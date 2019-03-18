@@ -176,3 +176,33 @@
         .shadow-soft;
     }
 }
+
+.ms-square-card {
+            
+    width: 24%;
+    margin-top: 8px;
+    padding: 4px;
+    margin-right: 1%;
+    float: left;
+    background-color: @ms2-color-background;
+    color: @ms2-color-text;
+    text-align: center;
+    transition: all 0.3s;
+    .shadow-soft;
+    .ms-preview {
+        font-size: 0;
+        border: 1px solid @ms2-color-shade-lighter;
+    }
+    &:hover {
+        .shadow-far;
+        cursor: pointer;
+    }
+    &.ms-selected {
+        background-color: @ms2-color-primary;
+        color: @ms2-color-text-primary;
+        .shadow-far;
+    }
+    &.ms-disabled {
+        opacity: 0.75;
+    }
+}

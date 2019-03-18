@@ -46,6 +46,9 @@ function getDescribeLayer(url, layer, options) {
             }
             return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
 
+        })
+        .catch((error) => {
+            return dispatch(updateNode(layer.id, "id", {describeLayer: {"error": error.status}}));
         });
     };
 }

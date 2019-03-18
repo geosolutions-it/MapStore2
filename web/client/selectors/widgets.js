@@ -1,27 +1,13 @@
-const { get, castArray, isEqualWith} = require('lodash');
+const { get, castArray} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
-const { defaultMemoize, createSelector, createSelectorCreator, createStructuredSelector} = require('reselect');
+const { createSelector, createStructuredSelector} = require('reselect');
+const { createShallowSelector } = require('../utils/ReselectUtils');
 
-const isShallowEqual = (el1, el2) => {
-    if (Array.isArray(el1) && Array.isArray(el2)) {
-        return el1 === el2 || el1.reduce((acc, curr, i) => acc && curr === el2[i], true);
-    }
-    return el1 === el2;
-};
-/**
- * Custom version of createSelector with custom compare function.
- * The previous compare function checks if values are arrays, then compares each element of the array.
- * This allows to avoid re-render when dependencies if the dependency keys do not change
- */
-const createShallowSelector = createSelectorCreator(
-  defaultMemoize,
-  (a, b) => isEqualWith(a, b, isShallowEqual)
-);
 const getEditorSettings = state => get(state, "widgets.builder.settings");
 const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
 const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k => getDependenciesMap(s)[k]);
@@ -34,7 +20,21 @@ const getWidgetLayer = createSelector(
 );
 
 const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
-
+const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
+const getVisibleFloatingWidgets = createSelector(
+    getFloatingWidgets,
+    getCollapsedState,
+    (widgets, collapsed) => {
+        if (widgets && collapsed) {
+            return widgets.filter(({ id } = {}) => !collapsed[id]);
+        }
+        return widgets;
+    }
+);
+const getCollapsedIds = createSelector(
+    getCollapsedState,
+    (collapsed = {}) => Object.keys(collapsed)
+);
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
 
 /**
@@ -63,12 +63,19 @@ const getWidgetsDependenciesGroups = createSelector(
     widgets => getWidgetsGroups(widgets)
 );
 const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+const getFloatingWidgetsCurrentLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layout`);
 
 const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
+const isTrayEnabled = state => get(state, "widgets.tray");
+
 module.exports = {
     getFloatingWidgets,
+    getVisibleFloatingWidgets,
+    getCollapsedState,
+    getCollapsedIds,
     getFloatingWidgetsLayout,
+    getFloatingWidgetsCurrentLayout,
     // let's use the same container for the moment
     getDashboardWidgets,
     dashboardHasWidgets: state => (getDashboardWidgets(state) || []).length > 0,
@@ -110,5 +117,6 @@ module.exports = {
     widgetsConfig: createStructuredSelector({
         widgets: getFloatingWidgets,
         layouts: getFloatingWidgetsLayout
-    })
+    }),
+    isTrayEnabled
 };

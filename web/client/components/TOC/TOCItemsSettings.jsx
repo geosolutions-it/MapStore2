@@ -56,6 +56,18 @@ const TOCItemSettings = (props, context) => {
     } = props;
 
     const tabs = getTabs(props, context);
+    const ToolbarComponent = head(tabs.filter(tab => tab.id === activeTab && tab.toolbarComponent).map(tab => tab.toolbarComponent));
+
+    const tabsCloseActions = tabs && tabs.map(tab => tab && tab.onClose).filter(val => val) || [];
+
+    const toolbarButtons = [
+        {
+            glyph: 'floppy-disk',
+            tooltipId: 'save',
+            visible: !!onSave,
+            onClick: () => onSave(tabsCloseActions)
+        },
+        ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])];
 
     return (
         <div>
@@ -64,7 +76,14 @@ const TOCItemSettings = (props, context) => {
                 glyph="wrench"
                 title={element.title && isObject(element.title) && (element.title[currentLocale] || element.title.default) || isString(element.title) && element.title || ''}
                 className={className}
-                onClose={onClose ? () => { onClose(); } : onHideSettings}
+                onClose={() => {
+                    if (onClose) {
+                        onClose(false, tabsCloseActions);
+                    } else {
+                        tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
+                        onHideSettings();
+                    }
+                }}
                 size={width}
                 style={dockStyle}
                 showFullscreen={showFullscreen}
@@ -74,15 +93,11 @@ const TOCItemSettings = (props, context) => {
                 header={[
                     <Row key="ms-toc-settings-toolbar" className="text-center">
                         <Col xs={12}>
-                            <Toolbar
+                            {ToolbarComponent ?
+                            <ToolbarComponent buttons={toolbarButtons}/>
+                            : <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={[{
-                                    glyph: 'floppy-disk',
-                                    tooltipId: 'save',
-                                    visible: !!onSave,
-                                    onClick: onSave
-                                },
-                                ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])]}/>
+                                buttons={toolbarButtons}/>}
                         </Col>
                     </Row>,
                     ...(tabs.length > 1 ? [<Row key="ms-toc-settings-navbar" className="ms-row-tab">
@@ -93,7 +108,10 @@ const TOCItemSettings = (props, context) => {
                                         key={'ms-tab-settings-' + tab.id}
                                         tooltip={<Message msgId={tab.tooltipId}/> }
                                         eventKey={tab.id}
-                                        onClick={() => onSetTab(tab.id)}>
+                                        onClick={() => {
+                                            onSetTab(tab.id);
+                                            if (tab.onClick) { tab.onClick(); }
+                                        }}>
                                         <Glyphicon glyph={tab.glyph}/>
                                     </NavItemT>
                                 )}
@@ -125,12 +143,12 @@ const TOCItemSettings = (props, context) => {
                         {
                             bsStyle: 'primary',
                             text: <Message msgId="close"/>,
-                            onClick: () => onClose(true)
+                            onClick: () => onClose(true, tabsCloseActions)
                         },
                         {
                             bsStyle: 'primary',
                             text: <Message msgId="save"/>,
-                            onClick: onSave
+                            onClick: () => onSave(tabsCloseActions)
                         }
                     ]}>
                     <div className="ms-alert">

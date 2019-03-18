@@ -23,7 +23,7 @@ const {get} = require('lodash');
  * @function
  * @memberof selectors.map
  * @param  {object} state the state
- * @return {object} the map configruation
+ * @return {object} the map configuration
  */
 const mapSelector = (state) => state.map && state.map.present || state.map || state.config && state.config.map || null;
 const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
@@ -31,7 +31,8 @@ const projectionDefsSelector = (state) => state.localConfig && state.localConfig
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
 const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseInt(get(mapSelector(state), "mapId"), 10) || null;
 const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
-const mapInfoDetailsUriFromIdSelector = (state) => mapSelector(state) && mapSelector(state).info && mapSelector(state).info.details;
+const mapInfoSelector = state => get(mapSelector(state), "info");
+const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
 
 /**
  * Get the scales of the current map
@@ -77,5 +78,6 @@ module.exports = {
     mapIdSelector,
     projectionDefsSelector,
     mapVersionSelector,
+    mapInfoSelector,
     mapNameSelector
 };

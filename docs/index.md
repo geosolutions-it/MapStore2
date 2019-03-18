@@ -1,61 +1,18 @@
+![MapStore Logo](https://github.com/geosolutions-it/MapStore2/blob/master/MapStore2.png?raw=true){: .center}
 
+# MapStore
+[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) is an **Open Source** highly modular webgis framework developed by [GeoSolutions](https://www.geo-solutions.it/) to create, manage and securely share maps and mashups. This simple and intuitive framework mixes contents served from servers like Google Maps, OpenStreetMap, Bing or from other servers adehering to OGC standards like WFS, CSW, WMS, WMTS and TMS. It is installed and configured on a Web application server so multiple users can access the site using Web browsers. It is used to find, view, and query published geospatial data and to integrate multiple sources into a single map view that can be easily navigated. Furthermore, with the release of the new version, this software allows the user to create dashboards for hosting widgets such as mini-maps, statistical charts, tables and much more.
 
+[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) aims to be both a product and a webgis framework. As a standard geoportal product, it is a web-based product for map visualization and analysis that enables you to build a geospatial interactive web site or web service. It provides a direct and real-time access to geospatial data warehouses of all the geospatial formats supported. It also provides all the spatial analysis functionality. This means that you can use it to build a web site that gives to thin clients, with nothing more than a web browser, a powerful, dynamic, and open geospatial application, previously available only in a desktop application. It is also a framework in the sense that it can be used as starting point to build sophisticated geospatial applications. It does not depend explicitly on any mapping engine but it can work with [OpenLayers](https://openlayers.org/) , [LeafletJS](https://leafletjs.com/) and [Cesium 3D viewer](https://cesiumjs.org/) ensuring the greatest flexibility when one wants to use it as a framework.
 
-![MapStore Logo](https://github.com/geosolutions-it/MapStore2/blob/master/MapStore2.png?raw=true)
+[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) has been designed from the beginning to provide users with a coherent and comprehensive experience across different devices, hence it should automatically adapt to different screen size as shown later.
 
-**[MapStore](http://mapstore2.geo-solutions.it/)** is a framework to build _web mapping_ applications using standard mapping libraries, such as _OpenLayers 3_ and _Leaflet_.
+**MapStore  is based on OpenLayers, Leaflet and ReactJS, and is licensed under the Simplified BSD license.**
 
-MapStore has several example applications:
+##Quick Start
 
- * **[MapViewer / Composer](http://mapstore2.geo-solutions.it/mapstore/)** is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore), and a composer of your own maps.
- * **[The Playground](http://dev.mapstore2.geo-solutions.it/mapstore/examples/plugins/)** a tool to built a custom UI using the framework plugins
+You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore. See the [Quick Start](quick-start/) documentation for more details.
 
-
-MapStore 2 is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the GPLv3 license.
-
-[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
-
-
-Quick Start
------------
-
-You can either choose to download a standalone *binary package* or a *WAR file* to quickly start playing with MapStore2.
-
-Binary package
---------------
-Download the binary package file from the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
-
-Go to the location where you saved the zip file, unzip the contents and run:
-
-Windows: `mapstore2_startup.bat`
-
-Linux: `./mapstore2_startup.sh`
-
-Point your browser to: [http://localhost:8082/mapstore](http://localhost:8082/mapstore)
-
-To stop MapStore2 simply do:
-
-Windows: `mapstore2_shutdown.bat`
-
-Linux: `./mapstore2_shutdown.sh`
-
-
-WAR file
---------
-Download the WAR file from the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
-
-[All the releases](https://github.com/geosolutions-it/MapStore2/releases)
-
-After downloading the MapStore2 war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
-
-If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java7 [JRE](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)
-
-Then you can access MapStore2 using the following URL (assuming the web container is on the standard 8080 port):
-
-[http://localhost:8080/mapstore](http://localhost:8080/mapstore)
-
-Use the default credentials (admin / admin) to login and start creating your maps!
-
-# Documentation
+## Documentation
+ * [Users Guide](user-guide/home-page/)
  * [Developers Guide](developer-guide/)
- * [Users Guide] TBD

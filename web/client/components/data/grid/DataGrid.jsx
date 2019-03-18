@@ -8,6 +8,7 @@
 const PropTypes = require('prop-types');
 const Grid = require('react-data-grid');
 const ReactDOM = require('react-dom');
+const forceScrollTop = require('./forceScrollTop');
 
 class DataGrid extends Grid {
     static propTypes = {
@@ -15,11 +16,9 @@ class DataGrid extends Grid {
     }
     constructor(props) {
         super(props);
-        this.handleSort = this._handleSort.bind(this);
-        this.getHeaderRows = this._getHeaderRows.bind(this);
     }
     componentDidMount() {
-        this.setCanvasListner();
+        this.setCanvasListener();
         if (this.props.displayFilters) {
             this.onToggleFilter();
         }
@@ -34,7 +33,7 @@ class DataGrid extends Grid {
         }
     }
     componentDidUpdate(oldProps) {
-        const {virtualScroll, displayFilters} = this.props;
+        const { virtualScroll, displayFilters, scrollToTopCounter} = this.props;
         if (oldProps.displayFilters !== displayFilters) {
             this.onToggleFilter();
         }
@@ -42,13 +41,13 @@ class DataGrid extends Grid {
             // Check if canvas is always valid
             if (this.canvas && this.canvas !== ReactDOM.findDOMNode(this).querySelector('.react-grid-Canvas')) {
                 this.canvas.removeEventListener('scroll', this.scrollListener);
-                this.setCanvasListner();
+                this.setCanvasListener();
             }
             // Check if canvas exist
             if (!this.canvas) {
-                this.setCanvasListner();
+                this.setCanvasListener();
             }
-            // When exiting feature editing we reset preious scroll
+            // When exiting feature editing we reset previous scroll
             if (oldProps.isFocused && !this.props.isFocused ) {
                 this.canvas.scrollTop = this.scroll;
             }else if (this.canvas && this.props.minHeight !== oldProps.minHeight) {
@@ -57,26 +56,11 @@ class DataGrid extends Grid {
             if (!this.props.isFocused && this.canvas) {
                 this.scroll = this.canvas.scrollTop;
             }
+            // force scroll top
+            if (scrollToTopCounter !== oldProps.scrollToTopCounter && this.canvas) {
+                this.canvas.scrollTop = 0;
+            }
         }
-    }
-    _handleSort(columnKey, direction) {
-        super.handleSort(columnKey, direction);
-        if (this.canvas) {
-            this.canvas.scrollTop = 0;
-        }
-    }
-    _getHeaderRows() {
-        return super.getHeaderRows().map(r =>
-            r.rowType === 'filter' && {...r,
-                onFilterChange: (f) => {
-                    if (r.onFilterChange) {
-                        r.onFilterChange(f);
-                    }
-                    if (this.canvas) {
-                        this.canvas.scrollTop = 0;
-                    }
-                }} || r
-            );
     }
     scrollListener = () => {
         if (!this.props.isFocused) {
@@ -89,11 +73,19 @@ class DataGrid extends Grid {
             this.props.onGridScroll({ firstRowIdx, lastRowIdx });
         }
     }
-    setCanvasListner = () => {
+    setCanvasListener = () => {
         this.canvas = ReactDOM.findDOMNode(this).querySelector('.react-grid-Canvas');
         if (this.canvas) {
             this.canvas.addEventListener('scroll', this.scrollListener);
         }
     }
 }
-module.exports = DataGrid;
+
+module.exports =
+    /*
+     * NOTE: forceScrollTop is a workaround to avoid to show empty rows during virtual scrolling.
+     * TODO: it should be fixed at higher level
+     */
+    forceScrollTop(
+        DataGrid
+    );

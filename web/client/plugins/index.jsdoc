@@ -1,6 +1,6 @@
 /**
  * MapStore2 plugins
  * @name plugins
- * @see {@link plugins-architecture}
+ * @see {@link https://mapstore.readthedocs.io/en/latest/developer-guide/plugins-architecture/}
  *
  */

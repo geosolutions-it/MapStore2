@@ -70,347 +70,6 @@ describe("test identify enhancers", () => {
         expect(spyMousePointer.calls.length).toEqual(2);
     });
 
-    it('test switchControlledIdentify component sends requests on point', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            sendRequest: () => {}
-        };
-
-        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spySendRequest.calls.length).toEqual(2);
-    });
-
-    it('creates the Identify component which sends requests on point and another layer', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            sendRequest: () => {}
-        };
-
-        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
-
-        ReactDOM.render(
-            <Component
-                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
-                />,
-            document.getElementById("container")
-        );
-        const layers = [
-            {
-                id: 'OpenTopoMap__3',
-                group: 'background',
-                source: 'OpenTopoMap',
-                name: 'OpenTopoMap',
-                title: 'OpenTopoMap',
-                type: 'tileprovider',
-                visibility: false,
-                handleClickOnLayer: false,
-                hidden: false
-            },
-            {
-                id: 'topp:states__4',
-                name: 'topp:states',
-                title: 'USA Population',
-                type: 'wms',
-                url: 'https://demo.geo-solutions.it:443/geoserver/wms',
-                visibility: true,
-                handleClickOnLayer: false,
-                hidden: false
-            },
-            {
-                id: 'annotations',
-                features: [],
-                name: 'Annotations',
-                type: 'vector',
-                visibility: true,
-                handleClickOnLayer: true,
-                hidden: false
-            }
-        ];
-        ReactDOM.render(
-            <Component
-                point={{pixel: {x: 1, y: 1}}}
-                layer="annotations"
-                enabled
-                layers={layers}
-                sendRequest={testHandlers.sendRequest}
-                buildRequest={() => ({url: "myurl"})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spySendRequest.calls.length).toEqual(3);
-    });
-    it('test switchControlledIdentify component sends local requess on point if no url is specified', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            sendRequest: () => {}
-        };
-
-        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                enabled layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spySendRequest.calls.length).toEqual(2);
-    });
-
-    it('test switchControlledIdentify component does not send requests on point if disabled', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            sendRequest: () => {}
-        };
-
-        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                enabled={false} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled={false} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spySendRequest.calls.length).toEqual(0);
-    });
-
-    it('test switchControlledIdentify component filters layers', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            sendRequest: () => {}
-        };
-
-        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={(layer) => layer.type === "wms"}
-                enabled layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={(layer) => layer.type === "wms"}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spySendRequest.calls.length).toEqual(1);
-    });
-
-    it('test switchControlledIdentify component shows marker on point', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            showMarker: () => {},
-            hideMarker: () => {}
-        };
-
-        const spyShowMarker = expect.spyOn(testHandlers, 'showMarker');
-        const spyHideMarker = expect.spyOn(testHandlers, 'hideMarker');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spyShowMarker.calls.length).toEqual(1);
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled={false} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spyHideMarker.calls.length).toEqual(1);
-    });
-
-    it('test switchControlledIdentify component no queryable layer', () => {
-
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            noQueryableLayers: () => {}
-        };
-
-        const spyNoQueryableLayers = expect.spyOn(testHandlers, 'noQueryableLayers');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => false}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => false}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spyNoQueryableLayers.calls.length).toEqual(1);
-    });
-
-    it('test switchControlledIdentify component purge results on point', () => {
-
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-
-        const testHandlers = {
-            purgeResults: () => {}
-        };
-
-        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spyPurgeResults.calls.length).toEqual(1);
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                enabled={false} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                />,
-            document.getElementById("container")
-        );
-        expect(spyPurgeResults.calls.length).toEqual(2);
-    });
-
-    it('test switchControlledIdentify component does not purge if multiselection enabled', () => {
-
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-
-        const testHandlers = {
-            purgeResults: () => {}
-        };
-
-        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
-
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                multiSelection
-                />,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                modifiers={{ctrl: false}}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                multiSelection
-                />,
-            document.getElementById("container")
-        );
-        expect(spyPurgeResults.calls.length).toEqual(1);
-        ReactDOM.render(
-            <Component
-                queryableLayersFilter={() => true}
-                point={{pixel: {x: 1, y: 1}}}
-                modifiers={{ctrl: true}}
-                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                multiSelection
-                />,
-            document.getElementById("container")
-        );
-        expect(spyPurgeResults.calls.length).toEqual(1);
-    });
-
-    it('test switchControlledIdentify component need refresh with null point', () => {
-
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            purgeResults: () => {}
-        };
-        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
-        ReactDOM.render(
-            <Component enabled point={null} purgeResults={testHandlers.purgeResults}/>,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component enabled point={{pixel: {x: 1, y: 1}}} purgeResults={testHandlers.purgeResults}/>,
-            document.getElementById("container")
-        );
-        expect(spyPurgeResults.calls.length).toEqual(1);
-    });
-
-    it('test switchControlledIdentify component need reset current index on new request', () => {
-        const Component = identifyLifecycle(() => <div id="test-component"></div>);
-        const testHandlers = {
-            setIndex: () => {}
-        };
-        const spySetIndex = expect.spyOn(testHandlers, 'setIndex');
-        ReactDOM.render(
-            <Component enabled responses={[{}]} setIndex={testHandlers.setIndex}/>,
-            document.getElementById("container")
-        );
-        ReactDOM.render(
-            <Component enabled responses={[{}, {}]} setIndex={testHandlers.setIndex}/>,
-            document.getElementById("container")
-        );
-        expect(spySetIndex.calls.length).toEqual(1);
-    });
-
     it("test switchControlledIdentify component doesn't need reset current index when requests are the same", () => {
         const Component = identifyLifecycle(() => <div id="test-component"></div>);
         const testHandlers = {
@@ -454,5 +113,49 @@ describe("test identify enhancers", () => {
         expect(spyPurgeResults).toHaveBeenCalled();
         expect(spyHideMarker).toHaveBeenCalled();
     });
+
+    it("test identifyLifecycle onChangeFormat", () => {
+        const testHandlers = {
+            onChangeFormat: () => {}
+        };
+        const spyChangeFormat = expect.spyOn(testHandlers, 'onChangeFormat');
+        const Component = identifyLifecycle(({onChangeFormat = () => {}}) => <div id="test-component" onClick={() => onChangeFormat("format")}></div>);
+        ReactDOM.render(
+            <Component
+                enabled
+                showCoordinateEditor
+                enabledCoordEditorButton
+                formatCoord="decimal"
+                responses={[{}]}
+                onChangeFormat={testHandlers.onChangeFormat}
+            />,
+            document.getElementById("container")
+        );
+        const testComponent = document.getElementById('test-component');
+        TestUtils.Simulate.click(testComponent);
+        expect(spyChangeFormat).toHaveBeenCalled();
+    });
+    it("test identifyLifecycle onChangeClickPoint", () => {
+        const testHandlers = {
+            onChangeClickPoint: () => {}
+        };
+        const spyOnChangeClickPoint = expect.spyOn(testHandlers, 'onChangeClickPoint');
+        const Component = identifyLifecycle(({onChangeClickPoint = () => {}}) => <div id="test-component" onClick={() => onChangeClickPoint("lat", "4")}></div>);
+        ReactDOM.render(
+            <Component
+                enabled
+                showCoordinateEditor
+                enabledCoordEditorButton
+                formatCoord="decimal"
+                responses={[{}]}
+                onChangeClickPoint={testHandlers.onChangeClickPoint}
+            />,
+            document.getElementById("container")
+        );
+        const testComponent = document.getElementById('test-component');
+        TestUtils.Simulate.click(testComponent);
+        expect(spyOnChangeClickPoint).toHaveBeenCalled();
+    });
+
 
 });

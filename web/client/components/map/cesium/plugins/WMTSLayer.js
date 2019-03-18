@@ -13,7 +13,7 @@ const WMTSUtils = require('../../../../utils/WMTSUtils');
 const Cesium = require('../../../../libs/cesium');
 const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
 const assign = require('object-assign');
-const {isObject, isArray, slice, get} = require('lodash');
+const { isObject, isArray, slice, get, head} = require('lodash');
 const urlParser = require('url');
 
 function splitUrl(originalUrl) {
@@ -53,8 +53,8 @@ NoProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
     return url + queryString;
 };
-function getMatrixIds(matrix = [], srs) {
-    return ((isObject(matrix) && matrix[srs]) || isArray(matrix) && matrix || []).map((el) => el.identifier);
+function getMatrixIds(matrix = [], setId) {
+    return ((isObject(matrix) && matrix[setId]) || isArray(matrix) && matrix || []).map((el) => el.identifier);
 }
 
 function getDefaultMatrixId(options) {
@@ -86,32 +86,32 @@ const getTilingSchema = (srs) => {
 
 const getMatrixOptions = (options, srs) => {
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
-    const matrixIds = limitMatrix(options.matrixIds && getMatrixIds(options.matrixIds, srs) || getDefaultMatrixId(options));
+    const matrixIds = limitMatrix(options.matrixIds && getMatrixIds(options.matrixIds, tileMatrixSet) || getDefaultMatrixId(options));
     return {tileMatrixSet, matrixIds};
 };
 
 function wmtsToCesiumOptions(options) {
     let srs = 'EPSG:4326';
-    let {tileMatrixSet, matrixIds} = getMatrixOptions(options, srs);
+    let { tileMatrixSet: tileMatrixSetID, matrixIds} = getMatrixOptions(options, srs);
     if (matrixIds.length === 0) {
         srs = 'EPSG:3857';
         const matrixOptions = getMatrixOptions(options, srs);
-        tileMatrixSet = matrixOptions.tileMatrixSet;
+        tileMatrixSetID = matrixOptions.tileMatrixSet;
         matrixIds = matrixOptions.matrixIds;
     }
-
+    // NOTE: can we use opacity to manage visibility?
     // var opacity = options.opacity !== undefined ? options.opacity : 1;
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
         proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
     }
-    // NOTE: can we use opacity to manage visibility?
-    const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSet]);
+    const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
 
     return assign({
-        url: getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString), // TODO subdomain support, if use {s} switches to RESTFul mode
+        // TODO: multi-domain support, if use {s} switches to RESTFul mode
+        url: head(getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString)),
         format: options.format || 'image/png',
         isValid,
         // tileDiscardPolicy: {
@@ -121,12 +121,12 @@ function wmtsToCesiumOptions(options) {
         layer: options.name,
         style: options.style || "",
         tileMatrixLabels: matrixIds,
-        tilingScheme: getTilingSchema(srs, options.matrixIds[tileMatrixSet]),
+        tilingScheme: getTilingSchema(srs, options.matrixIds[tileMatrixSetID]),
         proxy: proxy && new WMTSProxy(proxy) || new NoProxy(),
         enablePickFeatures: false,
         tileWidth: options.tileWidth || options.tileSize || 256,
         tileHeight: options.tileHeight || options.tileSize || 256,
-        tileMatrixSetID: tileMatrixSet,
+        tileMatrixSetID: tileMatrixSetID,
         maximumLevel: 30,
         parameters: {...getAuthenticationParam(options)}
     });

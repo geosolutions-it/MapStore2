@@ -53,6 +53,18 @@ describe('StandardApp', () => {
         expect(app).toExist();
     });
 
+    it('creates a default app with onInit', (done) => {
+        const init = {
+            onInit: () => { }
+        };
+        const spy = expect.spyOn(init, 'onInit');
+        ReactDOM.render(<StandardApp onInit={init.onInit}/>, document.getElementById("container"));
+        setTimeout(() => {
+            expect(spy).toHaveBeenCalled();
+            done();
+        }, 100);
+    });
+
     it('creates a default app with the given store creator', (done) => {
         let dispatched = 0;
         const store = () => ({

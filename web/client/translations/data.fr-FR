@@ -83,8 +83,21 @@
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
-            "templatePreview": "Aperçu du template"
+            "templatePreview": "Aperçu du template",
+            "tooltip": {
+                "label": "Info-bulle",
+                "title": "Titre",
+                "description": "Description",
+                "both": "Titre et Description",
+                "none": "Aucune infobulle",
+                "labelPlacement": "Placement",
+                "right": "Droite",
+                "bottom": "Bottom",
+                "top": "Haut"
+            }
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Mise à jour",
             "warning": "Avertissement",
@@ -159,13 +172,14 @@
         },
         "home":{
             "open": "Ouvrir",
-            "shortDescription": "Modern webmapping avec OL3, Leaflet et React<br/><small>consultez la page <a href=\"/mapstore/docs/\"> documentation </a> </ small>",
+            "shortDescription": "Modern webmapping avec OpenLayers, Leaflet et React<br/><small>consultez la page <a href=\"https://mapstore.readthedocs.io/en/latest/\"> documentation </a> </ small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
+            "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"https://mapstore.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Restez au fait des derniers développements via les mailing lists",
                 "subscribe_users": "Souscrire à la Mailing List utilisateurs",
@@ -492,6 +506,8 @@
         "identifyTitle": "Informations de l'objet",
         "identifyNoQueryableLayers": "Aucune couche active rencontrée",
         "identifyRevGeocodeHeader": "Coordonnées",
+        "identifyShowCoordinateEditor": "Afficher l'éditeur de coordonnées",
+        "identifyHideCoordinateEditor": "Masquer l'éditeur de coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'Informations",
         "identifyRevGeocodeCloseText": "Fermer",
@@ -530,7 +546,11 @@
             "showLabel": "Afficher l'étiquette de mesure"
         },
         "search":{
-            "placeholder": "Recherche par toponyme ou coordonnées...",
+            "decimal": "Décimal",
+            "aeronautical": "Aéronautique",
+            "changeSearchInputField": "Changer l'outil de recherche",
+            "addressSearch": "Recherche par nom de lieu",
+            "coordinatesSearch": "Rechercher par coordonnées",
             "searchservicesbutton": "Configurer les services de recherche",
             "configpaneltitle": "Créer / modifier un service de recherche",
             "serviceslistlabel": "Services disponibles",
@@ -896,7 +916,11 @@
             "QRCodeLinkTitle": "Code QR",
             "msgCopiedUrl":"Copié",
             "msgToCopyUrl":"Cliquer pour copier",
-            "sharedTitle": "Regardez ma nouvelle carte: "
+            "sharedTitle": "Regardez ma nouvelle carte: ",
+            "advancedOptions": "Options avancées",
+            "addBboxParam": "Ajouter un paramètre bbox au lien de partage",
+            "wrongBboxParamTitle": "Param bbox invalide",
+            "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1277,11 +1301,18 @@
             "widget": {
                 "menu": {
                     "showChartData": "Afficher les données de graphique",
-                    "edit": "éditer",
-                    "delete": "effacer",
+                    "edit": "Éditer",
+                    "delete": "Effacer",
+                    "collapse": "Réduire",
                     "confirmDelete": "Êtes-vous sûr?",
                     "downloadData": "Télécharger les données",
-                    "exportImage": "Exporter l'image"
+                    "exportImage": "Exporter l'image",
+                    "pin": "Épingle",
+                    "unpin": "Détacher",
+                    "hide": "Cacher",
+                    "hideDescription": "Cacher ce widget aux autres utilisateurs",
+                    "unhide": "Afficher",
+                    "unhideDescription": "Afficher le widget pour les autres utilisateurs"
                 }
             },
             "chartType": {
@@ -1372,6 +1403,13 @@
             "advancedOptions":{
                 "line": "Options avancées",
                 "bar": "Options avancées"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Développer le plateau de widgets",
+                "collapseTray": "Réduire le tiroir des widgets",
+                "expandAll": "Développer tous les widgets",
+                "collapseAll": "Réduire tous les widgets"
             }
         },
         "dashboard": {
@@ -1445,6 +1483,114 @@
             "tooltip": "Créer et éditer un style de couche",
             "paneltitle": "Style de couche",
             "layerlabel": "Couche"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtrer les styles par nom, titre ou résumé",
+            "templateFilterPlaceholder": "Filtrer les modèles de styles par titre",
+            "createStyleFromTemplate": "Sélectionnez un modèle pour créer un nouveau style",
+            "titleRequired": "<div> Un titre est requis! </ div> <div> Le titre et le résumé doivent être alphanumériques </ div>.",
+            "titleSettings": "Titre",
+            "titleSettingsplaceholder": "Entrez le titre (alphanumérique)",
+            "abstractSettings": "Abstrait",
+            "abstractSettingsplaceholder": "Entrez abstract (alphanumeric)",
+            "createStyleModalTitle": "Créer un nouveau style",
+            "filterMatchNotFound": "Aucun style ne correspond au filtre de texte saisi",
+            "backToList": "Retour à la liste de style",
+            "createNewStyle": "Créer un nouveau style",
+            "editSelectedStyle": "Modifier le style sélectionné",
+            "saveCurrentStyle": "Enregistrer le style actuel",
+            "addSelectedTemplate": "Ajouter le modèle sélectionné à la liste des styles",
+            "deleteSelectedStyle": "Supprimer le style sélectionné",
+            "closeWithoutSaveAlertTitle": "Le style a changé",
+            "closeWithoutSaveAlert": "Vous quittez l'éditeur de style sans enregistrer vos modifications",
+            "deleteStyleAlertTitle": "Supprimer le style",
+            "deleteStyleAlert": "Le style sélectionné sera définitivement supprimé",
+            "delete": "Effacer",
+            "defaultStyle": "Style par défaut",
+            "availableStyle": "Style disponible",
+            "styleNotFound": "Style non trouvé",
+            "noPermission": "L'utilisateur ne peut pas éditer les styles",
+            "deletedStyleSuccessTitle": "Supprimer le style",
+            "deletedStyleSuccessMessage": "Le style a été supprimé avec succès",
+            "deletedStyleErrorTitle": "Supprimer l'erreur de style",
+            "deletedStyleErrorMessage": "Impossible de supprimer le style actuel",
+            "savedStyleTitle": "Style sauvegardé",
+            "savedStyleMessage": "Le style a été enregistré avec succès",
+            "missingAvailableStyles": "Styles manquants",
+            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li> </ul>",
+            "createTmpErrorTitle": "Nouveau style temporaire",
+            "createTmpStyleErrorMessage": "Le style temporaire n'a pas pu être créé. Cela pourrait être dû à un format de style non pris en charge sur le service de styles.",
+            "updateTmpErrorTitle": "Mise à jour de style temporaire",
+            "updateTmpStyleErrorMessage": "Le style temporaire n'a pas pu être mis à jour. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "createStyleErrorTitle": "Nouveau style",
+            "createStyleErrorMessage": "Le style n'a pas pu être enregistré sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "updateStyleErrorTitle": "Modifier le style",
+            "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "genericValidationError": "Le style n'est pas valide et il n'a pas pu être appliqué.",
+            "setDefaultStyle": "Définir le style sélectionné par défaut pour le calque actuel",
+            "setDefaultStyleSuccessTitle": "Succès sur le style par défaut",
+            "setDefaultStyleSuccessMessage": "Le style par défaut a été appliqué avec succès",
+            "setDefaultStyleErrorTitle": "Erreur sur le style par défaut",
+            "setDefaultStyleErrorMessage": "Il n'est pas possible d'appliquer le style sélectionné par défaut"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Paramètres",
+                "title": "Paramètres de lecture",
+                "frameDuration": "Durée du cadre",
+                "range": {
+                    "title": "Animation rage",
+                    "zoomTooltip": "Zoom sur la plage d'animation actuelle",
+                    "animationStart": "Début de l'animation",
+                    "animationEnd": "Fin de l'animation",
+                    "zoomToCurrentPlayackRange": "Zoom sur la plage de lecture actuelle",
+                    "setToCurrentViewRange": "Définir à la plage de vue actuelle",
+                    "fitToSelectedLayerRange": "Ajuster à la plage du calque sélectionné"
+                },
+                "step": {
+                    "tooltip": "Lorsque l'option 'Aligner sur le calque guide' est désactivée, vous pouvez personnaliser l'étape de l'animation",
+                    "label": "Étape d'animation",
+                    "year": "{number, plural, =0 {Année} =1 {Année} other {Années}}",
+                    "week": "{number, plural, =0 {semaine} =1 {semaine} other {semaine}}",
+                    "day": "{number, plural, =0 {jour} =1 {jour} other {jours}}",
+                    "hour": "{number, plural, =0 {heure} =1 {heure} other {heures}}",
+                    "minute": "{number, plural, =0 {minute} =1 {minute} other {minute}}",
+                    "second": "{number, plural, =0 {seconde} =1 {seconde} other {secondes}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Suivre l'animation",
+                    "followingDescription": "Lorsque l'animation est active, suivez le curseur"
+                }
+            },
+            "backwardStep": "Reculer",
+            "forwardStep" : "Avancer",
+            "play": "Jouer",
+            "pause": "Pause",
+            "paused": "Jouer (en pause)",
+            "stop": "Arrêtez"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Paramètres de la timeline",
+                "snapToGuideLayer": "Aligner sur le calque guide",
+                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données du calque sélectionné. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
+            },
+            "currentTime": "Aller à l'heure actuelle",
+            "rangeStart": "Aller à la plage de temps actuelle",
+            "rangeEnd": "Aller à la plage de temps actuelle",
+            "hideLayerName": "Masquer les noms de calques",
+            "showLayerName": "Afficher les noms de calques",
+            "enableRange": "Activer la plage de temps",
+            "disableRange": "Désactiver la plage de temps",
+            "enablePlayBack": "Activer les contrôles de lecture",
+            "disablePlayBack": "Désactiver les contrôles de lecture",
+            "expand" : "Augmenter le curseur temporel",
+            "collapse" : "Réduire le curseur temporel",
+            "errors": {
+                "multidim_error_title": "Le service principal ne répond pas",
+                "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur."
+            }
         },
         "rulesmanager": {
             "apply": "Appliquer",

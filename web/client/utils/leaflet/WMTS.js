@@ -124,11 +124,22 @@ var WMTS = L.TileLayer.extend({
             return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         }
 
+
         this._urlsIndex++;
         if (this._urlsIndex === this._urls.length) {
             this._urlsIndex = 0;
         }
-        const url = L.Util.template(this._urls[this._urlsIndex], {s: this._getSubdomain(tilePoint)});
+        const url = L.Util.template(this._urls[this._urlsIndex], {
+            s: this._getSubdomain(tilePoint),
+            TileRow: params.tilerow,
+            TileCol: params.tilecol,
+            TileMatrixSet: this.options.tileMatrixSet,
+            TileMatrix: params.ident,
+            Style: this.options.style
+        });
+        if (this.options.requestEncoding === "RESTful") {
+            return url;
+        }
         return url + L.Util.getParamString(this.wmtsParams, url, true) + "&tilematrix=" + params.ident + "&tilerow=" + params.tilerow + "&tilecol=" + params.tilecol;
     },
     getMatrix: function(matrix, options) {

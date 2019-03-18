@@ -8,7 +8,7 @@
 
 
 const CoordinatesUtils = require('./CoordinatesUtils');
-const {isString, isArray, isObject, head, slice} = require('lodash');
+const {isString, isArray, isObject, head, castArray, slice } = require('lodash');
 
 const WMTSUtils = {
     getDefaultMatrixId: (options) => {
@@ -48,7 +48,63 @@ const WMTSUtils = {
         }
 
         return defaultMatrix;
-    }
+    },
+    /**
+     * Returns the first  available requestEncoding from the JSON
+     */
+    getRequestEncoding: json => {
+        const operations = WMTSUtils.getOperations(json);
+        return WMTSUtils.getOperation(operations, "GetTile", "KVP") ? "KVP" : WMTSUtils.getOperation(operations, "GetTile", "RESTful") && "RESTful";
+    },
+    getOperations: (json = {}) => castArray(json.Capabilities["ows:OperationsMetadata"]["ows:Operation"]),
+    /**
+     * gets the first operation of the type and with the name provided from the 'Operations' array of the WMTS Capabilities json parsed object
+     */
+    getOperation: (operations, name, type) => {
+        return head(
+            castArray(head(
+                operations
+                    .filter((operation) => operation.$.name === name)
+                    .map((operation) => castArray(operation["ows:DCP"]["ows:HTTP"]["ows:Get"]))
+            ) || [])
+            .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
+            .map((request) => request.$["xlink:href"])
+        );
+    },
+    /**
+     * Returns the GetTile Url from the record. This allows to get to get the proper
+     * url template.
+     * If ResourceURL is not present it uses GetTileURL
+     */
+    getGetTileURL: (record = {}) => {
+        return record.ResourceURL
+                // TODO: support for multiple URLs
+                && castArray(record.ResourceURL).map(({$ = {}}) => $.template || $.value)
+                || record.GetTileURL;
+    },
+    /**
+     * Returns the the original capabilities. if not present, try returns the GetTileURL.
+     * This is also a useful identifier for the source.
+     */
+    getCapabilitiesURL: (record = {}) => {
+        return head(castArray(record.capabilitiesURL || record.GetTileURL));
+    },
+    /**
+     * Gets the default style for the WMTS Capabilities Layer entry
+     * @param {object} layer the layer object of the WMTSCapabilities
+     * @return {string} the identifier of the default style
+     */
+    getDefaultStyleIdentifier: layer => head(
+        castArray(layer.Style)
+            // default is identified by XML attribute isDefault
+            .filter(({ $ = {} }) => $.isDefault === "true")
+            // the identifier content value is needed
+            .map(l => l["ows:Identifier"])
+    ),
+    /**
+     * gets the first format available in the list
+     */
+    getDefaultFormat: layer => head(castArray(layer.Format))
 };
 
 

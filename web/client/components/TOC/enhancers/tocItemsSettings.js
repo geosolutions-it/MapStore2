@@ -6,20 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { isNil, isEqual } = require('lodash');
+const { isNil, isEqual, isArray, isFunction } = require('lodash');
 const { withState, withHandlers, compose, lifecycle } = require('recompose');
 
 /**
  * Enhancer for settings state needed in TOCItemsSettings plugin
- * - originalSettings and initialSettings are the settings of node needed in onUpdateParams
  * - onShowAlertModal, alert modal appears on close in case of changes in TOCItemsSettings
  * - onShowEditor, edit modal appears on format info in TOCItemsSettings
  * @memberof enhancers.settingsState
  * @class
  */
 const settingsState = compose(
-    withState('originalSettings', 'onUpdateOriginalSettings', {}),
-    withState('initialSettings', 'onUpdateInitialSettings', {}),
     withState('alertModal', 'onShowAlertModal', false),
     withState('showEditor', 'onShowEditor', false)
 );
@@ -27,7 +24,6 @@ const settingsState = compose(
 /**
  * Basic toc settings lificycle used in TOCItemsSettings plugin with TOCItemsSettings component
  * Handlers:
- * - onUpdateParams: update settings by key and value of the current node
  * - onClose: triggers onHideSettings only if the settings doesn't change, in case of changes will trigger onShowAlertModal
  * - onSave: triggers onHideSettings
  * Lifecycle:
@@ -39,36 +35,18 @@ const settingsState = compose(
  */
 const settingsLifecycle = compose(
     withHandlers({
-        onUpdateParams: ({
-            settings = {},
-            initialSettings = {},
-            originalSettings: orig,
-            onUpdateOriginalSettings = () => {},
-            onUpdateSettings = () => {},
-            onUpdateNode = () => {}
-        }) => (newParams, update = true) => {
-            let originalSettings = { ...(orig || {}) };
-            // TODO one level only storage of original settings for the moment
-            Object.keys(newParams).forEach((key) => {
-                originalSettings[key] = initialSettings && initialSettings[key];
-            });
-            // update changed keys to verify only modified values (internal state)
-            onUpdateOriginalSettings(originalSettings);
-
-            onUpdateSettings(newParams);
-            if (update) {
-                onUpdateNode(
-                    settings.node,
-                    settings.nodeType,
-                    { ...settings.options, ...newParams }
-                );
-            }
-        },
-        onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode, originalSettings, settings, onHideSettings, onShowAlertModal }) => forceClose => {
+        onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode = () => {}, originalSettings, settings, onHideSettings = () => {}, onShowAlertModal = () => {} }) => (forceClose, tabsCloseActions = []) => {
             const originalOptions = Object.keys(settings.options).reduce((options, key) => ({ ...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key] }), {});
             if (!isEqual(originalOptions, settings.options) && !forceClose) {
                 onShowAlertModal(true);
             } else {
+                if (isArray(tabsCloseActions)) {
+                    tabsCloseActions.forEach(tabOnClose => {
+                        if (isFunction(tabOnClose)) {
+                            tabOnClose();
+                        }
+                    });
+                }
                 onUpdateNode(
                     settings.node,
                     settings.nodeType,
@@ -81,7 +59,14 @@ const settingsLifecycle = compose(
                 onUpdateInitialSettings({});
             }
         },
-        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => () => {
+        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => (tabsCloseActions = []) => {
+            if (isArray(tabsCloseActions)) {
+                tabsCloseActions.forEach(tabOnClose => {
+                    if (isFunction(tabOnClose)) {
+                        tabOnClose();
+                    }
+                });
+            }
             onHideSettings();
             onShowAlertModal(false);
             // clean up internal settings state
@@ -98,7 +83,7 @@ const settingsLifecycle = compose(
             } = this.props;
 
             // store changed keys
-            onUpdateOriginalSettings({ ...element });
+            onUpdateOriginalSettings({ });
             // store initial settings (internal state)
             onUpdateInitialSettings({ ...element });
         },
@@ -124,7 +109,7 @@ const settingsLifecycle = compose(
 
             if (!settings.expanded && newProps.settings && newProps.settings.expanded) {
                 // update initial and original settings
-                onUpdateOriginalSettings({ ...newProps.element });
+                onUpdateOriginalSettings({ });
                 onUpdateInitialSettings({ ...newProps.element });
                 onSetTab('general');
             }

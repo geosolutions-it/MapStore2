@@ -19,7 +19,7 @@ To create the final war, you have several options:
 
 ### Building the documentation
 
-MapStore2 uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/).  
+MapStore uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/).  
 Please see http://usejsdoc.org/ for further information about code documentation.  
 
 Refer to the existing files to follow the documentation style:
