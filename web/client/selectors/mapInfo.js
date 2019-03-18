@@ -48,6 +48,8 @@ const measureActiveSelector = (state) => get(state, "controls.measure.enabled") 
  * @param {object} state the state
  */
 const clickPointSelector = state => state && state.mapInfo && state.mapInfo.clickPoint;
+const showMarkerSelector = state => state && state.mapInfo && state.mapInfo.showMarker;
+
 const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
@@ -104,21 +106,26 @@ const currentFeatureSelector = state => {
     return get(currentResponse, 'data.features') || get(currentResponse, 'layerMetadata.features');
 };
 
-const applyMapInfoStyle = f => ({...f, style: f.style || {
-    color: '#ffcc33',
-    opacity: 1,
-    weight: 3,
-    fillColor: '#ffffff',
-    fillOpacity: 0.2
-}});
+const applyMapInfoStyle = f => ({
+    ...f, style: f.style || {
+        color: '#ffcc33',
+        opacity: 1,
+        radius: 100,
+        weight: 3,
+        fillColor: '#ffffff',
+        fillOpacity: 0.2
+    }});
 
 const clickedPointWithFeaturesSelector = createSelector(
     clickPointSelector,
     currentFeatureSelector,
-    (clickPoint, features) => clickPoint
+    showMarkerSelector,
+    (clickPoint, features, showMarker) => showMarker && clickPoint
         ? {
             ...clickPoint,
-            features: features && isArray(features) && features.map(applyMapInfoStyle )
+            features: features && isArray(features) &&
+            features
+                .map(applyMapInfoStyle)
         }
         : undefined
 

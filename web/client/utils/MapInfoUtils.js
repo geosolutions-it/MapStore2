@@ -111,6 +111,7 @@ const MapInfoUtils = {
                     iconAnchor: [12, 41], // in leaflet ther is no anchor in fraction
                     iconSize: [25, 41]
                 }]
+
             }
         ];
     },
