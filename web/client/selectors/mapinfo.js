@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {get} = require('lodash');
+const { get, isArray } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
 const {modeSelector} = require('./featuregrid');
@@ -101,13 +101,22 @@ const currentFeatureSelector = state => {
     const currentResponse = currentResponseSelector(state) || {};
     return get(currentResponse, 'data.features') || get(currentResponse, 'layerMetadata.features');
 };
+
+const applyMapInfoStyle = f => ({...f, style: f.style || {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2
+}});
+
 const clickedPointWithFeaturesSelector = createSelector(
     clickPointSelector,
     currentFeatureSelector,
     (clickPoint, features) => clickPoint
         ? {
             ...clickPoint,
-            features
+            features: features && isArray(features) && features.map(applyMapInfoStyle )
         }
         : undefined
 
