@@ -67,6 +67,10 @@ pages:
     - Dev Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore: 'developer-guide/developing-with-mapstore-2-intro.md'
+    - How to:
+      - Dev How To: 'developer-guide/dev-how-to.md'
+      - Plugins: 'developer-guide/plugins-howto.md'
+      - Writing Epics: 'developer-guide/writing-epics.md'
     - Configuration: 'developer-guide/configuration-files.md'
     - Migration: 'developer-guide/mapstore-migration-guide.md'
     - How to Release: 'developer-guide/release.md'
