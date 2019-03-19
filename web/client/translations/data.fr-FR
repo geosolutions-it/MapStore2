@@ -83,7 +83,18 @@
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
-            "templatePreview": "Aperçu du template"
+            "templatePreview": "Aperçu du template",
+            "tooltip": {
+                "label": "Info-bulle",
+                "title": "Titre",
+                "description": "Description",
+                "both": "Titre et Description",
+                "none": "Aucune infobulle",
+                "labelPlacement": "Placement",
+                "right": "Droite",
+                "bottom": "Bottom",
+                "top": "Haut"
+            }
         },
         "longitude": "Longitude",
         "latitude": "Latitude",

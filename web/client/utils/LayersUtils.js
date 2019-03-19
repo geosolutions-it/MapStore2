@@ -118,14 +118,19 @@ const getGroupNodes = (node) => {
     return [];
 };
 
+
+/**
+ * adds or update node property in a nested node
+ * if propName is an object it overrides a whole group of options instead of one
+*/
 const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
             if (isObject(node)) {
                 if (node.id === findValue) {
-                    return assign({}, node, {[propName]: propValue});
-                }else if (node.nodes) {
-                    return assign({}, node, {nodes: deepChange(node.nodes, findValue, propName, propValue)});
+                    return {...node, ...(isObject(propName) ? propName : {[propName]: propValue})};
+                } else if (node.nodes) {
+                    return {...node, nodes: deepChange(node.nodes, findValue, propName, propValue)};
                 }
             }
             return node;
@@ -418,7 +423,7 @@ const LayersUtils = {
         };
     },
     saveLayer: (layer) => {
-        return {
+        return assign({
             id: layer.id,
             features: layer.features,
             format: layer.format,
@@ -461,8 +466,9 @@ const LayersUtils = {
             origin: layer.origin,
             thematic: layer.thematic,
             thumbId: layer.thumbId,
-            ...assign({}, layer.params ? {params: layer.params} : {})
-        };
+        },
+        layer.params ? { params: layer.params } : {},
+        layer.credits ? { credits: layer.credits } : {});
     },
     /**
     * default regex rule for searching for a /geoserver/ string in a url
@@ -562,6 +568,11 @@ const LayersUtils = {
 
         }
         return layers;
+    },
+    creditsToAttribution: ({ imageUrl, link, title }) => {
+        // TODO: check if format is valid for an img (svg, for instance, may not work)
+        const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
+        return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
     }
 };
 

@@ -85,7 +85,6 @@ describe('LayersUtils', () => {
         ]);
     });
 
-
     it('deep change in nested group', () => {
 
         const nestedGroups = [
@@ -106,6 +105,44 @@ describe('LayersUtils', () => {
             {id: 'default', nodes: ['layer001', 'layer002']},
             {id: 'custom', nodes: [{id: 'custom.nested001', nodes: ['layer003', {id: 'custom.nested001.nested002', nodes: ['layer004'], value: 'now'}]}]}
         ]);
+    });
+
+    it('deep change of a subgroup in nested group with object ', () => {
+        const groups = [
+            {
+                "id": "1",
+                "title": "1",
+                "name": "1",
+                "nodes": [
+                    {
+                        "id": "1.3",
+                        "title": "3",
+                        "name": "3",
+                        "nodes": [
+                            {
+                                "id": "1.3.4",
+                                "title": "4",
+                                "name": "4",
+                                "nodes": [
+                                    "topp:states__6"
+                                ],
+                                "expanded": true
+                            }
+                        ],
+                        "expanded": true,
+                        "description": "old desc",
+                        "tooltipOptions": "both",
+                        "tooltipPlacement": "right"
+                    }
+                ],
+                "expanded": true
+            }
+        ];
+        const newGroups = LayersUtils.deepChange(groups, '1.3', {description: "new desc"});
+        expect(newGroups).toExist();
+        expect(newGroups[0].nodes[0].description).toBe("new desc");
+        expect(newGroups[0].nodes[0].tooltipOptions).toBe("both");
+        expect(newGroups[0].nodes[0].tooltipPlacement).toBe("right");
     });
 
     it('get groups node id in nested group', () => {
@@ -754,6 +791,62 @@ describe('LayersUtils', () => {
         expect(RES_4[0].type).toBe('bing');
         expect(RES_4[0].visibility).toBe(true);
 
+    });
+    it('creditsToAttribution', () => {
+        const TESTS = [
+            [{ title: "test"}, 'test'], // text only
+            [{ imageUrl: "image.png" }, '<img src="image.png" >'], // image and text
+            [{ title: "test", imageUrl: "image.png" }, '<img src="image.png" title="test">'], // image and text
+            [{ title: "test", link: "http://url.com" }, '<a href="http://url.com" target="_blank">test</a>'], // text with link
+            [{ title: "test", link: "http://url.com", imageUrl: "image.png" }, '<a href="http://url.com" target="_blank"><img src="image.png" title="test"></a>'], // text, image, link
+            [[], undefined], // no data returns undefined
+            [[{}], undefined], // empty object returns undefined
+            [{ link: "http://url.com" }, undefined] // only link returns undefined
+        ];
+        TESTS.map(([credits, expectedResult]) => expect(LayersUtils.creditsToAttribution(credits)).toBe(expectedResult));
+    });
+    it('saveLayer', () => {
+        const layers = [
+            // no params if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.params).toNotExist();
+                    const keys = Object.keys(l);
+                    expect(keys).toContain('id');
+                    expect(keys).toNotContain('params');
+                    expect(keys).toNotContain('credits');
+                }
+            ],
+            // save params if present
+            [
+                {
+                    params: {
+                        viewParams: "a:b"
+                    }
+                },
+                l => {
+                    expect(l.params).toExist();
+                    expect(l.params.viewParams).toExist();
+                }
+            ],
+            // save credits if present
+            [
+                {
+                    credits: {
+                        title: "test"
+                    }
+                },
+                l => {
+                    expect(l.credits).toExist();
+                }
+            ]
+        ];
+        layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
     });
 
 });

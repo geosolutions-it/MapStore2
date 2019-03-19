@@ -82,7 +82,18 @@
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
-            "templatePreview": "Template preview"
+            "templatePreview": "Template preview",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
         "longitude": "Longitude",
         "latitude": "Latitude",
@@ -895,10 +906,10 @@
             "titlePanel": "Share the map",
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
+            "embeddedLinkTitle": "Via the embedded code",
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
-            "embeddedLinkTitle": "Via the embedded code",
             "forceDrawer": "Show TOC",
             "apiLinkTitle": "Using APIs",
             "QRCodeLinkTitle": "qr code",

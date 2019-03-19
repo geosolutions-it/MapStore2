@@ -82,7 +82,18 @@
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die Sie anzeigen müssen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
-            "templatePreview": "Vorschau template"
+            "templatePreview": "Vorschau template",
+            "tooltip": {
+                "label": "QuickInfo",
+                "title": "Titel",
+                "description": "Beschreibung",
+                "both": "Titel und Beschreibung",
+                "none": "Kein Tooltip",
+                "labelPlacement": "Platzierung",
+                "right": "Recht",
+                "bottom": "Bottom",
+                "top": "Oben"
+            }
         },
         "longitude": "Länge",
         "latitude": "Breite",

@@ -267,6 +267,63 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+        expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+    });
+
+    it('wms layer attribution with credits - create and update layer', () => {
+        const TEXT1 = "some attribution";
+        const TEXT2 = "some other attibution";
+        const CREDITS1 = {
+            imageUrl: "test.jpg",
+            title: "test"
+        };
+
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            credits: {
+                title: TEXT1
+            },
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // check creation
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT1);
+        // check remove
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, credits: undefined}} map={map} />, document.getElementById("container"));
+        expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+        // check update
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{ ...options, credits: {title: TEXT2} }} map={map} />, document.getElementById("container"));
+        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT2);
+        // check content update
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT1);
+        // check complex contents
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, credits: CREDITS1}} map={map} />, document.getElementById("container"));
+        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe('<img src="test.jpg" title="test">');
     });
 
     it('creates a wms elevation layer for openlayers map', () => {
@@ -309,6 +366,31 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().getUrl()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+    });
+    it('creates a single tile credits', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "credits": {
+                title: "some attribution"
+            },
+            "singleTile": true,
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().getUrl()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
     });
 
     it('creates a single tile wms layer for openlayers map ratio', (done) => {

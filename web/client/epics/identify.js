@@ -6,34 +6,100 @@
  * LICENSE file in the root directory of this source tree.
 */
 const Rx = require('rxjs');
-const {get} = require('lodash');
+const { get } = require('lodash');
+const axios = require('../libs/ajax');
 
+const uuid = require('uuid');
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
+    exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
-const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults} = require('../actions/mapInfo');
-
-const {closeFeatureGrid} = require('../actions/featuregrid');
-const {CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint} = require('../actions/map');
+const { closeFeatureGrid } = require('../actions/featuregrid');
+const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
-const {MAP_CONFIG_LOADED} = require('../actions/config');
-const {stopGetFeatureInfoSelector} = require('../selectors/mapinfo');
-const {centerToMarkerSelector} = require('../selectors/layers');
-const {mapSelector} = require('../selectors/map');
-const {boundingMapRectSelector} = require('../selectors/maplayout');
-const {centerToVisibleArea, isInsideVisibleArea} = require('../utils/CoordinatesUtils');
-const {getCurrentResolution, parseLayoutValue} = require('../utils/MapUtils');
+const { MAP_CONFIG_LOADED } = require('../actions/config');
+const { stopGetFeatureInfoSelector, queryableLayersSelector, identifyOptionsSelector } = require('../selectors/mapinfo');
+const { centerToMarkerSelector } = require('../selectors/layers');
+const { mapSelector } = require('../selectors/map');
+const { boundingMapRectSelector } = require('../selectors/maplayout');
+const { centerToVisibleArea, isInsideVisibleArea } = require('../utils/CoordinatesUtils');
+const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
+const MapInfoUtils = require('../utils/MapInfoUtils');
+
+/**
+ * Sends a GetFeatureInfo request and dispatches the right action
+ * in case of success, error or exceptions.
+ *
+ * @param basePath {string} base path to the service
+ * @param requestParams {object} map of params for a getfeatureinfo request.
+ */
+const getFeatureInfo = (basePath, requestParams, lMetaData, options = {}) => {
+    const param = { ...options, ...requestParams };
+    const reqId = uuid.v1();
+    return Rx.Observable.defer(() => axios.get(basePath, { params: param }))
+        .map((response) =>
+            response.data.exceptions
+                ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
+                : loadFeatureInfo(reqId, response.data, requestParams, lMetaData)
+        )
+        .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
+        .startWith(newMapInfoRequest(reqId, param));
+};
+
 
 /**
  * Epics for Identify and map info
  * @name epics.identify
  * @type {Object}
  */
-
 module.exports = {
+    /**
+     * Triggers data load on FEATURE_INFO_CLICK events
+     */
+    getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
+        action$.ofType(FEATURE_INFO_CLICK).switchMap(({ point }) => {
+            const queryableLayers = queryableLayersSelector(getState());
+            if (queryableLayers.length === 0) {
+                return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
+            }
+            // TODO: make it in the application state
+            const excludeParams = ["SLD_BODY"];
+            const includeOptions = [
+                "buffer",
+                "cql_filter",
+                "filter",
+                "propertyName"
+            ];
+            const out$ = Rx.Observable.from((queryableLayers))
+                .mergeMap(layer => {
+                    const { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                    if (url) {
+                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams));
+                    }
+                    return Rx.Observable.of(getVectorInfo(layer, request, metadata));
+                });
+            // NOTE: multiSelection is inside the event
+            // TODO: move this flag in the application state
+            if (point && point.modifiers && point.modifiers.ctrl === true && point.multiSelection) {
+                return out$;
+            }
+            return out$.startWith(purgeMapInfoResults());
+
+        }),
+    /**
+     * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because
+     * it's managed by the layer itself (e.g. annotations). So the marker have to be hidden.
+     */
+    handleMapInfoMarker: (action$) =>
+        action$.ofType(FEATURE_INFO_CLICK)
+            .map(({ layer }) => layer
+                ? hideMapinfoMarker()
+                : showMapinfoMarker()
+            ),
     closeFeatureGridFromIdentifyEpic: (action$) =>
         action$.ofType(LOAD_FEATURE_INFO, GET_VECTOR_INFO)
-        .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid());
-        }),
+            .switchMap(() => {
+                return Rx.Observable.of(closeFeatureGrid());
+            }),
     /**
      * Check if something is editing in feature info.
      * If so, as to the proper tool to close (annotations)
