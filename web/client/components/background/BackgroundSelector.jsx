@@ -93,7 +93,7 @@ class BackgroundSelector extends React.Component {
         }
         return thumb && thumb.CurrentNewThumbnail && decodeURIComponent(thumb.CurrentNewThumbnail) || thumb && thumb.source;
     };
-    // get the associated thumbnail for the Modal 
+    // get the associated thumbnail for the Modal
     getThumb = (layer) => {
         return this.props.thumbURL || this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
         (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
@@ -104,7 +104,7 @@ class BackgroundSelector extends React.Component {
     getListThumb = (layer) => {
         return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
         (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
-        layer.source || this.props.thumbs.unknown;;
+        layer.source || this.props.thumbs.unknown;
     };
 
     getIcons = (side, frame, margin, vertical) => {
@@ -125,11 +125,11 @@ class BackgroundSelector extends React.Component {
         return {pagination, listSize, visibleIconsLength};
     };
 updatedLayer = (layer) => {
-    if (this.props.deletedId && layer.CurrentNewThumbnail === undefined){
-        return omit(this.props.CurrentModalParams,['source','CurrentThumbnailData'])
+    if (this.props.deletedId && layer.CurrentNewThumbnail === undefined) {
+        return omit(this.props.CurrentModalParams, ['source', 'CurrentThumbnailData']);
     }
-    const output = assign({},this.props.CurrentModalParams, {source: this.props.CurrentModalParams.CurrentNewThumbnail } )
-    return  omit(output,['CurrentThumbnailData', 'CurrentNewThumbnail'])
+    const output = assign({}, this.props.CurrentModalParams, {source: this.props.CurrentModalParams.CurrentNewThumbnail } );
+    return omit(output, ['CurrentThumbnailData', 'CurrentNewThumbnail']);
 }
     renderBackgroundSelector = () => {
         const configuration = assign({
@@ -183,7 +183,7 @@ updatedLayer = (layer) => {
                     editing = {this.props.editing}
                     add = {false}
                     thumbURL= {src}
-                    onUpdate= { parameter => this.props.addBackgroundProperties(parameter,false)}
+                    onUpdate= { parameter => this.props.addBackgroundProperties(parameter, false)}
                     CurrentModalParams= {CurrentModalParams}
                     modalParams={editedLayer}
                     onClose={() => {
@@ -192,13 +192,16 @@ updatedLayer = (layer) => {
                     }}
                     onSave={(layerModal) => {
 
-                        if (this.props.deletedId && layerModal.CurrentNewThumbnail === undefined){
+                        if (this.props.deletedId && layerModal.CurrentNewThumbnail === undefined) {
                             this.props.updateNode(layerModal.id, "layers", {source: undefined});
-                        } 
-
+                        }
+                        // clear thumbnail data
                         this.props.removeThumbnail(this.props.deletedId ? editedLayer.id : undefined);
+                        // adding new properties to backgroundSelector state
                         this.props.addBackgroundProperties( assign({}, editedLayer, this.props.CurrentModalParams), false);
+                        // updating layer properties in layer state
                         this.props.updateNode(this.props.CurrentModalParams.id, "layers", this.updatedLayer(layerModal));
+                        // clear state objects for modal and backgroundSelector properties
                         this.props.onEditBackgroundProperties(false);
                         this.props.clearModal();
                         this.forceUpdate();

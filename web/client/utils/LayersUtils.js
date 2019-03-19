@@ -465,7 +465,7 @@ const LayersUtils = {
             hidden: layer.hidden || false,
             origin: layer.origin,
             thematic: layer.thematic,
-            thumbId: layer.thumbId,
+            thumbId: layer.thumbId
         },
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {});

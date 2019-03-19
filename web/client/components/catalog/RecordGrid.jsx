@@ -39,7 +39,7 @@ class RecordGrid extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
         removeThumbnail: PropTypes.func,
-        updateParams:PropTypes.func,
+        updateParams: PropTypes.func,
         additionalParameters: PropTypes.array
     };
 

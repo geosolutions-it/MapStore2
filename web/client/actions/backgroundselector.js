@@ -80,11 +80,11 @@ function clearModalParameters() {
         type: CLEAR_MODAL_PARAMETERS
     };
 }
-function updateParams (params) {
+function updateParams(params) {
     return {
-        type:UPDATE_BACKGROUND_LAYER_PARAMETER,
+        type: UPDATE_BACKGROUND_LAYER_PARAMETER,
         params
-    }
+    };
 }
 
 

@@ -27,7 +27,8 @@ class ModalMock extends React.Component{
         editing: PropTypes.bool,
         deletedId: PropTypes.string,
         thumbURL: PropTypes.string,
-        addParameter: PropTypes.func
+        addParameter: PropTypes.func,
+        CurrentModalParams: PropTypes.object
     };
     static defaultProps = {
         updateThumbnail: () => {},
@@ -44,24 +45,6 @@ class ModalMock extends React.Component{
 
     };
     state = {id: 0, additionalParameters: []};
-    addAdditionalParameter = (event, key, id)=> {
-        this.setState({
-            additionalParameters: 
-            this.state.additionalParameters.map( v => { 
-                if (v.id === id) { 
-                    v[key] = event.target.value 
-                }; 
-                return v; 
-            })
-        })
-    }
-    addParameters = () => new Promise((resolve) => {
-        var obj = { source: this.props.thumbURL};
-
-        this.state.additionalParameters.map( parameter => obj[parameter.param]= parameter.val);
-    
-        return resolve(obj);
-    })
 
     render() {
         return (<ResizableModal
@@ -73,17 +56,23 @@ class ModalMock extends React.Component{
             {
                 text: this.props.add ? 'Add' : 'Save',
                 bsStyle: 'primary',
-                onClick: () => { 
+                onClick: () => {
                     this.addParameters()
                     .then( (obj)=> {
                         // add the edited source and additional parameters
-                        this.props.editing ? assign({},this.props.modalParams, assign({}, this.props.CurrentModalParams, assign ({}, obj, {source: this.props.thumbURL}))) :
-                        this.props.modalParams.showModal ?
-                        this.props.onUpdate(assign({},this.props.modalParams, {
-                            showModal: assign({},  this.props.modalParams.showModal, obj)}))
-                        : this.props.onUpdate(assign({},this.props.modalParams,obj));
-                        this.props.onSave(this.props.modalParams)});
-                    this.props.resetParameters([]); 
+                        if (this.props.editing) {
+                            assign({}, this.props.modalParams, assign({}, obj, {source: this.props.thumbURL}));
+                        }else {
+                            if (this.props.modalParams.showModal) {
+                                this.props.onUpdate(assign({}, this.props.modalParams, {
+                                    showModal: assign({}, this.props.modalParams.showModal, obj)}));
+                            }else {
+                                this.props.onUpdate(assign({}, this.props.modalParams, obj));
+                            }
+                        }
+                        this.props.onSave(this.props.modalParams);
+                    });
+                    this.props.resetParameters([]);
                 }
             }
         ]}>
@@ -104,22 +93,22 @@ class ModalMock extends React.Component{
                     value={ !this.props.CurrentModalParams && this.props.modalParams ? this.props.modalParams.title :
                         this.props.CurrentModalParams && this.props.CurrentModalParams.title}
                     placeholder="Enter displayed name"
-                    onChange={event => 
-                        this.props.add ? this.props.onUpdate( assign({},this.props.modalParams, {
+                    onChange={event =>
+                        this.props.add ? this.props.onUpdate( assign({}, this.props.modalParams, {
                         showModal: assign({}, this.props.modalParams.showModal, {title: event.target.value})
                     } ) ) :
-                    this.props.onUpdate( assign({},this.props.modalParams, {title: event.target.value} ) )
+                    this.props.onUpdate( assign({}, this.props.modalParams, {title: event.target.value} ) )
                 }/>
             </FormGroup>
             <FormGroup controlId="formControlsSelect">
                 <ControlLabel>Format</ControlLabel>
                 <Select
-                    onChange = {event => 
-                        this.props.add ? this.props.onUpdate( assign({},this.props.modalParams, {
+                    onChange = {event =>
+                        this.props.add ? this.props.onUpdate( assign({}, this.props.modalParams, {
                         showModal: assign({}, this.props.modalParams.showModal, {format: event.value})
                     } ) )
                     :
-                    this.props.onUpdate( assign({},this.props.modalParams, {format: event.value} ) )
+                    this.props.onUpdate( assign({}, this.props.modalParams, {format: event.value} ) )
                 }
                     value={!this.props.CurrentModalParams && this.props.modalParams ? this.props.modalParams.format || "image/png" :
                     this.props.CurrentModalParams && this.props.CurrentModalParams.format || "image/png"}
@@ -144,7 +133,7 @@ class ModalMock extends React.Component{
             <FormGroup>
                 <ControlLabel>Style</ControlLabel>
                 <Select
-                    onChange = {event => this.props.onUpdate( assign({},this.props.modalParams, {
+                    onChange = {event => this.props.onUpdate( assign({}, this.props.modalParams, {
                         showModal: assign({}, this.props.modalParams.showModal, {style: event.value})
                     } ) )
                     }
@@ -172,7 +161,7 @@ class ModalMock extends React.Component{
                         <Glyphicon glyph="plus"/>
                     </Button>
                 </div>
-                {this.state.additionalParameters.map((val, i) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
+                {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
                 <FormControl style={{flex: 1, marginRight: 8}} placeholder="Parameter" onChange={ e => this.addAdditionalParameter(e, 'param', val.id)}/>
                 <FormControl style={{flex: 1, marginRight: 8}} placeholder="Value" onChange={ e => this.addAdditionalParameter(e, 'val', val.id)}/>
                 <Button onClick={() => this.setState({additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)} ) } className="square-button-md" style={{borderColor: 'transparent'}}><Glyphicon glyph="trash"/></Button>
@@ -181,6 +170,24 @@ class ModalMock extends React.Component{
         </Form>
     </ResizableModal>);
     }
+    addAdditionalParameter = (event, key, id)=> {
+        this.setState({
+            additionalParameters:
+            this.state.additionalParameters.map( v => {
+                if (v.id === id) {
+                    v[key] = event.target.value;
+                }
+                return v;
+            })
+        });
+    }
+    addParameters = () => new Promise((resolve) => {
+        var obj = { source: this.props.thumbURL};
+
+        this.state.additionalParameters.map( parameter => obj[parameter.param] = parameter.val);
+
+        return resolve(obj);
+    })
 }
 
 module.exports = ModalMock;

@@ -26,7 +26,7 @@ function backgroundselector(state = null, action) {
     }
     case ADD_BACKGROUND_PROPERTIES: {
         // replace the background properties if it already exist
-        let backgrounds = filter(state.backgrounds || [], ((o) =>  action.modalParams && o.id !== action.modalParams.id)) || [];
+        let backgrounds = filter(state.backgrounds || [], ((o) => action.modalParams && o.id !== action.modalParams.id)) || [];
 
         const newBackgrounds = backgrounds.concat(action.modalParams);
         return assign({}, state, {
@@ -65,7 +65,6 @@ function backgroundselector(state = null, action) {
 
         return assign({}, state, {
             backgrounds: updatedBackgrounds,
-            lastRemovedId: undefined,
             modalParams: assign({}, state.modalParams, {
                 CurrentNewThumbnail: action.thumbnail || state.modalParams && state.modalParams.CurrentNewThumbnail,
                 CurrentThumbnailData: action.thumbnailData || state.modalParams && state.modalParams.CurrentThumbnailData }),
@@ -76,7 +75,7 @@ function backgroundselector(state = null, action) {
     case CLEAR_MODAL_PARAMETERS : {
         return assign({}, state, {
             modalParams: undefined
-        }) 
+        });
     }
     case REMOVE_BACKGROUND_THUMBNAIL: {
         const backgrounds = state.backgrounds || [];
@@ -100,7 +99,7 @@ function backgroundselector(state = null, action) {
     }
     case UPDATE_BACKGROUND_LAYER_PARAMETER: {
         return assign({}, state,
-            {additionalParameters : action.params});
+            {additionalParameters: action.params});
     }
     default:
         return state;

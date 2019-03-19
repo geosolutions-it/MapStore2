@@ -54,14 +54,14 @@ class RecordItem extends React.Component {
         unsavedChanges: PropTypes.bool,
         deletedId: PropTypes.string,
         removeThumbnail: PropTypes.func,
-        updateParams:PropTypes.func,
-        additionalParameters: PropTypes.array,
-        
+        updateParams: PropTypes.func,
+        additionalParameters: PropTypes.array
+
     };
 
     static defaultProps = {
         modalParams: {showModal: false},
-        additionalParameters:[],
+        additionalParameters: [],
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
@@ -195,7 +195,7 @@ class RecordItem extends React.Component {
                     className="record-button"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
-                    onClick={() => { 
+                    onClick={() => {
                         const id = uuidv1();
                         if (this.props.source === 'backgroundSelector') {
                             const modalFeatures = {showModal: assign({}, esri, {type: 'esri'}), id};
@@ -203,7 +203,7 @@ class RecordItem extends React.Component {
                         } else {
                             this.addEsriLayer();
                         }
-                         }}
+                    }}
                     key="addwmtsLayer">
                         <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
                 </Button>
@@ -271,15 +271,14 @@ class RecordItem extends React.Component {
                     {!disabled ? this.renderButtons(record) : 'Added to background selector'}
                 </div>
                 <ModalMock
-                    addParameters = {i => console.log(i)}
                     deletedId = {this.props.deletedId}
                     unsavedChanges = {this.props.unsavedChanges}
                     thumbURL ={this.props.modalParams && this.props.modalParams.CurrentNewThumbnail}
                     add
-                    onUpdate= { parameter => this.props.onAddBackgroundProperties(parameter,true)}
+                    onUpdate= { parameter => this.props.onAddBackgroundProperties(parameter, true)}
                     modalParams={this.props.modalParams}
                     onClose={() => this.props.onAddBackgroundProperties(null, false)}
-                    onSave={(s) => {
+                    onSave={() => {
                         if (this.props.modalParams.showModal.type === 'wms') {
                             this.addLayer(this.props.modalParams.showModal, this.props.modalParams.id);
                         }
