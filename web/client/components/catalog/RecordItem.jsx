@@ -53,12 +53,15 @@ class RecordItem extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
         deletedId: PropTypes.string,
-        removeThumbnail: PropTypes.func
+        removeThumbnail: PropTypes.func,
+        updateParams:PropTypes.func,
+        additionalParameters: PropTypes.array,
         
     };
 
     static defaultProps = {
         modalParams: {showModal: false},
+        additionalParameters:[],
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
@@ -71,6 +74,7 @@ class RecordItem extends React.Component {
         onPropertiesChange: () => {},
         onLayerChange: () => {},
         removeThumbnail: () => {},
+        updateParams: () => {},
         style: {},
         showGetCapLinks: false,
         zoomToLayer: true,
@@ -267,16 +271,17 @@ class RecordItem extends React.Component {
                     {!disabled ? this.renderButtons(record) : 'Added to background selector'}
                 </div>
                 <ModalMock
+                    addParameters = {i => console.log(i)}
                     deletedId = {this.props.deletedId}
                     unsavedChanges = {this.props.unsavedChanges}
                     thumbURL ={this.props.modalParams && this.props.modalParams.CurrentNewThumbnail}
                     add
+                    onUpdate= { parameter => this.props.onAddBackgroundProperties(parameter,true)}
                     modalParams={this.props.modalParams}
                     onClose={() => this.props.onAddBackgroundProperties(null, false)}
-                    onSave={() => {
-
+                    onSave={(s) => {
                         if (this.props.modalParams.showModal.type === 'wms') {
-                            this.addLayer(this.props.modalParams.showModal, this.props.modalParams.id, this.props.modalParams.showModal.title);
+                            this.addLayer(this.props.modalParams.showModal, this.props.modalParams.id);
                         }
 
                         if (this.props.modalParams.showModal.type === 'wmts') {
@@ -303,7 +308,7 @@ class RecordItem extends React.Component {
         this.setState({[key]: status});
     };
 
-    addLayer = (wms, id, title) => {
+    addLayer = (wms, id) => {
         const removeParams = ["request", "layer", "layers", "service", "version"].concat(this.props.authkeyParamNames);
         const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), removeParams );
         const allowedSRS = buildSRSMap(wms.SRS);
@@ -314,11 +319,12 @@ class RecordItem extends React.Component {
                 removeParams,
                 url,
                 id,
-                title,
+                title: wms.title,
                 catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
             };
             const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
             let layerProperties = assign({}, properties, LayerGroup);
+
             this.props.onLayerAdd(
                 recordToLayer(this.props.record, "wms", layerProperties));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
@@ -329,7 +335,7 @@ class RecordItem extends React.Component {
         }
     };
 
-    addwmtsLayer = (wmts, id, title) => {
+    addwmtsLayer = (wmts, id) => {
         const removeParams = ["request", "layer"].concat(this.props.authkeyParamNames);
         const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), removeParams);
         const allowedSRS = buildSRSMap(wmts.SRS);
@@ -340,7 +346,7 @@ class RecordItem extends React.Component {
                 removeParams,
                 url,
                 id,
-                title
+                title: wmts.title
             };
             const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
             let layerProperties = assign({}, properties, LayerGroup);

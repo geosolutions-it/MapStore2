@@ -381,6 +381,7 @@ const CatalogUtils = {
         return {
             id,
             type: type,
+            format: record.format,
             requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
             style: record.style,
             url: layerURL,

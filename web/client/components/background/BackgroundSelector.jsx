@@ -15,7 +15,7 @@ const PreviewIcon = require('./PreviewIcon');
 const ModalMock = require('./ModalMock');
 
 const PropTypes = require('prop-types');
-const {head, last} = require('lodash');
+const {head, last, find, omit} = require('lodash');
 require('./css/background.css');
 
 class BackgroundSelector extends React.Component {
@@ -46,7 +46,9 @@ class BackgroundSelector extends React.Component {
         editing: PropTypes.bool,
         removeThumbnail: PropTypes.func,
         deletedId: PropTypes.string,
-        CurrentModalParams: PropTypes.object
+        CurrentModalParams: PropTypes.object,
+        updateNode: PropTypes.func,
+        clearModal: PropTypes.func
     };
 
     static defaultProps = {
@@ -69,7 +71,8 @@ class BackgroundSelector extends React.Component {
         onLayerChange: () => {},
         onStartChange: () => {},
         onAdd: () => {},
-        onRemove: () => {}
+        onRemove: () => {},
+        clearModal: () => {}
     };
 
     state = {
@@ -90,17 +93,24 @@ class BackgroundSelector extends React.Component {
         }
         return thumb && thumb.CurrentNewThumbnail && decodeURIComponent(thumb.CurrentNewThumbnail) || thumb && thumb.source;
     };
+    // get the associated thumbnail for the Modal 
     getThumb = (layer) => {
+        return this.props.thumbURL || this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
+        (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
+        layer.source || (this.props.thumbURL && decodeURIComponent(this.props.thumbURL)) || this.props.thumbs.unknown;
+    };
+
+    // get the thumbnail of the BackgroundSelector list and the BackgroundSelector Button
+    getListThumb = (layer) => {
         return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
         (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
-
-        layer.source || (this.props.thumbURL && decodeURIComponent(this.props.thumbURL)) || this.props.thumbs.unknown;
+        layer.source || this.props.thumbs.unknown;;
     };
 
     getIcons = (side, frame, margin, vertical) => {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
-            let thumb = this.getThumb(layer);
-            return <PreviewIcon onEdit={(iconLayer) => this.setState({showModal: iconLayer, additionalParameters: []})} vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
+            let thumb = this.getListThumb(layer);
+            return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
         }) : [];
     };
 
@@ -114,7 +124,13 @@ class BackgroundSelector extends React.Component {
 
         return {pagination, listSize, visibleIconsLength};
     };
-
+updatedLayer = (layer) => {
+    if (this.props.deletedId && layer.CurrentNewThumbnail === undefined){
+        return omit(this.props.CurrentModalParams,['source','CurrentThumbnailData'])
+    }
+    const output = assign({},this.props.CurrentModalParams, {source: this.props.CurrentModalParams.CurrentNewThumbnail } )
+    return  omit(output,['CurrentThumbnailData', 'CurrentNewThumbnail'])
+}
     renderBackgroundSelector = () => {
         const configuration = assign({
             side: 78,
@@ -158,8 +174,8 @@ class BackgroundSelector extends React.Component {
             height: buttonSize,
             width: buttonSize * visibleIconsLength
         };
-        const CurrentModalParams = last(this.props.backgroundList);
-        const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id));
+        const CurrentModalParams = find(this.props.backgroundList, current => current.id === layer.id) || last(this.props.backgroundList);
+        const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id)) || layer;
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
                  <ModalMock
@@ -167,25 +183,32 @@ class BackgroundSelector extends React.Component {
                     editing = {this.props.editing}
                     add = {false}
                     thumbURL= {src}
+                    onUpdate= { parameter => this.props.addBackgroundProperties(parameter,false)}
                     CurrentModalParams= {CurrentModalParams}
                     modalParams={editedLayer}
                     onClose={() => {
                         this.props.onEditBackgroundProperties(false);
-                        this.props.removeThumbnail(null);
+                        this.props.removeThumbnail(undefined);
                     }}
-                    onSave={() => {
+                    onSave={(layerModal) => {
 
-                        this.props.onPropertiesChange(editedLayer);
-                        // this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
-                        this.props.removeThumbnail(this.props.deletedId ? editedLayer.id : null);
+                        if (this.props.deletedId && layerModal.CurrentNewThumbnail === undefined){
+                            this.props.updateNode(layerModal.id, "layers", {source: undefined});
+                        } 
+
+                        this.props.removeThumbnail(this.props.deletedId ? editedLayer.id : undefined);
                         this.props.addBackgroundProperties( assign({}, editedLayer, this.props.CurrentModalParams), false);
+                        this.props.updateNode(this.props.CurrentModalParams.id, "layers", this.updatedLayer(layerModal));
                         this.props.onEditBackgroundProperties(false);
+                        this.props.clearModal();
+                        this.forceUpdate();
                     }}
                     updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(editedLayer.id) : this.props.onUpdateThumbnail(data, url, false, editedLayer.id)}
                    />
                 <div className={'background-plugin-position'} style={this.props.style}>
                     <PreviewButton
                     onEdit={() => {
+                        this.props.onUpdateThumbnail(null, editedLayer.source, false, editedLayer.id);
                         this.props.onEditBackgroundProperties(true);
                     }}
                     onRemove={(id, type, lay) => {
@@ -195,7 +218,7 @@ class BackgroundSelector extends React.Component {
                         this.props.onPropertiesChange(nextLayer.id, {visibility: true});
                         this.props.onLayerChange('currentLayer', {...nextLayer});
                         this.props.onLayerChange('tempLayer', {...nextLayer});
-                    }} layers={this.props.layers} enabledCatalog={this.props.enabledCatalog} currentLayer={this.props.currentLayer} onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')} showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
+                    }} layers={this.props.layers} enabledCatalog={this.props.enabledCatalog} currentLayer={this.props.currentLayer} onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')} showLabel={configuration.label} src={this.getListThumb(layer)} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                     <div className="background-list-container" style={listContainerStyle}>
                         <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
                     </div>

@@ -30,13 +30,13 @@ const {
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
-const {updateNode, removeNode} = require('../actions/layers');
-const {updateThumbnail, backgroundThumbnailsUpdated, BACKGROUND_THUMBS_UPDATED, clearBackgrounds} = require('../actions/backgroundselector');
+const {updateNode} = require('../actions/layers');
+const {updateThumbnail, backgroundThumbnailsUpdated, clearModalParameters, BACKGROUND_THUMBS_UPDATED, clearBackgrounds} = require('../actions/backgroundselector');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector
 } = require('../selectors/maps');
-const {backgroundsSourceListSelector, backgroundListSelector } = require('../selectors/backgroundselector');
+const {backgroundsSourceListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector, mapSelector
@@ -392,7 +392,7 @@ const mapSaveBackgroundThumbnails = (action$) =>
                 return Rx.Observable.from(results.map( (response) => response.response && response.backgroundID ? updateMap(response.response, response.backgroundID) : Rx.Observable.of(response))).mergeAll();
             })
             .concat(
-            Rx.Observable.of(clearBackgrounds(), backgroundThumbnailsUpdated(action.data.thumbName, action.data.metadata, action.data.data, removedResources))
+            Rx.Observable.of(clearBackgrounds(), clearModalParameters(), backgroundThumbnailsUpdated(action.data.thumbName, action.data.metadata, action.data.data, removedResources))
             .catch(e => Rx.Observable.of(thumbnailError(null, e))));
     });
 
