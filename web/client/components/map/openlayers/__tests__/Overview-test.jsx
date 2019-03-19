@@ -46,4 +46,28 @@ describe('Openlayers Overview component', () => {
         const overview = domMap.getElementsByClassName('ol-overviewmap');
         expect(overview.length).toBe(1);
     });
+
+    it('testing mouse events', () => {
+        const ov = ReactDOM.render(<Overview map={map}/>, document.getElementById("container"));
+        expect(ov).toExist();
+        const domMap = map.getViewport();
+        const overview = domMap.getElementsByClassName('ol-overviewmap');
+        expect(overview.length).toBe(1);
+        ov.box.onmousedown({
+            pageX: 1,
+            pageY: 1
+        });
+        ov.box.onmousemove({
+            pageX: 3,
+            pageY: 3,
+            stopPropagation: () => {},
+            preventDefault: () => {}
+        });
+        ov.box.onmouseup({
+            pageX: 3,
+            pageY: 3
+        });
+        expect(ov.box.onmouseup).toBe(null);
+        expect(ov.box.onmousemove).toBe(null);
+    });
 });

@@ -61,14 +61,11 @@ module.exports = {
         },
         properties: {}
     },
-    geomCollFeature: {
+    lineFeature3: {
         type: "Feature",
         geometry: {
-            type: "GeometryCollection",
-            geometries: [{
-                type: "LineString",
-                coordinates: [[0, 1], [2, 4]]
-            }]
+            type: "LineString",
+            coordinates: [[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]
         },
         properties: {}
     },
@@ -77,6 +74,17 @@ module.exports = {
         geometry: {
             type: "LineString",
             coordinates: [[1, 1], [55, 5]]
+        },
+        properties: {}
+    },
+    geomCollFeature: {
+        type: "Feature",
+        geometry: {
+            type: "GeometryCollection",
+            geometries: [{
+                type: "LineString",
+                coordinates: [[0, 1], [2, 4]]
+            }]
         },
         properties: {}
     },

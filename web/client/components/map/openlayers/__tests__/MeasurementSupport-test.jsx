@@ -15,6 +15,7 @@ const MeasurementSupport = require('../MeasurementSupport');
 const {
     lineFeature,
     lineFeature2,
+    lineFeature3,
     invalidLineFeature,
     polyFeature,
     invalidPolyFeature
@@ -315,6 +316,16 @@ describe('Openlayers MeasurementSupport', () => {
                   geometry: new ol.geom.LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
                   name: 'My line with 3 points'
             })
+        });
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                feature: lineFeature3,
+                lineMeasureEnabled: true,
+                updatedByUI: true,
+                showLabel: true
+            },
+            uom
         });
         map.dispatchEvent({
             type: 'pointermove',

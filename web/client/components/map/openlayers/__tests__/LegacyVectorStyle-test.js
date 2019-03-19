@@ -8,6 +8,8 @@
 const expect = require('expect');
 const LegacyVectorStyle = require('../LegacyVectorStyle');
 const ol = require('openlayers');
+const {geomCollFeature} = require('../../../../test-resources/drawsupport/features');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 
 describe('Test LegacyVectorStyle', () => {
     beforeEach((done) => {
@@ -388,4 +390,26 @@ describe('Test LegacyVectorStyle', () => {
         expect(olStroke.getWidth()).toBe(10);
         expect(olStroke.getLineDash()).toEqual(['10', '5']);
     });
+
+    it('test getStyle with GeometryCollection', () => {
+        const styleFunc = LegacyVectorStyle.getStyle({
+            features: [geomCollFeature],
+            style: {
+                color: "ff0000",
+                opacity: 0.5,
+                ...DEFAULT_ANNOTATIONS_STYLES
+            }
+        }, false, ["textValue"]);
+        expect(styleFunc).toExist();
+
+        const styleGenerated = styleFunc(new ol.Feature({
+            geometry: new ol.geom.GeometryCollection([
+                new ol.geom.LineString([[1, 2], [1, 3]]),
+                new ol.geom.Polygon([[1, 2], [1, 3], [1, 1], [1, 2]]),
+                new ol.geom.Point([1, 20])
+            ])
+        }));
+        expect(styleGenerated).toExist();
+    });
+
 });
