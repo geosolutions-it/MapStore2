@@ -10,12 +10,13 @@ const {withHandlers} = require('recompose');
 
 module.exports = withHandlers({
     zoomToFeature: ({ zoomToExtent = () => {}, currentFeature = [], currentFeatureCrs: crs }) => () => {
-        if (currentFeature.length > 0) {
+        // zoom only to features that has some geometry (featureInfo returns features with no geometry for raster data).
+        // layer groups may have both features with no geometry and with geometry.
+        const zoomFeatures = currentFeature.filter(({ geometry }) => !!geometry);
+        if (zoomFeatures.length > 0) {
             const extent = bbox({
                 type: "FeatureCollection",
-                // zoom only to features that has some geometry (featureInfo returns features with no geometry for raster data).
-                // layer groups may have both
-                features: currentFeature.filter( ({geometry}) => !!geometry)
+                features: zoomFeatures
             });
             if (extent) {
                 zoomToExtent(extent, crs);
