@@ -13,7 +13,7 @@ const { createSelector, createStructuredSelector } = require('reselect');
 const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
 const {parseURN} = require('../utils/CoordinatesUtils');
-
+const MapInfoUtils = require('../utils/MapInfoUtils');
 
 const {queryPanelSelector} = require('./controls');
 
@@ -95,9 +95,19 @@ const indexSelector = state => state.mapInfo.index;
 
 const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
 
+/**
+ * Gets only the valid responses
+ */
+const validResponsesSelector = createSelector(
+    responsesSelector,
+    generalInfoFormatSelector,
+    (responses, format) => {
+        const validatorFormat = MapInfoUtils.getValidator(format);
+        return validatorFormat.getValidResponses(responses);
+    });
 
 const currentResponseSelector = createSelector(
-    responsesSelector, indexSelector,
+    validResponsesSelector, indexSelector,
     (responses = [], index = 0) => responses[index]
 );
 const currentFeatureSelector = state => {
@@ -109,9 +119,12 @@ const currentFeatureCrsSelector = state => {
     return parseURN(get(currentResponse, 'data.crs')) || get(currentResponse, 'layerMetadata.featuresCrs');
 };
 
-
+/**
+ * Returns the correct style based on the geometry type, to use in the highlight
+ * @param {feature} f the feature in json format
+ */
 const getStyleForFeature = (f = {}) =>
-     f.style
+    f.style
         || (f.geometry && (f.geometry.type === "Point" || f.geometry.type === "MultiPoint"))
             // point style circle requires radius (it's strange circle should be a default)
             ? {

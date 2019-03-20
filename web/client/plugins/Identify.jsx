@@ -76,6 +76,7 @@ const DefaultViewer = compose(
     loadingState(({responses}) => responses.length === 0)
 )(require('../components/data/identify/DefaultViewer'));
 
+
 const identifyDefaultProps = defaultProps({
     formatCoord: "decimal",
     enabled: false,
