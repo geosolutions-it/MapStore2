@@ -20,11 +20,16 @@ const { closeAnnotations } = require('../actions/annotations');
 const { MAP_CONFIG_LOADED } = require('../actions/config');
 const { stopGetFeatureInfoSelector, identifyOptionsSelector } = require('../selectors/mapInfo');
 const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
+const { modeSelector } = require('../selectors/featuregrid');
 const { mapSelector } = require('../selectors/map');
 const { boundingMapRectSelector } = require('../selectors/maplayout');
 const { centerToVisibleArea, isInsideVisibleArea } = require('../utils/CoordinatesUtils');
 const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
 const MapInfoUtils = require('../utils/MapInfoUtils');
+const { parseURN } = require('../utils/CoordinatesUtils');
+const gridEditingSelector = state => modeSelector(state) === 'EDIT';
+
+const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditingSelector(state);
 
 /**
  * Sends a GetFeatureInfo request and dispatches the right action
@@ -43,11 +48,12 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
             ? Rx.Observable.forkJoin(
                     retrieveFlow(param),
                 retrieveFlow({ ...param, info_format: "application/json"})
-                    .map(res => res.data.features)
+                    .map(res => res.data)
                     .catch(() => Rx.Observable.empty()) // errors on geometry retrieval are ignored
-                ).map(([response, features]) => ({
+                ).map(([response, data ]) => ({
                     ...response,
-                    features
+                    features: data && data.features,
+                    featuresCrs: data && data.crs && parseURN(data.crs)
                 }))
             // simply get the feature info
             : retrieveFlow(param)
@@ -55,7 +61,7 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
         .map((response) =>
             response.data.exceptions
                 ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
-                : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features })
+                : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs })
         )
         .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
         .startWith(newMapInfoRequest(reqId, param));
@@ -133,7 +139,7 @@ module.exports = {
     onMapClick: (action$, store) =>
         action$.ofType(CLICK_ON_MAP).filter(() => {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
-            return disableAlwaysOn || !stopGetFeatureInfoSelector(store.getState() || {});
+            return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
         .map(({point, layer}) => featureInfoClick(point, layer)),
     /**

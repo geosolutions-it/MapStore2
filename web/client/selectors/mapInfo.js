@@ -9,9 +9,11 @@
 const { get, isArray } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
-const {modeSelector} = require('./featuregrid');
+
 const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
+const {parseURN} = require('../utils/CoordinatesUtils');
+
 
 const {queryPanelSelector} = require('./controls');
 
@@ -54,7 +56,6 @@ const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
-const gridEditingSelector = createSelector(modeSelector, (mode) => mode === 'EDIT');
 const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
 
@@ -68,14 +69,12 @@ const stopGetFeatureInfoSelector = createSelector(
     mapInfoDisabledSelector,
     measureActiveSelector,
     drawSupportActiveSelector,
-    gridEditingSelector,
     annotationsEditingSelector,
     queryPanelSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing, isQueryPanelActive) =>
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, isQueryPanelActive) =>
         isMapInfoDisabled
         || !!isMeasureActive
         || isDrawSupportActive
-        || isGridEditing
         || !!isAnnotationsEditing
         || !!isQueryPanelActive
     );
@@ -105,27 +104,49 @@ const currentFeatureSelector = state => {
     const currentResponse = currentResponseSelector(state) || {};
     return get(currentResponse, 'data.features') || get(currentResponse, 'layerMetadata.features');
 };
+const currentFeatureCrsSelector = state => {
+    const currentResponse = currentResponseSelector(state) || {};
+    return parseURN(get(currentResponse, 'data.crs')) || get(currentResponse, 'layerMetadata.featuresCrs');
+};
 
+
+const getStyleForFeature = (f = {}) =>
+     f.style
+        || (f.geometry && (f.geometry.type === "Point" || f.geometry.type === "MultiPoint"))
+            // point style circle requires radius (it's strange circle should be a default)
+            ? {
+                    color: '#3388ff',
+                    weight: 4,
+                    radius: 4,
+                    dashArray: '',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2
+                }
+            // no radius means normal polygon, line or other
+            : {
+                    color: '#3388ff',
+                    weight: 4,
+                    dashArray: '',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2
+                };
 const applyMapInfoStyle = f => ({
-    ...f, style: f.style || {
-        color: '#ffcc33',
-        opacity: 1,
-        radius: 100,
-        weight: 3,
-        fillColor: '#ffffff',
-        fillOpacity: 0.2
-    }});
+    ...f,
+    style: getStyleForFeature(f)
+});
 
 const clickedPointWithFeaturesSelector = createSelector(
     clickPointSelector,
     currentFeatureSelector,
+    currentFeatureCrsSelector,
     showMarkerSelector,
-    (clickPoint, features, showMarker) => showMarker && clickPoint
+    (clickPoint, features, featuresCrs, showMarker) => showMarker && clickPoint
         ? {
             ...clickPoint,
-            features: features && isArray(features) &&
-            features
-                .map(applyMapInfoStyle)
+            featuresCrs,
+            features: features && isArray(features)
+                && features
+                    .map(applyMapInfoStyle)
         }
         : undefined
 

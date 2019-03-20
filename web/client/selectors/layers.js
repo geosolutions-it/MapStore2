@@ -45,23 +45,30 @@ const layerSelectorWithMarkers = createSelector(
         });
         newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
-            const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", { ...coords, features: markerPosition.features }, "marker", {
+            // A separate layer is required because the SRS is different
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfoHighLight", { features: markerPosition.features }, undefined, {
                 overrideOLStyle: true,
-                style: {
-                    ...defaultIconStyle, ...{
-                        color: '#ffcc33',
-                        opacity: 1,
-                        weight: 3,
-                        fillColor: '#ffffff',
-                        fillOpacity: 0.2
-                    } }
+                featuresCrs: markerPosition.featuresCrs,
+                style: { ...defaultIconStyle, ...{
+                    color: '#3388ff',
+                    weight: 4,
+                    dashArray: '',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2
+                }}
             }));
+            const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
         if ( highlightPoint ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(highlightPoint.latlng) : highlightPoint.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("Annotations", coords));
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", {
+                ...coords
+
+            }));
         }
+
         if (geocoder && geocoder.markerPosition) {
             let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",

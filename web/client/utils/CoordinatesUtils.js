@@ -667,6 +667,23 @@ const CoordinatesUtils = {
             timeout: 2000
         });
     },
+    /**
+     * Parse the URN to get EPSG code
+     * @param {object|string} crs object or string
+     * @return {string} EPSG in the form EPSG:NNNN
+     */
+    parseURN: (crs) => {
+        const code = crs && crs.properties && crs.properties.name || crs && crs.name || crs;
+
+        let crsCode = code && last(code.split(":"));
+
+        if (crsCode === "WGS 1984" || crsCode === "WGS84") {
+            return "EPSG:4326";
+        } else if (crsCode) {
+            // TODO check is valid EPSG code
+            return "EPSG:" + crsCode;
+        }
+    },
     determineCrs,
     parseString: (str) => {
         const coord = str.split(' ');
