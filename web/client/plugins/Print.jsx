@@ -316,7 +316,7 @@ module.exports = {
                                         {this.renderBody()}
                                     </Panel>);
                                 }
-                                return (<Dialog id="mapstore-print-panel" style={this.props.style}>
+                                return (<Dialog id="mapstore-print-panel" style={{ left: "17%", top: "50px", zIndex: 1990, ...this.props.style}}>
                                     <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                                     {this.renderBody()}
                                 </Dialog>);
