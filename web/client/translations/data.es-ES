@@ -508,6 +508,8 @@
         "identifyTitle": "Informaciones de las features",
         "identifyNoQueryableLayers": "Noy hay capas a las que poder preguntar",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyStopHighlightingFeatures": "Dejar de resaltar features",
+        "identifyHighlightFeatures": "Resaltar features",
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
         "identifyRevGeocodeModalTitle": "Dirección",

@@ -508,6 +508,8 @@
         "identifyTitle": "Feature Info",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordinates",
+        "identifyStopHighlightingFeatures": "Don't highlight features",
+        "identifyHighlightFeatures": "Highlight features",
         "identifyShowCoordinateEditor": "Show coordinate editor",
         "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Address",
