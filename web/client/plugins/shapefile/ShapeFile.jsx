@@ -50,10 +50,10 @@ class ShapeFile extends React.Component {
         wrapWithPanel: false,
         panelStyle: {
             minWidth: "360px",
-            zIndex: 100,
+            zIndex: 1995,
             position: "absolute",
             overflow: "visible",
-            top: "100px",
+            top: "30px",
             left: "calc(50% - 150px)"
         },
         panelClassName: "toolbar-panel",
