@@ -28,7 +28,9 @@ var {
     toggleMapInfoState,
     updateCenterToMarker,
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
-    CHANGE_FORMAT, changeFormat
+    CHANGE_FORMAT, changeFormat,
+    CHANGE_INDEX, changeIndex,
+    HIGHLIGHT_FEATURE, highlightFeature
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -118,5 +120,19 @@ describe('Test correctness of the map actions', () => {
         const retval = changeFormat(format);
         expect(retval.type).toBe(CHANGE_FORMAT);
         expect(retval.format).toBe(format);
+    });
+    it('highlightFeature', () => {
+        const retVal = highlightFeature(true);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(HIGHLIGHT_FEATURE);
+        expect(highlightFeature().enabled).toBeFalsy();
+        expect(highlightFeature(true).enabled).toBe(true);
+    });
+    it('changeIndex', () => {
+        const retVal = changeIndex(true);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(CHANGE_INDEX);
+        expect(changeIndex().index).toBeFalsy();
+        expect(changeIndex(1).index).toBe(1);
     });
 });

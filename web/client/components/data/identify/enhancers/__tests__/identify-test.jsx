@@ -8,7 +8,7 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const {identifyLifecycle, switchControlledIdentify} = require('../identify');
+const {identifyLifecycle} = require('../identify');
 const TestUtils = require('react-dom/test-utils');
 
 describe("test identify enhancers", () => {

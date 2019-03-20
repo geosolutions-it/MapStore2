@@ -109,17 +109,6 @@ describe('Test mapinfo selectors', () => {
         });
         expect(props).toEqual(true);
     });
-    it('test stopGetFeatureInfoSelector with grid editing', () => {
-        const props = stopGetFeatureInfoSelector({
-            mapInfo: {
-                enabled: true
-            },
-            featuregrid: {
-                mode: "EDIT"
-            }
-        });
-        expect(props).toEqual(true);
-    });
     it('test mapInfoConfigurationSelector', () => {
         const infoFormat = "text/html";
         const showEmptyMessageGFI = true;
