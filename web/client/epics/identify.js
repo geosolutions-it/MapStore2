@@ -45,7 +45,7 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
     const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
     return ((
         attachJSON && param.info_format !== "application/json" )
-            // add the flow to get the geometry
+            // add the flow to get the for highlight/zoom
             ? Rx.Observable.forkJoin(
                     retrieveFlow(param),
                 retrieveFlow({ ...param, info_format: "application/json"})
@@ -56,7 +56,7 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
                     features: data && data.features,
                     featuresCrs: data && data.crs && parseURN(data.crs)
                 }))
-            // simply get the feature info
+            // simply get the feature info, geometry is already there
             : retrieveFlow(param)
         )
         .map((response) =>
@@ -143,6 +143,9 @@ module.exports = {
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
         .map(({point, layer}) => featureInfoClick(point, layer)),
+    /**
+     * triggers click again when highlight feature is enabled, to download the feature.
+     */
     featureInfoClickOnHighligh: (action$, {getState = () => {}} = {}) =>
         action$.ofType(HIGHLIGHT_FEATURE)
             .filter(({enabled}) =>

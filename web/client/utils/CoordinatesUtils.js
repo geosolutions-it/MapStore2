@@ -673,7 +673,7 @@ const CoordinatesUtils = {
      * @return {string} EPSG in the form EPSG:NNNN
      */
     parseURN: (crs) => {
-        const code = crs && crs.properties && crs.properties.name || crs && crs.name || crs;
+        const code = crs && crs.properties && crs.properties.name || crs && crs.name || crs && crs.properties && crs.properties.code || crs;
 
         let crsCode = code && last(code.split(":"));
 
