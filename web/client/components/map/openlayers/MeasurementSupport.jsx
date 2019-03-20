@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {round, isEqual, dropRight, slice} = require('lodash');
+const {round, isEqual, dropRight, head, last} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
@@ -81,8 +81,8 @@ class MeasurementSupport extends React.Component {
             // filtering out the invalid coords because causing errors/crash when reprojecting
             let props = set("measurement.feature.geometry.coordinates", (isPolygon(ft) ? ft.geometry.coordinates[0] : ft.geometry.coordinates)
                 .filter((c, i) => {
-                    const isValid = this.filterValidCoords(c).length;
-                    if (!isValid) {
+                    const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+                    if (!isValid /*&& !isPolygon(ft) || isPolygon(ft) && this.validateCoords([ft.geometry.coordinates[0][0]]).length === 0 && this.validateCoords([last(ft.geometry.coordinates[0])]).length === 0 && i === 0*/) {
                         // if some coords are invalid we then need to add it to the feature before updating the state
                         this.invalidCoordinates.push({coord: c, index: i});
                     }
@@ -90,7 +90,11 @@ class MeasurementSupport extends React.Component {
                 }
             ), newProps);
             if (isPolygon(ft)) {
-                props = set("measurement.feature.geometry.coordinates", [props.measurement.feature.geometry.coordinates], props);
+                if (props.measurement.feature.geometry.coordinates.length >= 4 && isEqual(head(props.measurement.feature.geometry.coordinates), last(props.measurement.feature.geometry.coordinates))) {
+                    props = set("measurement.feature.geometry.coordinates", [dropRight(props.measurement.feature.geometry.coordinates)], props);
+                } else {
+                    props = set("measurement.feature.geometry.coordinates", [props.measurement.feature.geometry.coordinates], props);
+                }
             }
             this.updateFeatures(props);
         }
@@ -108,7 +112,7 @@ class MeasurementSupport extends React.Component {
         return null;
     }
 
-    filterValidCoords = (coords) => {
+    validateCoords = (coords) => {
         return coords.filter((c) => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
     }
     /**
@@ -416,18 +420,22 @@ class MeasurementSupport extends React.Component {
         // checks for invalid coords that needs to be re-added
         if (this.invalidCoordinates.length) {
             let newCoords;
+            let coords;
+            if (props.measurement.geomType === 'Polygon') {
+                coords = newMeasureState.feature.geometry.coordinates[0];
+            } else {
+                coords = newMeasureState.feature.geometry.coordinates;
+            }
+            newCoords = [...coords];
             this.invalidCoordinates.forEach(c => {
-                let coords = props.measurement.geomType === 'Polygon' ? newMeasureState.feature.geometry.coordinates[0] : newMeasureState.feature.geometry.coordinates;
-                newCoords = slice(coords, 0, c.index);
-                newCoords = newCoords.concat([c.coord]);
-                newCoords = newCoords.concat(slice(coords, c.index, coords.length));
-                newMeasureState = set("feature.geometry.coordinates", props.measurement.geomType === 'Polygon' ? [newCoords] : newCoords, newMeasureState);
+                newCoords.splice(c.index, 0, c.coord);
             });
+            newMeasureState = set("feature.geometry.coordinates", props.measurement.geomType === 'Polygon' ? [newCoords] : newCoords, newMeasureState);
 
             if (props.measurement.geomType === 'Polygon' && (!isEqual(newCoords[0], newCoords[newCoords.length - 1]))) {
-                let validCoords = this.filterValidCoords(newCoords);
+                let validCoords = this.validateCoords(newCoords);
                 if (validCoords.length) {
-                    newCoords = newCoords.concat([validCoords[0]]);
+                    newCoords = newCoords.concat([newCoords[0]]);
                 }
                 newMeasureState = set("feature.geometry.coordinates", [newCoords], newMeasureState);
             }
