@@ -17,8 +17,8 @@ const MapInfoUtils = require('../../../../utils/MapInfoUtils');
  * @class
  */
 const defaultViewerHandlers = withHandlers({
-    onNext: ({index = 0, setIndex = () => {}, responses, format, validator}) => () => {
-        setIndex(Math.min(validator(format).getValidResponses(responses).length - 1, index + 1));
+    onNext: ({index = 0, setIndex = () => {}, validResponses = []}) => () => {
+        setIndex(Math.min(validResponses.length - 1, index + 1));
     },
     onPrevious: ({index, setIndex = () => {}}) => () => {
         setIndex(Math.max(0, index - 1));

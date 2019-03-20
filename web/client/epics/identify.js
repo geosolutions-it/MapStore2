@@ -11,18 +11,19 @@ const { get } = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
-const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, HIGHLIGHT_FEATURE, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
 const { MAP_CONFIG_LOADED } = require('../actions/config');
-const { stopGetFeatureInfoSelector, identifyOptionsSelector } = require('../selectors/mapInfo');
+const { stopGetFeatureInfoSelector, identifyOptionsSelector, clickPointSelector, clickLayerSelector } = require('../selectors/mapInfo');
 const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
 const { modeSelector } = require('../selectors/featuregrid');
 const { mapSelector } = require('../selectors/map');
 const { boundingMapRectSelector } = require('../selectors/maplayout');
+const { isHighlightEnabledSelector } = require('../selectors/mapInfo');
 const { centerToVisibleArea, isInsideVisibleArea } = require('../utils/CoordinatesUtils');
 const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
 const MapInfoUtils = require('../utils/MapInfoUtils');
@@ -38,7 +39,7 @@ const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditin
  * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON = true) => {
+const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON) => {
     const param = { ...appParams, ...requestParams };
     const reqId = uuid.v1();
     const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
@@ -94,7 +95,7 @@ module.exports = {
                 .mergeMap(layer => {
                     const { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
                     if (url) {
-                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams));
+                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()) );
                     }
                     return Rx.Observable.of(getVectorInfo(layer, request, metadata));
                 });
@@ -142,6 +143,13 @@ module.exports = {
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
         .map(({point, layer}) => featureInfoClick(point, layer)),
+    featureInfoClickOnHighligh: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(HIGHLIGHT_FEATURE)
+            .filter(({enabled}) =>
+                enabled
+                && clickPointSelector(getState())
+            )
+            .map( () => featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState()))),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.

@@ -8,15 +8,15 @@
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, showEmptyMessageGFISelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector } = require('../selectors/mapInfo');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex} = require('../actions/mapInfo');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex, highlightFeature} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 
 
@@ -33,25 +33,24 @@ const Message = require('./locale/Message');
 
 require('./identify/identify.css');
 
-const selector = createSelector([
-    (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
-    responsesSelector,
-    (state) => state.mapInfo && state.mapInfo.requests || [],
-    generalInfoFormatSelector,
-    mapSelector,
-    layersSelector,
-    clickPointSelector,
-    (state) => state.mapInfo && state.mapInfo.showModalReverse,
-    (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
-    (state) => state.mapInfo && state.mapInfo.warning,
-    currentLocaleSelector,
-    state => mapLayoutValuesSelector(state, {height: true}),
-    (state) => state.mapInfo && state.mapInfo.formatCoord,
-    (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
-    state => showEmptyMessageGFISelector(state)
-], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor, showEmptyMessageGFI) => ({
-    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor, showEmptyMessageGFI
-}));
+const selector = createStructuredSelector({
+    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    responses: responsesSelector,
+    validResponses: validResponsesSelector,
+    requests: (state) => state.mapInfo && state.mapInfo.requests || [],
+    format: generalInfoFormatSelector,
+    map: mapSelector,
+    layers: layersSelector,
+    point: clickPointSelector,
+    showModalReverse: (state) => state.mapInfo && state.mapInfo.showModalReverse,
+    reverseGeocodeData: (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
+    warning: (state) => state.mapInfo && state.mapInfo.warning,
+    currentLocale: currentLocaleSelector,
+    dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
+    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
+    showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
+    showEmptyMessageGFI: state => showEmptyMessageGFISelector(state)
+});
 // result panel
 
 /**
@@ -123,7 +122,8 @@ const identifyDefaultProps = defaultProps({
     size: 660,
     getButtons: defaultIdentifyButtons,
     showFullscreen: false,
-    validator: MapInfoUtils.getValidator,
+    validResponses: [],
+    validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors
     zIndex: 1050
 });
 
@@ -191,6 +191,14 @@ const IdentifyPlugin = compose(
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
     }),
+    // highlight support
+    connect(
+        createStructuredSelector({
+            highlight: isHighlightEnabledSelector
+        }), {
+            highlightFeature
+        }
+    ),
     identifyDefaultProps,
     identifyIndex,
     defaultViewerHandlers,

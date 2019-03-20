@@ -10,7 +10,6 @@ const React = require('react');
 const {Row, Col} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
-const MapInfoUtils = require('../../../utils/MapInfoUtils');
 const DockablePanel = require('../../misc/panels/DockablePanel');
 const GeocodeViewer = require('./GeocodeViewer');
 const ResizableModal = require('../../misc/ResizableModal');
@@ -42,7 +41,7 @@ module.exports = props => {
         position,
         size,
         fluid,
-        validator = MapInfoUtils.getValidator,
+        validResponses,
         viewer = () => null,
         getButtons = () => [],
         showFullscreen,
@@ -76,9 +75,6 @@ module.exports = props => {
         /* the following formula apply the converion */
         lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
     }
-
-    const validatorFormat = validator(format);
-    const validResponses = validatorFormat.getValidResponses(responses);
     const Viewer = viewer;
     const buttons = getButtons({...props, lngCorrected, validResponses, latlng});
     const missingResponses = requests.length - responses.length;

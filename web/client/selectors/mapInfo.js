@@ -50,6 +50,7 @@ const measureActiveSelector = (state) => get(state, "controls.measure.enabled") 
  * @param {object} state the state
  */
 const clickPointSelector = state => state && state.mapInfo && state.mapInfo.clickPoint;
+const clickLayerSelector = state => state && state.mapInfo && state.mapInfo.clickLayer;
 const showMarkerSelector = state => state && state.mapInfo && state.mapInfo.showMarker;
 
 const drawSupportActiveSelector = (state) => {
@@ -150,17 +151,20 @@ const applyMapInfoStyle = f => ({
 
 const clickedPointWithFeaturesSelector = createSelector(
     clickPointSelector,
+    isHighlightEnabledSelector,
     currentFeatureSelector,
     currentFeatureCrsSelector,
     showMarkerSelector,
-    (clickPoint, features, featuresCrs, showMarker) => showMarker && clickPoint
-        ? {
-            ...clickPoint,
-            featuresCrs,
-            features: features && isArray(features)
-                && features
-                    .map(applyMapInfoStyle)
-        }
+    (clickPoint, highlight, features, featuresCrs, showMarker) => showMarker && clickPoint
+        ? highlight
+            ? {
+                ...clickPoint,
+                featuresCrs,
+                features: features && isArray(features)
+                    && features
+                        .map(applyMapInfoStyle)
+            }
+            : clickPoint
         : undefined
 
 );
@@ -170,9 +174,11 @@ module.exports = {
     isMapInfoOpen,
     indexSelector,
     responsesSelector,
+    validResponsesSelector,
     clickedPointWithFeaturesSelector,
     identifyOptionsSelector,
     clickPointSelector,
+    clickLayerSelector,
     generalInfoFormatSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector,

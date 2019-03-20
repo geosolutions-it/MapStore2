@@ -7,7 +7,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = props => [
+module.exports = ({
+    showHighlightFeatureButton,
+    highlight,
+    highlightFeature = () => {},
+    ...props
+}) => [
     {
         glyph: 'arrow-left',
         tooltipId: 'wizard.prev',
@@ -32,6 +37,12 @@ module.exports = props => [
         onClick: () => {
             props.onToggleShowCoordinateEditor(props.showCoordinateEditor);
         }
+    }, {
+        glyph: 'map-filter',
+        visible: showHighlightFeatureButton,
+        tooltip: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
+        bsStyle: highlight ? "success" : "primary",
+        onClick: () => highlightFeature(!highlight)
     },
     {
         glyph: 'arrow-right',
