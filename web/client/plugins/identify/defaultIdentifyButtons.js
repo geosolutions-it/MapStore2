@@ -9,8 +9,10 @@
 
 module.exports = ({
     showHighlightFeatureButton,
+    currentFeature,
     highlight,
     highlightFeature = () => {},
+    zoomToFeature = () => {},
     ...props
 }) => [
     {
@@ -43,8 +45,17 @@ module.exports = ({
         tooltip: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
         bsStyle: highlight ? "success" : "primary",
         onClick: () => highlightFeature(!highlight)
-    },
-    {
+    }, {
+        glyph: 'zoom-to',
+        visible:
+            highlight
+            && !!currentFeature
+            && currentFeature.length > 0
+            // has at least 1 geometry
+            && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
+        tooltip: "identifyZoomToFeature",
+        onClick: zoomToFeature
+    }, {
         glyph: 'arrow-right',
         tooltipId: 'wizard.next',
         visible: !props.viewerOptions.header && props.validResponses.length > 1 && props.index < props.validResponses.length - 1,

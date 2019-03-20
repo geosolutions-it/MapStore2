@@ -90,9 +90,9 @@ const identifyOptionsSelector = createStructuredSelector({
         currentLocale: currentLocaleSelector
     });
 
-const isHighlightEnabledSelector = state => state.mapInfo.highlight;
+const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state.mapInfo.highlight;
 
-const indexSelector = state => state.mapInfo.index;
+const indexSelector = (state = {}) => state && state.mapInfo && state.mapInfo.index;
 
 const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
 
@@ -175,6 +175,8 @@ module.exports = {
     indexSelector,
     responsesSelector,
     validResponsesSelector,
+    currentFeatureSelector,
+    currentFeatureCrsSelector,
     clickedPointWithFeaturesSelector,
     identifyOptionsSelector,
     clickPointSelector,

@@ -45,7 +45,7 @@ const layerSelectorWithMarkers = createSelector(
         });
         newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
-            // A separate layer is required because the SRS is different
+            // A separate layer for feature highlight is required because the SRS is different
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfoHighLight", { features: markerPosition.features }, undefined, {
                 overrideOLStyle: true,
                 featuresCrs: markerPosition.featuresCrs,

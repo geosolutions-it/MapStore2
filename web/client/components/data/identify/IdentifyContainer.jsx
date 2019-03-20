@@ -41,7 +41,7 @@ module.exports = props => {
         position,
         size,
         fluid,
-        validResponses,
+        validResponses = [],
         viewer = () => null,
         getButtons = () => [],
         showFullscreen,

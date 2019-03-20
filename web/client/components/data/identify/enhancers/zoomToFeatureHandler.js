@@ -1,0 +1,25 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const bbox = require('@turf/bbox');
+const {withHandlers} = require('recompose');
+
+module.exports = withHandlers({
+    zoomToFeature: ({ zoomToExtent = () => {}, currentFeature = [], currentFeatureCrs: crs }) => () => {
+        if (currentFeature.length > 0) {
+            const extent = bbox({
+                type: "FeatureCollection",
+                // zoom only to features that has some geometry (featureInfo returns features with no geometry for raster data).
+                // layer groups may have both
+                features: currentFeature.filter( ({geometry}) => !!geometry)
+            });
+            if (extent) {
+                zoomToExtent(extent, crs);
+            }
+        }
+    }
+});

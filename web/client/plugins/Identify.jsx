@@ -13,11 +13,11 @@ const assign = require('object-assign');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex, highlightFeature} = require('../actions/mapInfo');
-const {changeMousePointer} = require('../actions/map');
+const { changeMousePointer, zoomToExtent} = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -28,6 +28,7 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
 const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
+const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
 const defaultIdentifyButtons = require('./identify/defaultIdentifyButtons');
 const Message = require('./locale/Message');
 
@@ -192,12 +193,18 @@ const IdentifyPlugin = compose(
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
     }),
     // highlight support
-    connect(
-        createStructuredSelector({
-            highlight: isHighlightEnabledSelector
-        }), {
-            highlightFeature
-        }
+    compose(
+        connect(
+            createStructuredSelector({
+                highlight: isHighlightEnabledSelector,
+                currentFeature: currentFeatureSelector,
+                currentFeatureCrs: currentFeatureCrsSelector
+            }), {
+                highlightFeature,
+                zoomToExtent
+            }
+        ),
+        zoomToFeatureHandler
     ),
     identifyDefaultProps,
     identifyIndex,
