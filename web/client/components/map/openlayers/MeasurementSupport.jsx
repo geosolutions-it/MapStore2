@@ -91,6 +91,10 @@ class MeasurementSupport extends React.Component {
             ), newProps);
             if (isPolygon(ft)) {
                 if (props.measurement.feature.geometry.coordinates.length >= 4 && isEqual(head(props.measurement.feature.geometry.coordinates), last(props.measurement.feature.geometry.coordinates))) {
+                    /**
+                    removing the last coord in order to manage correctly invalid coords
+                    the first coord is added again before updating the state
+                    */
                     props = set("measurement.feature.geometry.coordinates", [dropRight(props.measurement.feature.geometry.coordinates)], props);
                 } else {
                     props = set("measurement.feature.geometry.coordinates", [props.measurement.feature.geometry.coordinates], props);
@@ -384,10 +388,9 @@ class MeasurementSupport extends React.Component {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
                 if (this.sketchFeature.getGeometry().getCoordinates().length > 3) {
                     /*
-                    * In some cases, if you are quick to change direction after the second point
-                    * the draw interaction does not stop, then we remove the third drawn point
-                    * from the draw interaction sketch feature.
-                    * The 4th point in sketchfeature is the one where the mouse is located
+                    * In some cases, if the user is too quick changing direction after the creation of the second point
+                    * (before the draw interaction stops) a new point is created in the interaction and have to be removed
+                    * note: `> 3` is because the 4th point of the sketchFeature is the current mouse position
                     */
                     this.drawInteraction.removeLastPoint();
                 }

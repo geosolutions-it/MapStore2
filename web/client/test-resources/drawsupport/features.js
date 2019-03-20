@@ -111,6 +111,14 @@ module.exports = {
         },
         properties: {}
     },
+    invalidFirstCoordPolyFeature: {
+        type: "Feature",
+        geometry: {
+            type: "Polygon",
+            coordinates: [[[0, ""], [0, 5], [10, 5], [0, 1], [0, 5]]]
+        },
+        properties: {}
+    },
     circle: {
         type: 'FeatureCollection',
         id: '36835090-23ad-11e8-9839-9bab136db9a3',

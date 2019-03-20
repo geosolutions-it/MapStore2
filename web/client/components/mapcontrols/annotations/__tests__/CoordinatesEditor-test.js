@@ -636,4 +636,81 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 8, lon: 8 });
     });
 
+    it('CoordinatesEditor as LineString, 4 rows, only invalid rows are not disabled', () => {
+        const components = [{
+            lat: 5,
+            lon: ""
+        }, {
+            lat: 8,
+            lon: 8
+        }, {
+            lat: 8,
+            lon: 8
+        },
+        {
+            lat: "",
+            lon: ""
+        }];
+
+        const editor = ReactDOM.render(
+            <CoordinatesEditor
+                {...testHandlers}
+                isMouseEnterEnabled
+                isMouseLeaveEnabled
+                type="LineString"
+                format="decimal"
+                properties={{isValidFeature: true}}
+                components={components}
+            />, document.getElementById("container")
+        );
+        expect(editor).toExist();
+
+        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        expect(buttons.length).toBe(7);
+        expect(buttons[3].disabled).toBe(false);
+        expect(buttons[4].disabled).toBe(true);
+        expect(buttons[5].disabled).toBe(true);
+        expect(buttons[6].disabled).toBe(false);
+    });
+    it('CoordinatesEditor as Polygon, 5 rows, only invalid rows are not disabled', () => {
+        const components = [{
+            lat: 5,
+            lon: ""
+        }, {
+            lat: 7,
+            lon: 7
+        }, {
+            lat: 8,
+            lon: 8
+        }, {
+            lat: 6,
+            lon: 6
+        },
+        {
+            lat: "",
+            lon: ""
+        }];
+
+        const editor = ReactDOM.render(
+            <CoordinatesEditor
+                {...testHandlers}
+                isMouseEnterEnabled
+                isMouseLeaveEnabled
+                type="Polygon"
+                format="decimal"
+                properties={{isValidFeature: true}}
+                components={components}
+            />, document.getElementById("container")
+        );
+        expect(editor).toExist();
+
+        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        expect(buttons.length).toBe(8);
+        expect(buttons[3].disabled).toBe(false);
+        expect(buttons[4].disabled).toBe(true);
+        expect(buttons[5].disabled).toBe(true);
+        expect(buttons[6].disabled).toBe(true);
+        expect(buttons[7].disabled).toBe(false);
+    });
+
 });

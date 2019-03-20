@@ -18,7 +18,9 @@ const {
     lineFeature3,
     invalidLineFeature,
     polyFeature,
-    invalidPolyFeature
+    invalidPolyFeature,
+    polygonFt,
+    invalidFirstCoordPolyFeature
 } = require('../../../../test-resources/drawsupport/features');
 
 describe('Openlayers MeasurementSupport', () => {
@@ -332,6 +334,38 @@ describe('Openlayers MeasurementSupport', () => {
             coordinate: [100, 400]
         });
         expect(cmp.helpTooltip.getPosition()).toEqual([100, 400]);
+
+    });
+
+    it('test drawing a polygon with 4 vertices and then invalidating the first coord', () => {
+        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
+        let cmp = renderWithDrawing();
+        expect(cmp).toExist();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Polygon",
+                feature: polygonFt,
+                areaMeasureEnabled: true,
+                updatedByUI: true,
+                showLabel: true
+            },
+            uom
+        });
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Polygon",
+                feature: invalidFirstCoordPolyFeature,
+                areaMeasureEnabled: true,
+                updatedByUI: true,
+                showLabel: true
+            },
+            uom
+        });
+        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
+        expect(spyOnChangeMeasurementState.calls.length).toBe(2);
+        const args = spyOnChangeMeasurementState.calls[1].arguments;
+        expect(args[0].feature.geometry.coordinates[0].length).toBe(5);
+        expect(args[0].feature.geometry.coordinates).toEqual([[[0, ""], [0, 5], [10, 5], [0, 1], [0, ""]]]);
 
     });
 
