@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ol = require('openlayers');
-var Overview = require('../Overview');
+const expect = require('expect');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ol = require('openlayers');
+const Overview = require('../Overview');
 
 
 describe('Openlayers Overview component', () => {

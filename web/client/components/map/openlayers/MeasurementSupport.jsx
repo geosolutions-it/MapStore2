@@ -81,7 +81,7 @@ class MeasurementSupport extends React.Component {
             // filtering out the invalid coords because causing errors/crash when reprojecting
             let props = set("measurement.feature.geometry.coordinates", (isPolygon(ft) ? ft.geometry.coordinates[0] : ft.geometry.coordinates)
                 .filter((c, i) => {
-                    const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+                    const isValid = this.filterValidCoords(c).length;
                     if (!isValid) {
                         // if some coords are invalid we then need to add it to the feature before updating the state
                         this.invalidCoordinates.push({coord: c, index: i});
@@ -108,6 +108,9 @@ class MeasurementSupport extends React.Component {
         return null;
     }
 
+    filterValidCoords = (coords) => {
+        return coords.filter((c) => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
+    }
     /**
      * This method takes the feature from properties and
      * it updated the drawn feature and its measure tooltip
@@ -375,6 +378,15 @@ class MeasurementSupport extends React.Component {
             bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], getProjectionCode(props.map));
             if (sketchCoords.length > 2) {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
+                if (this.sketchFeature.getGeometry().getCoordinates().length > 3) {
+                    /*
+                    * In some cases, if you are quick to change direction after the second point
+                    * the draw interaction does not stop, then we remove the third drawn point
+                    * from the draw interaction sketch feature.
+                    * The 4th point in sketchfeature is the one where the mouse is located
+                    */
+                    this.drawInteraction.removeLastPoint();
+                }
                 this.sketchFeature.getGeometry().setCoordinates([sketchCoords[0], sketchCoords[1]]);
                 this.drawInteraction.sketchFeature_ = this.sketchFeature;
                 this.drawInteraction.finishDrawing();
@@ -413,7 +425,10 @@ class MeasurementSupport extends React.Component {
             });
 
             if (props.measurement.geomType === 'Polygon' && (!isEqual(newCoords[0], newCoords[newCoords.length - 1]))) {
-                newCoords = newCoords.concat([newCoords[0]]);
+                let validCoords = this.filterValidCoords(newCoords);
+                if (validCoords.length) {
+                    newCoords = newCoords.concat([validCoords[0]]);
+                }
                 newMeasureState = set("feature.geometry.coordinates", [newCoords], newMeasureState);
             }
         }
@@ -429,8 +444,11 @@ class MeasurementSupport extends React.Component {
     };
 
     calculateGeodesicArea = (coordinates) => {
-        let reprojectedCoordinatesIn4326 = this.reprojectedCoordinatesIn4326(coordinates);
-        return Math.abs(wgs84Sphere.geodesicArea(reprojectedCoordinatesIn4326));
+        if (coordinates.length >= 4 ) {
+            let reprojectedCoordinatesIn4326 = this.reprojectedCoordinatesIn4326(coordinates);
+            return Math.abs(wgs84Sphere.geodesicArea(reprojectedCoordinatesIn4326));
+        }
+        return 0;
     };
 
     /**

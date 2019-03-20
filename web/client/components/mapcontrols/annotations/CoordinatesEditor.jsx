@@ -237,7 +237,7 @@ class CoordinateEditor extends React.Component {
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
-                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
+                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
                         onChange={this.change}
                         onMouseEnter={(val) => {
                             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
@@ -294,12 +294,14 @@ class CoordinateEditor extends React.Component {
             </Grid>
         );
     }
-    validateCoordinates = (components = this.props.components, remove = false) => {
+    validateCoordinates = (components = this.props.components, remove = false, idx) => {
         if (components && components.length) {
             const validComponents = components.filter(validateCoords);
 
             if (remove) {
-                return validComponents.length > this.props.componentsValidation[this.props.type].min;
+                return validComponents.length > this.props.componentsValidation[this.props.type].min ||
+                // if there are at least the min number of valid points, then you can delete the other invalid ones
+                validComponents.length >= this.props.componentsValidation[this.props.type].min && !validateCoords(components[idx]);
             }
             return validComponents.length >= this.props.componentsValidation[this.props.type].min;
         }
@@ -325,7 +327,7 @@ class CoordinateEditor extends React.Component {
     addCoordPolygon = (components) => {
         if (this.props.type === "Polygon") {
             const validComponents = components.filter(validateCoords);
-            return components.concat([validComponents[0]]);
+            return components.concat([validComponents.length ? validComponents[0] : {lat: "", lon: ""}]);
         }
         return components;
     }

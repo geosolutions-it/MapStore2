@@ -253,7 +253,8 @@ class MeasureComponent extends React.Component {
     render() {
         const geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
         let coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
-        if (geomType.indexOf('polygon') !== -1) {
+        // avoid to render the last coord of a polygon
+        if (geomType.indexOf('polygon') !== -1 && coords.length >= 4) {
             coords = dropRight(coords);
         }
         return (
