@@ -82,7 +82,7 @@ class MeasurementSupport extends React.Component {
             let props = set("measurement.feature.geometry.coordinates", (isPolygon(ft) ? ft.geometry.coordinates[0] : ft.geometry.coordinates)
                 .filter((c, i) => {
                     const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
-                    if (!isValid /*&& !isPolygon(ft) || isPolygon(ft) && this.validateCoords([ft.geometry.coordinates[0][0]]).length === 0 && this.validateCoords([last(ft.geometry.coordinates[0])]).length === 0 && i === 0*/) {
+                    if (!isValid) {
                         // if some coords are invalid we then need to add it to the feature before updating the state
                         this.invalidCoordinates.push({coord: c, index: i});
                     }
