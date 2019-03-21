@@ -13,6 +13,8 @@ const assign = require('object-assign');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
+const { mapTypeSelector } = require('../selectors/maptype');
+
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
 
@@ -146,6 +148,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.draggable {boolean} draggable info window, when modal
  * @prop cfg.viewerOptions {object}
+ * @prop cfg.showHighlightFeatureButton {boolean}
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
@@ -206,6 +209,8 @@ const IdentifyPlugin = compose(
         ),
         zoomToFeatureHandler
     ),
+    // disable with not supported mapTypes. TODO: remove when reproject (leaflet) and features draw available (cesium)
+    connect(createSelector(mapTypeSelector, mapType => ({mapType})), {}, ({mapType}, _, { showHighlightFeatureButton, ...props }) => ({...props, showHighlightFeatureButton: mapType === 'openlayers' && showHighlightFeatureButton}) ),
     identifyDefaultProps,
     identifyIndex,
     defaultViewerHandlers,
