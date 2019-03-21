@@ -42,7 +42,7 @@ module.exports = ({
     }, {
         glyph: 'map-filter',
         visible: showHighlightFeatureButton,
-        tooltip: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
+        tooltipId: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
         bsStyle: highlight ? "success" : "primary",
         onClick: () => highlightFeature(!highlight)
     }, {
@@ -53,7 +53,7 @@ module.exports = ({
             && currentFeature.length > 0
             // has at least 1 geometry
             && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
-        tooltip: "identifyZoomToFeature",
+        tooltipId: "identifyZoomToFeature",
         onClick: zoomToFeature
     }, {
         glyph: 'arrow-right',

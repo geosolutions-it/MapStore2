@@ -508,6 +508,7 @@
         "identifyTitle": "Informaciones de las features",
         "identifyNoQueryableLayers": "Noy hay capas a las que poder preguntar",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyZoomToFeature": "Zoom a la función",
         "identifyStopHighlightingFeatures": "Dejar de resaltar features",
         "identifyHighlightFeatures": "Resaltar features",
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",

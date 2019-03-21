@@ -79,6 +79,7 @@ class Feature extends React.Component {
                 id: props.msId,
                 ...ftGeometry
             }, {
+                    // reproject features from featureCrs
                     dataProjection: props.featuresCrs
             });
             this._feature.map(f => {

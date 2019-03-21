@@ -48,9 +48,9 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
             // add the flow to get the for highlight/zoom
             ? Rx.Observable.forkJoin(
                     retrieveFlow(param),
-                retrieveFlow({ ...param, info_format: "application/json"})
-                    .map(res => res.data)
-                    .catch(() => Rx.Observable.empty()) // errors on geometry retrieval are ignored
+                    retrieveFlow({ ...param, info_format: "application/json"})
+                        .map(res => res.data)
+                        .catch(() => Rx.Observable.of({})) // errors on geometry retrieval are ignored
                 ).map(([response, data ]) => ({
                     ...response,
                     features: data && data.features,

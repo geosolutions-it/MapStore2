@@ -508,6 +508,7 @@
         "identifyTitle": "Feature Info",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordinates",
+        "identifyZoomToFeature": "Zoom to feature",
         "identifyStopHighlightingFeatures": "Don't highlight features",
         "identifyHighlightFeatures": "Highlight features",
         "identifyShowCoordinateEditor": "Show coordinate editor",

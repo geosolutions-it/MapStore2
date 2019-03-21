@@ -508,6 +508,7 @@
         "identifyTitle": "Informazioni Sulle Feature",
         "identifyNoQueryableLayers": "Nessun livello interrogabile attivo",
         "identifyRevGeocodeHeader": "Coordinate",
+        "identifyStopHighlightingFeatures": "Zoom alla feature",
         "identifyStopHighlightingFeatures": "Non evidenziare le feature interrogate",
         "identifyHighlightFeatures": "Evidenzia le features interrogate",
         "identifyShowCoordinateEditor": "Mostra l'editor",
