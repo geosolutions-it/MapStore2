@@ -12,7 +12,6 @@ const { createSelector, createStructuredSelector } = require('reselect');
 
 const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
-const {parseURN} = require('../utils/CoordinatesUtils');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 
 const {queryPanelSelector} = require('./controls');
