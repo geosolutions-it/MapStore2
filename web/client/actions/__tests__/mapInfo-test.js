@@ -29,7 +29,7 @@ var {
     updateCenterToMarker,
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
-    CHANGE_INDEX, changeIndex,
+    CHANGE_PAGE, changePage,
     TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature
 } = require('../mapInfo');
 
@@ -128,11 +128,11 @@ describe('Test correctness of the map actions', () => {
         expect(toggleHighlightFeature().enabled).toBeFalsy();
         expect(toggleHighlightFeature(true).enabled).toBe(true);
     });
-    it('changeIndex', () => {
-        const retVal = changeIndex(true);
+    it('changePage', () => {
+        const retVal = changePage(true);
         expect(retVal).toExist();
-        expect(retVal.type).toBe(CHANGE_INDEX);
-        expect(changeIndex().index).toBeFalsy();
-        expect(changeIndex(1).index).toBe(1);
+        expect(retVal.type).toBe(CHANGE_PAGE);
+        expect(changePage().index).toBeFalsy();
+        expect(changePage(1).index).toBe(1);
     });
 });

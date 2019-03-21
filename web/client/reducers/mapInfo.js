@@ -23,7 +23,7 @@ const {
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
     TOGGLE_HIGHLIGHT_FEATURE,
-    CHANGE_INDEX,
+    CHANGE_PAGE,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     TOGGLE_EMPTY_MESSAGE_GFI,
@@ -75,7 +75,7 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             enabled: !state.enabled
         });
-    case CHANGE_INDEX: {
+    case CHANGE_PAGE: {
         return assign({}, state, {
             index: action.index
         });

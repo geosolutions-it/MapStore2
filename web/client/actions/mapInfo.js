@@ -25,7 +25,7 @@ const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
-const CHANGE_INDEX = 'IDENTIFY:CHANGE_INDEX';
+const CHANGE_PAGE = 'IDENTIFY:CHANGE_PAGE';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
@@ -202,9 +202,14 @@ function toggleHighlightFeature(enabled) {
     };
 }
 
-function changeIndex(index) {
+/**
+ * Changes the current page of the feature info.
+ * The index is relative only to valid responses, excluding invalid.(see validResponsesSelector)
+ * @param {number} index index of the page
+ */
+function changePage(index) {
     return {
-        type: CHANGE_INDEX,
+        type: CHANGE_PAGE,
         index
     };
 }
@@ -248,7 +253,7 @@ module.exports = {
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
     TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
-    CHANGE_INDEX, changeIndex,
+    CHANGE_PAGE, changePage,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,

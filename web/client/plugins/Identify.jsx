@@ -18,7 +18,7 @@ const { mapTypeSelector } = require('../selectors/maptype');
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex, toggleHighlightFeature} = require('../actions/mapInfo');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent} = require('../actions/map');
 
 
@@ -63,7 +63,7 @@ const identifyIndex = compose(
         connect(
             createSelector(indexSelector, (index) => ({ index })),
             {
-                setIndex: changeIndex
+                setIndex: changePage
             }
         ),
         defaultProps({
