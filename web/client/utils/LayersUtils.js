@@ -423,7 +423,7 @@ const LayersUtils = {
         };
     },
     saveLayer: (layer) => {
-        return {
+        return assign({
             id: layer.id,
             features: layer.features,
             format: layer.format,
@@ -464,9 +464,10 @@ const LayersUtils = {
             useForElevation: layer.useForElevation || false,
             hidden: layer.hidden || false,
             origin: layer.origin,
-            thematic: layer.thematic,
-            ...assign({}, layer.params ? {params: layer.params} : {})
-        };
+            thematic: layer.thematic
+        },
+        layer.params ? { params: layer.params } : {},
+        layer.credits ? { credits: layer.credits } : {});
     },
     /**
     * default regex rule for searching for a /geoserver/ string in a url
@@ -566,6 +567,11 @@ const LayersUtils = {
 
         }
         return layers;
+    },
+    creditsToAttribution: ({ imageUrl, link, title }) => {
+        // TODO: check if format is valid for an img (svg, for instance, may not work)
+        const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
+        return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
     }
 };
 
