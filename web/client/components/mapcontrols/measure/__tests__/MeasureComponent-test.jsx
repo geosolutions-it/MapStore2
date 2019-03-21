@@ -296,7 +296,7 @@ describe("test the MeasureComponent", () => {
         expect(coordEditorPanel).toExist();
     });
 
-    it('rendering a coordinate editor for Polygons with 3 empty rows', () => {
+    it('rendering a coordinate editor for Polygons with 4 empty rows', () => {
         let measurement = {
             lineMeasureEnabled: false,
             areaMeasureEnabled: true,
@@ -331,7 +331,7 @@ describe("test the MeasureComponent", () => {
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
         expect(coordEditorPanel).toExist();
-        expect(coordinateRows.length).toBe(3);
+        expect(coordinateRows.length).toBe(4);
 
     });
 });

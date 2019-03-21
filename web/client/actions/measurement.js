@@ -13,6 +13,7 @@ const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 const CHANGE_FORMAT = 'MEASUREMENT:CHANGE_FORMAT';
 const CHANGE_COORDINATES = 'MEASUREMENT:CHANGE_COORDINATES';
 const ADD_MEASURE_AS_ANNOTATION = 'MEASUREMENT:ADD_MEASURE_AS_ANNOTATION';
+const UPDATE_MEASURES = 'MEASUREMENT:UPDATE_MEASURES';
 const INIT = 'MEASUREMENT:INIT';
 
 /**
@@ -79,6 +80,12 @@ function resetGeometry() {
         type: RESET_GEOMETRY
     };
 }
+function updateMeasures(measures) {
+    return {
+        type: UPDATE_MEASURES,
+        measures
+    };
+}
 function changeMeasurementState(measureState) {
     return {
         type: CHANGE_MEASUREMENT_STATE,
@@ -109,6 +116,7 @@ module.exports = {
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY,
     changeFormatMeasurement, CHANGE_FORMAT,
+    updateMeasures, UPDATE_MEASURES,
     changeCoordinates, CHANGE_COORDINATES,
     resetGeometry, RESET_GEOMETRY,
     addAnnotation, ADD_MEASURE_AS_ANNOTATION,

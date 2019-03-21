@@ -15,6 +15,7 @@ const {
     changeFormatMeasurement,
     resetGeometry,
     changeGeometry,
+    updateMeasures,
     init
 } = require('../../actions/measurement');
 const {RESET_CONTROLS, setControlProperty} = require('../../actions/controls');
@@ -160,6 +161,19 @@ describe('Test the measurement reducer', () => {
             bearingMeasureEnabled: false
         }, setControlProperty("drawer", "enabled", false));
         expect(state.lineMeasureEnabled).toEqual(true);
+        expect(state.geomType).toEqual("LineString");
+    });
+    it('UPDATE_MEASURES', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            len: 0,
+            area: 700
+        }, updateMeasures({len: 12430, area: 0}));
+        expect(state.len).toEqual(12430);
+        expect(state.area).toEqual(0);
         expect(state.geomType).toEqual("LineString");
     });
 

@@ -12,6 +12,14 @@ const {
     convertUom,
     isValidGeometry
 } = require('../MeasureUtils');
+const {
+    lineFeature,
+    lineFeatureInvalid,
+    lineFeatureInvalid2,
+    polyFeatureClosed,
+    polyFeatureNotClosedInvalid,
+    polyFeatureNotClosedInvalid2
+} = require('../../test-resources/drawsupport/features');
 
 
 describe('MeasureUtils', () => {
@@ -88,20 +96,28 @@ describe('MeasureUtils', () => {
         val = getFormattedBearingValue(281.111);
         expect(val).toBe("N 78° 53' 20'' W");
     });
-    it('isValidGeometry with a valid geom', () => {
-        const geometry = {
-            type: "LineString",
-            coordinates: [[1, 1], [2, 2]]
-        };
-        const isValid = isValidGeometry(geometry);
+    it('testing isValidGeometry() with all valid coords (line geom)', () => {
+        const isValid = isValidGeometry(lineFeature.geometry);
         expect(isValid).toBe(true);
     });
-    it('isValidGeometry with an invalid geom', () => {
-        const geometry = {
-            type: "LineString",
-            coordinates: [[1, 1], [2, 2], ["", 2]]
-        };
-        const isValid = isValidGeometry(geometry);
+    it('testing isValidGeometry() with some invalid coords (line geom) 2 point valid', () => {
+        const isValid = isValidGeometry(lineFeatureInvalid.geometry);
+        expect(isValid).toBe(true);
+    });
+    it('testing isValidGeometry() with some invalid coords (line geom) 1 point valid', () => {
+        const isValid = isValidGeometry(lineFeatureInvalid2.geometry);
+        expect(isValid).toBe(false);
+    });
+    it('testing isValidGeometry() with all valid coords (polygon geom)', () => {
+        const isValid = isValidGeometry(polyFeatureClosed.geometry);
+        expect(isValid).toBe(true);
+    });
+    it('testing isValidGeometry() with some invalid coords (polygon geom) 3 point valid', () => {
+        const isValid = isValidGeometry(polyFeatureNotClosedInvalid.geometry);
+        expect(isValid).toBe(true);
+    });
+    it('testing isValidGeometry() with some invalid coords (polygon geom) only 2 point valid', () => {
+        const isValid = isValidGeometry(polyFeatureNotClosedInvalid2.geometry);
         expect(isValid).toBe(false);
     });
 

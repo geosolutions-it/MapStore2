@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const {ADD_MEASURE_AS_ANNOTATION} = require('../actions/measurement');
 const {getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES, STYLE_TEXT} = require('../utils/AnnotationsUtils');
-const {convertUom, getFormattedBearingValue} = require('../utils/MeasureUtils');
+const {convertUom, getFormattedBearingValue, validateFeatureCoordinates} = require('../utils/MeasureUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 const {addLayer, updateNode} = require('../actions/layers');
 const {toggleControl, SET_CONTROL_PROPERTY} = require('../actions/controls');
@@ -59,7 +59,9 @@ const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, s
             },
             {
                 type: "Feature",
-                geometry: {...measureGeometry, type: isLineString(state) ? "MultiPoint" : measureGeometry.type},
+                geometry: {
+                    coordinates: validateFeatureCoordinates(measureGeometry),
+                    type: isLineString(state) ? "MultiPoint" : measureGeometry.type},
                 properties: {
                     isValidFeature: true,
                     useGeodesicLines: isLineString(state), // this is reduntant? remove it, check in the codebase where is used and use the geom dta instad

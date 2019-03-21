@@ -53,6 +53,22 @@ module.exports = {
         id: "multipolygon",
         properties: {}
     },
+    lineFeatureInvalid: {
+        type: "Feature",
+        geometry: {
+            type: "LineString",
+            coordinates: [[0, 1], [2, 4], [2, ""]]
+        },
+        properties: {}
+    },
+    lineFeatureInvalid2: {
+        type: "Feature",
+        geometry: {
+            type: "LineString",
+            coordinates: [[0, 1], [2, ""]]
+        },
+        properties: {}
+    },
     lineFeature: {
         type: "Feature",
         geometry: {
@@ -69,12 +85,9 @@ module.exports = {
         },
         properties: {}
     },
-    lineFeature2: {
+    lineFeatureWithoutGeom: {
         type: "Feature",
-        geometry: {
-            type: "LineString",
-            coordinates: [[1, 1], [55, 5]]
-        },
+        geometry: undefined,
         properties: {}
     },
     geomCollFeature: {
@@ -88,14 +101,7 @@ module.exports = {
         },
         properties: {}
     },
-    invalidLineFeature: {
-        type: "Feature",
-        geometry: {
-            type: "LineString",
-            coordinates: [[1, 1], [55, 5], ["", 5]]
-        }
-    },
-    polyFeature: {
+    polyFeatureClosed: {
         type: "Feature",
         geometry: {
             type: "Polygon",
@@ -103,19 +109,35 @@ module.exports = {
         },
         properties: {}
     },
-    invalidPolyFeature: {
+    polyFeatureClosed2: {
         type: "Feature",
         geometry: {
             type: "Polygon",
-            coordinates: [[[0, 1], [0, 5], [10, 5], [2, ""], [0, 1]]]
+            coordinates: [[[0, 1], [0, 5], [2, 5], [0, 1]]]
         },
         properties: {}
     },
-    invalidFirstCoordPolyFeature: {
+    polyFeatureNotClosed: {
         type: "Feature",
         geometry: {
             type: "Polygon",
-            coordinates: [[[0, ""], [0, 5], [10, 5], [0, 1], [0, 5]]]
+            coordinates: [[[3, 1], [0, 5], [3, 3]]]
+        },
+        properties: {}
+    },
+    polyFeatureNotClosedInvalid: {
+        type: "Feature",
+        geometry: {
+            type: "Polygon",
+            coordinates: [[[0, 1], [0, 5], [2, 1], ["", 1]]]
+        },
+        properties: {}
+    },
+    polyFeatureNotClosedInvalid2: {
+        type: "Feature",
+        geometry: {
+            type: "Polygon",
+            coordinates: [[[0, 1], [0, 5], ["", 1]]]
         },
         properties: {}
     },

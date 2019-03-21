@@ -11,7 +11,8 @@ const React = require('react');
 const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
-const {changeMeasurementState, changeGeometry, resetGeometry} = require('../../actions/measurement');
+const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures} = require('../../actions/measurement');
+const {measurementSelector} = require('../../selectors/measurement');
 const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped, selectFeatures, drawingFeatures} = require('../../actions/draw');
@@ -46,7 +47,8 @@ module.exports = (mapType, actions) => {
 
     const MeasurementSupport = connect((state) => ({
         enabled: state.controls && state.controls.measure && state.controls.measure.enabled || false,
-        measurement: state.measurement || {},
+        // TODO TEST selector to validate the feature: filter the coords, if length >= minValue return ft validated (close the polygon) else empty ft
+        measurement: measurementSelector(state),
         useTreshold: state.measurement && state.measurement.useTreshold || null,
         uom: state.measurement && state.measurement.uom || {
             length: {unit: 'm', label: 'm'},
@@ -54,6 +56,7 @@ module.exports = (mapType, actions) => {
         }
     }), {
         changeMeasurementState,
+        updateMeasures,
         resetGeometry,
         changeGeometry
     })(components.MeasurementSupport || Empty);

@@ -14,13 +14,8 @@ const {round} = require('lodash');
 const MeasurementSupport = require('../MeasurementSupport');
 const {
     lineFeature,
-    lineFeature2,
     lineFeature3,
-    invalidLineFeature,
-    polyFeature,
-    invalidPolyFeature,
-    polygonFt,
-    invalidFirstCoordPolyFeature
+    polyFeatureClosed
 } = require('../../../../test-resources/drawsupport/features');
 
 describe('Openlayers MeasurementSupport', () => {
@@ -43,6 +38,7 @@ describe('Openlayers MeasurementSupport', () => {
 
     const testHandlers = {
         changeMeasurementState: () => {},
+        updateMeasures: () => {},
         changeGeometry: () => {}
     };
     function getMapLayersNum(olMap) {
@@ -127,9 +123,10 @@ describe('Openlayers MeasurementSupport', () => {
         expect(getMapLayersNum(map)).toBe(initialLayersNum);
     });
     it('test updating distance (LineString) tooltip after change uom', () => {
+        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
+        const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         let cmp = renderWithDrawing();
         expect(cmp).toExist();
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         cmp = renderMeasurement({
             measurement: {
                 geomType: "LineString",
@@ -140,28 +137,21 @@ describe('Openlayers MeasurementSupport', () => {
             },
             uom
         });
-        cmp = renderMeasurement({
-            measurement: {
-                geomType: "LineString",
-                feature: lineFeature2,
-                lineMeasureEnabled: true,
-                updatedByUI: true,
-                showLabel: true
-            },
-            uom
-        });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
-        expect(spyOnChangeMeasurementState.calls.length).toBe(1);
-        const measureState = spyOnChangeMeasurementState.calls[0].arguments[0];
+        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyUpdateMeasures).toHaveBeenCalled();
+        expect(spyUpdateMeasures.calls.length).toBe(1);
+        const measureState = spyUpdateMeasures.calls[0].arguments[0];
         expect(measureState).toExist();
-        expect(round(measureState.len, 2)).toBe(6010861.63);
+        expect(round(measureState.len, 2)).toBe(400787.44);
         expect(measureState.bearing).toBe(0);
         expect(measureState.area).toBe(0);
+        expect(measureState.point).toBe(null);
     });
     it('test updating Bearing (LineString) tooltip after change uom', () => {
+        const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
+        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         let cmp = renderWithDrawing();
         expect(cmp).toExist();
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         cmp = renderMeasurement({
             measurement: {
                 geomType: "Bearing",
@@ -172,92 +162,43 @@ describe('Openlayers MeasurementSupport', () => {
             },
             uom
         });
-        cmp = renderMeasurement({
-            measurement: {
-                geomType: "Bearing",
-                feature: lineFeature2,
-                bearingMeasureEnabled: true,
-                updatedByUI: true,
-                showLabel: true
-            },
-            uom
-        });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
-        expect(spyOnChangeMeasurementState.calls.length).toBe(1);
-        const measureState = spyOnChangeMeasurementState.calls[0].arguments[0];
+        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyUpdateMeasures).toHaveBeenCalled();
+        expect(spyUpdateMeasures.calls.length).toBe(1);
+        const measureState = spyUpdateMeasures.calls[0].arguments[0];
         expect(measureState).toExist();
         expect(measureState.len).toBe(0);
+        expect(round(measureState.bearing, 2)).toBe(33.63);
         expect(measureState.area).toBe(0);
-        expect(round(measureState.bearing, 2)).toBe(84.55);
+        expect(measureState.point).toBe(null);
     });
     it('test updating area (Polygon) tooltip after change uom', () => {
+        const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         let cmp = renderWithDrawing();
         expect(cmp).toExist();
         cmp = renderMeasurement({
             measurement: {
                 geomType: "Polygon",
-                feature: polyFeature,
+                feature: polyFeatureClosed,
                 areaMeasureEnabled: true,
                 updatedByUI: true,
                 showLabel: false
             },
             uom
         });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
-        expect(spyOnChangeMeasurementState.calls.length).toBe(1);
-        const measureState = spyOnChangeMeasurementState.calls[0].arguments[0];
+        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyUpdateMeasures).toHaveBeenCalled();
+        expect(spyUpdateMeasures.calls.length).toBe(1);
+        const measureState = spyUpdateMeasures.calls[0].arguments[0];
         expect(measureState).toExist();
-        expect(measureState.len).toBe(0);
         expect(round(measureState.area, 2)).toBe(49490132941.51);
         expect(measureState.bearing).toBe(0);
     });
-    it('test updating area (Polygon) with invalid feature after change uom', () => {
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
-        let cmp = renderWithDrawing();
-        expect(cmp).toExist();
-        cmp = renderMeasurement({
-            measurement: {
-                geomType: "Polygon",
-                feature: invalidPolyFeature,
-                areaMeasureEnabled: true,
-                updatedByUI: true,
-                showLabel: false
-            },
-            uom
-        });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
-        expect(spyOnChangeMeasurementState.calls.length).toBe(1);
-        const measureState = spyOnChangeMeasurementState.calls[0].arguments[0];
-        expect(measureState).toExist();
-        expect(measureState.len).toBe(0);
-        expect(round(measureState.area, 2)).toBe(247450664707.54);
-        expect(measureState.bearing).toBe(0);
-    });
-    it('test updating distance (LineString) with invalid feature after change uom', () => {
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
-        let cmp = renderWithDrawing();
-        expect(cmp).toExist();
-        cmp = renderMeasurement({
-            measurement: {
-                geomType: "LineString",
-                feature: invalidLineFeature,
-                lineMeasureEnabled: true,
-                updatedByUI: true,
-                showLabel: false
-            },
-            uom
-        });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
-        expect(spyOnChangeMeasurementState.calls.length).toBe(1);
-        const measureState = spyOnChangeMeasurementState.calls[0].arguments[0];
-        expect(measureState).toExist();
-        expect(round(measureState.len, 2)).toBe(6010861.63);
-        expect(measureState.area).toBe(0);
-        expect(measureState.bearing).toBe(0);
-    });
+
     it('test drawInteraction callbacks for a distance (LineString)', () => {
         const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
+        const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
         let cmp = renderWithDrawing();
         expect(cmp).toExist();
@@ -266,7 +207,7 @@ describe('Openlayers MeasurementSupport', () => {
                 geomType: "LineString",
                 feature: lineFeature,
                 lineMeasureEnabled: true,
-                updatedByUI: true,
+                updatedByUI: false,
                 showLabel: true
             },
             uom
@@ -285,7 +226,8 @@ describe('Openlayers MeasurementSupport', () => {
                   name: 'My line with 3 points'
             })
         });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
+        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyUpdateMeasures).toNotHaveBeenCalled();
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         const changedFeature = spyOnChangeGeometry.calls[0].arguments[0];
         expect(changedFeature.type).toBe("Feature");
@@ -334,38 +276,6 @@ describe('Openlayers MeasurementSupport', () => {
             coordinate: [100, 400]
         });
         expect(cmp.helpTooltip.getPosition()).toEqual([100, 400]);
-
-    });
-
-    it('test drawing a polygon with 4 vertices and then invalidating the first coord', () => {
-        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
-        let cmp = renderWithDrawing();
-        expect(cmp).toExist();
-        cmp = renderMeasurement({
-            measurement: {
-                geomType: "Polygon",
-                feature: polygonFt,
-                areaMeasureEnabled: true,
-                updatedByUI: true,
-                showLabel: true
-            },
-            uom
-        });
-        cmp = renderMeasurement({
-            measurement: {
-                geomType: "Polygon",
-                feature: invalidFirstCoordPolyFeature,
-                areaMeasureEnabled: true,
-                updatedByUI: true,
-                showLabel: true
-            },
-            uom
-        });
-        expect(spyOnChangeMeasurementState).toHaveBeenCalled();
-        expect(spyOnChangeMeasurementState.calls.length).toBe(2);
-        const args = spyOnChangeMeasurementState.calls[1].arguments;
-        expect(args[0].feature.geometry.coordinates[0].length).toBe(5);
-        expect(args[0].feature.geometry.coordinates).toEqual([[[0, ""], [0, 5], [10, 5], [0, 1], [0, ""]]]);
 
     });
 

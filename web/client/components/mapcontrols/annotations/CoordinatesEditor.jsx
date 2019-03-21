@@ -191,6 +191,9 @@ class CoordinateEditor extends React.Component {
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);
+                    if (this.props.type === "Polygon") {
+                        tempComps = this.addCoordPolygon(tempComps);
+                    }
                     this.props.onChange(tempComps, this.props.properties.radius, this.props.properties.valueText);
                 }
             }
@@ -228,7 +231,7 @@ class CoordinateEditor extends React.Component {
                         </Col>
                         <Col xs={1}/>
                     </Row>}
-                <Row style={{flex: 1, overflowY: 'auto', overflowX: 'hidden'}}>
+                <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
