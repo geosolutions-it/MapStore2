@@ -22,7 +22,7 @@ const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
 const defaultThumb = require('./img/default.jpg');
 
-const ModalMock = require('../background/ModalMock');
+const BackgroundDialog = require('../background/BackgroundDialog');
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -53,7 +53,8 @@ class RecordItem extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
         deletedId: PropTypes.string,
-        removeThumbnail: PropTypes.func
+        removeThumbnail: PropTypes.func,
+        clearModal: PropTypes.func
 
     };
 
@@ -71,6 +72,7 @@ class RecordItem extends React.Component {
         onPropertiesChange: () => {},
         onLayerChange: () => {},
         removeThumbnail: () => {},
+        clearModal: () => {},
         style: {},
         showGetCapLinks: false,
         zoomToLayer: true,
@@ -113,7 +115,7 @@ class RecordItem extends React.Component {
         // let's extract the references we need
         const {wms, wmts} = record.group === 'background' && {} || extractOGCServicesReferences(record);
         // let's extract the esri
-        const {esri} = extractEsriReferences(record);
+        const {esri} = record.group === 'background' && {} || extractEsriReferences(record);
 
         // let's create the buttons
         let buttons = [];
@@ -236,7 +238,7 @@ class RecordItem extends React.Component {
         let record = this.props.record;
         const {wms, wmts} = record && record.group === 'background' && {} || record && record.references && extractOGCServicesReferences(record) || {};
         const disabled = record && record.group === 'background' && head((this.props.layers || []).filter(lay => lay.id === record.id));
-        const {esri} = record && record.references && extractEsriReferences(record) || {};
+        const {esri} = record && record.group === 'background' && record && record.references && extractEsriReferences(record) || {};
         return (
             <Panel className="record-item" style={{opacity: disabled ? 0.4 : 1.0}}>
                 {!this.props.hideThumbnail && <div className="record-item-thumb">
@@ -266,14 +268,18 @@ class RecordItem extends React.Component {
                     ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}</div>}
                     {!disabled ? this.renderButtons(record) : 'Added to background selector'}
                 </div>
-                <ModalMock
+                <BackgroundDialog
                     deletedId = {this.props.deletedId}
                     unsavedChanges = {this.props.unsavedChanges}
                     thumbURL ={this.props.modalParams && this.props.modalParams.CurrentNewThumbnail}
                     add
                     onUpdate= { parameter => this.props.onAddBackgroundProperties(parameter, true)}
                     modalParams={this.props.modalParams}
-                    onClose={() => this.props.onAddBackgroundProperties(null, false)}
+                    onClose={() => {
+                        this.props.onAddBackgroundProperties(null, false);
+                        this.props.removeThumbnail(undefined);
+                        this.props.clearModal();
+                    }}
                     onSave={() => {
                         if (this.props.modalParams.showModal.type === 'wms') {
                             this.addLayer(this.props.modalParams.showModal, this.props.modalParams.id);
@@ -287,6 +293,7 @@ class RecordItem extends React.Component {
                         this.props.onLayerChange('tempLayer', this.props.modalParams.showModal);
                         this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
                         this.props.onUpdateThumbnail(this.props.modalParams.newThumbnail, this.props.modalParams.thumbnailData, false, this.props.modalParams.id);
+                        this.props.clearModal();
 
                     }}
                     updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(this.props.modalParams.id) : this.props.onUpdateThumbnail(data, url, true, this.props.modalParams.id)}

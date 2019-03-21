@@ -10,7 +10,7 @@ const assign = require('object-assign');
 let cnt = 0;
 
 
-class ModalMock extends React.Component{
+class BackgroundDialog extends React.Component{
     static propTypes = {
         onAdd: PropTypes.func,
         onClose: PropTypes.func,
@@ -44,7 +44,9 @@ class ModalMock extends React.Component{
     };
     state = {id: 0, additionalParameters: []};
     componentWillReceiveProps(nextProps) {
-        if (this.props.modalParams.id !== nextProps.modalParams.id) {
+        if ( !nextProps.modalParams) {
+            this.setState({title: '', format: "image/png"});
+        }else if (this.props.modalParams.id !== nextProps.modalParams.id) {
             this.setState({title: nextProps.modalParams.title || '', format: nextProps.modalParams.format || "image/png"});
         }
     }
@@ -181,4 +183,4 @@ class ModalMock extends React.Component{
     })
 }
 
-module.exports = ModalMock;
+module.exports = BackgroundDialog;

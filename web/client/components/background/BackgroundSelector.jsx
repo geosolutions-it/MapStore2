@@ -12,7 +12,7 @@ const assign = require('object-assign');
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
-const ModalMock = require('./ModalMock');
+const BackgroundDialog = require('./BackgroundDialog');
 
 const PropTypes = require('prop-types');
 const {head, omit} = require('lodash');
@@ -178,7 +178,7 @@ updatedLayer = (layer) => {
         const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id)) || layer;
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
-                 <ModalMock
+                 <BackgroundDialog
                     deletedId = {this.props.deletedId}
                     editing = {this.props.editing}
                     add = {false}

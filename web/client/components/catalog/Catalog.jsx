@@ -72,7 +72,8 @@ class Catalog extends React.Component {
         layers: PropTypes.array,
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
-        removeThumbnail: PropTypes.func
+        removeThumbnail: PropTypes.func,
+        clearModal: PropTypes.func
     };
 
     static contextTypes = {
@@ -217,7 +218,8 @@ class Catalog extends React.Component {
 
     renderRecords = () => {
         return (<div className="catalog-results">
-                <RecordGrid {...this.props} {...this.props.gridOptions} key="records"
+                <RecordGrid {...this.props.gridOptions} key="records"
+                    clearModal={this.props.clearModal}
                     unsavedChanges={this.props.unsavedChanges}
                     onUpdateThumbnail = {this.props.onUpdateThumbnail}
                     layers={this.props.layers}

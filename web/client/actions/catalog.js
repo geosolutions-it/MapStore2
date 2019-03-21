@@ -19,6 +19,7 @@ const LayersUtils = require('../utils/LayersUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {find} = require('lodash');
 const {authkeyParamNameSelector} = require('../selectors/catalog');
+const {layersSelector} = require('../selectors/layers');
 
 const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
@@ -165,7 +166,7 @@ function getRecords(format, url, startPosition = 1, maxRecords, filter, options)
 
     return (dispatch, getState) => {
         const state = getState();
-        const layers = state && state.layers && state.layers.flat;
+        const layers = layersSelector(state);
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
         API[format].getRecords(url, startPosition, maxRecords, filter, options, layers).then((result) => {
             if (result.error) {
@@ -186,7 +187,7 @@ function getRecords(format, url, startPosition = 1, maxRecords, filter, options)
 function textSearch(format, url, startPosition, maxRecords, text, options) {
     return (dispatch, getState) => {
         const state = getState();
-        const layers = state && state.layers && state.layers.flat;
+        const layers = layersSelector(state);
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
         API[format].textSearch(url, startPosition, maxRecords, text, options, layers).then((result) => {
             if (result.error) {
@@ -215,7 +216,7 @@ function describeError(layer, error) {
 function addLayerAndDescribe(layer) {
     return (dispatch, getState) => {
         const state = getState();
-        const layers = state && state.layers && state.layers.flat;
+        const layers = layersSelector(state);
         const id = LayersUtils.getLayerId(layer, layers || []);
         dispatch(addLayer({...layer, id}));
         if (layer.type === 'wms') {

@@ -30,7 +30,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector} = require('../selectors/backgroundselector');
+const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector, clearModalParameters} = require('../selectors/backgroundselector');
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
@@ -189,6 +189,7 @@ const metadataExplorerSelector = createSelector([
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
+    clearModal: clearModalParameters,
     onSearch: textSearch,
     onLayerAdd: addLayer,
     toggleControl: catalogClose,
