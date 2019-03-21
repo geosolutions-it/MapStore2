@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, UPDATE_BACKGROUND_THUMBNAIL, UPDATE_BACKGROUND_LAYER_PARAMETER,
-    BACKGROUNDS_CLEAR, REMOVE_BACKGROUND_THUMBNAIL, CREATE_BACKGROUNDS_LIST, EDIT_BACKGROUND_PROPERTIES, CLEAR_MODAL_PARAMETERS} = require('../actions/backgroundselector');
+const { ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, UPDATE_BACKGROUND_THUMBNAIL, BACKGROUNDS_CLEAR,
+        REMOVE_BACKGROUND_THUMBNAIL, CREATE_BACKGROUNDS_LIST, EDIT_BACKGROUND_PROPERTIES, CLEAR_MODAL_PARAMETERS} = require('../actions/backgroundselector');
 const {RESET_CATALOG} = require('../actions/catalog');
 const assign = require('object-assign');
 const {filter} = require('lodash');
@@ -67,9 +67,10 @@ function backgroundselector(state = null, action) {
             backgrounds: updatedBackgrounds,
             modalParams: assign({}, state.modalParams, {
                 CurrentNewThumbnail: action.thumbnail || state.modalParams && state.modalParams.CurrentNewThumbnail,
-                CurrentThumbnailData: action.thumbnailData || state.modalParams && state.modalParams.CurrentThumbnailData }),
-                unsavedChanges: action.unsavedChanges !== undefined ? action.unsavedChanges : true,
-                lastRemovedId: undefined
+                CurrentThumbnailData: action.thumbnailData || state.modalParams && state.modalParams.CurrentThumbnailData
+            }),
+            unsavedChanges: action.unsavedChanges !== undefined ? action.unsavedChanges : true,
+            lastRemovedId: undefined
             });
     }
     case CLEAR_MODAL_PARAMETERS : {
@@ -86,7 +87,7 @@ function backgroundselector(state = null, action) {
             modalParams: action.backgroundId !== undefined ? assign({}, state.modalParams, {
                 CurrentNewThumbnail: undefined,
                 CurrentThumbnailData: undefined}) : state.modalParams,
-                lastRemovedId: action.backgroundId
+            lastRemovedId: action.backgroundId
             });
 
     }
@@ -94,12 +95,8 @@ function backgroundselector(state = null, action) {
         const backgrounds = action.backgrounds;
         let idList = [];
         backgrounds.filter((background) => background.thumbId !== undefined).map(l => idList.push(l.thumbId));
-        return assign({}, state,
-            { backgroundSourcesId: idList});
-    }
-    case UPDATE_BACKGROUND_LAYER_PARAMETER: {
-        return assign({}, state,
-            {additionalParameters: action.params});
+
+        return assign({}, state, { backgroundSourcesId: idList});
     }
     default:
         return state;

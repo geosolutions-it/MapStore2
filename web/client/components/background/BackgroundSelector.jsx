@@ -15,7 +15,7 @@ const PreviewIcon = require('./PreviewIcon');
 const ModalMock = require('./ModalMock');
 
 const PropTypes = require('prop-types');
-const {head, last, find, omit} = require('lodash');
+const {head, omit} = require('lodash');
 require('./css/background.css');
 
 class BackgroundSelector extends React.Component {
@@ -126,9 +126,10 @@ class BackgroundSelector extends React.Component {
     };
 updatedLayer = (layer) => {
     if (this.props.deletedId && layer.CurrentNewThumbnail === undefined) {
-        return omit(this.props.CurrentModalParams, ['source', 'CurrentThumbnailData']);
+        return omit(layer, ['source', 'CurrentThumbnailData']);
     }
-    const output = assign({}, this.props.CurrentModalParams, {source: this.props.CurrentModalParams.CurrentNewThumbnail } );
+    // add the newly created Thumbnail url (if existed)
+    const output = assign({}, layer, {source: this.props.CurrentModalParams.CurrentNewThumbnail || this.props.CurrentModalParams.source } );
     return omit(output, ['CurrentThumbnailData', 'CurrentNewThumbnail']);
 }
     renderBackgroundSelector = () => {
@@ -174,7 +175,6 @@ updatedLayer = (layer) => {
             height: buttonSize,
             width: buttonSize * visibleIconsLength
         };
-        const CurrentModalParams = find(this.props.backgroundList, current => current.id === layer.id) || last(this.props.backgroundList);
         const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id)) || layer;
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
@@ -184,11 +184,12 @@ updatedLayer = (layer) => {
                     add = {false}
                     thumbURL= {src}
                     onUpdate= { parameter => this.props.addBackgroundProperties(parameter, false)}
-                    CurrentModalParams= {CurrentModalParams}
+                    CurrentModalParams= {this.props.currentLayer}
                     modalParams={editedLayer}
                     onClose={() => {
                         this.props.onEditBackgroundProperties(false);
                         this.props.removeThumbnail(undefined);
+                        this.props.clearModal();
                     }}
                     onSave={(layerModal) => {
 

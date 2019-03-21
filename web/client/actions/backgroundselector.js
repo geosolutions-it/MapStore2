@@ -14,7 +14,6 @@ const REMOVE_BACKGROUND_THUMBNAIL = ' REMOVE_BACKGROUND_THUMBNAIL';
 const BACKGROUND_THUMBS_UPDATED = 'BACKGROUND_THUMBS_UPDATED';
 const CREATE_BACKGROUNDS_LIST = 'CREATE_BACKGROUNDS_LIST';
 const EDIT_BACKGROUND_PROPERTIES = 'EDIT_BACKGROUND_PROPERTIES';
-const UPDATE_BACKGROUND_LAYER_PARAMETER = 'UPDATE_BACKGROUND_LAYER_PARAMETER';
 const CLEAR_MODAL_PARAMETERS = 'CLEAR_MODAL_PARAMETERS';
 
 function createBackgroundsList(backgrounds) {
@@ -80,12 +79,6 @@ function clearModalParameters() {
         type: CLEAR_MODAL_PARAMETERS
     };
 }
-function updateParams(params) {
-    return {
-        type: UPDATE_BACKGROUND_LAYER_PARAMETER,
-        params
-    };
-}
 
 
 module.exports = {
@@ -98,7 +91,6 @@ module.exports = {
     BACKGROUND_THUMBS_UPDATED,
     EDIT_BACKGROUND_PROPERTIES,
     CLEAR_MODAL_PARAMETERS,
-    UPDATE_BACKGROUND_LAYER_PARAMETER,
     editBackgroundProperties,
     createBackgroundsList,
     addBackgroundProperties,
@@ -107,6 +99,5 @@ module.exports = {
     clearModalParameters,
     clearBackgrounds,
     removeThumbnail,
-    backgroundThumbnailsUpdated,
-    updateParams
+    backgroundThumbnailsUpdated
 };

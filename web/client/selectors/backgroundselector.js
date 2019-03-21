@@ -14,8 +14,7 @@ const isEditSelector = (state) => state.backgroundSelector && state.backgroundSe
 const backgroundListSelector = (state) => state.backgroundSelector && state.backgroundSelector.backgrounds;
 const backgroundsSourceListSelector = (state) => state.backgroundSelector && state.backgroundSelector.backgroundSourcesId;
 const isDeletedIdSelector = (state) => state.backgroundSelector && state.backgroundSelector.lastRemovedId;
-const additionalParametersSelector = (state) => state.backgroundSelector && state.backgroundSelector.additionalParameters;
-// const backgroundList = find(list, id);
+
 module.exports = {
     isEditSelector,
     metadataSourceSelector,
@@ -24,6 +23,5 @@ module.exports = {
     backgroundListSelector,
     unsavedChangesSelector,
     backgroundsSourceListSelector,
-    isDeletedIdSelector,
-    additionalParametersSelector
+    isDeletedIdSelector
 };

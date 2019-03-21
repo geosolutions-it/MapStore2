@@ -18,7 +18,7 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {addBackgroundProperties, updateThumbnail, removeThumbnail, updateParams} = require('../actions/backgroundselector');
+const {addBackgroundProperties, updateThumbnail, removeThumbnail} = require('../actions/backgroundselector');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {layersSelector} = require('../selectors/layers');
 const {setControlProperty, toggleControl} = require("../actions/controls");
@@ -30,7 +30,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector, additionalParametersSelector} = require('../selectors/backgroundselector');
+const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector} = require('../selectors/backgroundselector');
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
@@ -38,7 +38,6 @@ require('./metadataexplorer/css/style.css');
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
-    (state) => additionalParametersSelector(state),
     (state) => unsavedChangesSelector(state),
     (state) => layersSelector(state),
     (state) => modalParamsSelector(state),
@@ -52,8 +51,7 @@ const catalogSelector = createSelector([
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
     (state) => currentLocaleSelector(state)
-], (additionalParameters, unsavedChanges, layers, modalParams, source, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
-    additionalParameters,
+], (unsavedChanges, layers, modalParams, source, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
     unsavedChanges,
     layers,
     modalParams,
@@ -84,7 +82,6 @@ const Catalog = connect(catalogSelector, {
     onFocusServicesList: focusServicesList,
     onPropertiesChange: changeLayerProperties,
     removeThumbnail,
-    updateParams,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')

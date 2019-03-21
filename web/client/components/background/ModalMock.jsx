@@ -20,7 +20,6 @@ class ModalMock extends React.Component{
         modalParams: PropTypes.object,
         resetParameters: PropTypes.func,
         add: PropTypes.bool,
-        additionalParameters: PropTypes.array,
         addParameters: PropTypes.func,
         updateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
@@ -39,13 +38,16 @@ class ModalMock extends React.Component{
         addParameters: () => {},
         addParameter: () => {},
         add: true,
-        additionalParameters: [],
         unsavedChanges: false,
         editing: false
 
     };
     state = {id: 0, additionalParameters: []};
-
+    componentWillReceiveProps(nextProps) {
+        if (this.props.modalParams.id !== nextProps.modalParams.id) {
+            this.setState({title: nextProps.modalParams.title || '', format: nextProps.modalParams.format || "image/png"});
+        }
+    }
     render() {
         return (<ResizableModal
         title={this.props.add ? "Add Background" : "Edit Current Background"}
@@ -59,9 +61,10 @@ class ModalMock extends React.Component{
                 onClick: () => {
                     this.addParameters()
                     .then( (obj)=> {
+                        let parameters = this.props.modalParams;
                         // add the edited source and additional parameters
                         if (this.props.editing) {
-                            assign({}, this.props.modalParams, assign({}, obj, {source: this.props.thumbURL}));
+                            parameters = assign({}, this.props.modalParams, assign({}, obj, {source: this.props.thumbURL}));
                         }else {
                             if (this.props.modalParams.showModal) {
                                 this.props.onUpdate(assign({}, this.props.modalParams, {
@@ -70,7 +73,7 @@ class ModalMock extends React.Component{
                                 this.props.onUpdate(assign({}, this.props.modalParams, obj));
                             }
                         }
-                        this.props.onSave(this.props.modalParams);
+                        this.props.onSave(parameters);
                     });
                     this.props.resetParameters([]);
                 }
@@ -90,28 +93,16 @@ class ModalMock extends React.Component{
             <FormGroup>
                 <ControlLabel>Title</ControlLabel>
                 <FormControl
-                    value={ !this.props.CurrentModalParams && this.props.modalParams ? this.props.modalParams.title :
-                        this.props.CurrentModalParams && this.props.CurrentModalParams.title}
+                    value={this.state.title}
                     placeholder="Enter displayed name"
-                    onChange={event =>
-                        this.props.add ? this.props.onUpdate( assign({}, this.props.modalParams, {
-                        showModal: assign({}, this.props.modalParams.showModal, {title: event.target.value})
-                    } ) ) :
-                    this.props.onUpdate( assign({}, this.props.modalParams, {title: event.target.value} ) )
+                    onChange={event => this.setState({title: event.target.value})
                 }/>
             </FormGroup>
             <FormGroup controlId="formControlsSelect">
                 <ControlLabel>Format</ControlLabel>
                 <Select
-                    onChange = {event =>
-                        this.props.add ? this.props.onUpdate( assign({}, this.props.modalParams, {
-                        showModal: assign({}, this.props.modalParams.showModal, {format: event.value})
-                    } ) )
-                    :
-                    this.props.onUpdate( assign({}, this.props.modalParams, {format: event.value} ) )
-                }
-                    value={!this.props.CurrentModalParams && this.props.modalParams ? this.props.modalParams.format || "image/png" :
-                    this.props.CurrentModalParams && this.props.CurrentModalParams.format || "image/png"}
+                    onChange = {event => this.setState({format: event.value})}
+                    value={this.state.format}
                     clearable={false}
                     options={[{
                         label: 'image/png',
@@ -182,7 +173,7 @@ class ModalMock extends React.Component{
         });
     }
     addParameters = () => new Promise((resolve) => {
-        var obj = { source: this.props.thumbURL};
+        var obj = { source: this.props.thumbURL, title: this.state.title, format: this.state.format};
 
         this.state.additionalParameters.map( parameter => obj[parameter.param] = parameter.val);
 
@@ -191,4 +182,3 @@ class ModalMock extends React.Component{
 }
 
 module.exports = ModalMock;
-

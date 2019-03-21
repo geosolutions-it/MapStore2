@@ -38,9 +38,7 @@ class RecordGrid extends React.Component {
         layers: PropTypes.object,
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
-        removeThumbnail: PropTypes.func,
-        updateParams: PropTypes.func,
-        additionalParameters: PropTypes.array
+        removeThumbnail: PropTypes.func
     };
 
     static defaultProps = {
@@ -58,8 +56,6 @@ class RecordGrid extends React.Component {
 			<Col {...this.props.column} key={record.identifier}>
                 <Item
                     {...this.props}
-                    updateParams={this.props.updateParams}
-                    additionalParameters={this.props.additionalParameters}
                     unsavedChanges={this.props.unsavedChanges}
                     layers={this.props.layers}
                     modalParams={this.props.modalParams}

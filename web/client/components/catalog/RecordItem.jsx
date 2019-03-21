@@ -53,15 +53,12 @@ class RecordItem extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
         deletedId: PropTypes.string,
-        removeThumbnail: PropTypes.func,
-        updateParams: PropTypes.func,
-        additionalParameters: PropTypes.array
+        removeThumbnail: PropTypes.func
 
     };
 
     static defaultProps = {
         modalParams: {showModal: false},
-        additionalParameters: [],
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
@@ -74,7 +71,6 @@ class RecordItem extends React.Component {
         onPropertiesChange: () => {},
         onLayerChange: () => {},
         removeThumbnail: () => {},
-        updateParams: () => {},
         style: {},
         showGetCapLinks: false,
         zoomToLayer: true,
