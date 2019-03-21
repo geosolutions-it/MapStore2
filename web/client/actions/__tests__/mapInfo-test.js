@@ -30,7 +30,7 @@ var {
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
     CHANGE_INDEX, changeIndex,
-    HIGHLIGHT_FEATURE, highlightFeature
+    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -121,12 +121,12 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toBe(CHANGE_FORMAT);
         expect(retval.format).toBe(format);
     });
-    it('highlightFeature', () => {
-        const retVal = highlightFeature(true);
+    it('toggleHighlightFeature', () => {
+        const retVal = toggleHighlightFeature(true);
         expect(retVal).toExist();
-        expect(retVal.type).toBe(HIGHLIGHT_FEATURE);
-        expect(highlightFeature().enabled).toBeFalsy();
-        expect(highlightFeature(true).enabled).toBe(true);
+        expect(retVal.type).toBe(TOGGLE_HIGHLIGHT_FEATURE);
+        expect(toggleHighlightFeature().enabled).toBeFalsy();
+        expect(toggleHighlightFeature(true).enabled).toBe(true);
     });
     it('changeIndex', () => {
         const retVal = changeIndex(true);

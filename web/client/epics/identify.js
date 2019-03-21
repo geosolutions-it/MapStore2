@@ -11,7 +11,7 @@ const { get } = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
-const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, HIGHLIGHT_FEATURE, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
 const { closeFeatureGrid } = require('../actions/featuregrid');
@@ -153,7 +153,7 @@ module.exports = {
      * triggers click again when highlight feature is enabled, to download the feature.
      */
     featureInfoClickOnHighligh: (action$, {getState = () => {}} = {}) =>
-        action$.ofType(HIGHLIGHT_FEATURE)
+        action$.ofType(TOGGLE_HIGHLIGHT_FEATURE)
             .filter(({enabled}) =>
                 enabled
                 && clickPointSelector(getState())

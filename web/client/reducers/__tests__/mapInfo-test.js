@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const mapInfo = require('../mapInfo');
-const { featureInfoClick, toggleEmptyMessageGFI, toggleShowCoordinateEditor, changeFormat, changeIndex, highlightFeature} = require('../../actions/mapInfo');
+const { featureInfoClick, toggleEmptyMessageGFI, toggleShowCoordinateEditor, changeFormat, changeIndex, toggleHighlightFeature} = require('../../actions/mapInfo');
 const { MAP_CONFIG_LOADED } = require('../../actions/config');
 const assign = require('object-assign');
 
@@ -800,7 +800,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.index).toBe(1);
     });
     it('mapInfo changeIndex', () => {
-        const action = highlightFeature(true);
+        const action = toggleHighlightFeature(true);
         const state = mapInfo(undefined, action);
         expect(state.highlight).toBe(true);
     });

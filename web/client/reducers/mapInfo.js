@@ -22,7 +22,7 @@ const {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
-    HIGHLIGHT_FEATURE,
+    TOGGLE_HIGHLIGHT_FEATURE,
     CHANGE_INDEX,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
@@ -80,7 +80,7 @@ function mapInfo(state = initState, action) {
             index: action.index
         });
     }
-    case HIGHLIGHT_FEATURE: {
+    case TOGGLE_HIGHLIGHT_FEATURE: {
         return assign({}, state, {
             highlight: action.enabled
         });

@@ -9,7 +9,7 @@
 const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify, highlightFeature } = require('../../actions/mapInfo');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature } = require('../../actions/mapInfo');
 const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh } = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
@@ -471,7 +471,7 @@ describe('identify Epics', () => {
         testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
     });
     it('featureInfoClickOnHighligh', (done) => {
-        const sentActions = highlightFeature(true);
+        const sentActions = toggleHighlightFeature(true);
 
         const expectedAction = actions => {
             expect(actions.length).toBe(1);

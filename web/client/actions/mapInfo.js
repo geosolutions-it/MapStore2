@@ -22,7 +22,7 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
-const HIGHLIGHT_FEATURE = "MAPINFO_HIGHLIGHT_FEATURE";
+const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
 const CHANGE_INDEX = 'IDENTIFY:CHANGE_INDEX';
@@ -195,9 +195,9 @@ function featureInfoClick(point, layer) {
     };
 }
 
-function highlightFeature(enabled) {
+function toggleHighlightFeature(enabled) {
     return {
-        type: HIGHLIGHT_FEATURE,
+        type: TOGGLE_HIGHLIGHT_FEATURE,
         enabled
     };
 }
@@ -247,7 +247,7 @@ module.exports = {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
-    HIGHLIGHT_FEATURE, highlightFeature,
+    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
     CHANGE_INDEX, changeIndex,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,

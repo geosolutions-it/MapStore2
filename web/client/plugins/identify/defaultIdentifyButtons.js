@@ -11,7 +11,7 @@ module.exports = ({
     showHighlightFeatureButton,
     currentFeature,
     highlight,
-    highlightFeature = () => {},
+    toggleHighlightFeature = () => {},
     zoomToFeature = () => {},
     ...props
 }) => [
@@ -44,7 +44,7 @@ module.exports = ({
         visible: showHighlightFeatureButton,
         tooltipId: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
         bsStyle: highlight ? "success" : "primary",
-        onClick: () => highlightFeature(!highlight)
+        onClick: () => toggleHighlightFeature(!highlight)
     }, {
         glyph: 'zoom-to',
         visible:

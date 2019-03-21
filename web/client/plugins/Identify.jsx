@@ -18,7 +18,7 @@ const { mapTypeSelector } = require('../selectors/maptype');
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex, highlightFeature} = require('../actions/mapInfo');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex, toggleHighlightFeature} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent} = require('../actions/map');
 
 
@@ -203,7 +203,7 @@ const IdentifyPlugin = compose(
                 currentFeature: currentFeatureSelector,
                 currentFeatureCrs: currentFeatureCrsSelector
             }), {
-                highlightFeature,
+                toggleHighlightFeature,
                 zoomToExtent
             }
         ),
