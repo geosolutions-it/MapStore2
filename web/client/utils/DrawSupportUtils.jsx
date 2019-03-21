@@ -11,9 +11,8 @@
 */
 
 const ol = require('openlayers');
-const {isArray, head, last} = require('lodash');
+const {isArray} = require('lodash');
 const {reproject} = require('./CoordinatesUtils');
-
 
 /**
  * Transforms a leaflet bounds object into an array.
@@ -72,21 +71,8 @@ const transformPolygonToCircle = (feature, mapCrs) => {
     return feature;
 };
 
-/**
- * it tells if the filtered list of the coordinates is a geojson polygon,
- * with the first point = to the last
- * @param {number[[[]]]} coords the coordinates of the polygon
- * @return {boolean} true if it is a valid polygon, false otherwise
-*/
-const isCompletePolygon = (coords = [[[]]]) => {
-    const {validateCoordsArray} = require('./AnnotationsUtils');
-    const validCoords = coords[0].filter(validateCoordsArray);
-    return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
-};
-
 module.exports = {
     transformPolygonToCircle,
     boundsToOLExtent,
-    isCompletePolygon,
     fromLeafletFeatureToQueryform
 };
