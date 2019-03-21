@@ -9,6 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const AttributeEditor = require('./AttributeEditor');
 const ControlledCombobox = require('../../../misc/combobox/ControlledCombobox');
+const {forceSelection} = require('../../../../utils/FeatureGridEditorUtils');
 const {head} = require('lodash');
 const assign = require('object-assign');
 
@@ -48,7 +49,7 @@ class DropDownEditor extends AttributeEditor {
         this.getValue = () => {
             const updated = super.getValue();
             if (this.props.forceSelection) {
-                return {[this.props.column.key]: this.forceSelection({
+                return {[this.props.column.key]: forceSelection({
                     oldValue: this.props.defaultOption,
                     changedValue: updated[this.props.column && this.props.column.key],
                     data: this.props.values,
@@ -58,7 +59,7 @@ class DropDownEditor extends AttributeEditor {
                 return updated;
             }
             // this case is only when forceSelection and allowEmpty are falsy, but this is contractidtory!! so the default option is used
-            return {[this.props.column.key]: this.forceSelection({
+            return {[this.props.column.key]: forceSelection({
                 oldValue: this.props.defaultOption,
                 changedValue: updated[this.props.column && this.props.column.key],
                 data: this.props.values,
@@ -73,12 +74,6 @@ class DropDownEditor extends AttributeEditor {
             defaultOption: this.props.defaultOption || head(this.props.values)
         });
         return <ControlledCombobox {...props} filter={this.props.filter}/>;
-    }
-    forceSelection = ( {oldValue, changedValue, data, allowEmpty}) => {
-        if (allowEmpty && changedValue === "") {
-            return "";
-        }
-        return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
     }
 }
 
