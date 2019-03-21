@@ -58,6 +58,12 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
                 }))
             // simply get the feature info, geometry is already there
             : retrieveFlow(param)
+                .map(res => res.data)
+                .map( ( data = {} ) => ({
+                    data,
+                    features: data.features,
+                    featuresCrs: data && data.crs && parseURN(data.crs)
+                }))
         )
         .map((response) =>
             response.data.exceptions

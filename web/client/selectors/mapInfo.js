@@ -24,7 +24,7 @@ const {queryPanelSelector} = require('./controls');
  * @static
  */
 
- /**
+/**
   * Get mapinfo requests from state
   * @function
   * @memberof selectors.mapinfo
@@ -113,11 +113,11 @@ const currentResponseSelector = createSelector(
 );
 const currentFeatureSelector = state => {
     const currentResponse = currentResponseSelector(state) || {};
-    return get(currentResponse, 'data.features') || get(currentResponse, 'layerMetadata.features');
+    return get(currentResponse, 'layerMetadata.features');
 };
 const currentFeatureCrsSelector = state => {
     const currentResponse = currentResponseSelector(state) || {};
-    return parseURN(get(currentResponse, 'data.crs')) || get(currentResponse, 'layerMetadata.featuresCrs');
+    return get(currentResponse, 'layerMetadata.featuresCrs');
 };
 
 /**
