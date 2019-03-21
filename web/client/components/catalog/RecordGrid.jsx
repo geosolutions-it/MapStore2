@@ -58,7 +58,7 @@ class RecordGrid extends React.Component {
                 <Item
                     {...this.props}
                     unsavedChanges={this.props.unsavedChanges}
-                    clearModal={this.props.clearModal} 
+                    clearModal={this.props.clearModal}
                     layers={this.props.layers}
                     modalParams={this.props.modalParams}
                     removeThumbnail={this.props.removeThumbnail}
