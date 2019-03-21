@@ -23,7 +23,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS
 } = require('../actions/annotations');
 
-const {validateCoordsArray, getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents, updateAllStyles} = require('../utils/AnnotationsUtils');
+const {validateCoordsArray, getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents, updateAllStyles, getBaseCoord} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
 const {head, findIndex, isNil, slice, castArray} = require('lodash');
 
@@ -36,8 +36,6 @@ const fixCoordinates = (coords, type) => {
         default: return coords[0];
     }
 };
-
-const {getBaseCoord} = require('../utils/AnnotationsUtils');
 
 function annotations(state = { validationErrors: {} }, action) {
     switch (action.type) {

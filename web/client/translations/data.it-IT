@@ -890,6 +890,7 @@
                     "MultiPoint": "Editor della linea",
                     "Text": "Editor del testo"
                 },
+                "center": "Centro",
                 "add": "Aggiungi una nuova coordinata",
                 "addByClick": "Aggiungi nuove coordinate cliccando sul pulsante + o sulla mappa",
                 "valid": "La geometria è valida",

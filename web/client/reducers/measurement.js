@@ -14,11 +14,13 @@ const {
     CHANGED_GEOMETRY,
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
+    UPDATE_MEASURES,
     INIT
 } = require('../actions/measurement');
-const {set} = require('../utils/ImmutableUtils');
-
 const {TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY} = require('../actions/controls');
+const {set} = require('../utils/ImmutableUtils');
+const {isPolygon} = require('../utils/openlayers/DrawUtils');
+const {dropRight} = require('lodash');
 
 const assign = require('object-assign');
 const defaultState = {
@@ -61,7 +63,14 @@ function measurement(state = defaultState, action) {
             }
         });
     }
-    case CHANGE_MEASUREMENT_STATE:
+    case CHANGE_MEASUREMENT_STATE: {
+        let feature = action.feature;
+        if (isPolygon(feature)) {
+            /* in the state the polygon is always not closed (the feature come closed from the measureSupport)
+             * a selector validates the feature and it closes the polygon adding first valid coord
+             */
+            feature = set("geometry.coordinates[0]", dropRight(feature.geometry.coordinates[0]), feature);
+        }
         return assign({}, state, {
             lineMeasureEnabled: action.lineMeasureEnabled,
             areaMeasureEnabled: action.areaMeasureEnabled,
@@ -73,8 +82,19 @@ function measurement(state = defaultState, action) {
             bearing: action.bearing,
             lenUnit: action.lenUnit,
             areaUnit: action.areaUnit,
-            feature: set("properties.disabled", state.feature.properties.disabled, action.feature)
+            feature: set("properties.disabled", state.feature.properties.disabled, feature)
         });
+    }
+    case UPDATE_MEASURES: {
+        const {point, len, area, bearing} = action.measures;
+        return {
+            ...state,
+            point,
+            len,
+            area,
+            bearing
+        };
+    }
     case RESET_GEOMETRY: {
         let newState = set("feature.properties.disabled", true, state);
         return {
@@ -170,16 +190,25 @@ function measurement(state = defaultState, action) {
     }
     case CHANGE_COORDINATES: {
         let coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
-        let newState = set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
-        newState = set("feature.type", "Feature", newState);
-        newState = set("feature.properties.disabled", coordinates
-            .filter((c) => {
-                const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
-                return isValid;
-            }
-        ).length !== coordinates.length, newState);
-        newState = set("updatedByUI", true, newState);
-        return set("feature.geometry.type", newState.bearingMeasureEnabled ? "LineString" : newState.geomType, newState);
+        // wrap in an array for polygon geom
+        coordinates = state.areaMeasureEnabled ? dropRight(coordinates) : coordinates;
+        return {
+            ...state,
+            feature: {
+                type: "Feature",
+                properties: {
+                    disabled: coordinates.filter((c) => {
+                        const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+                        return isValid;
+                    }).length !== coordinates.length
+                },
+                geometry: {
+                    type: state.bearingMeasureEnabled ? "LineString" : state.geomType,
+                    coordinates: state.areaMeasureEnabled ? [coordinates] : coordinates
+                }
+            },
+            updatedByUI: true
+        };
     }
     default:
         return state;

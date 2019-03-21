@@ -16,7 +16,8 @@ const {
     init, INIT,
     changeGeometry, CHANGED_GEOMETRY,
     changeCoordinates, CHANGE_COORDINATES,
-    addAnnotation, ADD_MEASURE_AS_ANNOTATION
+    addAnnotation, ADD_MEASURE_AS_ANNOTATION,
+    updateMeasures, UPDATE_MEASURES
 } = require('../measurement');
 const feature = {type: "Feature", geometry: {
     coordinates: [],
@@ -112,5 +113,11 @@ describe('Test correctness of measurement actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_COORDINATES);
         expect(retval.coordinates).toEqual(coordinates);
+    });
+    it('Test updateMeasures action creator', () => {
+        const retval = updateMeasures({len: 0});
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_MEASURES);
+        expect(retval.measures).toEqual({len: 0});
     });
 });

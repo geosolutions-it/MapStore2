@@ -379,7 +379,7 @@ class DrawSupport extends React.Component {
         this.drawInteraction.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
-            let drawnGeom = evt.feature.getGeometry();
+            let drawnGeom = this.sketchFeature.getGeometry();
             let drawnFeatures = this.drawLayer.getSource().getFeatures();
             let previousGeometries;
             let features = this.props.features;
@@ -395,7 +395,7 @@ class DrawSupport extends React.Component {
                     newFeature = this.getNewFeature(newDrawMethod, coordinates);
                     // TODO verify center is projected in 4326 and is an array
                     center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
-                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || this.sketchFeature.get("id");
+                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || this.sketchFeature.get("id");
                     // this.sketchFeature.set('id', originalId);
                     newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y], id: originalId});
                 } else if (drawMethod === "Polygon") {
@@ -435,7 +435,7 @@ class DrawSupport extends React.Component {
                     const center = drawnGeom.getCenter();
                     const coordinates = this.polygonCoordsFromCircle(center, radius);
                     const newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates}));
-                    if (features.length === 1 && !features[0].geometry) {
+                    if (features.length === 1 && features[0] && !features[0].geometry) {
                         previousGeometries = [];
                         geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
                     } else {
@@ -730,8 +730,8 @@ class DrawSupport extends React.Component {
             this.addFeatures(newProps);
         }
     };
-    addSingleClickListener = (singleclickCallback) => {
-        let evtKey = this.props.map.on('singleclick', singleclickCallback);
+    addSingleClickListener = (singleclickCallback, props) => {
+        let evtKey = props.map.on('singleclick', singleclickCallback);
         return evtKey;
     };
 
@@ -740,7 +740,7 @@ class DrawSupport extends React.Component {
         if (this.state && this.state.keySingleClickCallback) {
             ol.Observable.unByKey(this.state.keySingleClickCallback);
         }
-        const singleClickCallback = (e) => {
+        const singleClickCallback = (event) => {
             if (this.drawSource && newProps.options) {
                 let previousFeatures = this.drawSource.getFeatures();
                 let previousFtIndex = 0;
@@ -761,22 +761,22 @@ class DrawSupport extends React.Component {
                             if (isCompletePolygon(previousCoords)) {
                                 // insert at penultimate position
                                 actualCoords = slice(previousCoords[0], 0, previousCoords[0].length - 1);
-                                actualCoords = actualCoords.concat([e.coordinate]);
+                                actualCoords = actualCoords.concat([event.coordinate]);
                                 actualCoords = [actualCoords.concat([previousCoords[0][0]])];
                             } else {
                                 // insert at ultimate position if more than 2 point
-                                actualCoords = previousCoords[0].length > 1 ? [[...previousCoords[0], e.coordinate, previousCoords[0][0] ]] : [[...previousCoords[0], e.coordinate ]];
+                                actualCoords = previousCoords[0].length > 1 ? [[...previousCoords[0], event.coordinate, previousCoords[0][0] ]] : [[...previousCoords[0], event.coordinate ]];
                             }
                         } else {
                             // insert at first position
-                            actualCoords = [[e.coordinate]];
+                            actualCoords = [[event.coordinate]];
                         }
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                         break;
                     }
                     case "LineString": case "MultiPoint": {
-                        actualCoords = previousCoords.length ? [...previousCoords, e.coordinate] : [e.coordinate];
+                        actualCoords = previousCoords.length ? [...previousCoords, event.coordinate] : [event.coordinate];
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                     }
@@ -784,7 +784,7 @@ class DrawSupport extends React.Component {
                     case "Circle": {
                         newDrawMethod = "Polygon";
                         const radius = previousFt && previousFt.getProperties() && previousFt.getProperties().radius || 10000;
-                        let center = e.coordinate;
+                        let center = event.coordinate;
                         const coords = this.polygonCoordsFromCircle(center, 100);
                         olFt = this.getNewFeature(newDrawMethod, coords);
                         // TODO verify center is projected in 4326 and is an array
@@ -795,14 +795,14 @@ class DrawSupport extends React.Component {
                     }
                     case "Text": {
                         newDrawMethod = "Point";
-                        olFt = this.getNewFeature(newDrawMethod, e.coordinate);
+                        olFt = this.getNewFeature(newDrawMethod, event.coordinate);
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                         olFt.setProperties({isText: true, valueText: previousFt && previousFt.getProperties() && previousFt.getProperties().valueText || newProps.options.defaultTextAnnotation || "New" });
                         break;
                     }
                     // point
                     default: {
-                        actualCoords = e.coordinate;
+                        actualCoords = event.coordinate;
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                     }
@@ -835,7 +835,7 @@ class DrawSupport extends React.Component {
         };
         this.clean();
 
-        let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs());
+        let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs()) || {};
         let props;
         if (newFeature && newFeature.features && newFeature.features.length) {
             // filtering circles features only when drawing
@@ -864,7 +864,7 @@ class DrawSupport extends React.Component {
                 this.addTranslateInteraction();
             }
             if (newProps.options.addClickCallback) {
-                this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
+                this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback, newProps)});
             }
         }
         if (newProps.options && newProps.options.selectEnabled) {
@@ -999,7 +999,7 @@ class DrawSupport extends React.Component {
         // retrieve geodesic center from properties
         // it's different from extent center
         let center = geometryProperties && geometryProperties.geodesicCenter || ol.extent.getCenter(extent);
-        let coordinates = geometry.getCoordinates();
+        let coordinates;
         let projection = this.props.map.getView().getProjection().getCode();
         let radius;
         let type = geometry.getType();

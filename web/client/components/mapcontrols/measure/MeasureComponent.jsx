@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {DropdownList} = require('react-widgets');
 const {ButtonToolbar, Tooltip, Glyphicon, Grid, Row, Col, FormGroup} = require('react-bootstrap');
-const {isEqual, round, get, dropRight} = require('lodash');
+const {isEqual, round, get} = require('lodash');
 
 const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message');
@@ -253,9 +253,6 @@ class MeasureComponent extends React.Component {
     render() {
         const geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
         let coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
-        if (geomType.indexOf('polygon') !== -1) {
-            coords = dropRight(coords);
-        }
         return (
            <BorderLayout
                id={this.props.id}

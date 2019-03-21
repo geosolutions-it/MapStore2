@@ -10,8 +10,16 @@
 const expect = require('expect');
 const {
     isCoordinateEditorEnabledSelector,
-    showAddAsAnnotationSelector
+    showAddAsAnnotationSelector,
+    measurementSelector,
+    getValidFeatureSelector
 } = require('../measurement');
+const {
+    polyFeatureNotClosedInvalid,
+    polyFeatureNotClosed,
+    lineFeature3,
+    lineFeatureWithoutGeom
+} = require('../../test-resources/drawsupport/features');
 
 describe('Test maptype', () => {
     it('test isCoordinateEditorEnabledSelector', () => {
@@ -36,5 +44,38 @@ describe('Test maptype', () => {
         const retval = showAddAsAnnotationSelector({measurement: {showAddAsAnnotation: true}});
         expect(retval).toExist();
         expect(retval).toBe(true);
+    });
+    it('test getValidFeatureSelector no feature geom', () => {
+        expect(getValidFeatureSelector({
+            measurement: {
+                feature: lineFeatureWithoutGeom
+            }
+        })).toEqual(lineFeatureWithoutGeom);
+    });
+    it('test measurementSelector', () => {
+        let retval = measurementSelector({
+            measurement: {
+                showAddAsAnnotation: true,
+                feature: polyFeatureNotClosedInvalid
+            }
+        });
+        expect(retval).toExist();
+        expect(retval.feature.geometry.coordinates).toEqual( [ [ [ 0, 1 ], [ 0, 5 ], [ 2, 1 ], [ 0, 1 ] ] ] );
+
+        retval = measurementSelector({
+            measurement: {
+                showAddAsAnnotation: true,
+                feature: polyFeatureNotClosed
+            }
+        });
+        expect(retval.feature.geometry.coordinates).toEqual( [[[3, 1], [0, 5], [3, 3], [3, 1]]] );
+
+        retval = measurementSelector({
+            measurement: {
+                showAddAsAnnotation: true,
+                feature: lineFeature3
+            }
+        });
+        expect(retval.feature.geometry.coordinates).toEqual( lineFeature3.geometry.coordinates );
     });
 });

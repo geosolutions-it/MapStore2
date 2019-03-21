@@ -40,19 +40,13 @@ class Feature extends React.Component {
         // TODO check if shallow comparison is enough properties and geometry
         return !isEqual(nextProps.properties, this.props.properties) ||
             !isEqual(nextProps.geometry, this.props.geometry) ||
-            (nextProps.features !== this.props.features) ||
-            (nextProps.style !== this.props.style);
+            !isEqual(nextProps.features, this.props.features) ||
+            !isEqual(nextProps.style, this.props.style);
     }
 
     componentWillUpdate(nextProps) {
-        // TODO check if shallow comparison is enough properties and geometry
-        if (!isEqual(nextProps.properties, this.props.properties) ||
-            !isEqual(nextProps.geometry, this.props.geometry) ||
-            (nextProps.features !== this.props.features) ||
-            (nextProps.style !== this.props.style)) {
-            this.removeFromContainer();
-            this.addFeatures(nextProps);
-        }
+        this.removeFromContainer();
+        this.addFeatures(nextProps);
     }
 
     componentWillUnmount() {

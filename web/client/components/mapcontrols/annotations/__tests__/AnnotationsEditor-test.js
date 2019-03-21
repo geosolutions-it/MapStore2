@@ -9,8 +9,8 @@ const expect = require('expect');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const AnnotationsEditor = require('../AnnotationsEditor');
 
+const AnnotationsEditor = require('../AnnotationsEditor');
 const TestUtils = require('react-dom/test-utils');
 const actions = {
     onChangeProperties: () => {},

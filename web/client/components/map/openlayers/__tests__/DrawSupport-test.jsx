@@ -12,442 +12,62 @@ const ol = require('openlayers');
 const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
+const {circle, geomCollFeature} = require('../../../../test-resources/drawsupport/features');
 
-let CIRCLE = {
-    type: 'FeatureCollection',
-    id: '36835090-23ad-11e8-9839-9bab136db9a3',
-    features: [{
-        type: 'Feature',
-        geometry: {
-            type: 'Polygon',
-            coordinates: [
-            [
-              [
-                -7.066692092065635,
-                47.17477833929903
-              ],
-              [
-                -7.070957956986268,
-                47.26697075050753
-              ],
-              [
-                -7.083738716328214,
-                47.35863997502234
-              ],
-              [
-                -7.104983930273322,
-                47.44942710493982
-              ],
-              [
-                -7.134609753668168,
-                47.53897854842588
-              ],
-              [
-                -7.172499266922562,
-                47.6269473500946
-              ],
-              [
-                -7.218502937437762,
-                47.71299445745591
-              ],
-              [
-                -7.272439209743323,
-                47.796789930095706
-              ],
-              [
-                -7.334095222013593,
-                47.87801408888858
-              ],
-              [
-                -7.403227646136091,
-                47.95635860315586
-              ],
-              [
-                -7.479563648016411,
-                48.03152751426181
-              ],
-              [
-                -7.562801964329729,
-                48.10323819468144
-              ],
-              [
-                -7.6526140914695295,
-                48.17122224206827
-              ],
-              [
-                -7.748645582001249,
-                48.235226308292674
-              ],
-              [
-                -7.850517443504369,
-                48.29501286380931
-              ],
-              [
-                -7.95782763428237,
-                48.35036089804014
-              ],
-              [
-                -8.07015265003761,
-                48.40106655672712
-              ],
-              [
-                -8.18704919524932,
-                48.44694371741463
-              ],
-              [
-                -8.308055932658505,
-                48.48782450436609
-              ],
-              [
-                -8.432695303955327,
-                48.52355974430404
-              ],
-              [
-                -8.560475414483594,
-                48.55401936438973
-              ],
-              [
-                -8.690891974524225,
-                48.57909273383168
-              ],
-              [
-                -8.823430289496404,
-                48.59868895043517
-              ],
-              [
-                -8.95756729122193,
-                48.612737073283476
-              ],
-              [
-                -9.092773602236358,
-                48.62118630258009
-              ],
-              [
-                -9.228515625000002,
-                48.62400610748772
-              ],
-              [
-                -9.364257647763646,
-                48.62118630258009
-              ],
-              [
-                -9.499463958778072,
-                48.612737073283476
-              ],
-              [
-                -9.633600960503598,
-                48.59868895043517
-              ],
-              [
-                -9.766139275475776,
-                48.57909273383168
-              ],
-              [
-                -9.89655583551641,
-                48.55401936438973
-              ],
-              [
-                -10.024335946044676,
-                48.52355974430404
-              ],
-              [
-                -10.148975317341497,
-                48.48782450436609
-              ],
-              [
-                -10.269982054750683,
-                48.44694371741463
-              ],
-              [
-                -10.386878599962396,
-                48.40106655672712
-              ],
-              [
-                -10.499203615717633,
-                48.35036089804014
-              ],
-              [
-                -10.606513806495634,
-                48.29501286380931
-              ],
-              [
-                -10.708385667998753,
-                48.235226308292674
-              ],
-              [
-                -10.804417158530473,
-                48.17122224206827
-              ],
-              [
-                -10.894229285670272,
-                48.10323819468144
-              ],
-              [
-                -10.977467601983593,
-                48.03152751426181
-              ],
-              [
-                -11.053803603863912,
-                47.95635860315586
-              ],
-              [
-                -11.12293602798641,
-                47.87801408888858
-              ],
-              [
-                -11.184592040256682,
-                47.796789930095706
-              ],
-              [
-                -11.238528312562241,
-                47.71299445745591
-              ],
-              [
-                -11.284531983077443,
-                47.6269473500946
-              ],
-              [
-                -11.322421496331836,
-                47.53897854842588
-              ],
-              [
-                -11.352047319726681,
-                47.44942710493982
-              ],
-              [
-                -11.373292533671789,
-                47.35863997502234
-              ],
-              [
-                -11.386073293013734,
-                47.26697075050753
-              ],
-              [
-                -11.390339157934367,
-                47.17477833929903
-              ],
-              [
-                -11.386073293013734,
-                47.08242559504841
-              ],
-              [
-                -11.373292533671789,
-                46.990277901535556
-              ],
-              [
-                -11.35204731972668,
-                46.8987017170481
-              ],
-              [
-                -11.322421496331836,
-                46.808063084694076
-              ],
-              [
-                -11.284531983077443,
-                46.718726115193576
-              ],
-              [
-                -11.238528312562241,
-                46.63105144927073
-              ],
-              [
-                -11.184592040256682,
-                46.545394707297326
-              ],
-              [
-                -11.12293602798641,
-                46.46210493431348
-              ],
-              [
-                -11.053803603863912,
-                46.381523048960865
-              ],
-              [
-                -10.977467601983593,
-                46.303980305201314
-              ],
-              [
-                -10.894229285670272,
-                46.22979677595146
-              ],
-              [
-                -10.804417158530473,
-                46.15927986793656
-              ],
-              [
-                -10.708385667998753,
-                46.09272287714786
-              ],
-              [
-                -10.60651380649563,
-                46.03040359427646
-              ],
-              [
-                -10.499203615717633,
-                45.972582969388
-              ],
-              [
-                -10.386878599962396,
-                45.919503844897314
-              ],
-              [
-                -10.269982054750683,
-                45.871389765601215
-              ],
-              [
-                -10.148975317341497,
-                45.828443874131516
-              ],
-              [
-                -10.024335946044676,
-                45.79084789970411
-              ],
-              [
-                -9.89655583551641,
-                45.75876124746622
-              ],
-              [
-                -9.766139275475776,
-                45.73232019509079
-              ],
-              [
-                -9.633600960503598,
-                45.711637202538626
-              ],
-              [
-                -9.499463958778076,
-                45.696800340115416
-              ],
-              [
-                -9.364257647763646,
-                45.6878728390993
-              ],
-              [
-                -9.228515625000002,
-                45.684892768315834
-              ],
-              [
-                -9.092773602236358,
-                45.6878728390993
-              ],
-              [
-                -8.95756729122193,
-                45.696800340115416
-              ],
-              [
-                -8.823430289496406,
-                45.711637202538626
-              ],
-              [
-                -8.690891974524225,
-                45.73232019509079
-              ],
-              [
-                -8.560475414483594,
-                45.75876124746622
-              ],
-              [
-                -8.43269530395533,
-                45.79084789970411
-              ],
-              [
-                -8.308055932658508,
-                45.828443874131516
-              ],
-              [
-                -8.187049195249319,
-                45.871389765601215
-              ],
-              [
-                -8.07015265003761,
-                45.919503844897314
-              ],
-              [
-                -7.95782763428237,
-                45.972582969388
-              ],
-              [
-                -7.850517443504371,
-                46.03040359427646
-              ],
-              [
-                -7.7486455820012505,
-                46.09272287714786
-              ],
-              [
-                -7.652614091469531,
-                46.15927986793656
-              ],
-              [
-                -7.562801964329729,
-                46.22979677595146
-              ],
-              [
-                -7.479563648016411,
-                46.3039803052013
-              ],
-              [
-                -7.403227646136092,
-                46.381523048960865
-              ],
-              [
-                -7.334095222013593,
-                46.46210493431348
-              ],
-              [
-                -7.272439209743323,
-                46.545394707297326
-              ],
-              [
-                -7.218502937437762,
-                46.63105144927073
-              ],
-              [
-                -7.172499266922562,
-                46.718726115193576
-              ],
-              [
-                -7.134609753668168,
-                46.808063084694076
-              ],
-              [
-                -7.104983930273322,
-                46.8987017170481
-              ],
-              [
-                -7.083738716328214,
-                46.990277901535556
-              ],
-              [
-                -7.070957956986268,
-                47.08242559504841
-              ],
-              [
-                -7.066692092065635,
-                47.17477833929903
-              ]
-            ]
-          ]
-        }
-    }],
-    newFeature: true,
-    properties: {
-        id: '36835090-23ad-11e8-9839-9bab136db9a3',
-        circles: [0],
-        isCircle: true
-    },
-    style: {
-        type: 'Circle',
-        Circle: {
-            color: '#ffcc33',
-            opacity: 1,
-            weight: 3,
-            fillColor: '#ffffff',
-            fillOpacity: 0.2,
-            radius: 10
-        }
-    }
+const viewOptions = {
+    projection: 'EPSG:3857',
+    center: [0, 0],
+    zoom: 5
 };
+let olMap = new ol.Map({
+    target: "map",
+    view: new ol.View(viewOptions)
+});
+olMap.disableEventListener = () => {};
+
+const testHandlers = {
+    onStatusChange: () => {},
+    onSelectFeatures: () => {},
+    onGeometryChanged: () => {},
+    onEndDrawing: () => {},
+    onDrawingFeatures: () => {}
+};
+
+/*  used to render the DrawSupport component with some default props*/
+const renderDrawSupport = (props = {}) => {
+    return ReactDOM.render(
+        <DrawSupport
+            features={props.features | []}
+            map={props.map || olMap}
+            {...testHandlers}
+            {...props}
+        />, document.getElementById("container"));
+};
+
+/**
+ * it renders Drawsupport in edit mode with singleclick Listener enabled and
+ * it dispatches a singleclick mouse event
+*/
+const renderAndClick = (props = {}, options = {}) => {
+    let support = renderDrawSupport();
+    // entering componentWillReceiveProps
+    support = renderDrawSupport({
+        drawStatus: "drawOrEdit",
+        features: [props.feature],
+        options: {
+            drawEnabled: false,
+            editEnabled: true,
+            addClickCallback: true
+        },
+        ...props
+    });
+    support.props.map.dispatchEvent({
+        type: "singleclick",
+        coordinate: options.singleClickCoordiante || [500, 30]
+    });
+    return support;
+};
+
 
 describe('Test DrawSupport', () => {
     beforeEach((done) => {
@@ -457,6 +77,13 @@ describe('Test DrawSupport', () => {
 
     afterEach((done) => {
         document.body.innerHTML = '';
+        olMap = new ol.Map({
+            target: "map",
+            view: new ol.View(viewOptions)
+        });
+        olMap.disableEventListener = () => {};
+
+        expect.restoreSpies();
         setTimeout(done);
     });
 
@@ -489,19 +116,24 @@ describe('Test DrawSupport', () => {
             getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
+            enableEventListener: () => {},
+            removeInteraction: () => {},
+            removeLayer: () => {},
             getInteractions: () => ({
                 getLength: () => 0
             })
         };
-        const spyAdd = expect.spyOn(fakeMap, "addLayer");
-        const spyInteraction = expect.spyOn(fakeMap, "addInteraction");
+        const spyAddLayer = expect.spyOn(fakeMap, "addLayer");
+        const spyAddInteraction = expect.spyOn(fakeMap, "addInteraction");
         const support = ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point"/>, document.getElementById("container"));
-        expect(spyAdd.calls.length).toBe(1);
-        expect(spyInteraction.calls.length).toBe(1);
+        ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="LineString  "/>, document.getElementById("container"));
+        expect(spyAddLayer.calls.length).toBe(2);
+        expect(spyAddInteraction.calls.length).toBe(2);
     });
 
     it('starts drawing bbox', () => {
@@ -579,9 +211,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onStatusChange: () => {}
-        };
         const ft = {
             type: "Feature",
             geometry: {
@@ -619,9 +248,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onStatusChange: () => {}
-        };
 
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
         const support = ReactDOM.render(
@@ -746,10 +372,6 @@ describe('Test DrawSupport', () => {
                 })
             })
         };
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {}
-        };
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
               name: 'My Point'
@@ -762,6 +384,51 @@ describe('Test DrawSupport', () => {
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{stopAfterDrawing: true}}
                 onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+    });
+
+    it('end drawing a circle feature ', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const feature = new ol.Feature({
+              geometry: new ol.geom.Circle([13.0, 43.0], 100),
+              name: 'My Point'
+        });
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Circle" options={{
+                    stopAfterDrawing: true,
+                    geodesic: true
+                }}
+                onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: feature
@@ -783,10 +450,6 @@ describe('Test DrawSupport', () => {
                     getCode: () => 'EPSG:4326'
                 })
             })
-        };
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {}
         };
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
@@ -1478,11 +1141,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {},
-            onGeometryChanged: () => {}
-        };
         const geoJSON = {
             type: 'Feature',
             geometry: {
@@ -1537,11 +1195,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {},
-            onGeometryChanged: () => {}
-        };
         const geoJSON = {
             type: 'Feature',
             geometry: {
@@ -1599,7 +1252,7 @@ describe('Test DrawSupport', () => {
         };
 
         const support = ReactDOM.render(
-            <DrawSupport features={[CIRCLE]} map={fakeMap}/>, document.getElementById("container"));
+            <DrawSupport features={[circle]} map={fakeMap}/>, document.getElementById("container"));
         expect(support).toExist();
         const center = [1, 1];
         const radius = 100;
@@ -1931,4 +1584,501 @@ describe('Test DrawSupport', () => {
         }, 100);
     });
 
+    it('test draw callbacks in edit mode with Polygons feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 43]
+                ]]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                canEdit: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1,
+                fillColor: "#0000FF",
+                fillOpacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: feature.geometry.type
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        const ft = spyOnDrawingFeatures.calls[0].arguments[0][0];
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Polygon");
+        expect(ft.properties).toEqual({
+            "name": "some name",
+            "id": "a-unique-id",
+            "canEdit": true
+        });
+        done();
+    });
+    it('test draw callbacks in edit mode with LineString feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 43]
+                ]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                canEdit: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: feature.geometry.type
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+
+    it('test draw callbacks in edit mode with Text feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                isText: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                label: "a text",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: "Text"
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+
+    it('test draw callbacks in edit mode with Circle feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                radius: 1111,
+                isCircle: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: "Circle"
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test drawend callbacks with Circle, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Circle(center, radius)
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[2]).toEqual("");
+        expect(ArgsGeometryChanged[3]).toEqual(false);
+        expect(ArgsGeometryChanged[4]).toEqual(true);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+
+        done();
+    });
+
+    it('test drawend callbacks with Text, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "Text",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                stopAfterDrawing: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const coordinate = [1300, 4300];
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Point(coordinate)
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[2]).toEqual("enterEditMode");
+        expect(ArgsGeometryChanged[3]).toEqual(true);
+        expect(ArgsGeometryChanged[4]).toEqual(false);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+        expect(ArgsEndDrawing[0].features[0].properties.isText).toBe(true);
+        expect(ArgsEndDrawing[0].features[0].properties.valueText).toBe(".");
+        done();
+    });
+    it('test drawend callbacks with Polygon, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "Polygon",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                stopAfterDrawing: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Polygon([[[1300, 4300], [8, 9], [8, 59]]])
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[2]).toEqual("enterEditMode");
+        expect(ArgsGeometryChanged[3]).toEqual(false);
+        expect(ArgsGeometryChanged[4]).toEqual(false);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+        expect(ArgsEndDrawing[0].features[0].geometry.coordinates[0].length).toBe(4);
+        done();
+    });
+
+    it('test drawend callbacks with LineString, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "LineString",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.LineString([[1300, 4300], [8, 9], [8, 59]])
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[3]).toEqual(false);
+        expect(ArgsGeometryChanged[4]).toEqual(false);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+        expect(ArgsEndDrawing[0].features[0].geometry.coordinates.length).toBe(3);
+        done();
+    });
+
+    it('test drawend callbacks with Circle, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Circle(center, radius)
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(null);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+
+    it('test drawend callbacks with MultiLineString, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "MultiLineString",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.MultiLineString([[[1300, 4300], [8, 9], [8, 59]]])
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+
+    it('test drawend callbacks with MultiPoint, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "MultiPoint",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Point([1300, 4300])
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+    it('test select interaction, retrieving a drawn feature', (done) => {
+        const spyOnSelectFeatures = expect.spyOn(testHandlers, "onSelectFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "LineString",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                selected: geomCollFeature,
+                transformToFeatureCollection: false,
+                selectEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const feature = new ol.Feature({
+            geometry: new ol.geom.Point(13.0, 43.0),
+            name: 'My Point'
+        });
+        support.selectInteraction.dispatchEvent({
+            type: 'select',
+            feature: feature
+        });
+        expect(spyOnSelectFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test modifyend event for modifyInteraction with Circle, exported FeatureCollection', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: true,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.modifyInteraction.dispatchEvent({
+            type: 'modifyend',
+            features: new ol.Collection(
+                [new ol.Feature({
+                    geometry: new ol.geom.Circle(center, radius)
+                })]
+            )
+        });
+        expect(spyOnGeometryChanged).toNotHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnDrawingFeatures.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(1);
+
+        done();
+    });
+
+    it('test modifyend event for modifyInteraction with Circle, exported FeatureCollection', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.modifyInteraction.dispatchEvent({
+            type: 'modifyend',
+            features: new ol.Collection(
+                [new ol.Feature({
+                    geometry: new ol.geom.Circle(center, radius)
+                })]
+            )
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toNotHaveBeenCalled();
+
+        done();
+    });
 });

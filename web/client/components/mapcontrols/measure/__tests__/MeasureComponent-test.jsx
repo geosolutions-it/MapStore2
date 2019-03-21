@@ -295,4 +295,43 @@ describe("test the MeasureComponent", () => {
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         expect(coordEditorPanel).toExist();
     });
+
+    it('rendering a coordinate editor for Polygons with 4 empty rows', () => {
+        let measurement = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: true,
+            bearingMeasureEnabled: false,
+            geomType: 'Polygon',
+            feature: {
+                type: "Feature",
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [[["", ""], ["", ""], ["", ""], ["", ""]]]
+                },
+                properties: {}
+            },
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }}
+                measurement={measurement}
+                showCoordinateEditor
+                format="decimal"
+                isDraggable
+                areaMeasureEnabled
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
+        const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
+        expect(coordEditorPanel).toExist();
+        expect(coordinateRows.length).toBe(4);
+
+    });
 });

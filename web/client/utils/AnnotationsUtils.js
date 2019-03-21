@@ -464,6 +464,12 @@ const AnnotationsUtils = {
     formatCoordinates: (coords = [[]]) => {
         return coords.map(c => ({lat: c && c[1], lon: c && c[0]}));
     },
+    getBaseCoord: (type) => {
+        switch (type) {
+            case "Polygon": case "LineString": case "MultiPoint": return [];
+            default: return [[{lat: "", lon: ""}]];
+        }
+    },
     getComponents: ({type, coordinates}) => {
         switch (type) {
             case "Polygon": {
@@ -531,12 +537,6 @@ const AnnotationsUtils = {
             return AnnotationsUtils.validateCircle({components, properties});
         }
         return AnnotationsUtils.validateCoordinates({components, remove, type});
-    },
-    getBaseCoord: (type) => {
-        switch (type) {
-            case "Polygon": case "LineString": case "MultiPoint": return [];
-            default: return [[]];
-        }
     },
     updateAllStyles: (ftColl = {}, newStyle = {}) => {
         if (ftColl.features && ftColl.features.length) {

@@ -891,6 +891,7 @@
                     "MultiPoint": "Éditeur de ligne",
                     "Text": "Éditeur de texte"
                 },
+                "center": "Centre",
                 "add": "Ajouter de nouvelles coordonnées",
                 "addByClick": "Ajouter de nouvelles coordonnées en cliquant sur le bouton plus ou sur la carte",
                 "valid": "La géométrie est valide",

@@ -47,6 +47,141 @@ const ft = {
     }
 };
 
+
+const annotationsLayerWithTextFeature = {
+    "flat": [
+        {
+            "id": "annotations",
+            "features": [
+                {
+                    type: "FeatureCollection",
+                    features: [{
+                        "properties": {
+                            "id": "1",
+                            isText: true,
+                            valueText: "my text"
+                        },
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                1,
+                                1
+                            ]
+                        }
+                    }],
+                    style: {
+                        type: "Text",
+                        id: "id.1.text.5",
+                        "Text": {
+                            color: "#FF0000",
+                            font: "Arial 14px",
+                            label: "my text"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+};
+
+const annotationsLayerWithCircleFeature = {
+    "flat": [
+        {
+            "id": "annotations",
+            "features": [
+                {
+                    type: "FeatureCollection",
+                    features: [{
+                        "properties": {
+                            "id": "1",
+                            isCircle: true,
+                            center: []
+                        },
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                1,
+                                1
+                            ]
+                        }
+                    }],
+                    style: {
+                        type: "Circle",
+                        id: "id.1.2.3.4.5",
+                        "Circle": {
+                            color: "#FF0000"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+};
+const annotationsLayerWithLineStringFeature = {
+    "flat": [
+        {
+            "id": "annotations",
+            "features": [
+                {
+                    type: "FeatureCollection",
+                    features: [{
+                        "properties": {
+                            "id": "1"
+                        },
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [ 1, 1 ],
+                                [ 12, 12 ]
+                            ]
+                        }
+                    }],
+                    style: {
+                        type: "LineString",
+                        id: "id.1.2.3.4.5",
+                        "LineString": {
+                            color: "#FF0000"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+};
+const annotationsLayerWithPointFeatureAndSymbol = {
+    "flat": [
+        {
+            "id": "annotations",
+            "features": [
+                {
+                    type: "FeatureCollection",
+                    features: [{
+                        "properties": {
+                            "id": "1"
+                        },
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [ 1, 1 ],
+                                [ 12, 12 ]
+                            ]
+                        },
+                        style: [{
+                            type: "Point",
+                            id: "id.1.2.3.4.5",
+                            iconUrl: "/path/symbol.svg",
+                            symbolUrlCustomized: "/path/symbol.svg"
+                        }]
+                    }]
+                }
+            ]
+        }
+    ]
+};
 describe('annotations Epics', () => {
     let store;
     const defaultState = {
@@ -102,6 +237,31 @@ describe('annotations Epics', () => {
         const action = setStyle({});
         store.dispatch(action);
     });
+    it('MAP_CONFIG_LOADED with missing annotations layer', (done) => {
+        const state = {
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: {
+                flat: []
+            }
+        };
+        testEpic(addTimeoutEpic(addAnnotationsLayerEpic, 88), 1, configureMap({}), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
     it('add annotations layer on first save', (done) => {
         store = mockStore({
             annotations: {
@@ -126,7 +286,7 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
-    it('update annotations layer', (done) => {
+    it('update annotations layer, MAP_CONFIG_LOADED', (done) => {
         let action = configureMap({});
 
         store.subscribe(() => {
@@ -150,6 +310,96 @@ describe('annotations Epics', () => {
             }
         });
         editAnnotation('1')(store.dispatch, store.getState);
+    });
+    it('update annotations layer with LineString Feature, with old style structure, MAP_CONFIG_LOADED', (done) => {
+        let action = configureMap({});
+
+        store = mockStore({
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: annotationsLayerWithLineStringFeature
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
+    it('update annotations layer with text Feature, with old style structure, MAP_CONFIG_LOADED', (done) => {
+        let action = configureMap({});
+
+        store = mockStore({
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: annotationsLayerWithTextFeature
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
+    it('update annotations layer with Point Feature, with new symbol style structure, MAP_CONFIG_LOADED', (done) => {
+        let action = configureMap({});
+
+        store = mockStore({
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: annotationsLayerWithPointFeatureAndSymbol
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].options.features[0].features[0].style[0].symbolUrlCustomized).toBe(undefined);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
+    it('update annotations layer with Circle Feature, with old style structure, MAP_CONFIG_LOADED', (done) => {
+        let action = configureMap({});
+
+        store = mockStore({
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: annotationsLayerWithCircleFeature
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].options.features[0].features[0].style.length).toBe(2);
+                done();
+            }
+        });
+
+        store.dispatch(action);
     });
     /**
     TOFIX:

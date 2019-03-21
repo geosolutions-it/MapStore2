@@ -4,7 +4,7 @@ var ol = require('openlayers');
 const {last, head} = require('lodash');
 const blue = [0, 153, 255, 1];
 const assign = require('object-assign');
-const {trim, isString} = require('lodash');
+const {trim, isString, isArray} = require('lodash');
 const {colorToRgbaStr} = require('../../../utils/ColorUtils');
 const {set} = require('../../../utils/ImmutableUtils');
 const selectedStyleConfiguration = {
@@ -485,7 +485,11 @@ function getStyle(options, isDrawing = false, textValues = []) {
                             }));
                         }
                         let gStyle = getValidStyle(type, options, isDrawing, textValues);
-                        gStyle.setGeometry(c);
+                        if (isArray(gStyle)) {
+                            gStyle.forEach(s => s.setGeometry(c));
+                        } else {
+                            gStyle.setGeometry(c);
+                        }
                         return p.concat([gStyle]);
                     }, []);
                     return styles;

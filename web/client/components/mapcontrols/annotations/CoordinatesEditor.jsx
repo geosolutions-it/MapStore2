@@ -70,9 +70,9 @@ class CoordinateEditor extends React.Component {
             "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "MultiPoint": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
-            "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "annotations.editor.notValidMarker"},
-            "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "annotations.editor.notValidCircle"},
-            "Text": {add: false, remove: false, validation: "validateText", notValid: "annotations.editor.notValidText"}
+            "Point": {min: 1, max: 1, add: true, remove: false, validation: "validateCoordinates", notValid: "annotations.editor.notValidMarker"},
+            "Circle": {min: 1, max: 1, add: true, remove: false, validation: "validateCircle", notValid: "annotations.editor.notValidCircle"},
+            "Text": {min: 1, max: 1, add: true, remove: false, validation: "validateText", notValid: "annotations.editor.notValidText"}
         },
         transitionProps: {
             transitionName: "switch-panel-transition",
@@ -191,6 +191,9 @@ class CoordinateEditor extends React.Component {
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);
+                    if (this.props.type === "Polygon") {
+                        tempComps = this.addCoordPolygon(tempComps);
+                    }
                     this.props.onChange(tempComps, this.props.properties.radius, this.props.properties.valueText);
                 }
             }
@@ -211,13 +214,13 @@ class CoordinateEditor extends React.Component {
                 </Row>
                 {this.props.type === "Circle" && this.renderCircle()}
                 {this.props.type === "Text" && this.renderText()}
-                <Row style={{flex: 1, overflowY: 'auto'}}>
-                    <Col xs={12}>
-                        {
-                            this.props.type === "Circle" && <ControlLabel>Center</ControlLabel>
-                        }
-                    </Col>
-                </Row>
+                {
+                    this.props.type === "Circle" && <Row style={{flex: 1, overflowY: 'auto'}}>
+                        <Col xs={12}>
+                            <ControlLabel><Message msgId={"annotations.editor.center"}/></ControlLabel>
+                        </Col>
+                    </Row>
+                }
                  {!(!this.props.components || this.props.components.length === 0) &&
                      <Row style={{flex: 1, overflowY: 'auto'}}>
                         <Col xs={5} xsOffset={1}>
@@ -228,7 +231,7 @@ class CoordinateEditor extends React.Component {
                         </Col>
                         <Col xs={1}/>
                     </Row>}
-                <Row style={{flex: 1, overflowY: 'auto', overflowX: 'hidden'}}>
+                <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
@@ -237,7 +240,7 @@ class CoordinateEditor extends React.Component {
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
-                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
+                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
                         onChange={this.change}
                         onMouseEnter={(val) => {
                             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
@@ -294,12 +297,14 @@ class CoordinateEditor extends React.Component {
             </Grid>
         );
     }
-    validateCoordinates = (components = this.props.components, remove = false) => {
+    validateCoordinates = (components = this.props.components, remove = false, idx) => {
         if (components && components.length) {
             const validComponents = components.filter(validateCoords);
 
             if (remove) {
-                return validComponents.length > this.props.componentsValidation[this.props.type].min;
+                return validComponents.length > this.props.componentsValidation[this.props.type].min ||
+                // if there are at least the min number of valid points, then you can delete the other invalid ones
+                validComponents.length >= this.props.componentsValidation[this.props.type].min && !validateCoords(components[idx]);
             }
             return validComponents.length >= this.props.componentsValidation[this.props.type].min;
         }
@@ -325,7 +330,7 @@ class CoordinateEditor extends React.Component {
     addCoordPolygon = (components) => {
         if (this.props.type === "Polygon") {
             const validComponents = components.filter(validateCoords);
-            return components.concat([validComponents[0]]);
+            return components.concat([validComponents.length ? validComponents[0] : {lat: "", lon: ""}]);
         }
         return components;
     }
