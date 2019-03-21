@@ -148,7 +148,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.draggable {boolean} draggable info window, when modal
  * @prop cfg.viewerOptions {object}
- * @prop cfg.showHighlightFeatureButton {boolean}
+ * @prop cfg.showHighlightFeatureButton {boolean} show the highlight feature button if the interrogation returned valid features (openlayers only)
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
