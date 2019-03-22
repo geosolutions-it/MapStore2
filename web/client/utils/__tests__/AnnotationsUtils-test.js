@@ -19,7 +19,7 @@ const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     getStartEndPointsForLinestring,
     createGeometryFromGeomFunction,
     updateAllStyles,
-    fromLineStringToGeodesicLineString
+    fromLineStringToGeodesicLineString, isCompletePolygon
 } = require('../AnnotationsUtils');
 
 const featureCollection = {
@@ -726,5 +726,17 @@ describe('Test the AnnotationsUtils', () => {
         expect(f.type).toEqual("Feature");
         expect(f.properties.id).toEqual("VR46");
         expect(f.properties.ms_style).toExist();
+    });
+
+    it('test isCompletePolygon defaults', () => {
+        const polygonCoords1 = [[[1, 1], [2, 2]]];
+        const polygonCoords2 = [[[1, 1], [2, 2], [1, 1]]];
+        const polygonCoords3 = [[[1, 1], [2, 2], [3, 3], [1, 1]]];
+        const polygonCoords4 = [[[1, 1], [2, undefined], [3, 3], [1, 1]]];
+        expect(isCompletePolygon()).toBe(false);
+        expect(isCompletePolygon(polygonCoords1)).toBe(false);
+        expect(isCompletePolygon(polygonCoords2)).toBe(false);
+        expect(isCompletePolygon(polygonCoords3)).toBe(true);
+        expect(isCompletePolygon(polygonCoords4)).toBe(false);
     });
 });

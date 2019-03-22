@@ -10,7 +10,6 @@ const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
 const {extraMarkers} = require('./MarkerUtils');
 const {geometryFunctions, fetchStyle, hashAndStringify} = require('./VectorStyleUtils');
-const {isCompletePolygon} = require('./DrawSupportUtils');
 const {set} = require('./ImmutableUtils');
 const {values, isNil, slice, head, castArray, last, isArray, findIndex} = require('lodash');
 const uuid = require('uuid');
@@ -473,7 +472,7 @@ const AnnotationsUtils = {
     getComponents: ({type, coordinates}) => {
         switch (type) {
             case "Polygon": {
-                return isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
+                return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
             }
             case "LineString": case "MultiPoint": {
                 return AnnotationsUtils.formatCoordinates(coordinates);
@@ -556,6 +555,16 @@ const AnnotationsUtils = {
     },
     isAMissingSymbol: (style) => {
         return style.symbolUrlCustomized === require('../product/assets/symbols/symbolMissing.svg');
+    },
+    /**
+     * it tells if the filtered list of the coordinates is a geojson polygon,
+     * with the first point = to the last
+     * @param {number[[[]]]} coords the coordinates of the polygon
+     * @return {boolean} true if it is a valid polygon, false otherwise
+    */
+    isCompletePolygon: (coords = [[[]]]) => {
+        const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
+        return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
     }
 };
 

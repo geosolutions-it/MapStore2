@@ -10,7 +10,7 @@ const FeatureInfoUtils = require("./FeatureInfoUtils");
 const INFO_FORMATS = FeatureInfoUtils.INFO_FORMATS;
 const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 const pointOnSurface = require('turf-point-on-surface');
-const {findIndex, has, trim, isString} = require('lodash');
+const {findIndex} = require('lodash');
 
 const MapInfoUtils = {
     /**
@@ -233,32 +233,6 @@ const MapInfoUtils = {
             return op;
         }, {});
         return options;
-    },
-    /**
-     * check if a string attribute is inside of a given object
-     * @param feature {object}
-     * @param attribute {string} name of attribue with dot notations
-     * @param start {array} substring start
-     * @param end {array} substring end
-     * @return {bool} true if feature contains the attribute
-     */
-    validateStringAttribute: (feature, attribute, start = 0, end = 0) => {
-        const path = isString(attribute) && trim(attribute.substring(start, attribute.length - end)) || '';
-        return has(feature, path);
-    },
-    /**
-     * returns a valid template
-     * @param template {string} text with attribute to validate
-     * @param feature {object} object to match attributes
-     * @param regex {regex}
-     * @param start {array} substring start
-     * @param end {array} substring end
-     * @return {string} templete without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id }
-     */
-    getCleanTemplate: (template, feature, regex, start = 0, end = 0) => {
-        const matchVariables = isString(template) && template.match(regex);
-        const replacedTag = matchVariables && matchVariables.map(temp => ({ previous: temp, next: MapInfoUtils.validateStringAttribute(feature, temp.replace(/(<([^>]+)>)/ig, ''), start, end) && temp.replace(/(<([^>]+)>)/ig, '') || ''})) || null;
-        return replacedTag && replacedTag.reduce((temp, variable) => temp.replace(variable.previous, variable.next), template) || template || '';
     }
 };
 

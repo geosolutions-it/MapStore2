@@ -60,11 +60,5 @@ module.exports = {
             return getEditor(type, editor.editor, {...props, ...editor.editorProps || {}});
         }
         return null;
-    },
-    forceSelection: ( {oldValue, changedValue, data, allowEmpty}) => {
-        if (allowEmpty && changedValue === "") {
-            return "";
-        }
-        return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
     }
 };
