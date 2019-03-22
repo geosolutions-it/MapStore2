@@ -27,7 +27,7 @@ const SecurityUtils = {
      * Gets security state form the store.
      */
     getSecurityInfo() {
-        return this.store.getState().security;
+        return this.store && this.store.getState().security || {};
     },
 
     /**
