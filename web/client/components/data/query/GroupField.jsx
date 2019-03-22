@@ -152,6 +152,16 @@ class GroupField extends React.Component {
                             <DateField
                                 attType="date"
                                 operator={filterField.operator}/>
+                            <DateField
+                                attType="date-time"
+                                timeEnabled
+                                dateFormat="DD-MM-YYYY HH:mm"
+                                operator={filterField.operator}/>
+                            <DateField
+                                attType="time"
+                                timeEnabled
+                                dateFormat="HH:mm"
+                                operator={filterField.operator}/>
                             <NumberField
                                 operator={filterField.operator}
                                 attType="number"/>

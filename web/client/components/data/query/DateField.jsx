@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,11 +6,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
-const Moment = require('moment');
+const PropTypes = require('prop-types');
+const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
 
-momentLocalizer(Moment);
+momentLocalizer(moment);
 
 const {DateTimePicker} = require('react-widgets');
 const {Row, Col} = require('react-bootstrap');
@@ -34,7 +33,7 @@ class DateField extends React.Component {
 
     static defaultProps = {
         timeEnabled: false,
-        dateFormat: "L",
+        dateFormat: "DD-MM-YYYY",
         operator: null,
         fieldName: null,
         fieldRowId: null,
@@ -45,23 +44,46 @@ class DateField extends React.Component {
         onUpdateExceptionField: () => {}
     };
 
+    getDateStartOfDay = (date) => {
+        if (this.props.attType === "date") {
+
+        }
+        let month = date.getMonth() + 1;
+        month = month < 10 ? "0" + month : month;
+        let day = date.getDate();
+        day = day < 10 ? "0" + day : day;
+        return new Date(`${date.getFullYear()}-${month}-${day}T00:00:00Z`);
+    }
+
+    getUTCDate = (date) => {
+        return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+        date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
+    }
     render() {
+        let startdate = this.props.fieldValue && this.props.fieldValue.startDate ? this.getUTCDate(this.props.fieldValue.startDate) : null;
+        let enddate = this.props.fieldValue && this.props.fieldValue.endDate ? this.getUTCDate(this.props.fieldValue.endDate) : null;
+
+        let defaultCurrentDate = moment().startOf("day").toDate();
+        defaultCurrentDate = this.getDateStartOfDay(defaultCurrentDate);
+
         let dateRow = this.props.operator === "><" ?
                 (<div>
                     <Row>
                         <Col xs={6}>
                             <DateTimePicker
-                                defaultValue={this.props.fieldValue ? this.props.fieldValue.startDate : null}
+                                defaultValue={startdate}
+                                value={startdate}
                                 time={this.props.timeEnabled}
                                 format={this.props.dateFormat}
-                                onChange={(date) => this.updateValueState({startDate: date, endDate: this.props.fieldValue ? this.props.fieldValue.endDate : null})}/>
+                                onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
                         </Col>
                         <Col xs={6}>
                             <DateTimePicker
-                                defaultValue={this.props.fieldValue ? this.props.fieldValue.endDate : null}
+                                defaultValue={enddate}
+                                value={enddate}
                                 time={this.props.timeEnabled}
                                 format={this.props.dateFormat}
-                                onChange={(date) => this.updateValueState({startDate: this.props.fieldValue ? this.props.fieldValue.startDate : null, endDate: date})}/>
+                                onChange={(date) => this.updateValueState({startDate: startdate, endDate: date})}/>
                         </Col>
                     </Row>
                 </div>)
@@ -69,10 +91,17 @@ class DateField extends React.Component {
                 (<Row>
                     <Col xs={12}>
                         <DateTimePicker
-                            defaultValue={this.props.fieldValue ? this.props.fieldValue.startDate : null}
+                            defaultCurrentDate={defaultCurrentDate}
+                            defaultValue={startdate}
+                            value={startdate}
                             time={this.props.timeEnabled}
                             format={this.props.dateFormat}
-                            onChange={(date) => this.updateValueState({startDate: date, endDate: null})}/>
+                            onChange={
+                                (date) => {
+                                    console.log(`on change startDate:${date} and getDateStartOfDay ${this.getDateStartOfDay(date)}`);
+                                    this.updateValueState({startDate: this.getDateStartOfDay(date), endDate: null});
+                                }
+                            }/>
                     </Col>
                 </Row>)
             ;
