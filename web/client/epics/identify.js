@@ -11,20 +11,26 @@ const { get } = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
-const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
 const { MAP_CONFIG_LOADED } = require('../actions/config');
-const { stopGetFeatureInfoSelector, queryableLayersSelector, identifyOptionsSelector } = require('../selectors/mapInfo');
-const { centerToMarkerSelector } = require('../selectors/layers');
+const { stopGetFeatureInfoSelector, identifyOptionsSelector, clickPointSelector, clickLayerSelector } = require('../selectors/mapInfo');
+const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
+const { modeSelector } = require('../selectors/featuregrid');
 const { mapSelector } = require('../selectors/map');
 const { boundingMapRectSelector } = require('../selectors/maplayout');
+const { isHighlightEnabledSelector } = require('../selectors/mapInfo');
 const { centerToVisibleArea, isInsideVisibleArea } = require('../utils/CoordinatesUtils');
 const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
 const MapInfoUtils = require('../utils/MapInfoUtils');
+const { parseURN } = require('../utils/CoordinatesUtils');
+const gridEditingSelector = state => modeSelector(state) === 'EDIT';
+
+const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditingSelector(state);
 
 /**
  * Sends a GetFeatureInfo request and dispatches the right action
@@ -33,14 +39,36 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
  * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-const getFeatureInfo = (basePath, requestParams, lMetaData, options = {}) => {
-    const param = { ...options, ...requestParams };
+const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON) => {
+    const param = { ...appParams, ...requestParams };
     const reqId = uuid.v1();
-    return Rx.Observable.defer(() => axios.get(basePath, { params: param }))
+    const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
+    return ((
+        attachJSON && param.info_format !== "application/json" )
+            // add the flow to get the for highlight/zoom
+            ? Rx.Observable.forkJoin(
+                    retrieveFlow(param),
+                    retrieveFlow({ ...param, info_format: "application/json"})
+                        .map(res => res.data)
+                        .catch(() => Rx.Observable.of({})) // errors on geometry retrieval are ignored
+                ).map(([response, data ]) => ({
+                    ...response,
+                    features: data && data.features,
+                    featuresCrs: data && data.crs && parseURN(data.crs)
+                }))
+            // simply get the feature info, geometry is already there
+            : retrieveFlow(param)
+                .map(res => res.data)
+                .map( ( data = {} ) => ({
+                    data,
+                    features: data.features,
+                    featuresCrs: data && data.crs && parseURN(data.crs)
+                }))
+        )
         .map((response) =>
             response.data.exceptions
                 ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
-                : loadFeatureInfo(reqId, response.data, requestParams, lMetaData)
+                : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs })
         )
         .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
         .startWith(newMapInfoRequest(reqId, param));
@@ -73,7 +101,7 @@ module.exports = {
                 .mergeMap(layer => {
                     const { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
                     if (url) {
-                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams));
+                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()) );
                     }
                     return Rx.Observable.of(getVectorInfo(layer, request, metadata));
                 });
@@ -118,9 +146,19 @@ module.exports = {
     onMapClick: (action$, store) =>
         action$.ofType(CLICK_ON_MAP).filter(() => {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
-            return disableAlwaysOn || !stopGetFeatureInfoSelector(store.getState() || {});
+            return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
         .map(({point, layer}) => featureInfoClick(point, layer)),
+    /**
+     * triggers click again when highlight feature is enabled, to download the feature.
+     */
+    featureInfoClickOnHighligh: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(TOGGLE_HIGHLIGHT_FEATURE)
+            .filter(({enabled}) =>
+                enabled
+                && clickPointSelector(getState())
+            )
+            .map( () => featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState()))),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.

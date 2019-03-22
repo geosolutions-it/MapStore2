@@ -7,7 +7,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = props => [
+module.exports = ({
+    showHighlightFeatureButton,
+    currentFeature,
+    highlight,
+    toggleHighlightFeature = () => {},
+    zoomToFeature = () => {},
+    ...props
+}) => [
     {
         glyph: 'arrow-left',
         tooltipId: 'wizard.prev',
@@ -32,8 +39,23 @@ module.exports = props => [
         onClick: () => {
             props.onToggleShowCoordinateEditor(props.showCoordinateEditor);
         }
-    },
-    {
+    }, {
+        glyph: 'map-filter',
+        visible: showHighlightFeatureButton,
+        tooltipId: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
+        bsStyle: highlight ? "success" : "primary",
+        onClick: () => toggleHighlightFeature(!highlight)
+    }, {
+        glyph: 'zoom-to',
+        visible:
+            highlight
+            && !!currentFeature
+            && currentFeature.length > 0
+            // has at least 1 geometry
+            && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
+        tooltipId: "identifyZoomToFeature",
+        onClick: zoomToFeature
+    }, {
         glyph: 'arrow-right',
         tooltipId: 'wizard.next',
         visible: !props.viewerOptions.header && props.validResponses.length > 1 && props.index < props.validResponses.length - 1,

@@ -6,15 +6,13 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {get} = require('lodash');
+const { get, isArray } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
-const {modeSelector} = require('./featuregrid');
+
 const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
-
-const {layersSelector} = require('./layers');
-const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
+const MapInfoUtils = require('../utils/MapInfoUtils');
 
 const {queryPanelSelector} = require('./controls');
 
@@ -25,7 +23,7 @@ const {queryPanelSelector} = require('./controls');
  * @static
  */
 
- /**
+/**
   * Get mapinfo requests from state
   * @function
   * @memberof selectors.mapinfo
@@ -51,20 +49,15 @@ const measureActiveSelector = (state) => get(state, "controls.measure.enabled") 
  * @param {object} state the state
  */
 const clickPointSelector = state => state && state.mapInfo && state.mapInfo.clickPoint;
+const clickLayerSelector = state => state && state.mapInfo && state.mapInfo.clickLayer;
+const showMarkerSelector = state => state && state.mapInfo && state.mapInfo.showMarker;
+
 const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
-const gridEditingSelector = createSelector(modeSelector, (mode) => mode === 'EDIT');
 const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
-
-/**
- * Select queriable layers
- * @param {object} state the state
- * @return {array} the queriable layers
- */
-const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
 
 /**
  * selects stopGetFeatureInfo from state
@@ -76,18 +69,19 @@ const stopGetFeatureInfoSelector = createSelector(
     mapInfoDisabledSelector,
     measureActiveSelector,
     drawSupportActiveSelector,
-    gridEditingSelector,
     annotationsEditingSelector,
     queryPanelSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing, isQueryPanelActive) =>
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, isQueryPanelActive) =>
         isMapInfoDisabled
         || !!isMeasureActive
         || isDrawSupportActive
-        || isGridEditing
         || !!isAnnotationsEditing
         || !!isQueryPanelActive
     );
 
+/**
+ * Defines the general options of the identifyTool to build the request
+ */
 const identifyOptionsSelector = createStructuredSelector({
         format: generalInfoFormatSelector,
         map: mapSelector,
@@ -95,14 +89,101 @@ const identifyOptionsSelector = createStructuredSelector({
         currentLocale: currentLocaleSelector
     });
 
+const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state.mapInfo.highlight;
+
+const indexSelector = (state = {}) => state && state.mapInfo && state.mapInfo.index;
+
+const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
+
+/**
+ * Gets only the valid responses
+ */
+const validResponsesSelector = createSelector(
+    responsesSelector,
+    generalInfoFormatSelector,
+    (responses, format) => {
+        const validatorFormat = MapInfoUtils.getValidator(format);
+        return validatorFormat.getValidResponses(responses);
+    });
+
+const currentResponseSelector = createSelector(
+    validResponsesSelector, indexSelector,
+    (responses = [], index = 0) => responses[index]
+);
+const currentFeatureSelector = state => {
+    const currentResponse = currentResponseSelector(state) || {};
+    return get(currentResponse, 'layerMetadata.features');
+};
+const currentFeatureCrsSelector = state => {
+    const currentResponse = currentResponseSelector(state) || {};
+    return get(currentResponse, 'layerMetadata.featuresCrs');
+};
+
+/**
+ * Returns the correct style based on the geometry type, to use in the highlight
+ * @param {feature} f the feature in json format
+ */
+const getStyleForFeature = (f = {}) =>
+    f.style
+        || (f.geometry && (f.geometry.type === "Point" || f.geometry.type === "MultiPoint"))
+            // point style circle requires radius (it's strange circle should be a default)
+            ? {
+                    color: '#3388ff',
+                    weight: 4,
+                    radius: 4,
+                    dashArray: '',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2
+                }
+            // no radius means normal polygon, line or other
+            : {
+                    color: '#3388ff',
+                    weight: 4,
+                    dashArray: '',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2
+                };
+const applyMapInfoStyle = f => ({
+    ...f,
+    style: getStyleForFeature(f)
+});
+
+const clickedPointWithFeaturesSelector = createSelector(
+    clickPointSelector,
+    isHighlightEnabledSelector,
+    currentFeatureSelector,
+    currentFeatureCrsSelector,
+    showMarkerSelector,
+    (clickPoint, highlight, features, featuresCrs, showMarker) => showMarker && clickPoint
+        ? highlight
+            ? {
+                ...clickPoint,
+                featuresCrs,
+                features: features && isArray(features)
+                    && features
+                        .map(applyMapInfoStyle)
+            }
+            : clickPoint
+        : undefined
+
+);
+
+
 module.exports = {
     isMapInfoOpen,
+    indexSelector,
+    responsesSelector,
+    validResponsesSelector,
+    currentFeatureSelector,
+    currentFeatureCrsSelector,
+    clickedPointWithFeaturesSelector,
     identifyOptionsSelector,
     clickPointSelector,
+    clickLayerSelector,
     generalInfoFormatSelector,
-    queryableLayersSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector,
     showEmptyMessageGFISelector,
-    mapInfoConfigurationSelector
+    mapInfoConfigurationSelector,
+    isHighlightEnabledSelector
 };

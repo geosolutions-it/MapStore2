@@ -7,13 +7,13 @@
   */
 
 const { head, get, isObject} = require('lodash');
-const {layersSelector} = require('./layers');
+const { getLayerFromId} = require('./layers');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const {toChangesMap} = require('../utils/FeatureGridUtils');
 
-const getLayerById = (state, id) => head(layersSelector(state).filter(l => l.id === id));
+const getLayerById = getLayerFromId;
 const getTitle = (layer = {}) => layer.title || layer.name;
 const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
 const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);

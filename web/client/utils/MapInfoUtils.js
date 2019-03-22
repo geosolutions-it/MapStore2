@@ -95,9 +95,10 @@ const MapInfoUtils = {
         }
 
         if (clickedPoint.lng === undefined || clickedPoint.lat === undefined) {
-            return [];
+            return clickedPoint.features || [];
         }
         return [
+            ...(clickedPoint.features || []), // highlight features
             {
                 id: "get-feature-info-point",
                 type: "Feature",
@@ -107,9 +108,10 @@ const MapInfoUtils = {
                 },
                 style: [{
                     iconUrl: require('../components/map/openlayers/img/marker-icon.png'),
-                    iconAnchor: [12, 41], // in leaflet ther is no anchor in fraction
+                    iconAnchor: [12, 41], // in leaflet there is no anchor in fraction
                     iconSize: [25, 41]
                 }]
+
             }
         ];
     },

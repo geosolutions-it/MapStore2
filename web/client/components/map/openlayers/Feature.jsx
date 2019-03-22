@@ -9,10 +9,10 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const axios = require('axios');
 const ol = require('openlayers');
-const {isEqual, find, castArray} = require('lodash');
-const {parseStyles} = require('./VectorStyle');
-const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
-const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
+const { isEqual, find, castArray } = require('lodash');
+const { parseStyles } = require('./VectorStyle');
+const { transformPolygonToCircle } = require('../../../utils/DrawSupportUtils');
+const { createStylesAsync } = require('../../../utils/VectorStyleUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -64,11 +64,11 @@ class Feature extends React.Component {
         let canRender = false;
 
         if (props.type === "FeatureCollection") {
-            ftGeometry = {features: props.features};
+            ftGeometry = { features: props.features };
             canRender = !!(props.features);
         } else {
             // if type is geometryCollection or a simple geometry, the data will be in geometry prop
-            ftGeometry = {geometry: props.geometry};
+            ftGeometry = { geometry: props.geometry };
             canRender = !!(props.geometry && (props.geometry.geometries || props.geometry.coordinates));
         }
 
@@ -78,6 +78,9 @@ class Feature extends React.Component {
                 properties: props.properties,
                 id: props.msId,
                 ...ftGeometry
+            }, {
+                    // reproject features from featureCrs
+                    dataProjection: props.featuresCrs
             });
             this._feature.map(f => {
                 let newF = f;
@@ -93,7 +96,7 @@ class Feature extends React.Component {
                 this._feature.forEach((f) => {
                     let promises = [];
                     let geoJSONFeature = {};
-                    if ( props.type === "FeatureCollection") {
+                    if (props.type === "FeatureCollection") {
                         geoJSONFeature = find(props.features, (ft) => ft.properties.id === f.getProperties().id);
                         promises = createStylesAsync(castArray(geoJSONFeature.style));
                     } else {
@@ -106,9 +109,8 @@ class Feature extends React.Component {
                             style: props.style
                         };
                     }
-
                     axios.all(promises).then((styles) => {
-                        f.setStyle(() => parseStyles({...geoJSONFeature, style: styles}));
+                        f.setStyle(() => parseStyles({ ...geoJSONFeature, style: styles }));
                     });
                 });
             }

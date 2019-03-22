@@ -241,7 +241,7 @@ const parseStyleToOl = (feature = {properties: {}}, style = {}, tempStyles = [])
     if (filtering) {
         const stroke = getStrokeStyle(style);
         const fill = getFillStyle(style);
-        const image = getCircleStyle(style);
+        const image = getCircleStyle(style, stroke, fill);
 
         if (isMarkerStyle(style)) {
             return getMarkerStyle(style).map(s => {
