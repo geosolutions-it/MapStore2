@@ -15,7 +15,7 @@ const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:
 
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});
-    if (prop && prop.localType === 'number') {
+    if (prop && (prop.localType === 'number' || prop.localType === 'int')) {
         return [
           {value: "Count", label: "COUNT"},
           {value: "Sum", label: "SUM"},
