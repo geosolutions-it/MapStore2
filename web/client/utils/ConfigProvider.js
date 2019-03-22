@@ -554,8 +554,8 @@ const CONFIGPROVIDER = {
         url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}9/{z}/{y}/{x}.{format}',
         options: {
             attribution:
-                    'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System ' +
-                    '(<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+                    '<span>Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System ' +
+                    '(<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.</span>',
             credits: {
                 text: 'Black Marble imagery courtesy NASA Earth Observatory'
             },

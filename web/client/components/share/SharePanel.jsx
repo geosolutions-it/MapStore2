@@ -139,7 +139,7 @@ class SharePanel extends React.Component {
           </Tabs>);
 
         let sharePanel =
-            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win">
+            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win" style={{zIndex: 1993}}>
                 <span role="header">
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>

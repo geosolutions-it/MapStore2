@@ -14,7 +14,24 @@
         float: right;
     }
 
+    .map-footer-btn {
+        height: 25px;
+        width: 25px !important;
+        padding: 0;
+        margin-right: 5px;
+        margin-top: 2px;
+        span {
+            color: @ms2-color-text-primary;
+        }
+
+    }
+
     .leaflet-control-attribution {
+        display: flex;
+        max-height: 2.6em;
+        img {
+            max-height: 2.6em;
+        }
         position: absolute;
         width: 50%;
         height: 30px;
@@ -26,6 +43,16 @@
    }
 
    .ol-attribution.ol-uncollapsible {
+        ul {
+            display: flex;
+            li {
+                margin: auto 2px;
+            }
+        }
+       max-height: 2.6em;
+       img {
+           max-height: 2.6em;
+       }
        position: absolute;
        left: 0;
        height: 30px;
@@ -36,4 +63,39 @@
        overflow: hidden;
        font-size: 11px;
    }
+
+   .dropup {
+        z-index: 1100;
+        .dropdown-menu {
+            margin-right: 5px;
+        }
+    }
+}
+
+.ms-prj-selector {
+    border: none;
+
+    .dropdown-toggle-primary {
+        .btn-primary;
+        box-shadow: none;
+        border-width: 1px;
+        border: transparent;
+    }
+    &.open {
+        .dropdown-toggle-primary {
+            .btn-success;
+            .active;
+        }
+    }
+
+    .ms-prj-header {
+        font-size: @font-size-small;
+        .shadow-soft;
+        font-weight: bold;
+        z-index: 10;
+    }
+    .dropdown-menu {
+        border: none;
+        .shadow;
+    }
 }

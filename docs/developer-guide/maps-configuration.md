@@ -117,7 +117,12 @@ i.e.
     "title": "Open Street Map",
     "name": "mapnik",
     "group": "background",
-    "visibility": false
+    "visibility": false,
+    "credits": { // optional
+        "imageUrl": "somePic.png", // URL for the image to put in attribution
+        "link": "http://someURL.org", // URL where attribution have to link to
+        "title": "text to render" // title to show (as image title or as text)
+    }
 }
 ```
 
