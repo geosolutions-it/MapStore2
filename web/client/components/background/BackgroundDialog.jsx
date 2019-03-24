@@ -26,8 +26,7 @@ class BackgroundDialog extends React.Component{
         editing: PropTypes.bool,
         deletedId: PropTypes.string,
         thumbURL: PropTypes.string,
-        addParameter: PropTypes.func,
-        CurrentModalParams: PropTypes.object
+        addParameter: PropTypes.func
     };
     static defaultProps = {
         updateThumbnail: () => {},
@@ -46,8 +45,8 @@ class BackgroundDialog extends React.Component{
     componentWillReceiveProps(nextProps) {
         if ( !nextProps.modalParams) {
             this.setState({title: '', format: "image/png"});
-        }else if (this.props.modalParams.id !== nextProps.modalParams.id) {
-            this.setState({title: nextProps.modalParams.title || '', format: nextProps.modalParams.format || "image/png"});
+        }else if (!this.modalParams || this.props.modalParams.id !== nextProps.modalParams.id) {
+            this.setState({title: nextProps.modalParams && nextProps.modalParams.title || '', format: nextProps.modalParams && nextProps.modalParams.format || "image/png"});
         }
     }
     render() {
@@ -63,10 +62,11 @@ class BackgroundDialog extends React.Component{
                 onClick: () => {
                     this.addParameters()
                     .then( (obj)=> {
+                        const extraParams = assign({}, obj, {source: this.props.thumbURL});
                         let parameters = this.props.modalParams;
                         // add the edited source and additional parameters
                         if (this.props.editing) {
-                            parameters = assign({}, this.props.modalParams, assign({}, obj, {source: this.props.thumbURL}));
+                            parameters = assign({}, this.props.modalParams, extraParams);
                         }else {
                             if (this.props.modalParams.showModal) {
                                 this.props.onUpdate(assign({}, this.props.modalParams, {
@@ -75,7 +75,7 @@ class BackgroundDialog extends React.Component{
                                 this.props.onUpdate(assign({}, this.props.modalParams, obj));
                             }
                         }
-                        this.props.onSave(parameters);
+                        this.props.onSave(parameters, extraParams);
                     });
                     this.props.resetParameters([]);
                 }

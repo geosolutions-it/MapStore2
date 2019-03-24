@@ -184,7 +184,6 @@ updatedLayer = (layer) => {
                     add = {false}
                     thumbURL= {src}
                     onUpdate= { parameter => this.props.addBackgroundProperties(parameter, false)}
-                    CurrentModalParams= {this.props.currentLayer}
                     modalParams={editedLayer}
                     onClose={() => {
                         this.props.onEditBackgroundProperties(false);

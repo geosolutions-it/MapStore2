@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const {isObject, head} = require('lodash');
+const {isObject, head, omit} = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
@@ -280,18 +280,19 @@ class RecordItem extends React.Component {
                         this.props.removeThumbnail(undefined);
                         this.props.clearModal();
                     }}
-                    onSave={() => {
-                        if (this.props.modalParams.showModal.type === 'wms') {
-                            this.addLayer(this.props.modalParams.showModal, this.props.modalParams.id);
+                    onSave={(layerModal, extraParams) => {
+                        const savedLayer = this.updatedLayer(layerModal);
+                        if (savedLayer.type === 'wms') {
+                            this.addLayer(savedLayer, this.props.modalParams.id, extraParams);
                         }
 
-                        if (this.props.modalParams.showModal.type === 'wmts') {
-                            this.addwmtsLayer(this.props.modalParams.showModal, this.props.modalParams.id, this.props.modalParams.showModal.title);
+                        if (savedLayer.type === 'wmts') {
+                            this.addwmtsLayer(savedLayer, this.props.modalParams.id, extraParams);
                         }
-                        this.props.onPropertiesChange(this.props.modalParams.id, this.props.modalParams.showModal);
-                        this.props.onLayerChange('currentLayer', assign({}, this.props.modalParams.showModal, {id: this.props.modalParams.id}));
-                        this.props.onLayerChange('tempLayer', this.props.modalParams.showModal);
-                        this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
+                        this.props.onPropertiesChange(this.props.modalParams.id, this.updatedLayer(layerModal));
+                        this.props.onLayerChange('currentLayer', assign({}, savedLayer, {id: this.props.modalParams.id}));
+                        this.props.onLayerChange('tempLayer', savedLayer);
+                        // this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
                         this.props.onUpdateThumbnail(this.props.modalParams.newThumbnail, this.props.modalParams.thumbnailData, false, this.props.modalParams.id);
                         this.props.clearModal();
 
@@ -320,6 +321,7 @@ class RecordItem extends React.Component {
             const properties = {
                 removeParams,
                 url,
+
                 id,
                 title: wms.title,
                 catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
@@ -337,7 +339,7 @@ class RecordItem extends React.Component {
         }
     };
 
-    addwmtsLayer = (wmts, id) => {
+    addwmtsLayer = (wmts, id, extraParameters = {}) => {
         const removeParams = ["request", "layer"].concat(this.props.authkeyParamNames);
         const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), removeParams);
         const allowedSRS = buildSRSMap(wmts.SRS);
@@ -351,7 +353,7 @@ class RecordItem extends React.Component {
                 title: wmts.title
             };
             const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
-            let layerProperties = assign({}, properties, LayerGroup);
+            let layerProperties = assign({}, properties, assign({}, LayerGroup, extraParameters ? {additionalParams: extraParameters} : {}));
             this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", layerProperties));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
@@ -371,6 +373,11 @@ class RecordItem extends React.Component {
     displayExpand = width => {
         const descriptionWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
         return descriptionWidth > width;
+    };
+    updatedLayer = (layer) => {
+        // add the newly created Thumbnail url (if existed)
+        const output = assign({}, this.props.modalParams.showModal, {source: layer.CurrentNewThumbnail || layer.source } );
+        return omit(output, ['CurrentThumbnailData', 'CurrentNewThumbnail']);
     };
 }
 
