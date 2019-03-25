@@ -168,11 +168,12 @@ module.exports = {
         action$.ofType(PLAY).exhaustMap(() =>
             getAnimationFrames(getState, {
                 fromValue:
-                    // if animation range is not enabled, use the current time to start
+                    // if animation range is set, don't set from value on startup...
                     (playbackRangeSelector(getState())
                         && playbackRangeSelector(getState()).startPlaybackTime
                         && playbackRangeSelector(getState()).endPlaybackTime)
                     ? undefined
+                    // ...otherwise, start from the current time (start animation from cursor position)
                     : currentTimeSelector(getState())
                 })
                 .map((frames) => setFrames(frames))

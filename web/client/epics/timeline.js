@@ -186,16 +186,18 @@ module.exports = {
      * Initializes the time line
      */
     setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, UPDATE_LAYER_DIMENSION_DATA)
-        .exhaustMap(() => isAutoSelectEnabled(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
-        && !selectedLayerSelector(getState())
-            ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
-                .concat(
-                    Rx.Observable.of(1).switchMap( () =>
-                        snapTime(getState(), get(layersWithTimeDataSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
-                            .filter( v => v)
-                            .map(time => setCurrentTime(time)))
-                )
-            : Rx.Observable.empty()
+        .exhaustMap(() =>
+            isAutoSelectEnabled(getState())
+            && get(layersWithTimeDataSelector(getState()), "[0].id")
+            && !selectedLayerSelector(getState())
+                ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
+                    .concat(
+                        Rx.Observable.of(1).switchMap( () =>
+                            snapTime(getState(), get(layersWithTimeDataSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
+                                .filter( v => v)
+                                .map(time => setCurrentTime(time)))
+                    )
+                : Rx.Observable.empty()
     ),
      /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist
