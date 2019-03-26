@@ -368,7 +368,7 @@ const createBackgroundThumbnail = (nameThumbnail, dataThumbnail, categoryThumbna
 
     if (nameThumbnail && dataThumbnail) {
         return Persistence.createResource({metadata: metadata, data: dataThumbnail, category: categoryThumbnail, backgroundID}).map((response) => ({response, backgroundID}));
-     } else if (properties.thumbId) {
+     } else if (!nameThumbnail && !dataThumbnail && properties.thumbId) {
          // clear the layer data from the related resource
          return Rx.Observable.of(updateNode(backgroundID, "layers", { source: undefined, thumbId: undefined }));
      }

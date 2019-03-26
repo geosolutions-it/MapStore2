@@ -311,7 +311,7 @@ class RecordItem extends React.Component {
         this.setState({[key]: status});
     };
 
-    addLayer = (wms, id) => {
+    addLayer = (wms, id, extraParameters = {}) => {
         const removeParams = ["request", "layer", "layers", "service", "version"].concat(this.props.authkeyParamNames);
         const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), removeParams );
         const allowedSRS = buildSRSMap(wms.SRS);
@@ -321,13 +321,12 @@ class RecordItem extends React.Component {
             const properties = {
                 removeParams,
                 url,
-
                 id,
                 title: wms.title,
                 catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
             };
             const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
-            let layerProperties = assign({}, properties, LayerGroup);
+            let layerProperties = assign({}, properties, assign({}, LayerGroup, extraParameters ? {additionalParams: extraParameters} : {}));
 
             this.props.onLayerAdd(
                 recordToLayer(this.props.record, "wms", layerProperties));

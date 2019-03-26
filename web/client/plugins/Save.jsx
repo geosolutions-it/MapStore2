@@ -95,7 +95,7 @@ class Save extends React.Component {
     goForTheUpdate = () => {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
-                const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
+                const resultingMap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
                 const {name, description} = this.props.map.info;
                 if (this.props.backgrounds && this.props.backgrounds.length > 0) {
                     this.props.backgroundThumbnailsCreated({
@@ -104,7 +104,7 @@ class Save extends React.Component {
                     });
 
                 }else {
-                    this.props.onMapSave({id: this.props.mapId, data: resultingmap, metadata: {name, description}, category: "MAP"});
+                    this.props.onMapSave({id: this.props.mapId, data: resultingMap, metadata: {name, description}, category: "MAP"});
                 }
                 this.props.onClose();
             }

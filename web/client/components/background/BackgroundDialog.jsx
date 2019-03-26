@@ -7,7 +7,6 @@ const {Form, FormGroup, ControlLabel, FormControl, Button, Glyphicon} = require(
 const Thumbnail = require('../maps/forms/Thumbnail');
 const Select = require('react-select');
 const assign = require('object-assign');
-let cnt = 0;
 
 
 class BackgroundDialog extends React.Component{
@@ -18,7 +17,6 @@ class BackgroundDialog extends React.Component{
         onSave: PropTypes.func,
         onUpdate: PropTypes.func,
         modalParams: PropTypes.object,
-        resetParameters: PropTypes.func,
         add: PropTypes.bool,
         addParameters: PropTypes.func,
         updateThumbnail: PropTypes.func,
@@ -33,7 +31,6 @@ class BackgroundDialog extends React.Component{
         onClose: () => {},
         onSave: () => {},
         onUpdate: () => {},
-        resetParameters: () => {},
         addParameters: () => {},
         addParameter: () => {},
         add: true,
@@ -42,19 +39,28 @@ class BackgroundDialog extends React.Component{
 
     };
     state = {id: 0, additionalParameters: []};
+
     componentWillReceiveProps(nextProps) {
         if ( !nextProps.modalParams) {
-            this.setState({title: '', format: "image/png"});
+            this.setState({title: this.state.title || '', format: this.state.format || "image/png"});
         }else if (!this.modalParams || this.props.modalParams.id !== nextProps.modalParams.id) {
             this.setState({title: nextProps.modalParams && nextProps.modalParams.title || '', format: nextProps.modalParams && nextProps.modalParams.format || "image/png"});
         }
+
+        if (!this.props.editing && nextProps.editing) {
+            if (nextProps.modalParams && nextProps.modalParams.additionalParams) {
+                this.assignParameters(nextProps.modalParams.additionalParams);
+            }
+        }
+
     }
+
     render() {
         return (<ResizableModal
         title={this.props.add ? "Add Background" : "Edit Current Background"}
         show={!!this.props.unsavedChanges || !!this.props.editing}
         fade
-        onClose={() => { this.props.onClose(); this.props.resetParameters([]); }}
+        onClose={() => { this.props.onClose(); this.resetParameters([]); }}
         buttons={[
             {
                 text: this.props.add ? 'Add' : 'Save',
@@ -77,7 +83,7 @@ class BackgroundDialog extends React.Component{
                         }
                         this.props.onSave(parameters, extraParams);
                     });
-                    this.props.resetParameters([]);
+                    this.resetParameters([]);
                 }
             }
         ]}>
@@ -147,7 +153,8 @@ class BackgroundDialog extends React.Component{
                         className="square-button-md"
                         style={{borderColor: 'transparent'}}
                         onClick={() => {
-                            this.setState({id: cnt, additionalParameters:
+                            let cnt = this.state.additionalParameters.length;
+                            this.setState({additionalParameters:
                         [...this.state.additionalParameters, {id: cnt, param: '', val: ''}]});
                             cnt++;
                         }}>
@@ -155,20 +162,67 @@ class BackgroundDialog extends React.Component{
                     </Button>
                 </div>
                 {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
-                <FormControl style={{flex: 1, marginRight: 8}} placeholder="Parameter" onChange={ e => this.addAdditionalParameter(e, 'param', val.id)}/>
-                <FormControl style={{flex: 1, marginRight: 8}} placeholder="Value" onChange={ e => this.addAdditionalParameter(e, 'val', val.id)}/>
+                <FormControl style={{flex: 1, marginRight: 8}} placeholder="Parameter" value = {val.param} onChange={ e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
+                <FormControl style={{flex: 1, marginRight: 8}} placeholder="Value" value = {val.val} onChange={ e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)}/>
+                <Select
+                    style={{flex: 1, width: 90}}
+                    onChange = {event => { this.addAdditionalParameter(val.val, 'val', val.id, event.value); val.type = event.value; }}
+                    clearable={false}
+                    value={ val.type || "string"}
+                    options={[{
+                        label: 'String',
+                        value: 'String'
+                    }, {
+                        label: 'Number',
+                        value: 'number'
+                    },
+                    {
+                        label: 'boolean',
+                        value: 'boolean'
+                    }
+                    ]}/>
                 <Button onClick={() => this.setState({additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)} ) } className="square-button-md" style={{borderColor: 'transparent'}}><Glyphicon glyph="trash"/></Button>
                 </div>))}
             </FormGroup>
         </Form>
     </ResizableModal>);
     }
-    addAdditionalParameter = (event, key, id)=> {
+    // assign the additional parameters from the layers (state) to the modal component state
+    assignParameters = (parameters) => {
+        let results = [];
+        let count = 0;
+        for (let key in parameters) {
+            if (parameters.hasOwnProperty(key)) {
+                results = results.concat({id: count, param: key, val: parameters[key]});
+            }
+            count++;
+        }
+        return this.setState({additionalParameters:
+            results});
+
+    }
+    addAdditionalParameter = (event, key, id, type)=> {
         this.setState({
             additionalParameters:
             this.state.additionalParameters.map( v => {
                 if (v.id === id) {
-                    v[key] = event.target.value;
+                    let modifiedKey = event;
+                    if (key === 'val') {
+                        switch (type) {
+                            case 'number':
+                                modifiedKey = Number(modifiedKey);
+                            break;
+                            case 'boolean':
+                               modifiedKey = modifiedKey === 'true';
+                            break;
+
+                            default:
+                            break;
+                        }
+
+                    }
+                    v[key] = modifiedKey;
+
                 }
                 return v;
             })
@@ -181,6 +235,7 @@ class BackgroundDialog extends React.Component{
 
         return resolve(obj);
     })
+    resetParameters = () => this.setState({id: 0, additionalParameters: []});
 }
 
 module.exports = BackgroundDialog;

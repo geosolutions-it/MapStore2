@@ -467,6 +467,7 @@ const LayersUtils = {
             thematic: layer.thematic,
             thumbId: layer.thumbId
         },
+        layer.additionalParams ? { additionalParams: layer.additionalParams } : {},
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {});
     },

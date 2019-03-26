@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject} = require('lodash');
+const {head, isArray, isString, castArray, isObject, omit} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
@@ -382,7 +382,6 @@ const CatalogUtils = {
         const returnLayer = {
             id,
             type: type,
-            format: record.format,
             requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
             style: record.style,
             url: layerURL,
@@ -410,8 +409,9 @@ const CatalogUtils = {
             allowedSRS: allowedSRS,
             catalogURL,
             group,
-            additionalParams
+            additionalParams: additionalParams || {} ? omit(additionalParams, ['source', 'format', 'style', 'title']) : additionalParams
         };
+        // adding the additional parameters, so as a node, so it could be retrieved and rendered in the background selector modal
         return assign({}, returnLayer, additionalParams);
     },
     getCatalogRecords: (format, records, options) => {

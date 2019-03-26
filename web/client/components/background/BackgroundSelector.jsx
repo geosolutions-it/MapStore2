@@ -190,7 +190,7 @@ updatedLayer = (layer) => {
                         this.props.removeThumbnail(undefined);
                         this.props.clearModal();
                     }}
-                    onSave={(layerModal) => {
+                    onSave={(layerModal, extra) => {
 
                         if (this.props.deletedId && layerModal.CurrentNewThumbnail === undefined) {
                             this.props.updateNode(layerModal.id, "layers", {source: undefined});
@@ -200,7 +200,9 @@ updatedLayer = (layer) => {
                         // adding new properties to backgroundSelector state
                         this.props.addBackgroundProperties( assign({}, editedLayer, this.props.CurrentModalParams), false);
                         // updating layer properties in layer state
-                        this.props.updateNode(this.props.CurrentModalParams.id, "layers", this.updatedLayer(layerModal));
+                        let cleanedExtra = extra && omit(extra, ['source', 'title', 'format', 'style']);
+                        const layerProps = assign({}, layerModal, cleanedExtra ? {additionalParams: cleanedExtra} : {});
+                        this.props.updateNode(this.props.CurrentModalParams.id, "layers", this.updatedLayer(layerProps));
                         // clear state objects for modal and backgroundSelector properties
                         this.props.onEditBackgroundProperties(false);
                         this.props.clearModal();
