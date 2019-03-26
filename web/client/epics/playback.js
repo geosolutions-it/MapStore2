@@ -166,7 +166,16 @@ module.exports = {
      */
     retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(PLAY).exhaustMap(() =>
-            getAnimationFrames(getState)
+            getAnimationFrames(getState, {
+                fromValue:
+                    // if animation range is set, don't set from value on startup...
+                    (playbackRangeSelector(getState())
+                        && playbackRangeSelector(getState()).startPlaybackTime
+                        && playbackRangeSelector(getState()).endPlaybackTime)
+                    ? undefined
+                    // ...otherwise, start from the current time (start animation from cursor position)
+                    : currentTimeSelector(getState())
+                })
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
                     error({
@@ -190,6 +199,8 @@ module.exports = {
                         )
                 )
                 .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+                // this removes loading mask even if the STOP action is triggered before frame end (empty result)
+                .concat(Rx.Observable.of(timeDataLoading(false, false)))
                 .let(setupAnimation(getState))
         ),
     /**
