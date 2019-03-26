@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const { connect } = require('react-redux');
-const { isString, differenceBy } = require('lodash');
+const { isString, differenceBy, isNil } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 
 
@@ -34,8 +34,9 @@ const moment = require('moment');
  * Typically `loading` attribute
  */
 const timeLayersSelector = createShallowSelectorCreator(
-    (a = {}, b = {}) => {
-        return a.id === b.id && a.title === b.title && a.name === b.name;
+    (a, b) => {
+        return a === b
+            || !isNil(a) && !isNil(b) && a.id === b.id && a.title === b.title && a.name === b.name;
     }
 )(layersWithTimeDataSelector, layers => layers);
 
