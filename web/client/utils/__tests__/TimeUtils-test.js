@@ -33,19 +33,15 @@ describe('TimeUtils', () => {
         });
     });
     it('test getUTCDateParts', () => {
-        expect(getUTCDateParts(new Date("2018-01-09T05:03:00"))).toBe("2018-01-09");
-        // with UTC date
-        expect(getUTCDateParts(new Date("2018-01-09T00:03:00Z"))).toBe("2018-01-09");
-        // month 3 == April
-        expect(getUTCDateParts(new Date(2020, 3, 15, 6, 30))).toBe("2020-04-15");
-        expect(getUTCDateParts(new Date(2020, 9, 15, 6, 30))).toBe("2020-10-15");
-        expect(getUTCDateParts(new Date(2020, 12, 15, 6, 30))).toBe("2021-01-15");
+        expect(getUTCDateParts(new Date("2018-01-09T23:00:00Z"))).toBe("2018-01-09");
+        expect(getUTCDateParts(new Date("2018-01-09T00:00:00Z"))).toBe("2018-01-09");
+        expect(getUTCDateParts(new Date("2020-04-15T06:30:00Z"))).toBe("2020-04-15");
+        expect(getUTCDateParts(new Date("2020-10-09T01:00:00Z"))).toBe("2020-10-09");
+        expect(getUTCDateParts(new Date("2021-01-09T00:00:00Z"))).toBe("2021-01-09");
     });
     it('test getUTCTimeParts', () => {
-        // with timezone +1
-        expect(getUTCTimeParts(new Date(2019, 2, 15, 8, 30))).toBe("07:30:00");
-        expect(getUTCTimeParts(new Date("2018-01-09T01:00:00"))).toBe("00:00:00");
-        // with UTC date
+        expect(getUTCTimeParts(new Date("2019-03-15T08:30:00Z"))).toBe("08:30:00");
+        expect(getUTCTimeParts(new Date("2018-01-09T01:00:00Z"))).toBe("01:00:00");
         expect(getUTCTimeParts(new Date("2018-01-09T00:03:00Z"))).toBe("00:03:00");
     });
     it('test getDateTimeFormat', () => {
@@ -60,8 +56,8 @@ describe('TimeUtils', () => {
         expect(getDateTimeFormat("it-IT", "date-time")).toBe("DD/MM/YYYY HH:mm:SS");
     });
     it('test getTimezoneOffset', () => {
-        expect(getTimezoneOffset(new Date(2020, 3, 15, 6, 30))).toBe(-7200000);
-        expect(getTimezoneOffset(new Date(2020, 9, 15, 6, 30))).toBe(-7200000);
-        expect(getTimezoneOffset(new Date(2020, 12, 15, 6, 30))).toBe(-3600000);
+        expect(getTimezoneOffset(new Date("2020-04-15T06:30:00Z"))).toBe(-7200000);
+        expect(getTimezoneOffset(new Date("2020-10-15T06:30:00Z"))).toBe(-7200000);
+        expect(getTimezoneOffset(new Date("2020-01-15T06:30:00Z"))).toBe(-3600000);
     });
 });
