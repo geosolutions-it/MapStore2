@@ -37,7 +37,7 @@ describe("test updateSettingsLifecycle", () => {
             element={{}}
             onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
             onUpdateInitialSettings={testHandlers.onUpdateInitialSettings}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
         expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
@@ -55,13 +55,13 @@ describe("test updateSettingsLifecycle", () => {
             element={{}}
             settings={{expanded: false}}
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         ReactDOM.render(<Component
             element={{type: 'wms'}}
             settings={{expanded: true}}
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         expect(spyOnRetrieveLayerData).toHaveBeenCalled();
     });
@@ -78,13 +78,13 @@ describe("test updateSettingsLifecycle", () => {
             element={{}}
             settings={{expanded: true}}
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         ReactDOM.render(<Component
             element={{type: 'wms'}}
             settings={{expanded: true}}
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         expect(spyOnRetrieveLayerData).toNotHaveBeenCalled();
     });
@@ -101,13 +101,13 @@ describe("test updateSettingsLifecycle", () => {
             element={{}}
             settings={{expanded: false}}
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         ReactDOM.render(<Component
             element={{type: 'wms', description: 'description'}}
             settings={{expanded: true}}
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         expect(spyOnRetrieveLayerData).toNotHaveBeenCalled();
     });
@@ -129,7 +129,7 @@ describe("test updateSettingsLifecycle", () => {
             onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
             onUpdateInitialSettings={testHandlers.onUpdateInitialSettings}
             onSetTab={testHandlers.onSetTab}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         ReactDOM.render(<Component
             element={{type: 'wms', description: 'description'}}
@@ -137,7 +137,7 @@ describe("test updateSettingsLifecycle", () => {
             onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
             onUpdateInitialSettings={testHandlers.onUpdateInitialSettings}
             onSetTab={testHandlers.onSetTab}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
         expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
@@ -306,7 +306,7 @@ describe("test updateSettingsLifecycle", () => {
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
-             />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
@@ -328,7 +328,7 @@ describe("test updateSettingsLifecycle", () => {
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
-             />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
@@ -350,7 +350,7 @@ describe("test updateSettingsLifecycle", () => {
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
-             />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);

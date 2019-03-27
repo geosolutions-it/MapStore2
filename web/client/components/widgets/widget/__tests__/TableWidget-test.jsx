@@ -25,7 +25,7 @@ const TableWidget = compose(
     defaultProps({ canEdit: true }),
     tableWidget
 )(require('../TableWidget'));
-const describePois = require('json-loader!../../../../test-resources/wfs/describe-pois.json');
+const describePois = require('../../../../test-resources/wfs/describe-pois.json');
 
 describe('TableWidget component', () => {
     beforeEach((done) => {

@@ -176,13 +176,13 @@ module.exports = Quill => {
         };
 
         getCurrentSize = () => this.domNode.tagName.toUpperCase() === 'IMG' ?
-        [
-            this.domNode.width,
-            Math.round((this.domNode.width / this.domNode.naturalWidth) * this.domNode.naturalHeight)
-        ] : [
-            this.domNode.clientWidth,
-            this.domNode.clientHeight
-        ];
+            [
+                this.domNode.width,
+                Math.round((this.domNode.width / this.domNode.naturalWidth) * this.domNode.naturalHeight)
+            ] : [
+                this.domNode.clientWidth,
+                this.domNode.clientHeight
+            ];
     }
 
 
@@ -405,7 +405,7 @@ module.exports = Quill => {
                 button.innerHTML = alignment.icon;
                 button.addEventListener('click', () => {
                     // deselect all buttons
-                    buttons.forEach(btn => btn.style.filter = '');
+                    buttons.forEach(btn => {btn.style.filter = '';});
                     if (alignment.isApplied()) {
                         // If applied, unapply
                         FloatStyle.remove(this.domNode);

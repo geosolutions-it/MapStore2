@@ -76,7 +76,7 @@ function currentMap(state = {}, action) {
         return assign({}, state, {updating: true});
     }
     case UPDATE_CURRENT_MAP_PERMISSIONS: {
-            // Fix to overcome GeoStore bad encoding of single object arrays
+        // Fix to overcome GeoStore bad encoding of single object arrays
         let fixedSecurityRule = [];
         if (action.permissions && action.permissions.SecurityRuleList && action.permissions.SecurityRuleList.SecurityRule) {
             if ( isArray(action.permissions.SecurityRuleList.SecurityRule)) {
@@ -181,8 +181,7 @@ function currentMap(state = {}, action) {
     }
     case DETAILS_SAVING: {
         return assign({}, state, {
-            saving: action.saving/*,
-            unsavedChanges: action.saving === false ? true : state.unsavedChanges*/
+            saving: action.saving
         });
     }
     case DELETE_DETAILS: {

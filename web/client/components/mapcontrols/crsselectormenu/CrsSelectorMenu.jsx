@@ -30,7 +30,7 @@ class CrsSelectorMenu extends React.Component {
                 right: 0
             }}>
                 <ListGroupItem
-                className="ms-prj-header"
+                    className="ms-prj-header"
                     bsSize="sm">
                     <div>Selected:</div>
                     <div>{this.props.selected}</div>

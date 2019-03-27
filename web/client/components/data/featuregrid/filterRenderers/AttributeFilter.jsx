@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -45,8 +45,8 @@ class AttributeFilter extends React.PureComponent {
     renderTooltip = (cmp) => {
         if (this.props.tooltipMsgId && LocaleUtils.getMessageById(this.context.messages, this.props.tooltipMsgId)) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{LocaleUtils.getMessageById(this.context.messages, this.props.tooltipMsgId)}</Tooltip>}>
-              {cmp}
-          </OverlayTrigger>);
+                {cmp}
+            </OverlayTrigger>);
         }
         return cmp;
     }
@@ -55,7 +55,7 @@ class AttributeFilter extends React.PureComponent {
         let inputKey = 'header-filter--' + this.props.column.key;
         return (
             <div key={inputKey} className={`form-group${(this.props.valid ? "" : " has-error")}`}>
-              {this.renderTooltip(this.renderInput())}
+                {this.renderTooltip(this.renderInput())}
             </div>
         );
     }

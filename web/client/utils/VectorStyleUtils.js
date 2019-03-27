@@ -266,53 +266,53 @@ const createSvgUrl = (style = {}, url) => {
     // TODO think about adding a try catch for loading the not found icon
     return isSymbolStyle(style) && style.symbolUrl/* && !fetchStyle(hashAndStringify(style))*/ ?
         axios.get(url, { 'Content-Type': "image/svg+xml;charset=utf-8" })
-        .then(response => {
-            const DOMURL = window.URL || window.webkitURL || window;
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(response.data, 'image/svg+xml'); // create a dom element
-            const svg = doc.firstElementChild; // fetch svg element
+            .then(response => {
+                const DOMURL = window.URL || window.webkitURL || window;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(response.data, 'image/svg+xml'); // create a dom element
+                const svg = doc.firstElementChild; // fetch svg element
 
-            // override attributes to the first svg tag
-            svg.setAttribute("fill", style.fillColor || "#FFCC33");
-            svg.setAttribute("fill-opacity", !isNil(style.fillOpacity) ? style.fillOpacity : 0.2);
-            svg.setAttribute("stroke", colorToRgbaStr(style.color || "#FFCC33", !isNil(style.opacity) ? style.opacity : 1) );
-            svg.setAttribute("stroke-opacity", !isNil(style.opacity) ? style.opacity : 1);
-            svg.setAttribute("stroke-width", style.weight || 1);
-            svg.setAttribute("width", style.size || 32);
-            svg.setAttribute("height", style.size || 32);
-            svg.setAttribute("stroke-dasharray", style.dashArray || "none");
+                // override attributes to the first svg tag
+                svg.setAttribute("fill", style.fillColor || "#FFCC33");
+                svg.setAttribute("fill-opacity", !isNil(style.fillOpacity) ? style.fillOpacity : 0.2);
+                svg.setAttribute("stroke", colorToRgbaStr(style.color || "#FFCC33", !isNil(style.opacity) ? style.opacity : 1) );
+                svg.setAttribute("stroke-opacity", !isNil(style.opacity) ? style.opacity : 1);
+                svg.setAttribute("stroke-width", style.weight || 1);
+                svg.setAttribute("width", style.size || 32);
+                svg.setAttribute("height", style.size || 32);
+                svg.setAttribute("stroke-dasharray", style.dashArray || "none");
 
-            const svgBlob = new Blob([domNodeToString(svg)], { type: "image/svg+xml;charset=utf-8" });
-            const symbolUrlCustomized = DOMURL.createObjectURL(svgBlob);
+                const svgBlob = new Blob([domNodeToString(svg)], { type: "image/svg+xml;charset=utf-8" });
+                const symbolUrlCustomized = DOMURL.createObjectURL(svgBlob);
 
 
-            // ******** retrieving the base64 conversion of svg ********
-            let canvas = document.createElement('canvas');
-            canvas.width = style.size;
-            canvas.height = style.size;
-            let ctx = canvas.getContext("2d");
-            let icon = new Image();
+                // ******** retrieving the base64 conversion of svg ********
+                let canvas = document.createElement('canvas');
+                canvas.width = style.size;
+                canvas.height = style.size;
+                let ctx = canvas.getContext("2d");
+                let icon = new Image();
 
-            icon.src = symbolUrlCustomized;
-            let base64 = "";
-            let sha = hashAndStringify(style);
-            icon.onload = () => {
-                try {
+                icon.src = symbolUrlCustomized;
+                let base64 = "";
+                let sha = hashAndStringify(style);
+                icon.onload = () => {
+                    try {
                     // only when loaded draw the customized svg
-                    ctx.drawImage(icon, (canvas.width / 2) - (icon.width / 2), (canvas.height / 2) - (icon.height / 2));
-                    base64 = canvas.toDataURL("image/png");
-                    canvas = null;
-                    registerStyle(sha, {style: {...style, symbolUrlCustomized}, base64});
-                } catch (e) {
-                    return;
-                }
-            };
-            registerStyle(sha, {style: {...style, symbolUrlCustomized}, svg, base64});
+                        ctx.drawImage(icon, (canvas.width / 2) - (icon.width / 2), (canvas.height / 2) - (icon.height / 2));
+                        base64 = canvas.toDataURL("image/png");
+                        canvas = null;
+                        registerStyle(sha, {style: {...style, symbolUrlCustomized}, base64});
+                    } catch (e) {
+                        return;
+                    }
+                };
+                registerStyle(sha, {style: {...style, symbolUrlCustomized}, svg, base64});
 
-            return symbolUrlCustomized;
-        }).catch(()=> {
-            return require('../product/assets/symbols/symbolMissing.svg');
-        }) : new Promise((resolve) => {
+                return symbolUrlCustomized;
+            }).catch(()=> {
+                return require('../product/assets/symbols/symbolMissing.svg');
+            }) : new Promise((resolve) => {
             resolve(null);
         });
 };
@@ -325,8 +325,8 @@ const createStylesAsync = (styles = []) => {
             }).catch(() => {
                 return {...style, symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg')};
             }) : new Promise((resolve) => {
-                resolve(isSymbolStyle(style) ? fetchStyle(hashAndStringify(style)) : style);
-            });
+            resolve(isSymbolStyle(style) ? fetchStyle(hashAndStringify(style)) : style);
+        });
     });
 };
 

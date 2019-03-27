@@ -115,7 +115,7 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
         let imp = imports[impIndex];
         let taskIndex = imp && imp.tasks && findIndex(imp.tasks, (task) => task.id === taskId);
         if ( imp && imp.tasks && taskIndex >= 0 ) {
-            let task = assign({}, task, {
+            let task = assign({}, imp.tasks[taskIndex], {
                 loading: loading,
                 message: action.details && action.details.message,
                 element: action.details && action.details.element
@@ -141,17 +141,18 @@ function importer(state = {}, action) {
     switch (action.type) {
     case IMPORTS_LOADING: {
         if (!action.details) {
-                // loading full list
+            // loading full list
             return assign({}, state, {loading: action.loading, uploading: action.details && action.details.uploadingFiles !== undefined || state.uploading});
         } else if (action.details.importId !== undefined && action.details.taskId === undefined) {
-                // loading an import
+            // loading an import
             return updateImportLoadingStatus(state, action, action.loading);
         } else if (action.details.importId !== undefined && action.details.taskId !== undefined) {
-                // loading a task
+            // loading a task
             return updateImportTaskLoadingStatus(state, action, action.loading);
         }
-    }
         return state;
+    }
+
     case MANAGER_ITEM_SELECTED: {
         const toolId = action.toolId;
         if (toolId === importerTool) {
@@ -282,7 +283,7 @@ function importer(state = {}, action) {
                 state.selectedTask.transformChain &&
                 state.selectedTask.transformChain.transforms &&
                 state.selectedTask.transformChain.transforms[action.transformId]
-                ) {
+        ) {
             let newSelectedTask = assign({}, state.selectedTask, {
                 transformsChain: assign({}, state.selectedTask.transformChain, {
                     transforms: state.selectedTask.transformChain.transforms.filter((obj, index) => index !== action.transformId)
@@ -293,6 +294,7 @@ function importer(state = {}, action) {
                 selectedTransform: state.selectedTransform && state.selectedTransform.id === action.transformId ? null : state.selectedTransform
             });
         }
+        return state;
     }
     case IMPORT_LOADED: {
         return assign({}, state, {

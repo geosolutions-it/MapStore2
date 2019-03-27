@@ -10,8 +10,8 @@ const expect = require('expect');
 
 const { getConnectionList, getWidgetsGroups, shortenLabel } = require('../WidgetsUtils');
 
-const {widgets} = require('json-loader!../../test-resources/widgets/widgets1.json');
-const { widgets: complexGraphWidgets } = require('json-loader!../../test-resources/widgets/complex_graph.json');
+const {widgets} = require('../../test-resources/widgets/widgets1.json');
+const { widgets: complexGraphWidgets } = require('../../test-resources/widgets/complex_graph.json');
 describe('Test WidgetsUtils', () => {
     it('test getConnectionList', () => {
         const pairs = getConnectionList(widgets);

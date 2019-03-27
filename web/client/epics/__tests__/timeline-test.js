@@ -91,34 +91,34 @@ describe('timeline Epics', () => {
             expect(type).toBe(SET_CURRENT_TIME);
             done();
         }, {
-                timeline: {
-                    selectedLayer: "TEST_LAYER",
-                    range: {
-                        start: "2000-01-01T00:00:00.000Z",
-                        end: "2001-12-31T00:00:00.000Z" // this range do not contains  EXPECTED_TIME_DOMAIN
-                    }
-                },
-                layers: {
-                    flat: [{
-                        id: 'TEST_LAYER',
-                        name: 'TEST_LAYER',
-                        type: 'wms',
-                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
-                        dimensions: [
-                            {
-                                source: {
-                                    type: 'multidim-extension',
-                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
-                                },
-                                name: 'time'
-                            }
-                        ],
-                        params: {
-                            time: '2000-06-08T00:00:00.000Z'
-                        }
-                    }]
+            timeline: {
+                selectedLayer: "TEST_LAYER",
+                range: {
+                    start: "2000-01-01T00:00:00.000Z",
+                    end: "2001-12-31T00:00:00.000Z" // this range do not contains  EXPECTED_TIME_DOMAIN
                 }
-            });
+            },
+            layers: {
+                flat: [{
+                    id: 'TEST_LAYER',
+                    name: 'TEST_LAYER',
+                    type: 'wms',
+                    url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                    dimensions: [
+                        {
+                            source: {
+                                type: 'multidim-extension',
+                                url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                            },
+                            name: 'time'
+                        }
+                    ],
+                    params: {
+                        time: '2000-06-08T00:00:00.000Z'
+                    }
+                }]
+            }
+        });
     });
     it('settingInitialOffsetValue enable range', done => {
         testEpic(settingInitialOffsetValue, 3, enableOffset(true), ([action1, action2, action3]) => {

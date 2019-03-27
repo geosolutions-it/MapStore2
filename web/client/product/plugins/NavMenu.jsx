@@ -86,7 +86,7 @@ class NavMenu extends React.Component {
             .sort((itemA, itemB) => itemA.position - itemB.position)
             .map((item, idx) => {
                 return width > this.props.minWidth && !item.logo ?
-                this.renderLabeledItem(item, idx) : this.renderIconedItem(item, idx);
+                    this.renderLabeledItem(item, idx) : this.renderIconedItem(item, idx);
             }) || [];
     };
 
@@ -94,7 +94,7 @@ class NavMenu extends React.Component {
         return item.labelComponent ? item.labelComponent : (<NavItem
             key={idx}
             target="_blank"
-            href={isString(item.href) && !item.linkId && item.href}
+            href={isString(item.href) && !item.linkId && item.href || ""}
             onClick={isString(item.linkId) ? () => scrollIntoViewId(trimStart(item.linkId, '#')) : () => { }}>
             {item.label}
         </NavItem>);
@@ -106,7 +106,7 @@ class NavMenu extends React.Component {
             target="_blank"
             tooltip={item.label}
             tooltipPosition="bottom"
-            href={isString(item.href) && !item.linkId && item.href}
+            href={isString(item.href) && !item.linkId && item.href || ""}
             onClick={isString(item.linkId) ? () => scrollIntoViewId(trimStart(item.linkId, '#')) : () => { }}>
             {item.glyph && <Glyphicon glyph={item.glyph} /> || item.img}
         </NavItemT>);
@@ -115,11 +115,11 @@ class NavMenu extends React.Component {
     render() {
         return (
             <ContainerDimensions>
-            {({width}) => (
-                <Nav {...this.props.navProps}>
-                    {this.getLinks(width)}
-                </Nav>
-            )}
+                {({width}) => (
+                    <Nav {...this.props.navProps}>
+                        {this.getLinks(width)}
+                    </Nav>
+                )}
             </ContainerDimensions>
         );
     }

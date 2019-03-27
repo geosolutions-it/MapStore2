@@ -143,7 +143,8 @@ class Annotations extends React.Component {
         toggleControl: () => {},
         onUpdateSymbols: () => {},
         onSetErrorSymbol: () => {},
-        onLoadAnnotations: () => {}
+        onLoadAnnotations: () => {},
+        annotations: []
     };
     state = {
         selectFile: false
@@ -155,10 +156,10 @@ class Annotations extends React.Component {
     renderFieldValue = (field, annotation) => {
         const fieldValue = annotation.properties[field.name] || '';
         switch (field.type) {
-            case 'html':
-                return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
-            default:
-                return fieldValue;
+        case 'html':
+            return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
+        default:
+            return fieldValue;
         }
     };
 
@@ -173,28 +174,28 @@ class Annotations extends React.Component {
         const marker = markerStyle ? this.getConfig().getMarkerFromStyle(markerStyle) : {};
         if (featureType === "LineString" || featureType === "MultiLineString" ) {
             return (<span className={"mapstore-annotations-panel-card"}>
-            <LineThumb styleRect={style[featureType]}/>
-        </span>);
+                <LineThumb styleRect={style[featureType]}/>
+            </span>);
         }
         if (featureType === "Polygon" || featureType === "MultiPolygon" ) {
             return (<span className={"mapstore-annotations-panel-card"}>
-            <PolygonThumb styleRect={style[featureType]}/>
-        </span>);
+                <PolygonThumb styleRect={style[featureType]}/>
+            </span>);
         }
         if (featureType === "Circle") {
             return (<span className={"mapstore-annotations-panel-card"}>
-            <CircleThumb styleRect={style[featureType]}/>
-        </span>);
+                <CircleThumb styleRect={style[featureType]}/>
+            </span>);
         }
         if (featureType === "GeometryCollection" || featureType === "FeatureCollection") {
             return (<span className={"mapstore-annotations-panel-card"}>
-            {(!!(geometry.geometries || geometry.features || []).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
-            {markerStyle ? (<span className={"mapstore-annotations-panel-card"}>
-                <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
-                    <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>
-                </div>
-            </span>) : null}
-        </span>);
+                {(!!(geometry.geometries || geometry.features || []).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
+                {markerStyle ? (<span className={"mapstore-annotations-panel-card"}>
+                    <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
+                        <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>
+                    </div>
+                </span>) : null}
+            </span>);
         }
         return (
             <span className={"mapstore-annotations-panel-card"}>
@@ -222,7 +223,7 @@ class Annotations extends React.Component {
     renderCards = () => {
         if (this.props.mode === 'list') {
             return (
-            <SideGrid items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
+                <SideGrid items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
             );
         }
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
@@ -232,12 +233,12 @@ class Annotations extends React.Component {
         }
         // mode = editing
         return this.props.editing && <Editor feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
-        symbolsPath={this.props.symbolsPath}
-        onUpdateSymbols={this.props.onUpdateSymbols}
-        onSetErrorSymbol={this.props.onSetErrorSymbol}
-        symbolErrors={this.props.symbolErrors}
-        symbolList={this.props.symbolList}
-        defaultShape={this.props.defaultShape}
+            symbolsPath={this.props.symbolsPath}
+            onUpdateSymbols={this.props.onUpdateSymbols}
+            onSetErrorSymbol={this.props.onSetErrorSymbol}
+            symbolErrors={this.props.symbolErrors}
+            symbolList={this.props.symbolList}
+            defaultShape={this.props.defaultShape}
         />;
     };
 
@@ -285,17 +286,17 @@ class Annotations extends React.Component {
                                 }
                             ]}/>
                     </Col>
-            </Row>
-            <Row>
-                <Col xs={12}>
-                    <Filter
-                        filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
-                        filterText={this.props.filter}
-                        onFilter={this.props.onFilter} />
-                </Col>
-            </Row></span>}
+                </Row>
+                <Row>
+                    <Col xs={12}>
+                        <Filter
+                            filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
+                            filterText={this.props.filter}
+                            onFilter={this.props.onFilter} />
+                    </Col>
+                </Row></span>}
 
-        </Grid>
+            </Grid>
         );
     }
 
@@ -303,40 +304,40 @@ class Annotations extends React.Component {
         let body = null;
         if (this.props.closing ) {
             body = (<ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onCancelClose}
-                    onConfirm={this.props.onConfirmClose}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/>
-                </ConfirmDialog>);
+                show
+                modal
+                onClose={this.props.onCancelClose}
+                onConfirm={this.props.onConfirmClose}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo"/>
+            </ConfirmDialog>);
         } else if (this.props.showUnsavedChangesModal) {
             body = (<ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onToggleUnsavedChangesModal}
-                    onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/>
-                </ConfirmDialog>);
+                show
+                modal
+                onClose={this.props.onToggleUnsavedChangesModal}
+                onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo"/>
+            </ConfirmDialog>);
         } else if (this.props.showUnsavedStyleModal) {
             body = (<ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onToggleUnsavedStyleModal}
-                    onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/>
-                </ConfirmDialog>);
+                show
+                modal
+                onClose={this.props.onToggleUnsavedStyleModal}
+                onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo"/>
+            </ConfirmDialog>);
         } else if (this.props.removing) {
             body = (<ConfirmDialog
                 show
@@ -347,9 +348,9 @@ class Annotations extends React.Component {
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
-                 {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
-                     <Message msgId="annotations.removeannotation" msgParams={{title: this.props.editing && this.props.editing.properties && this.props.editing.properties.title}}/>}
-                </ConfirmDialog>);
+                {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
+                    <Message msgId="annotations.removeannotation" msgParams={{title: this.props.editing && this.props.editing.properties && this.props.editing.properties.title}}/>}
+            </ConfirmDialog>);
         } else if (this.state.selectFile) {
             body = (
                 <SelecAnnotationsFile
@@ -358,10 +359,10 @@ class Annotations extends React.Component {
                     show={this.state.selectFile}
                     disableOvveride={!(this.props.annotations && this.props.annotations.length > 0)}
                     onClose={() => this.setState(() => ({selectFile: false}))}
-                    />);
+                />);
 
 
-        }else {
+        } else {
             body = (<span> {this.renderCards()} </span>);
         }
         return (<BorderLayout id={this.props.id} header={this.renderHeader()}>

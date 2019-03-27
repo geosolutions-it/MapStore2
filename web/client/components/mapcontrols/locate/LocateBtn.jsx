@@ -102,7 +102,7 @@ class LocateBtn extends React.Component {
         );
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (this.props.locate !== 'PERMISSION_DENIED' && !checkingGeoLocation && !geoLocationAllowed) {
             // check if we are allowed to use geolocation feature
             checkingGeoLocation = true;

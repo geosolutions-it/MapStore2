@@ -55,6 +55,6 @@ module.exports = ({ addBaseUrl }) => ({
         return axios.get(`/users`, addBaseUrl(options)).then((response) => {
             return toJSONPromise(response.data);
         })
-        .then(({ UserList = {} }) => ({ users: [].concat(UserList.User || []) }));
+            .then(({ UserList = {} }) => ({ users: [].concat(UserList.User || []) }));
     }
 });

@@ -40,13 +40,13 @@ describe('Cesium layer', () => {
     });
 
     afterEach((done) => {
-        /*eslint-disable */
+        /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("map"));
             ReactDOM.unmountComponentAtNode(document.getElementById("container"));
             ReactDOM.unmountComponentAtNode(document.getElementById("container2"));
         } catch(e) {}
-        /*eslint-enable */
+        /* eslint-enable */
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -57,7 +57,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer source={source}
-                  map={map}/>, document.getElementById("container"));
+                map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(0);
@@ -74,7 +74,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(0);
@@ -90,7 +90,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(0);
@@ -101,7 +101,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -117,7 +117,7 @@ describe('Cesium layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -138,7 +138,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="tileprovider"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         expect(layer).toExist();
     });
 
@@ -154,7 +154,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -235,7 +235,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -254,7 +254,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -275,7 +275,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -305,7 +305,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -336,7 +336,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -366,7 +366,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         expect(layer).toExist();
         // count layers
         expect(map.imageryLayers.length).toBe(1);
@@ -387,7 +387,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -406,7 +406,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -433,18 +433,18 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                 options={{}} position={0} map={map}/>, document.getElementById("container"));
+                options={{}} position={0} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
         // not visibile layers are removed from the leaflet maps
         layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                 options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
+                options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.imageryLayers.length).toBe(0);
         layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                 options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
+                options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.imageryLayers.length).toBe(1);
     });
 
@@ -461,7 +461,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} position={0} map={map}/>, document.getElementById("container"));
+                options={options} position={0} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -469,7 +469,7 @@ describe('Cesium layer', () => {
         expect(layer.provider.alpha).toBe(1.0);
         layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
+                options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
         expect(layer.provider.alpha).toBe(0.5);
     });
 
@@ -495,29 +495,29 @@ describe('Cesium layer', () => {
         // create layers
         let layer1 = ReactDOM.render(
             <CesiumLayer type="wms"
-             options={options1} map={map} position={1}/>
-                , document.getElementById("container"));
+                options={options1} map={map} position={1}/>
+            , document.getElementById("container"));
 
         expect(layer1).toExist();
         expect(map.imageryLayers.length).toBe(1);
 
         let layer2 = ReactDOM.render(
             <CesiumLayer type="wms"
-             options={options2} map={map} position={2}/>
-         , document.getElementById("container2"));
+                options={options2} map={map} position={2}/>
+            , document.getElementById("container2"));
 
         expect(layer2).toExist();
         expect(map.imageryLayers.length).toBe(2);
 
         layer1 = ReactDOM.render(
             <CesiumLayer type="wms"
-             options={options1} map={map} position={2}/>
-                , document.getElementById("container"));
+                options={options1} map={map} position={2}/>
+            , document.getElementById("container"));
 
         layer2 = ReactDOM.render(
             <CesiumLayer type="wms"
-             options={options2} map={map} position={1}/>
-         , document.getElementById("container2"));
+                options={options2} map={map} position={1}/>
+            , document.getElementById("container2"));
 
         expect(map.imageryLayers.get(0)).toBe(layer2.provider);
         expect(map.imageryLayers.get(1)).toBe(layer1.provider);
@@ -530,7 +530,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="graticule"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -553,7 +553,7 @@ describe('Cesium layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <CesiumLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         expect(map.scene.primitives.length).toBe(1);
@@ -581,7 +581,7 @@ describe('Cesium layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <CesiumLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const content = map.scene.primitives.get(0)._content;
@@ -609,7 +609,7 @@ describe('Cesium layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <CesiumLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const content = map.scene.primitives.get(0)._content;
@@ -625,7 +625,7 @@ describe('Cesium layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <CesiumLayer type="marker"
-                 options={options} map={map}/>, document.getElementById('container'));
+                options={options} map={map}/>, document.getElementById('container'));
         expect(layer).toExist();
         expect(map.entities._entities.length).toBe(1);
     });
@@ -643,7 +643,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms" position={10}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
 

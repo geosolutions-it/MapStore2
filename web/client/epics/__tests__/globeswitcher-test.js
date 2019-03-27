@@ -41,12 +41,12 @@ describe('globeswitcher Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case "@@router/CALL_HISTORY_METHOD":
-                        expect(action.payload.method).toBe('push');
-                        expect(action.payload.args.length).toBe(1);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case "@@router/CALL_HISTORY_METHOD":
+                    expect(action.payload.method).toBe('push');
+                    expect(action.payload.args.length).toBe(1);
+                    break;
+                default:
+                    expect(true).toBe(false);
 
                 }
             });
@@ -60,12 +60,12 @@ describe('globeswitcher Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case "@@router/CALL_HISTORY_METHOD":
-                        expect(action.payload.method).toBe('push');
-                        expect(action.payload.args.length).toBe(1);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case "@@router/CALL_HISTORY_METHOD":
+                    expect(action.payload.method).toBe('push');
+                    expect(action.payload.args.length).toBe(1);
+                    break;
+                default:
+                    expect(true).toBe(false);
 
                 }
             });
@@ -78,11 +78,11 @@ describe('globeswitcher Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_LAST_2D_MAPTYPE:
-                        expect(action.mapType).toBe('leaflet');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case UPDATE_LAST_2D_MAPTYPE:
+                    expect(action.mapType).toBe('leaflet');
+                    break;
+                default:
+                    expect(true).toBe(false);
 
                 }
             });
@@ -95,11 +95,11 @@ describe('globeswitcher Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_LAST_2D_MAPTYPE:
-                        expect(action.mapType).toBe('openlayers');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case UPDATE_LAST_2D_MAPTYPE:
+                    expect(action.mapType).toBe('openlayers');
+                    break;
+                default:
+                    expect(true).toBe(false);
 
                 }
             });

@@ -29,20 +29,20 @@ const enhanceCounter = compose(
 );
 const React = require('react');
 module.exports = enhanceCounter(({ series = [], data = [], options = {}, style = {
-        width: "100%",
-        height: "100%",
-        transform: "translate(-50%, -50%)",
-        position: "absolute",
-        display: "inline",
-        padding: "1%",
-        top: "50%",
-        left: "50%"
-    }} ) => {
-        const renderCounter = ({ dataKey } = {}, i) => (<Counter
-            key={dataKey}
-            uom={get(options, `seriesOptions[${i}].uom`)}
-            value={data[0][dataKey]}
-            style={{ textAlign: "center", ...style }}
-        />);
-        return (<div className="counter-widget-view">{series.map(renderCounter)}</div>);
-    });
+    width: "100%",
+    height: "100%",
+    transform: "translate(-50%, -50%)",
+    position: "absolute",
+    display: "inline",
+    padding: "1%",
+    top: "50%",
+    left: "50%"
+}} ) => {
+    const renderCounter = ({ dataKey } = {}, i) => (<Counter
+        key={dataKey}
+        uom={get(options, `seriesOptions[${i}].uom`)}
+        value={data[0][dataKey]}
+        style={{ textAlign: "center", ...style }}
+    />);
+    return (<div className="counter-widget-view">{series.map(renderCounter)}</div>);
+});

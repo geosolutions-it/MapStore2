@@ -46,7 +46,7 @@ class Image extends Component {
         objectFitImages(this._node);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.src !== this.props.src) {
             objectFitImages(this._node);
         }
@@ -92,7 +92,7 @@ class Image extends Component {
                     <Lightbox
                         mainSrc={src}
                         onCloseRequest={() => onClick(false)}/>
-                : null}
+                    : null}
             </div>
         );
     }

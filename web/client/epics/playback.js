@@ -58,11 +58,11 @@ const domainArgs = (getState, paginationOptions = {}) => {
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
     const shouldFilter = statusSelector(getState()) === STATUS.PLAY || statusSelector(getState()) === STATUS.PAUSE;
     return [layerUrl, layerName, "time", {
-            limit: BUFFER_SIZE, // default, can be overridden by pagination options
-            time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
-            ...paginationOptions
-        },
-        multidimOptionsSelectorCreator(id)(getState())
+        limit: BUFFER_SIZE, // default, can be overridden by pagination options
+        time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
+        ...paginationOptions
+    },
+    multidimOptionsSelectorCreator(id)(getState())
     ];
 };
 
@@ -144,8 +144,8 @@ const getAnimationFrames = (getState, options) => {
 const setupAnimation = (getState = () => ({})) => animationEventsStream$ => {
     const layers = layersWithTimeDataSelector(getState());
     return Rx.Observable.from(
-            layers.map(l => changeLayerProperties(l.id, {singleTile: true}))
-        ).concat(animationEventsStream$)
+        layers.map(l => changeLayerProperties(l.id, {singleTile: true}))
+    ).concat(animationEventsStream$)
         // restore original singleTile configuration
         .concat(Rx.Observable.from(
             layers.map(l => changeLayerProperties(l.id, { singleTile: l.singleTile }))
@@ -175,10 +175,10 @@ module.exports = {
                     (playbackRangeSelector(getState())
                         && playbackRangeSelector(getState()).startPlaybackTime
                         && playbackRangeSelector(getState()).endPlaybackTime)
-                    ? undefined
+                        ? undefined
                     // ...otherwise, start from the current time (start animation from cursor position)
-                    : currentTimeSelector(getState())
-                })
+                        : currentTimeSelector(getState())
+            })
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
                     error({
@@ -197,8 +197,8 @@ module.exports = {
                             getAnimationFrames(getState, {
                                 fromValue: lastFrameSelector(getState())
                             })
-                            .map(appendFrames)
-                            .let(wrapStartStop(framesLoading(true), framesLoading(false)))
+                                .map(appendFrames)
+                                .let(wrapStartStop(framesLoading(true), framesLoading(false)))
                         )
                 )
                 .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
@@ -238,7 +238,7 @@ module.exports = {
                     )
                     .concat(Rx.Observable.of(stop()))
                     .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
-        ),
+            ),
     /**
      * Synchronizes the fixed animation step toggle with guide layer on timeline
      */
@@ -283,29 +283,29 @@ module.exports = {
     playbackCacheNextPreviousTimes: (action$, { getState = () => { } } = {}) =>
         action$
             .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC )
-                .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
-                .filter(() => selectedLayerSelector(getState()))
-                .filter( t => !!t )
-                .switchMap(({time: actionTime}) => {
-                    // get current time in case of SELECT_LAYER
-                    const time = actionTime || currentTimeSelector(getState());
-                    return Rx.Observable.forkJoin(
-                        // TODO: find out a way to optimize and do only one request
-                        // TODO: support for local list of values (in case of missing multidim-extension)
-                        getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
-                            .map(res => res.DomainValues.Domain.split(","))
-                            .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-                        getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
-                            .map(res => res.DomainValues.Domain.split(","))
-                            .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-                    ).map(([next, previous]) =>
-                        updateMetadata({
-                            forTime: time,
-                            next,
-                            previous
-                        })
-                    );
-                }),
+            .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
+            .filter(() => selectedLayerSelector(getState()))
+            .filter( t => !!t )
+            .switchMap(({time: actionTime}) => {
+                // get current time in case of SELECT_LAYER
+                const time = actionTime || currentTimeSelector(getState());
+                return Rx.Observable.forkJoin(
+                    // TODO: find out a way to optimize and do only one request
+                    // TODO: support for local list of values (in case of missing multidim-extension)
+                    getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
+                        .map(res => res.DomainValues.Domain.split(","))
+                        .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
+                    getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
+                        .map(res => res.DomainValues.Domain.split(","))
+                        .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
+                ).map(([next, previous]) =>
+                    updateMetadata({
+                        forTime: time,
+                        next,
+                        previous
+                    })
+                );
+            }),
     /**
      * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
      * current start-end values
@@ -332,14 +332,14 @@ module.exports = {
                 )
             )),
 
-    playbackStopWhenDeleteLayer: (action$, { getState = () => {} }= {}) =>
+    playbackStopWhenDeleteLayer: (action$, { getState = () => {} } = {}) =>
         action$
-        .ofType(REMOVE_NODE)
-        .filter( () =>
+            .ofType(REMOVE_NODE)
+            .filter( () =>
                 !selectedLayerSelector(getState())
                 && statusSelector(getState()) === "PLAY"
-        )
-        .switchMap( () => Rx.Observable.of(stop()))
+            )
+            .switchMap( () => Rx.Observable.of(stop()))
 
 
 };

@@ -30,10 +30,10 @@ const GeoStoryNavigation = ({
     className="ms-geostory-navigation"
     style={{width: "100%", position: 'relative' }}>
     <Navigation
-            currentPage={currentPage}
-            scrollTo={(id, options = { behavior: "smooth" }) => () => {
-                scrollToContent(id, options);
-            }}
+        currentPage={currentPage}
+        scrollTo={(id, options = { behavior: "smooth" }) => () => {
+            scrollToContent(id, options);
+        }}
         story={story}
         setEditing={setEditingMode} />
 </div> : null);
@@ -49,8 +49,8 @@ export default createPlugin('GeoStoryNavigation', {
             currentPage: currentPageSelector,
             story: currentStorySelector
         }), {
-        setEditingMode: setEditing
-    }
+            setEditingMode: setEditing
+        }
     )(GeoStoryNavigation),
     reducers: {
         geostory

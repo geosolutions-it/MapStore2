@@ -12,7 +12,8 @@ module.exports = compose(
     withStateHandlers(({initExpanded}) => {
         return {
             expanded: !!initExpanded
-    }; },
+        };
+    },
     {
         onSwitch: (state, {reset}) => (expanded) => {
             if (!expanded) {

@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import DrawerMenuPlugin from '../DrawerMenu';
-import { getPluginForTest, } from './pluginsTestUtils';
+import { getPluginForTest } from './pluginsTestUtils';
 
 const mouseMove = (x, y, node) => {
     const doc = node ? node.ownerDocument : document;

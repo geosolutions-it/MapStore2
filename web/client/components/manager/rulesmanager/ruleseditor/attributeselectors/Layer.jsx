@@ -45,7 +45,8 @@ module.exports = compose(
     withPropsOnChange(["workspace"], ({workspace}) => {
         return {
             parentsFilter: {workspace}
-    }; }),
+        };
+    }),
     withHandlers({
         onValueSelected: ({setOption = () => {}}) => filterTerm => {
             setOption({key: "layer", value: filterTerm});

@@ -27,7 +27,7 @@ describe('MousePositionLabelDM', () => {
     it('checks default', () => {
 
         const cmp = ReactDOM.render(
-                <MousePositionLabelDM/>
+            <MousePositionLabelDM/>
             , document.getElementById("container"));
         expect(cmp).toExist();
 
@@ -54,11 +54,11 @@ describe('MousePositionLabelDM', () => {
     it('a position with defaults', () => {
 
         const cmp = ReactDOM.render(
-                <IntlProvider>
-                    <MousePositionLabelDM
-                        position={{lng: 28.3, lat: 13.5333333}}
-                    />
-                </IntlProvider>
+            <IntlProvider>
+                <MousePositionLabelDM
+                    position={{lng: 28.3, lat: 13.5333333}}
+                />
+            </IntlProvider>
             , document.getElementById("container"));
         expect(cmp).toExist();
 
@@ -71,11 +71,11 @@ describe('MousePositionLabelDM', () => {
     it('position with no rounding but flooring of latD and lngD', () => {
 
         const cmp = ReactDOM.render(
-                <IntlProvider>
-                    <MousePositionLabelDM
-                        position={{lng: 10.475013256072998, lat: 43.70726776739903}}
-                    />
-                </IntlProvider>
+            <IntlProvider>
+                <MousePositionLabelDM
+                    position={{lng: 10.475013256072998, lat: 43.70726776739903}}
+                />
+            </IntlProvider>
             , document.getElementById("container"));
         expect(cmp).toExist();
 

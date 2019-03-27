@@ -21,6 +21,7 @@ const GeoCodeUtils = {
         case 3:
             return 2;
         default:
+            return -1;
         }
     },
     /**

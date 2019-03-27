@@ -57,7 +57,7 @@ describe('This test for MapItem', () => {
         const testDescription = "testDescription";
         var component = TestUtils.renderIntoDocument(<MapItem id={1} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet" viewerUrl="viewer"/>);
         var a = TestUtils.findRenderedDOMComponentWithTag(
-           component, 'a'
+            component, 'a'
         );
         expect(a.href).toContain("viewer?type=leaflet&mapId=1");
     });

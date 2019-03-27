@@ -86,7 +86,7 @@ class Locate extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         this.fol = false;
         if (newProps.status !== this.props.status) {
             if ( newProps.status === "ENABLED" && !this.locate._active) {

@@ -33,14 +33,14 @@ const defaultButtonConfig = {
 };
 
 const DropdownFeatureType = ({
-        menuOptions = [],
-        buttonConfig = {}
-    } = {}) => (
-        <DropdownButtonT {...defaultButtonConfig} {...buttonConfig}>
-            {menuOptions.length ? menuOptions.map(({glyph, text, onClick, active = false}, i) => (
-                <MenuItem active={active} eventKey={i} onClick={onClick} key={i}>
-                    {glyph && <Glyphicon glyph={glyph}/>} {text}
-                </MenuItem>)) : null}
-        </DropdownButtonT>
+    menuOptions = [],
+    buttonConfig = {}
+} = {}) => (
+    <DropdownButtonT {...defaultButtonConfig} {...buttonConfig}>
+        {menuOptions.length ? menuOptions.map(({glyph, text, onClick, active = false}, i) => (
+            <MenuItem active={active} eventKey={i} onClick={onClick} key={i}>
+                {glyph && <Glyphicon glyph={glyph}/>} {text}
+            </MenuItem>)) : null}
+    </DropdownButtonT>
 );
 module.exports = DropdownFeatureType;

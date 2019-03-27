@@ -69,30 +69,30 @@ class MultiGeomThumb extends React.Component {
             ...stroke, ...fill} : {};
         return (
             <div className="ms-thumb-geom">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>
-                {styleLine && lineStringPresent && (<path
-                    d={polygonPresent ? "M10 15 L10 65" : "M45 15 L45 65" }
-                    strokeLinecap={this.props.linecap}
-                    strokeLinejoin={this.props.linejoin}
-                    stroke={styleLine.color || this.props.stroke}
-                    strokeWidth={styleLine.weight || this.props.strokeWidth}
-                    fill={styleLine.fillColor}/>)
-                }
-                {stylePolygon && polygonPresent && (<rect
-                    width="50" height="50" x={lineStringPresent ? "40" : "20"} y="15"
-                    style={{
-                        fill: stylePolygon.fillColor,
-                        strokeWidth: stylePolygon.weight || this.props.strokeWidth,
-                        stroke: stylePolygon.color || this.props.stroke,
-                        fillOpacity: stylePolygon.fillOpacity,
-                        opacity: stylePolygon.opacity
-                    }}
-                />) }
-                {textPresent && <text x="10" y="40" fill={styleText.color}>T</text>}
-                {circlePresent && <circle cx="50" cy="50" r="25" stroke={styleCircle.color} opacity={styleCircle.opacity} strokeWidth={styleCircle.weight} fill={styleCircle.fillColor} fillOpacity={styleCircle.fillOpacity}/> }
-            </svg>
-            {pointPresent && <img src={markerIcon} size={32} style={{position: "absolute"}}/>}
-        </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>
+                    {styleLine && lineStringPresent && (<path
+                        d={polygonPresent ? "M10 15 L10 65" : "M45 15 L45 65" }
+                        strokeLinecap={this.props.linecap}
+                        strokeLinejoin={this.props.linejoin}
+                        stroke={styleLine.color || this.props.stroke}
+                        strokeWidth={styleLine.weight || this.props.strokeWidth}
+                        fill={styleLine.fillColor}/>)
+                    }
+                    {stylePolygon && polygonPresent && (<rect
+                        width="50" height="50" x={lineStringPresent ? "40" : "20"} y="15"
+                        style={{
+                            fill: stylePolygon.fillColor,
+                            strokeWidth: stylePolygon.weight || this.props.strokeWidth,
+                            stroke: stylePolygon.color || this.props.stroke,
+                            fillOpacity: stylePolygon.fillOpacity,
+                            opacity: stylePolygon.opacity
+                        }}
+                    />) }
+                    {textPresent && <text x="10" y="40" fill={styleText.color}>T</text>}
+                    {circlePresent && <circle cx="50" cy="50" r="25" stroke={styleCircle.color} opacity={styleCircle.opacity} strokeWidth={styleCircle.weight} fill={styleCircle.fillColor} fillOpacity={styleCircle.fillOpacity}/> }
+                </svg>
+                {pointPresent && <img src={markerIcon} size={32} style={{position: "absolute"}}/>}
+            </div>
         );
     }
 }

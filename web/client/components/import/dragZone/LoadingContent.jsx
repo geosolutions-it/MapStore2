@@ -12,16 +12,16 @@ const Loader = require('../../misc/Loader');
 const Message = require('../../I18N/Message');
 
 module.exports = () => (<div style={{
-        margin: 'auto',
-        maxWidth: 550
-    }}>
-        <Loader
+    margin: 'auto',
+    maxWidth: 550
+}}>
+    <Loader
         size={80}
         color="#ffffff"
         style={{
             margin: 'auto'
         }}/>
-        <h4>
-            <Message msgId="loading" />
-        </h4>
-    </div>);
+    <h4>
+        <Message msgId="loading" />
+    </h4>
+</div>);

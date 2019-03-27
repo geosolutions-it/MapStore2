@@ -37,7 +37,7 @@ const baseTemplates = [{
                     fontWeight: 'bold'
                 }
             }
-    ]}/>
+        ]}/>
 },
 {
     types: ['point', 'linestring', 'polygon', 'vector'],
@@ -55,7 +55,7 @@ const baseTemplates = [{
                     fontWeight: 'bold'
                 }
             }
-    ]}/>
+        ]}/>
 },
 {
     types: ['raster'],
@@ -73,7 +73,7 @@ const baseTemplates = [{
                     fontWeight: 'bold'
                 }
             }
-    ]}/>
+        ]}/>
 },
 {
     types: ['raster'],
@@ -91,7 +91,7 @@ const baseTemplates = [{
                     fontWeight: 'bold'
                 }
             }
-    ]}/>
+        ]}/>
 }].map(style => ({ ...style, styleId: uuidv1() }));
 
 const customTemplates = [
@@ -510,7 +510,7 @@ const customTemplates = [
                     }
                 }
             ]}
-            />
+        />
     },
 
     {

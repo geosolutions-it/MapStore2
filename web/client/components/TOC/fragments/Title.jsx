@@ -58,11 +58,11 @@ class Title extends React.Component {
             </OverlayTrigger>
 
         ) :
-        (
-            <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
-                {this.getFilteredTitle(title)}
-            </div>
-        );
+            (
+                <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
+                    {this.getFilteredTitle(title)}
+                </div>
+            );
     }
 }
 

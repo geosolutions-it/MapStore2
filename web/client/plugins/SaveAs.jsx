@@ -35,19 +35,19 @@ const saveAsStateSelector = createStructuredSelector({
 });
 
 const selector = createSelector(
-        mapSelector,
-        layersSelector,
-        groupsSelector,
-        mapOptionsToSaveSelector,
-        saveAsStateSelector,
-        (map, layers, groups, additionalOptions, saveAsState) => ({
-    currentZoomLvl: map && map.zoom,
-    map,
-    layers,
-    groups,
-    additionalOptions,
-    ...saveAsState
-}));
+    mapSelector,
+    layersSelector,
+    groupsSelector,
+    mapOptionsToSaveSelector,
+    saveAsStateSelector,
+    (map, layers, groups, additionalOptions, saveAsState) => ({
+        currentZoomLvl: map && map.zoom,
+        map,
+        layers,
+        groups,
+        additionalOptions,
+        ...saveAsState
+    }));
 
 class SaveAs extends React.Component {
     static propTypes = {
@@ -91,11 +91,11 @@ class SaveAs extends React.Component {
         displayMetadataEdit: false
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.onMissingInfo(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.onMissingInfo(nextProps);
     }
 
@@ -176,18 +176,18 @@ module.exports = {
             onDisplayMetadataEdit,
             onCreateThumbnail: createThumbnail
         })(assign(SaveAs, {
-            BurgerMenu: {
-                name: 'saveAs',
-                position: 31,
-                text: <Message msgId="saveAs"/>,
-                icon: <Glyphicon glyph="floppy-open"/>,
+        BurgerMenu: {
+            name: 'saveAs',
+            position: 31,
+            text: <Message msgId="saveAs"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
             action: editMap.bind(null, {}, true),
-                selector: (state) => {
-                    if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
-                        return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
-                    }
-                    return state && state.security && state.security.user ? {} : { style: {display: "none"} };
+            selector: (state) => {
+                if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
+                    return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
                 }
+                return state && state.security && state.security.user ? {} : { style: {display: "none"} };
             }
-        }))
+        }
+    }))
 };

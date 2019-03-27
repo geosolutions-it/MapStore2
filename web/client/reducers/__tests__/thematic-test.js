@@ -18,7 +18,7 @@ const {
     cancelDirty,
     setInvalidInput,
     resetInvalidInput
- } = require('../../actions/thematic');
+} = require('../../actions/thematic');
 const thematic = require('../thematic');
 
 const layer = {

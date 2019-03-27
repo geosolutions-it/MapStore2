@@ -11,10 +11,6 @@ const ReactDOM = require('react-dom');
 const Header = require('../Header');
 const expect = require('expect');
 
-const getTitle = (title) => {
-    return '<span class="glyphicon glyphicon-1-map"></span><!-- react-text: 7 -->&nbsp;&nbsp;<!-- /react-text --><!-- react-text: 8 -->' + title + '<!-- /react-text -->';
-};
-
 describe('TOC Header', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -47,7 +43,7 @@ describe('TOC Header', () => {
         expect(sections).toExist();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
         expect(title).toExist();
-        expect(title.innerHTML).toBe(getTitle('Map Title'));
+        expect(title.innerHTML).toContain('Map Title');
     });
 
     it('disable filter', () => {
@@ -60,7 +56,7 @@ describe('TOC Header', () => {
         expect(sections).toExist();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
         expect(title).toExist();
-        expect(title.innerHTML).toBe(getTitle(''));
+        expect(title.innerHTML).toNotContain('Map Title');
     });
 
     it('disable filter', () => {

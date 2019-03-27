@@ -72,7 +72,7 @@ class LeafletMap extends React.Component {
 
     state = { };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.zoomOffset = 0;
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions && this.props.mapOptions.view.resolutions.length > 0) {
             const scaleFun = L.CRS.EPSG3857.scale;
@@ -107,7 +107,7 @@ class LeafletMap extends React.Component {
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
         const map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
-          Math.round(this.props.zoom));
+            Math.round(this.props.zoom));
 
         this.map = map;
 
@@ -221,7 +221,7 @@ class LeafletMap extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
 
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
@@ -325,7 +325,7 @@ class LeafletMap extends React.Component {
         // we need to check if the new zoom is equal to map zoom
         const zoomIsNotUpdated = propsZoomEqual || newZoom === mapZoom;
 
-         // do the change at the same time, to avoid glitches
+        // do the change at the same time, to avoid glitches
         if (!centerIsNotUpdated && !zoomIsNotUpdated) {
             this.map.setView([newProps.center.y, newProps.center.x], Math.round(newProps.zoom));
         } else if (!zoomIsNotUpdated) {
@@ -419,18 +419,18 @@ class LeafletMap extends React.Component {
             const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
             // bbox is minx, miny, maxx, maxy'southwest_lng,southwest_lat,northeast_lng,northeast_lat'
             this.map.fitBounds([
-                    // sw
-                    [bounds[1], bounds[0]],
-                    // ne
-                    [bounds[3], bounds[2]]
-                ],
-                 {
-                    paddingTopLeft,
-                    paddingBottomRight,
-                    maxZoom,
-                    duration,
-                    animate: duration === 0 ? false : undefined
-                }
+                // sw
+                [bounds[1], bounds[0]],
+                // ne
+                [bounds[3], bounds[2]]
+            ],
+            {
+                paddingTopLeft,
+                paddingBottomRight,
+                maxZoom,
+                duration,
+                animate: duration === 0 ? false : undefined
+            }
             );
         });
     };

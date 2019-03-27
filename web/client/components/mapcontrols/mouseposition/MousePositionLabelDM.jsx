@@ -38,7 +38,7 @@ class MousePositionLabelDM extends React.Component {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 3, minimumFractionDigits: 3};
         let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 0};
         return (
-                <h5>
+            <h5>
                 <Label bsSize="lg" bsStyle="info">
                     <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={isNil(pos.lat) ? pos.lat : roundCoord({roundingBehaviour: "floor", value: pos.lat, maximumFractionDigits: integerFormat.maximumFractionDigits})} />
                     <span>° </span><NumberFormat key="latM" numberParams={decimalFormat} value={pos.latM} />
@@ -47,7 +47,7 @@ class MousePositionLabelDM extends React.Component {
                     <span>° </span><NumberFormat key="lngM" numberParams={decimalFormat} value={pos.lngM} />
                     <span>&apos; </span>
                 </Label>
-                </h5>);
+            </h5>);
     }
 }
 

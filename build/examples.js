@@ -8,5 +8,6 @@ module.exports = {
     print: path.join(__dirname, "..", "web", "client", "examples", "print", "app"),
     login: path.join(__dirname, "..", "web", "client", "examples", "login", "app"),
     plugins: path.join(__dirname, "..", "web", "client", "examples", "plugins", "app"),
-    api: path.join(__dirname, "..", "web", "client", "examples", "api", "app")
+    api: path.join(__dirname, "..", "web", "client", "examples", "api", "app"),
+    hooks: path.join(__dirname, "..", "web", "client", "examples", "hooks", "app")
 };

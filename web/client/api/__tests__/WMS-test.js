@@ -68,7 +68,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.WMS_Capabilities.$.version).toBe("1.3.0");
                 expect(result.WMS_Capabilities.Capability.Layer).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -82,7 +82,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.WMT_MS_Capabilities.$.version).toBe("1.1.1");
                 expect(result.WMT_MS_Capabilities.Capability.Layer).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -98,7 +98,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(bbox.extent).toExist();
                 expect(bbox.crs).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -114,7 +114,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(bbox.bounds.minx).toExist();
                 expect(bbox.crs).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

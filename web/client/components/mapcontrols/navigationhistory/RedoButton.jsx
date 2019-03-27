@@ -62,7 +62,7 @@ class RedoBtn extends React.Component {
         );
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         // none
     }
 

@@ -61,16 +61,16 @@ const selector = createStructuredSelector({
  * Enhancer to enable set index only if Component has not header in viewerOptions props
  */
 const identifyIndex = compose(
-        connect(
-            createSelector(indexSelector, (index) => ({ index })),
-            {
-                setIndex: changePage
-            }
-        ),
-        defaultProps({
-            index: 0
-        })
-    )
+    connect(
+        createSelector(indexSelector, (index) => ({ index })),
+        {
+            setIndex: changePage
+        }
+    ),
+    defaultProps({
+        index: 0
+    })
+)
 ;
 const DefaultViewer = compose(
     identifyIndex,
@@ -237,7 +237,7 @@ module.exports = {
             tool: <FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-            }/>,
+                }/>,
             position: 3
         }
     }),

@@ -6,22 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 const ogcComparisonOperators = {
-        "=": (ns, content) => `<${ns}:PropertyIsEqualTo>${content}</${ns}:PropertyIsEqualTo>`,
-        ">": (ns, content) => `<${ns}:PropertyIsGreaterThan>${content}</${ns}:PropertyIsGreaterThan>`,
-        "<": (ns, content) => `<${ns}:PropertyIsLessThan>${content}</${ns}:PropertyIsLessThan>`,
-        ">=": (ns, content) => `<${ns}:PropertyIsGreaterThanOrEqualTo>${content}</${ns}:PropertyIsGreaterThanOrEqualTo>`,
-        "<=": (ns, content) => `<${ns}:PropertyIsLessThanOrEqualTo>${content}</${ns}:PropertyIsLessThanOrEqualTo>`,
-        "<>": (ns, content) => `<${ns}:PropertyIsNotEqualTo>${content}</${ns}:PropertyIsNotEqualTo>`,
-        "><": (ns, content) => `<${ns}:PropertyIsBetween>${content}</${ns}:PropertyIsBetween>`,
-        "like": (ns, content) => `<${ns}:PropertyIsLike matchCase="true" wildCard="*" singleChar="." escapeChar="!">${content}</${ns}:PropertyIsLike>`,
-        "ilike": (ns, content) => `<${ns}:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">${content}</${ns}:PropertyIsLike>`,
-        "isNull": (ns, content) => `<${ns}:PropertyIsNull>${content}</${ns}:PropertyIsNull>`
-    };
+    "=": (ns, content) => `<${ns}:PropertyIsEqualTo>${content}</${ns}:PropertyIsEqualTo>`,
+    ">": (ns, content) => `<${ns}:PropertyIsGreaterThan>${content}</${ns}:PropertyIsGreaterThan>`,
+    "<": (ns, content) => `<${ns}:PropertyIsLessThan>${content}</${ns}:PropertyIsLessThan>`,
+    ">=": (ns, content) => `<${ns}:PropertyIsGreaterThanOrEqualTo>${content}</${ns}:PropertyIsGreaterThanOrEqualTo>`,
+    "<=": (ns, content) => `<${ns}:PropertyIsLessThanOrEqualTo>${content}</${ns}:PropertyIsLessThanOrEqualTo>`,
+    "<>": (ns, content) => `<${ns}:PropertyIsNotEqualTo>${content}</${ns}:PropertyIsNotEqualTo>`,
+    "><": (ns, content) => `<${ns}:PropertyIsBetween>${content}</${ns}:PropertyIsBetween>`,
+    "like": (ns, content) => `<${ns}:PropertyIsLike matchCase="true" wildCard="*" singleChar="." escapeChar="!">${content}</${ns}:PropertyIsLike>`,
+    "ilike": (ns, content) => `<${ns}:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">${content}</${ns}:PropertyIsLike>`,
+    "isNull": (ns, content) => `<${ns}:PropertyIsNull>${content}</${ns}:PropertyIsNull>`
+};
 const ogcLogicalOperators = {
-        "AND": (ns, content) => `<${ns}:And>${content}</${ns}:And>`,
-        "OR": (ns, content) => `<${ns}:Or>${content}</${ns}:Or>`,
-        "NOR": (ns, content) => `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>`,
-        "NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
+    "AND": (ns, content) => `<${ns}:And>${content}</${ns}:And>`,
+    "OR": (ns, content) => `<${ns}:Or>${content}</${ns}:Or>`,
+    "NOR": (ns, content) => `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>`,
+    "NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
 };
 
 const ogcSpatialOperators = {
@@ -50,7 +50,7 @@ const spatial = {
     dwithin: (ns, ...args) => multiop(ns, ogcSpatialOperators.DWITHIN, args),
     contains: (ns, ...args) => multiop(ns, ogcSpatialOperators.CONTAINS, args)
 };
-const distance = (ns, content, units="m") => `<${ns}:Distance units="${units}">${content}</${ns}:Distance>`;
+const distance = (ns, content, units = "m") => `<${ns}:Distance units="${units}">${content}</${ns}:Distance>`;
 const comparison = {
     equal: (ns, ...args) => multiop(ns, ogcComparisonOperators["="], args),
     greater: (ns, ...args) => multiop(ns, ogcComparisonOperators[">"], args),

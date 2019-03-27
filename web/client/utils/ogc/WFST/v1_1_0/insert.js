@@ -20,7 +20,7 @@ const geometryAttribute = (f, describeFeatureType) =>
 const feature = (f, describeFeatureType) => `<${getTypeName(describeFeatureType)}>`
     + (attributes(f, describeFeatureType)
         .concat(geometryAttribute(f, describeFeatureType))
-        ).join("")
+    ).join("")
     + `</${getTypeName(describeFeatureType)}>`;
 const features = (fs, describeFeatureType) => fs.map(f => feature(f, describeFeatureType)).join("");
 

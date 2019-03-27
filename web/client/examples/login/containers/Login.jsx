@@ -34,12 +34,12 @@ class Login extends React.Component {
     render() {
         return (<Localized messages={this.props.messages} locale={this.props.locale}>
             <div className="fill">
-                    <div style={{textAlign: "right"}}><LoginPlugin /></div>
-                    <Jumbotron style={{position: "absolute", bottom: 0, left: 0, right: 0, top: "35px"}}>
+                <div style={{textAlign: "right"}}><LoginPlugin /></div>
+                <Jumbotron style={{position: "absolute", bottom: 0, left: 0, right: 0, top: "35px"}}>
                     <h1>Hello, {this.props.security && this.props.security.user && this.props.security.user.name || "Guest user. Please login"}</h1>
                     <p>This is a sample of the login functionality.</p>
                     <p>{this.renderGroups()}</p>
-                  </Jumbotron>
+                </Jumbotron>
                 <Debug/>
             </div>
         </Localized>);

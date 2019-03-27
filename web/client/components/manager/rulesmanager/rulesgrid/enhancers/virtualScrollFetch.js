@@ -35,8 +35,8 @@ module.exports = page$ => props$ => props$.distinctUntilChanged((oProps, nProps)
                 message: "rulesmanager.errorLoadingRules"
             })).do(() => setLoading(false))) // Store pages requests and emit on first request end
             .withLatestFrom(page$, ({pages: nPages}, lastRequest) => ({
-                    lastRequest,
-                    nPages
+                lastRequest,
+                nPages
             }))
             .filter(({error}) => !error)
             .map(({lastRequest, nPages}) => {
@@ -50,4 +50,4 @@ module.exports = page$ => props$ => props$.distinctUntilChanged((oProps, nProps)
             .filter(({pagesToLoad}) => pagesToLoad.length > 0)
             .do((newRequest) => moreRules(newRequest));
     })
-);
+    );

@@ -23,5 +23,5 @@ module.exports = (action = "", debounceTime = 1000) => withHandlers((initProp = 
     const debounced = debounce(initProp[action] || emptyFunc, debounceTime);
     return {
         [action]: () => debounced
-        };
+    };
 });

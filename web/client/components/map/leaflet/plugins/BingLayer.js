@@ -28,6 +28,7 @@ L.BingLayer.prototype.loadMetadata = function() {
             return _this.onError(meta);
         }
         _this.initMetadata(meta);
+        return null;
     };
     const urlScheme = document.location.protocol === 'file:' ? 'https' : document.location.protocol.slice(0, -1);
     const url = urlScheme + '://dev.virtualearth.net/REST/v1/Imagery/Metadata/'
@@ -43,6 +44,7 @@ L.BingLayer.prototype.onError = function(meta) {
     if (this.options.onError) {
         return this.options.onError(meta);
     }
+    return null;
 };
 
 

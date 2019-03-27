@@ -138,7 +138,7 @@ const featuresToGrid = compose(
                         }
                         return props.editors(desc.localType, generalProps);
                     },
-                    getFilterRenderer: ({localType=""} = {}, name) => {
+                    getFilterRenderer: ({localType = ""} = {}, name) => {
                         if (props.filterRenderers && props.filterRenderers[name]) {
                             return props.filterRenderers[name];
                         }
@@ -146,7 +146,7 @@ const featuresToGrid = compose(
                     },
                     getFormatter: (desc) => getFormatter(desc)
                 }))
-            })
+        })
     ),
     withPropsOnChange(
         ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns"],
@@ -157,7 +157,6 @@ const featuresToGrid = compose(
                 onRowsSelected = () => {},
                 onRowsDeselected = () => {},
                 onRowsToggled = () => {},
-                hasTemporaryChanges = () => {},
                 ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts, props.columns);
 
             // setup gridOpts setting app selection events bind

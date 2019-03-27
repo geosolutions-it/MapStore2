@@ -119,16 +119,16 @@ class GroupField extends React.Component {
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === filterField.attribute)[0];
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
         const deleteButton = filterField.exception ?
-                    (<OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
-                        <Button id="remove-filter-field" className="filter-buttons no-border" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
-                            <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
-                        </Button>
-                    </OverlayTrigger>)
-                 :
-                    (<OverlayTrigger placement="top" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong>
-                    <I18N.Message msgId="queryform.attributefilter.delete" /></strong></Tooltip>)}><Button id="remove-filter-field" className="filter-buttons no-border" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
-                        <Glyphicon glyph={this.props.removeButtonIcon}/>
-                    </Button></OverlayTrigger>);
+            (<OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
+                <Button id="remove-filter-field" className="filter-buttons no-border" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                    <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
+                </Button>
+            </OverlayTrigger>)
+            :
+            (<OverlayTrigger placement="top" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong>
+                <I18N.Message msgId="queryform.attributefilter.delete" /></strong></Tooltip>)}><Button id="remove-filter-field" className="filter-buttons no-border" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                    <Glyphicon glyph={this.props.removeButtonIcon}/>
+                </Button></OverlayTrigger>);
         return (
             <div key={filterField.rowId}>
                 <Row className="filter-field-row filter-field-row">
@@ -169,12 +169,12 @@ class GroupField extends React.Component {
                             {
                                 // flag to swtich from AutocompleteField to TextField
                                 this.props.autocompleteEnabled ?
-                                (<AutocompleteField
-                                    filterField={filterField}
-                                    attType="string"/>) :
-                                (<TextField
-                                    operator={filterField.operator}
-                                    attType="string"/>)
+                                    (<AutocompleteField
+                                        filterField={filterField}
+                                        attType="string"/>) :
+                                    (<TextField
+                                        operator={filterField.operator}
+                                        attType="string"/>)
                             }
 
                             <ComboField
@@ -239,7 +239,7 @@ class GroupField extends React.Component {
                                     value={groupField.logic}
                                     onSelect={ v => this.props.actions.onUpdateLogicCombo(groupField.id, v)}
                                     labelRenderer={ ({name} = {}) => <I18N.Message msgId={name} />}
-                                    />&nbsp;
+                                />&nbsp;
                                 <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span>
                                 <span className="pull-right">{this.renderGroupButtons(groupField)}</span>
                             </div>
@@ -288,8 +288,8 @@ class GroupField extends React.Component {
                 collapsible
                 expanded={this.props.attributePanelExpanded}
                 onSwitch={(checked) => this.props.actions.onExpandAttributeFilterPanel(checked)}
-                >
-                    {this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}
+            >
+                {this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}
             </SwitchPanel>) : (
                 <div className="query-filter-container">{this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}</div>
 
@@ -299,9 +299,7 @@ class GroupField extends React.Component {
 
     updateLogicCombo = (groupId, name, value) => {
         const logic = this.props.logicComboOptions.filter((opt) => {
-            if (value === LocaleUtils.getMessageById(this.context.messages, opt.name)) {
-                return opt;
-            }
+            return value === LocaleUtils.getMessageById(this.context.messages, opt.name);
         })[0].logic;
         this.props.actions.onUpdateLogicCombo(groupId, logic);
     };

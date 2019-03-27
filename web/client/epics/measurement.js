@@ -90,39 +90,39 @@ const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, s
 module.exports = (viewer) => ({
     addAnnotationFromMeasureEpic: (action$, store) =>
         action$.ofType(ADD_MEASURE_AS_ANNOTATION)
-        .switchMap((a) => {
-            const state = store.getState();
-            // transform measure feature into geometry collection
-            // add feature property to manage text annotation with value and uom
-            const {feature, value, uom, measureTool} = a;
-            const id = uuidv1();
-            const newFeature = convertMeasureToGeoJSON(feature.geometry, value, uom, id, measureTool, state);
-            const annotationsLayer = head(state.layers.flat.filter(l => l.id === 'annotations'));
+            .switchMap((a) => {
+                const state = store.getState();
+                // transform measure feature into geometry collection
+                // add feature property to manage text annotation with value and uom
+                const {feature, value, uom, measureTool} = a;
+                const id = uuidv1();
+                const newFeature = convertMeasureToGeoJSON(feature.geometry, value, uom, id, measureTool, state);
+                const annotationsLayer = head(state.layers.flat.filter(l => l.id === 'annotations'));
 
-            // if layers doesn not exist add it
-            // if layers exist add only the feature to existing features
-            return Rx.Observable.from((annotationsLayer ? [
-                updateNode('annotations', 'layer', {
-                features: annotationsLayerSelector(state).features.concat([newFeature])
-            }), editAnnotation(id)] : [
-                addLayer({
-                    type: 'vector',
-                    visibility: true,
-                    id: 'annotations',
-                    name: "Annotations",
-                    rowViewer: viewer,
-                    hideLoading: true,
-                    style: null,
-                    features: [newFeature],
-                    handleClickOnLayer: true
-                }),
-                editAnnotation(id)
-            ])).startWith(toggleControl("annotations"));
-        }),
+                // if layers doesn not exist add it
+                // if layers exist add only the feature to existing features
+                return Rx.Observable.from((annotationsLayer ? [
+                    updateNode('annotations', 'layer', {
+                        features: annotationsLayerSelector(state).features.concat([newFeature])
+                    }), editAnnotation(id)] : [
+                    addLayer({
+                        type: 'vector',
+                        visibility: true,
+                        id: 'annotations',
+                        name: "Annotations",
+                        rowViewer: viewer,
+                        hideLoading: true,
+                        style: null,
+                        features: [newFeature],
+                        handleClickOnLayer: true
+                    }),
+                    editAnnotation(id)
+                ])).startWith(toggleControl("annotations"));
+            }),
     openMeasureEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY)
-        .filter((action) => action.control === "measure" && action.value && showCoordinateEditorSelector(store.getState()))
-        .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
-        })
+            .filter((action) => action.control === "measure" && action.value && showCoordinateEditorSelector(store.getState()))
+            .switchMap(() => {
+                return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            })
 });

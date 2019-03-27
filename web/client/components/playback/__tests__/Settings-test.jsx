@@ -101,10 +101,10 @@ describe('Timeline/Playback Settings component', () => {
             playbackRange={{
                 startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
             }}
-        playbackButtons={[{
-            className: "test_button",
-            onClick: actions.onClick
-        }]} />, document.getElementById("container"));
+            playbackButtons={[{
+                className: "test_button",
+                onClick: actions.onClick
+            }]} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .test_button")); // <-- trigger event callback
         expect(spyClick).toHaveBeenCalled();
     });

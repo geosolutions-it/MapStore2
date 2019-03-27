@@ -22,8 +22,8 @@ var SortableMixin = assign(require('react-sortable-items/SortableItemMixin'), {
             'is-placeholder': this.props._isPlaceholder
         }), item.props.className || {});
         return React.cloneElement(
-          this.props._isPlaceholder && this.getPlaceholderContent && Object.prototype.toString.call(this.getPlaceholderContent) === '[object Function]'
-            ? this.getPlaceholderContent() : item, {
+            this.props._isPlaceholder && this.getPlaceholderContent && Object.prototype.toString.call(this.getPlaceholderContent) === '[object Function]'
+                ? this.getPlaceholderContent() : item, {
                 className: classNames,
                 style: assign({}, item.props.style, this.props.sortableStyle),
                 key: this.props.sortableIndex,
@@ -69,6 +69,7 @@ var Node = createReactClass({
                 }, {});
                 return React.cloneElement(child, props);
             }
+            return null;
         });
     },
 

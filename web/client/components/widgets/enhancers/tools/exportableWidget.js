@@ -12,7 +12,7 @@ const { withProps } = require('recompose');
  */
 module.exports = () =>
     withProps(({ widgetTools = [], data, id, title, exportCSV = () => { }, exportImage = () => { } }) => ({
-    widgetTools: [
+        widgetTools: [
             ...widgetTools,
             {
                 glyph: "download",
@@ -31,4 +31,4 @@ module.exports = () =>
                 onClick: () => exportImage({ widgetDivId: `widget-chart-${id}`, title })
             }
         ]
-}));
+    }));

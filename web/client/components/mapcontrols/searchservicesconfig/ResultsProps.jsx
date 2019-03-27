@@ -62,21 +62,21 @@ class ResultsProps extends React.Component {
                         <Message msgId="search.s_title" />
                     </ControlLabel>
                     <FormControl
-                    value={service.displayName}
-                    key="displayName"
-                    type="text"
-                    placeholder={'e.g. "${properties.name}\"'}
-                    onChange={this.updateProp.bind(null, "displayName")}/>
+                        value={service.displayName}
+                        key="displayName"
+                        type="text"
+                        placeholder={'e.g. "${properties.name}\"'}
+                        onChange={this.updateProp.bind(null, "displayName")}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
                         <Message msgId="search.s_description" />
                     </ControlLabel>
                     <FormControl
-                    value={service.subTitle}
-                    key="subTitle"
-                    type="text"
-                    onChange={this.updateProp.bind(null, "subTitle")}/>
+                        value={service.subTitle}
+                        key="subTitle"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "subTitle")}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
@@ -88,7 +88,7 @@ class ResultsProps extends React.Component {
                         step={1}
                         range={{min: 1, max: 10}}
                         onSlide={this.updatePriority}
-                        />
+                    />
                     <span className="priority-info"><Message msgId="search.s_priority_info" /></span>
                 </FormGroup>
                 <FormGroup>

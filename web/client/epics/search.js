@@ -32,7 +32,7 @@ import {
     searchResultLoaded,
     searchResultError,
     selectNestedService,
-	searchTextChanged
+    searchTextChanged
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
@@ -52,46 +52,46 @@ import {getFeatureSimple} from '../api/WFS';
  * @return {external:Observable}
  */
 export const searchEpic = action$ =>
-  action$.ofType(TEXT_SEARCH_STARTED)
-    .debounceTime(250)
-    .switchMap( action =>
-         // create a stream of streams from array
-        Rx.Observable.from(
-            (action.services || [ {type: "nominatim", priority: 5} ])
-             // Create an stream for each Service
-            .map((service) => {
-                const serviceInstance = API.Utils.getService(service.type);
-                if (!serviceInstance) {
-                    const err = new Error("Service Missing");
-                    err.msgId = "search.service_missing";
-                    err.serviceType = service.type;
-                    return Rx.Observable.of(err).do((e) => {throw e; });
-                }
-                return Rx.Observable.defer(() =>
-                    serviceInstance(action.searchText, service.options)
-                        .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
-                ))
-                .retryWhen(errors => errors.delay(200).scan((count, err) => {
-                    if ( count >= 2) {
-                        throw err;
-                    }
-                    return count + 1;
-                }, 0));
-            }) // map
-        )// from
-        // merge all results from the streams
-        .mergeAll()
-        .scan((oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
-         // limit the number of results returned from all services to maxResults
-        .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
-        .startWith(searchTextLoading(true))
-        .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
-        .concat([searchTextLoading(false)])
-        .catch(e => {
-            const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
-            return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
-        })
-);
+    action$.ofType(TEXT_SEARCH_STARTED)
+        .debounceTime(250)
+        .switchMap( action =>
+        // create a stream of streams from array
+            Rx.Observable.from(
+                (action.services || [ {type: "nominatim", priority: 5} ])
+                // Create an stream for each Service
+                    .map((service) => {
+                        const serviceInstance = API.Utils.getService(service.type);
+                        if (!serviceInstance) {
+                            const err = new Error("Service Missing");
+                            err.msgId = "search.service_missing";
+                            err.serviceType = service.type;
+                            return Rx.Observable.of(err).do((e) => {throw e; });
+                        }
+                        return Rx.Observable.defer(() =>
+                            serviceInstance(action.searchText, service.options)
+                                .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
+                                ))
+                            .retryWhen(errors => errors.delay(200).scan((count, err) => {
+                                if ( count >= 2) {
+                                    throw err;
+                                }
+                                return count + 1;
+                            }, 0));
+                    }) // map
+            )// from
+            // merge all results from the streams
+                .mergeAll()
+                .scan((oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
+            // limit the number of results returned from all services to maxResults
+                .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
+                .startWith(searchTextLoading(true))
+                .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
+                .concat([searchTextLoading(false)])
+                .catch(e => {
+                    const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
+                    return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
+                })
+        );
 
 /**
  * Gets every `TEXT_SEARCH_ITEM_SELECTED` event.
@@ -108,57 +108,57 @@ export const searchEpic = action$ =>
 
 export const searchItemSelected = action$ =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
-    .switchMap(action => {
-        // itemSelectionStream --> emits actions for zoom and marker add
-        let itemSelectionStream = Rx.Observable.of(action.item)
-            .concatMap((item) => {
-                if (item && item.__SERVICE__ && item.__SERVICE__.geomService) {
-                    let staticFilter = generateTemplateString(item.__SERVICE__.geomService.options.staticFilter || "")(item);
-                    // retrieve geometry from geomService or pass the item directly
-                    return Rx.Observable.fromPromise(
-                        API.Utils.getService(item.__SERVICE__.geomService.type)("", assign( {}, item.__SERVICE__.geomService.options, { staticFilter } ))
-                            .then(res => assign({}, item, {geometry: CoordinatesUtils.mergeToPolyGeom(res)} ) )
-                    );
-                }
-                return Rx.Observable.of(action.item);
-            }).concatMap((item) => {
-                // check if the service has been configured to start a GetFeatureInfo request based on the item selected
-                // if so, then do it with a point inside the geometry
-                let bbox = item.bbox || item.properties.bbox || toBbox(item);
-                let actions = [
-                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
-                    addMarker(item)
-                ];
-                if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
-                    let coord = pointOnSurface(item).geometry.coordinates;
-                    const latlng = { lng: coord[0], lat: coord[1] };
-                    const typeName = item.__SERVICE__.options.typeName;
-                    if (coord) {
-                        let itemId = null;
-                        let filterNameList = [];
-                        let overrideParams = {};
-                        if (item.__SERVICE__.launchInfoPanel === "single_layer") {
-                            /* take info from the item selected and restrict feature info to this layer
-                             * and force info_format to application/json for allowing
-                             * filtering results later on (identify epic) */
-                            filterNameList = [typeName];
-                            itemId = item.id;
-                            overrideParams = {[item.__SERVICE__.options.typeName]: {info_format: "application/json"}};
-                        }
-                        return [
-                            featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
-                            showMapinfoMarker(),
-                            ...actions
-                        ];
+        .switchMap(action => {
+            // itemSelectionStream --> emits actions for zoom and marker add
+            let itemSelectionStream = Rx.Observable.of(action.item)
+                .concatMap((item) => {
+                    if (item && item.__SERVICE__ && item.__SERVICE__.geomService) {
+                        let staticFilter = generateTemplateString(item.__SERVICE__.geomService.options.staticFilter || "")(item);
+                        // retrieve geometry from geomService or pass the item directly
+                        return Rx.Observable.fromPromise(
+                            API.Utils.getService(item.__SERVICE__.geomService.type)("", assign({}, item.__SERVICE__.geomService.options, { staticFilter }))
+                                .then(res => assign({}, item, { geometry: CoordinatesUtils.mergeToPolyGeom(res) }))
+                        );
                     }
-                }
-                return actions;
-            });
+                    return Rx.Observable.of(action.item);
+                }).concatMap((item) => {
+                    // check if the service has been configured to start a GetFeatureInfo request based on the item selected
+                    // if so, then do it with a point inside the geometry
+                    let bbox = item.bbox || item.properties.bbox || toBbox(item);
+                    let actions = [
+                        zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
+                        addMarker(item)
+                    ];
+                    if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
+                        let coord = pointOnSurface(item).geometry.coordinates;
+                        const latlng = { lng: coord[0], lat: coord[1] };
+                        const typeName = item.__SERVICE__.options.typeName;
+                        if (coord) {
+                            let itemId = null;
+                            let filterNameList = [];
+                            let overrideParams = {};
+                            if (item.__SERVICE__.launchInfoPanel === "single_layer") {
+                                /* take info from the item selected and restrict feature info to this layer
+                                 * and force info_format to application/json for allowing
+                                 * filtering results later on (identify epic) */
+                                filterNameList = [typeName];
+                                itemId = item.id;
+                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: "application/json" } };
+                            }
+                            return [
+                                featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
+                                showMapinfoMarker(),
+                                ...actions
+                            ];
+                        }
+                    }
+                    return actions;
+                });
 
-        const item = action.item;
-        let nestedServices = item && item.__SERVICE__ && item.__SERVICE__.then;
-        // if a nested service is present, select the item and the nested service
-        let nestedServicesStream = nestedServices ? Rx.Observable.of(selectNestedService(
+            const item = action.item;
+            let nestedServices = item && item.__SERVICE__ && item.__SERVICE__.then;
+            // if a nested service is present, select the item and the nested service
+            let nestedServicesStream = nestedServices ? Rx.Observable.of(selectNestedService(
                 nestedServices.map((nestedService) => ({
                     ...nestedService,
                     options: {
@@ -173,12 +173,12 @@ export const searchItemSelected = action$ =>
                 generateTemplateString(item.__SERVICE__.searchTextTemplate || "")(item)
             )) : Rx.Observable.empty();
 
-        // if the service has a searchTextTemplate, use it to modify the search text to display
-        let searchTextTemplate = item.__SERVICE__ && item.__SERVICE__.searchTextTemplate;
-        let searchTextStream = searchTextTemplate ? Rx.Observable.of(searchTextChanged(generateTemplateString(searchTextTemplate)(item))) : Rx.Observable.empty();
+            // if the service has a searchTextTemplate, use it to modify the search text to display
+            let searchTextTemplate = item.__SERVICE__ && item.__SERVICE__.searchTextTemplate;
+            let searchTextStream = searchTextTemplate ? Rx.Observable.of(searchTextChanged(generateTemplateString(searchTextTemplate)(item))) : Rx.Observable.empty();
 
-        return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
-    });
+            return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
+        });
 
 
 /**
@@ -187,7 +187,7 @@ export const searchItemSelected = action$ =>
  *
 */
 export const zoomAndAddPointEpic = (action$, store) =>
-        action$.ofType(ZOOM_ADD_POINT)
+    action$.ofType(ZOOM_ADD_POINT)
         .switchMap(action => {
             const feature = {
                 type: "Feature",
@@ -236,19 +236,19 @@ export const searchOnStartEpic = (action$, store) =>
                         // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
                         cql_filter: cqlFilter
                     })
-                    .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
+                        .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
-                .switchMap(({ type, geometry, typeName }) => {
-                    let coord = pointOnSurface({ type, geometry }).geometry.coordinates;
-                    const latlng = {lng: coord[0], lat: coord[1] };
+                    .switchMap(({ type, geometry, typeName }) => {
+                        let coord = pointOnSurface({ type, geometry }).geometry.coordinates;
+                        const latlng = {lng: coord[0], lat: coord[1] };
 
-                    if (coord) { // trigger get feature info
-                        return Rx.Observable.of(featureInfoClick({latlng}, typeName, [typeName], {[typeName]: {cql_filter: cqlFilter}}), showMapinfoMarker());
-                    }
-                    return Rx.Observable.empty();
-                }).catch(() => {
-                    return Rx.Observable.of(serverError());
-                });
+                        if (coord) { // trigger get feature info
+                            return Rx.Observable.of(featureInfoClick({latlng}, typeName, [typeName], {[typeName]: {cql_filter: cqlFilter}}), showMapinfoMarker());
+                        }
+                        return Rx.Observable.empty();
+                    }).catch(() => {
+                        return Rx.Observable.of(serverError());
+                    });
             }
             return Rx.Observable.empty();
         });

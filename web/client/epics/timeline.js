@@ -49,14 +49,14 @@ const snapTime = (state, group, time) => {
     if (selectedLayerName(state)) {
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
-                // TODO: find out a way to optimize and do only one request
-                getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
-                    .map(res => res.DomainValues.Domain.split(","))
-                    .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
-                getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time }))
-                    .map(res => res.DomainValues.Domain.split(","))
-                    .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
-            )
+            // TODO: find out a way to optimize and do only one request
+            getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
+                .map(res => res.DomainValues.Domain.split(","))
+                .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
+            getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time }))
+                .map(res => res.DomainValues.Domain.split(","))
+                .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
+        )
             .map(values =>
                 getNearestDate(values.filter(v => !!v), time) || time
             );
@@ -94,15 +94,15 @@ const loadRangeData = (id, timeData, getState) => {
         [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
     };
     return getHistogram(
-            timeData.source.url,
-            layerName,
-            TIME_DIMENSION,
-            {
-                [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
-            },
-            resolution,
-            multidimOptionsSelectorCreator(id)(getState())
-        )
+        timeData.source.url,
+        layerName,
+        TIME_DIMENSION,
+        {
+            [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
+        },
+        resolution,
+        multidimOptionsSelectorCreator(id)(getState())
+    )
         .merge(
             describeDomains(
                 timeData.source.url,
@@ -113,48 +113,48 @@ const loadRangeData = (id, timeData, getState) => {
                     expandLimit: MAX_ITEMS_PER_LAYER
                 }
             )
-    )
-    .scan((acc, val) => ({...acc, ...val}), {})
-    .switchMap(({ Histogram: histogram, Domains: domains }) => {
-        const domain = get(
-            head(
-                castArray(
-                    get(domains, "DimensionDomain") || []
-                ).filter(
-                    ({ Identifier } = {}) => Identifier === TIME_DIMENSION
-                )
-            ),
-            "Domain"
-        );
-        let values;
-        try {
-            values = histogram && histogram.Values && histogram.Values.split(',').map(v => parseInt(v, 10)) || [];
-        } catch (e) {
-            values = []; // TODO notify some issue
-        }
+        )
+        .scan((acc, val) => ({...acc, ...val}), {})
+        .switchMap(({ Histogram: histogram, Domains: domains }) => {
+            const domain = get(
+                head(
+                    castArray(
+                        get(domains, "DimensionDomain") || []
+                    ).filter(
+                        ({ Identifier } = {}) => Identifier === TIME_DIMENSION
+                    )
+                ),
+                "Domain"
+            );
+            let values;
+            try {
+                values = histogram && histogram.Values && histogram.Values.split(',').map(v => parseInt(v, 10)) || [];
+            } catch (e) {
+                values = []; // TODO notify some issue
+            }
 
-        const domainValues = domain && domain.indexOf('--') < 0 && domain.split(',');
+            const domainValues = domain && domain.indexOf('--') < 0 && domain.split(',');
 
-        /*
+            /*
          * shape of range: {start: "T_START", end: "T_END"}
          * shape of histogram {values: [1, 2, 3], domain: "T_START/T_END/RESOLUTION" }
          * shape of domain: {values: ["T1", "T2", ....]}, present only if not in the form "T1--T2"
          */
-        return Rx.Observable.of({
-            range,
-            histogram: histogram && histogram.Domain
-                ? {
-                    values,
-                    domain: histogram.Domain
-                }
-                : undefined,
-            domain: domain
-                ? {
-                    values: domainValues
-                }
-                : undefined
+            return Rx.Observable.of({
+                range,
+                histogram: histogram && histogram.Domain
+                    ? {
+                        values,
+                        domain: histogram.Domain
+                    }
+                    : undefined,
+                domain: domain
+                    ? {
+                        values: domainValues
+                    }
+                    : undefined
+            });
         });
-    });
 };
 
 
@@ -164,34 +164,34 @@ module.exports = {
      */
     setTimelineCurrentTime: (action$, {getState = () => {}} = {}) =>
         action$.ofType(SELECT_TIME)
-        .throttleTime(100) // avoid multiple request in case of mouse events drag and click
-        .switchMap( ({time, group}) => {
-            const state = getState();
+            .throttleTime(100) // avoid multiple request in case of mouse events drag and click
+            .switchMap( ({time, group}) => {
+                const state = getState();
 
-            if (snap && group) {
-                return snapTime(state, group, time)
-                    .switchMap( t => {
-                        const currentViewRange = rangeSelector(state);
-                        const {
-                            start,
-                            end
-                        } = currentViewRange || {};
-                        let actions = [];
-                        // re- center the view is snapped time is out of view range
-                        if (start && end && (moment(t).isBefore(start) || moment(t).isAfter(end))) {
-                            const rangeDistance = moment(end).diff(start);
-                            actions = [onRangeChanged({
-                                start: moment(t).subtract(rangeDistance / 2),
-                                end: moment(t).add(rangeDistance / 2)
-                            })];
-                        }
-                        return Rx.Observable.from([...actions, setCurrentTime(t)]);
-                    })
-                    .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
+                if (snap && group) {
+                    return snapTime(state, group, time)
+                        .switchMap( t => {
+                            const currentViewRange = rangeSelector(state);
+                            const {
+                                start,
+                                end
+                            } = currentViewRange || {};
+                            let actions = [];
+                            // re- center the view is snapped time is out of view range
+                            if (start && end && (moment(t).isBefore(start) || moment(t).isAfter(end))) {
+                                const rangeDistance = moment(end).diff(start);
+                                actions = [onRangeChanged({
+                                    start: moment(t).subtract(rangeDistance / 2),
+                                    end: moment(t).add(rangeDistance / 2)
+                                })];
+                            }
+                            return Rx.Observable.from([...actions, setCurrentTime(t)]);
+                        })
+                        .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
                     ;
-            }
-            return Rx.Observable.of(setCurrentTime(time));
-        }),
+                }
+                return Rx.Observable.of(setCurrentTime(time));
+            }),
     /**
      * Initializes the time line
      */
@@ -208,7 +208,7 @@ module.exports = {
                                 .map(time => setCurrentTime(time)))
                     )
                 : Rx.Observable.empty()
-    ),
+        ),
     /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist
      * The policy is:
@@ -219,37 +219,37 @@ module.exports = {
      */
     settingInitialOffsetValue: (action$, {getState = () => {}} = {}) =>
         action$.ofType(ENABLE_OFFSET)
-        .switchMap( (action) => {
-            const RATIO = 5; // ratio of the size of the offset to set relative to the current viewport, if set
-            const state = getState();
-            const time = currentTimeSelector(state);
-            const currentViewRange = rangeSelector(state);
-            // find out current viewport range, if exist, to define a good offset to use as default
-            if (action.enabled) {
-                const {
-                    start = 0,
-                    end = 1000 * 60 * 60 * 24 * RATIO // this makes the offset 1 day by default, if timeline is not initialized
-                } = currentViewRange || {};
-                const currentOffset = offsetTimeSelector(state);
-                const rangeDistance = moment(end).diff(start);
-                // Set current moment, if not set yet, to current viewport center. otherwise, it is set to now.
-                let currentMoment = currentViewRange ? moment(start).add(rangeDistance / 2).toISOString() : moment(new Date()).toISOString();
+            .switchMap( (action) => {
+                const RATIO = 5; // ratio of the size of the offset to set relative to the current viewport, if set
+                const state = getState();
+                const time = currentTimeSelector(state);
+                const currentViewRange = rangeSelector(state);
+                // find out current viewport range, if exist, to define a good offset to use as default
+                if (action.enabled) {
+                    const {
+                        start = 0,
+                        end = 1000 * 60 * 60 * 24 * RATIO // this makes the offset 1 day by default, if timeline is not initialized
+                    } = currentViewRange || {};
+                    const currentOffset = offsetTimeSelector(state);
+                    const rangeDistance = moment(end).diff(start);
+                    // Set current moment, if not set yet, to current viewport center. otherwise, it is set to now.
+                    let currentMoment = currentViewRange ? moment(start).add(rangeDistance / 2).toISOString() : moment(new Date()).toISOString();
 
-                const initialOffsetTime = moment(time ? time : currentMoment).add(rangeDistance / RATIO);
-                let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment)) : Rx.Observable.empty();
-                let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
-                    : Rx.Observable.empty();
-                const centerToCurrentViewRange = currentViewRange ? Rx.Observable.empty() : Rx.Observable.of(
-                    onRangeChanged({
-                        start: moment(currentMoment).add(-1 * rangeDistance / 2),
-                        end: moment(currentMoment).add(rangeDistance / 2)
-                    })
-                );
-                return setTime.concat(setOff).concat(centerToCurrentViewRange);
-            }
-            return Rx.Observable.of(setCurrentOffset());
+                    const initialOffsetTime = moment(time ? time : currentMoment).add(rangeDistance / RATIO);
+                    let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment)) : Rx.Observable.empty();
+                    let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
+                        : Rx.Observable.empty();
+                    const centerToCurrentViewRange = currentViewRange ? Rx.Observable.empty() : Rx.Observable.of(
+                        onRangeChanged({
+                            start: moment(currentMoment).add(-1 * rangeDistance / 2),
+                            end: moment(currentMoment).add(rangeDistance / 2)
+                        })
+                    );
+                    return setTime.concat(setOff).concat(centerToCurrentViewRange);
+                }
+                return Rx.Observable.of(setCurrentOffset());
             // disable by setting off the offset
-        }),
+            }),
     /**
      * Update the time data when the timeline range changes, or when the layer dimension data is
      * updated (for instance when a layer is added to the map)
@@ -276,13 +276,13 @@ module.exports = {
                             histogram,
                             domain
                         ))
-                        .startWith(timeDataLoading(id, true))
-                        .catch(() => Rx.Observable.of(error({
-                            uid: "error_with_timeline_update",
-                            title: "timeline.errors.multidim_error_title",
-                            message: "timeline.errors.multidim_error_message"
-                        })))
-                        .concat( Rx.Observable.of(timeDataLoading(id, false)))
+                            .startWith(timeDataLoading(id, true))
+                            .catch(() => Rx.Observable.of(error({
+                                uid: "error_with_timeline_update",
+                                title: "timeline.errors.multidim_error_title",
+                                message: "timeline.errors.multidim_error_message"
+                            })))
+                            .concat( Rx.Observable.of(timeDataLoading(id, false)))
                     ));
 
             })

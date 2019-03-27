@@ -16,7 +16,7 @@ const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = 
 const {describeDomains} = require('../api/MultiDim');
 const {
     domainsToDimensionsObject
- } = require('../utils/TimeUtils');
+} = require('../utils/TimeUtils');
 
 const { pick, find, replace, endsWith, get } = require('lodash');
 /**
@@ -57,7 +57,7 @@ module.exports = {
         action$
             .ofType(ADD_LAYER)
             .filter(
-                    ({ layer = {} } = {}) => layer.id && layer.url && layer.name && (layer.type === "wms" || layer.type === "wmts")
+                ({ layer = {} } = {}) => layer.id && layer.url && layer.name && (layer.type === "wms" || layer.type === "wmts")
             )
             // find out possible multidim URL
             // TODO: find out a better way to extract or discover multidim URL
@@ -92,31 +92,31 @@ module.exports = {
      * Updates dimension state for layers that has multidimensional extension.
      */
     updateLayerDimensionDataOnMapLoad: (action$, {getState = () => {}} = {}) =>
-            action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
-                const layers = layersWithTimeDataSelector(getState());
-                return Observable.from(
-                        // layers with dimension and multidimensional extension
-                        layers.filter(l =>
-                            l
+        action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
+            const layers = layersWithTimeDataSelector(getState());
+            return Observable.from(
+                // layers with dimension and multidimensional extension
+                layers.filter(l =>
+                    l
                             && l.dimensions
                             && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")
-                        )
-                    )
-                    // one flow for each dimension
-                    .mergeMap(l =>
-                        describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
-                            .switchMap( domains =>
-                                    Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
-                                        .map(d => updateLayerDimensionData(l.id, d.name, d))
-                                )
+                )
+            )
+            // one flow for each dimension
+                .mergeMap(l =>
+                    describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
+                        .switchMap( domains =>
+                            Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
+                                .map(d => updateLayerDimensionData(l.id, d.name, d))
                             )
-                            .catch(() =>
-                                Observable.of(error({
-                                    uid: "error_with_timeline_update",
-                                    title: "timeline.errors.multidim_error_title",
-                                    message: "timeline.errors.multidim_error_message"
-                                })).delay(2000)
                         )
-                    );
-            })
+                        .catch(() =>
+                            Observable.of(error({
+                                uid: "error_with_timeline_update",
+                                title: "timeline.errors.multidim_error_title",
+                                message: "timeline.errors.multidim_error_message"
+                            })).delay(2000)
+                        )
+                );
+        })
 };

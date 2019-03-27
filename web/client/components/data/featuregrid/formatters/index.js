@@ -8,5 +8,5 @@
 const React = require('react');
 
 module.exports = {
-    getFormatter: (desc) => desc.localType === 'boolean' ? (({value} = {}) => value !== undefined ? <span>{value.toString()}</span> : undefined) : undefined
+    getFormatter: (desc) => desc.localType === 'boolean' ? ({value} = {}) => value !== undefined ? <span>{value.toString()}</span> : undefined : undefined
 };

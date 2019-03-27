@@ -115,15 +115,15 @@ module.exports = {
                             && state.thematic.classification.length && state.thematic.classification[0].type || 'Polygon'
                     }, API);
                 }, {
-                        onChangeConfiguration: changeConfiguration,
-                        onChangeLayerParams: changeLayerParams,
-                        onSwitchLayer: loadFields,
-                        onClassify: loadClassification,
-                        onApplyStyle: cancelDirty,
-                        onDirtyStyle: setDirty,
-                        onInvalidInput: setInvalidInput,
-                        onValidInput: resetInvalidInput
-                    })(require('../components/TOC/fragments/settings/ThematicLayer'));
+                    onChangeConfiguration: changeConfiguration,
+                    onChangeLayerParams: changeLayerParams,
+                    onSwitchLayer: loadFields,
+                    onClassify: loadClassification,
+                    onApplyStyle: cancelDirty,
+                    onDirtyStyle: setDirty,
+                    onInvalidInput: setInvalidInput,
+                    onValidInput: resetInvalidInput
+                })(require('../components/TOC/fragments/settings/ThematicLayer'));
                 resolve(ThematicLayer);
             });
         }, enabler: (state) => state.layerSettings && state.layerSettings.expanded

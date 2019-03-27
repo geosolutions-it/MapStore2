@@ -43,7 +43,7 @@ class MapViewerPage extends React.Component {
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
-    {
-        loadMapConfig,
-        onInit: initMap
-    })(MapViewerPage);
+{
+    loadMapConfig,
+    onInit: initMap
+})(MapViewerPage);

@@ -80,7 +80,7 @@ const {processOGCGeometry} = require("../GML");
  * @prop {function} property.dwithin `property("P1").dwithin(geoJSONGeometry, 10, "m")` 2nd and 3rd params are optional
  * @prop {function} property.contains `property("P1").contains(geoJSONGeometry)`
  */
-module.exports = function({filterNS= "ogc", gmlVersion, wfsVersion = "1.1.0"} = {}) {
+module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} = {}) {
     let gmlV = gmlVersion || "3.1.1";
 
     const getGeom = (geom) => processOGCGeometry(gmlV, geom);
@@ -111,7 +111,7 @@ module.exports = function({filterNS= "ogc", gmlVersion, wfsVersion = "1.1.0"} = 
                 isNull: () => comparison.isNull(filterNS, propName(filterNS, name)),
                 intersects: (value) => spatial.intersects(filterNS, propName(filterNS, name), getGeom(value)),
                 within: (value) => spatial.within(filterNS, propName(filterNS, name), getGeom(value)),
-                dwithin: (geom, dist, units="m") => spatial.dwithin(filterNS, propName(filterNS, name), getGeom(geom), distance(filterNS, dist, units)),
+                dwithin: (geom, dist, units = "m") => spatial.dwithin(filterNS, propName(filterNS, name), getGeom(geom), distance(filterNS, dist, units)),
                 contains: (value) => spatial.contains(filterNS, propName(filterNS, name), getGeom(value))
                 // TODO bbox equals, disjoint, touches, overlaps
             };

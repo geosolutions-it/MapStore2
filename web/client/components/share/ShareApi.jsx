@@ -31,10 +31,10 @@ class ShareApi extends React.Component {
 
     render() {
         const parsedCode = codeApi
-          .replace('__BASE__URL__', this.props.baseUrl)
-          .replace('__CONFIG__URL__', this.props.shareConfigUrl)
-          .replace('__ORIGINAL_URL__', this.props.shareUrl)
-          .replace('__VERSION__', validateVersion(this.props.version) ? '?' + trim(this.props.version) : '');
+            .replace('__BASE__URL__', this.props.baseUrl)
+            .replace('__CONFIG__URL__', this.props.shareConfigUrl)
+            .replace('__ORIGINAL_URL__', this.props.shareUrl)
+            .replace('__VERSION__', validateVersion(this.props.version) ? '?' + trim(this.props.version) : '');
 
         return (
             <div className="input-link">

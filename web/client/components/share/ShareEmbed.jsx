@@ -25,7 +25,8 @@ class ShareEmbed extends React.Component {
     };
 
     static defaultProps = {
-        showTOCToggle: true
+        showTOCToggle: true,
+        shareUrl: ''
     };
 
     state = {copied: false, forceDrawer: false};
@@ -33,9 +34,10 @@ class ShareEmbed extends React.Component {
     renderTools = () => {
         if (this.props.showTOCToggle) {
             return (<Checkbox checked={this.state.forceDrawer} onChange={() => this.setState({forceDrawer: !this.state.forceDrawer})}>
-                  <Message msgId="share.forceDrawer"/>
-               </Checkbox>);
+                <Message msgId="share.forceDrawer"/>
+            </Checkbox>);
         }
+        return null;
     };
 
     render() {

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
+import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
 import { Modes } from '../../utils/GeoStoryUtils';
 import {

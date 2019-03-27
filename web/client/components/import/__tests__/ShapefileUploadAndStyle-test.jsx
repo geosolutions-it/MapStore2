@@ -29,7 +29,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
         const onShapeError = (error) => {
             try {
                 expect(error).toBe('shapefile.error.shapeFileParsingError');
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -46,7 +46,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
         const onShapeError = (error) => {
             try {
                 expect(error).toBe('shapefile.error.genericLoadError');
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();

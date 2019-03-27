@@ -15,11 +15,11 @@ const paths = {
 
 module.exports = require('./buildConfig')(
     assign({
-            "mapstore2": path.join(paths.code, "product", "app"),
-            "embedded": path.join(paths.code, "product", "embedded"),
-            "ms2-api": path.join(paths.code, "product", "api")
-        },
-        require('./examples')
+        "mapstore2": path.join(paths.code, "product", "app"),
+        "embedded": path.join(paths.code, "product", "embedded"),
+        "ms2-api": path.join(paths.code, "product", "api")
+    },
+    require('./examples')
     ),
     themeEntries,
     paths,
@@ -49,8 +49,8 @@ module.exports = require('./buildConfig')(
         })
     ].concat(Object.keys(require('./examples')).map(function(example) {
         return new DynamicPublicPathPlugin({
-                externalGlobal: 'window.mapStoreDist',
-                chunkName: example
-            });
+            externalGlobal: 'window.mapStoreDist',
+            chunkName: example
+        });
     }))
 );

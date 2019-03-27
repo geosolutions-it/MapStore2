@@ -12,7 +12,7 @@ var expect = require('expect');
 const spyOn = expect.spyOn;
 const TestUtils = require('react-dom/test-utils');
 
-describe('Test for DownloadOptions component', () => {
+describe('Test for DownloadDialog component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);

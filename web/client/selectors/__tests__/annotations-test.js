@@ -62,227 +62,323 @@ const state = {
             features: [{
                 type: 'Feature',
                 properties: {
-                  title: 'qe',
-                  id: '051dc1f0-1004-11e8-b823-074c4aa21e05'
+                    title: 'qe',
+                    id: '051dc1f0-1004-11e8-b823-074c4aa21e05'
                 },
                 geometry: {
-                  type: 'GeometryCollection',
-                  geometries: [
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -15.292055042255983,
-                          50.92290805089552
-                        ]
-                      ]
-                    },
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -8.260805042255983,
-                          50.25331169520629
-                        ]
-                      ]
-                    },
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -8.392640979755985,
-                          48.62469821211753
-                        ]
-                      ]
-                    },
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -11.600648792255985,
-                          47.12149867823992
-                        ]
-                      ]
-                    }
-                  ]
-                },
-                style: {
-                  type: 'MultiPoint',
-                  MultiPoint: {
-                    iconColor: 'cyan',
-                    iconShape: 'circle',
-                    iconGlyph: 'comment'
-                  },
-                  Point: {
-                    iconColor: 'cyan',
-                    iconShape: 'circle',
-                    iconGlyph: 'comment'
-                  },
-                  highlight: false
-                }
-              },
-              {
-                type: 'Feature',
-                properties: {
-                  title: 'multi geom with texts',
-                  description: '<p>description of the annotation (<strong>only text here</strong>)</p>',
-                  id: '14f738e0-1004-11e8-b823-074c4aa21e05',
-                  textValues: [
-                    'text annotation'
-                  ],
-                  textGeometriesIndexes: [
-                    3
-                  ]
-                },
-                geometry: {
-                  type: 'GeometryCollection',
-                  geometries: [
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -15.116273792255985,
-                          43.85726130570702
-                        ]
-                      ]
-                    },
-                    {
-                      type: 'MultiLineString',
-                      coordinates: [
-                        [
-                          [
-                            -12.611390979755985,
-                            41.26847014527159
-                          ],
-                          [
-                            -8.304750354755985,
-                            45.60534743757343
-                          ]
-                        ]
-                      ]
-                    },
-                    {
-                      type: 'MultiPolygon',
-                      coordinates: [
-                        [
-                          [
-                            [
-                              -9.798890979755983,
-                              45.111286652123994
-                            ],
-                            [
-                              -14.281312854755985,
-                              40.37056482316976
-                            ],
-                            [
-                              -13.666078479755987,
-                              43.92060275549285
+                    type: 'GeometryCollection',
+                    geometries: [
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -15.292055042255983,
+                                    50.92290805089552
+                                ]
                             ]
-                          ]
-                        ]
-                      ]
-                    },
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -16.742250354755985,
-                          42.41428591353268
-                        ]
-                      ]
-                    }
-                  ]
+                        },
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -8.260805042255983,
+                                    50.25331169520629
+                                ]
+                            ]
+                        },
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -8.392640979755985,
+                                    48.62469821211753
+                                ]
+                            ]
+                        },
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -11.600648792255985,
+                                    47.12149867823992
+                                ]
+                            ]
+                        }
+                    ]
                 },
                 style: {
-                  type: 'GeometryCollection',
-                  MultiPoint: {
-                    iconColor: 'pink',
-                    iconShape: 'square',
-                    iconGlyph: 'comment'
-                  },
-                  Point: {
-                    iconColor: 'pink',
-                    iconShape: 'square',
-                    iconGlyph: 'comment'
-                  },
-                  MultiLineString: {
-                    color: '#A033FF',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  LineString: {
-                    color: '#A033FF',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  MultiPolygon: {
-                    color: '#33FF99',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#65D495',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  Polygon: {
-                    color: '#33FF99',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#65D495',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  Text: {
-                    font: '14px Arial',
-                    color: '#1726E6',
-                    weight: 1,
-                    opacity: 1
-                  },
-                  highlight: false
+                    type: 'MultiPoint',
+                    MultiPoint: {
+                        iconColor: 'cyan',
+                        iconShape: 'circle',
+                        iconGlyph: 'comment'
+                    },
+                    Point: {
+                        iconColor: 'cyan',
+                        iconShape: 'circle',
+                        iconGlyph: 'comment'
+                    },
+                    highlight: false
                 }
-              },
-              {
+            },
+            {
                 type: 'Feature',
                 properties: {
-                  title: 'ads',
-                  id: '9b39c170-10c7-11e8-8bd1-5d54c2264561',
-                  textValues: [
-                    'asd'
-                  ],
-                  textGeometriesIndexes: [
-                    0
-                  ]
+                    title: 'multi geom with texts',
+                    description: '<p>description of the annotation (<strong>only text here</strong>)</p>',
+                    id: '14f738e0-1004-11e8-b823-074c4aa21e05',
+                    textValues: [
+                        'text annotation'
+                    ],
+                    textGeometriesIndexes: [
+                        3
+                    ]
                 },
                 geometry: {
-                  type: 'GeometryCollection',
-                  geometries: [
-                    {
-                      type: 'MultiPoint',
-                      coordinates: [
-                        [
-                          -16.522523792255985,
-                          46.00359577260061
-                        ]
-                      ]
-                    }
-                  ]
+                    type: 'GeometryCollection',
+                    geometries: [
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -15.116273792255985,
+                                    43.85726130570702
+                                ]
+                            ]
+                        },
+                        {
+                            type: 'MultiLineString',
+                            coordinates: [
+                                [
+                                    [
+                                        -12.611390979755985,
+                                        41.26847014527159
+                                    ],
+                                    [
+                                        -8.304750354755985,
+                                        45.60534743757343
+                                    ]
+                                ]
+                            ]
+                        },
+                        {
+                            type: 'MultiPolygon',
+                            coordinates: [
+                                [
+                                    [
+                                        [
+                                            -9.798890979755983,
+                                            45.111286652123994
+                                        ],
+                                        [
+                                            -14.281312854755985,
+                                            40.37056482316976
+                                        ],
+                                        [
+                                            -13.666078479755987,
+                                            43.92060275549285
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        },
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -16.742250354755985,
+                                    42.41428591353268
+                                ]
+                            ]
+                        }
+                    ]
                 },
                 style: {
-                  type: 'GeometryCollection',
-                  Text: {
+                    type: 'GeometryCollection',
+                    MultiPoint: {
+                        iconColor: 'pink',
+                        iconShape: 'square',
+                        iconGlyph: 'comment'
+                    },
+                    Point: {
+                        iconColor: 'pink',
+                        iconShape: 'square',
+                        iconGlyph: 'comment'
+                    },
+                    MultiLineString: {
+                        color: '#A033FF',
+                        opacity: 1,
+                        weight: 3,
+                        fillColor: '#ffffff',
+                        fillOpacity: 0.2,
+                        editing: {
+                            fill: 1
+                        }
+                    },
+                    LineString: {
+                        color: '#A033FF',
+                        opacity: 1,
+                        weight: 3,
+                        fillColor: '#ffffff',
+                        fillOpacity: 0.2,
+                        editing: {
+                            fill: 1
+                        }
+                    },
+                    MultiPolygon: {
+                        color: '#33FF99',
+                        opacity: 1,
+                        weight: 3,
+                        fillColor: '#65D495',
+                        fillOpacity: 0.2,
+                        editing: {
+                            fill: 1
+                        }
+                    },
+                    Polygon: {
+                        color: '#33FF99',
+                        opacity: 1,
+                        weight: 3,
+                        fillColor: '#65D495',
+                        fillOpacity: 0.2,
+                        editing: {
+                            fill: 1
+                        }
+                    },
+                    Text: {
+                        font: '14px Arial',
+                        color: '#1726E6',
+                        weight: 1,
+                        opacity: 1
+                    },
+                    highlight: false
+                }
+            },
+            {
+                type: 'Feature',
+                properties: {
+                    title: 'ads',
+                    id: '9b39c170-10c7-11e8-8bd1-5d54c2264561',
+                    textValues: [
+                        'asd'
+                    ],
+                    textGeometriesIndexes: [
+                        0
+                    ]
+                },
+                geometry: {
+                    type: 'GeometryCollection',
+                    geometries: [
+                        {
+                            type: 'MultiPoint',
+                            coordinates: [
+                                [
+                                    -16.522523792255985,
+                                    46.00359577260061
+                                ]
+                            ]
+                        }
+                    ]
+                },
+                style: {
+                    type: 'GeometryCollection',
+                    Text: {
+                        fontStyle: 'normal',
+                        fontSize: '21',
+                        fontSizeUom: 'px',
+                        fontFamily: 'Arial',
+                        fontWeight: 'normal',
+                        font: 'normal normal 21px Arial',
+                        textAlign: 'center',
+                        color: '#A424C0',
+                        opacity: 1
+                    },
+                    highlight: false
+                }
+            }
+            ],
+            name: 'Annotations',
+            style: {
+                type: 'MultiPoint',
+                MultiPoint: {
+                    iconColor: 'cyan',
+                    iconShape: 'circle',
+                    iconGlyph: 'comment'
+                },
+                Point: {
+                    iconColor: 'cyan',
+                    iconShape: 'circle',
+                    iconGlyph: 'comment'
+                }
+            },
+            type: 'vector',
+            visibility: true,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: true,
+            handleClickOnLayer: true
+        }
+        ],
+        groups: [
+            {
+                id: 'Default',
+                title: 'Default',
+                name: 'Default',
+                nodes: [
+                    'annotations'
+                ],
+                expanded: true
+            }
+        ]
+    },
+    annotations: {
+        format: "decimal",
+        config: {
+            multiGeometry: true
+        },
+        current: '9b39c170-10c7-11e8-8bd1-5d54c2264561',
+        editing: {
+            type: 'Feature',
+            properties: {
+                title: 'ads',
+                id: '9b39c170-10c7-11e8-8bd1-5d54c2264561',
+                textValues: [
+                    'asd',
+                    'asdfafdsa',
+                    'asdfafdsa'
+                ],
+                textGeometriesIndexes: [
+                    0,
+                    0,
+                    1
+                ]
+            },
+            geometry: {
+                type: 'GeometryCollection',
+                geometries: [
+                    {
+                        type: 'MultiPoint',
+                        coordinates: [
+                            [
+                                -12.391664417255981,
+                                45.82014261504604
+                            ]
+                        ]
+                    },
+                    {
+                        type: 'MultiPoint',
+                        coordinates: [
+                            [
+                                -22.367250354755985,
+                                39.460534938478276
+                            ]
+                        ]
+                    }
+                ]
+            },
+            style: {
+                type: 'GeometryCollection',
+                Text: {
                     fontStyle: 'normal',
                     fontSize: '21',
                     fontSizeUom: 'px',
@@ -292,105 +388,9 @@ const state = {
                     textAlign: 'center',
                     color: '#A424C0',
                     opacity: 1
-                  },
-                  highlight: false
-                }
-              }
-            ],
-            name: 'Annotations',
-            style: {
-              type: 'MultiPoint',
-              MultiPoint: {
-                iconColor: 'cyan',
-                iconShape: 'circle',
-                iconGlyph: 'comment'
-              },
-              Point: {
-                iconColor: 'cyan',
-                iconShape: 'circle',
-                iconGlyph: 'comment'
-              }
-            },
-            type: 'vector',
-            visibility: true,
-            singleTile: false,
-            dimensions: [],
-            hideLoading: true,
-            handleClickOnLayer: true
-          }
-        ],
-        groups: [
-          {
-            id: 'Default',
-            title: 'Default',
-            name: 'Default',
-            nodes: [
-              'annotations'
-            ],
-            expanded: true
-          }
-        ]
-    },
-    annotations: {
-        format: "decimal",
-        config: {
-          multiGeometry: true
-        },
-        current: '9b39c170-10c7-11e8-8bd1-5d54c2264561',
-        editing: {
-          type: 'Feature',
-          properties: {
-            title: 'ads',
-            id: '9b39c170-10c7-11e8-8bd1-5d54c2264561',
-            textValues: [
-              'asd',
-              'asdfafdsa',
-              'asdfafdsa'
-            ],
-            textGeometriesIndexes: [
-              0,
-              0,
-              1
-            ]
-          },
-          geometry: {
-            type: 'GeometryCollection',
-            geometries: [
-              {
-                type: 'MultiPoint',
-                coordinates: [
-                  [
-                    -12.391664417255981,
-                    45.82014261504604
-                  ]
-                ]
-              },
-              {
-                type: 'MultiPoint',
-                coordinates: [
-                  [
-                    -22.367250354755985,
-                    39.460534938478276
-                  ]
-                ]
-              }
-            ]
-          },
-          style: {
-            type: 'GeometryCollection',
-            Text: {
-              fontStyle: 'normal',
-              fontSize: '21',
-              fontSizeUom: 'px',
-              fontFamily: 'Arial',
-              fontWeight: 'normal',
-              font: 'normal normal 21px Arial',
-              textAlign: 'center',
-              color: '#A424C0',
-              opacity: 1
-            },
-            highlight: true
-          }
+                },
+                highlight: true
+            }
         },
         removing: null,
         validationErrors: {},
@@ -398,30 +398,30 @@ const state = {
         drawing: true,
         filter: null,
         originalStyle: {
-          type: 'GeometryCollection',
-          Text: {
-            fontStyle: 'normal',
-            fontSize: '21',
-            fontSizeUom: 'px',
-            fontFamily: 'Arial',
-            fontWeight: 'normal',
-            font: 'normal normal 21px Arial',
-            textAlign: 'center',
-            color: '#A424C0',
-            opacity: 1
-          },
-          highlight: false
+            type: 'GeometryCollection',
+            Text: {
+                fontStyle: 'normal',
+                fontSize: '21',
+                fontSizeUom: 'px',
+                fontFamily: 'Arial',
+                fontWeight: 'normal',
+                font: 'normal normal 21px Arial',
+                textAlign: 'center',
+                color: '#A424C0',
+                opacity: 1
+            },
+            highlight: false
         },
         stylerType: 'text',
         featureType: 'Text',
         drawingText: {
-          show: false,
-          drawing: false
+            show: false,
+            drawing: false
         },
         unsavedChanges: true,
         showUnsavedChangesModal: false,
         showUnsavedStyleModal: false
-      }
+    }
 };
 
 describe('Test annotations selectors', () => {

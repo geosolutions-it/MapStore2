@@ -39,7 +39,7 @@ const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPoi
 const {mapNameSelector} = require('../selectors/map');
 const {changeDrawingStatus} = require('../actions/draw');
 
-   /**
+/**
     * Epics for annotations
     * @name epics.annotations
     * @type {Object}
@@ -170,10 +170,10 @@ module.exports = (viewer) => ({
                             extraStyles.concat(getStartEndPointsForLinestring());
                         }
                         return {...ft,
-                        style: isArray(ft.style) ? ft.style.map(ftStyle => {
-                            const {symbolUrlCustomized, ...filteredStyle} = ftStyle;
-                            return filteredStyle;
-                        }) : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1(), symbolUrlCustomized: undefined}].concat(extraStyles)};
+                            style: isArray(ft.style) ? ft.style.map(ftStyle => {
+                                const {symbolUrlCustomized, ...filteredStyle} = ftStyle;
+                                return filteredStyle;
+                            }) : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1(), symbolUrlCustomized: undefined}].concat(extraStyles)};
                     })};
                 });
 
@@ -349,7 +349,7 @@ module.exports = (viewer) => ({
             const style = store.getState().annotations.editing.style;
             return Rx.Observable.from([
                 changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [feature], {featureProjection: "EPSG:3857",
-                transformToFeatureCollection: true}, assign({}, style, {highlight: false}))
+                    transformToFeatureCollection: true}, assign({}, style, {highlight: false}))
             ].concat(!multiGeometrySelector(store.getState()) ? [toggleAdd()] : []));
         }),
     cancelTextAnnotationsEpic: (action$, store) => action$.ofType(CANCEL_CLOSE_TEXT)
@@ -424,7 +424,7 @@ module.exports = (viewer) => ({
             }
             return Rx.Observable.empty();
         }),
-        /**
+    /**
         this epic closes the measure tool becasue can conflict with the draw interaction in others
         */
     closeMeasureToolEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
@@ -456,7 +456,7 @@ module.exports = (viewer) => ({
         .switchMap(() => {
             return Rx.Observable.from((
                 store.getState().controls.annotations && store.getState().controls.annotations.enabled ?
-                [toggleControl('annotations')] : [])
+                    [toggleControl('annotations')] : [])
                 .concat([purgeMapInfoResults()]));
         }),
     downloadAnnotations: (action$, {getState}) => action$.ofType(DOWNLOAD)
@@ -466,13 +466,13 @@ module.exports = (viewer) => ({
                 const mapName = mapNameSelector(getState());
                 saveAs(new Blob([JSON.stringify({features: annotations, type: "ms2-annotations"})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
                 return Rx.Observable.empty();
-            }catch (e) {
+            } catch (e) {
                 return Rx.Observable.of(error({
-                        title: "annotations.title",
-                        message: "annotations.downloadError",
-                        autoDismiss: 5,
-                        position: "tr"
-                    }));
+                    title: "annotations.title",
+                    message: "annotations.downloadError",
+                    autoDismiss: 5,
+                    position: "tr"
+                }));
             }
         }),
     onLoadAnnotations: (action$, {getState}) => action$.ofType(LOAD_ANNOTATIONS)
@@ -484,15 +484,15 @@ module.exports = (viewer) => ({
             const newFeatures = override ? normFeatures : oldFeature.concat(normFeatures);
             const action = annotationsLayer ? updateNode('annotations', 'layer', {
                 features: removeDuplicate(newFeatures)}) : addLayer({
-                    type: 'vector',
-                    visibility: true,
-                    id: 'annotations',
-                    name: "Annotations",
-                    rowViewer: viewer,
-                    hideLoading: true,
-                    features: newFeatures,
-                    handleClickOnLayer: true
-                });
+                type: 'vector',
+                visibility: true,
+                id: 'annotations',
+                name: "Annotations",
+                rowViewer: viewer,
+                hideLoading: true,
+                features: newFeatures,
+                handleClickOnLayer: true
+            });
             return Rx.Observable.of(action);
         }),
     onChangedSelectedFeatureEpic: (action$, {getState}) => action$.ofType(CHANGED_SELECTED )
@@ -501,18 +501,18 @@ module.exports = (viewer) => ({
             let feature = state.annotations.editing;
             let selected = state.annotations.selected;
             switch (selected.geometry.type) {
-                case "Polygon": {
-                    selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
-                    break;
-                }
-                case "LineString": case "MultiPoint": {
-                    selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
-                    break;
-                }
-                // point
-                default: {
-                    selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
-                }
+            case "Polygon": {
+                selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
+                break;
+            }
+            case "LineString": case "MultiPoint": {
+                selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
+                break;
+            }
+            // point
+            default: {
+                selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
+            }
             }
             let method = selected.properties.isCircle ? "Circle" : selected.geometry.type;
 
@@ -533,10 +533,6 @@ module.exports = (viewer) => ({
             if (selectedIndex !== -1 && !selected.properties.isValidFeature && (selected.geometry.type !== "MultiPoint" && selected.geometry.type !== "LineString" && selected.geometry.type !== "Polygon")) {
                 feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
             }
-
-            /*if (!selected.properties.isValidFeature) {
-                feature = feature.features.filter((f, i) => selectedIndex !== i);
-            }*/
             const multiGeometry = multiGeometrySelector(state);
             const style = feature.style;
             const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {

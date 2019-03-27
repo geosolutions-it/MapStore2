@@ -26,7 +26,7 @@ describe('MousePositionLabelDMS', () => {
 
     it('checks default', () => {
         const cmp = ReactDOM.render(
-                <MousePositionLabelDMS/>
+            <MousePositionLabelDMS/>
             , document.getElementById("container"));
         expect(cmp).toExist();
 
@@ -59,11 +59,11 @@ describe('MousePositionLabelDMS', () => {
     it('a position with defaults', () => {
 
         const cmp = ReactDOM.render(
-                <IntlProvider>
-                    <MousePositionLabelDMS
-                        position={{lng: 28.3, lat: 13.5333333}}
-                    />
-                </IntlProvider>
+            <IntlProvider>
+                <MousePositionLabelDMS
+                    position={{lng: 28.3, lat: 13.5333333}}
+                />
+            </IntlProvider>
             , document.getElementById("container"));
         expect(cmp).toExist();
 
@@ -75,11 +75,11 @@ describe('MousePositionLabelDMS', () => {
     it('position with no rounding but trunc of latD and lngD', () => {
 
         const cmp = ReactDOM.render(
-                <IntlProvider>
-                    <MousePositionLabelDMS
-                        position={{lng: 10.475013256072998, lat: 43.70726776739903}}
-                    />
-                </IntlProvider>
+            <IntlProvider>
+                <MousePositionLabelDMS
+                    position={{lng: 10.475013256072998, lat: 43.70726776739903}}
+                />
+            </IntlProvider>
             , document.getElementById("container"));
         expect(cmp).toExist();
 
@@ -93,11 +93,11 @@ describe('MousePositionLabelDMS', () => {
     it('position with negative lat and lng correctly truncated ladD e lngD', () => {
 
         const cmp = ReactDOM.render(
-                <IntlProvider>
-                    <MousePositionLabelDMS
-                        position={{lng: -0.006, lat: -0.006}}
-                    />
-                </IntlProvider>
+            <IntlProvider>
+                <MousePositionLabelDMS
+                    position={{lng: -0.006, lat: -0.006}}
+                />
+            </IntlProvider>
             , document.getElementById("container"));
         expect(cmp).toExist();
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -107,17 +107,17 @@ describe('MousePositionLabelDMS', () => {
     });
     it('test sign changes when crossing greenwich meridian and equator parallel and latD lngD are 0', () => {
         const cmp = ReactDOM.render(
-                <IntlProvider>
-                    <MousePositionLabelDMS
-                        position={{lng: -0.006, lat: -0.006}}
-                    />
-                </IntlProvider>
+            <IntlProvider>
+                <MousePositionLabelDMS
+                    position={{lng: -0.006, lat: -0.006}}
+                />
+            </IntlProvider>
             , document.getElementById("container"));
         expect(cmp).toExist();
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-       // it should be Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''
+        // it should be Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''
         expect(cmpDom.textContent).toBe("Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''");
 
         const cmpPositive = ReactDOM.render(
@@ -126,7 +126,7 @@ describe('MousePositionLabelDMS', () => {
                     position={{lng: 0.006, lat: 0.006}}
                 />
             </IntlProvider>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(cmpPositive).toExist();
         const cmpDomPositive = ReactDOM.findDOMNode(cmpPositive);
         expect(cmpDomPositive).toExist();

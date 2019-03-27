@@ -12,7 +12,7 @@ const {combineReducers} = require('redux');
 
 const map = require('../../../reducers/map');
 
- // reducers
+// reducers
 const allReducers = combineReducers({
     browser: require('../../../reducers/browser'),
     config: require('../../../reducers/config'),

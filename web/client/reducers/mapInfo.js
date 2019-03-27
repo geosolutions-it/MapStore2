@@ -291,27 +291,27 @@ function mapInfo(state = initState, action) {
         let resolution = action.metadata && action.metadata.resolution || 1;
         let bufferedPoint = buffer(point, (action.metadata.buffer || 1) * resolution, unit);
         const intersected = (action.layer.features || []).filter(
-                    (feature) => {
-                        try {
-                            // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
+            (feature) => {
+                try {
+                    // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
 
-                            if (feature.type === "FeatureCollection" && feature.features && feature.features.length) {
-                                return feature.features.reduce((p, c) => {
-                                    // if required use the geodesic geometry
-                                    let ft = c.properties.useGeodesicLines && c.properties.geometryGeodesic ? {...c,
-                                        geometry: c.properties.geometryGeodesic
-                                    } : c;
-                                    return p || intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(ft, 1, "meters") : ft);
-                                }, false);
-                            }
-                            return intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
-
-                        } catch (e) {
-                            return false;
-                        }
+                    if (feature.type === "FeatureCollection" && feature.features && feature.features.length) {
+                        return feature.features.reduce((p, c) => {
+                            // if required use the geodesic geometry
+                            let ft = c.properties.useGeodesicLines && c.properties.geometryGeodesic ? {...c,
+                                geometry: c.properties.geometryGeodesic
+                            } : c;
+                            return p || intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(ft, 1, "meters") : ft);
+                        }, false);
                     }
+                    return intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
 
-            );
+                } catch (e) {
+                    return false;
+                }
+            }
+
+        );
         const responses = state.responses || [];
         return assign({}, state, {
             requests: [...state.requests, {}],
@@ -336,7 +336,7 @@ function mapInfo(state = initState, action) {
     case TOGGLE_EMPTY_MESSAGE_GFI: {
         return {...state, configuration: {
             ...state.configuration, showEmptyMessageGFI: !state.configuration.showEmptyMessageGFI
-            }
+        }
         };
     }
     case MAP_CONFIG_LOADED: {

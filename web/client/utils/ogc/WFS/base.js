@@ -89,9 +89,9 @@ module.exports = {
         const isGeom = isGeometryType(getPropertyDesciptor(key, describeFeatureType));
         if (isGeom) {
             return value ? processOGCGeometry(version, {
-                    type: value.type,
-                    coordinates: value.coordinates
-              }) : "";
+                type: value.type,
+                coordinates: value.coordinates
+            }) : "";
         }
         if (value === null || value === undefined) {
             return "";

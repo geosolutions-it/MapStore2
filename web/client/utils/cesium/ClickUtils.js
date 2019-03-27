@@ -13,6 +13,7 @@ const getCartesian = function(viewer, event) {
         const cartesian = scene._camera.pickEllipsoid(event.position || event.endPosition, ellipsoid);
         return cartesian;
     }
+    return null;
 };
 const getMouseXYZ = (viewer, event) => {
     var scene = viewer.scene;

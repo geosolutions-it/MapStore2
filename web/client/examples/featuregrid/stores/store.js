@@ -47,6 +47,6 @@ module.exports = (plugins) => {
                     browseData({
                         ...getLayerFromId(store.getState(), layer.id)
                     })
-        ))
+                ))
     }, plugins);
 };

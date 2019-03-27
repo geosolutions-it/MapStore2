@@ -83,15 +83,15 @@ const formatCards = {
                 <br/>
                 <div>
                     {template && template !== '<p><br></p>' ?
-                    <HtmlRenderer html={template}/>
-                    :
-                    <span>
-                        <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }'}}/></p>
-                        <pre>
-                            <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }}/>
-                        </pre>
-                        <p><small><Message msgId="layerProperties.templateFormatInfoAlert1"/></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil"/>&nbsp;)</p>
-                    </span>}
+                        <HtmlRenderer html={template}/>
+                        :
+                        <span>
+                            <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }'}}/></p>
+                            <pre>
+                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }}/>
+                            </pre>
+                            <p><small><Message msgId="layerProperties.templateFormatInfoAlert1"/></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil"/>&nbsp;)</p>
+                        </span>}
                     <FeatureInfoEditor template={template} {...props}/>
                 </div>
             </div>

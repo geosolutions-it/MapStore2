@@ -39,7 +39,7 @@ module.exports = ({
     pageSize = 10,
     offsetSize = 200
 } = {}) => (Component) =>
-  class WithInfiniteScroll extends React.Component {
+    class WithInfiniteScroll extends React.Component {
 
     static propTypes = {
         hasMore: PropTypes.func,
@@ -105,4 +105,4 @@ module.exports = ({
     render() {
         return <Component {...this.props} />;
     }
-};
+    };

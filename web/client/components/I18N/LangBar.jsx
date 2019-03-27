@@ -46,7 +46,7 @@ class LangBar extends React.Component {
                             code={this.props.currentLocale}
                             label={locales[currentLanguage] && locales[currentLanguage].description}
                             lang={currentLanguage}/>
-                        }>
+                    }>
                     {Object.keys(locales).filter(lang => locales[lang].code !== this.props.currentLocale).map(lang =>
                         <MenuItem key={lang} eventKey={lang} onClick={() => this.props.onLanguageChange(locales[lang].code)}>
                             <FlagButton
@@ -55,7 +55,7 @@ class LangBar extends React.Component {
                                 label={locales[lang].description}
                                 lang={lang}
                                 active={locales[lang].code === this.props.currentLocale}
-                        />{' ' + locales[lang].description}</MenuItem>)
+                            />{' ' + locales[lang].description}</MenuItem>)
                     }
                 </DropdownButton>
             </div>
@@ -69,7 +69,7 @@ class LangBar extends React.Component {
                         lang={lang}
                         active={locales[lang].code === this.props.currentLocale}
                         onFlagSelected={this.props.onLanguageChange}
-                        />
+                    />
                 ))}
             </ButtonGroup>
         );

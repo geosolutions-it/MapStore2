@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -39,16 +39,16 @@ const dataStreamFactory = ($props) =>
     $props
         .filter(({layer = {}, options}) => layer.name && getLayerUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
         .distinctUntilChanged(
-            ({layer={}, options = {}, filter}, newProps) =>
-                getLayerUrl(layer) === getLayerUrl(layer)
-                && (newProps.layer && layer.name === newProps.layer.name)
+            ({layer = {}, options = {}, filter}, newProps) =>
+                /* getLayerUrl(layer) === getLayerUrl(layer) && */
+                (newProps.layer && layer.name === newProps.layer.name)
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter))
         .switchMap(
-            ({layer={}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
-            wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter}, {
-                timeout: 15000
-            }).map((response) => ({
+            ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
+                wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter}, {
+                    timeout: 15000
+                }).map((response) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
@@ -56,12 +56,12 @@ const dataStreamFactory = ($props) =>
                     series: [{dataKey: `${response.data.AggregationFunctions[0]}(${response.data.AggregationAttribute})`}],
                     xAxis: {dataKey: response.data.GroupByAttributes[0]}
                 })).do(onLoad)
-                .catch((e) => Rx.Observable.of({
+                    .catch((e) => Rx.Observable.of({
                         loading: false,
                         error: e,
                         data: []
                     }).do(onLoadError)
-                ).startWith({loading: true})
+                    ).startWith({loading: true})
         );
 module.exports = compose(
     withProps( () => ({

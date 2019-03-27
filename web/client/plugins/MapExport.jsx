@@ -59,13 +59,13 @@ const MapExport = enhanceExport(
         style={{ width: 450 }}
         footer={<Button onClick={() => onExport(format)}>Export</Button>}
         show={enabled} onClose={onClose} >
-            <Select
-                value={format}
-                onChange={opt => setFormat(opt.value)}
-                name="form-field-name"
-                options={formatOptions}
-            />
-        </Dialog>
+        <Select
+            value={format}
+            onChange={opt => setFormat(opt.value)}
+            name="form-field-name"
+            options={formatOptions}
+        />
+    </Dialog>
 );
 
 module.exports = {

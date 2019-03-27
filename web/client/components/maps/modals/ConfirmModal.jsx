@@ -56,21 +56,21 @@ class ConfirmModal extends React.Component {
 
     render() {
         const footer = (<span role="footer"><div style={{"float": "left"}}></div>
-        <Button
-            ref="confirmButton"
-            disabled={this.props.running}
-            className={this.props.className}
-            key="confirmButton"
-            bsStyle="primary"
-            bsSize={this.props.buttonSize}
-            onClick={() => {
-                this.onConfirm();
-            }}>{this.props.running ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" noFadeIn /> : null}{this.props.confirmText}</Button>
-        {this.props.includeCloseButton ? <Button
-            key="cancelButton"
-            ref="cancelButton"
-            bsSize={this.props.buttonSize}
-            onClick={this.props.onClose}>{this.props.cancelText}</Button> : <span/>}
+            <Button
+                ref="confirmButton"
+                disabled={this.props.running}
+                className={this.props.className}
+                key="confirmButton"
+                bsStyle="primary"
+                bsSize={this.props.buttonSize}
+                onClick={() => {
+                    this.onConfirm();
+                }}>{this.props.running ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" noFadeIn /> : null}{this.props.confirmText}</Button>
+            {this.props.includeCloseButton ? <Button
+                key="cancelButton"
+                ref="cancelButton"
+                bsSize={this.props.buttonSize}
+                onClick={this.props.onClose}>{this.props.cancelText}</Button> : <span/>}
         </span>);
         const body = this.props.body;
         return (
@@ -78,13 +78,13 @@ class ConfirmModal extends React.Component {
                 show={this.props.show}
                 onHide={this.props.onClose}>
                 <Modal.Header key="dialogHeader" closeButton>
-                  <Modal.Title>{this.props.titleText}</Modal.Title>
+                    <Modal.Title>{this.props.titleText}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {body}
                 </Modal.Body>
                 <Modal.Footer>
-                  {footer}
+                    {footer}
                 </Modal.Footer>
             </Modal>);
     }

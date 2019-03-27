@@ -77,13 +77,13 @@ class InfoPopover extends React.Component {
         return (
             <span className="mapstore-info-popover">
                 {this.props.trigger
-                        ? (<OverlayTrigger trigger={trigger} placement={this.props.placement} overlay={this.renderPopover()}>
-                                {this.renderContent()}
-                            </OverlayTrigger>)
+                    ? (<OverlayTrigger trigger={trigger} placement={this.props.placement} overlay={this.renderPopover()}>
+                        {this.renderContent()}
+                    </OverlayTrigger>)
                     : [
                         this.renderContent(),
                         <Overlay placement={this.props.placement} show target={() => ReactDOM.findDOMNode(this.target)}>
-                        {this.renderPopover()}
+                            {this.renderPopover()}
                         </Overlay>
                     ]}
             </span>

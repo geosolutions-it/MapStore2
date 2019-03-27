@@ -69,26 +69,26 @@ const thumbs = {
 };
 
 const backgroundSelector = createSelector([
-        projectionSelector,
-        mapSelector,
-        layersSelector,
-        backgroundControlsSelector,
-        drawerEnabledControlSelector,
-        mapTypeSelector,
-        currentBackgroundSelector,
-        tempBackgroundSelector,
-        state => mapLayoutValuesSelector(state, {left: true, bottom: true})
-    ],
-    (projection, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style) => ({
-        size: map && map.size || {width: 0, height: 0},
-        layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
-        tempLayer,
-        currentLayer,
-        start: controls.start || 0,
-        enabled: controls.enabled,
-        style,
-        projection
-    }));
+    projectionSelector,
+    mapSelector,
+    layersSelector,
+    backgroundControlsSelector,
+    drawerEnabledControlSelector,
+    mapTypeSelector,
+    currentBackgroundSelector,
+    tempBackgroundSelector,
+    state => mapLayoutValuesSelector(state, {left: true, bottom: true})
+],
+(projection, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style) => ({
+    size: map && map.size || {width: 0, height: 0},
+    layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
+    tempLayer,
+    currentLayer,
+    start: controls.start || 0,
+    enabled: controls.enabled,
+    style,
+    projection
+}));
 
 /**
   * BackgroundSelector Plugin.
@@ -122,14 +122,14 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
 }, (stateProps, dispatchProps, ownProps) => ({
-        ...stateProps,
-        ...dispatchProps,
-        ...ownProps,
-        thumbs: {
-            ...thumbs,
-            ...ownProps.thumbs
-        }
-    })
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    thumbs: {
+        ...thumbs,
+        ...ownProps.thumbs
+    }
+})
 )(require('../components/background/BackgroundSelector'));
 
 module.exports = {

@@ -26,11 +26,11 @@ describe('CesiumMap', () => {
         setTimeout(done);
     });
     afterEach((done) => {
-        /*eslint-disable */
+        /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         } catch(e) {}
-        /*eslint-enable */
+        /* eslint-enable */
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -53,7 +53,7 @@ describe('CesiumMap', () => {
                 <div id="container1"><CesiumMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><CesiumMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -115,7 +115,7 @@ describe('CesiumMap', () => {
                 }}
 
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const cesiumMap = map.map;
         cesiumMap.camera.moveEnd.addEventListener(() => {
@@ -163,7 +163,7 @@ describe('CesiumMap', () => {
                 zoom={11}
                 onClick={testHandlers.handler}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(map.map).toExist();
         map.onClick(map.map, {position: {x: 100, y: 100 }});
         setTimeout(() => {
@@ -178,7 +178,7 @@ describe('CesiumMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={10}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const cesiumMap = map.map;
 
@@ -187,7 +187,7 @@ describe('CesiumMap', () => {
                 center={{y: 44, x: 10}}
                 zoom={12}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         expect(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12))).toBe(0);
         expect(Math.round(cesiumMap.camera.positionCartographic.latitude * 180.0 / Math.PI)).toBe(44);

@@ -54,7 +54,7 @@ class ZoomButton extends React.Component {
                 className={this.props.className}
                 disabled={this.props.currentZoom + this.props.step > this.props.maxZoom || this.props.currentZoom + this.props.step < this.props.minZoom}
                 bsStyle={this.props.bsStyle}
-                >
+            >
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}

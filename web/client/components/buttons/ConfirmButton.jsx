@@ -117,9 +117,9 @@ class ConfirmButton extends React.Component {
                 disabled={isDisabled}
                 {...buttonProps}
             >
-            {children}
-            {children ? ' ' : ''}
-            {text}
+                {children}
+                {children ? ' ' : ''}
+                {text}
             </button>
         );
     }

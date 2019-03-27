@@ -170,17 +170,17 @@ const Api = {
                 resolve([]);
             } else {
                 styles.forEach(({name}, idx) =>
-                axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
-                    .then(({data}) => {
-                        responses[idx] = assign({}, styles[idx], data && data.style && {...data.style, name: stringifyNameParts(data.style)} || {});
-                        count--;
-                        if (count === 0) resolve(responses.filter(val => val));
-                    })
-                    .catch(() => {
-                        responses[idx] = assign({}, styles[idx]);
-                        count--;
-                        if (count === 0) resolve(responses.filter(val => val));
-                    })
+                    axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
+                        .then(({data}) => {
+                            responses[idx] = assign({}, styles[idx], data && data.style && {...data.style, name: stringifyNameParts(data.style)} || {});
+                            count--;
+                            if (count === 0) resolve(responses.filter(val => val));
+                        })
+                        .catch(() => {
+                            responses[idx] = assign({}, styles[idx]);
+                            count--;
+                            if (count === 0) resolve(responses.filter(val => val));
+                        })
                 );
             }
         });
@@ -205,4 +205,4 @@ const Api = {
     }
 };
 
-module.exports = Api;
+export default Api;

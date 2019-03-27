@@ -61,7 +61,7 @@ const ContainerDimensions = emptyState(
                     add(`sections`, 0, SectionTemplates.MEDIA);
                 }
             }]}/>
-        }
+    }
     )
 )(ContainerDimensionsBase);
 
@@ -81,27 +81,27 @@ const Cascade = ({
             <div
                 id="ms-sections-container"
                 className="ms-sections-container">
-                    {
-                        sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
-                            return (
-                                <Section
-                                    onVisibilityChange={onVisibilityChange}
-                                    add={add}
-                                    editMedia={editMedia}
-                                    update={update}
-                                    remove={remove}
-                                    key={sectionId}
-                                    id={sectionId}
-                                    viewHeight={height}
-                                    viewWidth={width}
-                                    type={sectionType}
-                                    mode={mode}
-                                    contents={contents}
-                                    cover={cover}
-                                />
-                            );
-                        })
-                    }
+                {
+                    sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
+                        return (
+                            <Section
+                                onVisibilityChange={onVisibilityChange}
+                                add={add}
+                                editMedia={editMedia}
+                                update={update}
+                                remove={remove}
+                                key={sectionId}
+                                id={sectionId}
+                                viewHeight={height}
+                                viewWidth={width}
+                                type={sectionType}
+                                mode={mode}
+                                contents={contents}
+                                cover={cover}
+                            />
+                        );
+                    })
+                }
             </div>}
     </ContainerDimensions>
 </BorderLayout>);

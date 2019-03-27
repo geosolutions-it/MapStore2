@@ -35,11 +35,11 @@ class Print extends React.Component {
                 <PrintMap/>
                 {this.props.enabled ? <PrintPreview
                     title="Print Preview" style={{
-                            position: "absolute",
-                            top: "10px",
-                            left: "40px",
-                            zIndex: 100}}/> : null}
-                    <ScaleBox/>
+                        position: "absolute",
+                        top: "10px",
+                        left: "40px",
+                        zIndex: 100}}/> : null}
+                <ScaleBox/>
                 <Debug/>
             </div>
         </Localized>);

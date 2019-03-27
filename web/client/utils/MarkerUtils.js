@@ -93,6 +93,7 @@ const MarkerUtils = {
                 canvas = null;
                 return data;
             }
+            return null;
         },
         matches: (style, marker) => {
             return style.iconColor === marker.color && style.iconShape === marker.shape;

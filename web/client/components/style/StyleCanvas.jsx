@@ -59,37 +59,37 @@ class StyleCanvas extends React.Component {
             ctx.setLineDash(this.props.shapeStyle.dashArray);
         }
         switch (this.props.geomType) {
-            case 'Polygon': {
-                this.paintPolygon(ctx);
-                break;
-            }
-            case 'Polyline': {
-                this.paintPolyline(ctx);
-                break;
-            }
-            case 'Point': {
-                this.paintPoint(ctx, this.props.shapeStyle.markName);
-                break;
-            }
-            case 'Circle': {
-                this.paintPoint(ctx, "circle");
-                break;
-            }
-            case 'Marker': {
-                this.paintMarker(ctx);
-                break;
-            }
-            case 'Text': {
-                this.paintText(ctx);
-                break;
-            }
-            case 'Symbol': {
-                this.paintSymbol(ctx);
-            }
-            default: {
-
-                return;
-            }
+        case 'Polygon': {
+            this.paintPolygon(ctx);
+            break;
+        }
+        case 'Polyline': {
+            this.paintPolyline(ctx);
+            break;
+        }
+        case 'Point': {
+            this.paintPoint(ctx, this.props.shapeStyle.markName);
+            break;
+        }
+        case 'Circle': {
+            this.paintPoint(ctx, "circle");
+            break;
+        }
+        case 'Marker': {
+            this.paintMarker(ctx);
+            break;
+        }
+        case 'Text': {
+            this.paintText(ctx);
+            break;
+        }
+        case 'Symbol': {
+            this.paintSymbol(ctx);
+            break;
+        }
+        default: {
+            return;
+        }
         }
         ctx.restore();
     };

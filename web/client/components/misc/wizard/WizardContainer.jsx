@@ -65,21 +65,22 @@ class WizardComponent extends React.Component {
        const children = this.props.children || [];
        const childrenLenght = children.length >= 0 ? children.length : 1;
        return (
-         <div key="wizard-pages" className="ms-wizard">
-           {React.Children.map(children, (child, i) => {
-               if (i === this.props.step) {
-                   return React.cloneElement(child, {
-                       key: `wizard-component-${i}`,
-                       onNextPage: this.props.step === childrenLenght - 1 ? this.props.onFinish : this.props.onNextPage,
-                       onPrevPage: this.props.onPrevPage
-                   });
-               }
-           })}
-           <Row key="wizard-buttons" className="ms-wizard-buttons">
-              {this.renderButtons()}
-           </Row>
-         </div>
-     );
+           <div key="wizard-pages" className="ms-wizard">
+               {React.Children.map(children, (child, i) => {
+                   if (i === this.props.step) {
+                       return React.cloneElement(child, {
+                           key: `wizard-component-${i}`,
+                           onNextPage: this.props.step === childrenLenght - 1 ? this.props.onFinish : this.props.onNextPage,
+                           onPrevPage: this.props.onPrevPage
+                       });
+                   }
+                   return null;
+               })}
+               <Row key="wizard-buttons" className="ms-wizard-buttons">
+                   {this.renderButtons()}
+               </Row>
+           </div>
+       );
    }
 }
 module.exports = WizardComponent;

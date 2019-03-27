@@ -57,7 +57,7 @@ class CRSSelector extends React.Component {
                     value={this.props.crs}
                     onChange={this.launchNewCRSAction}
                     bsSize="small"
-                    >
+                >
                     {list}
                 </select>);
         } else if (this.props.enabled && !this.props.useRawInput) {
@@ -65,15 +65,15 @@ class CRSSelector extends React.Component {
                 <FormGroup>
                     <ControlLabel>{this.props.label}</ControlLabel>
                     <FormControl
-                      componentClass="select"
-                      id={this.props.id}
-                      value={this.props.crs}
-                      onChange={this.launchNewCRSAction}
-                      bsSize="small"
-                      >
-                      {list}
-              </FormControl>
-          </FormGroup>);
+                        componentClass="select"
+                        id={this.props.id}
+                        value={this.props.crs}
+                        onChange={this.launchNewCRSAction}
+                        bsSize="small"
+                    >
+                        {list}
+                    </FormControl>
+                </FormGroup>);
         }
         return null;
     }

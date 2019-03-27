@@ -33,8 +33,8 @@ const enhancePreview = compose(
 );
 const LegendPreview = enhancePreview(require('../../widget/LegendView'));
 module.exports = ({
-    onChange = () => {}, onFinish = () => {}, setPage= () => {},
-    step=0,
+    onChange = () => {}, onFinish = () => {}, setPage = () => {},
+    step = 0,
     dependencies,
     valid,
     data = {}
@@ -45,7 +45,7 @@ module.exports = ({
         onFinish={onFinish}
         hideButtons>
         <Row>
-                <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
+            <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
             <Col xs={12}>
                 <div style={{ marginBottom: "30px" }}>
                     <LegendPreview
@@ -61,6 +61,6 @@ module.exports = ({
         <WidgetOptions
             key="widget-options"
             onChange={onChange}
-            />
-</Wizard>
+        />
+    </Wizard>
 );

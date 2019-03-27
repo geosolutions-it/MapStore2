@@ -227,9 +227,9 @@ describe('widgetsTray epics', () => {
                 expect(a0.collapsed).toBe(false);
                 done();
             }, {
-                    ...SAMPLE_COLLAPSED_TIMELINE_STATE,
-                    NO_WIDGETS_STATE
-                });
+                ...SAMPLE_COLLAPSED_TIMELINE_STATE,
+                NO_WIDGETS_STATE
+            });
         });
         it('timeline expanded on map config loaded, if collapsed but it should be present and no widgets are on map', done => {
             testEpic(expandTimelineIfCollapsedOnTrayUnmount, 1, [configureMap("TEST")], ([a0]) => {
@@ -237,18 +237,18 @@ describe('widgetsTray epics', () => {
                 expect(a0.collapsed).toBe(false);
                 done();
             }, {
-                    ...SAMPLE_COLLAPSED_TIMELINE_STATE,
-                    NO_WIDGETS_STATE
-                });
+                ...SAMPLE_COLLAPSED_TIMELINE_STATE,
+                NO_WIDGETS_STATE
+            });
         });
         it('no effect if timeline is not collapsed', done => {
             testEpic(addTimeoutEpic(expandTimelineIfCollapsedOnTrayUnmount, 10), 1, [configureMap("TEST")], ([a0]) => {
                 expect(a0.type).toBe(TEST_TIMEOUT);
                 done();
             }, {
-                    ...SAMPLE_TIMELINE_STATE, // collapsed: false
-                    NO_WIDGETS_STATE
-                });
+                ...SAMPLE_TIMELINE_STATE, // collapsed: false
+                NO_WIDGETS_STATE
+            });
         });
 
     });

@@ -14,34 +14,34 @@ const MockAdapter = require("axios-mock-adapter");
 let mockAxios;
 
 const SAMPLE_RULES = {
-   "SecurityRuleList": {
-      "SecurityRule": [
-         {
-            "canRead": true,
-            "canWrite": true,
-            "user": {
-               "id": 3,
-               "name": "admin"
+    "SecurityRuleList": {
+        "SecurityRule": [
+            {
+                "canRead": true,
+                "canWrite": true,
+                "user": {
+                    "id": 3,
+                    "name": "admin"
+                }
+            },
+            {
+                "canRead": true,
+                "canWrite": true,
+                "group": {
+                    "groupName": "geosolutions",
+                    "id": 524
+                }
+            },
+            {
+                "canRead": true,
+                "canWrite": false,
+                "group": {
+                    "groupName": "testers",
+                    "id": 3956
+                }
             }
-         },
-         {
-            "canRead": true,
-            "canWrite": true,
-            "group": {
-               "groupName": "geosolutions",
-               "id": 524
-            }
-         },
-         {
-            "canRead": true,
-            "canWrite": false,
-            "group": {
-               "groupName": "testers",
-               "id": 3956
-            }
-         }
-      ]
-   }
+        ]
+    }
 };
 const SAMPLE_XML_RULES = "<SecurityRuleList>"
     + "<SecurityRule>"
@@ -88,7 +88,7 @@ describe('Test correctness of the GeoStore APIs', () => {
         expect(result.baseURL).toNotBe(null);
         const result2 = API.addBaseUrl({otherOption: 3});
         expect(result2).toIncludeKey("baseURL")
-        .toIncludeKey('otherOption');
+            .toIncludeKey('otherOption');
         expect(result2.baseURL).toNotBe(null);
     });
 

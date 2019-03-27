@@ -26,12 +26,12 @@ const createCrossLayerFunctionalitiesInspectionStream = ($props) => $props
             url: searchUrl
         }
     }})
-    .do(
-        (capabilities) => {
-            if (!hasCrossLayerFunctionalities(capabilities)) {
-                throw new Error("nocrosslayerfunctionalities");
-            }
-        })
+        .do(
+            (capabilities) => {
+                if (!hasCrossLayerFunctionalities(capabilities)) {
+                    throw new Error("nocrosslayerfunctionalities");
+                }
+            })
         .map(() => ({
             loadingCapabilities: false
         }))
@@ -43,42 +43,42 @@ const createCrossLayerFunctionalitiesInspectionStream = ($props) => $props
                 featureTypeProperties: []
             });
         })
-    .startWith({loadingCapabilities: true}))
-.startWith({});
+        .startWith({loadingCapabilities: true}))
+    .startWith({});
 
 const retrieveCrossLayerAttributes = ($props, setQueryCollectionParameter) => $props
 // retrieve layer's attributes on layer selection change
-.distinctUntilChanged(({layer = {}} = {}, {layer: newLayer } = {}) => newLayer && layer.name === (newLayer && newLayer.name))
-.filter(({layer} = {}) => !!layer)
-.switchMap(({layer} = {}) =>
-    Observable.defer( () => describeFeatureType({layer}))
-        .do((result) => {
-            const geomProp = get(findGeometryProperty(result.data || {}), "name");
-            if (geomProp) {
-                setQueryCollectionParameter("geometryName", geomProp);
-            }
-        })
-        .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
-        .map(attributes => ({
-            attributes,
-            loadingAttributes: false
-        }))
-        .startWith({loadingAttributes: true})
-        .catch( e => {
-            return Observable.of({
-                errorObj: e,
-                loadingAttributes: false,
-                featureTypeProperties: []
-            });
-        })
-).catch( e => {
-    return Observable.of({
-        errorObj: e,
-        loadingAttributes: false,
-        loadingCapabilities: false,
-        featureTypeProperties: []
-    });
-}).startWith({});
+    .distinctUntilChanged(({layer = {}} = {}, {layer: newLayer } = {}) => newLayer && layer.name === (newLayer && newLayer.name))
+    .filter(({layer} = {}) => !!layer)
+    .switchMap(({layer} = {}) =>
+        Observable.defer( () => describeFeatureType({layer}))
+            .do((result) => {
+                const geomProp = get(findGeometryProperty(result.data || {}), "name");
+                if (geomProp) {
+                    setQueryCollectionParameter("geometryName", geomProp);
+                }
+            })
+            .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
+            .map(attributes => ({
+                attributes,
+                loadingAttributes: false
+            }))
+            .startWith({loadingAttributes: true})
+            .catch( e => {
+                return Observable.of({
+                    errorObj: e,
+                    loadingAttributes: false,
+                    featureTypeProperties: []
+                });
+            })
+    ).catch( e => {
+        return Observable.of({
+            errorObj: e,
+            loadingAttributes: false,
+            loadingCapabilities: false,
+            featureTypeProperties: []
+        });
+    }).startWith({});
 module.exports = compose(
     withPropsOnChange(
         ['crossLayerFilter'],
@@ -108,14 +108,14 @@ module.exports = compose(
     defaultProps({
         dataStreamFactory: ($props, {setQueryCollectionParameter = () => {}} = {}) =>
             createCrossLayerFunctionalitiesInspectionStream($props)
-            .combineLatest(
-                retrieveCrossLayerAttributes($props, setQueryCollectionParameter),
+                .combineLatest(
+                    retrieveCrossLayerAttributes($props, setQueryCollectionParameter),
                     // combine the 2 streams output props
-                    (overrides= {}, props = {}) => ({
+                    (overrides = {}, props = {}) => ({
                         ...props,
                         ...overrides
                     })
-            ).startWith({})
+                ).startWith({})
     }),
     propsStreamFactory
 );

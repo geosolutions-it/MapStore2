@@ -4,7 +4,7 @@ const NumberEditor = require('../NumberEditor');
 var expect = require('expect');
 
 let testColumn = {
-  key: 'columnKey'
+    key: 'columnKey'
 };
 
 
@@ -23,7 +23,7 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
         const cmp = ReactDOM.render(<NumberEditor
             value={1.1}
             rowIdx={1}
-        column={testColumn}/>, document.getElementById("container"));
+            column={testColumn}/>, document.getElementById("container"));
         expect(cmp.getValue().columnKey).toBe(1.1);
         expect(cmp.validate(1.1)).toBe(true);
     });
@@ -32,7 +32,7 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
             dataType="int"
             value={1.1}
             rowIdx={2}
-        column={testColumn}/>, document.getElementById("container"));
+            column={testColumn}/>, document.getElementById("container"));
         expect(cmp.getValue().columnKey).toBe(1);
         expect(cmp.validate(1)).toBe(true);
     });

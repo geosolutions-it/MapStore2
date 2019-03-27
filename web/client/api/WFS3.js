@@ -99,20 +99,20 @@ export const getTilingSchemes = (layer) => {
                                 .catch(() => null)
                         )
                     )
-                    .then((schemes) => ({
-                        tilingSchemes: {
-                            url: tilingSchemes,
-                            schemes: schemes.filter(scheme => scheme)
-                        },
-                        allowedSRS: schemes
-                            .filter(scheme => scheme)
-                            .reduce((acc, { supportedCRS }) => {
-                                return {
-                                    ...acc,
-                                    [supportedCRS]: true
-                                };
-                            }, {})
-                    }))
+                        .then((schemes) => ({
+                            tilingSchemes: {
+                                url: tilingSchemes,
+                                schemes: schemes.filter(scheme => scheme)
+                            },
+                            allowedSRS: schemes
+                                .filter(scheme => scheme)
+                                .reduce((acc, { supportedCRS }) => {
+                                    return {
+                                        ...acc,
+                                        [supportedCRS]: true
+                                    };
+                                }, {})
+                        }))
                     : {
                         tilingSchemes: {
                             url: tilingSchemes,

@@ -107,31 +107,31 @@ module.exports = props => {
                             lat: latlng && latlng.lat,
                             lon: lngCorrected
                         }}
-                        />,
+                    />,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
                     <Row key="button-row" className="text-center" style={{position: 'relative'}}>
-                            <Col key="tools" xs={12}>
-                                <Toolbar
-                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                    buttons={toolButtons}
-                                    transitionProps={null
-                                        /* transitions was causing a bad rendering of toolbar present in the identify panel
+                        <Col key="tools" xs={12}>
+                            <Toolbar
+                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                buttons={toolButtons}
+                                transitionProps={null
+                                    /* transitions was causing a bad rendering of toolbar present in the identify panel
                                          * for this reason they ahve been disabled
                                         */
-                                      }/>
-                            </Col>
+                                }/>
+                        </Col>
                         <div key="navigation" style={{
-                                zIndex: 1,
-                                position: "absolute",
-                                right: 0,
-                                top: 0,
-                                margin: "0 10px"
-                            }}>
-                                <Toolbar
-                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                    buttons={getNavigationButtons(props)}
-                                    transitionProps={null /* same here */}
-                                     />
+                            zIndex: 1,
+                            position: "absolute",
+                            right: 0,
+                            top: 0,
+                            margin: "0 10px"
+                        }}>
+                            <Toolbar
+                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                buttons={getNavigationButtons(props)}
+                                transitionProps={null /* same here */}
+                            />
                         </div>
                     </Row>
                 ].filter(headRow => headRow)}>

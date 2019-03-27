@@ -42,14 +42,14 @@ describe('MediaEditor Epics', () => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                    case LOAD_MEDIA_SUCCESS:
-                        expect(a.params).toEqual(params);
-                        expect(a.mediaType).toEqual(mediaType);
-                        expect(a.sourceId).toEqual(sourceId);
-                        expect(a.resultData).toEqual(resultData);
-                        break;
-                    default: expect(true).toEqual(false);
-                        break;
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.params).toEqual(params);
+                    expect(a.mediaType).toEqual(mediaType);
+                    expect(a.sourceId).toEqual(sourceId);
+                    expect(a.resultData).toEqual(resultData);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
                 }
             });
             done();
@@ -71,14 +71,14 @@ describe('MediaEditor Epics', () => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                    case LOAD_MEDIA_SUCCESS:
-                        expect(a.params).toEqual(params);
-                        expect(a.mediaType).toEqual(mediaType);
-                        expect(a.sourceId).toEqual(sourceId);
-                        expect(a.resultData).toEqual(resultData);
-                        break;
-                    default: expect(true).toEqual(false);
-                        break;
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.params).toEqual(params);
+                    expect(a.mediaType).toEqual(mediaType);
+                    expect(a.sourceId).toEqual(sourceId);
+                    expect(a.resultData).toEqual(resultData);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
                 }
             });
             done();
@@ -96,24 +96,24 @@ describe('MediaEditor Epics', () => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                    case SAVE_MEDIA_SUCCESS:
-                        expect(a.id.length).toEqual(36);
-                        expect(a.mediaType).toEqual(type);
-                        expect(a.source).toEqual(source);
-                        expect(a.data).toEqual(data);
-                        break;
-                    case ADDING_MEDIA:
-                        expect(a.adding).toEqual(false);
-                        break;
-                    case SELECT_ITEM:
-                        expect(a.id.length).toEqual(36);
-                        break;
-                    case LOAD_MEDIA:
-                        expect(a.mediaType).toEqual(type);
-                        expect(a.sourceId).toEqual(source);
-                        break;
-                    default: expect(true).toEqual(false);
-                        break;
+                case SAVE_MEDIA_SUCCESS:
+                    expect(a.id.length).toEqual(36);
+                    expect(a.mediaType).toEqual(type);
+                    expect(a.source).toEqual(source);
+                    expect(a.data).toEqual(data);
+                    break;
+                case ADDING_MEDIA:
+                    expect(a.adding).toEqual(false);
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id.length).toEqual(36);
+                    break;
+                case LOAD_MEDIA:
+                    expect(a.mediaType).toEqual(type);
+                    expect(a.sourceId).toEqual(source);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
                 }
             });
             done();
@@ -137,21 +137,21 @@ describe('MediaEditor Epics', () => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                    case SAVE_MEDIA_SUCCESS:
-                        expect(a.id.length).toEqual(36);
-                        expect(a.mediaType).toEqual(type);
-                        expect(a.source).toEqual(source);
-                        expect(a.data).toEqual(data);
-                        break;
-                    case EDITING_MEDIA:
-                        expect(a.editing).toEqual(false);
-                        break;
-                    case LOAD_MEDIA:
-                        expect(a.mediaType).toEqual(type);
-                        expect(a.sourceId).toEqual(source);
-                        break;
-                    default: expect(true).toEqual(false);
-                        break;
+                case SAVE_MEDIA_SUCCESS:
+                    expect(a.id.length).toEqual(36);
+                    expect(a.mediaType).toEqual(type);
+                    expect(a.source).toEqual(source);
+                    expect(a.data).toEqual(data);
+                    break;
+                case EDITING_MEDIA:
+                    expect(a.editing).toEqual(false);
+                    break;
+                case LOAD_MEDIA:
+                    expect(a.mediaType).toEqual(type);
+                    expect(a.sourceId).toEqual(source);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
                 }
             });
             done();

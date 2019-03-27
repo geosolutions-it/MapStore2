@@ -77,19 +77,19 @@ const refresh = action$ =>
                     })
                 )
             )
-            .mergeAll()
-            .map((layer) => {
-                if (layer.error) {
-                    return Rx.Observable.of(layersRefreshError([layer], layer.error.message));
-                }
-                return Rx.Observable.from([layersRefreshed([layer]), updateNode(layer.layer, "id", getUpdates({
-                    bbox: layer.bbox,
-                    search: layer.search,
-                    title: layer.title,
-                    dimensions: layer.dimensions
-                }, action.options))]);
-            })
-            .mergeAll();
+                .mergeAll()
+                .map((layer) => {
+                    if (layer.error) {
+                        return Rx.Observable.of(layersRefreshError([layer], layer.error.message));
+                    }
+                    return Rx.Observable.from([layersRefreshed([layer]), updateNode(layer.layer, "id", getUpdates({
+                        bbox: layer.bbox,
+                        search: layer.search,
+                        title: layer.title,
+                        dimensions: layer.dimensions
+                    }, action.options))]);
+                })
+                .mergeAll();
         });
 
 /**

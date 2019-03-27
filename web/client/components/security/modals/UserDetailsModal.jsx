@@ -65,7 +65,7 @@ class UserDetails extends React.Component {
                         const info = params[key] && userInfo[key](params[key]);
                         return info && <Row key={key}><Col sm={6} xs={12}>{<Message msgId={'user.details' + this.capitalCase(key)}/>}:</Col><Col sm={6} xs={12}>{info}</Col></Row>;
                     }
-                ).filter(value => value);
+                    ).filter(value => value);
                 if (generalAttributes && generalAttributes.length > 0) {
                     return <div className="ms-user-details-table"><Grid fluid>{generalAttributes}</Grid></div>;
                 }

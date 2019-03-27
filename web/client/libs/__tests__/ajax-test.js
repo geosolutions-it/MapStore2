@@ -51,31 +51,31 @@ const authenticationRules = [
         "method": "authkey"
     },
     {
-      "urlPattern": ".*youhavetouseacustomone.*",
-      "authkeyParamName": "mario",
-      "method": "authkey"
+        "urlPattern": ".*youhavetouseacustomone.*",
+        "authkeyParamName": "mario",
+        "method": "authkey"
     },
     {
-      "urlPattern": ".*thisismissingtheparam.*",
-      "method": {
-          "method": "authkey-param"
-      }
+        "urlPattern": ".*thisismissingtheparam.*",
+        "method": {
+            "method": "authkey-param"
+        }
     },
     {
-      "urlPattern": ".*not-supported.*",
-      "method": "not-supported"
+        "urlPattern": ".*not-supported.*",
+        "method": "not-supported"
     },
     {
-      "urlPattern": ".*some-site.*",
-      "method": "basic"
+        "urlPattern": ".*some-site.*",
+        "method": "basic"
     },
     {
-      "urlPattern": ".*imtokenized.*",
-      "method": "bearer"
+        "urlPattern": ".*imtokenized.*",
+        "method": "bearer"
     },
     {
-      "urlPattern": ".*useBrowserCredentials.*",
-      "method": "browserWithCredentials"
+        "urlPattern": ".*useBrowserCredentials.*",
+        "method": "browserWithCredentials"
     },
     {
         "urlPattern": ".*sitetocheck.*",

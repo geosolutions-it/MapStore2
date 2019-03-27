@@ -90,7 +90,7 @@ class RecordItem extends React.Component {
             )
         });
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
     }
 
@@ -131,7 +131,7 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     onClick={() => { this.addWmsLayer(wms); }}
                     key="addlayer">
-                        <Glyphicon glyph="plus" />
+                    <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -144,7 +144,7 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     onClick={() => { this.addwmtsLayer(wmts); }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />
+                    <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -157,7 +157,7 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     onClick={() => { this.addEsriLayer(); }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />
+                    <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -180,8 +180,8 @@ class RecordItem extends React.Component {
         const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
         return this.state.fullText && record.metadataTemplate
             ? (<div className="catalog-metadata ql-editor">
-                    <HtmlRenderer html={parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`)}/>
-                </div>)
+                <HtmlRenderer html={parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`)}/>
+            </div>)
             : record.metadataTemplate ? '' : (isArray(record.description) ? record.description.join(", ") : record.description);
     };
 
@@ -192,48 +192,48 @@ class RecordItem extends React.Component {
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then this defaults needs to change too
         return record ? (
-                <SideCard
-                    style={{transform: "none"}}
-                    fullText={this.state.fullText}
-                    preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
-                    title={record && this.getTitle(record.title)}
-                    description={<div className ref={sideCardDesc => {
-                        this.sideCardDesc = sideCardDesc;
-                    }}>{this.renderDescription(record)}</div>}
-                    caption={
-                        <div>
-                            {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                            <div>{!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
-                            {!this.props.hideExpand &&
+            <SideCard
+                style={{transform: "none"}}
+                fullText={this.state.fullText}
+                preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
+                title={record && this.getTitle(record.title)}
+                description={<div className ref={sideCardDesc => {
+                    this.sideCardDesc = sideCardDesc;
+                }}>{this.renderDescription(record)}</div>}
+                caption={
+                    <div>
+                        {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
+                        <div>{!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"
                                     style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
                                     ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}
                                 </div>
+                        }
+                    </div>
+                }
+                tools={
+                    <Toolbar
+                        btnDefaultProps={{
+                            className: 'square-button-md',
+                            bsStyle: 'primary'
+                        }}
+                        btnGroupProps={{
+                            style: {
+                                margin: 10
                             }
-                        </div>
-                    }
-                    tools={
-                        <Toolbar
-                            btnDefaultProps={{
-                                className: 'square-button-md',
-                                bsStyle: 'primary'
-                            }}
-                            btnGroupProps={{
-                                style: {
-                                    margin: 10
-                                }
-                            }}
-                            buttons={[
-                                ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
-                                {
-                                    glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
-                                    visible: this.state.visibleExpand,
-                                    tooltipId: this.state.fullText ? 'collapse' : 'expand',
-                                    onClick: () => this.setState({ fullText: !this.state.fullText })
-                                }
-                            ]}/>
-                    }/>
+                        }}
+                        buttons={[
+                            ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
+                            {
+                                glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
+                                visible: this.state.visibleExpand,
+                                tooltipId: this.state.fullText ? 'collapse' : 'expand',
+                                onClick: () => this.setState({ fullText: !this.state.fullText })
+                            }
+                        ]}/>
+                }/>
         ) : null;
     }
 
@@ -291,4 +291,4 @@ class RecordItem extends React.Component {
     };
 }
 
-module.exports = RecordItem;
+export default RecordItem;

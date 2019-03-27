@@ -28,7 +28,7 @@ const Builder = compose(
             dependenciesSelector,
             availableDependenciesSelector,
             (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps }))
-    , { toggleConnection }),
+        , { toggleConnection }),
     withMapExitButton
 )(require('./widgetbuilder/WidgetTypeBuilder'));
 
@@ -65,31 +65,31 @@ class SideBarComponent extends React.Component {
          onClose: () => {},
          layout: {}
      };
-    componentDidMount() {
-        this.props.onMount();
-    }
+     componentDidMount() {
+         this.props.onMount();
+     }
 
-    componentWillUnmount() {
-        this.props.onUnmount();
-    }
-    render() {
-        return (
-        <DockPanel
-            open={this.props.enabled}
-            size={this.props.dockSize}
-            zIndex={this.props.zIndex}
-            position={this.props.position}
-            bsStyle="primary"
-            hideHeader
-            style={{...this.props.layout, background: "white"}}>
-            <Builder
-                enabled={this.props.enabled}
-                onClose={this.props.onClose}
-                typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend'}
-                shortenChartLabelThreshold={this.props.shortenChartLabelThreshold}/>
-        </DockPanel>);
+     componentWillUnmount() {
+         this.props.onUnmount();
+     }
+     render() {
+         return (
+             <DockPanel
+                 open={this.props.enabled}
+                 size={this.props.dockSize}
+                 zIndex={this.props.zIndex}
+                 position={this.props.position}
+                 bsStyle="primary"
+                 hideHeader
+                 style={{...this.props.layout, background: "white"}}>
+                 <Builder
+                     enabled={this.props.enabled}
+                     onClose={this.props.onClose}
+                     typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend'}
+                     shortenChartLabelThreshold={this.props.shortenChartLabelThreshold}/>
+             </DockPanel>);
 
-    }
+     }
 }
 /**
  * Editor for map widgets
@@ -105,7 +105,7 @@ const Plugin = connect(
         (enabled, layout) => ({
             enabled,
             layout
-    })), {
+        })), {
         onMount: () => setControlProperty("widgetBuilder", "available", true),
         onUnmount: () => setControlProperty("widgetBuilder", "available", false),
         onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)

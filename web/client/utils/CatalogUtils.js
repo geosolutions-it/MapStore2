@@ -208,6 +208,7 @@ const converters = {
                 };
             });
         }
+        return null;
     },
     wms: (records, options = {}) => {
         if (records && records.records) {
@@ -222,10 +223,10 @@ const converters = {
                     tags: "",
                     title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                            values: dim._ && dim._.split(',') || []
-                        }, dim.$ || {}))
-                        // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
-                        // TODO: replace with capabilities URL service. something like this:
+                        values: dim._ && dim._.split(',') || []
+                    }, dim.$ || {}))
+                    // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
+                    // TODO: replace with capabilities URL service. something like this:
                         /*
                         .map(dim => dim && dim.name !== "time" ? dim : {
                             ...dim,
@@ -250,6 +251,7 @@ const converters = {
                 };
             });
         }
+        return null;
     },
     wmts: (records, options) => {
         if (records && records.records) {
@@ -285,37 +287,38 @@ const converters = {
 
                 const bbox = getWMTSBBox(record);
                 return {
-                title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
-                description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
-                identifier: getNodeText(record["ows:Identifier"]),
-                tags: "",
-                style: record.style,
-                capabilitiesURL: capabilitiesURL,
-                queryable: record.queryable,
-                requestEncoding: record.requestEncoding,
-                tileMatrixSet: record.TileMatrixSet,
-                matrixIds,
-                TileMatrixSetLink: castArray(record.TileMatrixSetLink),
-                boundingBox: {
-                    extent: [
+                    title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
+                    description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
+                    identifier: getNodeText(record["ows:Identifier"]),
+                    tags: "",
+                    style: record.style,
+                    capabilitiesURL: capabilitiesURL,
+                    queryable: record.queryable,
+                    requestEncoding: record.requestEncoding,
+                    tileMatrixSet: record.TileMatrixSet,
+                    matrixIds,
+                    TileMatrixSetLink: castArray(record.TileMatrixSetLink),
+                    boundingBox: {
+                        extent: [
                             bbox["ows:LowerCorner"].split(" ")[0],
                             bbox["ows:LowerCorner"].split(" ")[1],
                             bbox["ows:UpperCorner"].split(" ")[0],
                             bbox["ows:UpperCorner"].split(" ")[1]
-                    ],
-                    crs: "EPSG:4326"
-                },
-                references: [{
-                    type: "OGC:WMTS",
-                    url: urls,
-                    SRS: filterOnMatrix(record.SRS || [], matrixIds),
-                    params: {
-                        name: record["ows:Identifier"]
-                    }
-                }]
+                        ],
+                        crs: "EPSG:4326"
+                    },
+                    references: [{
+                        type: "OGC:WMTS",
+                        url: urls,
+                        SRS: filterOnMatrix(record.SRS || [], matrixIds),
+                        params: {
+                            name: record["ows:Identifier"]
+                        }
+                    }]
                 };
             });
         }
+        return null;
     }
 };
 const buildSRSMap = (srs) => {

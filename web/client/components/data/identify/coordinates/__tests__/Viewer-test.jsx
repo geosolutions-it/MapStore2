@@ -27,7 +27,7 @@ describe('Identify Coordinate Viewer Component', () => {
         ReactDOM.render(
             <Viewer
                 coordinate={{ lat: 40, lon: 10 }}
-                />,
+            />,
             document.getElementById("container")
         );
 

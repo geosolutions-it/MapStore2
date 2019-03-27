@@ -35,6 +35,6 @@ describe('handleNodeSelection enhancer', () => {
         }));
         ReactDOM.render(<Sink
             map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
     });
 });

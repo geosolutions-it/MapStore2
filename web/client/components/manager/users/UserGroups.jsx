@@ -56,23 +56,23 @@ class UserCard extends React.Component {
 
     renderGroupsSelector = () => {
         return (<Select key="groupSelector"
-        clearable={false}
-        isLoading={this.props.groups.length === 0 }
-        name="user-groups-selector"
-        multi
-        value={ (this.props.user && this.props.user.groups ? this.props.user.groups : this.getDefaultGroups() ).map(group => group.id) }
-        options={this.getOptions()}
-        onChange={this.onChange}
-        style={{marginTop: "10px"}}
+            clearable={false}
+            isLoading={this.props.groups.length === 0 }
+            name="user-groups-selector"
+            multi
+            value={ (this.props.user && this.props.user.groups ? this.props.user.groups : this.getDefaultGroups() ).map(group => group.id) }
+            options={this.getOptions()}
+            onChange={this.onChange}
+            style={{marginTop: "10px"}}
         />);
     };
 
     render() {
         return this.props.groups ? (
-           <div style={{marginTop: "10px"}} key="groups-page">
-             <span><Message msgId="users.selectedGroups"/></span>
-             {this.renderGroupsSelector()}
-         </div>
+            <div style={{marginTop: "10px"}} key="groups-page">
+                <span><Message msgId="users.selectedGroups"/></span>
+                {this.renderGroupsSelector()}
+            </div>
         ) : null;
     }
 }

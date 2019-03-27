@@ -26,6 +26,6 @@ module.exports = ({enabled, onClose = () => {}, typeFilter} = {}) =>
     (<BorderLayout
         className="bg-body"
         header={<BuilderHeader onClose={onClose}><Message msgId="widgets.selectWidgetType" /></BuilderHeader>}
-        >
+    >
         {enabled ? <TypeSelector typeFilter={typeFilter}/> : null}
     </BorderLayout>);

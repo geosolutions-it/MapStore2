@@ -22,7 +22,7 @@ function mapConfig(state = null, action) {
         let size = state && state.map && state.map.present && state.map.present.size || state && state.map && state.map.size;
 
         let hasVersion = action.config && action.config.version >= 2;
-            // we get from the configuration what will be used as the initial state
+        // we get from the configuration what will be used as the initial state
         let mapState = action.legacy && !hasVersion ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
 
 
@@ -44,6 +44,7 @@ function mapConfig(state = null, action) {
                 if (feature.properties.geometryGeodesic) {
                     return set("properties.geometryGeodesic", {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)}, feature);
                 }
+                return state;
             });
             mapState.layers[annotationsLayerIndex] = set("features", featuresLayer, mapState.layers[annotationsLayerIndex]);
         }
@@ -93,7 +94,7 @@ function mapConfig(state = null, action) {
                 info:
                     assign({}, map.info, {
                         details: action.detailsUri
-                })
+                    })
             });
             return assign({}, state, {map: map});
         }
@@ -101,11 +102,12 @@ function mapConfig(state = null, action) {
     case MAP_CREATED: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map) {
-            const {name, description, canDelete = false, canCopy = false, canEdit= false} = action.metadata || {};
+            const {name, description, canDelete = false, canCopy = false, canEdit = false} = action.metadata || {};
             // version needed to avoid automapupdate to start
             map = assign({}, map, {mapId: action.resourceId, info: {...map.info, name, description, canEdit, canDelete, canCopy}, version: 2});
             return assign({}, state, {map: map});
         }
+        return state;
     }
     default:
         return state;

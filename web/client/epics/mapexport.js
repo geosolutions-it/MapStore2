@@ -29,5 +29,5 @@ module.exports = {
                 Rx.Observable.of(PersistMap[format](getState()))
                     .do((data) => download(data, "map.json", "application/json"))
                     .map(() => setControlProperty('export', 'enabled', false))
-    )
+            )
 };
