@@ -56,8 +56,11 @@ describe('TimeUtils', () => {
         expect(getDateTimeFormat("it-IT", "date-time")).toBe("DD/MM/YYYY HH:mm:SS");
     });
     it('test getTimezoneOffset', () => {
-        expect(getTimezoneOffset(new Date("2020-04-15T06:30:00Z"))).toBe(-7200000);
-        expect(getTimezoneOffset(new Date("2020-10-15T06:30:00Z"))).toBe(-7200000);
-        expect(getTimezoneOffset(new Date("2020-01-15T06:30:00Z"))).toBe(-3600000);
+        expect(getTimezoneOffset(new Date(Date.UTC(2020, 1, 15, 6, 30, 0)))).toBe(-3600000);
+        expect(getTimezoneOffset(new Date(Date.UTC(2020, 2, 15, 6, 30, 0)))).toBe(-3600000);
+        expect(getTimezoneOffset(new Date(Date.UTC(2020, 3, 15, 6, 30, 0)))).toBe(-7200000);
+        expect(getTimezoneOffset(new Date(Date.UTC(2020, 4, 15, 6, 30, 0)))).toBe(-7200000);
+        expect(getTimezoneOffset(new Date(Date.UTC(2020, 9, 15, 6, 30, 0)))).toBe(-7200000);
+        expect(getTimezoneOffset(new Date(Date.UTC(2020, 10, 15, 6, 30, 0)))).toBe(-3600000);
     });
 });
