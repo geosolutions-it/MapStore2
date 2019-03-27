@@ -9,18 +9,31 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
-
+const utcDateWrapper = require('../../misc/enhancers/utcDateWrapper');
+const {getDateTimeFormat} = require('../../../utils/TimeUtils');
 momentLocalizer(moment);
-
 const {DateTimePicker} = require('react-widgets');
 const {Row, Col} = require('react-bootstrap');
+/**
+ * Date time picker enhanced with UTC and timezone offset
+ * it takes the localized date in input and it translates to UTC
+ * for the DatePicker tool
+*/
+const UTCDateTimePicker = utcDateWrapper({
+    dateField: "value",
+    dateType: "type",
+    setDateField: "onChange"
+})(DateTimePicker);
 
 require('react-widgets/lib/less/react-widgets.less');
 
+/**
+ * This enhanced Component is used for supporting "date", "time" or "date-time" attribute types
+*/
 class DateField extends React.Component {
     static propTypes = {
         timeEnabled: PropTypes.bool,
-        dateFormat: PropTypes.string,
+        dateEnabled: PropTypes.bool,
         operator: PropTypes.string,
         fieldName: PropTypes.string,
         fieldRowId: PropTypes.number,
@@ -31,9 +44,13 @@ class DateField extends React.Component {
         onUpdateExceptionField: PropTypes.func
     };
 
+    static contextTypes = {
+        locale: PropTypes.string
+    };
+
     static defaultProps = {
         timeEnabled: false,
-        dateFormat: "DD-MM-YYYY",
+        dateEnabled: true,
         operator: null,
         fieldName: null,
         fieldRowId: null,
@@ -43,46 +60,37 @@ class DateField extends React.Component {
         onUpdateField: () => {},
         onUpdateExceptionField: () => {}
     };
-
-    getDateStartOfDay = (date) => {
-        if (this.props.attType === "date") {
-
-        }
-        let month = date.getMonth() + 1;
-        month = month < 10 ? "0" + month : month;
-        let day = date.getDate();
-        day = day < 10 ? "0" + day : day;
-        return new Date(`${date.getFullYear()}-${month}-${day}T00:00:00Z`);
-    }
-
-    getUTCDate = (date) => {
-        return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
-        date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
-    }
     render() {
-        let startdate = this.props.fieldValue && this.props.fieldValue.startDate ? this.getUTCDate(this.props.fieldValue.startDate) : null;
-        let enddate = this.props.fieldValue && this.props.fieldValue.endDate ? this.getUTCDate(this.props.fieldValue.endDate) : null;
+        // these values are already parsed by the enhancer
+        const startdate = this.props.fieldValue && this.props.fieldValue.startDate || null;
+        const enddate = this.props.fieldValue && this.props.fieldValue.endDate || null;
 
-        let defaultCurrentDate = moment().startOf("day").toDate();
-        defaultCurrentDate = this.getDateStartOfDay(defaultCurrentDate);
+        // needed to initialize the time parts to 00:00:00
+        const defaultCurrentDate = moment().startOf("day").toDate();
 
         let dateRow = this.props.operator === "><" ?
                 (<div>
                     <Row>
                         <Col xs={6}>
-                            <DateTimePicker
+                            <UTCDateTimePicker
+                                type={this.props.attType}
+                                defaultCurrentDate={defaultCurrentDate}
                                 defaultValue={startdate}
                                 value={startdate}
+                                calendar={this.props.dateEnabled}
                                 time={this.props.timeEnabled}
-                                format={this.props.dateFormat}
+                                format={getDateTimeFormat(this.context.locale, this.props.attType)}
                                 onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
                         </Col>
                         <Col xs={6}>
-                            <DateTimePicker
+                            <UTCDateTimePicker
+                                type={this.props.attType}
+                                defaultCurrentDate={defaultCurrentDate}
                                 defaultValue={enddate}
                                 value={enddate}
+                                calendar={this.props.dateEnabled}
                                 time={this.props.timeEnabled}
-                                format={this.props.dateFormat}
+                                format={getDateTimeFormat(this.context.locale, this.props.attType)}
                                 onChange={(date) => this.updateValueState({startDate: startdate, endDate: date})}/>
                         </Col>
                     </Row>
@@ -90,22 +98,19 @@ class DateField extends React.Component {
              :
                 (<Row>
                     <Col xs={12}>
-                        <DateTimePicker
+                        <UTCDateTimePicker
+                            type={this.props.attType}
                             defaultCurrentDate={defaultCurrentDate}
                             defaultValue={startdate}
                             value={startdate}
                             time={this.props.timeEnabled}
-                            format={this.props.dateFormat}
-                            onChange={
-                                (date) => {
-                                    console.log(`on change startDate:${date} and getDateStartOfDay ${this.getDateStartOfDay(date)}`);
-                                    this.updateValueState({startDate: this.getDateStartOfDay(date), endDate: null});
-                                }
-                            }/>
+                            calendar={this.props.dateEnabled}
+                            format={getDateTimeFormat(this.context.locale, this.props.attType)}
+                            onChange={(date) => {
+                                this.updateValueState({startDate: date, endDate: null});
+                            }}/>
                     </Col>
-                </Row>)
-            ;
-
+                </Row>);
         return (
             dateRow
         );
@@ -117,9 +122,7 @@ class DateField extends React.Component {
         } else {
             this.props.onUpdateExceptionField(this.props.fieldRowId, null);
         }
-
         this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
     };
 }
-
 module.exports = DateField;
