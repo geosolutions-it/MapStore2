@@ -8,7 +8,6 @@
 const expect = require('expect');
 const {
     getDateTimeFormat,
-    getTimezoneOffset,
     getUTCTimeParts,
     getUTCDateParts,
     roundResolution
