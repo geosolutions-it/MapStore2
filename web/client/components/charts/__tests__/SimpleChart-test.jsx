@@ -14,13 +14,13 @@ const expect = require('expect');
 const SimpleChart = require('../SimpleChart');
 
 const data = [
-      {name: 'Page A', uv: 0, pv: 0, amt: 0},
-      {name: 'Page B', uv: 1, pv: 1, amt: 1},
-      {name: 'Page C', uv: 2, pv: 2, amt: 2},
-      {name: 'Page D', uv: 3, pv: 3, amt: 3},
-      {name: 'Page E', uv: 4, pv: 4, amt: 4},
-      {name: 'Page F', uv: 5, pv: 5, amt: 5},
-      {name: 'Page G', uv: 6, pv: 6, amt: 6}
+      {name: 'Page A', uv: 0},
+      {name: 'Page B', uv: 1},
+      {name: 'Page C', uv: 2},
+      {name: 'Page D', uv: 3},
+      {name: 'Page E', uv: 4},
+      {name: 'Page F', uv: 5},
+      {name: 'Page G', uv: 6}
 ];
 const SERIES = [{dataKey: "pv"}, {dataKey: "uv"}];
 describe('SimpleChart component', () => {
@@ -73,5 +73,114 @@ describe('SimpleChart component', () => {
         expect(legend).toExist();
         expect(tooltip).toExist();
 
+    });
+    it('test with y axis vlaues over trillion ', () => {
+        let modifiedData = data;
+        modifiedData[6].uv = 10000000000000;
+
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const maxValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(5) > text > tspan').textContent;
+        expect(maxValue).toBe('10 T');
+    });
+    it('test y axis with short strings ', () => {
+        let modifiedData = data;
+        modifiedData.map(y => y.uv = 'string');
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const maxValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g > text > tspan').textContent;
+        expect(maxValue).toBe('string');
+    });
+    it('test y axis with long strings ', () => {
+        let modifiedData = data;
+        const string = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+        modifiedData.map((y, i) => y.uv = string.substring(0, i * 2));
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const firstValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(1) > text > tspan').textContent;
+        const secondValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(2) > text > tspan').textContent;
+        const thirdValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(3) > text > tspan').textContent;
+        const fourthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(4) > text > tspan').textContent;
+        const fifthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(5) > text > tspan').textContent;
+        const sixthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(6) > text > tspan').textContent;
+
+        expect(firstValue).toBe('aa');
+        expect(secondValue).toBe('aaaa');
+        expect(thirdValue).toBe('aaaaaa');
+        expect(fourthValue).toBe('aaaa...');
+        expect(fourthValue).toEqual(fifthValue);
+        expect(fourthValue).toEqual(sixthValue);
+
+
+    });
+    it('test y axis with undefined valus ', () => {
+        let modifiedData = data;
+        modifiedData.map(y => y.uv = undefined);
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const maxValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis').textContent;
+        expect(maxValue).toBe('');
+    });
+    it('test y axis with null valus ', () => {
+        let modifiedData = data;
+        modifiedData.map(y => y.uv = null);
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const maxValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis').textContent;
+        expect(maxValue).toBe('');
+    });
+    it('test y axis with long decimal numbers ', () => {
+        let modifiedData = data;
+        modifiedData.map((y, i) => y.uv = 3.1 / (i * 2));
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        expect(el).toExist();
+        const firstValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(1) > text > tspan').textContent;
+        const secondValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(2) > text > tspan').textContent;
+        const thirdValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(3) > text > tspan').textContent;
+        const fourthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(4) > text > tspan').textContent;
+        const fifthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(5) > text > tspan').textContent;
+        const sixthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(6) > text > tspan').textContent;
+
+        expect(firstValue).toEqual(Infinity);
+        expect(secondValue.length).toBeLessThan(7);
+        expect(thirdValue.length).toBeLessThan(7);
+        expect(fourthValue.length).toBeLessThan(7);
+        expect(fifthValue.length).toBeLessThan(7);
+        expect(sixthValue.length).toBeLessThan(7);
+    });
+    it('test y axis with small values and long decimal numbers ', () => {
+        let modifiedData = data;
+        modifiedData.map((y, i) => y.uv = 0 + i / 100000000);
+        ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        expect(el).toExist();
+        const firstValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(1) > text > tspan').textContent;
+        const secondValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(2) > text > tspan').textContent;
+        const thirdValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(3) > text > tspan').textContent;
+        const fourthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(4) > text > tspan').textContent;
+        const fifthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(5) > text > tspan').textContent;
+        const sixthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(6) > text > tspan').textContent;
+
+        expect(firstValue).toEqual(0);
+        expect(secondValue).toEqual(1e-8);
+        expect(thirdValue).toEqual(2e-8);
+        expect(fourthValue).toEqual(3e-8);
+        expect(fifthValue).toEqual(4e-8);
+        expect(sixthValue).toEqual(5e-8);
     });
 });
