@@ -57,6 +57,117 @@ const initState = {
     configuration: {}
 };
 
+/**
+ * Manages the map info tool state. Contains configurations and responses.
+ * @prop {boolean} [enabled=true] if true, the info tool is enabled by default
+ * @prop {object} [highlightStyle] customize style for highlight. Can be customized this way
+ * ```
+ * {
+ *     color: '#3388ff',
+ *     weight: 4,
+ *     radius: 4,
+ *     dashArray: '',
+ *     fillColor: '#3388ff',
+ *     fillOpacity: 0.2
+ * }
+ * ```
+ * @prop {object} configuration contains the configuration for getFeatureInfo tool.
+ * @prop {array} requests the requests performed. Here a sample:
+ * ```javascript
+ * {
+ *     request: {
+ *         service: 'WMS',
+ *         version: '1.1.1',
+ *         request: 'GetFeatureInfo',
+ *         exceptions: 'application/json',
+ *         id: 'tiger:poi__7',
+ *         layers: 'tiger:poi',
+ *         query_layers: 'tiger:poi',
+ *         x: 51,
+ *         y: 51,
+ *         height: 101,
+ *         width: 101,
+ *         srs: 'EPSG:3857',
+ *         bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
+ *         feature_count: 10,
+ *         info_format: 'text/plain',
+ *         ENV: 'locale:it'
+ *     },
+ *     reqId: '4e030000-514a-11e9-90f1-3db233bf30bf'
+ * }
+ * ```
+ * @prop {array} responses the responses to the requests performed. This is a sample response
+ * ```javascript
+ * {
+ *     response: 'Results for FeatureType', // text
+ *     queryParams: {
+ *         service: 'WMS',
+ *         version: '1.1.1',
+ *         request: 'GetFeatureInfo',
+ *         exceptions: 'application/json',
+ *         id: 'tiger:poi__7',
+ *         layers: 'tiger:poi',
+ *         query_layers: 'tiger:poi',
+ *         x: 51,
+ *         y: 51,
+ *         height: 101,
+ *         width: 101,
+ *         srs: 'EPSG:3857',
+ *         bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
+ *         feature_count: 10,
+ *         info_format: 'text/plain',
+ *         ENV: 'locale:it'
+ *     },
+ *     layerMetadata: {
+ *         title: 'Manhattan (NY) points of interest',
+ *         viewer: {},
+ *         featureInfo: {}
+ *     }
+ * }
+ * ```
+ * @prop {object} clickPoint the clicked point. Contains the `pixel` clicked (x,y), the coordinates of the clicked point `latlng` (latlng) and `modifiers` (buttons pressed when clicked)
+ * @prop {object} clickLayer used to query vector layers
+ * @example
+ * {
+ *       enabled: true,
+ *       highlightStyle: {
+ *           color: '#3388ff',
+ *           weight: 4,
+ *           radius: 4,
+ *           dashArray: '',
+ *           fillColor: '#3388ff',
+ *           fillOpacity: 0.2
+ *       },
+ *       configuration: {},
+ *       showMarker: true,
+ *       responses: [
+ *           // ...array of responses
+ *       ],
+ *       requests: [
+ *           // ...requests
+ *       ],
+ *       centerToMarker: 'disabled',
+ *       clickPoint: {
+ *           pixel: {
+ *               x: 873,
+ *               y: 576
+ *           },
+ *           latlng: {
+ *               lat: 40.71190648169588,
+ *               lng: -74.00854110717773
+ *           },
+ *           modifiers: {
+ *               alt: false,
+ *               ctrl: false,
+ *               shift: false
+ *           }
+ *       },
+ *       clickLayer: null,
+ *       index: 0
+ *   }
+ *
+ * @memberof reducers
+ */
 function mapInfo(state = initState, action) {
     switch (action.type) {
     case NO_QUERYABLE_LAYERS:

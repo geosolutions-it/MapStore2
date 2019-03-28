@@ -163,6 +163,7 @@
             "web/client/reducers/featuregrid.js",
             "web/client/reducers/globeswitcher.js",
             "web/client/reducers/floatinglegend.js",
+            "web/client/reducers/mapInfo.js",
             "web/client/reducers/maps.js",
             "web/client/reducers/maptype.js",
             "web/client/reducers/notifications.js",
