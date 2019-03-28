@@ -511,7 +511,7 @@
         "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
         "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
         "identifyZoomToFeature": "Zoom auf die Funktion",
-        "identifyStopHighlightingFeatures": "Stoppen Sie die Hervorhebung von Funktionen",
+        "identifyStopHighlightingFeatures": "Stoppen Sie die Markierung von Features",
         "identifyHighlightFeatures": "Markieren Sie Features",
         "identifyRevGeocodeModalTitle": "Addresse",
         "identifyRevGeocodeSubmitText": "Mehr Informationen",
