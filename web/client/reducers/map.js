@@ -66,53 +66,6 @@ function mapConfig(state = null, action) {
             return newState;
         }
         return state;
-    case ZOOM_TO_EXTENT: {
-        let zoom = 0;
-        let extent = [];
-        if (isArray(action.extent)) {
-            extent = action.extent.map((val) => {
-                    // MapUtils.getCenterForExtent returns an array of strings sometimes (catalog)
-                if (typeof val === 'string' || val instanceof String) {
-                    return Number(val);
-                }
-                return val;
-            });
-        } else {
-            extent = Object.keys(action.extent).map(v => {
-                if (typeof action.extent[v] === 'string' || action.extent[v] instanceof String) {
-                    return Number(action.extent[v]);
-                }
-                return action.extent[v];
-            });
-        }
-        let bounds = CoordinatesUtils.reprojectBbox(extent, action.crs, state.bbox && state.bbox.crs || "EPSG:4326");
-        if (bounds) {
-                // center by the max. extent defined in the map's config
-            let center = CoordinatesUtils.reproject(MapUtils.getCenterForExtent(extent, action.crs), action.crs, 'EPSG:4326');
-                // workaround to get zoom 0 for -180 -90... - TODO do it better
-            let full = action.crs === "EPSG:4326" && extent && extent[0] <= -180 && extent[1] <= -90 && extent[2] >= 180 && extent[3] >= 90;
-            if ( full ) {
-                zoom = 1;
-            } else {
-                let mapBBounds = CoordinatesUtils.reprojectBbox(extent, action.crs, state.projection || "EPSG:4326");
-                    // NOTE: STATE should contain size !!!
-                zoom = MapUtils.getZoomForExtent(mapBBounds, state.size, 0, 21, null);
-            }
-            if (action.maxZoom && zoom > action.maxZoom) {
-                zoom = action.maxZoom;
-            }
-            let newbounds = {minx: bounds[0], miny: bounds[1], maxx: bounds[2], maxy: bounds[3]};
-            let newbbox = assign({}, state.bbox, {bounds: newbounds});
-            return assign({}, state, {
-                center,
-                zoom,
-                mapStateSource: action.mapStateSource,
-                bbox: newbbox,
-                viewerOptions: action.viewerOptions
-            });
-        }
-        return state;
-    }
     case ZOOM_TO_POINT: {
         return assign({}, state, {
             center: CoordinatesUtils.reproject(action.pos, action.crs, 'EPSG:4326'),
