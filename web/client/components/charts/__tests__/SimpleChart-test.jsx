@@ -75,8 +75,8 @@ describe('SimpleChart component', () => {
 
     });
     it('test with y axis vlaues over trillion ', () => {
-        let modifiedData = data;
-        modifiedData[6].uv = 10000000000000;
+        const modifiedData = [...data];
+        modifiedData[6] = {...modifiedData[6], uv: 10000000000000};
 
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -86,8 +86,7 @@ describe('SimpleChart component', () => {
         expect(maxValue).toBe('10 T');
     });
     it('test y axis with short strings ', () => {
-        let modifiedData = data;
-        modifiedData.map(y => y.uv = 'string');
+        const modifiedData = data.map(y => { return {...y, uv: 'string'}; });
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
@@ -96,9 +95,8 @@ describe('SimpleChart component', () => {
         expect(maxValue).toBe('string');
     });
     it('test y axis with long strings ', () => {
-        let modifiedData = data;
         const string = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-        modifiedData.map((y, i) => y.uv = string.substring(0, i * 2));
+        const modifiedData = data.map((y, i) => { return {...y, uv: string.substring(0, i * 2)}; });
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
@@ -119,9 +117,8 @@ describe('SimpleChart component', () => {
 
 
     });
-    it('test y axis with undefined valus ', () => {
-        let modifiedData = data;
-        modifiedData.map(y => y.uv = undefined);
+    it('test y axis with undefined values ', () => {
+        const modifiedData = data.map(y => {return {...y, uv: undefined}; });
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
@@ -129,9 +126,8 @@ describe('SimpleChart component', () => {
         const maxValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis').textContent;
         expect(maxValue).toBe('');
     });
-    it('test y axis with null valus ', () => {
-        let modifiedData = data;
-        modifiedData.map(y => y.uv = null);
+    it('test y axis with null values ', () => {
+        const modifiedData = data.map(y => {return {...y, uv: null}; });
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
@@ -140,8 +136,7 @@ describe('SimpleChart component', () => {
         expect(maxValue).toBe('');
     });
     it('test y axis with long decimal numbers ', () => {
-        let modifiedData = data;
-        modifiedData.map((y, i) => y.uv = 3.1 / (i * 2));
+        const modifiedData = data.map((y, i) => {return {...y, uv: 3.1 / (i * 2)}; });
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
@@ -155,15 +150,14 @@ describe('SimpleChart component', () => {
         const sixthValue = document.querySelector('#container > div > svg > g.recharts-layer.recharts-y-axis > g > g > g:nth-child(6) > text > tspan').textContent;
 
         expect(firstValue).toEqual(Infinity);
-        expect(secondValue.length).toBeLessThan(7);
-        expect(thirdValue.length).toBeLessThan(7);
-        expect(fourthValue.length).toBeLessThan(7);
-        expect(fifthValue.length).toBeLessThan(7);
-        expect(sixthValue.length).toBeLessThan(7);
+        expect(secondValue).toBe('1.55');
+        expect(thirdValue).toBe('0.775');
+        expect(fourthValue).toBe('0.517');
+        expect(fifthValue).toBe('0.3875');
+        expect(sixthValue).toBe('0.31');
     });
     it('test y axis with small values and long decimal numbers ', () => {
-        let modifiedData = data;
-        modifiedData.map((y, i) => y.uv = 0 + i / 100000000);
+        const modifiedData = data.map((y, i) => { return {...y, uv: 0 + (i / 100000000)}; });
         ReactDOM.render(<SimpleChart data={modifiedData} type="line" xAxis={{dataKey: "name"}} yAxis={{dataKey: "uv", type: "category"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
