@@ -24,6 +24,15 @@ const GOOGLE_MERCATOR = {
 };
 
 const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
+
+/**
+ * `ZOOM_TO_EXTENT_HOOK` hook takes 2 arguments:
+ * - `extent`: array of the extent [minx, miny, maxx, maxy]
+ * - `options` object, with the following attributes:
+ *   - `crs`: crs of the extent
+ *   - `maxZoom`: max zoom for the zoom to functionality.
+ *   - `padding`: object with attributes, `top`, `right`, `bottom` and `top` with the size, in pixels of the padding for the visible part of the map. When supported by the mapping lib, it will zoom to visible area
+ */
 const ZOOM_TO_EXTENT_HOOK = 'ZOOM_TO_EXTENT_HOOK';
 const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
 const RESOLUTION_HOOK = 'RESOLUTION_HOOK';

@@ -81,7 +81,7 @@ describe('map epics', () => {
             expect(a0.type).toBe(CHANGE_MAP_VIEW);
             expect(a0.center.x).toBe(11);
             expect(a0.center.y).toBe(45);
-            expect(a0.zoom).toBe(21);
+            expect(a0.zoom).toBeGreaterThan(4);
             expect(a0.bbox).toExist();
             expect(a0.bbox.bounds).toExist();
             expect(a0.bbox.bounds.minx).toBe(10);
@@ -103,7 +103,7 @@ describe('map epics', () => {
             expect(a0.type).toBe(CHANGE_MAP_VIEW);
             expect(a0.center.x).toBe(11);
             expect(a0.center.y).toBe(45);
-            expect(a0.zoom).toBe(21);
+            expect(a0.zoom).toBeGreaterThan(4);
             expect(a0.bbox).toExist();
             expect(a0.bbox.bounds).toExist();
             expect(a0.bbox.bounds.minx).toBe(10);
