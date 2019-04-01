@@ -156,15 +156,15 @@ const getStartEnd = (startTime, endTime) => {
  * @param {object} date
  * @return {number} the offset in milliseconds
 */
-const getTimezoneOffset = (date) => {
+const getTimezoneOffsetMillis = (date) => {
     return (date).getTimezoneOffset() * 60000;
 };
 
 /**
- * @param {object} date to get only time parts (without date parts)
- * @return {string} used to compose a UTC date
+ * @param {Date|string} date to parse
+ * @return {string} time part of the TimeStamp
 */
-const getUTCTimeParts = (date) => {
+const getUTCTimePart = (date) => {
     let dateToParse = date;
     if (!isDate(date) & isString(date)) {
         dateToParse = new Date(date);
@@ -179,10 +179,10 @@ const getUTCTimeParts = (date) => {
 };
 
 /**
- * @param {object} date to get only date parts (without time parts)
- * @return {string} used to compose a UTC date
+ * @param {Date|string} date to parse
+ * @return {string} date part of the TimeStamp
 */
-const getUTCDateParts = (date) => {
+const getUTCDatePart = (date) => {
     let dateToParse = date;
     if (!isDate(date) & isString(date)) {
         dateToParse = new Date(date);
@@ -196,7 +196,7 @@ const getUTCDateParts = (date) => {
 
 /**
  * generate the format for parsing a Date
- * @param {stirng} locale to get date format
+ * @param {string} locale to get date format
  * @param {string} type of the dateTime attribute ("date", "time", "date-time")
  * @return {string} format to be returned
 */
@@ -214,9 +214,9 @@ const getDateTimeFormat = (locale, type) => {
 };
 module.exports = {
     getDateTimeFormat,
-    getTimezoneOffset,
-    getUTCTimeParts,
-    getUTCDateParts,
+    getTimezoneOffsetMillis,
+    getUTCTimePart,
+    getUTCDatePart,
     timeIntervalNumber,
     timeIntervalToSequence,
     timeIntervalToIntervalSequence,

@@ -17,7 +17,7 @@ const {DateTimePicker} = require('react-widgets');
 const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
 momentLocalizer(moment);
-const enhanceCustom = utcDateWrapper({dateField: "value", dateType: "type", setDateField: "onChange"});
+const enhanceCustom = utcDateWrapper({dateProp: "value", dateTypeProp: "type", setDateProp: "onChange"});
 const CMP = enhanceCustom((props) => <DateTimePicker id="CMP" {...props}/>);
 
 describe('utcDateWrapper enhancher', () => {

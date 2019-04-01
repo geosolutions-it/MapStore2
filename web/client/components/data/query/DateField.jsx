@@ -17,12 +17,12 @@ const {Row, Col} = require('react-bootstrap');
 /**
  * Date time picker enhanced with UTC and timezone offset
  * it takes the localized date in input and it translates to UTC
- * for the DatePicker tool
+ * for the DateTimePicker tool
 */
 const UTCDateTimePicker = utcDateWrapper({
-    dateField: "value",
-    dateType: "type",
-    setDateField: "onChange"
+    dateProp: "value",
+    dateTypeProp: "type",
+    setDateProp: "onChange"
 })(DateTimePicker);
 
 require('react-widgets/lib/less/react-widgets.less');

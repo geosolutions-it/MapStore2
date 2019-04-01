@@ -8,8 +8,8 @@
 const expect = require('expect');
 const {
     getDateTimeFormat,
-    getUTCTimeParts,
-    getUTCDateParts,
+    getUTCTimePart,
+    getUTCDatePart,
     roundResolution
 } = require('../TimeUtils');
 
@@ -31,17 +31,17 @@ describe('TimeUtils', () => {
             expect(roundResolution(testString)).toBe(expected);
         });
     });
-    it('test getUTCDateParts', () => {
-        expect(getUTCDateParts(new Date("2018-01-09T23:00:00Z"))).toBe("2018-01-09");
-        expect(getUTCDateParts(new Date("2018-01-09T00:00:00Z"))).toBe("2018-01-09");
-        expect(getUTCDateParts(new Date("2020-04-15T06:30:00Z"))).toBe("2020-04-15");
-        expect(getUTCDateParts(new Date("2020-10-09T01:00:00Z"))).toBe("2020-10-09");
-        expect(getUTCDateParts(new Date("2021-01-09T00:00:00Z"))).toBe("2021-01-09");
+    it('test getUTCDatePart', () => {
+        expect(getUTCDatePart(new Date("2018-01-09T23:00:00Z"))).toBe("2018-01-09");
+        expect(getUTCDatePart(new Date("2018-01-09T00:00:00Z"))).toBe("2018-01-09");
+        expect(getUTCDatePart(new Date("2020-04-15T06:30:00Z"))).toBe("2020-04-15");
+        expect(getUTCDatePart(new Date("2020-10-09T01:00:00Z"))).toBe("2020-10-09");
+        expect(getUTCDatePart(new Date("2021-01-09T00:00:00Z"))).toBe("2021-01-09");
     });
-    it('test getUTCTimeParts', () => {
-        expect(getUTCTimeParts(new Date("2019-03-15T08:30:00Z"))).toBe("08:30:00");
-        expect(getUTCTimeParts(new Date("2018-01-09T01:00:00Z"))).toBe("01:00:00");
-        expect(getUTCTimeParts(new Date("2018-01-09T00:03:00Z"))).toBe("00:03:00");
+    it('test getUTCTimePart', () => {
+        expect(getUTCTimePart(new Date("2019-03-15T08:30:00Z"))).toBe("08:30:00");
+        expect(getUTCTimePart(new Date("2018-01-09T01:00:00Z"))).toBe("01:00:00");
+        expect(getUTCTimePart(new Date("2018-01-09T00:03:00Z"))).toBe("00:03:00");
     });
     it('test getDateTimeFormat', () => {
         // date

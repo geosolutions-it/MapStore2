@@ -81,7 +81,9 @@ describe('LocaleUtils', () => {
         expect(LocaleUtils.getLocalizedProp('fr-FR', localizedObjectProp)).toBe('title');
     });
     it('getDateFormat', () => {
+        // test default dateFormat value
         expect(LocaleUtils.getDateFormat()).toBe("YYYY/MM/DD");
+        // test dateFormat for the locales actually defined
         expect(LocaleUtils.getDateFormat("en-US")).toBe("MM/DD/YYYY");
         expect(LocaleUtils.getDateFormat("it-IT")).toBe("DD/MM/YYYY");
         expect(LocaleUtils.getDateFormat("nl-NL")).toBe("DD/MM/YYYY");
@@ -89,7 +91,7 @@ describe('LocaleUtils', () => {
         expect(LocaleUtils.getDateFormat("hr-HR")).toBe("DD/MM/YYYY");
         expect(LocaleUtils.getDateFormat("pt-PT")).toBe("DD/MM/YYYY");
     });
-    it('DATE_FORMATS', () => {
+    it('test the defaults for DATE_FORMATS', () => {
         expect(Object.keys(LocaleUtils.DATE_FORMATS).length).toBe(7);
         expect(Object.keys(LocaleUtils.DATE_FORMATS)).toEqual(["default", "en-US", "it-IT", "nl-NL", "zh-ZH", "hr-HR", "pt-PT"]);
     });

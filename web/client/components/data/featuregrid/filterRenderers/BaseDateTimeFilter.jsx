@@ -17,9 +17,9 @@ const {getDateTimeFormat} = require('../../../../utils/TimeUtils');
 const AttributeFilter = require('./AttributeFilter');
 const utcDateWrapper = require('../../../misc/enhancers/utcDateWrapper');
 const UTCDateTimePicker = utcDateWrapper({
-    dateField: "value",
-    dateType: "type",
-    setDateField: "onChange"
+    dateProp: "value",
+    dateTypeProp: "type",
+    setDateProp: "onChange"
 })(DateTimePicker);
 
 class DateFilter extends AttributeFilter {
