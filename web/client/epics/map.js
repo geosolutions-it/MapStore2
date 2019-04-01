@@ -168,7 +168,6 @@ const zoomToExtentEpic = (action$, {getState = () => {} }) =>
         const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         const padding = mapPaddingSelector(getState());
         if (hook) {
-            // TODO: manage crs
             const { crs, maxZoom } = action;
             hook(extent, {
                 crs,
