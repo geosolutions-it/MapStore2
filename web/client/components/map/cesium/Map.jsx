@@ -326,7 +326,7 @@ class CesiumMap extends React.Component {
         this.pauserStream$ = pauserStream$;
     };
     registerHooks = () => {
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { crs }) => {
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
             // TODO: manage padding and maxZoom
             const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
             if (this.map.camera.flyTo) {
@@ -337,7 +337,15 @@ class CesiumMap extends React.Component {
                     bounds[3] // north
                 );
                 this.map.camera.flyTo({
-                    destination: rectangle
+                    destination: rectangle,
+                    duration,
+                    /*
+                     * updateMapInfoState is triggered by camera.moveEnd
+                     * too late (seconds later).
+                     * This handler on complete cause duplicated call of updateMapInfoState but
+                     * guarantees the testability of the callback
+                     */
+                    complete: this.updateMapInfoState
                 });
             }
         });

@@ -121,7 +121,7 @@ const toBoundsArray = extent => {
  */
 const legacyZoomToExtent = (action, mapState) => {
     let zoom = 0;
-    let extent = [];
+    let {extent = []} = action;
     let bounds = CoordinatesUtils.reprojectBbox(extent, action.crs, mapState.bbox && mapState.bbox.crs || "EPSG:4326");
     if (bounds) {
         // center by the max. extent defined in the map's config

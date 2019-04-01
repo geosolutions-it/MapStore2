@@ -7,9 +7,8 @@
  */
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
-    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, ZOOM_TO_EXTENT, PAN_TO,
+    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
     CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP} = require('../actions/map');
-const {isArray} = require('lodash');
 
 
 var assign = require('object-assign');
