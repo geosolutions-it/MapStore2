@@ -8,26 +8,39 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const { createSink, setObservableConfig} = require('recompose');
+const { createSink, setObservableConfig } = require('recompose');
 const expect = require('expect');
 const wfsTable = require('../index');
+const MockAdapter = require("axios-mock-adapter");
+const axios = require("../../../../../libs/ajax");
+
 
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);
+let mockAxios;
 
+const DATA = {
+    DESCRIBE: require("json-loader!../../../../../test-resources/wfs/describe-pois.json"),
+    WFS: require("json-loader!../../../../../test-resources/wfs/museam.json")
+};
 
 describe('wfsTable enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/DESCRIBE.*/).reply(200, DATA.DESCRIBE);
+        mockAxios.onPost(/WFS.*/).reply(200, DATA.WFS);
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        mockAxios.restore();
         setTimeout(done);
     });
     it('retrieve WFS describeFeatureType and features', (done) => {
-        const Sink = wfsTable(createSink( props => {
+
+        const Sink = wfsTable(createSink(props => {
             expect(props).toExist();
             if (props.describeFeatureType) {
                 expect(props.describeFeatureType.featureTypes).toExist();
@@ -39,10 +52,10 @@ describe('wfsTable enhancer', () => {
         }));
         ReactDOM.render(<Sink layer={{
             name: "pois",
-            describeFeatureTypeURL: "base/web/client/test-resources/wfs/describe-pois.json",
+            describeFeatureTypeURL: "DESCRIBE",
             search: {
                 type: "wfs",
-                url: "base/web/client/test-resources/wfs/museam.json"
+                url: "WFS"
             }
         }} />, document.getElementById("container"));
     });
@@ -56,7 +69,7 @@ describe('wfsTable enhancer', () => {
             if (props.pages && props.features.length > 0 && props.pages[0] === 0 && !triggered) {
                 expect(props.pages[1]).toBe(20);
                 triggered = true;
-                props.pageEvents.moreFeatures({startPage: 2, endPage: 3});
+                props.pageEvents.moreFeatures({ startPage: 2, endPage: 3 });
             } else if (props.pages && props.features.length > 0 && props.pages[0] === 40) {
                 expect(props.pages[1]).toBe(60);
                 done();
@@ -64,10 +77,10 @@ describe('wfsTable enhancer', () => {
         }));
         ReactDOM.render(<Sink virtualScroll layer={{
             name: "pois",
-            describeFeatureTypeURL: "base/web/client/test-resources/wfs/describe-pois.json",
+            describeFeatureTypeURL: "DESCRIBE",
             search: {
                 type: "wfs",
-                url: "base/web/client/test-resources/wfs/museam.json"
+                url: "WFS"
             }
         }} />, document.getElementById("container"));
     });
