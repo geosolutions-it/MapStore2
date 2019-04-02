@@ -67,7 +67,7 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
                 zIndex={zIndex}>
                 <BorderLayout
                     header={
-                        !hideHeader && <PanelHeader
+                        !hideHeader && open && <PanelHeader
                             position={position}
                             onClose={onClose}
                             bsStyle={bsStyle}
@@ -78,8 +78,8 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
                             additionalRows={header}
                             onFullscreen={onFullscreen}/>
                     }
-                    footer={footer}>
-                    {children}
+                    footer={open && footer}>
+                    {open && children}
                 </BorderLayout>
             </Dock>
         </div>

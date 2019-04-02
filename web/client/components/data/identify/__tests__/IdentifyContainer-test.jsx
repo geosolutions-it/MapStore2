@@ -48,7 +48,7 @@ describe("test IdentifyContainer", () => {
     it('test component component uses custom viewer', () => {
         const Viewer = ({responses}) => <div id="test-viewer-gfi">{responses.length}</div>;
         ReactDOM.render(
-            <IdentifyContainer enabled responses={[{}, {}]} viewer={Viewer} />,
+            <IdentifyContainer enabled requests={[{}, {}]} responses={[{}, {}]} viewer={Viewer} />,
             document.getElementById("container")
         );
         const viewer = document.getElementById("test-viewer-gfi");
@@ -58,6 +58,7 @@ describe("test IdentifyContainer", () => {
     it('test component reverse geocode modal', () => {
         ReactDOM.render(
             <IdentifyContainer
+                requests={[{}]} responses={[{}]}
                 enableRevGeocode
                 point={{latlng: {lat: 40, lng: 10}}}
                 enabled
