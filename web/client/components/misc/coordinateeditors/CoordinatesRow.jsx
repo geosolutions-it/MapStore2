@@ -42,7 +42,7 @@ class CoordinatesRow extends React.Component {
     render() {
         const {idx} = this.props;
         const rowStyle = {marginLeft: -5, marginRight: -5};
-        // drag button must be a button in order to shwo the disabled state
+        // drag button must be a button in order to show the disabled state
         const dragButton = (
             <div><Button
                 disabled={!this.props.isDraggableEnabled}
