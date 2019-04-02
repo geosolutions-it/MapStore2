@@ -568,7 +568,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(editor).toExist();
 
         let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        let firstDelButton = buttons[3];
+        let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 8, lon: 8 });
@@ -598,7 +598,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(editor).toExist();
 
         let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        let firstDelButton = buttons[3];
+        let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
         expect(firstDelButton.disabled).toBe(true);
@@ -636,7 +636,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(editor).toExist();
 
         let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        let firstDelButton = buttons[3];
+        let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalled();
@@ -674,11 +674,11 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(editor).toExist();
 
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        expect(buttons.length).toBe(7);
-        expect(buttons[3].disabled).toBe(false);
-        expect(buttons[4].disabled).toBe(true);
-        expect(buttons[5].disabled).toBe(true);
-        expect(buttons[6].disabled).toBe(false);
+        expect(buttons.length).toBe(11);
+        expect(buttons[4].disabled).toBe(false);
+        expect(buttons[6].disabled).toBe(true);
+        expect(buttons[8].disabled).toBe(true);
+        expect(buttons[10].disabled).toBe(false);
     });
     it('CoordinatesEditor as Polygon, 5 rows, only invalid rows are not disabled', () => {
         const components = [{
@@ -715,12 +715,12 @@ describe("test the CoordinatesEditor Panel", () => {
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(5);
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        expect(buttons.length).toBe(8);
-        expect(buttons[3].disabled).toBe(false);
-        expect(buttons[4].disabled).toBe(true);
-        expect(buttons[5].disabled).toBe(true);
+        expect(buttons.length).toBe(13);
+        expect(buttons[4].disabled).toBe(false);
         expect(buttons[6].disabled).toBe(true);
-        expect(buttons[7].disabled).toBe(false);
+        expect(buttons[8].disabled).toBe(true);
+        expect(buttons[10].disabled).toBe(true);
+        expect(buttons[12].disabled).toBe(false);
     });
 
 });
