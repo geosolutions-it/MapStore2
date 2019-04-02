@@ -56,6 +56,22 @@ describe("test DockPanel", () => {
         const body = document.getElementsByClassName('my-custom-body-child')[0];
         expect(body).toExist();
     });
+    it('test header, footer and children with closed panel (render nothing)', () => {
+        // This prevents issues like "Pressing tab cause white space on right #3664"
+        ReactDOM.render(
+            <DockPanel
+                header={<div className="my-custom-head-row" />}
+                footer={<div className="my-custom-footer" />}>
+                <div className="my-custom-body-child" />
+            </DockPanel>, document.getElementById("container"));
+
+        const header = document.getElementsByClassName('my-custom-head-row')[0];
+        expect(header).toNotExist();
+        const footer = document.getElementsByClassName('my-custom-footer')[0];
+        expect(footer).toNotExist();
+        const body = document.getElementsByClassName('my-custom-body-child')[0];
+        expect(body).toNotExist();
+    });
 
     it('test fullscreen', () => {
         ReactDOM.render(<DockPanel open showFullscreen onClose={() => {}}/>, document.getElementById("container"));
