@@ -47,7 +47,7 @@ class CoordinatesRow extends React.Component {
             <div><Button
                 disabled={!this.props.isDraggableEnabled}
                 className="square-button-md no-border btn btn-default"
-                style={{display: "flex"/*workaround for firefox*/}}>
+                style={{display: "flex", cursor: this.props.isDraggableEnabled && 'grab'}}>
                 <Glyphicon
                     glyph="menu-hamburger"
                     style={{pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto"}}
