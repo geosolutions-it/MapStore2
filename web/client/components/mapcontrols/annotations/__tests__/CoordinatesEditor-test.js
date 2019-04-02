@@ -52,6 +52,8 @@ describe("test the CoordinatesEditor Panel", () => {
             />, document.getElementById("container")
         );
         expect(editor).toExist();
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        expect(hamburgerMenus.length).toBe(0);
 
         const spans = TestUtils.scryRenderedDOMComponentsWithTag(editor, "span");
         expect(spans).toExist();
@@ -92,7 +94,8 @@ describe("test the CoordinatesEditor Panel", () => {
             />, document.getElementById("container")
         );
         expect(editor).toExist();
-
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        expect(hamburgerMenus.length).toBe(3);
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const input = inputs[0];
@@ -331,6 +334,8 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        expect(hamburgerMenus.length).toBe(0);
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputRadius = inputs[0];
@@ -491,6 +496,9 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputText = inputs[0];
         inputText.value = "";
         TestUtils.Simulate.change(inputText);
+
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        expect(hamburgerMenus.length).toBe(0);
 
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
         expect(spyOnChange).toNotHaveBeenCalled();
@@ -704,6 +712,8 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        expect(hamburgerMenus.length).toBe(5);
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
         expect(buttons.length).toBe(8);
         expect(buttons[3].disabled).toBe(false);
