@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const StatusIcon = require('./StatusIcon');
 const {Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
-const {getTitleAndtooltip} = require('../../../utils/TOCUtils');
+const {getTitleAndTooltip} = require('../../../utils/TOCUtils');
 
 class GroupTitle extends React.Component {
     static propTypes = {
@@ -40,7 +40,7 @@ class GroupTitle extends React.Component {
 
     render() {
         let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
-        const {title: groupTitle, tooltipText} = getTitleAndtooltip(this.props);
+        const {title: groupTitle, tooltipText} = getTitleAndTooltip(this.props);
 
         return this.props.tooltip && tooltipText ? (
             <OverlayTrigger placement={this.props.node.tooltipPlacement || "top"} overlay={(<Tooltip id={"tooltip-layer-group"}>{tooltipText}</Tooltip>)}>
