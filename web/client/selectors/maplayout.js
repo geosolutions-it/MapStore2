@@ -6,6 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 const {head} = require('lodash');
+const {mapSelector} = require('./map');
+const {parseLayoutValue} = require('../utils/MapUtils');
 
 /**
  * selects map layout state
@@ -90,11 +92,29 @@ const bottomPanelOpenSelector = state => {
     return checkConditionsSelector(state, [{ key: 'bottom', value: 30, type: 'not' }]);
 };
 
+/**
+ * Extract the map layout in pixels.
+ * @param {object} state the state
+ * @returns {object} object with `left,bottom,right,top` properties, in pixels, containing the map layout
+ */
+
+const mapPaddingSelector = state => {
+    const map = mapSelector(state);
+    const boundingMapRect = boundingMapRectSelector(state);
+    return boundingMapRect && map && map.size && {
+        left: parseLayoutValue(boundingMapRect.left, map.size.width),
+        bottom: parseLayoutValue(boundingMapRect.bottom, map.size.height),
+        right: parseLayoutValue(boundingMapRect.right, map.size.width),
+        top: parseLayoutValue(boundingMapRect.top, map.size.height)
+    };
+};
+
 module.exports = {
     mapLayoutSelector,
     mapLayoutValuesSelector,
     checkConditionsSelector,
     rightPanelOpenSelector,
     bottomPanelOpenSelector,
-    boundingMapRectSelector
+    boundingMapRectSelector,
+    mapPaddingSelector
 };

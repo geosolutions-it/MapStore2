@@ -388,6 +388,26 @@ class LeafletMap extends React.Component {
             let pos = CoordinatesUtils.reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
         });
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+            const paddingTopLeft = padding && L.point(padding.left || 0, padding.top || 0);
+            const paddingBottomRight = padding && L.point(padding.right || 0, padding.bottom || 0);
+            const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
+            // bbox is minx, miny, maxx, maxy'southwest_lng,southwest_lat,northeast_lng,northeast_lat'
+            this.map.fitBounds([
+                    // sw
+                    [bounds[1], bounds[0]],
+                    // ne
+                    [bounds[3], bounds[2]]
+                ],
+                 {
+                    paddingTopLeft,
+                    paddingBottomRight,
+                    maxZoom,
+                    duration,
+                    animate: duration === 0 ? false : undefined
+                }
+            );
+        });
     };
 
     addLayerObservable = (event, stopped) => {
