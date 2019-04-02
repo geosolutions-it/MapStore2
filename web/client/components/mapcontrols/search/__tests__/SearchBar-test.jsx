@@ -240,24 +240,24 @@ describe("test the SearchBar", () => {
         expect(reset).toExist();
         expect(search.length).toBe(1);
     });
-    it('test zoomToPoint and reset, with decimal, with reset', () => {
+    it('test zoomToPoint, with search, with decimal, with reset', () => {
         const tb = ReactDOM.render(<SearchBar format="decimal" coordinate={{"lat": 2, "lon": 2}} activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
         expect(reset.length).toBe(1);
-        expect(search.length).toBe(1);
+        expect(search.length).toBe(2);
         expect(cog.length).toBe(2);
     });
 
-    it('test zoomToPoint and reset, with aeronautical', () => {
+    it('test zoomToPoint, with search, with aeronautical, with reset', () => {
         const tb = ReactDOM.render(<SearchBar format="aeronautical" activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
         let inputs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input");
         expect(reset.length).toBe(0);
-        expect(search.length).toBe(1);
+        expect(search.length).toBe(2);
         expect(cog.length).toBe(2);
         expect(inputs.length).toBe(6);
     });
