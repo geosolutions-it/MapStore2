@@ -166,7 +166,6 @@ class MeasureComponent extends React.Component {
     };
 
     renderMeasurements = () => {
-        let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
             <Grid fluid style={{maxHeight: 400}}>
                     {this.props.lineMeasureEnabled && <Row >
@@ -175,7 +174,7 @@ class MeasureComponent extends React.Component {
                             <span>{this.props.lengthLabel}: </span>
                             <span id="measure-len-res" className="measure-value">
                                 <h3><strong>
-                                    <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}
+                                    {round(this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len), 2)} {this.props.uom.length.label}
                                 </strong></h3>
                             </span>
                         </Col>
@@ -198,7 +197,7 @@ class MeasureComponent extends React.Component {
                             <span>{this.props.areaLabel}: </span>
                             <span id="measure-area-res" className="measure-value">
                                 <h3><strong>
-                                    <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}
+                                    {round(this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area), 2)} {this.props.uom.area.label}
                                 </strong></h3>
                             </span>
                         </Col>
