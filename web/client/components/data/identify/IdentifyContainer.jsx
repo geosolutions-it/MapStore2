@@ -27,7 +27,7 @@ const Portal = require('../../misc/Portal');
  * @prop {function} getNavigationButtons must return an array of navigation buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  */
 
-const CoordinatesEditor = require('../../../plugins/identify/CoordinatesEditor');
+const IdentifyEditor = require('../../../plugins/identify/IdentifyEditor');
 
 module.exports = props => {
     const {
@@ -99,9 +99,8 @@ module.exports = props => {
                 showFullscreen={showFullscreen}
                 zIndex={zIndex}
                 header={[enabledCoordEditorButton && showCoordinateEditor &&
-                    <CoordinatesEditor
+                    <IdentifyEditor
                         key="coordinate-editor"
-                        isDraggable={false}
                         removeVisible={false}
                         formatCoord={formatCoord}
                         coordinate={point.latlng ? {lat: point.latlng.lat, lon: lngCorrected } : {lat: "", lon: ""}}

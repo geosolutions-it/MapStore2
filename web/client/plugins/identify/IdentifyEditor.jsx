@@ -9,8 +9,9 @@
 const React = require('react');
 const CoordinatesRow = require('../../components/misc/coordinateeditors/CoordinatesRow');
 
-const CoordinatesEditor = (props) => (
+const IdentifyEditor = (props) => (
     <CoordinatesRow
+        key="IdentifyEditor"
         format={props.formatCoord || "decimal"}
         aeronauticalOptions={{
             seconds: {
@@ -29,9 +30,10 @@ const CoordinatesEditor = (props) => (
         component={props.coordinate || {}}
         customClassName="GFI-coord-editor"
         isDraggable={false}
+        showDraggable={false}
         formatVisible
         showLabels
         removeVisible={false}
     />);
 
-module.exports = CoordinatesEditor;
+module.exports = IdentifyEditor;
