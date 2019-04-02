@@ -7,6 +7,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+ /**
+  * Buttons for Identify Tool Toolbar
+  */
 module.exports = ({
     showHighlightFeatureButton,
     currentFeature,
@@ -15,14 +18,6 @@ module.exports = ({
     zoomToFeature = () => {},
     ...props
 }) => [
-    {
-        glyph: 'arrow-left',
-        tooltipId: 'wizard.prev',
-        visible: !props.viewerOptions.header && props.validResponses.length > 1 && props.index > 0,
-        onClick: () => {
-            props.onPrevious();
-        }
-    },
     {
         glyph: 'info-sign',
         tooltipId: 'identifyRevGeocodeSubmitText',
@@ -55,12 +50,5 @@ module.exports = ({
             && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
         tooltipId: "identifyZoomToFeature",
         onClick: zoomToFeature
-    }, {
-        glyph: 'arrow-right',
-        tooltipId: 'wizard.next',
-        visible: !props.viewerOptions.header && props.validResponses.length > 1 && props.index < props.validResponses.length - 1,
-        onClick: () => {
-            props.onNext();
-        }
     }
 ].filter(btn => btn && btn.visible);

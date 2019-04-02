@@ -31,7 +31,8 @@ const loadingState = require('../components/misc/enhancers/loadingState');
 const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
 const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
-const defaultIdentifyButtons = require('./identify/defaultIdentifyButtons');
+const getToolButtons = require('./identify/toolButtons');
+const getNavigationButtons = require('./identify/navigationButtons');
 const Message = require('./locale/Message');
 
 require('./identify/identify.css');
@@ -123,7 +124,8 @@ const identifyDefaultProps = defaultProps({
     showLayerTitle: true,
     position: 'right',
     size: 660,
-    getButtons: defaultIdentifyButtons,
+    getToolButtons,
+    getNavigationButtons,
     showFullscreen: false,
     validResponses: [],
     validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors
@@ -131,12 +133,12 @@ const identifyDefaultProps = defaultProps({
 });
 
 /**
- * Identify plugin. This plugin allows to perform getfeature info.
+ * Identify plugin. This plugin allows to perform get feature info.
  * It can be configured to have a mobile or a desktop flavor.
  * It's enabled by default. The bubbling of an on_click_map action to GFI is stopped
  * if Annotations or FeatureGrid plugins are editing, draw or measurement supports are
  * active, the query panel is active or the identify plugin is disabled.
- * To restore old behaviour, in mapInfo state, set disabledAlwaysOn to true and
+ * To restore old behavior, in mapInfo state, set disabledAlwaysOn to true and
  * manage the plugin using toggleControl action with 'info' as control name.
  * It's possible also possible disable the plugin by changeMapInfoState or toggleMapInfoState actions
  *
