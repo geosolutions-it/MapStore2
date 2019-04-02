@@ -12,6 +12,9 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ConfigUtils = require('../../../utils/ConfigUtils');
 const ClickUtils = require('../../../utils/cesium/ClickUtils');
+const mapUtils = require('../../../utils/MapUtils');
+const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+
 const assign = require('object-assign');
 const {throttle} = require('lodash');
 
@@ -31,6 +34,7 @@ class CesiumMap extends React.Component {
         standardHeight: PropTypes.number,
         mousePointer: PropTypes.string,
         zoomToHeight: PropTypes.number,
+        registerHooks: PropTypes.bool,
         viewerOptions: PropTypes.object
     };
 
@@ -44,6 +48,7 @@ class CesiumMap extends React.Component {
         standardWidth: 512,
         standardHeight: 512,
         zoomToHeight: 80000000,
+        registerHooks: true,
         viewerOptions: {
             orientation: {
                 heading: 0,
@@ -103,6 +108,9 @@ class CesiumMap extends React.Component {
             if (this.cesiumNavigation) {
                 this.cesiumNavigation.navigationInitialization(this.props.id, map);
             }
+        }
+        if (this.props.registerHooks) {
+            this.registerHooks();
         }
     }
 
@@ -317,6 +325,31 @@ class CesiumMap extends React.Component {
         this.clickStream$ = clickStream$;
         this.pauserStream$ = pauserStream$;
     };
+    registerHooks = () => {
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
+            // TODO: manage padding and maxZoom
+            const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
+            if (this.map.camera.flyTo) {
+                const rectangle = Cesium.Rectangle.fromDegrees(
+                    bounds[0], // west,
+                    bounds[1], // south,
+                    bounds[2], // east,
+                    bounds[3] // north
+                );
+                this.map.camera.flyTo({
+                    destination: rectangle,
+                    duration,
+                    /*
+                     * updateMapInfoState is triggered by camera.moveEnd
+                     * too late (seconds later).
+                     * This handler on complete cause duplicated call of updateMapInfoState but
+                     * guarantees the testability of the callback
+                     */
+                    complete: this.updateMapInfoState
+                });
+            }
+        });
+    }
     updateMapInfoState = () => {
         const center = this.getCenter();
         const zoom = this.getZoomFromHeight(center.height);

@@ -412,6 +412,14 @@ class OpenlayersMap extends React.Component {
         mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+            const bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
+            this.map.getView().fit(bounds, {
+               padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
+                maxZoom,
+                duration
+            });
+        });
     };
 }
 

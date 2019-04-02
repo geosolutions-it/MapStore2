@@ -632,6 +632,69 @@ describe('OpenlayersMap', () => {
         expect(getPixelFromCoordinates).toExist();
         expect(getCoordinatesFromPixel).toExist();
     });
+    it('test ZOOM_TO_EXTENT_HOOK', (done) => {
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        // fix size
+        document.querySelector('#map').setAttribute('style', "width: 200px; height: 200px");
+        const spy = expect.spyOn(testHandlers, 'onMapViewChanges');
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            onMapViewChanges={testHandlers.onMapViewChanges} />,
+            document.getElementById("map"));
+        const olMap = map.map;
+        let bbox1;
+        olMap.on('moveend', () => {
+            expect(spy.calls[1]).toExist();
+
+            expect(spy.calls[1].arguments[0].x).toBeGreaterThan(9);
+            expect(spy.calls[1].arguments[0].y).toBeGreaterThan(9);
+            expect(spy.calls[1].arguments[0].x).toBeLessThan(11);
+            expect(spy.calls[1].arguments[0].y).toBeLessThan(11);
+            if (spy.calls[2]) {
+                // center should be almost the same
+                expect(spy.calls[2].arguments[0].x).toBeGreaterThan(9);
+                expect(spy.calls[2].arguments[0].y).toBeGreaterThan(9);
+                expect(spy.calls[2].arguments[0].x).toBeLessThan(11);
+                expect(spy.calls[2].arguments[0].y).toBeLessThan(11);
+                let size = olMap.getSize();
+                let bbox2 = olMap.getView().calculateExtent(size);
+                // bbox2 should have a bigger extent that bbox1
+                expect(bbox1[2] - bbox1[0]).toBeLessThan(bbox2[2] - bbox2[0]);
+                expect(bbox1[3] - bbox1[1]).toBeLessThan(bbox2[3] - bbox2[1]);
+
+                done();
+            } else {
+                let size = olMap.getSize();
+                bbox1 = olMap.getView().calculateExtent(size);
+            }
+
+        });
+        expect(map).toExist();
+        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toExist();
+        hook([0, 0, 20, 20], { crs: "EPSG:4326", duration: 0 });
+        olMap.dispatchEvent('moveend');
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0]).toExist(); // first is called by initial render
+
+        hook([0, 0, 20, 20], {
+            crs: "EPSG:4326", padding: {
+                left: 50,
+                top: 50,
+                right: 50,
+                bottom: 50
+            }
+        });
+        olMap.dispatchEvent('moveend');
+    });
 
     it('create attribution with container', () => {
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
