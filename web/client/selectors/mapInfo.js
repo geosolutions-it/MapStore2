@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { get, isArray } = require('lodash');
+const { get, omit, isArray } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
 
@@ -120,32 +120,35 @@ const currentFeatureCrsSelector = state => {
 };
 
 /**
- * Returns the correct style based on the geometry type, to use in the highlight
+ * Returns the a function that returns the correct style based on the geometry type, to use in the highlight
  * @param {feature} f the feature in json format
  */
-const getStyleForFeature = (f = {}) =>
+const getStyleForFeature = (style) => (f = {}) =>
     f.style
         || (f.geometry && (f.geometry.type === "Point" || f.geometry.type === "MultiPoint"))
             // point style circle requires radius (it's strange circle should be a default)
-            ? {
-                    color: '#3388ff',
-                    weight: 4,
-                    radius: 4,
-                    dashArray: '',
-                    fillColor: '#3388ff',
-                    fillOpacity: 0.2
-                }
-            // no radius means normal polygon, line or other
-            : {
-                    color: '#3388ff',
-                    weight: 4,
-                    dashArray: '',
-                    fillColor: '#3388ff',
-                    fillOpacity: 0.2
-                };
-const applyMapInfoStyle = f => ({
+            ? style
+            // no radius means normal polygon, line or other. TODO: fix VectorStyle to omit radius automatically
+            : omit(style, 'radius');
+/**
+ * Create a function that add the style property to the feature.
+ */
+const applyMapInfoStyle = style => f => ({
     ...f,
-    style: getStyleForFeature(f)
+    style: getStyleForFeature(style)(f)
+});
+/**
+ * gets the configured state for highlight mapInfo features.
+ * @param {object} state the application state
+ * @returns {object} style object
+ */
+const highlightStyleSelector = state => get(state, 'mapInfo.highlightStyle', {
+    color: '#3388ff',
+    weight: 4,
+    radius: 4,
+    dashArray: '',
+    fillColor: '#3388ff',
+    fillOpacity: 0.2
 });
 
 const clickedPointWithFeaturesSelector = createSelector(
@@ -154,14 +157,15 @@ const clickedPointWithFeaturesSelector = createSelector(
     currentFeatureSelector,
     currentFeatureCrsSelector,
     showMarkerSelector,
-    (clickPoint, highlight, features, featuresCrs, showMarker) => showMarker && clickPoint
+    highlightStyleSelector,
+    (clickPoint, highlight, features, featuresCrs, showMarker, style) => showMarker && clickPoint
         ? highlight
             ? {
                 ...clickPoint,
                 featuresCrs,
                 features: features && isArray(features)
                     && features
-                        .map(applyMapInfoStyle)
+                        .map(applyMapInfoStyle(style))
             }
             : clickPoint
         : undefined
@@ -177,6 +181,7 @@ module.exports = {
     currentFeatureSelector,
     currentFeatureCrsSelector,
     clickedPointWithFeaturesSelector,
+    highlightStyleSelector,
     identifyOptionsSelector,
     clickPointSelector,
     clickLayerSelector,

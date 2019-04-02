@@ -23,7 +23,8 @@ const Portal = require('../../misc/Portal');
  * @prop {dock} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
  * @prop {function} viewer component that will be used as viewer of Identify
  * @prop {object} viewerOptions options to use with the viewer, eg { header: MyHeader, container: MyContainer }
- * @prop {function} getButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
+ * @prop {function} getToolButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
+ * @prop {function} getNavigationButtons must return an array of navigation buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  */
 
 const CoordinatesEditor = require('../../../plugins/identify/CoordinatesEditor');
@@ -43,7 +44,8 @@ module.exports = props => {
         fluid,
         validResponses = [],
         viewer = () => null,
-        getButtons = () => [],
+        getToolButtons = () => [],
+        getNavigationButtons = () => [],
         showFullscreen,
         reverseGeocodeData = {},
         point,
@@ -76,10 +78,10 @@ module.exports = props => {
         lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
     }
     const Viewer = viewer;
-    const buttons = getButtons({...props, lngCorrected, validResponses, latlng});
+    // TODO: put all the header (Toolbar, navigation, coordinate editor) outside the container
+    const toolButtons = getToolButtons({...props, lngCorrected, validResponses, latlng});
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
-    const CoordEditor = enabledCoordEditorButton && showCoordinateEditor ? CoordinatesEditor : null;
     return (
         <div>
             <DockablePanel
@@ -96,8 +98,9 @@ module.exports = props => {
                 style={dockStyle}
                 showFullscreen={showFullscreen}
                 zIndex={zIndex}
-                header={[ CoordEditor &&
-                    <CoordEditor
+                header={[enabledCoordEditorButton && showCoordinateEditor &&
+                    <CoordinatesEditor
+                        key="coordinate-editor"
                         isDraggable={false}
                         removeVisible={false}
                         formatCoord={formatCoord}
@@ -106,14 +109,22 @@ module.exports = props => {
                         onChangeFormat={onChangeFormat}
                     /> || null,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
-                    buttons.length > 0 ? (
-                    <Row className="text-center">
-                        <Col xs={12}>
-                            <Toolbar
-                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={buttons}/>
-                        </Col>
-                    </Row>) : null
+                    <Row key="button-row" className="text-center">
+                            <Col key="tools" xs={12}>
+                                <Toolbar
+                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                    buttons={toolButtons}/>
+                            </Col>
+                        <div key="navigation" style={{
+                                position: "absolute",
+                                right: 0,
+                                margin: "0 10px"
+                            }}>
+                                <Toolbar
+                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                    buttons={getNavigationButtons(props)} />
+                        </div>
+                    </Row>
                 ].filter(headRow => headRow)}>
                 <Viewer
                     index={index}
