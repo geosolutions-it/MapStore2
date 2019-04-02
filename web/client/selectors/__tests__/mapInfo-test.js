@@ -21,6 +21,24 @@ const {
     highlightStyleSelector
 } = require('../mapInfo');
 
+const QUERY_PARAMS = {
+    service: 'WMS',
+    version: '1.1.1',
+    request: 'GetFeatureInfo',
+    exceptions: 'application/json',
+    id: 'tiger:poi__7',
+    layers: 'tiger:poi',
+    query_layers: 'tiger:poi',
+    x: 51,
+    y: 51,
+    height: 101,
+    width: 101,
+    srs: 'EPSG:3857',
+    bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
+    feature_count: 10,
+    info_format: 'text/plain',
+    ENV: 'locale:it'
+};
 const RESPONSE_STATE = {
     mapInfo: {
         enabled: true,
@@ -37,24 +55,7 @@ const RESPONSE_STATE = {
         responses: [
             {
                 response: 'Results for FeatureType',
-                queryParams: {
-                    service: 'WMS',
-                    version: '1.1.1',
-                    request: 'GetFeatureInfo',
-                    exceptions: 'application/json',
-                    id: 'tiger:poi__7',
-                    layers: 'tiger:poi',
-                    query_layers: 'tiger:poi',
-                    x: 51,
-                    y: 51,
-                    height: 101,
-                    width: 101,
-                    srs: 'EPSG:3857',
-                    bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
-                    feature_count: 10,
-                    info_format: 'text/plain',
-                    ENV: 'locale:it'
-                },
+                queryParams: QUERY_PARAMS,
                 layerMetadata: {
                     title: 'Manhattan (NY) points of interest',
                     viewer: {},
@@ -64,24 +65,7 @@ const RESPONSE_STATE = {
         ],
         requests: [
             {
-                request: {
-                    service: 'WMS',
-                    version: '1.1.1',
-                    request: 'GetFeatureInfo',
-                    exceptions: 'application/json',
-                    id: 'tiger:poi__7',
-                    layers: 'tiger:poi',
-                    query_layers: 'tiger:poi',
-                    x: 51,
-                    y: 51,
-                    height: 101,
-                    width: 101,
-                    srs: 'EPSG:3857',
-                    bbox: '-8238713.7375893425,4969819.729231167,-8238472.483218817,4970060.983601692',
-                    feature_count: 10,
-                    info_format: 'text/plain',
-                    ENV: 'locale:it'
-                },
+                request: QUERY_PARAMS,
                 reqId: '4e030000-514a-11e9-90f1-3db233bf30bf'
             }
         ],
