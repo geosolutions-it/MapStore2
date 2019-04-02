@@ -237,7 +237,8 @@ class CoordinatesEditor extends React.Component {
                         aeronauticalOptions={this.props.aeronauticalOptions}
                         sortId={idx}
                         key={idx + " key"}
-                        isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}
+                        isDraggable={this.props.isDraggable}
+                        isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
                         showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
