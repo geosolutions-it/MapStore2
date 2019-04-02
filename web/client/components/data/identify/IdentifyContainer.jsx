@@ -26,7 +26,7 @@ const Portal = require('../../misc/Portal');
  * @prop {function} getButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  */
 
-const CoordinatesEditor = require('../../../plugins/identify/CoordinatesEditor');
+const IdentifyEditor = require('../../../plugins/identify/IdentifyEditor');
 
 module.exports = props => {
     const {
@@ -79,7 +79,7 @@ module.exports = props => {
     const buttons = getButtons({...props, lngCorrected, validResponses, latlng});
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
-    const CoordEditor = enabledCoordEditorButton && showCoordinateEditor ? CoordinatesEditor : null;
+    const CoordEditor = enabledCoordEditorButton && showCoordinateEditor ? IdentifyEditor : null;
     return (
         <div>
             <DockablePanel

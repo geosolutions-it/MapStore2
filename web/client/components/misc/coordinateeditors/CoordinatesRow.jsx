@@ -26,13 +26,16 @@ class CoordinatesRow extends React.Component {
         customClassName: PropTypes.string,
         isDraggable: PropTypes.bool,
         showLabels: PropTypes.bool,
+        showDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
     defaultProps = {
         showLabels: false,
-        formatVisible: false
+        formatVisible: false,
+        onMouseEnter: () => {},
+        onMouseLeave: () => {}
     }
 
     render() {
@@ -59,7 +62,7 @@ class CoordinatesRow extends React.Component {
                 }
             }}>
                 <Col xs={1}>
-                    {this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton}
+                    {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
                 <Col xs={5}>
                     {this.props.showLabels && <span><Message msgId="latitude"/></span>}
