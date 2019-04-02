@@ -79,7 +79,7 @@ module.exports = props => {
     }
     const Viewer = viewer;
     // TODO: put all the header (Toolbar, navigation, coordinate editor) outside the container
-    const buttons = getToolButtons({...props, lngCorrected, validResponses, latlng});
+    const toolButtons = getToolButtons({...props, lngCorrected, validResponses, latlng});
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
@@ -113,7 +113,7 @@ module.exports = props => {
                             <Col key="tools" xs={12}>
                                 <Toolbar
                                     btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                    buttons={buttons}/>
+                                    buttons={toolButtons}/>
                             </Col>
                         <div key="navigation" style={{
                                 position: "absolute",
