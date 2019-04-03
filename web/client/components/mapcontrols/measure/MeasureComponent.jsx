@@ -319,6 +319,7 @@ class MeasureComponent extends React.Component {
                 {(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled)
                         ? <Row style={ this.props.isCoordinateEditorEnabled ? {} : {pointerEvents: "none", opacity: 0.5}}>
                         <CoordinatesEditor
+                            key="measureEditor"
                             isMouseEnterEnabled
                             isMouseLeaveEnabled
                             format={this.props.format}

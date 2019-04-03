@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Row, Col, Glyphicon} = require('react-bootstrap');
+const {Row, Col, Glyphicon, Button} = require('react-bootstrap');
 const Toolbar = require('../toolbar/Toolbar');
 const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
@@ -25,28 +25,34 @@ class CoordinatesRow extends React.Component {
         aeronauticalOptions: PropTypes.object,
         customClassName: PropTypes.string,
         isDraggable: PropTypes.bool,
+        isDraggableEnabled: PropTypes.bool,
         showLabels: PropTypes.bool,
+        showDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
     defaultProps = {
         showLabels: false,
-        formatVisible: false
+        formatVisible: false,
+        onMouseEnter: () => {},
+        onMouseLeave: () => {}
     }
 
     render() {
         const {idx} = this.props;
         const rowStyle = {marginLeft: -5, marginRight: -5};
-        const dragButton = (<div
-            className="square-button-md no-border btn btn-default"
-            style={{display: "flex" /*workaround for firefox*/}}
-            >
-            <Glyphicon
-            glyph="menu-hamburger"
-            disabled={!this.props.isDraggable}
-            style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
-        /></div>);
+        // drag button must be a button in order to show the disabled state
+        const dragButton = (
+            <div><Button
+                disabled={!this.props.isDraggableEnabled}
+                className="square-button-md no-border btn btn-default"
+                style={{display: "flex", cursor: this.props.isDraggableEnabled && 'grab'}}>
+                <Glyphicon
+                    glyph="menu-hamburger"
+                    style={{pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto"}}
+                />
+            </Button></div>);
 
         return (
             <Row className={`coordinateRow ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
@@ -59,7 +65,7 @@ class CoordinatesRow extends React.Component {
                 }
             }}>
                 <Col xs={1}>
-                    {this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton}
+                    {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
                 <Col xs={5}>
                     {this.props.showLabels && <span><Message msgId="latitude"/></span>}
