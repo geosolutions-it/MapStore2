@@ -844,6 +844,17 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.credits).toExist();
                 }
+            ],
+            // save tooltipOptions and tooltipPlacement if present
+            [
+                {
+                    tooltipOptions: "both",
+                    tooltipPlacement: "right"
+                },
+                l => {
+                    expect(l.tooltipOptions).toExist();
+                    expect(l.tooltipPlacement).toExist();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

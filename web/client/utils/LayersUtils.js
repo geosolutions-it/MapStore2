@@ -464,7 +464,9 @@ const LayersUtils = {
             useForElevation: layer.useForElevation || false,
             hidden: layer.hidden || false,
             origin: layer.origin,
-            thematic: layer.thematic
+            thematic: layer.thematic,
+            tooltipOptions: layer.tooltipOptions,
+            tooltipPlacement: layer.tooltipPlacement
         },
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {});
