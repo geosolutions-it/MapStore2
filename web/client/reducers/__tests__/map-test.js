@@ -158,51 +158,6 @@ describe('Test the map reducer', () => {
         expect(state.mapOptions.view.resolutions).toExist();
     });
 
-    it('zoom to extent', () => {
-        const action = {
-            type: 'ZOOM_TO_EXTENT',
-            extent: [10, 44, 12, 46],
-            crs: "EPSG:4326"
-        };
-        // full extent
-        const action2 = {
-            type: 'ZOOM_TO_EXTENT',
-            extent: [-180, -90, 180, 90],
-            crs: "EPSG:4326"
-        };
-
-        var state = mapConfig({projection: "EPSG:4326", size: {width: 400, height: 400}}, action);
-        expect(state.mapStateSource).toBe(undefined);
-        expect(state.center.x).toBe(11);
-        expect(state.center.y).toBe(45);
-        expect(state.bbox).toExist();
-        expect(state.bbox.bounds).toExist();
-        expect(state.bbox.bounds.minx).toExist();
-        expect(state.bbox.bounds.miny).toExist();
-        expect(state.bbox.bounds.maxx).toExist();
-        expect(state.bbox.bounds.maxy).toExist();
-        state = mapConfig({projection: "EPSG:900913"}, action2);
-        expect(state.zoom).toBe(1);
-        expect(state.bbox).toExist();
-        expect(state.bbox.bounds).toExist();
-        expect(state.bbox.bounds.minx).toExist();
-        expect(state.bbox.bounds.miny).toExist();
-        expect(state.bbox.bounds.maxx).toExist();
-        expect(state.bbox.bounds.maxy).toExist();
-
-    });
-
-    it('zoom to extent with max zoom', () => {
-        const action = {
-            type: 'ZOOM_TO_EXTENT',
-            extent: [10, 44, 12, 46],
-            crs: "EPSG:4326",
-            maxZoom: 5
-        };
-
-        var state = mapConfig({ projection: "EPSG:4326", size: { width: 400, height: 400 } }, action);
-        expect(state.zoom).toBe(5);
-    });
     it('change map style', () => {
         const action = {
             type: 'CHANGE_MAP_STYLE',

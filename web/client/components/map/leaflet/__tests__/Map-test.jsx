@@ -18,6 +18,9 @@ require('leaflet-draw');
 require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
 
+// required for elevation tests
+require('../plugins/WMSLayer');
+
 describe('LeafletMap', () => {
 
     beforeEach(() => {
@@ -464,6 +467,67 @@ describe('LeafletMap', () => {
         getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
         expect(getPixelFromCoordinates).toExist();
         expect(getCoordinatesFromPixel).toExist();
+    });
+    it('test ZOOM_TO_EXTENT_HOOK', () => {
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const testHandlers = {
+            onMapViewChanges: () => {}
+        };
+        // fix size
+        document.querySelector('#container').setAttribute('style', "width: 200px; height: 200px");
+        const spy = expect.spyOn(testHandlers, 'onMapViewChanges');
+        const map = ReactDOM.render(<LeafletMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            onMapViewChanges={testHandlers.onMapViewChanges} />,
+        document.getElementById("container"));
+        expect(map).toExist();
+        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toExist();
+        hook([0, 0, 20, 20], {crs: "EPSG:4326"});
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[1]).toExist(); // first is called by initial render
+        expect(spy.calls[1].arguments[0].x).toBeGreaterThan(9);
+        expect(spy.calls[1].arguments[0].y).toBeGreaterThan(9);
+        expect(spy.calls[1].arguments[0].x).toBeLessThan(11);
+        expect(spy.calls[1].arguments[0].y).toBeLessThan(11);
+        const bounds1 = map.map.getBounds();
+        // center should be the same
+        expect(bounds1.getCenter().lng).toBeGreaterThan(9);
+        expect(bounds1.getCenter().lat).toBeGreaterThan(9);
+        expect(bounds1.getCenter().lng).toBeLessThan(11);
+        expect(bounds1.getCenter().lat).toBeLessThan(11);
+
+        hook([0, 0, 20, 20], {
+            crs: "EPSG:4326",
+            duration: 0,
+            padding: {
+                left: 50,
+                top: 50,
+                right: 50,
+                bottom: 50
+            }
+         });
+        const bounds2 = map.map.getBounds();
+        // center should be almost the same
+        expect(bounds2.getCenter().lng).toBeGreaterThan(9);
+        expect(bounds2.getCenter().lat).toBeGreaterThan(9);
+        expect(bounds2.getCenter().lng).toBeLessThan(11);
+        expect(bounds2.getCenter().lat).toBeLessThan(11);
+
+        // but bounds different
+        expect(bounds2.getEast()).toNotEqual(bounds1.getEast());
+        expect(bounds2.getWest()).toNotEqual(bounds1.getWest());
+        expect(bounds2.getNorth()).toNotEqual(bounds1.getNorth());
+        expect(bounds2.getSouth()).toNotEqual(bounds1.getSouth());
+
+        // bounds2 size must be greater than bounds1
+        expect(bounds2.getWest() - bounds2.getEast()).toNotEqual(bounds1.getWest() - bounds1.getEast());
+        expect(bounds2.getNorth() - bounds2.getSouth()).toNotEqual(bounds1.getNorth() - bounds1.getSouth());
     });
 
     it('create attribution with container', () => {
