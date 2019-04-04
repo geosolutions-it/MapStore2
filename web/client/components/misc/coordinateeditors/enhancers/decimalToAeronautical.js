@@ -28,7 +28,7 @@ const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
             degrees: "",
             minutes: "",
             seconds: "",
-            direction: lng ? 'W' : 'N' // let's chose some default direction if coord is 0
+            direction: lng ? 'E' : 'N' // let's chose some default direction if coord is 0
         };
     }
     let values = {
