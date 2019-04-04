@@ -11,6 +11,8 @@ const PropTypes = require('prop-types');
 const {round, isEqual, dropRight, pick} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
+const addI18NProps = require('../../I18N/enhancers/addI18NProps');
+
 const wgs84Sphere = new ol.Sphere(6378137);
 const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
@@ -30,6 +32,7 @@ class MeasurementSupport extends React.Component {
         measurement: PropTypes.object,
         enabled: PropTypes.bool,
         uom: PropTypes.object,
+        formatNumber: PropTypes.func,
         changeMeasurementState: PropTypes.func,
         updateMeasures: PropTypes.func,
         resetGeometry: PropTypes.func,
@@ -46,6 +49,7 @@ class MeasurementSupport extends React.Component {
         resetGeometry: () => {},
         updateMeasures: () => {},
         changeGeometry: () => {},
+        formatNumber: () => {},
         startEndPoint: {
             startPointOptions: {
                 radius: 3,
@@ -451,7 +455,7 @@ class MeasurementSupport extends React.Component {
         const length = calculateDistance(reprojectedCoords, props.measurement.lengthFormula);
         const {label, unit} = props.uom && props.uom.length;
         const output = round(convertUom(length, "m", unit), 2);
-        return output + " " + (label);
+        return this.props.formatNumber(output) + " " + (label);
     };
 
     /**
@@ -464,7 +468,7 @@ class MeasurementSupport extends React.Component {
         const {label, unit} = props.uom && props.uom.area;
         const output = round(convertUom(area, "sqm", unit), 2);
 
-        return output + " " + label;
+        return this.props.formatNumber(output) + " " + label;
     };
 
     removeHelpTooltip = () => {
@@ -486,4 +490,6 @@ class MeasurementSupport extends React.Component {
     }
 }
 
-module.exports = MeasurementSupport;
+module.exports = addI18NProps(
+    ['formatNumber']
+)(MeasurementSupport);
