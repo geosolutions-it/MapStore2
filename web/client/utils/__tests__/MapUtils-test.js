@@ -294,7 +294,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -338,7 +340,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -382,7 +386,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -426,7 +432,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: [100000, 100000],
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -488,7 +496,9 @@ describe('Test the MapUtils', () => {
                 type: "wms",
                 url: "",
                 visibility: true,
-                catalogURL: "url"
+                catalogURL: "url",
+                tooltipOptions: "both",
+                tooltipPlacement: "right"
             }
         ];
 
@@ -592,7 +602,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -636,7 +648,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -680,7 +694,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: "both",
+                    tooltipPlacement: "right"
                 }],
                 mapOptions: {
                     view: {
@@ -864,7 +880,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -908,7 +926,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 },
                 {
                     allowedSRS: {},
@@ -952,7 +972,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1251,6 +1273,145 @@ describe('Test the MapUtils', () => {
                     useForElevation: false,
                     origin: undefined,
                     thematic: undefined
+                }],
+                mapOptions: {},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                text_serch_config: '',
+                units: 'm',
+                zoom: 10,
+                sources: {
+                    'http:url001': {
+                        tileMatrixSet: {
+                            'EPSG:4326': {
+                                TileMatrix: [{
+                                    'ows:Identifier': 'EPSG:4326:0'
+                                }],
+                                'ows:Identifier': "EPSG:4326",
+                                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                            }
+                        }
+                    }
+                }
+            },
+            mapInfoConfiguration: {
+                infoFormat: "text/html",
+                showEmptyMessageGFI: false
+            },
+            version: 2
+        });
+    });
+
+    it('save map configuration with tile matrix and map info configuration', () => {
+        const flat = [
+            {
+                allowedSRS: {},
+                bbox: {},
+                description: undefined,
+                dimensions: [],
+                id: "layer001",
+                loading: true,
+                name: "layer001",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer001",
+                type: "wms",
+                url: "http:url001",
+                visibility: true,
+                catalogURL: "url",
+                matrixIds: {
+                    'EPSG:4326': [{
+                        identifier: 'EPSG:4326:0'
+                    }]
+                },
+                tileMatrixSet: [{
+                    TileMatrix: [{
+                        'ows:Identifier': 'EPSG:4326:0'
+                    }],
+                    'ows:Identifier': "EPSG:4326",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                }, {
+                    TileMatrix: [{
+                        'ows:Identifier': 'custom:0'
+                    }],
+                    'ows:Identifier': "custom",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                }]
+            }
+        ];
+        const groups = [
+            {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
+            {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
+            ]}
+        ];
+        const mapConfig = {
+            center: {x: 0, y: 0, crs: 'EPSG:4326'},
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            projection: 'EPSG:900913',
+            units: 'm',
+            zoom: 10
+        };
+        const saved = saveMapConfiguration(mapConfig, flat, groups, '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+        expect(saved).toEqual({
+            map: {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                groups: [{
+                    id: 'Default',
+                    expanded: true
+                }, {
+                    id: 'custom',
+                    expanded: false
+                }, {
+                    id: 'custom.nested001',
+                    expanded: true
+                }],
+                layers: [{
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    nativeCrs: undefined,
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer001",
+                    matrixIds: ['EPSG:4326'],
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer001",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: true,
+                    tiled: undefined,
+                    title: "layer001",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "http:url001",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

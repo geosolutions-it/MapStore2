@@ -11,7 +11,7 @@ const {
     getTooltip,
     getTooltipFragment,
     flattenGroups,
-    getTitleAndtooltip
+    getTitleAndTooltip
 } = require('../TOCUtils');
 let options = [{label: "lab1", value: "val1"}];
 const groups = [{
@@ -158,7 +158,7 @@ describe('TOCUtils', () => {
         expect(allGroups[2].value).toBe("first.second.third");
         expect(allGroups[2].label).toBe("first/second/third");
     });
-    it('test getTitleAndtooltip', () => {
+    it('test getTitleAndTooltip both', () => {
         const node = {
             name: 'layer00',
             title: {
@@ -167,15 +167,27 @@ describe('TOCUtils', () => {
             },
             id: "layer00",
             description: "desc",
-            visibility: true,
-            storeIndex: 9,
-            type: 'wms',
-            url: 'fakeurl',
             tooltipOptions: "both"
         };
         const currentLocale = "it-IT";
-        const {title, tooltipText} = getTitleAndtooltip({node, currentLocale});
+        const {title, tooltipText} = getTitleAndTooltip({node, currentLocale});
         expect(title).toBe("Livello");
         expect(tooltipText).toBe("Livello - desc");
+    });
+    it('test getTitleAndTooltip NoTooltip', () => {
+        const node = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            id: "layer00",
+            description: "desc",
+            tooltipOptions: "none"
+        };
+        const currentLocale = "it-IT";
+        const {title, tooltipText} = getTitleAndTooltip({node, currentLocale});
+        expect(title).toBe("Livello");
+        expect(tooltipText).toBe("");
     });
 });
