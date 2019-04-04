@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
-const {getTitleAndtooltip} = require('../../../utils/TOCUtils');
+const {getTitleAndTooltip} = require('../../../utils/TOCUtils');
 
 require("./css/toctitle.css");
 
@@ -49,7 +49,7 @@ class Title extends React.Component {
     }
 
     render() {
-        const {title, tooltipText} = getTitleAndtooltip(this.props);
+        const {title, tooltipText} = getTitleAndTooltip(this.props);
         return this.props.tooltip && tooltipText ? (
             <OverlayTrigger placement={this.props.node.tooltipPlacement || "top"} overlay={(<Tooltip id={"tooltip-layer-title"}>{tooltipText}</Tooltip>)}>
                 <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
