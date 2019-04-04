@@ -11,7 +11,6 @@ const PropTypes = require('prop-types');
 const {round, isEqual, dropRight, pick} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
-const addI18NProps = require('../../I18N/enhancers/addI18NProps');
 
 const wgs84Sphere = new ol.Sphere(6378137);
 const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
@@ -49,7 +48,7 @@ class MeasurementSupport extends React.Component {
         resetGeometry: () => {},
         updateMeasures: () => {},
         changeGeometry: () => {},
-        formatNumber: () => {},
+        formatNumber: n => n,
         startEndPoint: {
             startPointOptions: {
                 radius: 3,
@@ -490,6 +489,4 @@ class MeasurementSupport extends React.Component {
     }
 }
 
-module.exports = addI18NProps(
-    ['formatNumber']
-)(MeasurementSupport);
+module.exports = MeasurementSupport;
