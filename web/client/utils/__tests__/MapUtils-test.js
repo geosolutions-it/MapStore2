@@ -1153,6 +1153,8 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     origin: undefined,
                     thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined,
                     params: {} } ],
                 groups: [ {
                     id: 'Default', expanded: true
@@ -1272,7 +1274,9 @@ describe('Test the MapUtils', () => {
                     hidden: false,
                     useForElevation: false,
                     origin: undefined,
-                    thematic: undefined
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
