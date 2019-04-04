@@ -60,7 +60,7 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseEnter(this.props.component);
                 }
             }} onMouseLeave={() => {
-                if (this.props.component.lat && this.props.component.lon) {
+                if (this.props.onMouseLeave && this.props.component.lat && this.props.component.lon) {
                     this.props.onMouseLeave();
                 }
             }}>
