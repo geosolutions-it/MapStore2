@@ -14,7 +14,7 @@ const DockablePanel = require('../../misc/panels/DockablePanel');
 const GeocodeViewer = require('./GeocodeViewer');
 const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
-
+const Coordinate = require('./coordinates/Coordinate');
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -26,9 +26,6 @@ const Portal = require('../../misc/Portal');
  * @prop {function} getToolButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  * @prop {function} getNavigationButtons must return an array of navigation buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  */
-
-const IdentifyEditor = require('../../../plugins/identify/IdentifyEditor');
-
 module.exports = props => {
     const {
         enabled,
@@ -98,15 +95,19 @@ module.exports = props => {
                 style={dockStyle}
                 showFullscreen={showFullscreen}
                 zIndex={zIndex}
-                header={[enabledCoordEditorButton && showCoordinateEditor &&
-                    <IdentifyEditor
+                header={[
+                    <Coordinate
                         key="coordinate-editor"
-                        removeVisible={false}
                         formatCoord={formatCoord}
-                        coordinate={point.latlng ? {lat: point.latlng.lat, lon: lngCorrected } : {lat: "", lon: ""}}
+                        enabledCoordEditorButton={enabledCoordEditorButton}
                         onChange={onChangeClickPoint}
                         onChangeFormat={onChangeFormat}
-                    /> || null,
+                        edit={showCoordinateEditor}
+                        coordinate={{
+                            lat: latlng && latlng.lat,
+                            lon: lngCorrected
+                        }}
+                        />,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
                     <Row key="button-row" className="text-center" style={{position: 'relative'}}>
                             <Col key="tools" xs={12}>
