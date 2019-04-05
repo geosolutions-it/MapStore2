@@ -41,6 +41,12 @@ const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
     return values;
 };
 
+/**
+ * Converts decimal coordinate value and the `onChange` handler to be handled internally in aeronautical format.
+ * The `value` property is converted into the degrees, minutes, seconds, direction properties.
+ * The `onChange` handler property is masked to have been called with an object of `{degrees, minutes, seconds, direction}` as argument
+ * and call the original handler with the decimal value.
+ */
 module.exports = compose(
     withProps(({
         value,

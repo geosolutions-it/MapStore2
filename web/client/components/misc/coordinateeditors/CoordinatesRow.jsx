@@ -7,9 +7,6 @@ const CoordinateEntry = require('./CoordinateEntry');
 const Message = require('../../I18N/Message');
 const DropdownToolbarOptions = require('../toolbar/DropdownToolbarOptions');
 
-/**
-
-*/
 class CoordinatesRow extends React.Component {
     static propTypes = {
         idx: PropTypes.number,

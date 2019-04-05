@@ -10,6 +10,7 @@ const PropTypes = require('prop-types');
 const BootstrapReact = require('react-bootstrap');
 const Label = BootstrapReact.Label;
 const NumberFormat = require('../../I18N/Number');
+const {isNil} = require('lodash');
 const {roundCoord} = require('../../../utils/CoordinatesUtils');
 
 class MousePositionLabelDM extends React.Component {
@@ -39,10 +40,10 @@ class MousePositionLabelDM extends React.Component {
         return (
                 <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: pos.lat, maximumFractionDigits: integerFormat.maximumFractionDigits})} />
+                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={isNil(pos.lat) ? pos.lat : roundCoord({roundingBehaviour: "floor", value: pos.lat, maximumFractionDigits: integerFormat.maximumFractionDigits})} />
                     <span>° </span><NumberFormat key="latM" numberParams={decimalFormat} value={pos.latM} />
                     <span>&apos; </span>
-                    <span>Lng: </span><NumberFormat key="lngD" numberParams={lngDFormat} value={roundCoord({roundingBehaviour: "floor", value: pos.lng, maximumFractionDigits: lngDFormat.maximumFractionDigits})} />
+                    <span>Lng: </span><NumberFormat key="lngD" numberParams={lngDFormat} value={isNil(pos.lng) ? pos.lng : roundCoord({roundingBehaviour: "floor", value: pos.lng, maximumFractionDigits: lngDFormat.maximumFractionDigits})} />
                     <span>° </span><NumberFormat key="lngM" numberParams={decimalFormat} value={pos.lngM} />
                     <span>&apos; </span>
                 </Label>
