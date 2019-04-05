@@ -59,6 +59,10 @@ class AeronauticalCoordinateEditor extends React.Component {
             let direction = newValues.direction;
             seconds = this.roundToNextSexagesimalStep(seconds);
             minutes = this.roundToNextSexagesimalStep(minutes);
+            if (degrees === this.props.maxDegrees) {
+                minutes = 0;
+                seconds = 0;
+            }
             direction = degrees < 0
                 ? (direction === this.props.directions[0] ? this.props.directions[1] : this.props.directions[0])
                 : direction;
