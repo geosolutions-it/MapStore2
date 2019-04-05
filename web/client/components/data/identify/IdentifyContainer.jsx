@@ -108,13 +108,14 @@ module.exports = props => {
                         onChangeFormat={onChangeFormat}
                     /> || null,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
-                    <Row key="button-row" className="text-center">
+                    <Row key="button-row" className="text-center" style={{position: 'relative'}}>
                             <Col key="tools" xs={12}>
                                 <Toolbar
                                     btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
                                     buttons={toolButtons}/>
                             </Col>
                         <div key="navigation" style={{
+                                zIndex: 1,
                                 position: "absolute",
                                 right: 0,
                                 margin: "0 10px"
