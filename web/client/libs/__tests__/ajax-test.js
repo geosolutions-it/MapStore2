@@ -11,6 +11,8 @@ const axios = require('../ajax');
 const SecurityUtils = require('../../utils/SecurityUtils');
 const assign = require('object-assign');
 const urlUtil = require('url');
+const MockAdapter = require("axios-mock-adapter");
+let mockAxios;
 
 const userA = {
     User: {
@@ -79,6 +81,10 @@ const authenticationRules = [
 
 describe('Tests ajax library', () => {
     afterEach(() => {
+        if (mockAxios) {
+            mockAxios.restore();
+            mockAxios = null;
+        }
         expect.restoreSpies();
     });
 
@@ -379,12 +385,49 @@ describe('Tests ajax library', () => {
     it('does not set withCredentials on the request', (done)=> {
         expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
         expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-
         axios.get('http://www.skipBrowserCredentials.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch( (exception) => {
             expect(exception.config).toExist();
             expect(exception.config.withCredentials).toNotExist();
+            done();
+        });
+    });
+
+    it('does test for CORS if autoDetectCORS is true', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(200, {}, {
+            "allow-control-allow-origin": "*"
+        });
+        axios
+            .get("http://testcors/", {
+                proxyUrl: {
+                    url: "/proxy/?url=",
+                    useCORS: [],
+                    autoDetectCORS: true
+                }
+            })
+            .then(response => {
+                expect(response.config).toExist();
+                expect(response.config.url).toExist();
+                expect(response.config.url).toNotContain("proxy/?url=");
+                done();
+            });
+    });
+
+    it('revert to proxy if autoDetectCORS is true but CORS is not enabled on server', (done) => {
+        mockAxios = new MockAdapter(axios);
+        axios.get('http://testcors/', {
+            timeout: 1,
+            proxyUrl: {
+                url: '/proxy/?url=',
+                useCORS: [],
+                autoDetectCORS: true
+            }
+        }).catch((response) => {
+            expect(response.config).toExist();
+            expect(response.config.url).toExist();
+            expect(response.config.url).toContain('proxy/?url=');
             done();
         });
     });
