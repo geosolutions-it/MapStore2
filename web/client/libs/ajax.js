@@ -7,7 +7,6 @@
  */
 
 const axios = require('axios');
-const url = require('url');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const SecurityUtils = require('../utils/SecurityUtils');
@@ -31,8 +30,6 @@ function addParameterToAxiosConfig(axiosConfig, parameterName, parameterValue) {
 function addHeaderToAxiosConfig(axiosConfig, headerName, headerValue) {
     axiosConfig.headers = assign({}, axiosConfig.headers, {[headerName]: headerValue});
 }
-
-const corsDisabled = [];
 
 /**
  * Internal helper that will add to the axios config object the correct
@@ -110,15 +107,12 @@ axios.interceptors.request.use(config => {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
             let useCORS = [];
-            let autoDetectCORS = false;
             if (isObject(proxyUrl)) {
                 useCORS = proxyUrl.useCORS || [];
-                autoDetectCORS = proxyUrl.autoDetectCORS || false;
                 proxyUrl = proxyUrl.url;
             }
             const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
-            const cannotUseCORS = corsDisabled.reduce((found, current) => found || uri.indexOf(current) === 0, false);
-            if (!isCORS && (!autoDetectCORS || cannotUseCORS)) {
+            if (!isCORS) {
                 const parsedUri = urlUtil.parse(uri, true, true);
                 config.url = proxyUrl + encodeURIComponent(
                     urlUtil.format(
@@ -129,26 +123,10 @@ axios.interceptors.request.use(config => {
                     )
                 );
                 config.params = undefined;
-            } else if (autoDetectCORS) {
-                config.autoDetectCORS = true;
             }
         }
     }
     return config;
-});
-
-axios.interceptors.response.use(response => response, (error) => {
-    if (error.config && error.config.autoDetectCORS) {
-        const urlParts = url.parse(error.config.url);
-        const baseUrl = urlParts.protocol + "//" + urlParts.host + urlParts.pathname;
-        if (corsDisabled.indexOf(baseUrl) === -1) {
-            corsDisabled.push(baseUrl);
-            return new Promise((resolve, reject) => {
-                axios({ ...error.config, autoDetectCORS: false}).then(resolve).catch(reject);
-            });
-        }
-    }
-    return Promise.reject(error.response ? {...error.response, originalError: error} : error);
 });
 
 module.exports = axios;

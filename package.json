@@ -87,7 +87,7 @@
     "@turf/polygon-to-linestring": "4.1.0",
     "ag-grid": "3.3.3",
     "ag-grid-react": "3.3.1",
-    "axios": "0.18.0",
+    "axios": "0.11.1",
     "b64-to-blob": "1.2.19",
     "babel-polyfill": "6.8.0",
     "babel-standalone": "6.7.7",

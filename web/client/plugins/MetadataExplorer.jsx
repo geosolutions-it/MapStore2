@@ -51,7 +51,7 @@ const catalogSelector = createSelector([
     format: newformat,
     newService,
     currentLocale,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || []
+    records: CatalogUtils.getCatalogRecords(selectedFormat, result, options)
 }));
 
 const catalogClose = () => {
