@@ -4,7 +4,7 @@ var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
-const extractThemesPlugin = require('./MapStore2/themes.js').extractThemesPlugin;
+const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 webpackConfig.plugins = [

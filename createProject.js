@@ -4,7 +4,7 @@ const projectVersion = process.argv[4];
 const projectDescription = process.argv[5];
 const repoURL = process.argv[6];
 const outFolder = process.argv[7];
-const project = require('./projectLib');
+const project = require('./utility/projects/projectLib');
 const denodeify = require('denodeify');
 
 if (!projectType || !projectName || !projectVersion || !projectDescription || !repoURL || !outFolder) {
@@ -21,7 +21,7 @@ const options = {
     version: projectVersion,
     description: projectDescription,
     repository: repoURL,
-    scripts: require('./projectScripts.json')
+    scripts: require('./utility/projects/projectScripts.json')
 };
 
 const projectFolder = './project/' + projectType;
@@ -36,7 +36,7 @@ readdir(projectFolder)
     })
     .then(() => {
         process.stdout.write('package.json file created\n');
-        return project.copyStaticFiles(projectFolder + '/static', outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', '.babelrc']);
+        return project.copyStaticFiles(projectFolder + '/static', outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', 'web/client/.babelrc']);
     })
     .then(() => {
         process.stdout.write('Static files copied\n');
