@@ -7,6 +7,7 @@
  */
 
 const axios = require('axios');
+const combineURLs = require('axios/lib/helpers/combineURLs');
 const url = require('url');
 const ConfigUtils = require('../utils/ConfigUtils');
 
@@ -42,7 +43,8 @@ function addAuthenticationToAxios(axiosConfig) {
     if (!axiosConfig || !axiosConfig.url || !SecurityUtils.isAuthenticationActivated()) {
         return axiosConfig;
     }
-    const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
+    const axiosUrl = combineURLs(axiosConfig.baseURL || '', axiosConfig.url);
+    const rule = SecurityUtils.getAuthenticationRule(axiosUrl);
 
     switch (rule && rule.method) {
         case 'browserWithCredentials':

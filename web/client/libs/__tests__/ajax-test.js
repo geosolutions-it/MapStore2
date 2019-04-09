@@ -76,6 +76,10 @@ const authenticationRules = [
     {
       "urlPattern": ".*useBrowserCredentials.*",
       "method": "browserWithCredentials"
+    },
+    {
+        "urlPattern": ".*sitetocheck.*",
+        "method": "bearer"
     }
 ];
 
@@ -302,6 +306,20 @@ describe('Tests ajax library', () => {
         expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
         expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
         axios.get('http://non-existent.mapstore2/imtokenized?parameter1=value1&par2=v2').then(() => {
+            done("Axios actually reached the fake url");
+        }).catch((exception) => {
+            expect(exception.config).toExist().toIncludeKey('headers');
+            expect(exception.config.headers.Authorization).toBe('Bearer 263c6917-543f-43e3-8e1a-6a0d29952f72');
+            done();
+        });
+    });
+
+    it('adds Bearer header also when using baseURL', (done) => {
+        // mocking the authentication rules and user info
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        axios.get('tokenservice?param=token', { baseURL: 'http://sitetocheck', timeout: 1}).then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
             expect(exception.config).toExist().toIncludeKey('headers');
