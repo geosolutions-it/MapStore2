@@ -8,7 +8,6 @@
 
 module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
     const React = require('react');
-    const {isNil} = require('lodash');
     const ReactDOM = require('react-dom');
     const {connect} = require('react-redux');
     const LocaleUtils = require('../utils/LocaleUtils');
@@ -21,7 +20,7 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
         const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
-        const {pages, initialState, storeOpts, appEpics = {}, themeCfg, printingEnabled} = config;
+        const {pages, initialState, storeOpts, appEpics = {}, themeCfg, printingEnabled = true} = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
@@ -53,7 +52,7 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
             pluginsDef,
             initialActions,
             appComponent: StandardRouter,
-            printingEnabled: !isNil(printingEnabled) ? printingEnabled : true,
+            printingEnabled,
             themeCfg
         });
 
