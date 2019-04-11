@@ -19,7 +19,8 @@ const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     getStartEndPointsForLinestring,
     createGeometryFromGeomFunction,
     updateAllStyles,
-    fromLineStringToGeodesicLineString, isCompletePolygon
+    fromLineStringToGeodesicLineString, isCompletePolygon,
+    getDashArrayFromStyle
 } = require('../AnnotationsUtils');
 
 const featureCollection = {
@@ -373,6 +374,23 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.geometry.coordinates[1]).toBe(0);
         expect(ft.properties).toExist();
         expect(ft.properties.ms_style).toExist();
+    });
+    it('fromAnnotationToGeoJson with a LineString with dashArray', () => {
+        const f = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+            },
+            style: {
+                dashArray: [1, 3]
+            }
+        };
+        const ft = fromAnnotationToGeoJson(f);
+        expect(ft.type).toBe("Feature");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties.ms_style.strokeDashStyle).toEqual("1 3");
     });
     it('flattenGeometryCollection', () => {
         const fts = flattenGeometryCollection(feature);
@@ -738,5 +756,11 @@ describe('Test the AnnotationsUtils', () => {
         expect(isCompletePolygon(polygonCoords2)).toBe(false);
         expect(isCompletePolygon(polygonCoords3)).toBe(true);
         expect(isCompletePolygon(polygonCoords4)).toBe(false);
+    });
+    it('test getDashArrayFromStyle', () => {
+        // default
+        expect(getDashArrayFromStyle()).toEqual("");
+        expect(getDashArrayFromStyle("3 4 5")).toEqual("3 4 5");
+        expect(getDashArrayFromStyle(["3", "4", "5"])).toEqual("3 4 5");
     });
 });
