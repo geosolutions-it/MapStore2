@@ -97,6 +97,7 @@ module.exports = playbackEnhancer(({
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
                     active: status === statusMap.PLAY || status === statusMap.PAUSE,
+                    disabled: !hasNext,
                     bsStyle: status === statusMap.PLAY || status === statusMap.PAUSE ? "success" : "primary",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
                     tooltipId: status === statusMap.PLAY
