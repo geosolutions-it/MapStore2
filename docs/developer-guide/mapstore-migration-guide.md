@@ -6,6 +6,15 @@ This is a list of things to do if you want to update from a previous version val
  - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
  - Follow the instructions, in order
 
+## Migration from 2019.01.00 to 2019.01.01
+MapStore **2019.01.01** changes the location of some of the build and test configuration files.
+This also affects projects using MapStore build files, sp if you update MapStore subproject to the **2019.01.01** version you also have to update some of the project configuration files. In particular:
+
+ * **webpack.config.js** and **prod-webpack.config.js**: 
+   * update path to themes.js from ./MapStore2/themes.js to ./MapStore2/build/themes.js
+   * update path to buildConfig from ./MapStore2/buildConfig to ./MapStore2/build/buildConfig
+ * **karma.conf.continuous-test.js** and **karma.config.single-run.js**: update path to testConfig from ./MapStore2/testConfig to ./MapStore2/build/testConfig
+
 ## Migration from 2017.05.00 to 2018.01.00
 MapStore **2018.01.00** introduced theme and js and css versioning.
 This allows to auto-invalidates cache files for each version of your software.
