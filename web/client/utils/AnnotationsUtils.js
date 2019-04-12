@@ -11,7 +11,7 @@ const LocaleUtils = require('./LocaleUtils');
 const {extraMarkers} = require('./MarkerUtils');
 const {geometryFunctions, fetchStyle, hashAndStringify} = require('./VectorStyleUtils');
 const {set} = require('./ImmutableUtils');
-const {values, isNil, slice, head, castArray, last, isArray, findIndex} = require('lodash');
+const {values, isNil, slice, head, castArray, last, isArray, findIndex, isString} = require('lodash');
 const uuid = require('uuid');
 const turfCenter = require('@turf/center').default;
 const assign = require('object-assign');
@@ -96,9 +96,14 @@ const getStylesObject = ({type = "Point", features = []} = {}) => {
 };
 const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? LocaleUtils.getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
 
+const getDashArrayFromStyle = dashArray => {
+    return isString(dashArray) && dashArray || isArray(dashArray) && dashArray.join(" ");
+};
+
 const annStyleToOlStyle = (type, tempStyle, label = "") => {
     let style = tempStyle && tempStyle[type] ? tempStyle[type] : tempStyle;
     const s = style;
+    const dashArray = s.dashArray ? getDashArrayFromStyle(s.dashArray) : "";
     switch (type) {
         case "MultiPolygon":
         case "Polygon":
@@ -108,14 +113,16 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeOpacity": s.opacity,
                 "strokeWidth": s.weight,
                 "fillColor": rgbaTorgb(s.fillColor),
-                "fillOpacity": s.fillOpacity
+                "fillOpacity": s.fillOpacity,
+                "strokeDashStyle": dashArray
             };
         case "LineString":
         case "MultiLineString":
             return {
                 "strokeColor": rgbaTorgb(s.color),
                 "strokeOpacity": s.opacity,
-                "strokeWidth": s.weight
+                "strokeWidth": s.weight,
+                "strokeDashStyle": dashArray
             };
         case "Text":
             return {
@@ -133,7 +140,8 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "stroke": true,
                 "strokeColor": rgbaTorgb(s.color),
                 "strokeOpacity": s.opacity,
-                "strokeWidth": s.weight
+                "strokeWidth": s.weight,
+                "strokeDashStyle": dashArray
             };
         case "Point":
         case "MultiPoint": {
@@ -177,6 +185,7 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeColor": "#FF0000",
                 "pointRadius": 5,
                 "strokeOpacity": 1,
+                "strokeDashStyle": dashArray,
                 "strokeWidth": 1
             };
     }
@@ -565,7 +574,8 @@ const AnnotationsUtils = {
     isCompletePolygon: (coords = [[[]]]) => {
         const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
         return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
-    }
+    },
+    getDashArrayFromStyle
 };
 
 module.exports = AnnotationsUtils;
