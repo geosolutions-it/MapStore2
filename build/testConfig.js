@@ -1,4 +1,4 @@
-module.exports = ({files, path, testFile, singleRun}) => ({
+module.exports = ({files, path, testFile, singleRun, basePath = "."}) => ({
     browsers: [ 'Chrome' ],
 
     browserNoActivityTimeout: 30000,
@@ -8,6 +8,8 @@ module.exports = ({files, path, testFile, singleRun}) => ({
     singleRun,
 
     frameworks: [ 'mocha' ],
+
+    basePath,
 
     files,
 

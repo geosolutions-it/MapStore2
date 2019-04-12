@@ -3,12 +3,13 @@ const path = require("path");
 module.exports = function karmaConfig(config) {
     const testConfig = require('./testConfig')({
         files: [
-            'tests-travis.webpack.js',
+            'build/tests-travis.webpack.js',
             { pattern: './web/client/test-resources/**/*', included: false },
             { pattern: './web/client/translations/**/*', included: false }
         ],
-        path: path.join(__dirname, "web", "client"),
-        testFile: 'tests-travis.webpack.js',
+        path: path.join(__dirname, "..", "web", "client"),
+        basePath: "..",
+        testFile: 'build/tests-travis.webpack.js',
         singleRun: true
     });
     testConfig.webpack.module.rules = [{

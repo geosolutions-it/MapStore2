@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = function karmaConfig(config) {
-    const testConfig = require('./MapStore2/testConfig')({
+    const testConfig = require('./MapStore2/build/testConfig')({
         files: [
             'tests.webpack.js',
             { pattern: './js/test-resources/**/*', included: false }

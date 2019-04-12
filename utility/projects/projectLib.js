@@ -12,7 +12,7 @@ const ncp = denodeify(require('ncp').ncp);
 const createPackageJSON = (options, outFolder) => {
     process.stdout.write('Creating package.json...\n');
 
-    const packageJSON = assign({}, require('./package.json'), options);
+    const packageJSON = assign({}, require('../../package.json'), options);
     return writeFile(outFolder + '/package.json', JSON.stringify(packageJSON, null, 4));
 };
 
@@ -70,10 +70,11 @@ const copyStaticFiles = (baseFolder, outFolder, options, baseFiles) => {
         process.stdout.write('Copying static files...\n');
         let copied = 0;
         const toBeCopied = baseFiles.length;
-        baseFiles.map(function(fileName) {
+        baseFiles.map(function(filePath) {
+            const fileName = filePath.indexOf('/') === -1 ? filePath : filePath.split('/').reverse()[0];
             const toWrite = fs.createWriteStream(outFolder + '/' + fileName);
-            fs.createReadStream(fileName).pipe(toWrite);
-            process.stdout.write('Copied ' + fileName + '\n');
+            fs.createReadStream(filePath).pipe(toWrite);
+            process.stdout.write('Copied ' + filePath + '\n');
             return toWrite;
         }).forEach(function(stream) {
             stream.on('finish', function() {
