@@ -390,7 +390,7 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.type).toBe("Feature");
         expect(ft.properties).toExist();
         expect(ft.properties.ms_style).toExist();
-        expect(ft.properties.ms_style.strokeDashStyle).toEqual("1 3");
+        expect(ft.properties.ms_style.strokeDashstyle).toEqual("1 3");
     });
     it('flattenGeometryCollection', () => {
         const fts = flattenGeometryCollection(feature);

@@ -114,7 +114,7 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeWidth": s.weight,
                 "fillColor": rgbaTorgb(s.fillColor),
                 "fillOpacity": s.fillOpacity,
-                "strokeDashStyle": dashArray
+                "strokeDashstyle": dashArray
             };
         case "LineString":
         case "MultiLineString":
@@ -122,7 +122,7 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeColor": rgbaTorgb(s.color),
                 "strokeOpacity": s.opacity,
                 "strokeWidth": s.weight,
-                "strokeDashStyle": dashArray
+                "strokeDashstyle": dashArray
             };
         case "Text":
             return {
@@ -141,7 +141,7 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeColor": rgbaTorgb(s.color),
                 "strokeOpacity": s.opacity,
                 "strokeWidth": s.weight,
-                "strokeDashStyle": dashArray
+                "strokeDashstyle": dashArray
             };
         case "Point":
         case "MultiPoint": {
@@ -185,7 +185,7 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeColor": "#FF0000",
                 "pointRadius": 5,
                 "strokeOpacity": 1,
-                "strokeDashStyle": dashArray,
+                "strokeDashstyle": dashArray,
                 "strokeWidth": 1
             };
     }
