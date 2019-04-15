@@ -8,102 +8,19 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
-const { compose, defaultProps, withProps, withState, lifecycle, mapPropsStream } = require('recompose');
+const { compose, withProps, withState, lifecycle, mapPropsStream } = require('recompose');
 const { createSelector } = require('reselect');
-const { find, findIndex, sortBy } = require('lodash');
 const tooltip = require('../../components/misc/enhancers/tooltip');
-const editOptions = require('./editOptions');
 
 const { Glyphicon, Button: BButton } = require('react-bootstrap');
 const Button = tooltip(BButton);
-const { getFloatingWidgets, getVisibleFloatingWidgets, getFloatingWidgetsCurrentLayout, getCollapsedIds, getCollapsedState } = require('../../selectors/widgets');
-const { toggleCollapse, toggleCollapseAll, toggleTray } = require('../../actions/widgets');
+const { getVisibleFloatingWidgets} = require('../../selectors/widgets');
+const { toggleCollapseAll, toggleTray } = require('../../actions/widgets');
+const { trayWidgets } = require('../../selectors/widgetsTray');
+const { filterHiddenWidgets } = require('./widgetsPermission');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
-
-/**
- * Only widgets that are not hidden (to some users) or pinned (static) can be in tray
- * @param {object} widget the widget configuration
- */
-const noHiddenOrStaticWidgets = w => !w.dataGrid || !w.dataGrid.static;
-
-// hide hidden widgets in tray for users has not access to them
-const filterHiddenWidgets = compose(
-    defaultProps({
-        "toolsOptions": {
-            "seeHidden": "user.role===ADMIN"
-        }
-    }),
-    // allow to customize toolsOptions object, with rules. see accessRuleParser
-    editOptions("toolsOptions", { asObject: true }),
-    withProps(({ widgets, toolsOptions = { seeHidden: false } }) => ({
-        widgets: toolsOptions.seeHidden ? widgets : widgets.filter(w => !w.hide)
-    }))
-);
-
-/**
- * A selector that retrieves widgets to display in the tray area
- * @return the widgets to display in the tray area
- */
-const trayWidgets = createSelector(
-    getFloatingWidgets,
-    getCollapsedIds,
-    getFloatingWidgetsCurrentLayout,
-    getCollapsedState,
-    (widgets = [], collapsedIds, layout, collapsed = {}) =>
-        // sort, filter and add collapsed state to the widgets
-        sortBy(
-            // only non-static non-hidden widgets should be visible in tray
-            widgets
-            .filter(noHiddenOrStaticWidgets)
-            // collapsed widgets should have the flag - Collapsed
-            .map(w => findIndex(collapsedIds, id => id === w.id) >= 0
-                ? {
-                    ...w,
-                    collapsed: true
-                }
-                : w),
-            // sort by layout position (row, column)
-            w => {
-                const collapsedLayout = collapsed[w.id] && collapsed[w.id].layout;
-                const position = find(layout, { i: w.id }) || collapsedLayout || {};
-                const { x = 0, y = 0 } = position;
-                return y * 100 + x;
-            })
-);
-
-/**
- * Button bar with the list of widgets to
- * minimize/expand
- */
-const WidgetsBar = compose(
-    connect(
-        createSelector(
-            trayWidgets,
-            widgets => ({ widgets })
-        ),
-        {
-            onClick: toggleCollapse
-        }
-    ),
-    defaultProps({
-        btnGroupProps: {
-            className: "widgets-toolbar",
-            style: { marginLeft: 2, marginRight: 2 }
-        }
-    }),
-    filterHiddenWidgets,
-    withProps(({ btnGroupProps = {}, btnDefaultProps = {} }) => ({
-        btnGroupProps: {
-            bsSize: "xsmall",
-            ...btnGroupProps
-        },
-        btnDefaultProps: {
-            bsSize: "xsmall",
-            ...(btnDefaultProps || {})
-        }
-    }))
-)(require('../../components/widgets/view/WidgetsBar'));
+const WidgetsBar = require('./WidgetsBar');
 
 /**
  * Button that allows collapse/Expand functionality of the tray.
@@ -145,7 +62,6 @@ const CollapseAllButton = compose(
         onClick={onClick}>
         <Glyphicon glyph={"list"} />
     </Button>));
-
 
 /**
  * Main component of the widgets tray.
