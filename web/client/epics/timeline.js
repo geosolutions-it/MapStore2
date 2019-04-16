@@ -10,8 +10,8 @@ const {REMOVE_NODE} = require('../actions/layers');
 const {error} = require('../actions/notifications');
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector, timelineLayersSelector } = require('../selectors/timeline');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
@@ -192,12 +192,12 @@ module.exports = {
     setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, UPDATE_LAYER_DIMENSION_DATA)
         .exhaustMap(() =>
             isAutoSelectEnabled(getState())
-            && get(layersWithTimeDataSelector(getState()), "[0].id")
+            && get(timelineLayersSelector(getState()), "[0].id")
             && !selectedLayerSelector(getState())
-                ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
+                ? Rx.Observable.of(selectLayer(get(timelineLayersSelector(getState()), "[0].id")))
                     .concat(
                         Rx.Observable.of(1).switchMap( () =>
-                            snapTime(getState(), get(layersWithTimeDataSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
+                            snapTime(getState(), get(timelineLayersSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
                                 .filter( v => v)
                                 .map(time => setCurrentTime(time)))
                     )

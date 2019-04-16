@@ -12,8 +12,8 @@ const { createSelector } = require('reselect');
 const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
-const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { currentTimeRangeSelector, isVisible, rangeSelector } = require('../selectors/timeline');
+const { offsetEnabledSelector, currentTimeSelector } = require('../selectors/dimension');
+const { currentTimeRangeSelector, isVisible, rangeSelector, timelineLayersSelector } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
 const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
@@ -45,7 +45,7 @@ const TimelinePlugin = compose(
     connect(
         createSelector(
             isVisible,
-            layersWithTimeDataSelector,
+            timelineLayersSelector,
             currentTimeSelector,
             currentTimeRangeSelector,
             offsetEnabledSelector,

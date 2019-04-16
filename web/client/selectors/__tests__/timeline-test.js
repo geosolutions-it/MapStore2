@@ -9,6 +9,7 @@
 const expect = require('expect');
 const {
     isCollapsed,
+    hasLayers,
     isVisible,
     isAutoSelectEnabled,
     currentTimeRangeSelector,
@@ -39,6 +40,14 @@ const SAMPLE_RANGE = {
     end: DIMENSION_RANGE.offsetTime
 };
 
+const TIME_DIMENSION_DATA = {
+    source: {
+        type: "multidim-extension",
+        url: "FAKE"
+    },
+    name: "time",
+    dimension: `${T1}--${T2}`
+};
 // sample timeline state with histogram
 const TIMELINE_STATE_HISTOGRAM = timeline(undefined, rangeDataLoaded(
     TEST_LAYER_ID,
@@ -62,18 +71,18 @@ const TIMELINE_STATE_VALUES = timeline(undefined, rangeDataLoaded(
 ));
 
 // sample dimension state for TEST_LAYER
-const DIMENSION_STATE = dimension(undefined, updateLayerDimensionData(TEST_LAYER_ID, "time", {
-    source: {
-        type: "multidim-extension",
-        url: "FAKE"
-    },
-    name: "time",
-    dimension: `${T1}--${T2}`
-}));
+const DIMENSION_STATE = dimension(undefined, updateLayerDimensionData(TEST_LAYER_ID, "time", TIME_DIMENSION_DATA));
 
 const LAYERS_STATE = {
     flat: [{
         id: TEST_LAYER_ID
+    }]
+};
+
+const LAYERS_WITH_TIME = {
+    flat: [{
+        id: TEST_LAYER_ID,
+        dimensions: [TIME_DIMENSION_DATA]
     }]
 };
 const SAMPLE_STATE_HISTOGRAM = {
@@ -94,12 +103,21 @@ describe('timeline selector', () => {
         expect(isCollapsed({ timeline: { settings: {} } })).toBeFalsy();
         expect(isCollapsed({ timeline: { settings: { collapsed: true } } })).toBe(true);
     });
-    it('isVisible', () => {
-        expect(isVisible({})).toBe(true);
-        expect(isVisible({ timeline: { settings: {} } })).toBe(true);
-        expect(isVisible({ timeline: { settings: { collapsed: true } } })).toBeFalsy();
+    it('hasLayers', () => {
+        expect(hasLayers({})).toBe(false);
+        expect(hasLayers({ timeline: TIMELINE_STATE_VALUES, layers: LAYERS_WITH_TIME, dimension: DIMENSION_STATE })).toBe(true);
     });
-    it('isCollapsed', () => {
+    it('isVisible', () => {
+        expect(isVisible({})).toBe(false);
+        expect(isVisible({ timeline: { settings: {} } })).toBe(false);
+        // collapsed, no time data
+        expect(isVisible({ timeline: { settings: { collapsed: true } } })).toBe(false);
+        // not collapsed, with time data
+        expect(isVisible({ timeline: { ...TIMELINE_STATE_VALUES, settings: { collapsed: false }}, layers: LAYERS_WITH_TIME })).toBe(true);
+        // collapsed with time data
+        expect(isVisible({ timeline: { ...TIMELINE_STATE_VALUES, settings: { collapsed: true }}, layers: LAYERS_WITH_TIME })).toBe(false);
+    });
+    it('isAutoSelectEnabled', () => {
         expect(isAutoSelectEnabled({})).toBeFalsy();
         expect(isAutoSelectEnabled({ timeline: { settings: {} } })).toBeFalsy();
         expect(isAutoSelectEnabled({ timeline: { settings: { autoSelect: true } } })).toBe(true);

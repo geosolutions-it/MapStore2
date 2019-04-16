@@ -2,7 +2,7 @@ const { get, head } = require('lodash');
 const {createSelector} = require('reselect');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector } = require('../selectors/dimension');
+const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
@@ -11,7 +11,6 @@ const rangeDataSelector = state => get(state, 'timeline.rangeData');
 const MAX_ITEMS = 50;
 
 const isCollapsed = state => get(state, 'timeline.settings.collapsed');
-const isVisible = state => !isCollapsed(state);
 
 const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
 /**
@@ -103,6 +102,12 @@ const getTimeItems = (data = {}, range, rangeData) => {
     return [];
 };
 
+/**
+ * Selector that retrieves the time data from the state (layer configuration, dimension state...) and convert it
+ * into timeline object data.
+ * @param {object} state the state
+ * @return {object[]} items to show in the timeline in the [visjs timeline data object format](http://visjs.org/docs/timeline/#Data_Format)
+ */
 const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
@@ -134,11 +139,21 @@ const currentTimeRangeSelector = createSelector(
 );
 const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
+/**
+ * Select layers visible in the timeline
+ */
+const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
+
+const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
+const isVisible = state => !isCollapsed(state) && hasLayers(state);
+
 
 module.exports = {
     isVisible,
     isCollapsed,
     currentTimeRangeSelector,
+    timelineLayersSelector,
+    hasLayers,
     itemsSelector,
     rangeSelector,
     isAutoSelectEnabled,

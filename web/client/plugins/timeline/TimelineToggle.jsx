@@ -8,10 +8,10 @@
 const React = require('react');
 const { Button: RButton, Glyphicon } = require('react-bootstrap');
 const { setCollapsed } = require('../../actions/timeline');
-const { isCollapsed } = require('../../selectors/timeline');
+const { isCollapsed, hasLayers } = require('../../selectors/timeline');
 
 
-const { compose, withHandlers, withProps } = require('recompose');
+const { compose, withHandlers, withProps, renderNothing, branch } = require('recompose');
 const tooltip = require('../../components/misc/enhancers/tooltip');
 
 
@@ -24,18 +24,25 @@ const ToggleButton = (props) => (<Button
     bsSize="xsmall"
 ><Glyphicon glyph="time" /></Button>);
 
+/**
+ * Toggle button for timeline hide (collapse)/show functionality for timeline.
+ * Visible in the WidgetsTray, when present
+ */
 module.exports = compose(
     connect(
         createSelector(
             isCollapsed,
-            collapsed => ({
-                collapsed
+            hasLayers,
+            (collapsed, visible) => ({
+                collapsed,
+                visible
             })
         ),
         {
             setCollapsed
         }
     ),
+    branch(({ visible }) => !visible, renderNothing),
     withHandlers({
         onClick: ({ collapsed, setCollapsed: handler }) => () => handler(!collapsed)
     }),
