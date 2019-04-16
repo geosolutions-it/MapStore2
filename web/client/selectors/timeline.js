@@ -2,7 +2,6 @@ const { get, head } = require('lodash');
 const {createSelector} = require('reselect');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-const moment = require('moment');
 const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector } = require('../selectors/dimension');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
@@ -10,6 +9,9 @@ const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
 const MAX_ITEMS = 50;
+
+const isCollapsed = state => get(state, 'timeline.settings.collapsed');
+const isVisible = state => !isCollapsed(state);
 
 const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
 /**
@@ -88,7 +90,7 @@ const rangeDataToItems = (rangeData = {}, range) => {
 };
 /**
  * Transforms time values from layer state or rangeData (histogram,values) into items for timeline.
- * @param {object} data layer timedimension data
+ * @param {object} data layer time dimension data
  * @param {object} range start/end object that represent the view range
  * @param {object} rangeData object that contains domain or histogram
  */
@@ -119,18 +121,11 @@ const itemsSelector = createShallowSelector(
 );
 const loadingSelector = state => get(state, "timeline.loading");
 const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
-const calculateOffsetTimeSelector = (state) => {
-    const offset = get(state, "timeline.offsetTime");
-    const time = currentTimeSelector(state);
-    return time && offset && moment(time).add(offset) || time && moment(time).add(1, 'month');
-};
 
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
 const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
 const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(state), "source.url");
-
-const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
 const currentTimeRangeSelector = createSelector(
     currentTimeSelector,
@@ -141,14 +136,14 @@ const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(stat
 
 
 module.exports = {
+    isVisible,
+    isCollapsed,
     currentTimeRangeSelector,
-    mouseEventSelector,
     itemsSelector,
     rangeSelector,
     isAutoSelectEnabled,
     loadingSelector,
     selectedLayerSelector,
-    calculateOffsetTimeSelector,
     selectedLayerData,
     selectedLayerTimeDimensionConfiguration,
     selectedLayerDataRangeSelector,

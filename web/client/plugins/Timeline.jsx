@@ -13,7 +13,7 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { currentTimeRangeSelector, rangeSelector } = require('../selectors/timeline');
+const { currentTimeRangeSelector, isVisible, rangeSelector } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
 const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
@@ -44,6 +44,7 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 const TimelinePlugin = compose(
     connect(
         createSelector(
+            isVisible,
             layersWithTimeDataSelector,
             currentTimeSelector,
             currentTimeRangeSelector,
@@ -51,7 +52,8 @@ const TimelinePlugin = compose(
             playbackRangeSelector,
             statusSelector,
             rangeSelector,
-            (layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
+                visible,
                 layers,
                 currentTime,
                 currentTimeRange,
@@ -67,7 +69,7 @@ const TimelinePlugin = compose(
             setPlaybackRange: selectPlaybackRange,
             moveRangeTo: onRangeChanged
         }),
-    branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
+    branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true}),
     //
     // ** Responsiveness to container.
@@ -271,10 +273,14 @@ const TimelinePlugin = compose(
 );
 
 const assign = require('object-assign');
-
+const TimelineToggle = require('./timeline/TimelineToggle');
 module.exports = {
     TimelinePlugin: assign(TimelinePlugin, {
-        disablePluginIf: "{state('mapType') === 'cesium'}"
+        disablePluginIf: "{state('mapType') === 'cesium'}",
+        WidgetsTray: {
+            tool: <TimelineToggle />,
+            position: 0
+        }
     }),
     reducers: {
         dimension: require('../reducers/dimension'),

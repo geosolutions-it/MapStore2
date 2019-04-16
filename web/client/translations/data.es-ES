@@ -1575,6 +1575,8 @@
                 "snapToGuideLayer": "Ajustar a capa de guía",
                 "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
             },
+            "hide": "Esconder la línea de tiempo",
+            "show": "Mostrar la línea de tiempo",
             "currentTime": "Ir a la hora actual",
             "rangeStart": "Ir al rango de tiempo actual",
             "rangeEnd": "Ir al rango de tiempo actual",

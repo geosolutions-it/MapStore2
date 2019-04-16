@@ -1576,6 +1576,8 @@
                 "snapToGuideLayer": "Snap to guide layer",
                 "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
             },
+            "hide": "Hide timeline",
+            "show": "Show timeline",
             "currentTime": "Go to current time",
             "rangeStart":"Go to the current time range",
             "rangeEnd" : "Go to the current time range",

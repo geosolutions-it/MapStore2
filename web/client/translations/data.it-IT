@@ -1575,6 +1575,8 @@
                 "snapToGuideLayer": "Aggancia al livello guida",
                 "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
             },
+            "hide": "Nascondi timeline",
+            "show": "Mostra timeline",
             "currentTime": "Istante corrente",
             "rangeStart": "Vai all'intervallo di tempo corrente",
             "rangeEnd": "Vai all'intervallo di tempo corrente",

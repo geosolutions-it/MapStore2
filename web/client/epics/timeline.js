@@ -128,8 +128,12 @@ const loadRangeData = (id, timeData, getState) => {
         }
 
         const domainValues = domain && domain.indexOf('--') < 0 && domain.split(',');
-        // const total = values.reduce((a, b) => a + b, 0);
 
+        /*
+         * shape of range: {start: "T_START", end: "T_END"}
+         * shape of histogram {values: [1, 2, 3], domain: "T_START/T_END/RESOLUTION" }
+         * shape of domain: {values: ["T1", "T2", ....]}, present only if not in the form "T1--T2"
+         */
         return Rx.Observable.of({
             range,
             histogram: histogram && histogram.Domain
@@ -199,7 +203,7 @@ module.exports = {
                     )
                 : Rx.Observable.empty()
     ),
-     /**
+    /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist
      * The policy is:
      *  - if current time is not defined, it will be placed to the center of the current timeline's viewport. If the viewport is undefined it is set to "now"

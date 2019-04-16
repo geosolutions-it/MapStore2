@@ -14,14 +14,12 @@ const tooltip = require('../../components/misc/enhancers/tooltip');
 
 const { Glyphicon, Button: BButton } = require('react-bootstrap');
 const Button = tooltip(BButton);
-const { getVisibleFloatingWidgets} = require('../../selectors/widgets');
+const { getVisibleFloatingWidgets } = require('../../selectors/widgets');
 const { toggleCollapseAll, toggleTray } = require('../../actions/widgets');
 const { trayWidgets } = require('../../selectors/widgetsTray');
 const { filterHiddenWidgets } = require('./widgetsPermission');
-
 const BorderLayout = require('../../components/layout/BorderLayout');
 const WidgetsBar = require('./WidgetsBar');
-
 /**
  * Button that allows collapse/Expand functionality of the tray.
  * @param {object} props
@@ -43,14 +41,14 @@ const CollapseAllButton = compose(
     connect(
         createSelector(
             getVisibleFloatingWidgets,
-            (widgets = []) => ({widgets})
+            (widgets = []) => ({ widgets })
         ), // get all visible widgets
         {
             onClick: () => toggleCollapseAll()
         }
     ),
     filterHiddenWidgets,
-    withProps(({widgets = []}) => ({
+    withProps(({ widgets = [] }) => ({
         shouldExpand: widgets.length === 0
     }))
 )(({ onClick = () => { }, shouldExpand = false } = {}) =>
@@ -74,11 +72,13 @@ class WidgetsTray extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
         toolsOptions: PropTypes.object,
+        items: PropTypes.array,
         expanded: PropTypes.bool,
         setExpanded: PropTypes.fun
     };
     static defaultProps = {
         enabled: true,
+        items: [],
         expanded: false,
         setExpanded: () => { }
     };
@@ -86,16 +86,17 @@ class WidgetsTray extends React.Component {
         return this.props.enabled
             ? (<div className="widgets-tray"
                 style={{
-                    marginBottom: 34,
-                    marginRight: 60,
+                    marginBottom: 32,
+                    marginRight: 80,
                     bottom: 0,
                     right: 0,
                     position: "absolute"
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseTrayButton toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
-                        <CollapseAllButton toolsOptions={this.props.toolsOptions} />
+                        <CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
+                        <CollapseAllButton key="collapse-all" toolsOptions={this.props.toolsOptions} />,
+                        ...(this.props.items.map( i => i.tool) || [])
                     ]}
                 >{this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
                 </BorderLayout>
@@ -107,12 +108,12 @@ module.exports = compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
-        (widgets = []) => ({widgets})
+        (widgets = []) => ({ widgets })
     ), {
-        toggleTray
-    }),
+            toggleTray
+        }),
     filterHiddenWidgets,
-    withProps(({widgets = []}) => ({
+    withProps(({ widgets = [] }) => ({
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
@@ -130,7 +131,7 @@ module.exports = compose(
         .merge(
             props$
                 .distinctUntilKeyChanged('hasCollapsedWidgets')
-                .do(({ setExpanded = () => { }, hasCollapsedWidgets}) => setExpanded(hasCollapsedWidgets))
+                .do(({ setExpanded = () => { }, hasCollapsedWidgets }) => setExpanded(hasCollapsedWidgets))
                 .ignoreElements()
         )
     ),

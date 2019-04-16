@@ -1576,6 +1576,8 @@
                 "snapToGuideLayer": "Aligner sur le calque guide",
                 "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données du calque sélectionné. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
             },
+            "hide": "Masquer la timeline",
+            "show": "Afficher la timeline",
             "currentTime": "Aller à l'heure actuelle",
             "rangeStart": "Aller à la plage de temps actuelle",
             "rangeEnd": "Aller à la plage de temps actuelle",

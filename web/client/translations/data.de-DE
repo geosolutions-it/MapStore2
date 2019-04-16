@@ -1575,6 +1575,8 @@
                 "snapToGuideLayer": "Auf Führungsebene ausrichten",
                 "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren."
             },
+            "hide": "Timeline ausblenden",
+            "show": "Timeline anzeigen",
             "currentTime": "Gehe zur aktuellen Uhrzeit",
             "rangeStart": "Gehe zum aktuellen Zeitbereich",
             "rangeEnd": "Gehe zum aktuellen Zeitbereich",
