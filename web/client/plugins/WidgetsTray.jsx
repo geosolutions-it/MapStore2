@@ -18,5 +18,6 @@ const autoDisableWidgets = require('./widgets/autoDisableWidgets');
  * @class
  */
 module.exports = {
-    WidgetsTrayPlugin: autoDisableWidgets(WidgetsTray)
+    WidgetsTrayPlugin: autoDisableWidgets(WidgetsTray),
+    epics: require('../epics/widgetsTray')
 };

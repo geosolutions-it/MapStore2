@@ -1409,7 +1409,14 @@
                 "expandTray": "Expand widgets tray",
                 "collapseTray": "Collapse widgets tray",
                 "expandAll": "Expand all widgets",
-                "collapseAll": "Collapse all widgets"
+                "collapseAll": "Collapse all widgets",
+                "notifications" : {
+                    "collapsed": {
+                        "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
+                        "timelineTitle": "Timeline has been collapsed",
+                        "widgetsTitle": "Widgets has been collapsed"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1589,6 +1596,10 @@
             "disablePlayBack": "Disable playback controls",
             "expand" : "Expand time slider",
             "collapse" : "Collapse time slider",
+            "collapsed": {
+                "title": "Timeline has been collapsed",
+                "tooltip": "Click here to expand it again"
+            },
             "errors": {
                 "multidim_error_title": "Backend service is not responding",
                 "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."

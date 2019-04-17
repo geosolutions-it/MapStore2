@@ -1409,7 +1409,14 @@
                 "expandTray": "Développer le plateau de widgets",
                 "collapseTray": "Réduire le tiroir des widgets",
                 "expandAll": "Développer tous les widgets",
-                "collapseAll": "Réduire tous les widgets"
+                "collapseAll": "Réduire tous les widgets",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La chronologie et les widgets ne peuvent pas rester en même temps. Utilisez-le sur le plateau du widget pour basculer entre la timeline et les widgets",
+                        "timelineTitle": "La chronologie a été réduite",
+                        "widgetsTitle": "Les widgets ont été réduits"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1589,6 +1596,10 @@
             "disablePlayBack": "Désactiver les contrôles de lecture",
             "expand" : "Augmenter le curseur temporel",
             "collapse" : "Réduire le curseur temporel",
+            "collapsed": {
+                "title": "La chronologie a été réduite",
+                "tooltip": "Cliquez ici pour l'agrandir à nouveau"
+            },
             "errors": {
                 "multidim_error_title": "Le service principal ne répond pas",
                 "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur."

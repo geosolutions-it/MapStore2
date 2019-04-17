@@ -50,8 +50,6 @@ const { assign, pickBy, has } = require('lodash');
 module.exports = (state = {
     settings: {
         autoSelect: true, // selects the first layer available as guide layer. This is a configuration only setting for now
-        // enabled: true, // is enabled
-        // disableOnCollapse: true,
         collapsed: false
     }
 }, action) => {
