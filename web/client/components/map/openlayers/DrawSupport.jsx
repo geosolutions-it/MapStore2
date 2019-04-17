@@ -294,7 +294,7 @@ class DrawSupport extends React.Component {
         let drawBaseProps = {
             source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: new ol.style.Style({
+            style: geometryType === "Marker" ? VectorStyle.getMarkerStyle({style: newProps.style}) : new ol.style.Style({
                 fill: new ol.style.Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
                 }),
@@ -365,11 +365,14 @@ class DrawSupport extends React.Component {
                 }
                 break;
             }
-            case "Point": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": {
+            case "Marker": case "Point": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": {
                 if (geometryType === "LineString") {
                     roiProps.maxPoints = maxPoints;
                 }
                 roiProps.type = geometryType;
+                if (geometryType === "Marker") {
+                    roiProps.type = "Point";
+                }
                 roiProps.geometryFunction = (coordinates, geometry) => {
                     let geom = geometry;
                     if (!geom) {
@@ -713,7 +716,7 @@ class DrawSupport extends React.Component {
     createOLGeometry = ({type, coordinates, radius, center, projection, options = {}}) => {
         let geometry;
         switch (type) {
-            case "Point": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
+            case "Point": case "Marker": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
             case "LineString": { geometry = new ol.geom.LineString(coordinates ? coordinates : []); break; }
             case "MultiPoint": { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; }
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
