@@ -29,8 +29,11 @@ const withPopover = require('../../components/data/featuregrid/enhancers/withPop
  */
 const togglePopover = props$ =>
     props$
+        // only the first time collapsed property is set to true
         .distinctUntilKeyChanged('collapsed')
+        .filter(({ collapsed }) => collapsed)
         .take(1)
+        // show popover for 5 seconds
         .switchMap(({ collapseHintPopoverOptions }) =>
             Rx.Observable.timer(5000)
             .startWith({
@@ -94,7 +97,7 @@ module.exports = compose(
         onClick: ({ collapsed, setCollapsed: handler }) => () => handler(!collapsed)
     }),
     withProps(({collapsed}) => ({
-        bsStyle: collapsed ? "primary" : "success active",
+        bsStyle: collapsed ? "primary" : "success",
         tooltipId: collapsed ? "timeline.show" : "timeline.hide"
         })
     )
