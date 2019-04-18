@@ -207,7 +207,7 @@
     "xml2js": "0.4.17"
   },
   "scripts": {
-    "doc": "docma -c docma-config.json --dest web/docs",
+    "doc": "docma -c build/docma-config.json --dest web/docs",
     "cleandoc": "rimraf web/docs && rimraf web/client/mapstore/docs",
     "doctest": "docma -c build/docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running npm start",
     "i18n": "node  utility/translations/findMissingTranslations.js",
