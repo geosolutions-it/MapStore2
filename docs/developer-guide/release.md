@@ -21,8 +21,6 @@ Replacing:
  - with current release tag name `v2018.02.00`
  - `%222018.02.00%22` with the name of the milestone (`%22` are `"` in the URL to generate a filter like `milestone:"2018.02.00"`)
 
-NOTE: we don't use  github_changelog_generator anymore because it has some issues that may address issues to wrong milestone, accordingly to our current workflow.
-
 ## Release Checklist
 ```
 - [ ] Create an issue with this checklist in the release milestone.
