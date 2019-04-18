@@ -27,6 +27,23 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 require('./appPolyfill');
 
+
+/**
+ * Standard MapStore2 application component
+ *
+ * @name  StandardApp
+ * @memberof components.app
+ * @prop {function} appStore store creator function
+ * @prop {object} pluginsDef plugins definition object (e.g. as loaded from plugins.js)
+ * @prop {object} storeOpts options for the store
+ * @prop {array} initialActions list of actions to be dispatched on startup
+ * @prop {function|object} appComponent root component for the application
+ * @prop {bool} printingEnabled initializes printing environment based on mapfish-print
+ * @prop {function} onStoreInit optional callback called just after store creation
+ * @prop {function} onInit optional callback called before first rendering, can delay first rendering
+ * to do custom initialization (e.g. force SSO login)
+ * @prop {string} mode current application mode (e.g. desktop/mobile) drives plugins loaded from localConfig
+ */
 class StandardApp extends React.Component {
     static propTypes = {
         appStore: PropTypes.func,

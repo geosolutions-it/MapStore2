@@ -20,7 +20,21 @@ const getWidgetLayer = createSelector(
 );
 
 const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
-
+const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
+const getVisibleFloatingWidgets = createSelector(
+    getFloatingWidgets,
+    getCollapsedState,
+    (widgets, collapsed) => {
+        if (widgets && collapsed) {
+            return widgets.filter(({ id } = {}) => !collapsed[id]);
+        }
+        return widgets;
+    }
+);
+const getCollapsedIds = createSelector(
+    getCollapsedState,
+    (collapsed = {}) => Object.keys(collapsed)
+);
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
 
 /**
@@ -49,12 +63,19 @@ const getWidgetsDependenciesGroups = createSelector(
     widgets => getWidgetsGroups(widgets)
 );
 const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+const getFloatingWidgetsCurrentLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layout`);
 
 const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
+const isTrayEnabled = state => get(state, "widgets.tray");
+
 module.exports = {
     getFloatingWidgets,
+    getVisibleFloatingWidgets,
+    getCollapsedState,
+    getCollapsedIds,
     getFloatingWidgetsLayout,
+    getFloatingWidgetsCurrentLayout,
     // let's use the same container for the moment
     getDashboardWidgets,
     dashboardHasWidgets: state => (getDashboardWidgets(state) || []).length > 0,
@@ -96,5 +117,6 @@ module.exports = {
     widgetsConfig: createStructuredSelector({
         widgets: getFloatingWidgets,
         layouts: getFloatingWidgetsLayout
-    })
+    }),
+    isTrayEnabled
 };
