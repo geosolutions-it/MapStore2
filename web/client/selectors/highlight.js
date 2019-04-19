@@ -2,7 +2,7 @@ const {get} = require('lodash');
 const {createSelector} = require('reselect');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 
-const selectedFeatures = (state) => get(state, state && state.highlight && state.highlight.featuresPath || "highlight.emptyFeatures");
+const selectedFeatures = (state) => get(state, state && state.highlight && state.highlight.featuresPath || "highlight.emptyFeatures") || [];
 const filteredspatialObject = (state) => get(state, state && state.featuregrid && state.featuregrid.open && state.featuregrid.showFilteredObject && "query.filterObj.spatialField" || "emptyObject");
 const filteredGeometry = (state) => filteredspatialObject(state) && filteredspatialObject(state).geometry;
 const filteredspatialObjectType = (state) => filteredGeometry(state) && filteredGeometry(state).type || "Polygon";

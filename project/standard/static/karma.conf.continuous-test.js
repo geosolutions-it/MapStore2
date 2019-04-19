@@ -8,6 +8,9 @@ module.exports = function karmaConfig(config) {
         ],
         path: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")],
         testFile: 'tests.webpack.js',
-        singleRun: false
+        singleRun: false,
+        alias: {
+            "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client")
+        }
     }));
 };

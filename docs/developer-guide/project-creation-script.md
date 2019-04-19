@@ -1,6 +1,19 @@
 # Create your own MapStore project
 
-To create a new MapStore based project you can use the createProject script:
+To create a new MapStore based project you can use the createProject script.
+First of all, if you don't have done it before, clone the MapStore2 repository master branch into a local folder:
+
+```sh
+git clone https://github.com/geosolutions-it/MapStore2
+```
+
+Then, move into the folder that has just been created, containing MapStore2:
+
+```sh
+cd MapStore2
+```
+
+Finally, to create the project, use the following command:
 
 ```sh
 node ./createProject.js <projectType> <projectName> <projectVersion> <projectDescription> <gitRepositoryUrl> <outputFolder>

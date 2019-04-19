@@ -1,4 +1,4 @@
-module.exports = ({files, path, testFile, singleRun, basePath = "."}) => ({
+module.exports = ({files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers: [ 'Chrome' ],
 
     browserNoActivityTimeout: 30000,
@@ -100,7 +100,8 @@ module.exports = ({files, path, testFile, singleRun, basePath = "."}) => ({
             ]
         },
         resolve: {
-            extensions: ['.js', '.json', '.jsx']
+            extensions: ['.js', '.json', '.jsx'],
+            alias: alias
         }
     },
     webpackServer: {

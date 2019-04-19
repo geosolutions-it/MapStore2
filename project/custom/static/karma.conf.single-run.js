@@ -115,7 +115,10 @@ module.exports = function karmaConfig(config) {
                 ]
             },
             resolve: {
-                extensions: ['.js', '.json', '.jsx']
+                extensions: ['.js', '.json', '.jsx'],
+                alias: {
+                    "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client")
+                }
             }
         },
 
