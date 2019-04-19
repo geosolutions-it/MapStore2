@@ -3,27 +3,32 @@ The MapStore2 [plugins architecture](plugins-architecture) allows building your 
 
 Creating a plugin is like assembling and connecting several pieces together into an atomic module. This happens by writing a plugin module, a ReactJS JSX file exporting the plugin descriptor.
 
+## Introduction
+During this tutorial, you will learn how to create and configure plugins in a MapStore project.
+If you don't know how to work with MapStore projects, please read the [Projects Guide](mapstore-projects).
+
 ## A plugin example
 
 A plugin is a ReactJS *component with a name*. The chosen name is always suffixed with **Plugin**.
 
-### Sample.jsx
+### js/plugins/Sample.jsx
 ```javascript
+import React from 'react';
 
-const SampleComponent = () => {
-    const style = {position: "absolute", top: "100px", left: "100px", zIndex: 10000000};
-    return <div style={style}>Sample</div>;
+class SampleComponent extends React.Component {
+    render() {
+        const style = {position: "absolute", top: "100px", left: "100px", zIndex: 10000000};
+        return <div style={style}>Sample</div>;
+    }
 }
 
-module.exports = {
-    SamplePlugin: SampleComponent
-    // the Plugin postfix is mandatory, avoid bugs by calling all your descriptors
-    // <Something>Plugin
-};
+export const SamplePlugin = SampleComponent;
+// the Plugin postfix is mandatory, avoid bugs by calling all your descriptors
+// <Something>Plugin
 ```
 Being a component with a name (**Sample** in our case) you can include it in your project editing its *plugins.js* file:
 
-### plugins.js
+### js/plugins.js
 ```javascript
 module.exports = {
     plugins: {
@@ -73,13 +78,22 @@ Plugin properties
 ## A store connected plugin example
 A plugin component is a **smart component** (connected to the Redux store) so that properties can be taken from the global state, as needed.
 
-### ConnectedSample.jsx (1)
+### js/plugins/ConnectedSample.jsx (1)
 ```javascript
-const {connect} = require('react-redux');
+import React from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {get} from 'lodash';
 
-const SampleComponent = ({zoom) => {
-    const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
-    return <div style={style}>Zoom: {zoom}</div>;
+class SampleComponent extends React.Component {
+    static propTypes = {
+        zoom: PropTypes.number
+    };
+
+    render() {
+        const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
+        return <div style={style}>Zoom: {this.props.zoom}</div>;
+    }
 }
 
 const ConnectedSample = connect((state) => {
@@ -88,23 +102,31 @@ const ConnectedSample = connect((state) => {
     };
 })(SampleComponent);
 
-module.exports = {
-    ConnectedSamplePlugin: ConnectedSample
-};
+export const ConnectedSamplePlugin = ConnectedSample;
 ```
 
 A plugin can use actions to update the global state.
 
-### ConnectedSample.jsx (2)
+### js/plugins/ConnectedSample.jsx (2)
 ```javascript
 
-const {connect} = require('react-redux');
-const {changeZoomLevel} = require('../actions/map');
-const {get} = require('lodash');
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {get} from 'lodash';
 
-const SampleComponent = ({zoom, onZoom) => {
-    const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
-    return <div style={style}>Zoom: {zoom} <button onClick={() => onZoom(zoom + 1))}>+</button></div>;
+import { changeZoomLevel } from '../../MapStore2/web/client/actions/map';
+
+class SampleComponent extends React.Component {
+    static propTypes = {
+        zoom: PropTypes.number,
+        onZoom: PropTypes.func
+    };
+
+    render() {
+        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
+        return <div style={style}>Zoom: {this.props.zoom} <button onClick={() => this.props.onZoom(this.props.zoom + 1)}>Increase</button></div >;
+    }
 }
 
 const ConnectedSample = connect((state) => {
@@ -112,79 +134,74 @@ const ConnectedSample = connect((state) => {
         zoom: get(state, 'map.present.zoom')
     };
 }, {
-    onZoom: changeZoomLevel // connected action
-})(SampleComponent);
+        onZoom: changeZoomLevel // connected action
+    })(SampleComponent);
 
-module.exports = {
-    ConnectedSamplePlugin: ConnectedSample
-};
+export const ConnectedSamplePlugin = ConnectedSample;
+
 ```
 
 A plugin can define its own state fragments and the related reducers.
 Obviously you will also be able to define your own actions.
 
-### actions/sample.js
+### js/actions/sample.js
 ```javascript
-// custom action
-const UPDATE_SOMETHING = 'SAMPLE:UPDATE_SOMETHING';
-const updateSomething = (payload) => {
+export const UPDATE_SOMETHING = 'SAMPLE:UPDATE_SOMETHING';
+export const updateSomething = (payload) => {
     return {
         type: UPDATE_SOMETHING,
         payload
     };
 };
-module.exports = {
-    UPDATE_SOMETHING,
-    updateSomething
-};
 ```
 
-### reducers/sample.js
+### js/reducers/sample.js
 ```javascript
-const {UPDATE_SOMETHING} = require('../actions/sample');
-module.exports = function (action, state) {
-        switch (action.type) {
-            case UPDATE_SOMETHING:
-                return {
-                    text: action.payload
-                }
-                break;
-            default:
-                return state;
-        }
+import { UPDATE_SOMETHING } from '../actions/sample';
+export default function(state = { text: 'Initial Text' }, action) {
+    switch (action.type) {
+        case UPDATE_SOMETHING:
+            return {
+                text: action.payload
+            };
+        default:
+            return state;
     }
-};
+}
 ```
 
-### ConnectedSample.jsx (3)
+### js/plugins/ConnectedSample.jsx (3)
 ```javascript
-const {connect} = require('react-redux');
-// custom action
-const {updateSomething} = require('../actions/sample');
-// custom reducer and state fragment
-const sample = require('../reducers/sample');
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {get} from 'lodash';
 
-const {get} = require('lodash');
+import { updateSomething } from '../actions/sample';
+import sample from '../reducers/sample';
 
-const SampleComponent = ({text, onUpdate}) => {
-    const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
-    return <div style={style}>Text: {text} <button onClick={() => onUpdate('Updated Text'))}>Initial Text</button></div>;
-};
+class SampleComponent extends React.Component {
+    static propTypes = {
+        text: PropTypes.string,
+        onUpdate: PropTypes.func
+    };
+
+    render() {
+        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
+        return <div style={style}>Text: {this.props.text} <button onClick={() => this.props.onUpdate('Updated Text')}>Update</button></div >;
+    }
+}
 
 const ConnectedSample = connect((state) => {
     return {
         text: get(state, 'sample.text')
     };
 }, {
-    onUpdate: updateSomething
-})(SampleComponent);
+        onUpdate: updateSomething // connected action
+    })(SampleComponent);
 
-module.exports = {
-    ConnectedSamplePlugin: ConnectedSample,
-    reducers: {
-        sample
-    }
-};
+export const ConnectedSamplePlugin = ConnectedSample;
+export const reducers = {sample};
 ```
 ## Data fetching and side effects
 Side effects should be limited as much as possible, but there are cases where a side effect cannot be avoided.
@@ -192,105 +209,135 @@ In particular all asynchronous operations are side effects in Redux, but we obvi
 
 To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](writing-epics) section of this documentation.
 
-### actions/sample.js
+### js/actions/sample.js
 ```javascript
 // custom action
-const LOAD_DATA = 'SAMPLE:LOAD_DATA';
-const LOADED_DATA = 'SAMPLE:LOADED_DATA';
-const loadData = () => {
+export const LOAD_DATA = 'SAMPLE:LOAD_DATA';
+export const LOADED_DATA = 'SAMPLE:LOADED_DATA';
+export const LOAD_ERROR = 'SAMPLE:LOAD_ERROR';
+export const loadData = () => {
     return {
         type: LOAD_DATA
     };
 };
 
-const loadedData = (payload) => {
+export const loadedData = (payload) => {
     return {
-        type: LOAD_DATA,
+        type: LOADED_DATA,
         payload
     };
 };
-module.exports = {
-    LOAD_DATA,
-    LOADED_DATA,
-    loadData,
-    loadedData
+
+export const loadError = (error) => {
+    return {
+        type: LOAD_ERROR,
+        error
+    };
 };
 ```
 
-### reducers/sample.js
+### js/reducers/sample.js
 ```javascript
-const {LOADED_DATA} = require('../actions/sample');
-module.exports = function (action, state) {
-        switch (action.type) {
-            case LOADED_DATA:
-                return {
-                    text: action.payload
-                }
-                break;
-            default:
-                return state;
-        }
+import { LOADED_DATA } from '../actions/sample';
+export default function(state = { text: 'Initial Text' }, action) {
+    switch (action.type) {
+        case LOADED_DATA:
+            return {
+                text: action.payload
+            };
+        case LOAD_ERROR:
+            return {
+                error: action.error
+            };
+        default:
+            return state;
     }
+}
+```
+
+### js/epics/sample.js
+```javascript
+import Rx from 'rxjs';
+import axios from 'axios';
+
+import { LOAD_DATA, loadedData, loadError } from '../actions/sample';
+
+export const loadDataEpic = (action$) => {
+    return action$.ofType(LOAD_DATA)
+        .switchMap(() => {
+            return Rx.Observable.defer(() => axios.get('version.txt'))
+                .switchMap((response) => Rx.Observable.of(loadedData(response.data)))
+                .catch(e => Rx.Observable.of(loadError(e.message)));
+        });
+};
+
+export default {
+    loadDataEpic
 };
 ```
 
-### epics/sample.js
+### js/plugins/SideEffectComponent.jsx
 ```javascript
-const Rx = require('rxjs');
-const {LOAD_DATA, lodadedData} = require('../actions/sample');
-module.exports = {
-    loadDataEpic: action$.ofType(LOAD_DATA)
-            .switchMap((action) => {
-                return Rx.Observable.defer(() => axios.get('load/data/service'))
-                    .switchMap((response) => Rx.Observable.of(loadedData(response.data)))
-                    .catch(e => Rx.Observable.of(...));
-            })
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {get} from 'lodash';
+
+import { loadData } from '../actions/sample';
+import sampleEpics from '../epics/sample';
+import sample from '../reducers/sample';
+
+class SampleComponent extends React.Component {
+    static propTypes = {
+        text: PropTypes.string,
+        onLoad: PropTypes.func
+    };
+
+    render() {
+        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
+        return <div style={style}>Text: {this.props.text} <button onClick={this.props.onLoad}>Load</button></div >;
     }
-};
-```
-
-### SideEffectComponent.jsx
-```javascript
-const {connect} = require('react-redux');
-const {loadData} = require('../actions/sample');
-
-const SampleComponent = ({text, onLoad}) => {
-    const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
-    return <div style={style}>Text: {text} <button onClick={onLoad)}>Load</button></div>;
-};
+}
 
 const ConnectedSample = connect((state) => {
     return {
         text: get(state, 'sample.text')
     };
 }, {
-    onLoad: loadData
-})(SampleComponent);
+        onLoad: loadData // connected action
+    })(SampleComponent);
 
-module.exports = {
-    SideEffectSamplePlugin: ConnectedSample,
-    reducers: {
-        sample
-    },
-    epics: require('../epics/sample')
-};
+export const ConnectedSamplePlugin = ConnectedSample;
+export const reducers = {sample};
+export const epics = sampleEpics;
 ```
 
 ## Plugins that are containers of other plugins
 It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dinamically configure their items / tools from the configuration. 
 
-### ContainerComponent.jsx
+### js/plugins/ContainerComponent.jsx
 ```javascript
-const SampleContainer = ({items}) => {
-    return items.map(item => {
-        const Item = item.plugin; // item.plugin is the plugin ReactJS component
-        return <Item id={item.id} name={item.name}/>;
-    });
-};
+import React from 'react';
+import PropTypes from 'prop-types';
 
-module.exports = {
-    ContainerPlugin: SampleContainer
+class SampleContainer extends React.Component {
+    static propTypes = {
+        items: PropTypes.array
+    };
+    renderItems = () => {
+        return this.props.items.map(item => {
+            const Item = item.plugin; // item.plugin is the plugin ReactJS component
+            return <Item id={item.id} name={item.name} />;
+        });
+    };
+
+    render() {
+        const style = { zIndex: 1000, border: "solid black 1px", width: "200px", height: "200px", position: "absolute", top: "100px", left: "100px" };
+        return <div style={style}>{this.renderItems()}</div>;
+    }
 }
+
+export const ContainerPlugin = SampleContainer;
 ```
 
 ## Plugins for other plugins
@@ -298,12 +345,24 @@ Since we have containers, we can build plugins that can be contained in one or m
 
 ### ContainedComponent.jsx
 ```javascript
-const {connect} = require('react-redux');
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {get} from 'lodash';
+import assign from 'object-assign';
 
-const SampleComponent = ({text}) => {
-    const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
-    return <div style={style}>Text: {text}</div>;
-};
+import sample from '../reducers/sample';
+
+class SampleComponent extends React.Component {
+    static propTypes = {
+        text: PropTypes.string
+    };
+
+    render() {
+        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
+        return <div style={style}>Text: {this.props.text}</div >;
+    }
+}
 
 const ConnectedSample = connect((state) => {
     return {
@@ -311,14 +370,14 @@ const ConnectedSample = connect((state) => {
     };
 })(SampleComponent);
 
-module.exports = {
-    ContainedSamplePlugin: ConnectedSample,
+export const ConnectedSamplePlugin = assign(ConnectedSample, {
     Container: {
         name: "Sample",
         id: "sample_tool",
-        ...
+        priority: 1
     }
-};
+});
+export const reducers = {sample};
 ```
 
 Each section defines a possible container for the plugin, as the name of another plugin (*Container* in the example). The properties in it define the plugin behaviour in relation to the container (e.g. id of the item).
