@@ -74,8 +74,10 @@ pages:
     - Configuration: 'developer-guide/configuration-files.md'
     - Migration: 'developer-guide/mapstore-migration-guide.md'
     - How to Release: 'developer-guide/release.md'
+    - Projects:
+      - MapStore Projects: 'developer-guide/mapstore-projects.md'
+      - Project Creation Script: 'developer-guide/project-creation-script.md'
     - Plugins:
       - Plugins Architecture: 'developer-guide/plugins-architecture.md'
       - Configuring Plugins: 'developer-guide/plugins-documentation.md'
-    - Project Creation Script: 'developer-guide/project-creation-script.md'
   - Quick Start: 'quick-start.md'
