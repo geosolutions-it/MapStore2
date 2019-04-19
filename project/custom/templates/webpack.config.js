@@ -56,7 +56,8 @@ module.exports = (env) => {
         resolve: {
             extensions: [".js", ".jsx"],
             alias: {
-                "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client")
+                "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+                "@js": path.resolve(__dirname, "js")
             }
         },
         module: {
