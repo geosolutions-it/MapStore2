@@ -273,7 +273,7 @@
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ShapeFile", "Timeline", "Playback", {
+            }, "Print", "ShapeFile", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -343,6 +343,8 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets", "WidgetsTray",
+            "Timeline",
+            "Playback",
             "FeedbackMask",
             "StyleEditor"
         ],

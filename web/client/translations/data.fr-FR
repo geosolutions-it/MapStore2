@@ -1389,7 +1389,14 @@
                 "expandTray": "Développer le plateau de widgets",
                 "collapseTray": "Réduire le tiroir des widgets",
                 "expandAll": "Développer tous les widgets",
-                "collapseAll": "Réduire tous les widgets"
+                "collapseAll": "Réduire tous les widgets",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La chronologie et les widgets ne peuvent pas rester en même temps. Utilisez-le sur le plateau du widget pour basculer entre la timeline et les widgets",
+                        "timelineTitle": "La chronologie a été réduite",
+                        "widgetsTitle": "Les widgets ont été réduits"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1556,6 +1563,8 @@
                 "snapToGuideLayer": "Aligner sur le calque guide",
                 "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données du calque sélectionné. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
             },
+            "hide": "Masquer la timeline",
+            "show": "Afficher la timeline",
             "currentTime": "Aller à l'heure actuelle",
             "rangeStart": "Aller à la plage de temps actuelle",
             "rangeEnd": "Aller à la plage de temps actuelle",
@@ -1567,6 +1576,10 @@
             "disablePlayBack": "Désactiver les contrôles de lecture",
             "expand" : "Augmenter le curseur temporel",
             "collapse" : "Réduire le curseur temporel",
+            "collapsed": {
+                "title": "La chronologie a été réduite",
+                "tooltip": "Cliquez ici pour l'agrandir à nouveau"
+            },
             "errors": {
                 "multidim_error_title": "Le service principal ne répond pas",
                 "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur."
