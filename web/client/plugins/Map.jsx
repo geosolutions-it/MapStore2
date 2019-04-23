@@ -10,7 +10,6 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('../utils/PluginsUtils');
 const {createSelector} = require('reselect');
-const uuidv1 = require('uuid/v1');
 
 const {loadFont} = require('../utils/AgentUtils');
 
@@ -254,7 +253,7 @@ class MapPlugin extends React.Component {
                     {this.props.features.map( (feature) => {
                         return (<plugins.Feature
                             msId={feature.id}
-                            key={feature.id || uuidv1()}
+                            key={feature.id}
                             crs={projection}
                             type={feature.type}
                             style={feature.style || null }
@@ -282,7 +281,7 @@ class MapPlugin extends React.Component {
         const projection = this.props.map.projection || 'EPSG:3857';
         return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
-                <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name || uuidv1()} options={layer} securityToken={this.props.securityToken}>
+                <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}
                 </plugins.Layer>
             );
@@ -294,7 +293,7 @@ class MapPlugin extends React.Component {
             return layer.features.map( (feature) => {
                 return (
                     <plugins.Feature
-                        key={feature.id || uuidv1()}
+                        key={feature.id}
                         msId={feature.id}
                         type={feature.type}
                         crs={projection}
@@ -315,7 +314,7 @@ class MapPlugin extends React.Component {
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);
             const options = this.props.toolsOptions[Tool.name] && this.props.toolsOptions[Tool.name][this.props.mapType] || this.props.toolsOptions[Tool.name] || {};
-            return <Tool.impl key={Tool.name || uuidv1()} {...options}/>;
+            return <Tool.impl key={Tool.name} {...options}/>;
         });
     };
 
