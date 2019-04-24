@@ -32,13 +32,26 @@ import {
 module.exports = ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
     withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) /*props*/ => {
         let dateToParse = date;
-        if (!isDate(date) & isString(date)) {
-            // if time attribute, the prop 'date' has already the Z to the end
-            dateToParse = type === "time" ? new Date(`1970-01-01T${date}`) : new Date(date);
-        }
-        let resultDate = dateToParse;
         let datePart = "1970-01-01";
         let timePart = "00:00:00";
+        if (!isDate(date) && isString(date)) {
+            if (type === "time") {
+                // if time attribute, the prop 'date' has already the Z to the end, 00:00:00Z
+                dateToParse = new Date(`${datePart}T${date}`);
+            }
+
+            if (type === "date") {
+                // if date attribute, the prop 'date' has already the Z to the end, 1970-01-01Z
+                if (date.indexOf("Z") !== -1) {
+                    dateToParse = date.substr(0, date.length - 1);
+                }
+                dateToParse = new Date(`${dateToParse}T${timePart}Z`);
+            }
+            if (type === "date-time") {
+                dateToParse = new Date(date);
+            }
+        }
+        let resultDate = dateToParse;
         if (dateToParse) {
             switch (type) {
                 case "time": {
