@@ -10,7 +10,6 @@ const React = require('react');
 const PropTypes = require('prop-types');
 require('react-widgets/lib/less/react-widgets.less');
 const {DateTimePicker} = require('react-widgets');
-const moment = require('moment');
 
 const LocaleUtils = require('../../../../utils/LocaleUtils');
 const {getDateTimeFormat} = require('../../../../utils/TimeUtils');
@@ -42,7 +41,6 @@ class DateFilter extends AttributeFilter {
         if (this.props.column.filterable === false) {
             return <span/>;
         }
-        const defaultCurrentDate = moment().startOf("day").toDate();
         const placeholder = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
         const inputKey = 'header-filter-' + this.props.column.key;
         let val;
@@ -55,7 +53,6 @@ class DateFilter extends AttributeFilter {
         const dateValue = this.props.value ? val : null;
         return (<UTCDateTimePicker
             key={inputKey}
-            defaultCurrentDate={defaultCurrentDate}
             disabled={this.props.disabled}
             format={getDateTimeFormat(this.context.locale, this.props.type)}
             placeholder={placeholder}

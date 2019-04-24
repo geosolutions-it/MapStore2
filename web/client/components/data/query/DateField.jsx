@@ -9,9 +9,9 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
+momentLocalizer(moment);
 const utcDateWrapper = require('../../misc/enhancers/utcDateWrapper');
 const {getDateTimeFormat} = require('../../../utils/TimeUtils');
-momentLocalizer(moment);
 const {DateTimePicker} = require('react-widgets');
 const {Row, Col} = require('react-bootstrap');
 /**
@@ -66,7 +66,6 @@ class DateField extends React.Component {
         const enddate = this.props.fieldValue && this.props.fieldValue.endDate || null;
 
         // needed to initialize the time parts to 00:00:00
-        const defaultCurrentDate = moment().startOf("day").toDate();
 
         let dateRow = this.props.operator === "><" ?
                 (<div>
@@ -74,7 +73,6 @@ class DateField extends React.Component {
                         <Col xs={6}>
                             <UTCDateTimePicker
                                 type={this.props.attType}
-                                defaultCurrentDate={defaultCurrentDate}
                                 defaultValue={startdate}
                                 value={startdate}
                                 calendar={this.props.dateEnabled}
@@ -85,7 +83,6 @@ class DateField extends React.Component {
                         <Col xs={6}>
                             <UTCDateTimePicker
                                 type={this.props.attType}
-                                defaultCurrentDate={defaultCurrentDate}
                                 defaultValue={enddate}
                                 value={enddate}
                                 calendar={this.props.dateEnabled}
@@ -100,7 +97,6 @@ class DateField extends React.Component {
                     <Col xs={12}>
                         <UTCDateTimePicker
                             type={this.props.attType}
-                            defaultCurrentDate={defaultCurrentDate}
                             defaultValue={startdate}
                             value={startdate}
                             time={this.props.timeEnabled}

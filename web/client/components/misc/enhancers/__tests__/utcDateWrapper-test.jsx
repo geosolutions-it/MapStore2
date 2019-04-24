@@ -1,21 +1,20 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-// const ReactTestUtils = require('react-dom/test-utils');
-const {createSink} = require('recompose');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
 
-const expect = require('expect');
-const utcDateWrapper = require('../utcDateWrapper');
-const {DateTimePicker} = require('react-widgets');
-const moment = require('moment');
-const momentLocalizer = require('react-widgets/lib/localizers/moment');
+import expect from 'expect';
+import utcDateWrapper from '../utcDateWrapper';
+import {DateTimePicker} from 'react-widgets';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 momentLocalizer(moment);
 const enhanceCustom = utcDateWrapper({dateProp: "value", dateTypeProp: "type", setDateProp: "onChange"});
 const CMP = enhanceCustom((props) => <DateTimePicker id="CMP" {...props}/>);
@@ -32,9 +31,9 @@ describe('utcDateWrapper enhancher', () => {
     });
     it('utcDateWrapper rendering with Custom props', () => {
         ReactDOM.render(<CMP
-            value={new Date("2018-01-02T00:00:00Z")}
+            value={new Date("2018-01-02Z")}
             type="date"
-            format="DD/MM/YYYY HH:mm:SS"
+            format="DD/MM/YYYY"
             />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
@@ -42,7 +41,35 @@ describe('utcDateWrapper enhancher', () => {
         const inputs = container.getElementsByTagName('input');
         expect(inputs).toExist();
         expect(inputs.length).toBe(1);
-        expect(inputs[0].value).toBe('02/01/2018 00:00:00');
+        expect(inputs[0].value).toBe('02/01/2018');
+    });
+    it('utcDateWrapper rendering with Custom props', () => {
+        ReactDOM.render(<CMP
+            value="03:00:00Z"
+            format="HH:mm:SS"
+            type="time"
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('#CMP');
+        expect(el).toExist();
+        const inputs = container.getElementsByTagName('input');
+        expect(inputs).toExist();
+        expect(inputs.length).toBe(1);
+        expect(inputs[0].value).toBe('03:00:00');
+    });
+    it('utcDateWrapper rendering with Custom props', () => {
+        ReactDOM.render(<CMP
+            value="2018-01-02T03:00:00Z"
+            format="DD/MM/YYYY HH:mm:SS"
+            type="date-time"
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('#CMP');
+        expect(el).toExist();
+        const inputs = container.getElementsByTagName('input');
+        expect(inputs).toExist();
+        expect(inputs.length).toBe(1);
+        expect(inputs[0].value).toBe('02/01/2018 03:00:00');
     });
 
     it('UTCDateWrapper calls onSetDate', (done) => {
