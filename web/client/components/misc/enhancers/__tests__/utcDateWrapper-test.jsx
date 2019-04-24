@@ -29,9 +29,9 @@ describe('utcDateWrapper enhancher', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('utcDateWrapper rendering with Custom props', () => {
+    it('utcDateWrapper rendering date type', () => {
         ReactDOM.render(<CMP
-            value={new Date("2018-01-02Z")}
+            value="2018-01-02Z"
             type="date"
             format="DD/MM/YYYY"
             />, document.getElementById("container"));
@@ -43,7 +43,7 @@ describe('utcDateWrapper enhancher', () => {
         expect(inputs.length).toBe(1);
         expect(inputs[0].value).toBe('02/01/2018');
     });
-    it('utcDateWrapper rendering with Custom props', () => {
+    it('utcDateWrapper rendering time type', () => {
         ReactDOM.render(<CMP
             value="03:00:00Z"
             format="HH:mm:SS"
@@ -57,7 +57,7 @@ describe('utcDateWrapper enhancher', () => {
         expect(inputs.length).toBe(1);
         expect(inputs[0].value).toBe('03:00:00');
     });
-    it('utcDateWrapper rendering with Custom props', () => {
+    it('utcDateWrapper rendering date-time type', () => {
         ReactDOM.render(<CMP
             value="2018-01-02T03:00:00Z"
             format="DD/MM/YYYY HH:mm:SS"
