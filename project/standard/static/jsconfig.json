@@ -6,6 +6,9 @@
         "paths": {
             "@mapstore/*": [
                 "MapStore2/web/client/*"
+            ],
+            "@js/*": [
+                "js/*"
             ]
         }
     },

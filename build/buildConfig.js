@@ -7,7 +7,30 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 
-module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix, chunks, alias = {}, proxy) => ({
+/**
+ * Webpack configuration builder.
+ * Returns a webpack configuration object for the given parameters.
+ *
+ * @param {object} bundles object that defines the javascript (or jsx) entry points and related bundles
+ * to be built (bundle name -> entry point path)
+ * @param {object} themeEntries object that defines the css (or less) entry points and related bundles
+ * to be built (bundle name -> entry point path)
+ * @param {object} paths object with paths used by the configuration builder:
+ *  - dist: path to the output folder for the bundles
+ *  - base: root folder of the project
+ *  - framework: root folder of the MapStore2 framework
+ *  - code: root folder(s) for javascript / jsx code, can be an array with several folders (e.g. framework code and
+ *    project code)
+ * @param {object} extractThemesPlugin plugin to be used for bundling css (usually defined in themes.js)
+ * @param {boolean} prod flag for production / development mode (true = production)
+ * @param {string} publicPath web public path for loading bundles (e.g. dist/)
+ * @param {string} cssPrefix prefix to be appended on every generated css rule (e.g. ms2)
+ * @param {array} prodPlugins plugins to be used only in production mode
+ * @param {object} alias aliases to be used by webpack to resolve paths (alias -> real path)
+ * @param {object} proxy webpack-devserver custom proxy configuration object
+ * @returns a webpack configuration object
+ */
+module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
     entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
@@ -49,7 +72,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin
-    ].concat(prod && chunks || []).concat(prod ? [new ParallelUglifyPlugin({
+    ].concat(prod && prodPlugins || []).concat(prod ? [new ParallelUglifyPlugin({
         uglifyJS: {
             sourceMap: false,
             compress: {warnings: false},
