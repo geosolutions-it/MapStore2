@@ -103,8 +103,8 @@ import {UPDATE_LAYER_FEATURE} from '@mapstore/actions/layer';
 export default function layer(state, action) {
     switch (action.type) {
         case UPDATE_LAYER_FEATURE: {
-            // lodash get
-            const feature = get(state.features, {id: action.id});
+            // lodash find
+            const feature = find(state.features, {id: action.id});
             // merge the old and the new feature object, replacing the existing element in the array
             return arrayUpdate("features", {...feature, ...action.props}, {id: action.id}, state);
         }
