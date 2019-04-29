@@ -1,5 +1,5 @@
 # Creating a MapStore2 plugin
-The MapStore2 [plugins architecture](plugins-architecture) allows building your own inde    pendent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Creating a plugin is like assembling and connecting several pieces together into an atomic module. This happens by writing a plugin module, a ReactJS JSX file exporting the plugin descriptor.
 
@@ -33,9 +33,9 @@ module.exports = {
     }
 };
 ```
-**Note** that SamplePlugin in plugins.js must be called with the same used when exporting it
+**Note** that SamplePlugin in plugins.js must be called with the same name used when exporting it
 
-Then you have to configure it properly so that is enabled in one or more [application modes](application-modes) / [pages](application-pages):
+Then you have to configure it properly so that is enabled in one or more [application modes](../application-modes) / [pages](../application-pages):
 
 ### localConfig.json
 ```javascript
@@ -50,7 +50,7 @@ Then you have to configure it properly so that is enabled in one or more [applic
 
 Note: to enable a plugin you need to do two things:
  - require it in the plugins.js file
- - configure it in localConfig.json is required. (just remove the Plugins suffix here)
+ - configure it in localConfig.json (remove the Plugins suffix here)
 If one is missing, the plugin won't appear.
 To globally remove a plugin from your project the preferred way is removing it from plugins.js, because this will reduce the global javascript size of your application.
 

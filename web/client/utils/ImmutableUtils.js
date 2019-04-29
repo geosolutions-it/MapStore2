@@ -82,6 +82,7 @@ module.exports = {
      * @param {string} path the path
      * @param value the value to set
      * @param
+     * @memberof utils.ImmutableUtils
      * @example
      * set('a.b.c',2, {}); // returns {a: {b: {c: 2}}});
      */
@@ -93,6 +94,7 @@ module.exports = {
      * ```
      * compose(set(a, b), set(c, d), set(e, f))(state)
      * ```
+     * @memberof utils.ImmutableUtils
      */
     compose,
     arrayUpsert,

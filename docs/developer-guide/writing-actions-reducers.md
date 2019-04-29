@@ -53,26 +53,25 @@ But actions by themselves are not enough we need Reducers that intercepts those 
 Again quoting redux [documentation](https://redux.js.org/basics/reducers) they are:
 > Reducers specify how the application's state changes in response to actions sent to the store.
 
-Reducers are pure function that takes the previous state and an action and returns a new state
+Reducers are pure functions that take the previous state and an action and return a new state
 > (previousState, action) => newState
 
 let's see an example:
 ```
- // @mapstore is an alias for dir_name/web/client (see webpack.config.js)
- import {PAN_TO} from '@mapstore/actions/map';
+// @mapstore is an alias for dir_name/web/client (see webpack.config.js)
+import {PAN_TO} from '@mapstore/actions/map';
 
-export function map( (state, action) => {
-        switch(action.type) {
-            case PAN_TO: {
-                return {
-                    ...state,
-                    center
-                };
-            }
-            default return state;
+export default function map(state, action) {
+    switch (action.type) {
+        case PAN_TO: {
+            return {
+                ...state,
+                center: action.center
+            };
         }
+        default: return state;
     }
-);
+}
 ```
 As you can see we are changing the center of the map that triggers the panning action of the mapping library
 
@@ -81,7 +80,7 @@ And that's it we have wrote an action and a reducers that make the map panning a
 **Note:** Remember to put all the reducers .js files in the web/client/reducers folder or in js/reducers if you are working with custom plugins
 
 ## Advanced usage and tips
-Sometimes you need to change a value of an item which is store inside an array or in a nested object.
+Sometimes you need to change a value of an item which is stored inside an array or in a nested object.
 
 Let's imagine we have this object in the store:
 ```
@@ -96,44 +95,22 @@ export const UPDATE_LAYER_FEATURE = 'LAYER:UPDATE_LAYER_FEATURE'
 export const updateFeature = (id, props = {}) => ({type: UPDATE_LAYER_FEATURE, id, props})
 ```
 
-Then in the reducer we can have different implementations
+Then in the reducer we can have different implementations.
+Here we show the one using **arrayUpdate** from @mapstore/utils/ImmutableUtils for updating objects in array
 ```
 import {UPDATE_LAYER_FEATURE} from '@mapstore/actions/layer';
 
-export function layer( (state, action) => {
-        switch(action.type) {
-            case UPDATE_LAYER_FEATURE: {
-                const features = [...state.features];
-                return {
-                    ...state,
-                    features: features.reduce((p, c) => {
-                        return c.id === action.id ? {...c, ...action.props} : c
-                    })
-                };
-            }
-            default return state;
+export default function layer(state, action) {
+    switch (action.type) {
+        case UPDATE_LAYER_FEATURE: {
+            // lodash get
+            const feature = get(state.features, {id: action.id});
+            // merge the old and the new feature object, replacing the existing element in the array
+            return arrayUpdate("features", {...feature, ...action.props}, {id: action.id}, state);
         }
+        default: return state;
     }
-);
-```
-Which is good but maybe less readable than using other ways.
-
-We suggest to use lodash/fp which allows to avoid mutation of the objects (remember reducers are pure function)
-We have prepared some utilities in @mapstore/utils/ImmutableUtils like set
-
-The previous example with set() becomes:
-```
-import {findIndex} from 'lodash';
-...
-    case UPDATE_LAYER_FEATURE: {
-        const indexFeatureChanged = findIndex(state.features, id => action.id)
-        const features = indexFeatureChanged !== -1 ? set([indexFeatureChanged], action.props, state.features) : state.features;
-        return {
-            ...state,
-            features
-        };
-    }
-...
+}
 ```
 
 # Testing
@@ -149,7 +126,7 @@ reducers/__tests__/map-test.js
 
 We use [expect](https://github.com/mjackson/expect) as testing library, therefore we suggest to have a look there.
 
-## How to test and action
+## How to test an action
 Typically you want to test the type and the params return from the action creator
 
 let's test the mapTo action:
@@ -175,7 +152,7 @@ In order to speed up the unit test runner, you can:
 This allows to run only the tests contained to the specified path.
 **Note:** When all tests are successfully passing remember to restore it to its orignal value '../web'
 
-## How to test an reducer
+## How to test a reducer
 Here things can become more complicated depending on your reducer but in general you want to test all cases
 ```
 // copyright section
@@ -198,6 +175,7 @@ in order to point to the reducers folder and then runnning
 `npm run continuoustest`
 
 ## Actions and epics
-Constant types are also used in the epics.
+Actions are not only used by redux to update the store (through the reducers),
+but also for triggering side effects workflows managed by epics
 
 For more details see [Writing epics](../writing-epics)
