@@ -173,6 +173,19 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[1]).toBe(0.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[2]).toBe(105.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[3]).toBe(1.0);
+        expect(CoordinatesUtils.getGeoJSONExtent({ "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+               [100.0, 1.0], [100.0, 0.0] ]
+                ]
+            },
+            "properties": {
+                "prop0": "value0",
+                "prop1": {"this": "that"}
+            }
+        })).toEqual([ 100, 0, 101, 1 ]);
     });
     it('test coordsOLtoLeaflet on point', () => {
         let geojsonPoint = {

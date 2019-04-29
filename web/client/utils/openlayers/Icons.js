@@ -54,9 +54,11 @@ module.exports = {
          getIcon: (options) => {
              let markerStyle = [new ol.style.Style({
                    image: new ol.style.Icon(({
-                     anchor: options.iconAnchor || [0.5, 1],
-                     anchorXUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                     anchorYUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
+                     anchor: options.style.iconAnchor || options.iconAnchor || [0.5, 1],
+                     anchorXUnits: options.style.anchorXUnits || ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
+                     anchorYUnits: options.style.anchorYUnits || ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
+                     size: options.style.size || [16, 16],
+                     anchorOrigin: options.style.anchorOrigin || "bottom-right",
                      src: options.style.iconUrl
                  }))
              })];
