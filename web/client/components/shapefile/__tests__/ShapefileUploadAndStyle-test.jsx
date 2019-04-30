@@ -98,13 +98,12 @@ describe("Test ShapefileUploadAndStyle component", () => {
                         },
                         "crs": "EPSG:4326"
                     });
-                    expect(layer.features).toEqual([{
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
-                        },
-                        "type": "Feature"
-                    }]);
+                    expect(layer.features[0].geometry).toEqual({
+                        "type": "LineString",
+                        "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+                    });
+                    expect(layer.features[0].type).toEqual("Feature");
+                    expect(layer.features[0].id.length).toEqual("1e63efb0-6b37-11e9-8359-eb9aa043350b".length);
                     expect(spyShapeLoading).toHaveBeenCalled();
                     expect(spyShapeLoading).toHaveBeenCalledWith(false);
                     expect(spyShapeLoading.calls.length).toBe(2);
