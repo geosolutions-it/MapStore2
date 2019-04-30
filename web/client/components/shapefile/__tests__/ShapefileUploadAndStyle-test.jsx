@@ -3,7 +3,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ShapefileUploadAndStyle = require('../ShapefileUploadAndStyle');
 
-describe("Test the select shapefile component", () => {
+describe("Test ShapefileUploadAndStyle component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -57,5 +57,62 @@ describe("Test the select shapefile component", () => {
         }} />, document.getElementById("container"));
         expect(cmp).toExist();
         cmp.addShape();
+    });
+
+    it('test adding a file.json in a zip archive', (done) => {
+        const handlers = {
+            onShapeChoosen: () => {},
+            onShapeError: () => {},
+            shapeLoading: () => {}
+        };
+        fetch('base/web/client/test-resources/LineGeoJSON.zip')
+            .then((response) => {
+                return response.blob();
+            })
+            .then(zip => {
+                const fileZip = new File([ zip ], 'file.zip', { type: 'application/zip' });
+                const spyOnShapeChoosen = expect.spyOn(handlers, 'onShapeChoosen');
+                const spyShapeLoading = expect.spyOn(handlers, 'shapeLoading');
+
+                const cmp = ReactDOM.render(<ShapefileUploadAndStyle useDefaultStyle {...handlers} />, document.getElementById("container"));
+                expect(cmp).toExist();
+                cmp.addShape([fileZip]);
+                expect(spyShapeLoading).toHaveBeenCalled();
+                expect(spyShapeLoading).toHaveBeenCalledWith(true);
+
+                setTimeout(() => {
+                    expect(spyOnShapeChoosen).toHaveBeenCalled();
+                    const args = spyOnShapeChoosen.calls[0].arguments;
+                    const layer = args[0][0];
+                    expect(layer.type).toEqual("vector");
+                    expect(layer.visibility).toEqual(true);
+                    expect(layer.group).toEqual("Local shape");
+                    expect(layer.name).toEqual("LineGeoJSON");
+                    expect(layer.hideLoading).toEqual(true);
+                    expect(layer.bbox).toEqual({
+                        "bounds": {
+                            "minx": 0,
+                            "miny": 39,
+                            "maxx": 28,
+                            "maxy": 48
+                        },
+                        "crs": "EPSG:4326"
+                    });
+                    expect(layer.features).toEqual([{
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+                        },
+                        "type": "Feature"
+                    }]);
+                    expect(spyShapeLoading).toHaveBeenCalled();
+                    expect(spyShapeLoading).toHaveBeenCalledWith(false);
+                    expect(spyShapeLoading.calls.length).toBe(2);
+                    done();
+                }, 0);
+            })
+            .catch(() => {
+                expect(true).toBe(false);
+            });
     });
 });
