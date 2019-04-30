@@ -394,6 +394,13 @@ const LayersUtils = {
         }
         return mapState;
     },
+    /**
+     * used for converting a geojson file with fileName into a vector layer
+     * it supports FeatureCollection or Feature
+     * @param {object} geoJSON object to put into features
+     * @param {string} id layer id
+     * @return {object} vector layer containing the geojson in features array
+    */
     geoJSONToLayer: (geoJSON, id) => {
         const bbox = toBbox(geoJSON);
         let features = [];
