@@ -6,8 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const { roundResolution } = require('../TimeUtils');
-
+const {
+    getDateTimeFormat,
+    getUTCTimePart,
+    getUTCDatePart,
+    roundResolution
+} = require('../TimeUtils');
 
 describe('TimeUtils', () => {
     it('roundResolution', () => {
@@ -27,4 +31,28 @@ describe('TimeUtils', () => {
             expect(roundResolution(testString)).toBe(expected);
         });
     });
+    it('test getUTCDatePart', () => {
+        expect(getUTCDatePart(new Date("2018-01-09T23:00:00Z"))).toBe("2018-01-09");
+        expect(getUTCDatePart(new Date("2018-01-09T00:00:00Z"))).toBe("2018-01-09");
+        expect(getUTCDatePart(new Date("2020-04-15T06:30:00Z"))).toBe("2020-04-15");
+        expect(getUTCDatePart(new Date("2020-10-09T01:00:00Z"))).toBe("2020-10-09");
+        expect(getUTCDatePart(new Date("2021-01-09T00:00:00Z"))).toBe("2021-01-09");
+    });
+    it('test getUTCTimePart', () => {
+        expect(getUTCTimePart(new Date("2019-03-15T08:30:00Z"))).toBe("08:30:00");
+        expect(getUTCTimePart(new Date("2018-01-09T01:00:00Z"))).toBe("01:00:00");
+        expect(getUTCTimePart(new Date("2018-01-09T00:03:00Z"))).toBe("00:03:00");
+    });
+    it('test getDateTimeFormat', () => {
+        // date
+        expect(getDateTimeFormat("en-US", "date")).toBe("MM/DD/YYYY");
+        expect(getDateTimeFormat("it-IT", "date")).toBe("DD/MM/YYYY");
+        // time
+        expect(getDateTimeFormat("en-US", "time")).toBe("HH:mm:SS");
+        expect(getDateTimeFormat("it-IT", "time")).toBe("HH:mm:SS");
+        // date-time
+        expect(getDateTimeFormat("en-US", "date-time")).toBe("MM/DD/YYYY HH:mm:SS");
+        expect(getDateTimeFormat("it-IT", "date-time")).toBe("DD/MM/YYYY HH:mm:SS");
+    });
+
 });
