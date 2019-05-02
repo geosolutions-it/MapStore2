@@ -805,6 +805,112 @@ describe('LayersUtils', () => {
         ];
         TESTS.map(([credits, expectedResult]) => expect(LayersUtils.creditsToAttribution(credits)).toBe(expectedResult));
     });
+    it('geoJSONToLayer with a Feature with id', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip",
+            "id": "feature-id"
+        };
+        const layer = LayersUtils.geoJSONToLayer(feature, "layer-id");
+        expect(layer.type).toEqual("vector");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.group).toEqual("Local shape");
+        expect(layer.name).toEqual("file.zip");
+        expect(layer.hideLoading).toEqual(true);
+        expect(layer.bbox).toEqual({
+            "bounds": {
+                "minx": 0,
+                "miny": 39,
+                "maxx": 28,
+                "maxy": 48
+            },
+            "crs": "EPSG:4326"
+        });
+        expect(layer.features).toEqual([{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+            },
+            "id": "feature-id",
+            "type": "Feature"
+        }]);
+    });
+    it('geoJSONToLayer with a Feature without id', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip"
+        };
+        const layer = LayersUtils.geoJSONToLayer(feature, "layer-id");
+        expect(layer.type).toEqual("vector");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.group).toEqual("Local shape");
+        expect(layer.name).toEqual("file.zip");
+        expect(layer.hideLoading).toEqual(true);
+        expect(layer.bbox).toEqual({
+            "bounds": {
+                "minx": 0,
+                "miny": 39,
+                "maxx": 28,
+                "maxy": 48
+            },
+            "crs": "EPSG:4326"
+        });
+
+        expect(Object.keys(layer.features[0]).length).toEqual(3);
+        expect(Object.keys(layer.features[0])).toEqual(["geometry", "type", "id"]);
+        expect(layer.features[0].geometry).toEqual({
+            "type": "LineString",
+            "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+        });
+        expect(layer.features[0].type).toEqual("Feature");
+        expect(layer.features[0].id.length).toEqual("1e63efb0-6b37-11e9-8359-eb9aa043350b".length);
+    });
+    it('geoJSONToLayer with a FeatureCollection', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "id": "feature-id"
+        };
+        const ftColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            fileName: "ft-coll-zip"
+        };
+        const layer = LayersUtils.geoJSONToLayer(ftColl, "layer-id");
+        expect(layer.type).toEqual("vector");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.group).toEqual("Local shape");
+        expect(layer.name).toEqual("ft-coll-zip");
+        expect(layer.hideLoading).toEqual(true);
+        expect(layer.bbox).toEqual({
+            "bounds": {
+                "minx": 0,
+                "miny": 39,
+                "maxx": 28,
+                "maxy": 48
+            },
+            "crs": "EPSG:4326"
+        });
+        expect(layer.features).toEqual([{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+            },
+            "id": "feature-id",
+            "type": "Feature"
+        }]);
+    });
     it('saveLayer', () => {
         const layers = [
             // no params if not present
