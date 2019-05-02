@@ -151,6 +151,17 @@ class GroupField extends React.Component {
                                 comboFilter={"contains"}/>
                             <DateField
                                 attType="date"
+                                dateEnabled
+                                operator={filterField.operator}/>
+                            <DateField
+                                attType="date-time"
+                                timeEnabled
+                                dateEnabled
+                                operator={filterField.operator}/>
+                            <DateField
+                                attType="time"
+                                timeEnabled
+                                dateEnabled={false}
                                 operator={filterField.operator}/>
                             <NumberField
                                 operator={filterField.operator}
