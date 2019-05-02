@@ -10,6 +10,12 @@ const {get, findIndex} = require('lodash');
 const set = require('lodash/fp/set');
 const compose = require('lodash/fp/compose');
 
+/**
+ * Utility functions for reducers and immutable objects in general
+ * @memberof utils
+ * @static
+ * @name ImmutableUtils
+ */
 
 /**
  * Immutable array upsert in a nested object (update or insert)
@@ -70,18 +76,11 @@ const arrayDelete = (path, condition, object) => {
     }
     return object;
 };
-/**
- * Utility functions for reducers and immutable objects in general
- * @memberof utils
- * @static
- * @name ImmutableUtils
- */
 module.exports = {
     /**
      * Set of lodash fp
      * @param {string} path the path
-     * @param value the value to set
-     * @param
+     * @param {any} value the value to set
      * @memberof utils.ImmutableUtils
      * @example
      * set('a.b.c',2, {}); // returns {a: {b: {c: 2}}});
