@@ -1,5 +1,5 @@
 # Creating a MapStore2 plugin
-The MapStore2 [plugins architecture](plugins-architecture) allows building your own idenpendent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Creating a plugin is like assembling and connecting several pieces together into an atomic module. This happens by writing a plugin module, a ReactJS JSX file exporting the plugin descriptor.
 
@@ -33,8 +33,9 @@ module.exports = {
     }
 };
 ```
+**Note** that SamplePlugin in plugins.js must be called with the same name used when exporting it
 
-Then you have to configure it properly so that is enabled in one or more [application modes](application-modes) / [pages](application-pages):
+Then you have to configure it properly so that is enabled in one or more [application modes](../application-modes) / [pages](../application-pages):
 
 ### localConfig.json
 ```javascript
@@ -47,7 +48,10 @@ Then you have to configure it properly so that is enabled in one or more [applic
 }
 ```
 
-Note: to enable a plugin both requiring it in the plugins.js file and configuring it in localConfig.json is required. If one is missing, the plugin won't appear. 
+Note: to enable a plugin you need to do two things:
+ - require it in the plugins.js file
+ - configure it in localConfig.json (remove the Plugins suffix here)
+If one is missing, the plugin won't appear.
 To globally remove a plugin from your project the preferred way is removing it from plugins.js, because this will reduce the global javascript size of your application.
 
 You can also specify plugins properties in the configuration, using the **cfg** property:
@@ -68,7 +72,7 @@ You can also specify plugins properties in the configuration, using the **cfg** 
 }
 ```
 
-Plugin properties 
+Plugin properties
 
 ## A store connected plugin example
 A plugin component is a **smart component** (connected to the Redux store) so that properties can be taken from the global state, as needed.
@@ -277,7 +281,7 @@ module.exports = {
 ```
 
 ## Plugins that are containers of other plugins
-It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dinamically configure their items / tools from the configuration. 
+It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dinamically configure their items / tools from the configuration.
 
 ### ContainerComponent.jsx
 ```javascript
