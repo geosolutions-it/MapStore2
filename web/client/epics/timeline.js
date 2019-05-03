@@ -3,13 +3,19 @@ const Rx = require('rxjs');
 const {isString, get, head, castArray} = require('lodash');
 const moment = require('moment');
 const {wrapStartStop} = require('../observables/epics');
+const {reprojectBbox} = require('../utils/CoordinatesUtils');
+
+
+const { CHANGE_MAP_VIEW } = require('../actions/map');
 
 const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
+
 const {REMOVE_NODE} = require('../actions/layers');
 const {error} = require('../actions/notifications');
 
 const {getLayerFromId} = require('../selectors/layers');
+const { mapSelector, projectionSelector } = require('../selectors/map');
 const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector, timelineLayersSelector } = require('../selectors/timeline');
 const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 
@@ -20,6 +26,25 @@ const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
 const MAX_ITEMS_PER_LAYER = 20;
 const MAX_HISTOGRAM = 20;
+const isLiveFilterByViewportActive = () => true; // TODO: get live filter enabled flag
+const getOptions = (state) => {
+    const { bbox: viewport } = mapSelector(state);
+    if (viewport && !isLiveFilterByViewportActive(state)) { // TODO: optional filtering
+        return {};
+    }
+
+    const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
+        return {...p, [c]: parseFloat(viewport.bounds[c])};
+    }, {});
+
+    // TODO: reproject bounds in CRS of the SpaceDimension from
+    const crs = "EPSG:4326";
+    const [minx, miny, maxx, maxy] = reprojectBbox(bounds, projectionSelector(state), crs);
+    return {
+        bbox: `${minx},${miny},${maxx},${maxy}`,
+        crs
+    };
+};
 
 /**
  * Gets the getDomain args for retrieve **single** value surrounding current time for the selected layer
@@ -96,7 +121,8 @@ const loadRangeData = (id, timeData, getState) => {
             {
                 [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
             },
-            resolution
+            resolution,
+            getOptions(getState())
         )
         .merge(
             describeDomains(
@@ -104,6 +130,7 @@ const loadRangeData = (id, timeData, getState) => {
                 layerName,
                 filter,
                 {
+                    ...getOptions(getState()),
                     expandLimit: MAX_ITEMS_PER_LAYER
                 }
             )
@@ -250,6 +277,9 @@ module.exports = {
      */
     updateRangeDataOnRangeChange: (action$, { getState = () => { } } = {}) =>
         action$.ofType(RANGE_CHANGED)
+            .merge(
+                action$.ofType(CHANGE_MAP_VIEW).filter(() => isLiveFilterByViewportActive(getState()))
+            )
             .debounceTime(400)
             .merge(action$.ofType(UPDATE_LAYER_DIMENSION_DATA).debounceTime(50))
             .switchMap( () => {
