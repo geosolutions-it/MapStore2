@@ -1,6 +1,6 @@
 {
     "clean": "rimraf dist",
-    "compile": "npm run clean && mkdirp ./dist && webpack --config prod-webpack.config.js",
+    "compile": "npm run clean && mkdirp ./dist && webpack --config prod-webpack.config.js --env.production",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base .",
     "postinstall": "node checkCesium.js",
     "test": "karma start ./karma.conf.single-run.js",
