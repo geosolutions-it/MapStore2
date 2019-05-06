@@ -124,7 +124,16 @@ class Toolbar extends React.Component {
     isLoading = () => {
         return head(this.props.selectedLayers.filter(l => l.loading));
     }
-
+    /**
+     * retrieve current status based on selected layers and groups
+     * 'DESELECT' no selection
+     * 'LAYER' single layer selection
+     * 'LAYERS' multiple layer selection
+     * 'GROUP' single group selection, it select also children layers
+     * 'GROUPS' multiple group selection, it select also children layers
+     * 'LAYER_LOAD_ERROR' single layer selection with error
+     * 'LAYERS_LOAD_ERROR' multiple layer selection with error, all selected layer have an error
+     */
     getStatus = () => {
         const {selectedLayers, selectedGroups} = this.props;
         const isSingleGroup = this.isNestedGroup();
