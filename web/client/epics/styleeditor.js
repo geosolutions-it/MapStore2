@@ -78,34 +78,17 @@ const getStyleCodeObservable = ({status, styleName, baseUrl}) =>
         .catch(err => Rx.Observable.of(errorStyle('edit', err)))
         : Rx.Observable.empty();
 /*
- * Observable delete styles.
- * silent to false hide notifications
+ * This function returns an observable that delete styles.
  */
-const deleteStyleObservable = ({styleName, baseUrl, observableResponse, observableReject}, silent) =>
+const deleteStyle = ({styleName, baseUrl, onSuccess$, onError$}) =>
     Rx.Observable.defer(() =>
         StylesAPI.deleteStyle({
             baseUrl,
             styleName
         })
     )
-    .switchMap(() => silent ? observableResponse || Rx.Observable.empty() : Rx.Observable.of(
-            success({
-                title: "styleeditor.deletedStyleSuccessTitle",
-                message: "styleeditor.deletedStyleSuccessMessage",
-                uid: "deletedStyleSuccess",
-                autoDismiss: 5
-            })
-        )
-    )
-    .catch(() => silent ? observableReject || Rx.Observable.empty() : Rx.Observable.of(
-        error({
-            title: "styleeditor.deletedStyleErrorTitle",
-            message: "styleeditor.deletedStyleErrorMessage",
-            uid: "deletedStyleError",
-            autoDismiss: 5
-        })
-    )
-);
+    .switchMap(() => onSuccess$ || Rx.Observable.empty())
+    .catch(() => onError$ || Rx.Observable.empty());
 /*
  * Observable to delete temporary style from server and reset state of style editor
  */
@@ -116,7 +99,7 @@ const resetStyleEditorObservable = state => {
             resetStyleEditor(),
             removeAdditionalLayer({ owner: STYLE_OWNER_NAME })
         )
-        .merge(styleName ? deleteStyleObservable({styleName, baseUrl}, true) : Rx.Observable.empty());
+        .merge(styleName ? deleteStyle({styleName, baseUrl}) : Rx.Observable.empty());
 };
 /*
  * Observable to add a style to available style list and update the layer object on the server
@@ -377,17 +360,28 @@ module.exports = {
                                 message: "styleeditor.createTmpStyleErrorMessage",
                                 uid: "createTmpStyleError",
                                 autoDismiss: 5
+                            }),
+                            // reset temporary style properties
+                            // when it's not possible to create it
+                            // so next time it creates a new temporary id
+                            updateTemporaryStyle({
+                                temporaryId: null,
+                                templateId: '',
+                                code: '',
+                                format: '',
+                                init: '',
+                                languageVersion: null
                             })
                         ]
                     );
 
                 // delete and replace current temporary style if format is changed
-                return (isChangedFormat && temporaryId) && deleteStyleObservable({
+                return (isChangedFormat && temporaryId) && deleteStyle({
                     styleName: temporaryId,
                     baseUrl,
-                    observableResponse: createTmpCode(`${workspace ? `${workspace}:` : ''}${generateTemporaryStyleId()}`),
-                    observableReject: updateTmpCode(styleName)
-                }, true)
+                    onSuccess$: createTmpCode(`${workspace ? `${workspace}:` : ''}${generateTemporaryStyleId()}`),
+                    onError$: updateTmpCode(styleName)
+                })
                 || temporaryId && updateTmpCode(styleName)
                 || createTmpCode(styleName);
             }),
@@ -533,7 +527,26 @@ module.exports = {
                             setControlProperty('layersettings', 'originalSettings', {...originalSettings, style: ''}),
                             setControlProperty('layersettings', 'initialSettings', {...initialSettings, style: ''})
                         ),
-                        deleteStyleObservable({styleName, baseUrl})
+                        deleteStyle({
+                            styleName,
+                            baseUrl,
+                            onSuccess$: Rx.Observable.of(
+                                success({
+                                    title: "styleeditor.deletedStyleSuccessTitle",
+                                    message: "styleeditor.deletedStyleSuccessMessage",
+                                    uid: "deletedStyleSuccess",
+                                    autoDismiss: 5
+                                })
+                            ),
+                            onError$: Rx.Observable.of(
+                                error({
+                                    title: "styleeditor.deletedStyleErrorTitle",
+                                    message: "styleeditor.deletedStyleErrorMessage",
+                                    uid: "deletedStyleError",
+                                    autoDismiss: 5
+                                })
+                            )
+                        })
                     );
                 })
                 .catch(() => Rx.Observable.of(loadedStyle()))

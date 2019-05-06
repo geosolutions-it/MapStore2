@@ -1213,4 +1213,101 @@ describe('Test styleeditor epics, with mock axios', () => {
         state);
     });
 
+
+    it('test updateTemporaryStyleEpic fails on create should reset temporary properties', (done) => {
+
+        mockAxios.onPost(/\/styles/).reply(() => [ 404, {}]);
+
+        const state = {};
+
+        const results = (actions) => {
+            try {
+                const [
+                    loadingStyleAction,
+                    errorStyleAction,
+                    loadedStyleAction,
+                    showNotifiactionAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(errorStyleAction.type).toBe(ERROR_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(showNotifiactionAction.type).toBe(SHOW_NOTIFICATION);
+                expect(showNotifiactionAction.level).toBe('error');
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(null);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        const NUMBER_OF_ACTIONS = 5;
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({ }),
+            results,
+        state);
+
+        /*const TEMPORARY_ID = 'id';
+
+        mockAxios.onDelete(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 404, {}];
+        });
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        const state = {
+            styleeditor: {
+                temporaryId: TEMPORARY_ID,
+                format: 'css',
+                service: {
+                    baseUrl: '/geoserver/'
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 4;
+
+        const results = (actions) => {
+            try {
+                const [
+                    putLoadingStyleAction,
+                    loadedStyleAction,
+                    updateOptionsByOwnerAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(putLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({ format: 'sld' }),
+            results,
+        state);*/
+    });
+
 });
