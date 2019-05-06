@@ -133,7 +133,7 @@ class Toolbar extends React.Component {
         status = isSingleGroup ? 'GROUP' : status;
         status = selectedLayers.length > 1 & selectedGroups.length === 0 ? 'LAYERS' : status;
         status = selectedGroups.length > 1 && !isSingleGroup ? 'GROUPS' : status;
-        status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? 'LAYERS_LOAD_ERROR' : status;
+        status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? `${status}_LOAD_ERROR` : status;
         return status;
     }
 
@@ -176,11 +176,11 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYER_LOAD_ERROR') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="settings"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status]}</Tooltip>}>
+                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status ? 'LAYER_LOAD_ERROR' && 'LAYER' : status]}</Tooltip>}>
                         <Button active={this.props.settings.expanded} bsStyle={this.props.settings.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => { this.showSettings(status); }}>
                             <Glyphicon glyph="wrench"/>
                         </Button>
@@ -196,7 +196,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
@@ -206,7 +206,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {!this.isLoading() && status === 'LAYERS_LOAD_ERROR' ?
+                {!this.isLoading() && status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR' ?
                     <OverlayTrigger
                         key="reload"
                         placement="top"
@@ -299,7 +299,7 @@ class Toolbar extends React.Component {
 
     showSettings = (status) => {
         if (!this.props.settings.expanded) {
-            if (status === 'LAYER') {
+            if (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') {
                 this.props.onToolsActions.onSettings( this.props.selectedLayers[0].id, 'layers', {opacity: parseFloat(this.props.selectedLayers[0].opacity !== undefined ? this.props.selectedLayers[0].opacity : 1)});
             } else if (status === 'GROUP') {
                 this.props.onToolsActions.onSettings(this.props.selectedGroups[this.props.selectedGroups.length - 1].id, 'groups', {});
