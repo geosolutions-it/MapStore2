@@ -1388,7 +1388,14 @@
                 "expandTray": "Expandir la bandeja de widgets",
                 "collapseTray": "Contraer la bandeja de widgets",
                 "expandAll": "Expandir todos los widgets",
-                "collapseAll": "Contraer todos los widgets"
+                "collapseAll": "Contraer todos los widgets",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La línea de tiempo y los widgets no pueden permanecer al mismo tiempo. Use en la bandeja del widget para cambiar entre la línea de tiempo y los widgets",
+                        "timelineTitle": "La línea de tiempo ha sido colapsada",
+                        "widgetsTitle": "Widgets ha sido colapsado"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1555,6 +1562,8 @@
                 "snapToGuideLayer": "Ajustar a capa de guía",
                 "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
             },
+            "hide": "Esconder la línea de tiempo",
+            "show": "Mostrar la línea de tiempo",
             "currentTime": "Ir a la hora actual",
             "rangeStart": "Ir al rango de tiempo actual",
             "rangeEnd": "Ir al rango de tiempo actual",
@@ -1566,6 +1575,10 @@
             "disablePlayBack": "Deshabilita los controles de reproducción",
             "expand" : "Expandir el control deslizante de tiempo",
             "collapse" : "colapsar el control deslizante de tiempo",
+             "collapsed": {
+                "title": "La línea de tiempo ha sido colapsada",
+                "tooltip": "Haga clic aquí para ampliarlo de nuevo."
+            },
             "errors": {
                 "multidim_error_title": "El servicio de backend no responde",
                 "multidim_error_message": "Los servicios requeridos para soporte multidinensional no están respondiendo. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
