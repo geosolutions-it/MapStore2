@@ -170,7 +170,8 @@ const StyleList = compose(
                 position: 'relative'
             },
             maskStyle: {
-                overflowY: 'auto'
+                overflowY: 'auto',
+                left: 0
             }
         }
     )
