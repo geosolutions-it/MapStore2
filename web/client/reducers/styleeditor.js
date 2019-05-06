@@ -41,6 +41,7 @@ function styleeditor(state = {}, action) {
                 code: action.code,
                 format: action.format,
                 error: null,
+                languageVersion: action.languageVersion,
                 initialCode: action.init ? action.code : state.initialCode
             };
         }
