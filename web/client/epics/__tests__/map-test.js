@@ -15,8 +15,10 @@ const {
     zoomToExtent
  } = require('../../actions/map');
 
+const {MAP_INFO_LOAD_START} = require('../../actions/config');
+const {LOGIN_SUCCESS} = require('../../actions/security');
 
-const {zoomToExtentEpic} = require('../map');
+const {zoomToExtentEpic, checkMapPermissions} = require('../map');
 const LAYOUT_STATE = {
     layout: {
         left: 200,
@@ -35,6 +37,7 @@ const LAYOUT_STATE = {
 };
 const MAP_STATE = {
     projection: "EPSG:4326",
+    mapId: 10112,
     size: { width: 400, height: 400 },
     bbox: {
         bounds: {
@@ -172,6 +175,18 @@ describe('map epics', () => {
         testEpic(addTimeoutEpic(zoomToExtentEpic, 0), 1, zoomToExtent([10, 44, 12, 46], "EPSG:4326", 4), ([a]) => {
             expect(a.type).toBe(TEST_TIMEOUT);
             done();
+        }, STATE_NORMAL);
+    });
+    it('checkMapPermissions after login', (done) => {
+        const dispatch = (a) => {
+            expect(a).toExist();
+            expect(a.type).toBe(MAP_INFO_LOAD_START);
+            done();
+        };
+        testEpic(checkMapPermissions, 1, {type: LOGIN_SUCCESS}, ([a0]) => {
+            expect(a0).toExist();
+            expect(a0).toBeA('function');
+            a0(dispatch);
         }, STATE_NORMAL);
     });
 });
