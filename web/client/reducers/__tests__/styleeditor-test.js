@@ -130,4 +130,20 @@ describe('Test styleeditor reducer', () => {
             }
         });
     });
+
+    it('test errorStyle sld error', () => {
+        const state = styleeditor({ }, errorStyle('edit', { status: 400, statusText: 'Error on lineNumber: 10; columnNumber: 2;' }));
+        expect(state).toEqual({
+            loading: false,
+            canEdit: true,
+            error: {
+                edit: {
+                    status: 400,
+                    message: 'Error on lineNumber: 10; columnNumber: 2;',
+                    line: 10,
+                    column: 2
+                }
+            }
+        });
+    });
 });
