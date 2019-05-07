@@ -52,7 +52,8 @@ const StyleToolbar = ({
     onSelectStyle = () => {},
     onEditStyle = () => {},
     onUpdate = () => {},
-    onSetDefault = () => {}
+    onSetDefault = () => {},
+    disableCodeEditing
 }) => (
     <div>
         <Toolbar
@@ -102,7 +103,7 @@ const StyleToolbar = ({
                     glyph: 'code',
                     tooltipId: 'styleeditor.editSelectedStyle',
                     visible: !status && editEnabled ? true : false,
-                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1,
+                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || disableCodeEditing,
                     onClick: () => onEditStyle()
                 },
                 {

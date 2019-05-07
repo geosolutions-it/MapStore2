@@ -47,14 +47,16 @@ describe('Test styleeditor reducer', () => {
         const code = '* { stroke: #ff0000; }';
         const format = 'css';
         const init = true;
-        const state = styleeditor({}, updateTemporaryStyle({ temporaryId, templateId, code, format, init }));
+        const languageVersion = { version: '1.0.0' };
+        const state = styleeditor({}, updateTemporaryStyle({ temporaryId, templateId, code, format, init, languageVersion }));
         expect(state).toEqual({
             temporaryId,
             templateId,
             code,
             format,
             error: null,
-            initialCode: code
+            initialCode: code,
+            languageVersion
         });
     });
     it('test updateStatus', () => {
