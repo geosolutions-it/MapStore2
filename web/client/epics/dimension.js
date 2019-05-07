@@ -25,7 +25,16 @@ const DESCRIBE_DOMAIN_OPTIONS = {
 };
 
 const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
-    const dimensions = castArray(Domains.DimensionDomain || []);
+
+
+    let dimensions = castArray(Domains.DimensionDomain || []).concat();
+    const bbox = get(Domains, 'SpaceDomain.BoundingBox');
+    if (bbox) {
+        dimensions.push({
+            Identifier: "space",
+            Domain: bbox
+        });
+    }
     return dimensions.map( ({Identifier: name, Domain: domain} ) => ({
         source: {
             type: "multidim-extension",

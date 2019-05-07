@@ -1,8 +1,10 @@
 const { get, head } = require('lodash');
 const {createSelector} = require('reselect');
 const { createShallowSelector } = require('../utils/ReselectUtils');
+const { reprojectBbox } = require('../utils/CoordinatesUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector, layersWithTimeDataSelector, layerDimensionDataSelectorCreator } = require('../selectors/dimension');
+const { mapSelector, projectionSelector } = require('../selectors/map');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
@@ -13,6 +15,12 @@ const MAX_ITEMS = 50;
 const isCollapsed = state => get(state, 'timeline.settings.collapsed');
 
 const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
+
+/**
+ * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
+ * @return the flag of sync of the timeline with the map viewport
+ */
+const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get live filter enabled flag
 /**
  * Converts the list of timestamps into timeline items.
  * If a timestamp is a start/end/resolution, and items in viewRange are less than MAX_ITEMS, returns tha array of items,
@@ -148,6 +156,34 @@ const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers
 const isVisible = state => !isCollapsed(state) && hasLayers(state);
 
 
+/**
+ * This selector returns additional parameters for multidimensional extension requests for timeline/playback tools.
+ * When the liveFilterByViewport is active, returns the bbox, re-projected in the CRS of `SpaceDomain`.
+ * TODO: add cql_filter when supported on back-end.
+ * @param {string} layerId The layer ID
+ * @returns a selector for multidimensional requests options (`bbox`)
+ */
+const multidimOptionsSelectorCreator = layerId => state => {
+    const { bbox: viewport } = mapSelector(state);
+    const crs = get(layerDimensionDataSelectorCreator(layerId, "space")(state), 'domain.CRS');
+    const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
+        return { ...p, [c]: parseFloat(viewport.bounds[c]) };
+    }, {});
+    if (!crs || !bounds || !isMapSync(state)) { // TODO: optional filtering
+        return {};
+    }
+    // TODO: reprojectBbox (and the view)
+    let [minx, miny, maxx, maxy] = reprojectBbox(bounds, projectionSelector(state), crs);
+    // workaround for dateline issues. anyway it takes only half of the data. TODO: update when geoserver support it.
+    if (maxx < minx && crs === "EPSG:4326") {
+        maxx = maxx + 360;
+    }
+    return {
+        bbox: `${minx},${miny},${maxx},${maxy}`,
+        crs
+    };
+};
+
 module.exports = {
     isVisible,
     isCollapsed,
@@ -164,5 +200,7 @@ module.exports = {
     selectedLayerDataRangeSelector,
     selectedLayerName,
     selectedLayerUrl,
-    rangeDataSelector
+    rangeDataSelector,
+    isMapSync,
+    multidimOptionsSelectorCreator
 };

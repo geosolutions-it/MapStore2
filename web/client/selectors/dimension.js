@@ -41,6 +41,7 @@ const timeDataSelector = state => layersSelector(state).reduce((timeDataMap, lay
  * @param {object} state application state
  */
 const layersWithTimeDataSelector = state => layersSelector(state).filter(l => getLayerStaticDimension(l, "time"));
+
 const currentTimeSelector = state => {
     const currentTime = get(state, 'dimension.currentTime');
     return currentTime && currentTime.split('/')[0];
@@ -87,8 +88,6 @@ const layerDimensionRangeSelector = (state, layerId) => {
             end: values[values.length - 1]
         };
     }
-
-
 };
 
 module.exports = {

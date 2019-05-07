@@ -32,7 +32,7 @@ const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
 
-const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector, timelineLayersSelector } = require('../selectors/timeline');
+const { selectedLayerSelector, selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, timelineLayersSelector, multidimOptionsSelectorCreator } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
 const { wrapStartStop } = require('../observables/epics');
@@ -51,16 +51,18 @@ const toAbsoluteInterval = (start, end) => `${start}/${end}`;
  * @param {object} paginationOptions additional options to send to the service. (e.g. `fromValue`)
  */
 const domainArgs = (getState, paginationOptions = {}) => {
-    // const timeData = timeDataSelector(getState()) || {};
+    const id = selectedLayerSelector(getState());
     const layerName = selectedLayerName(getState());
     const layerUrl = selectedLayerUrl(getState());
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
     const shouldFilter = statusSelector(getState()) === STATUS.PLAY || statusSelector(getState()) === STATUS.PAUSE;
     return [layerUrl, layerName, "time", {
-        limit: BUFFER_SIZE, // default, can be overridden by pagination options
-        time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
-        ...paginationOptions
-    }];
+            limit: BUFFER_SIZE, // default, can be overridden by pagination options
+            time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
+            ...paginationOptions
+        },
+        multidimOptionsSelectorCreator(id)(getState())
+    ];
 };
 
 /**
