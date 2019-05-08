@@ -251,8 +251,6 @@ const getPluginImplementation = (impl, stateSelector) => {
     return impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector);
 };
 
-
-
 /**
  * Utilities to manage plugins
  * @memberof utils
