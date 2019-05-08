@@ -14,6 +14,7 @@ const {connect} = require('react-redux');
 const url = require('url');
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
+
 /**
  * Gives a reduced version of the status to check.
  * It cached the last state to prevent re-evaluations if the input didn't change.
@@ -40,6 +41,8 @@ const filterState = memoize((state, monitor) => {
 });
 
 const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.substring(0, plugin.length - 6) || plugin;
+
+const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
 
 const getPluginConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
@@ -247,6 +250,9 @@ const defaultEpicWrapper = epic => (...args) =>
 const getPluginImplementation = (impl, stateSelector) => {
     return impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector);
 };
+
+
+
 /**
  * Utilities to manage plugins
  * @memberof utils
@@ -380,6 +386,36 @@ const PluginsUtils = {
      */
     connect: (mapStateToProps, mapDispatchToProps, mergeProps, options) => {
         return connect(mapStateToProps, mapDispatchToProps, mergeProps || pluginsMergeProps, options);
+    },
+    /**
+     * Use this function to export a plugin from a module.
+     *
+     * @param {string} name name of the plugin (without the Plugin postfix)
+     * @param {object} config configuration object, with the following (optional) properties:
+     *  * component: ReactJS component that implements the plugin functionalities, can be null if the plugin supports lazy loading
+     *  * options: generic plugins configuration options (e.g. disablePluginIf)
+     *  * containers: object with supported containers (key=container name, value=container config)
+     *  * reducers: reducers the plugin will need
+     *  * epics: epics the plugin will need to work
+     *  * lazy: true if the plugin implements on-demand loading,
+     *  * enabler: function used in lazy mode to decide when plugin needs to be loaded (receives redux state as the only param)
+     *  * loader: promise that will return the loaded implementation
+     */
+    createPlugin: (name, { component, options = {}, containers = {}, reducers = {}, epics = {}, lazy = false, enabler = () => true, loader}) => {
+        const pluginName = normalizeName(name);
+        const pluginImpl = lazy ? {
+            loadPlugin: (resolve) => {
+                loader().then(loadedImpl => {
+                    resolve(loadedImpl);
+                });
+            },
+            enabler
+        } : component;
+        return {
+            [pluginName]: assign(pluginImpl, containers, options),
+            reducers,
+            epics
+        };
     },
     handleExpression,
     getMorePrioritizedContainer,

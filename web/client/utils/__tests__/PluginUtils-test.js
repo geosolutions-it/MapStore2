@@ -355,4 +355,56 @@ describe('PluginsUtils', () => {
         expect(expr).toExist();
         expect(expr()).toBe("test");
     });
+
+    it('createPlugin', () => {
+        const plugin = PluginsUtils.createPlugin('My', {
+            component: {
+                myprop: {}
+            },
+            containers: {
+                Container: {}
+            },
+            reducers: {myreducer: {}},
+            epics: {myepic: {}},
+            options: {myoption: {}}
+        });
+        expect(plugin.MyPlugin).toExist();
+        expect(plugin.MyPlugin.myprop).toExist();
+        expect(plugin.MyPlugin.Container).toExist();
+        expect(plugin.MyPlugin.myoption).toExist();
+        expect(plugin.reducers).toExist();
+        expect(plugin.epics).toExist();
+    });
+
+    it('createPlugin lazy', (done) => {
+        const plugin = PluginsUtils.createPlugin('My', {
+            lazy: true,
+            enabler: (state) => state.my.enabled,
+            loader: () => new Promise((resolve) => {
+                resolve(true);
+            }),
+            containers: {
+                Container: {}
+            },
+            reducers: { myreducer: {} },
+            epics: { myepic: {} },
+            options: { myoption: {} }
+        });
+        expect(plugin.MyPlugin).toExist();
+        expect(plugin.MyPlugin.Container).toExist();
+        expect(plugin.MyPlugin.myoption).toExist();
+        expect(plugin.MyPlugin.enabler).toExist();
+        expect(plugin.MyPlugin.loadPlugin).toExist();
+        expect(plugin.reducers).toExist();
+        expect(plugin.epics).toExist();
+        expect(plugin.MyPlugin.enabler({
+            my: {
+                enabled: true
+            }
+        })).toBe(true);
+        plugin.MyPlugin.loadPlugin(resp => {
+            expect(resp).toBe(true);
+            done();
+        });
+    });
 });
