@@ -89,6 +89,7 @@ class ShapeFileUploadAndStyle extends React.Component {
             }
         }),
         mapType: "leaflet",
+        stylers: {},
         buttonSize: "small",
         uploadOptions: {},
         createId: () => undefined,
@@ -145,6 +146,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                 return currentType;
             }, null);
         }
+        return null;
     };
 
     renderError = () => {
@@ -213,8 +215,11 @@ class ShapeFileUploadAndStyle extends React.Component {
     addShape = (files) => {
         this.props.shapeLoading(true);
         let queue = this.props.readFiles(files, this.props.onShapeError);
+        // geoJsons is array of array
         Promise.all(queue).then((geoJsons) => {
-            let ls = geoJsons.filter((element) => element[0].features.length !== 0).reduce((layers, geoJson) => {
+            let ls = geoJsons.filter((element) => (element[0] && element[0].features && element[0].features.length !== 0) || element[0].type === "Feature");
+            ls = ls.reduce((layers, geoJson) => {
+                // geoJson is array
                 if (geoJson) {
                     return layers.concat(geoJson.map((layer) => {
                         return LayersUtils.geoJSONToLayer(layer, this.props.createId(layer, geoJson));

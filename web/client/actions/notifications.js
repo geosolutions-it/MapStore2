@@ -12,7 +12,8 @@ const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
  *    uid: "1234" // a unique identifier (if not present, current time is used),
  *    action: {
  *      label:  "label.translation.path" // or the message directly
- *    }
+ *    },
+ *    values: {param1: value1} // optional, used to parametrize the string
  *  }
  * ```
  * @param  {String} [level='success'] The level of the notification. (one of "success"|"warning"|"info"|"error")

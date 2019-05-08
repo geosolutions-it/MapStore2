@@ -185,6 +185,7 @@
 
             "web/client/utils/index.jsdoc",
             "web/client/utils/CoordinatesUtils.js",
+            "web/client/utils/ImmutableUtils.js",
             "web/client/utils/LocaleUtils.js",
             "web/client/utils/PluginsUtils.js",
             "web/client/utils/PrintUtils.js",

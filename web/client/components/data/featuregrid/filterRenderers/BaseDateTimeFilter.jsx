@@ -8,21 +8,20 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const LocaleUtils = require('../../../../utils/LocaleUtils');
-
 require('react-widgets/lib/less/react-widgets.less');
-
 const {DateTimePicker} = require('react-widgets');
 
+const LocaleUtils = require('../../../../utils/LocaleUtils');
+const {getDateTimeFormat} = require('../../../../utils/TimeUtils');
 const AttributeFilter = require('./AttributeFilter');
+const utcDateWrapper = require('../../../misc/enhancers/utcDateWrapper');
+const UTCDateTimePicker = utcDateWrapper({
+    dateProp: "value",
+    dateTypeProp: "type",
+    setDateProp: "onChange"
+})(DateTimePicker);
 
 class DateFilter extends AttributeFilter {
-    static defaultProps = {
-        value: null,
-        type: "datetime",
-        column: {},
-        placeholderMsgId: "featuregrid.filter.placeholders.default"
-    };
     static propTypes = {
         type: PropTypes.string,
         disabled: PropTypes.boolean,
@@ -32,71 +31,38 @@ class DateFilter extends AttributeFilter {
         messages: PropTypes.object,
         locale: PropTypes.string
     };
-    getDateValue = (val) => {
-        if (this.props.type === "time" && val) {
-            return new Date(`1970-01-01T${val}`);
-        } else if (this.props.type === "date" && val) {
-            let dateParts = val.split("Z");
-            if (dateParts.length > 1) {
-                return new Date(`${dateParts[0]}T00:00:00Z`);
-            }
-            return new Date(`${dateParts[0]}T00:00:00`);
-        } else if (val) {
-            return new Date(val);
-        }
-        return null;
-    }
-    getFormat = () => {
-        const dateFormat = LocaleUtils.getDateFormat(this.context.locale);
-        const timeFormat = "HH:MM:SS";
-        switch (this.props.type) {
-            case "time":
-                return timeFormat;
-            case "date":
-                return dateFormat;
-            default:
-                return dateFormat + " " + timeFormat;
-
-        }
-    }
+    static defaultProps = {
+        value: null,
+        type: "date-time",
+        column: {},
+        placeholderMsgId: "featuregrid.filter.placeholders.default"
+    };
     renderInput = () => {
         if (this.props.column.filterable === false) {
             return <span/>;
         }
         const placeholder = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
-        let inputKey = 'header-filter-' + this.props.column.key;
-        const val = this.props.value && this.props.value.startDate || this.props.value;
-        const dateValue = this.props.value ? this.getDateValue(val) : null;
-        return (<DateTimePicker
+        const inputKey = 'header-filter-' + this.props.column.key;
+        let val;
+        // reset correctly the value; if it is null or startDate is null then reset
+        if (this.props.value && this.props.value.startDate === null || !this.props.value) {
+            val = null;
+        } else {
+            val = this.props.value && this.props.value.startDate || this.props.value;
+        }
+        const dateValue = this.props.value ? val : null;
+        return (<UTCDateTimePicker
             key={inputKey}
             disabled={this.props.disabled}
-            format={this.getFormat()}
+            format={getDateTimeFormat(this.context.locale, this.props.type)}
             placeholder={placeholder}
             value={dateValue}
+            type={this.props.type}
             time={this.props.type === 'date-time' || this.props.type === 'time'}
             calendar={this.props.type === 'date-time' || this.props.type === 'date'}
-            format={this.props.dateFormat}
-            onChange={(date, stringDate) => this.handleChange(date, stringDate)}/>);
+            onChange={date => this.handleChange(date)}/>);
     }
-    handleChange = (date, stringDate) => {
-        var tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
-        let value = (date && date.toISOString) ? (date).toISOString() : stringDate;
-        switch (this.props.type) {
-            case "date":
-                value = (date && date.toISOString) ? (new Date(date.getTime() - tzoffset)).toISOString() : stringDate;
-                if (value) {
-                    value = value.split("T")[0] + "Z";
-                }
-                break;
-            case "time":
-                if (value) {
-                    value = value.split("T")[1];
-                }
-                break;
-            default:
-        }
-
-
+    handleChange = (value) => {
         this.props.onChange({value, attribute: this.props.column && this.props.column.name});
     }
 }

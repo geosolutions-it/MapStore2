@@ -38,8 +38,9 @@ module.exports = {
     }
 };
 ```
+**Note** that SamplePlugin in plugins.js must be called with the same name used when exporting it
 
-Then you have to configure it properly so that is enabled in one or more [application modes](application-modes) / [pages](application-pages):
+Then you have to configure it properly so that is enabled in one or more [application modes](../application-modes) / [pages](../application-pages):
 
 ### localConfig.json
 ```javascript
@@ -52,7 +53,10 @@ Then you have to configure it properly so that is enabled in one or more [applic
 }
 ```
 
-Note: to enable a plugin both requiring it in the plugins.js file and configuring it in localConfig.json is required. If one is missing, the plugin won't appear. 
+Note: to enable a plugin you need to do two things:
+ - require it in the plugins.js file
+ - configure it in localConfig.json (remove the Plugins suffix here)
+If one is missing, the plugin won't appear.
 To globally remove a plugin from your project the preferred way is removing it from plugins.js, because this will reduce the global javascript size of your application.
 
 You can also specify plugins properties in the configuration, using the **cfg** property:

@@ -8,7 +8,8 @@
 
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
-const { isString, isObject, isArray, head, castArray, isEmpty, findIndex} = require('lodash');
+const uuidv1 = require('uuid/v1');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
 const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
 const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
     return regex.test(url) && url.match(regex)[0] || null;
@@ -393,8 +394,29 @@ const LayersUtils = {
         }
         return mapState;
     },
+    /**
+     * used for converting a geojson file with fileName into a vector layer
+     * it supports FeatureCollection or Feature
+     * @param {object} geoJSON object to put into features
+     * @param {string} id layer id
+     * @return {object} vector layer containing the geojson in features array
+    */
     geoJSONToLayer: (geoJSON, id) => {
         const bbox = toBbox(geoJSON);
+        let features = [];
+        if (geoJSON.type === "FeatureCollection") {
+            features = geoJSON.features.map((feature, idx) => {
+                if (!feature.id) {
+                    feature.id = idx;
+                }
+                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
+                    feature.geometry.bbox = [null, null, null, null];
+                }
+                return feature;
+            });
+        } else {
+            features = [pick({...geoJSON, id: isNil(geoJSON.id) ? uuidv1() : geoJSON.id}, ["geometry", "type", "style", "id"])];
+        }
         return {
             type: 'vector',
             visibility: true,
@@ -411,15 +433,7 @@ const LayersUtils = {
                 },
                 crs: "EPSG:4326"
             },
-            features: geoJSON.features.map((feature, idx) => {
-                if (!feature.id) {
-                    feature.id = idx;
-                }
-                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
-                    feature.geometry.bbox = [null, null, null, null];
-                }
-                return feature;
-            })
+            features
         };
     },
     saveLayer: (layer) => {
