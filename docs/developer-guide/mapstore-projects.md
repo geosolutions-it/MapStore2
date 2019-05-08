@@ -5,7 +5,7 @@ A MapStore project is an application using the MapStore framework to build a cus
 
 The MapStore framework is linked as a git submodule in the MapStore2 project subfolder.
 
-**Note**: since MapStore is linked as a submodule, every project custom file should be created outside of it. This allows updating MapStore to a newer version easily, without conflicts. The general rule is: never add / update / modify files directly in the MapStore2 subfolder.
+**Note**: since MapStore is linked as a submodule, every project custom file should be created outside of it. This allows updating MapStore to a newer version easily, without conflicts. The general rule is: **never add / update / modify files directly in the MapStore2 subfolder**.
 
 ## Standard Projects
 

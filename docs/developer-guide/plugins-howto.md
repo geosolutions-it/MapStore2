@@ -1,5 +1,5 @@
 # Creating a MapStore2 plugin
-The MapStore2 [plugins architecture](plugins-architecture) allows building your own idenpendent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Creating a plugin is like assembling and connecting several pieces together into an atomic module. This happens by writing a plugin module, a ReactJS JSX file exporting the plugin descriptor.
 
@@ -72,8 +72,6 @@ You can also specify plugins properties in the configuration, using the **cfg** 
     }
 }
 ```
-
-Plugin properties 
 
 ## A store connected plugin example
 A plugin component is a **smart component** (connected to the Redux store) so that properties can be taken from the global state, as needed.
@@ -203,6 +201,7 @@ const ConnectedSample = connect((state) => {
 export const ConnectedSamplePlugin = ConnectedSample;
 export const reducers = {sample};
 ```
+
 ## Data fetching and side effects
 Side effects should be limited as much as possible, but there are cases where a side effect cannot be avoided.
 In particular all asynchronous operations are side effects in Redux, but we obviously need to handle them, in particular we need to asynchronously load the data that we need from ore or more web services.
@@ -238,7 +237,7 @@ export const loadError = (error) => {
 
 ### js/reducers/sample.js
 ```javascript
-import { LOADED_DATA } from '../actions/sample';
+import { LOADED_DATA, LOAD_ERROR } from '../actions/sample';
 export default function(state = { text: 'Initial Text' }, action) {
     switch (action.type) {
         case LOADED_DATA:
@@ -287,7 +286,7 @@ import { loadData } from '../actions/sample';
 import sampleEpics from '../epics/sample';
 import sample from '../reducers/sample';
 
-class SampleComponent extends React.Component {
+class SideEffectComponent extends React.Component {
     static propTypes = {
         text: PropTypes.string,
         onLoad: PropTypes.func
@@ -299,21 +298,23 @@ class SampleComponent extends React.Component {
     }
 }
 
-const ConnectedSample = connect((state) => {
+const ConnectedSideEffect = connect((state) => {
     return {
         text: get(state, 'sample.text')
     };
 }, {
         onLoad: loadData // connected action
-    })(SampleComponent);
+    })(SideEffectComponent);
 
-export const ConnectedSamplePlugin = ConnectedSample;
+export const SideEffectPlugin = ConnectedSideEffect;
 export const reducers = {sample};
 export const epics = sampleEpics;
 ```
 
 ## Plugins that are containers of other plugins
-It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dinamically configure their items / tools from the configuration. 
+It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dinamically configure their items / tools from the configuration.
+
+In addition to those "user defined" containers, there is always a **root container**. When no container is specified for a plugin, it will be included in the root container.
 
 ### js/plugins/ContainerComponent.jsx
 ```javascript
@@ -343,7 +344,7 @@ export const ContainerPlugin = SampleContainer;
 ## Plugins for other plugins
 Since we have containers, we can build plugins that can be contained in one or more container plugins.
 
-### ContainedComponent.jsx
+### js/plugins/ContainedComponent.jsx
 ```javascript
 import React from 'react';
 import { connect } from 'react-redux';
@@ -370,7 +371,9 @@ const ConnectedSample = connect((state) => {
     };
 })(SampleComponent);
 
-export const ConnectedSamplePlugin = assign(ConnectedSample, {
+export const ContainedPlugin = assign(ConnectedSample, {
+    // we support the previously defined Container Plugin as a
+    // possible container for this plugin
     Container: {
         name: "Sample",
         id: "sample_tool",
@@ -549,20 +552,118 @@ We can change containers relation like this:
 
 This will force the plugin system to choose Container1 instead of Container3, and will override the name property.
 
-There is also a full set of options to (dinamically) add/exclude containers:
+There is also a set of options to (dinamically) add/exclude containers:
  * **showIn**: can be used to add a plugin to a container or more than one, in addition to the default one (it is an array of container plugin names)
  * **hideFrom**: can be used to exclude a plugin from a given container or more than one (it is an array of container plugin names)
  * **doNotHide**: can be used to show a plugin in the root container, in addition to the default one
 
 Note that also these properties accept dynamic expressions.
 
+#### js/plugins/Container.jsx
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+
+class SampleContainer extends React.Component {
+    static propTypes = {
+        items: PropTypes.array
+    };
+    renderItems = () => {
+        return this.props.items.map(item => {
+            const Item = item.plugin; // item.plugin is the plugin ReactJS component
+            return <Item id={item.id} name={item.name} />;
+        });
+    };
+
+    render() {
+        const style = { zIndex: 1000, border: "solid black 1px", width: "200px", height: "200px", position: "absolute", top: "100px", left: "100px" };
+        return <div style={style}>{this.renderItems()}</div>;
+    }
+}
+
+export const ContainerPlugin = SampleContainer;
+
+```
+
+#### js/plugins/ContainerOther.jsx
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+
+class SampleContainer extends React.Component {
+    static propTypes = {
+        items: PropTypes.array
+    };
+    renderItems = () => {
+        return this.props.items.map(item => {
+            const Item = item.plugin; // item.plugin is the plugin ReactJS component
+            return <Item id={item.id} name={item.name} />;
+        });
+    };
+
+    render() {
+        const style = { zIndex: 1000, border: "solid red 1px", width: "200px", height: "200px", position: "absolute", top: "100px", left: "100px" };
+        return <div style={style}>{this.renderItems()}</div>;
+    }
+}
+
+export const ContainerOtherPlugin = SampleContainer;
+
+```
+
+#### js/plugins/Sample.jsx
+```javascript
+import React from 'react';
+import assign from 'object-assign';
+
+class SampleComponent extends React.Component {
+    render() {
+        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
+        return <div style={style}>Hello</div >;
+    }
+}
+
+export const SamplePlugin = assign(SampleComponent, {
+    Container: {
+        name: "Sample",
+        id: "sample_tool",
+        priority: 1
+    },
+    ContainerOther: {
+        name: "Sample",
+        id: "sample_tool",
+        priority: 1
+    }
+});
+
+```
+
+With this configuration the sample plugin will be shown in both Container and ContainerOther plugins (they have the same priority, so both are picked).
+
+We can change this using showIn or hideFrom in localConfig.json:
+#### localConfig.json
 ```javascript
 {
     ...,
     "plugins": {
         "desktop": [{
             "name": "Sample",
-            "showIn": ["Container1"]
+            "showIn": ["Container"]
+            ...
+        }, ...],
+        ...
+    }
+    ...
+}
+
+or 
+
+{
+    ...,
+    "plugins": {
+        "desktop": [{
+            "name": "Sample",
+            "hideFrom": ["ContainerOther"]
             ...
         }, ...],
         ...
@@ -570,12 +671,30 @@ Note that also these properties accept dynamic expressions.
     ...
 }
 ```
-This will duplicate the plugin both in Container3 (the one chosen as the most prioritized) and Container1 (chosen by configuration).
-This is useful when the same plugin controls different application widgets, for example:
- * a toolbar button to enable / disable the plugin functionality
- * a settings panel to configure the tool
 
-The two widgets will be contained by 2 different containers, the Toolbar plugin and the Settings plugin.
+We can also add the plugin to the root container, using the doNotHide property (note that this is a container property, so we have to use an override for it):
+
+#### localConfig.json
+```javascript
+{
+    ...,
+    "plugins": {
+        "desktop": [{
+            "name": "Sample",
+            "showIn": ["Container"],
+            "override": {
+                "Container": {
+                    "doNotHide": true
+                }
+            }
+            ...
+        }, ...],
+        ...
+    }
+    ...
+}
+
+```
 
 ### Conditionally disabling plugins
 Dinamyc expression can also be used to enable a plugin only when a specific application state is met, using the **disablePluginIf** property.
@@ -586,7 +705,9 @@ Dinamyc expression can also be used to enable a plugin only when a specific appl
     "plugins": {
         "desktop": [{
             "name": "Sample",
-            "disablePluginIf": "{state('mapType') === 'cesium'}"
+            "cfg": {
+                "disablePluginIf": "{state('mapType') === 'cesium'}"
+            }
             ...
         }, ...],
         ...
@@ -634,15 +755,15 @@ To ease writing a plugin unit test, an helper is available (pluginsTestUtils) th
 
 ### Examples
 
+#### js/__tests__/myplugin-test.js
+
 ```javascript
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import MyPlugin from '../MyPlugin';
-import { getPluginForTest } from './pluginsTestUtils';
-
-import plugins from '<plugins_definition_file>';
+import { getPluginForTest } from '../../MapStore2/web/client/plugins/__tests__/pluginsTestUtils';
 
 const initialState = {};
 
@@ -659,14 +780,14 @@ describe('MyPlugin Test', () => {
     });
 
     it('creates MyPlugin with default configuration', () => {
-        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, plugins);
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.getElementById('<my plugin id>')).toExist();
         expect(...);
     });
     // use pluginCfg to override plugins properties
     it('creates MyPlugin with custom configuration', () => {
-        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, plugins);
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin pluginCfg={{
             property: 'value'
         }}/>, document.getElementById("container"));
@@ -676,7 +797,7 @@ describe('MyPlugin Test', () => {
 
     // test connected epics looking at the actions array
     it('test plugin epics', () => {
-        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, plugins);
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
         store.dispatch({
             type: ACTION_CAPTURED_BY_AN_EPIC,
