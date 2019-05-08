@@ -794,6 +794,7 @@
                 "targetLayer": "Capa objetivo",
                 "clear": "Eliminar filtro",
                 "operation": "Operación",
+                "placeholder": "Selecciona una capa",
                 "errors": {
                     "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
                 }

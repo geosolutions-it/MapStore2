@@ -795,6 +795,7 @@
                 "targetLayer": "Couche cible",
                 "clear": "Effacer le filtre",
                 "operation": "Opération",
+                "placeholder": "Sélectionner une couche",
                 "errors": {
                     "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
                 }
