@@ -239,7 +239,12 @@ class SearchBar extends React.Component {
         key={key}
         onClick={onClick}
         className={className}/>);
-
+    getError = (e) => {
+        if (e) {
+            return (<Message msgId={e.serviceType && e.message || "search.generic_error"} msgParams={{serviceType: e.serviceType}}/>);
+        }
+        return null;
+    }
 
 /**
  * if one tool is disabled the other one is enabled
@@ -319,7 +324,7 @@ class SearchBar extends React.Component {
                                 }
                             }
                         }, {
-                            tooltip: this.props.error && this.props.error.message || "null",
+                            tooltip: this.getError(this.props.error),
                             tooltipPosition: "bottom",
                             className: "square-button-md no-border",
                             glyph: "warning-sign",

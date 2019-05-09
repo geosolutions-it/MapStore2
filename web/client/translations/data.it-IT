@@ -574,7 +574,9 @@
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
-            "serviceslistempty": "Nessun servizio definito"
+            "serviceslistempty": "Nessun servizio definito",
+            "service_missing": "Il servizio {serviceType} non è configurato",
+            "generic_error": "Errore di ricerca"
         },
         "drawLocal": {
             "draw": {
