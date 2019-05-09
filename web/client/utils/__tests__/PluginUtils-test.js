@@ -97,7 +97,19 @@ describe('PluginsUtils', () => {
         expect(desc1.items.length).toBe(1);
         expect(desc1.items[0].test).toBe(item.test);
         expect(desc1.items[0].cfg).toExist();
-
+    });
+    it('getPluginDescriptor functional component', () => {
+        const Component = () => {
+            return <div>hello</div>;
+        };
+        const P1 = PluginsUtils.createPlugin('P1', {
+            component: Component
+        });
+        const desc1 = PluginsUtils.getPluginDescriptor({}, P1, ["P1"], "P1");
+        expect(desc1).toExist();
+        expect(desc1.id).toBe("P1");
+        expect(desc1.name).toBe("P1");
+        expect(desc1.impl).toBe(Component);
     });
     it('combineEpics', () => {
         const plugins = {MapSearchPlugin: MapSearchPlugin};
@@ -369,6 +381,7 @@ describe('PluginsUtils', () => {
             options: {myoption: {}}
         });
         expect(plugin.MyPlugin).toExist();
+        expect(plugin.MyPlugin.isMapStorePlugin).toBe(true);
         expect(plugin.MyPlugin.myprop).toExist();
         expect(plugin.MyPlugin.Container).toExist();
         expect(plugin.MyPlugin.myoption).toExist();
@@ -381,7 +394,9 @@ describe('PluginsUtils', () => {
             lazy: true,
             enabler: (state) => state.my.enabled,
             loader: () => new Promise((resolve) => {
-                resolve(true);
+                resolve({
+                    myproperty: true
+                });
             }),
             containers: {
                 Container: {}
@@ -403,7 +418,9 @@ describe('PluginsUtils', () => {
             }
         })).toBe(true);
         plugin.MyPlugin.loadPlugin(resp => {
-            expect(resp).toBe(true);
+            expect(resp).toExist();
+            expect(resp.myproperty).toBe(true);
+            expect(resp.isMapStorePlugin).toBe(true);
             done();
         });
     });

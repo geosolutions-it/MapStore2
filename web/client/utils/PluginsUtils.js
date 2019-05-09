@@ -246,9 +246,10 @@ const defaultEpicWrapper = epic => (...args) =>
       return source;
   });
 
+const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
 
 const getPluginImplementation = (impl, stateSelector) => {
-    return impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector);
+    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
 };
 
 /**
@@ -404,11 +405,11 @@ const PluginsUtils = {
         const pluginImpl = lazy ? {
             loadPlugin: (resolve) => {
                 loader().then(loadedImpl => {
-                    resolve(loadedImpl);
+                    resolve(assign(loadedImpl, { isMapStorePlugin: true }));
                 });
             },
             enabler
-        } : component;
+        } : assign(component, {isMapStorePlugin: true});
         return {
             [pluginName]: assign(pluginImpl, containers, options),
             reducers,
@@ -417,6 +418,7 @@ const PluginsUtils = {
     },
     handleExpression,
     getMorePrioritizedContainer,
-    getPluginConfiguration
+    getPluginConfiguration,
+    isMapStorePlugin
 };
 module.exports = PluginsUtils;
