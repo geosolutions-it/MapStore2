@@ -24,24 +24,24 @@ const selectedSelector = createSelector(
 const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${index}` }</span>;
 
 /**
-  * @name ContentTabs
-  * @memberof plugins
-  * @class
-  * @classdesc
-  * ContentTabs plugin is used in home page allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
-  * <br/>Each contained plugin has to have the contenttabs configuration property in its plugin configuration.
-  * The key property is mandatory following and position property is used to order give tabs order.
-  * An example of the contenttabs config in Maps plugin
-  * @example
-    *   ContentTabs: {
-    *       name: 'maps',
-    *       key: 'maps',
-    *       TitleComponent:
-    *       connect(mapsCountSelector)(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
-    *       position: 1,
-    *       tool: true
-    *   }
-  */
+ * @name ContentTabs
+ * @memberof plugins
+ * @class
+ * @classdesc
+ * ContentTabs plugin is used in home page allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
+ * <br/>Each contained plugin has to have the contenttabs configuration property in its plugin configuration.
+ * The key property is mandatory following and position property is used to order give tabs order.
+ * An example of the contenttabs config in Maps plugin
+ * @example
+ *   ContentTabs: {
+ *       name: 'maps',
+ *       key: 'maps',
+ *       TitleComponent:
+ *       connect(mapsCountSelector)(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
+ *       position: 1,
+ *       tool: true
+ *   }
+ */
 class ContentTabs extends React.Component {
     static propTypes = {
         selected: PropTypes.number,
