@@ -99,6 +99,11 @@ function changeZoomLevel(zoomLvl, mapStateSource) {
     };
 }
 
+
+/**
+ * pan to a specific point
+ * @param {object} center as {x, y, crs}
+*/
 function panTo(center) {
     return {
         type: PAN_TO,
