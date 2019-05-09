@@ -576,7 +576,7 @@
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
-            "generic_error": "Suchfehler"
+            "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}"
         },
         "drawLocal": {
             "draw": {

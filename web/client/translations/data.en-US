@@ -576,7 +576,7 @@
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined",
             "service_missing": "{serviceType} service is not configured",
-            "generic_error": "Search error"
+            "generic_error": "An error occurred during search. Error details: {message}"
         },
         "drawLocal": {
             "draw": {

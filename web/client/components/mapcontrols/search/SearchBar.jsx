@@ -241,7 +241,7 @@ class SearchBar extends React.Component {
         className={className}/>);
     getError = (e) => {
         if (e) {
-            return (<Message msgId={e.serviceType && e.message || "search.generic_error"} msgParams={{serviceType: e.serviceType}}/>);
+            return (<Message msgId={e.msgId || "search.generic_error"} msgParams={{message: e.message, serviceType: e.serviceType}}/>);
         }
         return null;
     }

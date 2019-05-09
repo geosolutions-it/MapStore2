@@ -58,7 +58,8 @@ const searchEpic = action$ =>
             .map((service) => {
                 const serviceInstance = API.Utils.getService(service.type);
                 if (!serviceInstance) {
-                    const err = new Error("search.service_missing");
+                    const err = new Error("Service Missing");
+                    err.msgId = "search.service_missing";
                     err.serviceType = service.type;
                     return Rx.Observable.of(err).do((e) => {throw e; });
                 }
@@ -81,7 +82,10 @@ const searchEpic = action$ =>
         .startWith(searchTextLoading(true))
         .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
         .concat([searchTextLoading(false)])
-        .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
+        .catch(e => {
+            const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
+            return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
+        })
 );
 
 /**

@@ -576,7 +576,7 @@
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
             "serviceslistempty": "Nessun servizio definito",
             "service_missing": "Il servizio {serviceType} non è configurato",
-            "generic_error": "Errore di ricerca"
+            "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}"
         },
         "drawLocal": {
             "draw": {
