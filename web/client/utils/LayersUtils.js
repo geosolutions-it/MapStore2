@@ -10,10 +10,9 @@ const assign = require('object-assign');
 const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
 const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
-const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
-const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
-    return regex.test(url) && url.match(regex)[0] || null;
-};
+
+let REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
+
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
 };
@@ -486,9 +485,20 @@ const LayersUtils = {
         layer.credits ? { credits: layer.credits } : {});
     },
     /**
-    * default regex rule for searching for a /geoserver/ string in a url
+    * default constant regex rule for searching for a /geoserver/ string in a url
     */
     REG_GEOSERVER_RULE,
+    /**
+     * Override default REG_GEOSERVER_RULE variable
+     * @param {regex} regex custom regex to override
+     */
+    setRegGeoserverRule: (regex) => {
+        REG_GEOSERVER_RULE = regex;
+    },
+    /**
+     * Get REG_GEOSERVER_RULE regex variable
+     */
+    getRegGeoserverRule: () => REG_GEOSERVER_RULE,
     /**
     * it tests if a url is matched by a regex,
     * if so it returns the matched string
@@ -496,14 +506,17 @@ const LayersUtils = {
     * @param object.regex the regex to use for parsing the url
     * @param object.url the url to test
     */
-    findGeoServerName,
+    findGeoServerName: ({url, regexRule}) => {
+        const regex = regexRule || LayersUtils.getRegGeoserverRule();
+        return regex.test(url) && url.match(regex)[0] || null;
+    },
     /**
      * This method search for a /geoserver/  string inside the url
      * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
      * otherwise it returns the default getCapabilitiesUrl
     */
     getCapabilitiesUrl: (layer) => {
-        const matchedGeoServerName = findGeoServerName({url: layer.url});
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
         let reqUrl = layer.url;
         if (!!matchedGeoServerName) {
             let urlParts = reqUrl.split(matchedGeoServerName);
