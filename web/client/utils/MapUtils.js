@@ -378,7 +378,7 @@ function isSimpleGeomType(geomType) {
 function getSimpleGeomType(geomType = "Point") {
     switch (geomType) {
         case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
-        case "MultiPoint": return "Point";
+        case "MultiPoint": case "Marker": return "Point";
         case "MultiLineString": return "LineString";
         case "MultiPolygon": return "Polygon";
         case "GeometryCollection": return "GeometryCollection";

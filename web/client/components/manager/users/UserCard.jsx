@@ -50,8 +50,11 @@ class UserCard extends React.Component {
 
     renderGroups = () => {
         return (<div key="groups" className="groups-container" style={this.props.innerItemStyle}><div><strong><Message msgId="users.groupTitle"/></strong></div>
-    <div className="groups-list">{this.props.user && this.props.user.groups ? this.props.user.groups.map((group) => (<div className="group-item" key={"group-" + group.id}>{group.groupName}</div>)) : null}</div>
-
+            <div className="groups-list">
+                {this.props.user && this.props.user.groups ? this.props.user.groups
+                .filter(({ groupName } = {}) => groupName)
+                .map(({ id, groupName } = {}) => (<div className="group-item" key={"group-" + id}>{groupName}</div>)) : null}
+            </div>
      </div>);
     };
 

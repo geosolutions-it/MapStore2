@@ -23,6 +23,10 @@
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
         "method": "bearer"
+      }, {
+        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
+        "authkeyParamName": "authkey",
+        "method": "authkey"
     }],
     "monitorState": [
       {"name": "routing", "path": "routing.location.pathname"},
@@ -282,7 +286,7 @@
             },
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "MapImport", "MapExport", "Timeline", "Playback", {
+            }, "Print", "ShapeFile", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -354,6 +358,8 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets", "WidgetsTray",
+            "Timeline",
+            "Playback",
             "FeedbackMask",
             "StyleEditor"
         ],

@@ -16,7 +16,7 @@ const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV,
 const editOptions = require('./widgets/editOptions');
 const autoDisableWidgets = require('./widgets/autoDisableWidgets');
 
-
+const RIGHT_MARGIN = 70;
 const {heightProvider} = require('../components/layout/enhancers/gridLayout');
 const ContainerDimensions = require('react-container-dimensions').default;
 
@@ -61,9 +61,9 @@ compose(
             style: {
                 left: (width && width > 800) ? "500px" : "0",
                 marginTop: 52,
-                bottom: 67,
+                bottom: 65,
                 height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
-                width: `${width && width > 800 ? 'calc(100% - 550px)' : 'calc(100% - 50px)'}`,
+                width: width && width > 800 ? `calc(100% - ${500 + RIGHT_MARGIN}px)` : `calc(100% - ${RIGHT_MARGIN}px)`,
                 position: 'absolute',
                 zIndex: 50
             }

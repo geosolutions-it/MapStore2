@@ -1486,5 +1486,16 @@ describe('Test the MapUtils', () => {
         const noNumberValue = parseLayoutValue('value');
         expect(noNumberValue).toBe(0);
     });
+    it('test getSimpleGeomType', () => {
+        expect(getSimpleGeomType("Point")).toBe("Point");
+        expect(getSimpleGeomType("Marker")).toBe("Point");
+        expect(getSimpleGeomType("MultiPoint")).toBe("Point");
+        expect(getSimpleGeomType("MultiLineString")).toBe("LineString");
+        expect(getSimpleGeomType("LineString")).toBe("LineString");
+        expect(getSimpleGeomType("MultiPolygon")).toBe("Polygon");
+        expect(getSimpleGeomType("Polygon")).toBe("Polygon");
+        expect(getSimpleGeomType("Circle")).toBe("Circle");
+        expect(getSimpleGeomType("Other")).toBe("Other");
+    });
 
 });

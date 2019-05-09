@@ -30,7 +30,7 @@ A few sentences describing the overall goals of the pull request' s commits.
 
 **Does this PR introduce a breaking change?** (check one with "x", remove the other)
 
- - [ ] Yes
+ - [ ] Yes, and I documented them in migration notes
  - [ ] No
 
 If this PR contains a breaking change, please describe the impact and migration path for existing applications: ...

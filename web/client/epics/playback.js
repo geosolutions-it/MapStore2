@@ -32,7 +32,7 @@ const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
 
-const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector } = require('../selectors/timeline');
+const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector, timelineLayersSelector } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
 const { wrapStartStop } = require('../observables/epics');
@@ -249,7 +249,7 @@ module.exports = {
                     // need to select first
                     : Rx.Observable.of(
                         selectLayer(
-                            get(layersWithTimeDataSelector(getState()), "[0].id")
+                            get(timelineLayersSelector(getState()), "[0].id")
                         )
                     )
             ),

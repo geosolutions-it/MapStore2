@@ -20,7 +20,7 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
         const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
-        const {pages, initialState, storeOpts, appEpics = {}, themeCfg} = config;
+        const {pages, initialState, storeOpts, appEpics = {}, themeCfg, printingEnabled = true} = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
@@ -52,7 +52,7 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
             pluginsDef,
             initialActions,
             appComponent: StandardRouter,
-            printingEnabled: true,
+            printingEnabled,
             themeCfg
         });
 

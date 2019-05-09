@@ -55,3 +55,4 @@ Deploy the generated mapstore.war file (in web/target) to your favourite J2EE co
  * [Configuration](configuration-files)
  * [Migration](mapstore-migration-guide)
  * [How to Release](release)
+

@@ -12,6 +12,20 @@ The Widget page will open showing the various widget types to create.
 
   <img src="../img/widget-list.jpg" style="max-width:400px;"/>
 
+Widgets Tray
+------------
+
+When created, The widgets will be placed on the map (or in the dashboard, depending on the context). At both sides of the title of the widget header you can find some tools:
+
+ <img src="../img/widgets-tray.jpg" style="max-width:500px;"/>
+
+
+* **Pin** the pin tool allow to lock the widget position
+* **Collapse** the collapse tool allow to collapse the widgets in the *Widgets Tray**
+* **Menu** a set of tools (depending of the widget). Contains the controls to "Remove" or Edit the widget
+
+The **Widget Tray** is a plugin that allow to expand/collapse widgets one by one. In this tray you can see one item for each widget. You can click on these items to collapse or expand the single widgets. A **Collapse All** button allow to collapse or expand all widgets at once.
+
 Creating Chart Widget
 ---------------------
 

@@ -6,17 +6,17 @@ const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const paths = {
-    base: __dirname,
-    dist: path.join(__dirname, "web", "client", "dist"),
-    framework: path.join(__dirname, "web", "client"),
-    code: path.join(__dirname, "web", "client")
+    base: path.join(__dirname, ".."),
+    dist: path.join(__dirname, "..", "web", "client", "dist"),
+    framework: path.join(__dirname, "..", "web", "client"),
+    code: path.join(__dirname, "..", "web", "client")
 };
 
 module.exports = require('./buildConfig')(
     assign({
-            "mapstore2": path.join(__dirname, "web", "client", "product", "app"),
-            "embedded": path.join(__dirname, "web", "client", "product", "embedded"),
-            "ms2-api": path.join(__dirname, "web", "client", "product", "api")
+            "mapstore2": path.join(paths.code, "product", "app"),
+            "embedded": path.join(paths.code, "product", "embedded"),
+            "ms2-api": path.join(paths.code, "product", "api")
         },
         require('./examples')
     ),

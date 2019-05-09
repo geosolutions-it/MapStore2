@@ -6,15 +6,19 @@ This is the overall framework folder structure:
 +-- package.json
 +-- pom.xml
 +-- build.sh
-+-- karma.conf.*.js
-+-- tests.webpack.js
-+-- webpack.config.js
-+-- prod-webpack.config.js
 +-- .babelrc
 +-- .eslintrc
 +-- .editorconfig
 +-- .travis.yml
 +-- ...
++-- build       (build realted files)
+    +-- karma.conf.*.js
+    +-- tests.webpack.js
+    +-- webpack.config.js
+    +-- prod-webpack.config.js
+    +-- docma-config.json
+    +-- testConfig.json
+    +-- ...
 +-- web      (MapStore maven module)
     +-- pom.xml
     +-- src        (maven java webapp src folder)
