@@ -178,10 +178,12 @@ describe('Test VectorStyle', () => {
         expect(olStyles.length).toBe(1);
         // **************** icon ****************
         expect(olStyles[0].getImage().getSrc()).toBe("url");
-        // this is weird, and a bug of ol see https://github.com/openlayers/openlayers/issues/6557, if you dont pass a size and units is fraction then anchor is null (but seems to be applied)
-        expect(olStyles[0].getImage().getAnchor()).toEqual(null);
-        // expect(olStyles[0].getImage().getSize()).toEqual(null);
-        expect(olStyles[0].getImage().getOrigin()).toEqual([0, 0]);
+        // this is weird, and a bug of ol see https://github.com/openlayers/openlayers/issues/6557
+        // if you dont pass a size and units is fraction then anchor is null (but seems to be applied)
+        const image = olStyles[0].getImage();
+        expect(image.getAnchor()).toEqual(null);
+        expect(image.getSize()).toEqual(null);
+        expect(image.getOrigin()).toEqual([0, 0]);
     });
     it('getMarkerStyle, with a Marker Style with url, no shadow, yes highlight', () => {
         const markerStyle = {
@@ -193,11 +195,12 @@ describe('Test VectorStyle', () => {
         expect(isArray(olStyles)).toBe(true);
         expect(olStyles.length).toBe(2);
         // **************** icon ****************
-        expect(olStyles[0].getImage().getSrc()).toBe("url");
+        const image = olStyles[0].getImage();
+        expect(image.getSrc()).toBe("url");
         // this is weird, and a bug of ol see https://github.com/openlayers/openlayers/issues/6557, if you dont pass a size and units is fraction then anchor is null (but seems to be applied)
-        expect(olStyles[0].getImage().getAnchor()).toEqual(null);
-        // expect(olStyles[0].getImage().getSize()).toEqual(null);
-        expect(olStyles[0].getImage().getOrigin()).toEqual([0, 0]);
+        expect(image.getAnchor()).toEqual(null);
+        // expect(image.getSize()).toEqual(null);
+        expect(image.getOrigin()).toEqual([0, 0]);
     });
     it('getMarkerStyle, with a Marker Style with url and anchor in pixels, no shadow, no highlight', () => {
         const markerStyle = {
@@ -250,7 +253,7 @@ describe('Test VectorStyle', () => {
         expect(olStyles[1].getImage().getSrc()).toBe("iconUrl");
         // this is weird, and a bug of ol see https://github.com/openlayers/openlayers/issues/6557, if you dont pass a size anchor is null, but seems to be applied?
         expect(olStyles[1].getImage().getAnchor()).toEqual(null);
-        // expect(olStyles[0].getImage().getSize()).toEqual(null);
+        expect(olStyles[0].getImage().getSize()).toEqual(null);
         expect(olStyles[1].getImage().getOrigin()).toEqual([0, 0]);
     });
     it('getMarkerStyle, with a Marker Style with url, yes shadow, yes highlight', () => {
@@ -270,7 +273,7 @@ describe('Test VectorStyle', () => {
         expect(olStyles[1].getImage().getSrc()).toBe("iconUrl");
         // this is weird, and a bug of ol see https://github.com/openlayers/openlayers/issues/6557, if you dont pass a size anchor is null, but seems to be applied?
         expect(olStyles[1].getImage().getAnchor()).toEqual(null);
-        // expect(olStyles[0].getImage().getSize()).toEqual(null);
+        expect(olStyles[0].getImage().getSize()).toEqual(null);
         expect(olStyles[1].getImage().getOrigin()).toEqual([0, 0]);
     });
     it('getMarkerStyle, with a Marker Style with url with anchor, yes shadow, yes highlight', () => {
