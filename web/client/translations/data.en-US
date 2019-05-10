@@ -774,6 +774,7 @@
                 "targetLayer": "Target layer",
                 "clear": "Clear filter",
                 "operation": "Operation",
+                "placeholder": "Select layer",
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
                 }

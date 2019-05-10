@@ -774,6 +774,7 @@
                 "targetLayer": "Livello Filtro",
                 "clear": "Pulisci Filtro",
                 "operation": "Operazione",
+                "placeholder": "Seleziona il livello",
                 "errors": {
                     "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
                 }
