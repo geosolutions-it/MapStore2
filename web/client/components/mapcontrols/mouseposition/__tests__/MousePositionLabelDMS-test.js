@@ -74,7 +74,7 @@ describe('MousePositionLabelDMS', () => {
         expect(cmpDom.textContent).toBe("Lat: 13° 31' 60.00'' Lng: 028° 18' 00.00''");
     });
 
-    it('position with no rounding but flooring of latD and lngD', () => {
+    it('position with no rounding but trunc of latD and lngD', () => {
 
         const cmp = ReactDOM.render(
                 <IntlProvider>
@@ -90,5 +90,22 @@ describe('MousePositionLabelDMS', () => {
 
         // it should be 010° 28' 30.05'' instead of 010° 29' 00''
         expect(cmpDom.textContent).toBe("Lat: 43° 42' 26.16'' Lng: 010° 28' 30.05''");
+    });
+
+    it('position with negative lat and lng correctly truncated ladD e lngD', () => {
+
+        const cmp = ReactDOM.render(
+                <IntlProvider>
+                    <MousePositionLabelDMS
+                        position={{lng: -0.006, lat: -0.006}}
+                    />
+                </IntlProvider>
+            , document.getElementById("container"));
+        expect(cmp).toExist();
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+
+        // it should be 010° 28' 30.05'' instead of 010° 29' 00''
+        expect(cmpDom.textContent).toBe("Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''");
     });
 });
