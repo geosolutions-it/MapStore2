@@ -11,7 +11,7 @@ const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
 const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
 
-let REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
+let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
@@ -485,20 +485,21 @@ const LayersUtils = {
         layer.credits ? { credits: layer.credits } : {});
     },
     /**
-    * default constant regex rule for searching for a /geoserver/ string in a url
+    * default initial constant regex rule for searching for a /geoserver/ string in a url
+    * useful for a reset to an initial state of the rule
     */
-    REG_GEOSERVER_RULE,
+    REG_GEOSERVER_RULE: regGeoServerRule,
     /**
      * Override default REG_GEOSERVER_RULE variable
      * @param {regex} regex custom regex to override
      */
     setRegGeoserverRule: (regex) => {
-        REG_GEOSERVER_RULE = regex;
+        regGeoServerRule = regex;
     },
     /**
      * Get REG_GEOSERVER_RULE regex variable
      */
-    getRegGeoserverRule: () => REG_GEOSERVER_RULE,
+    getRegGeoserverRule: () => regGeoServerRule,
     /**
     * it tests if a url is matched by a regex,
     * if so it returns the matched string
