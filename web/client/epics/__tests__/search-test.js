@@ -11,7 +11,7 @@ var expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const { textSearch, selectSearchItem, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE, UPDATE_RESULTS_STYLE } = require('../../actions/search');
+const { textSearch, selectSearchItem, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE, UPDATE_RESULTS_STYLE, TEXT_SEARCH_ERROR} = require('../../actions/search');
 const {CHANGE_MAP_VIEW} = require('../../actions/map');
 const {searchEpic, searchItemSelected } = require('../search');
 const rootEpic = combineEpics(searchEpic, searchItemSelected);
@@ -21,6 +21,8 @@ const mockStore = configureMockStore([epicMiddleware]);
 const SEARCH_NESTED = 'SEARCH NESTED';
 const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
+
+const {testEpic} = require('./epicTestUtils');
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER
@@ -195,6 +197,31 @@ describe('search Epics', () => {
 
                 done();
             }
+        });
+    });
+    it('respond with correct service error when service type missing', (done) => {
+        let action = {
+            ...textSearch("TEST"),
+            services: [{
+                type: 'nom',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/Wyoming.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME],
+                    returnFullData: false
+                }
+            }]
+        };
+        testEpic(searchEpic, 3, action, (actions) => {
+            expect(actions).toExist();
+            expect(actions[0].type).toBe(TEXT_SEARCH_LOADING);
+            expect(actions.length).toBe(3);
+            expect(actions[1].type).toBe(TEXT_SEARCH_ERROR);
+            expect(actions[1].error).toExist();
+            expect(actions[1].error.serviceType).toBe('nom');
+            expect(actions[2].type).toBe(TEXT_SEARCH_LOADING);
+            done();
+
         });
     });
 });

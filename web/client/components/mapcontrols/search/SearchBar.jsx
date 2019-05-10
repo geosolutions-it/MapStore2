@@ -13,7 +13,7 @@ const OverlayTrigger = require('../../misc/OverlayTrigger');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
-
+const Message = require('../../I18N/Message');
 
 const delay = (
     function() {
@@ -163,6 +163,12 @@ class SearchBar extends React.Component {
         };
         return assign({}, {position: "absolute"}, this.props.splitTools ? {...splittedStyle} : {...nonSplittedStyle} );
     }
+    getError = (e) => {
+        if (e) {
+            return (<Message msgId={e.msgId || "search.generic_error"} msgParams={{message: e.message, serviceType: e.serviceType}}/>);
+        }
+        return null;
+    }
     renderAddonBefore = () => {
         return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
             <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
@@ -184,7 +190,7 @@ class SearchBar extends React.Component {
             addonAfter = [<Spinner style={this.getSpinnerStyle()} spinnerName="pulse" noFadeIn/>, addonAfter];
         }
         if (this.props.error) {
-            let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
+            let tooltip = <Tooltip id="tooltip">{this.getError(this.props.error)}</Tooltip>;
             addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
         }
         return <span className="input-group-addon">{addonAfter}</span>;
