@@ -25,7 +25,6 @@ describe('MousePositionLabelDMS', () => {
     });
 
     it('checks default', () => {
-
         const cmp = ReactDOM.render(
                 <MousePositionLabelDMS/>
             , document.getElementById("container"));
@@ -70,7 +69,6 @@ describe('MousePositionLabelDMS', () => {
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
-
         expect(cmpDom.textContent).toBe("Lat: 13° 31' 60.00'' Lng: 028° 18' 00.00''");
     });
 
@@ -104,8 +102,36 @@ describe('MousePositionLabelDMS', () => {
         expect(cmp).toExist();
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
-
-        // it should be 010° 28' 30.05'' instead of 010° 29' 00''
+        // it should be Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60'' instead of Lat: -01° 00' 21.60'' Lng: -001° 00' 21.60''
         expect(cmpDom.textContent).toBe("Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''");
+    });
+    it('test sign changes when crossing greenwich meridian and equator parallel and latD lngD are 0', () => {
+        const cmp = ReactDOM.render(
+                <IntlProvider>
+                    <MousePositionLabelDMS
+                        position={{lng: -0.006, lat: -0.006}}
+                    />
+                </IntlProvider>
+            , document.getElementById("container"));
+        expect(cmp).toExist();
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+
+       // it should be Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''
+        expect(cmpDom.textContent).toBe("Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''");
+
+        const cmpPositive = ReactDOM.render(
+            <IntlProvider>
+                <MousePositionLabelDMS
+                    position={{lng: 0.006, lat: 0.006}}
+                />
+            </IntlProvider>
+        , document.getElementById("container"));
+        expect(cmpPositive).toExist();
+        const cmpDomPositive = ReactDOM.findDOMNode(cmpPositive);
+        expect(cmpDomPositive).toExist();
+
+        // it should be Lat: 00° 00' 21.60'' Lng: 000° 00' 21.60'' instead of Lat: -00° 00' 21.60'' Lng: -000° 00' 21.60''
+        expect(cmpDomPositive.textContent).toBe("Lat: 00° 00' 21.60'' Lng: 000° 00' 21.60''");
     });
 });
