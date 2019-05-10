@@ -458,4 +458,19 @@ describe('LayersUtils', () => {
 
     });
 
+    it('findGeoServerName with a positive match and using custom regex (setRegGeoserverRule)', () => {
+        const customRegex = /\/[\w- ]*gs[\w- ]*\//;
+        LayersUtils.setRegGeoserverRule(customRegex);
+
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/gs/ows"});
+        expect(matchedGeoServerName).toBe("/gs/");
+
+        // reset regex
+        LayersUtils.setRegGeoserverRule(LayersUtils.REG_GEOSERVER_RULE);
+    });
+
+    it('getRegGeoserverRule test default value', () => {
+        expect(LayersUtils.getRegGeoserverRule()).toBe(LayersUtils.REG_GEOSERVER_RULE);
+    });
+
 });
