@@ -79,7 +79,7 @@ module.exports = ({
                         label: l.title || l.name,
                         value: l.name
                     }))}
-                    placeholder="Select Layer"
+                    placeholder={<Message msgId="queryform.crossLayerFilter.placeholder" />}
                     filter="contains"
                     value={typeName}
                     onChange={ sel => {
