@@ -9,6 +9,12 @@
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
 const {CREATION_ERROR_LAYER, INIT_MAP} = require('../actions/map');
+
+const {mapIdSelector} = require('../selectors/map');
+
+const {loadMapInfo} = require('../actions/config');
+const {LOGIN_SUCCESS} = require('../actions/security');
+
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
@@ -17,6 +23,8 @@ const {warning} = require('../actions/notifications');
 const {resetControls} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
 const {head} = require('lodash');
+
+const ConfigUtils = require('../utils/ConfigUtils');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -70,7 +78,20 @@ const handleCreationLayerError = (action$, store) =>
 const resetMapOnInit = action$ =>
     action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(resetControls(), clearLayers()));
 
+/**
+ * It checks user's permissions on current map on LOGIN_SUCCESS event
+ * @memberof epics.map
+ * @param {object} action$
+ */
+const checkMapPermissions = (action$, {getState = () => {} }) =>
+        action$.ofType(LOGIN_SUCCESS)
+        .map(() => {
+            const mapId = mapIdSelector(getState());
+            return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, mapId);
+        });
+
 module.exports = {
+    checkMapPermissions,
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit
