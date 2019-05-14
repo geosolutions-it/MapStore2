@@ -82,7 +82,6 @@ describe("Test GroupDialog Component", () => {
             document.getElementById("container"));
 
         expect(comp).toExist();
-        // let domnode = ReactDOM.findDOMNode(comp);
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "button");
         expect(buttons[1].className).toBe("square-button btn btn-lg btn-success");
         let groupGroupButton = buttons[2];
