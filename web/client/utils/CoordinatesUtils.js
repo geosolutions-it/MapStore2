@@ -473,7 +473,7 @@ const CoordinatesUtils = {
     getGeoJSONExtent: function(geoJSON) {
         let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
         const reduceCollectionExtent = (extent, collectionElement) => {
-            let ext = this.getGeoJSONExtent(collectionElement);
+            let ext = CoordinatesUtils.getGeoJSONExtent(collectionElement);
             if (this.isValidExtent(ext)) {
                 return this.extendExtent(ext, extent);
             }
@@ -504,7 +504,7 @@ const CoordinatesUtils = {
             if (geoJSON.type === "FeatureCollection") {
                 return geoJSON.features.reduce(reduceCollectionExtent, newExtent);
             } else if (geoJSON.type === "Feature" && geoJSON.geometry) {
-                return this.getGeoJSONExtent(geoJSON.geometry);
+                return CoordinatesUtils.getGeoJSONExtent(geoJSON.geometry);
             }
         }
 

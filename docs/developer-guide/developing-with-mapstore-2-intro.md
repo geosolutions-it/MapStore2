@@ -6,6 +6,7 @@ This section is about developing your own application using the MapStore framewo
  * [Front-end Technologies](../reactjs-and-redux-introduction)
  * [Developing and Debugging](../developing)
  * [Building and Deploying](../building-and-deploying)
+ * [How-to](../dev-how-to)
  * [Code Conventions](../code-conventions)
  * [Developers FAQ](../dev-faq)
  * [How to customize the Theme](../customize-theme)

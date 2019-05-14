@@ -38,7 +38,7 @@ const DropdownFeatureType = ({
     } = {}) => (
         <DropdownButtonT {...defaultButtonConfig} {...buttonConfig}>
             {menuOptions.length ? menuOptions.map(({glyph, text, onClick, active = false}, i) => (
-                <MenuItem active={active} eventKey={i} onClick={onClick}>
+                <MenuItem active={active} eventKey={i} onClick={onClick} key={i}>
                     {glyph && <Glyphicon glyph={glyph}/>} {text}
                 </MenuItem>)) : null}
         </DropdownButtonT>

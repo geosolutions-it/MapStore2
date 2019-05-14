@@ -49,15 +49,25 @@ describe("Test UserCard Component", () => {
         let comp = ReactDOM.render(
             <UserCard user={enabledUser}/>, document.getElementById("container"));
         expect(comp).toExist();
+        expect(document.querySelector('#container .gridcard')).toExist();
     });
     it('Test disabled user rendering', () => {
         let comp = ReactDOM.render(
             <UserCard user={disabledUser}/>, document.getElementById("container"));
         expect(comp).toExist();
+        expect(document.querySelector('#container .gridcard')).toExist();
     });
     it('Test admin user rendering', () => {
         let comp = ReactDOM.render(
             <UserCard user={adminUser}/>, document.getElementById("container"));
         expect(comp).toExist();
+        expect(document.querySelector('#container .gridcard')).toExist();
+    });
+    it('Test admin user with undefined group do not crash', () => {
+        let comp = ReactDOM.render(
+            <UserCard user={{...enabledUser, groups: [undefined]}} />, document.getElementById("container"));
+        expect(comp).toExist();
+        expect(document.querySelector('#container .gridcard')).toExist();
+
     });
 });

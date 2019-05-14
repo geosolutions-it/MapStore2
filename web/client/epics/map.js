@@ -16,7 +16,10 @@ const {
     ZOOM_TO_EXTENT,
     changeMapView
 } = require('../actions/map');
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, mapIdSelector} = require('../selectors/map');
+
+const { loadMapInfo} = require('../actions/config');
+const {LOGIN_SUCCESS} = require('../actions/security');
 
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
@@ -30,6 +33,8 @@ const {resetControls} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
 const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
+
+const ConfigUtils = require('../utils/ConfigUtils');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -178,7 +183,20 @@ const zoomToExtentEpic = (action$, {getState = () => {} }) =>
         }
         return legacyZoomToExtent({...action, extent}, mapSelector(getState()) );
     });
+/**
+ * It checks user's permissions on current map on LOGIN_SUCCESS event
+ * @memberof epics.map
+ * @param {object} action$
+ */
+const checkMapPermissions = (action$, {getState = () => {} }) =>
+        action$.ofType(LOGIN_SUCCESS)
+        .map(() => {
+            const mapId = mapIdSelector(getState());
+            return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, mapId);
+        });
+
 module.exports = {
+    checkMapPermissions,
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,

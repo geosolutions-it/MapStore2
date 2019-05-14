@@ -6,27 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {
+import {
     UPDATE_NODE,
     UPDATE_SETTINGS_PARAMS
-} = require('../../actions/layers');
+} from '../../actions/layers';
 
-const {
+import {
     SET_CONTROL_PROPERTY
-} = require('../../actions/controls');
+} from '../../actions/controls';
 
-const {
+import {
     SHOW_NOTIFICATION
-} = require('../../actions/notifications');
+} from '../../actions/notifications';
 
-const {
+import {
     REMOVE_ADDITIONAL_LAYER,
     UPDATE_OPTIONS_BY_OWNER
-} = require('../../actions/additionallayers');
+} from '../../actions/additionallayers';
 
-const {
+import {
     RESET_STYLE_EDITOR,
     LOADING_STYLE,
     SELECT_STYLE_TEMPLATE,
@@ -41,9 +41,9 @@ const {
     deleteStyle,
     UPDATE_STATUS,
     setDefaultStyle
-} = require('../../actions/styleeditor');
+} from '../../actions/styleeditor';
 
-const {
+import {
     toggleStyleEditorEpic,
     updateLayerOnStatusChangeEpic,
     updateTemporaryStyleEpic,
@@ -51,11 +51,16 @@ const {
     updateStyleCodeEpic,
     deleteStyleEpic,
     setDefaultStyleEpic
-} = require('../styleeditor');
+} from '../styleeditor';
 
-const { testEpic } = require('./epicTestUtils');
+import { testEpic } from './epicTestUtils';
 
-describe('styleeditor Epics', () => {
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
+
+let mockAxios;
+
+describe('Test styleeditor epics', () => {
 
     it('test toggleStyleEditorEpic enabled to true', (done) => {
 
@@ -755,4 +760,496 @@ describe('styleeditor Epics', () => {
             done(e);
         }
     });
+});
+
+describe('Test styleeditor epics, with mock axios', () => {
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
+    it('test updateStyleCodeEpic with 200 response', (done) => {
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            expect(config.url).toBe('/geoserver/rest/styles/test_style');
+            expect(config.params.raw).toBe(true);
+            return [ 200, {}];
+        });
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: '/geoserver/',
+                        describeFeatureType: {},
+                        style: 'test_style'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ]
+            },
+            styleeditor: {
+                service: {
+                    baseUrl: '/geoserver/'
+                },
+                code: '* { stroke: #ff0000; }'
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 5;
+
+        const results = (actions) => {
+            const [
+                loadingStyleAction,
+                loadedStyleAction,
+                updateNodeAction,
+                updateTemporaryStyleAction,
+                showNotificationAction
+            ] = actions;
+
+            try {
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateNodeAction.type).toBe(UPDATE_NODE);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(showNotificationAction.type).toBe(SHOW_NOTIFICATION);
+                expect(showNotificationAction.level).toBe('success');
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateStyleCodeEpic,
+            NUMBER_OF_ACTIONS,
+            updateStyleCode(),
+            results,
+        state);
+    });
+
+
+    it('test updateStyleCodeEpic with 404 response', (done) => {
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            expect(config.url).toBe('/geoserver/rest/styles/test_style');
+            expect(config.params.raw).toBe(true);
+            return [ 404, {}];
+        });
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: '/geoserver/',
+                        describeFeatureType: {},
+                        style: 'test_style'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ]
+            },
+            styleeditor: {
+                service: {
+                    baseUrl: '/geoserver/'
+                },
+                code: '* { stroke: #ff0000; }'
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 4;
+
+        const results = (actions) => {
+            const [
+                loadingStyleAction,
+                errorStyleAction,
+                loadedStyleAction,
+                showNotificationAction
+            ] = actions;
+
+            try {
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(errorStyleAction.type).toBe(ERROR_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(showNotificationAction.type).toBe(SHOW_NOTIFICATION);
+                expect(showNotificationAction.level).toBe('error');
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateStyleCodeEpic,
+            NUMBER_OF_ACTIONS,
+            updateStyleCode(),
+            results,
+        state);
+    });
+
+    it('test updateTemporaryStyleEpic, temporary style does not exist, response 200', (done) => {
+
+        let TEMP_STYLE_ID;
+
+        mockAxios.onPost(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe('/geoserver/rest/styles.json');
+                TEMP_STYLE_ID = config.params.name;
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMP_STYLE_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        const state = {
+            styleeditor: {
+                service: {
+                    baseUrl: '/geoserver/'
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 5;
+
+        const results = (actions) => {
+            try {
+                const [
+                    postLoadingStyleAction,
+                    putLoadingStyleAction,
+                    loadedStyleAction,
+                    updateOptionsByOwnerAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(postLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(putLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(TEMP_STYLE_ID);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({}),
+            results,
+        state);
+    });
+
+
+    it('test updateTemporaryStyleEpic, temporary style exist and change format, response 200', (done) => {
+
+        let TEMP_STYLE_ID;
+        const TEMPORARY_ID = 'id';
+
+        mockAxios.onDelete(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        mockAxios.onPost(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe('/geoserver/rest/styles.json');
+                TEMP_STYLE_ID = config.params.name;
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMP_STYLE_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        const state = {
+            styleeditor: {
+                temporaryId: TEMPORARY_ID,
+                format: 'css',
+                service: {
+                    baseUrl: '/geoserver/'
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 5;
+
+        const results = (actions) => {
+            try {
+                const [
+                    postLoadingStyleAction,
+                    putLoadingStyleAction,
+                    loadedStyleAction,
+                    updateOptionsByOwnerAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(postLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(putLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(TEMP_STYLE_ID);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({ format: 'sld' }),
+            results,
+        state);
+    });
+
+
+    it('test updateTemporaryStyleEpic, temporary style exist and same format and version, response 200', (done) => {
+
+        const TEMPORARY_ID = 'id';
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+                expect(config.params.raw).toBe(undefined);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        const state = {
+            styleeditor: {
+                temporaryId: TEMPORARY_ID,
+                format: 'sld',
+                languageVersion: {
+                    version: '1.0.0'
+                },
+                service: {
+                    baseUrl: '/geoserver/'
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 4;
+
+        const results = (actions) => {
+            try {
+                const [
+                    putLoadingStyleAction,
+                    loadedStyleAction,
+                    updateOptionsByOwnerAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(putLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({ format: 'sld' }),
+            results,
+        state);
+    });
+
+    it('test updateTemporaryStyleEpic, temporary style exist and same format and different version (style body version 1.1.0), response 200', (done) => {
+
+        const TEMPORARY_ID = 'id';
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+                expect(config.params.raw).toBe(true);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        const state = {
+            styleeditor: {
+                temporaryId: TEMPORARY_ID,
+                format: 'sld',
+                languageVersion: {
+                    version: '1.0.0'
+                },
+                service: {
+                    baseUrl: '/geoserver/'
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 4;
+
+        const results = (actions) => {
+            try {
+                const [
+                    putLoadingStyleAction,
+                    loadedStyleAction,
+                    updateOptionsByOwnerAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(putLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({
+                format: 'sld',
+                code: '<StyledLayerDescriptor version="1.1.0" ></StyledLayerDescriptor>'
+            }),
+            results,
+        state);
+    });
+
+
+    it('test updateTemporaryStyleEpic, temporary style exist and cahnge format, delete response 404', (done) => {
+
+        const TEMPORARY_ID = 'id';
+
+        mockAxios.onDelete(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 404, {}];
+        });
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
+            } catch(e) {
+                done(e);
+            }
+            return [ 200, {}];
+        });
+
+        const state = {
+            styleeditor: {
+                temporaryId: TEMPORARY_ID,
+                format: 'css',
+                service: {
+                    baseUrl: '/geoserver/'
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 4;
+
+        const results = (actions) => {
+            try {
+                const [
+                    putLoadingStyleAction,
+                    loadedStyleAction,
+                    updateOptionsByOwnerAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(putLoadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({ format: 'sld' }),
+            results,
+        state);
+    });
+
+
+    it('test updateTemporaryStyleEpic fails on create should reset temporary properties', (done) => {
+
+        mockAxios.onPost(/\/styles/).reply(() => [ 404, {}]);
+
+        const state = {};
+
+        const results = (actions) => {
+            try {
+                const [
+                    loadingStyleAction,
+                    errorStyleAction,
+                    loadedStyleAction,
+                    showNotifiactionAction,
+                    updateTemporaryStyleAction
+                ] = actions;
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(errorStyleAction.type).toBe(ERROR_STYLE);
+                expect(loadedStyleAction.type).toBe(LOADED_STYLE);
+                expect(showNotifiactionAction.type).toBe(SHOW_NOTIFICATION);
+                expect(showNotifiactionAction.level).toBe('error');
+                expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
+                expect(updateTemporaryStyleAction.temporaryId).toBe(null);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        const NUMBER_OF_ACTIONS = 5;
+
+        testEpic(
+            updateTemporaryStyleEpic,
+            NUMBER_OF_ACTIONS,
+            selectStyleTemplate({ }),
+            results,
+        state);
+    });
+
 });

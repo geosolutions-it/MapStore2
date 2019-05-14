@@ -30,8 +30,9 @@ const {omit} = require('lodash');
  */
 module.exports = branch(
     ({tooltip, tooltipId} = {}) => tooltip || tooltipId,
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, ...props} = {}) => (<OverlayTrigger
+    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, ...props} = {}) => (<OverlayTrigger
         trigger={tooltipTrigger}
+        id={idDropDown}
         key={keyProp}
         placement={tooltipPosition}
         overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),

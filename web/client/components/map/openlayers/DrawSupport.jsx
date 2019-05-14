@@ -573,7 +573,7 @@ class DrawSupport extends React.Component {
         let drawBaseProps = {
             source: this.drawSource || source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: new ol.style.Style({
+            style: geometryType === "Marker" ? VectorStyle.getMarkerStyle({style: newProps.style}) : new ol.style.Style({
                 fill: new ol.style.Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
                 }),
@@ -644,11 +644,11 @@ class DrawSupport extends React.Component {
                 }
                 break;
             }
-            case "Point": case "Text": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": {
+            case "Marker": case "Point": case "Text": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": {
                 if (geometryType === "LineString") {
                     roiProps.maxPoints = maxPoints;
                 }
-                let geomType = geometryType === "Text" ? "Point" : geometryType;
+                let geomType = geometryType === "Text" || geometryType === "Marker" ? "Point" : geometryType;
                 roiProps.type = geomType;
                 roiProps.geometryFunction = (coordinates, geometry) => {
                     let geom = geometry;
@@ -1259,7 +1259,7 @@ class DrawSupport extends React.Component {
 
         let geometry;
         switch (type) {
-            case "Point": case "Text": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
+            case "Point": case "Marker": case "Text": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
             case "LineString": { geometry = new ol.geom.LineString(coordinates ? coordinates : []); break; }
             case "MultiPoint": /*case "Text":*/ { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }

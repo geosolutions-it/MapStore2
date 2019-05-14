@@ -25,7 +25,10 @@ const types = {
     // 'xsd:gMonthDay': 'date',
     // 'xsd:gYear': 'date',
     // 'xsd:gYearMonth': 'date',
-    // 'xsd:time': 'date',
+    // date-time
+    'xsd:date-time': 'date-time',
+    // time
+    'xsd:time': 'time',
 
     // number
     // 'xsd:byte': 'number',

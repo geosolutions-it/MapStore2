@@ -53,14 +53,17 @@ module.exports = {
          }
      },
      standard: {
-         getIcon: ({style}) => {
+         getIcon: ({style, iconAnchor }) => {
+             const anchor = style.iconAnchor || iconAnchor;
              let markerStyle = [new ol.style.Style({
-                   image: new ol.style.Icon({
-                       anchor: style.iconAnchor || [0.5, 1],
-                       anchorXUnits: style.anchorXUnits || (( style.iconAnchor || style.iconAnchor === 0) ? 'pixels' : 'fraction'),
-                       anchorYUnits: style.anchorYUnits || (( style.iconAnchor || style.iconAnchor === 0) ? 'pixels' : 'fraction'),
-                       src: style.iconUrl || style.symbolUrlCustomized || style.symbolUrl
-                 })
+                image: new ol.style.Icon(({
+                     anchor: anchor || [0.5, 1],
+                     anchorXUnits: style.anchorXUnits || ( anchor || anchor === 0) ? 'pixels' : 'fraction',
+                     anchorYUnits: style.anchorYUnits || ( anchor || anchor === 0) ? 'pixels' : 'fraction',
+                     size: style.size,
+                     anchorOrigin: style.anchorOrigin || "top-left",
+                     src: style.iconUrl || style.symbolUrlCustomized || style.symbolUrl
+                 }))
              })];
              if (style.shadowUrl) {
                  markerStyle = [new ol.style.Style({
