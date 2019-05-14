@@ -80,6 +80,11 @@ class UserDialog extends React.Component {
         hidePasswordFields: false
     };
 
+    state = {
+        key: 1
+    };
+    // Only to keep the selected button, not for the modal window
+
     getAttributeValue = (name) => {
         let attrs = this.props.user && this.props.user.attribute;
         if (attrs) {
@@ -217,14 +222,14 @@ class UserDialog extends React.Component {
               </button>
           </span>
           <div role="body">
-          <Tabs defaultActiveKey={1} key="tab-panel" id="userDetails-tabs">
-              <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="user"/></Button>} >
+          <Tabs defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel" id="userDetails-tabs">
+              <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 1 ? "success" : "primary"}><Glyphicon glyph="user"/></Button>} >
                   {this.renderGeneral()}
               </Tab>
-              <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="info-sign"/></Button>} >
+              <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 2 ? "success" : "primary"}><Glyphicon glyph="info-sign"/></Button>} >
                   {this.renderAttributes()}
               </Tab>
-              <Tab eventKey={3} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group"/></Button>} >
+              <Tab eventKey={3} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 3 ? "success" : "primary"}><Glyphicon glyph="1-group"/></Button>} >
                   {this.renderGroups()}
               </Tab>
           </Tabs>

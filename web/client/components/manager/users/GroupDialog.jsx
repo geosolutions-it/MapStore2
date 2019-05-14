@@ -75,6 +75,11 @@ class GroupDialog extends React.Component {
         }
     };
 
+    state = {
+        key: 1
+    };
+    // Only to keep the selected button, not for the modal window
+
     getCurrentGroupMembers = () => {
         return this.props.group && (this.props.group.newUsers || this.props.group.users) || [];
     };
@@ -210,13 +215,13 @@ class GroupDialog extends React.Component {
                 <span className="user-panel-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
             </span>
             <div role="body">
-            <Tabs defaultActiveKey={1} key="tab-panel">
-                <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group"/></Button>} >
+            <Tabs defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
+                <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 1 ? "success" : "primary"}><Glyphicon glyph="1-group"/></Button>} >
                     {this.renderGeneral()}
                     {this.checkNameLenght()}
                     {this.checkDescLenght()}
                 </Tab>
-                <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group-add"/></Button>} >
+                <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 2 ? "success" : "primary"}><Glyphicon glyph="1-group-add"/></Button>} >
                     {this.renderMembersTab()}
                 </Tab>
             </Tabs>
