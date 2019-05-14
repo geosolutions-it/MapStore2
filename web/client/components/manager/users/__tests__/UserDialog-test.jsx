@@ -9,6 +9,7 @@ const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const UserDialog = require('../UserDialog');
+const ReactTestUtils = require('react-dom/test-utils');
 const enabledUser = {
     id: 1,
     name: "USER1",
@@ -197,5 +198,24 @@ describe("Test UserDialog Component", () => {
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
         expect(domnode.getElementsByClassName("btn-success").length).toBe(1);
+    });
+    it('Testing selected user-dialog-tab is highlighted', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={{
+                id: 1,
+                name: "USER1",
+                role: "USER",
+                enabled: true,
+                status: "saved"
+            }} />, document.getElementById("container"));
+
+        expect(comp).toExist();
+        // let domnode = ReactDOM.findDOMNode(comp);
+        let buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "button");
+        expect(buttons[1].className).toBe("square-button btn btn-lg btn-success");
+        let userGroupButton = buttons[3];
+        ReactTestUtils.Simulate.click(userGroupButton);
+        expect(userGroupButton.className).toBe("square-button btn btn-lg btn-success");
+        expect(buttons[3].className).toBe("square-button btn btn-lg btn-success");
     });
 });
