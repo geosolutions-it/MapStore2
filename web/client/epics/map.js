@@ -192,7 +192,7 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
         action$.ofType(LOGIN_SUCCESS)
         .map(() => {
             const mapId = mapIdSelector(getState());
-            return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, `${mapId}`);
+            return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, mapId);
         });
 
 module.exports = {
