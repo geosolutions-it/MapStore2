@@ -1,6 +1,6 @@
 const PropTypes = require('prop-types');
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -24,6 +24,9 @@ class UserCard extends React.Component {
         style: PropTypes.object,
         user: PropTypes.object,
         innerItemStyle: PropTypes.object,
+        avatarStyle: PropTypes.object,
+        nameStyle: PropTypes.object,
+        infoContainerStyle: PropTypes.object,
         actions: PropTypes.array
     };
 
@@ -35,7 +38,23 @@ class UserCard extends React.Component {
             backgroundRepeat: "repeat-x"
         },
         innerItemStyle: {"float": "left",
+            position: "relative",
+            margin: "10px",
+            maxHeight: "85px"
+        },
+        avatarStyle: {"float": "left",
+            position: "relative",
             margin: "10px"
+        },
+        nameStyle: {"float": "bottom",
+            position: "relative",
+            left: "10px",
+            top: "5px",
+            borderBottom: "1px solid grey",
+            width: "90%"
+        },
+        infoContainerStyle: {
+            width: "100%"
         }
     };
 
@@ -65,9 +84,14 @@ class UserCard extends React.Component {
     };
 
     renderAvatar = () => {
-        return (<div key="avatar" className="avatar-containter" style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
+        return (<div key="avatar" className="avatar-containter" style={this.props.avatarStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="user" />
             </Button></div>);
+    };
+
+    renderName = () => {
+        return (<div key="name" style={this.props.nameStyle}><strong><font size="4">{this.props.user.name}</font></strong>
+            </div>);
     };
 
     render() {
@@ -77,13 +101,16 @@ class UserCard extends React.Component {
                >
             <div className="user-data-container">
                 {this.renderAvatar()}
-                {this.renderRole()}
-                {this.renderGroups()}
+                <div style={this.props.infoContainerStyle}>
+                    {this.renderName()}
+                    {this.renderRole()}
+                    {this.renderGroups()}
+                </div>
+                {this.renderStatus()}
             </div>
-             {this.renderStatus()}
            </GridCard>
         );
     }
 }
-
+// Without div with style=infoContainerStyle Name, Role and Groups are displayed inline
 module.exports = UserCard;
