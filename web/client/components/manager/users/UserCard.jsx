@@ -26,7 +26,6 @@ class UserCard extends React.Component {
         innerItemStyle: PropTypes.object,
         avatarStyle: PropTypes.object,
         nameStyle: PropTypes.object,
-        infoContainerStyle: PropTypes.object,
         actions: PropTypes.array
     };
 
@@ -37,24 +36,23 @@ class UserCard extends React.Component {
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
-        innerItemStyle: {"float": "left",
+        innerItemStyle: {
             position: "relative",
-            margin: "10px",
+            marginTop: "35px",
+            marginLeft: "10px",
+            marginRight: "10px",
             maxHeight: "85px"
         },
-        avatarStyle: {"float": "left",
-            position: "relative",
+        avatarStyle: {
             margin: "10px"
         },
-        nameStyle: {"float": "bottom",
-            position: "relative",
-            left: "10px",
-            top: "5px",
-            borderBottom: "1px solid grey",
-            width: "90%"
-        },
-        infoContainerStyle: {
-            width: "100%"
+        nameStyle: {
+            position: "absolute",
+            left: "80px",
+            right: "20px",
+            top: "30px",
+            width: "75%",
+            borderBottom: "1px solid #ddd"
         }
     };
 
@@ -101,16 +99,13 @@ class UserCard extends React.Component {
                >
             <div className="user-data-container">
                 {this.renderAvatar()}
-                <div style={this.props.infoContainerStyle}>
-                    {this.renderName()}
-                    {this.renderRole()}
-                    {this.renderGroups()}
-                </div>
-                {this.renderStatus()}
+                {this.renderName()}
+                {this.renderRole()}
+                {this.renderGroups()}
             </div>
+            {this.renderStatus()}
            </GridCard>
         );
     }
 }
-// Without div with style=infoContainerStyle Name, Role and Groups are displayed inline
 module.exports = UserCard;
