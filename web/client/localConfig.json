@@ -4,6 +4,12 @@
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver", "https://nominatim.openstreetmap.org", "http://cloudsdi.geo-solutions.it"]
     },
     "geoStoreUrl": "rest/geostore/",
+    "geoFencePath": "rest/geofence",
+    "geoFenceUrl": "https://gs-stable.geo-solutions.it/geoserver/",
+    "geoFenceGeoServerInstance": {
+      "url": "http://gs-stable.geo-solutions.it/geoserver/",
+      "id": 1
+    },
     "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
@@ -92,6 +98,26 @@
               "code": "es-ES",
               "description": "Español"
             }
+          }
+        },
+        "rulesmanager": {
+          "services": {
+            "WFS": [
+              "DescribeFeatureType",
+              "GetCapabilities",
+              "GetFeature",
+              "GetFeatureWithLock",
+              "LockFeature",
+              "Transaction"
+            ],
+            "WMS": [
+              "DescribeLayer",
+              "GetCapabilities",
+              "GetFeatureInfo",
+              "GetLegendGraphic",
+              "GetMap",
+              "GetStyles"
+            ]
           }
         }
       }
@@ -551,6 +577,21 @@
                 "containerPosition": "header"
             }
         }],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
+        "rulesmanager": [
+            "Redirect" ,
+            {
+                "name": "OmniBar",
+                    "cfg": {
+                        "containerPosition": "header",
+                        "className": "navbar shadow navbar-home"
+                    }
+            }, "ManagerMenu", "Login", "Language", "NavMenu",
+            "Attribution", "RulesDataGrid", "Notifications"
+            ,{
+                 "name": "RulesEditor",
+               "cfg": {"containerPosition": "columns"}
+            }
+        ]
     }
 }

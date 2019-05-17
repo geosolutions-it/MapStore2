@@ -50,7 +50,7 @@ var Api = {
         const options = {params, 'headers': {
             'Content': 'application/json'
         }};
-        return axios.get('geofence/rest/rules', this.addBaseUrl(options))
+        return axios.get('/rules', this.addBaseUrl(options))
             .then(function(response) {
                 return response.data;
             }
@@ -61,7 +61,7 @@ var Api = {
         const options = {
             'params': this.assignFiltersValue(rulesFiltersValues)
         };
-        return axios.get('geofence/rest/rules/count', this.addBaseUrl(options)).then(function(response) {
+        return axios.get('/rules/count', this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
     },
@@ -73,13 +73,13 @@ var Api = {
                 'rulesIds': rules && rules.map(rule => rule.id).join()
             }
         };
-        return axios.get('geofence/rest/rules/move', this.addBaseUrl(options)).then(function(response) {
+        return axios.get('/rules/move', this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
     },
 
     deleteRule: function(ruleId) {
-        return axios.delete('geofence/rest/rules/id/' + ruleId, this.addBaseUrl({}));
+        return axios.delete('/rules/id/' + ruleId, this.addBaseUrl({}));
     },
 
     addRule: function(rule) {
@@ -91,7 +91,7 @@ var Api = {
         if (!newRule.grant) {
             newRule.grant = "ALLOW";
         }
-        return axios.post('geofence/rest/rules', cleanConstraints(newRule), this.addBaseUrl({
+        return axios.post('/rules', cleanConstraints(newRule), this.addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -102,7 +102,7 @@ var Api = {
         // id, priority and grant aren't updatable
         const {id, priority, grant, position, ...others} = cleanConstraints(rule);
         const newRule = {...EMPTY_RULE, ...others};
-        return axios.put(`geofence/rest/rules/id/${id}`, newRule, this.addBaseUrl({
+        return axios.put(`/rules/id/${id}`, newRule, this.addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -139,7 +139,7 @@ var Api = {
     },
     getGroupsCount: function(filter = " ") {
         const encodedFilter = encodeURIComponent(`%${filter}%`);
-        return axios.get(`geofence/rest/groups/count/${encodedFilter}`, this.addBaseUrl({
+        return axios.get(`/groups/count/${encodedFilter}`, this.addBaseUrl({
             'headers': {
                 'Accept': 'text/plain'
             }
@@ -154,13 +154,13 @@ var Api = {
             nameLike: `%${filter}%`
         };
         const options = {params};
-        return axios.get(`geofence/rest/groups`, this.addBaseUrl(options)).then(function(response) {
+        return axios.get(`/groups`, this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
     },
     getUsersCount: function(filter = " ") {
         const encodedFilter = encodeURIComponent(`%${filter}%`);
-        return axios.get(`geofence/rest/users/count/${encodedFilter}`, this.addBaseUrl({
+        return axios.get(`/users/count/${encodedFilter}`, this.addBaseUrl({
             'headers': {
                 'Accept': 'text/plain'
             }
@@ -176,7 +176,7 @@ var Api = {
             nameLike: `%${filter}%`
         };
         const options = {params};
-        return axios.get(`geofence/rest/users`, this.addBaseUrl(options)).then(function(response) {
+        return axios.get(`/users`, this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
     },
@@ -196,7 +196,8 @@ var Api = {
     },
 
     addBaseUrl: function(options = {}) {
-        return assign(options, {baseURL: ConfigUtils.getDefaults().geoFenceUrl});
+        return assign(options, {
+            baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
     },
     addBaseUrlGS: function(options = {}) {
         const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};

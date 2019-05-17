@@ -7,7 +7,6 @@
 */
 const React = require('react');
 const PropTypes = require('prop-types');
-const { Row: Rule } = require('react-data-grid');
 
 const accessField = {
     ALLOW: {
@@ -24,6 +23,7 @@ class RuleRenderer extends React.Component {
             PropTypes.string,
             PropTypes.number]),
         row: PropTypes.object,
+        renderBaseRow: PropTypes.func.isRequired,
         isSelected: PropTypes.bool
     };
     static defaultProps = {
@@ -39,9 +39,8 @@ class RuleRenderer extends React.Component {
     render() {
         const {row = {}, isSelected} = this.props;
         const extraClasses = (isSelected && ' ms-row-select ' || '') + ((accessField[row.grant] || {}).classNameRow || ' ');
-        return (<Rule ref={ node => this.row = node } extraClasses={extraClasses} {...this.props} />);
+        return this.props.renderBaseRow({ extraClasses: extraClasses, ...this.props});
     }
-
 }
 
 module.exports = RuleRenderer;

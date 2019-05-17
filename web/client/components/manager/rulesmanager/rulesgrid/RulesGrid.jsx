@@ -9,7 +9,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const RuleRenderer = require('./renderers/RuleRenderer');
 
-const { Draggable} = require('react-data-grid-addons');
+const EmptyView = require('../../../misc/EmptyView');
+
+
+const { Draggable } = require('react-data-grid-addons');
 
 const DataGrid = require('../../../data/grid/DataGrid');
 const { Container: DraggableContainer, DropTargetRowContainer: dropTargetRowContainer } = Draggable;
@@ -77,6 +80,7 @@ class RulesGrid extends React.Component {
                     displayFilters
                     ref={(grid) => { this.grid = grid; }}
                     enableCellSelection={false}
+                    emptyRowsView={() => <EmptyView glyph="inbox" />}
                     rowActionsCell={PriorityActionCell}
                     columns={this.props.columns}
                     rowGetter={this.props.rowGetter}
