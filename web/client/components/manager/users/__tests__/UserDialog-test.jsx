@@ -183,7 +183,7 @@ describe("Test UserDialog Component", () => {
             }} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        expect(domnode.getElementsByClassName("btn-primary")[3].disabled).toBe(true);
+        expect(domnode.getElementsByClassName("btn-primary")[2].disabled).toBe(true);
         expect(domnode.getElementsByClassName("spinner").length).toNotBe(0);
     });
     it('displays the success style', () => {
@@ -197,7 +197,7 @@ describe("Test UserDialog Component", () => {
             }} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        expect(domnode.getElementsByClassName("btn-success").length).toBe(1);
+        expect(domnode.getElementsByClassName("btn-success").length).toBe(2);
     });
     it('Testing selected user-dialog-tab is highlighted', () => {
         let comp = ReactDOM.render(
