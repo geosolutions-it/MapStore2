@@ -6,18 +6,22 @@ const {stripPrefix} = require('xml2js/lib/processors');
 const CatalogAPI = require('../api/CSW');
 const GeoFence = require('../api/geoserver/GeoFence');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {trim} = require("lodash");
+const { trim, isString} = require("lodash");
 const WMS = require('../api/WMS');
 const {getLayerCapabilities, describeLayer} = require("./wms");
 const {describeFeatureType} = require("./wfs");
 const {RULE_SAVED} = require("../actions/rulesmanager");
 
-const xmlToJson$ = response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
-    tagNameProcessors: [stripPrefix],
-    explicitArray: false,
-    mergeAttrs: true
-}, callback))(response);
-
+const xmlToJson$ = response => {
+    if (!isString(response)) {
+        return Rx.Observable.of(response);
+    }
+    return Rx.Observable.bindNodeCallback((data, callback) => parseString(data, {
+        tagNameProcessors: [stripPrefix],
+        explicitArray: false,
+        mergeAttrs: true
+    }, callback))(response);
+};
 
 const fixUrl = (url) => {
     const u = trim(url, "/");
