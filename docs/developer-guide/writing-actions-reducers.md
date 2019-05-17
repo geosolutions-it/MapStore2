@@ -150,7 +150,7 @@ In order to speed up the unit test runner, you can:
 `npm run continuoustest`
 
 This allows to run only the tests contained to the specified path.
-**Note:** When all tests are successfully passing remember to restore it to its orignal value '../web'
+**Note:** When all tests are successfully passing remember to restore it to its original value.
 
 ## How to test a reducer
 Here things can become more complicated depending on your reducer but in general you want to test all cases
@@ -171,7 +171,7 @@ describe('Test correctness of the map reducers', () => {
 ```
 
 Here for speedup testing you can again modify the build\tests.webpack.js
-in order to point to the reducers folder and then runnning
+in order to point to the reducers folder and then running
 `npm run continuoustest`
 
 ## Actions and epics
