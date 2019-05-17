@@ -13,7 +13,6 @@ const GridCard = require('../../misc/GridCard');
 const {Button, Glyphicon} = require('react-bootstrap');
 const Message = require('../../../components/I18N/Message');
 
-
 // const ConfirmModal = require('./modals/ConfirmModal');
 
 require('./style/usercard.css');
@@ -49,10 +48,11 @@ class UserCard extends React.Component {
         nameStyle: {
             position: "absolute",
             left: "80px",
-            right: "20px",
             top: "30px",
             width: "75%",
-            borderBottom: "1px solid #ddd"
+            borderBottom: "1px solid #ddd",
+            fontSize: 18,
+            fontWeight: "bold"
         }
     };
 
@@ -88,8 +88,7 @@ class UserCard extends React.Component {
     };
 
     renderName = () => {
-        return (<div key="name" style={this.props.nameStyle}><strong><font size="4">{this.props.user.name}</font></strong>
-            </div>);
+        return (<div key="name" style={this.props.nameStyle}>{this.props.user.name}</div>);
     };
 
     render() {
