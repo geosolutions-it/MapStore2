@@ -68,6 +68,13 @@ describe("Test UserCard Component", () => {
             <UserCard user={{...enabledUser, groups: [undefined]}} />, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.querySelector('#container .gridcard')).toExist();
-
+    });
+    it('Test username rendering inside the card', () => {
+        let comp = ReactDOM.render(
+            <UserCard user={enabledUser} />, document.getElementById("container"));
+        expect(comp).toExist();
+        let items = document.querySelectorAll('#container .gridcard .user-data-container > div');
+        let renderName = items[1];
+        expect(renderName.innerHTML).toBe(enabledUser.name);
     });
 });
