@@ -15,9 +15,9 @@ The Widget page will open showing the various widget types to create.
 Widgets Tray
 ------------
 
-When created, The widgets will be placed on the map (or in the dashboard, depending on the context). At both sides of the title of the widget header you can find some tools:
+When created, the widgets will be placed on the map (or in the dashboard, depending on the context). In the header of each widget window there are some options:
 
- <img src="../img/widgets-tray.jpg" style="max-width:500px;"/>
+ <img src="../img/widgets-tray.jpg"/>
 
 
 * **Pin** the pin tool allow to lock the widget position
@@ -28,7 +28,7 @@ The **Widget Tray** is a plugin that allow to expand/collapse widgets one by one
 
 Widgets and **[Timeline](timeline.md#timeline)** cannot be expanded on the same map at the same time.<br>
 If a layer with a time dimension is added to the map, the *Timeline* will be shown on the screen and not-pinned widgets will collapse in the tray automatically.<br>
-When a widget is added to the map, the *Timeline* will collapse in the tray and all the widgets will expand. A tooltip will highlight the *Timeline* icon in the tray.<br>
+When a widget is added to the map, the *Timeline* will collapse in the tray and all the widgets will expand. A tooltip will highlight the *Timeline* icon <img src="../img/timeline-collapse-icon.jpg" style="max-width:25px;"/> in the tray.<br>
 When those events occur a **notification** explains what happened and how to manage the widgets and the *Timeline*.
 
 <img src="../img/timeline-collapse.jpg"/>
