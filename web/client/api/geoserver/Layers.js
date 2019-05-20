@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../libs/ajax');
+const { uniqBy } = require('lodash');
 const { getNameParts } = require('../../utils/StyleEditorUtils');
 
 /**
@@ -97,9 +98,13 @@ const Api = {
                 const layer = data.layer || {};
                 const currentAvailableStyle = layer.styles && layer.styles.style || {};
                 const defaultStyle = layer.defaultStyle || {};
-                const newAvailableStyle = currentAvailableStyle.filter(({ name: sName }) => {
-                    return sName !== styleName;
-                });
+
+                // add old default to available styles to ensure to display it in the style list
+                const style = uniqBy([
+                    defaultStyle,
+                    ...currentAvailableStyle
+                ], 'name');
+
                 const layerObj = {
                     'layer': {
                         ...layer,
@@ -108,10 +113,7 @@ const Api = {
                         },
                         'styles': {
                             '@class': 'linked-hash-set',
-                            'style': [
-                                defaultStyle,
-                                ...newAvailableStyle
-                            ]
+                            style
                         }
                     }
                 };
