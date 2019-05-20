@@ -11,6 +11,7 @@ When you load ***time layers*** the Timeline panel becomes automatically visible
 
 <img src="../img/timeline-base.jpg" />
 
+Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#widgets-tray) to learn more about this.
 
 Timeline histogram
 ------------------

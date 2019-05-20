@@ -26,6 +26,13 @@ When created, The widgets will be placed on the map (or in the dashboard, depend
 
 The **Widget Tray** is a plugin that allow to expand/collapse widgets one by one. In this tray you can see one item for each widget. You can click on these items to collapse or expand the single widgets. A **Collapse All** button allow to collapse or expand all widgets at once.
 
+Widgets and **[Timeline](timeline.md#timeline)** cannot be expanded on the same map at the same time.<br>
+If a layer with a time dimension is added to the map, the *Timeline* will be shown on the screen and not-pinned widgets will collapse in the tray automatically.<br>
+When a widget is added to the map, the *Timeline* will collapse in the tray and all the widgets will expand. A tooltip will highlight the *Timeline* icon in the tray.<br>
+When those events occur a **notification** explains what happened and how to manage the widgets and the *Timeline*.
+
+<img src="../img/timeline-collapse.jpg"/>
+
 Creating Chart Widget
 ---------------------
 
