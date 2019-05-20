@@ -155,4 +155,29 @@ describe('test Editor module component (Style Editor)', () => {
         loadingDOM = document.querySelector('.mapstore-small-size-loader');
         expect(loadingDOM).toNotExist();
     });
+
+    it('test Editor shows default validation pop up', () => {
+        const code = "@styleTitle 'Error';\n@styleAbstract 'Abstract';\n\n {\n\tstroke: #00ff00;\n}";
+
+        ReactDOM.render(<Editor mode="geocss" code={code}/>, document.getElementById("container"));
+
+        let editorError = document.querySelectorAll('.ms-style-editor-error');
+        expect(editorError.length).toBe(0);
+        let infoPopover = document.querySelector('.mapstore-info-popover');
+        expect(infoPopover).toNotExist();
+
+        ReactDOM.render(<Editor
+            mode="geocss"
+            error={{
+                status: 400
+            }}/>, document.getElementById("container"));
+
+        editorError = document.querySelectorAll('.ms-style-editor-error');
+        expect(editorError.length > 0).toBe(true);
+
+        infoPopover = document.querySelector('.mapstore-info-popover');
+        expect(infoPopover).toExist();
+        TestUtils.Simulate.mouseOver(infoPopover.children[0]);
+        expect(document.querySelector('.popover-content > span').innerHTML).toBe('styleeditor.genericValidationError');
+    });
 });

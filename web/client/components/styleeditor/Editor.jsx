@@ -183,13 +183,15 @@ class Editor extends React.Component {
                 header={
                     <div className="ms-style-editor-head">
                         {this.props.loading && <Loader className="ms-style-editor-loader" size={20}/>}
-                        {this.props.error && this.props.error.line && <InfoPopover
+                        {this.props.error && <InfoPopover
                             glyph="exclamation-mark"
                             bsStyle="danger"
                             placement="right"
-                            title={'Validation Error'}
-                            text={this.props.error.message}/>
-                        || this.props.error && <Message msgId="styleeditor.genericValidationError"/>}
+                            title={<Message msgId="styleeditor.validationErrorTitle"/>}
+                            text={this.props.error.line
+                                ? this.props.error.message
+                                : <Message msgId="styleeditor.genericValidationError"/>}/>
+                        }
                     </div>
                 }>
                 <Codemirror
