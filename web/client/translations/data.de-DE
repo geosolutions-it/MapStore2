@@ -1535,6 +1535,7 @@
             "createStyleErrorMessage": "Stil konnte nicht im Stildienst gespeichert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
             "updateStyleErrorTitle": "Stil bearbeiten",
             "updateStyleErrorMessage": "Der Stil konnte im Stildienst nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "validationErrorTitle": "Validierungsfehler",
             "genericValidationError": "Stil ist nicht gültig und konnte nicht angewendet werden.",
             "setDefaultStyle": "Legen Sie den ausgewählten Stil als Standard für die aktuelle Ebene fest",
             "setDefaultStyleSuccessTitle": "Erfolg beim Setzen des Standardstils",

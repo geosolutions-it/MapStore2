@@ -1535,6 +1535,7 @@
             "createStyleErrorMessage": "Lo stile non può essere salvato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
             "updateStyleErrorTitle": "Modifica stile",
             "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione.",
+            "validationErrorTitle": "Errore di validazione",
             "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo.",
             "setDefaultStyle": "Imposta lo stile selezionato come predefinito per il layer corrente",
             "setDefaultStyleSuccessTitle": "Stile predefinito aggiornamento",
