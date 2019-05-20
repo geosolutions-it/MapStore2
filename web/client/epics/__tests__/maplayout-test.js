@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const {toggleControl} = require('../../actions/controls');
+const { toggleControl, setControlProperty } = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
 const {closeIdentify, purgeMapInfoResults} = require('../../actions/mapInfo');
 
@@ -87,5 +87,28 @@ describe('map layout epics', () => {
         const state = {};
         testEpic(addTimeoutEpic(updateMapLayoutEpic, 10), 1, purgeMapInfoResults(), epicResult, state);
 
+    });
+
+    it('tests resizable drawer', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        left: 512, right: 0, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            left: 512,
+                            right: 0,
+                            bottom: 30
+                        }
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = { controls: { drawer: { enabled: true, resizedWidth: 512} } };
+        testEpic(updateMapLayoutEpic, 1, setControlProperty("drawer", "resizedWidth", 512), epicResult, state);
     });
 });
