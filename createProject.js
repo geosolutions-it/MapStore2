@@ -65,10 +65,14 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('package.json file created\n');
-            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', 'web/client/.babelrc']);
+            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', 'web/client/.babelrc', 'Dockerfile']);
         })
         .then(() => {
-            process.stdout.write('Static files copied\n');
+            process.stdout.write('copied static files\n');
+            return project.copyTemplates('docker', params.outFolder + "/docker", options);
+        })
+        .then(() => {
+            process.stdout.write('docker folder\n');
             process.stdout.write('Copying template files\n');
             return project.copyTemplates(projectFolder + '/templates', params.outFolder, options);
         })
