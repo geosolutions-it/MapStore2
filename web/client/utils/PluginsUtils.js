@@ -399,7 +399,7 @@ const PluginsUtils = {
      * @param {boolean} config.lazy: true if the plugin implements on-demand loading,
      * @param {function} config.enabler: function used in lazy mode to decide when plugin needs to be loaded (receives redux state as the only param)
      * @param {promise} config.loader: promise that will return the loaded implementation
-     * 
+     *
      * @example statically loaded plugin
      * createPlugin('My', {
      *  component: MyPluginComponent,
@@ -414,7 +414,7 @@ const PluginsUtils = {
      *  reducers: {my: require('...')},
      *  epics: {myEpic: require('...')}
      * });
-     * 
+     *
      * @example lazy loaded plugin
      * createPlugin('My', {
      *  enabler: (state) => state.my.enabled || false,
