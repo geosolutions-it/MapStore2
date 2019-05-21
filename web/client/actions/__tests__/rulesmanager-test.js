@@ -7,10 +7,9 @@
  */
 
 const expect = require('expect');
-const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
-        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
-        rulesSelected, rulesLoaded, updateActiveRule,
-        actionError, optionsLoaded, updateFiltersValues,
+const { RULES_SELECTED, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
+        rulesSelected,
+        optionsLoaded, updateFiltersValues,
         SET_FILTER, setFilter,
         SAVE_RULE, saveRule, cleanEditing, CLEAN_EDITING,
         onEditRule, EDIT_RULE, delRules, DELETE_RULES} = require('../rulesmanager');
@@ -60,41 +59,6 @@ describe('test rules manager actions', () => {
         expect(action.rules).toInclude({ id: "rules2" });
         expect(action.merge).toBe(true);
         expect(action.unselect).toBe(false);
-    });
-
-    it('rules loaded', () => {
-        const rules = {
-            rules: [
-                { id: "rules1" },
-                { id: "rules2" }
-            ]
-        };
-        var action = rulesLoaded(rules, {count: 10}, 5, true);
-        expect(action).toExist();
-        expect(action.type).toBe(RULES_LOADED);
-        expect(action.rules.length).toBe(2);
-        expect(action.rules).toInclude({ id: "rules1" });
-        expect(action.rules).toInclude({ id: "rules2" });
-        expect(action.page).toBe(5);
-        expect(action.count).toBe(10);
-        expect(action.keepSelected).toBe(true);
-    });
-
-    it('update active rule', () => {
-        var action = updateActiveRule({ id: "rules1" }, "status", true);
-        expect(action).toExist();
-        expect(action.type).toBe(UPDATE_ACTIVE_RULE);
-        expect(action.rule).toEqual({ id: "rules1" });
-        expect(action.status).toBe("status");
-        expect(action.merge).toBe(true);
-    });
-
-    it('submit action error', () => {
-        var action = actionError("message", "context");
-        expect(action).toExist();
-        expect(action.type).toBe(ACTION_ERROR);
-        expect(action.msgId).toBe("message");
-        expect(action.context).toBe("context");
     });
 
     it('options loaded', () => {
