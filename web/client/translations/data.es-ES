@@ -372,11 +372,16 @@
             "showLegend": "Mostrar leyenda",
             "hideLegend": "Ocultar leyenda"
         },
+        "addgroup": {
+            "addbtn": "Añadir",
+            "groupName": "Nombre del grupo"
+        },
         "toc": {
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
             "addLayer": "Añadir capa",
+            "addGroup": "Añadir grupo",
             "toolZoomToLayerTooltip": "Zoom a la extensión de capa seleccionada",
             "toolZoomToLayersTooltip": "Zoom a la extensión de capas seleccionadas",
             "toolLayerSettingsTooltip": "Configuración de capa seleccionada",

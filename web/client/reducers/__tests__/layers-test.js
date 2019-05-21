@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var layers = require('../layers');
-const { changeLayerParams, addLayer } = require('../../actions/layers');
+const { changeLayerParams, addLayer, ADD_GROUP } = require('../../actions/layers');
 
 
 describe('Test the layers reducer', () => {
@@ -108,6 +108,27 @@ describe('Test the layers reducer', () => {
             flat: [
                 {id: 'layer1', group: 'sample1'},
                 {id: 'layer2', group: 'sample2'}
+            ]
+        };
+        let state = layers(initialState, testAction);
+        expect(state.groups.length).toBe(2);
+        expect(state.flat.length).toBe(1);
+    });
+    it('removeNode layer with remove empty groups flag', () => {
+        let testAction = {
+            type: 'REMOVE_NODE',
+            node: 'layer1',
+            nodeType: 'layers',
+            removeEmpty: true
+        };
+        let initialState = {
+            groups: [
+                { name: 'sample1', nodes: ['layer1'], id: 'sample1' },
+                { name: 'sample2', nodes: ['layer2'], id: 'sample2' }
+            ],
+            flat: [
+                { id: 'layer1', group: 'sample1' },
+                { id: 'layer2', group: 'sample2' }
             ]
         };
         let state = layers(initialState, testAction);
@@ -797,6 +818,37 @@ describe('Test the layers reducer', () => {
         expect(state).toExist();
         expect(state.layerMetadata).toExist();
         expect(state.layerMetadata.expanded).toEqual(false);
+    });
+
+    it('add root group', () => {
+        const action = {
+            type: ADD_GROUP,
+            group: 'newgroup'
+        };
+
+        const state = layers({groups: [{id: 'group1'}]}, action);
+        expect(state).toExist();
+        expect(state.groups.length).toBe(2);
+        expect(state.groups[1].id).toBe('newgroup');
+    });
+
+    it('add nested group', () => {
+        const action = {
+            type: ADD_GROUP,
+            group: 'newgroup',
+            parent: 'group1.group2'
+        };
+
+        const state = layers({ groups: [{ id: 'group1', nodes: [{ id: 'group1.group2', nodes: [{ id: 'group1.group2.group3', nodes: []}]}] }] }, action);
+        expect(state).toExist();
+        expect(state.groups.length).toBe(1);
+        expect(state.groups[0].nodes.length).toBe(1);
+        expect(state.groups[0].nodes[0].nodes.length).toBe(2);
+        const newgroup = state.groups[0].nodes[0].nodes[1];
+        expect(newgroup.id).toBe('group1.group2.newgroup');
+        expect(newgroup.name).toBe('newgroup');
+        expect(newgroup.title).toBe('newgroup');
+        expect(newgroup.nodes.length).toBe(0);
     });
 
 });

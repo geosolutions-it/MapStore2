@@ -22,7 +22,8 @@ const {
     layerErrorSelector,
     activeSelector,
     authkeyParamNameSelector,
-    searchTextSelector
+    searchTextSelector,
+    groupSelector
 } = require("../catalog");
 
 const {set} = require('../../utils/ImmutableUtils');
@@ -30,7 +31,8 @@ const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
         metadataexplorer: {
-            enabled: true
+            enabled: true,
+            group: 'mygroup'
         }
     },
     catalog: {
@@ -83,6 +85,10 @@ const state = {
 };
 
 describe('Test catalog selectors', () => {
+    it('test groupSelector', () => {
+        const retVal = groupSelector(state);
+        expect(retVal).toBe('mygroup');
+    });
     it('test resultSelector', () => {
         const retVal = resultSelector(state);
         expect(retVal).toExist();

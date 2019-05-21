@@ -372,11 +372,16 @@
             "showLegend": "Mostra legenda",
             "hideLegend": "Nascondi legenda"
         },
+        "addgroup": {
+            "addbtn": "Aggiungi",
+            "groupName": "Nome del gruppo"
+        },
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
             "addLayer": "Aggiungi Livello",
+            "addGroup": "Aggiungi Gruppo",
             "toolZoomToLayerTooltip": "Zoom all' estensione del livello",
             "toolZoomToLayersTooltip": "Zoom all' estensione del livelli",
             "toolLayerSettingsTooltip": "Modifica proprietà del livello selezionato",

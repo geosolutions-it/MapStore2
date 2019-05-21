@@ -372,11 +372,16 @@
             "showLegend": "Legende anzeigen",
             "hideLegend": "Legende ausblenden"
         },
+        "addgroup": {
+            "addbtn": "Hinzufügen",
+            "groupName": "Gruppenname"
+        },
         "toc": {
             "toggleLayerVisibility": "Ändere die Ebenen Sichtbarkeit",
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
+            "addGroup": "Gruppe hinzufügen",
             "toolZoomToLayerTooltip": "Zoom auf den ausgewählten Ebenen",
             "toolZoomToLayersTooltip": "Zoom auf ausgewählte Ebenen",
             "toolLayerSettingsTooltip": "Ausgewählte Ebeneneinstellungen",

@@ -13,6 +13,7 @@ module.exports = {
         PrintPlugin: require('../plugins/Print'),
         IdentifyPlugin: require('../plugins/Identify'),
         TOCPlugin: require('../plugins/TOC'),
+        AddGroupPlugin: require('../plugins/AddGroup').default,
         BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
         MeasurePlugin: require('../plugins/Measure'),
         MapPlugin: require('../plugins/Map'),

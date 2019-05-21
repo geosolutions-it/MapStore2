@@ -7,7 +7,10 @@
  */
 const TOGGLE_CONTROL = 'TOGGLE_CONTROL';
 const SET_CONTROL_PROPERTY = 'SET_CONTROL_PROPERTY';
+const SET_CONTROL_PROPERTIES = 'SET_CONTROL_PROPERTIES';
 const RESET_CONTROLS = 'RESET_CONTROLS';
+
+const { fromPairs, chunk } = require('lodash');
 
 /**
  * Toggle a control property
@@ -53,6 +56,21 @@ function setControlProperty(control, property, value, toggle) {
 }
 
 /**
+ * Sets a list of properties at once
+ * @memberof actions.controls
+ * @param {string} control  control name
+ * @param {object} properties the properties to set, as key (property name), value pairs
+ * @return {object} of type `SET_CONTROL_PROPERTIES` with control and properties
+ */
+function setControlProperties(control, ...properties) {
+    return {
+        type: SET_CONTROL_PROPERTIES,
+        control,
+        properties: fromPairs(chunk(properties, 2))
+    };
+}
+
+/**
  * Reset all the controls
  * @memberof actions.controls
  * @param {string[]} [skip=[]] a list of tools to skip
@@ -69,5 +87,6 @@ function resetControls(skip = []) {
  * control property.
  * @name actions.controls
  */
-module.exports = {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS,
-    toggleControl, on, setControlProperty, resetControls};
+module.exports = {
+    TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, RESET_CONTROLS,
+    toggleControl, on, setControlProperty, setControlProperties, resetControls};
