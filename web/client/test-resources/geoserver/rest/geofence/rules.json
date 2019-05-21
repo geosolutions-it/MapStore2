@@ -1,0 +1,33 @@
+{
+  "count": 2,
+  "rules": [
+    {
+      "id": 2,
+      "priority": 0,
+      "userName": null,
+      "roleName": "ADMIN",
+      "addressRange": null,
+      "workspace": null,
+      "layer": null,
+      "service": null,
+      "request": null,
+      "access": "ALLOW",
+      "limits": null,
+      "layerDetails": null
+    },
+    {
+      "id": 1,
+      "priority": 1,
+      "userName": null,
+      "roleName": null,
+      "addressRange": null,
+      "workspace": null,
+      "layer": null,
+      "service": null,
+      "request": null,
+      "access": "ALLOW",
+      "limits": null,
+      "layerDetails": null
+    }
+  ]
+}

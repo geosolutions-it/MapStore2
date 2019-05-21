@@ -12,8 +12,9 @@ const Rx = require("rxjs");
 
 const axios = require('../../../../../../libs/ajax');
 const rulesInterceptor = (config) => {
-    if (config.url.indexOf("geofence/rest/rules") !== -1) {
+    if (config.url.indexOf("/rules") !== -1) {
         config.url = "base/web/client/test-resources/geofence/rest/rules/rules.xml";
+        config.baseURL = "";
     }
     return config;
 };
@@ -27,7 +28,9 @@ describe('rulegrid virtulaScrollFetch', () => {
             expect(pages[0].length).toBe(5);
             done();
         };
-        const onLoadError = () => {};
+        const onLoadError = (e) => {
+            done(e);
+        };
         const pages$ = Rx.Observable.of({ pagesToLoad: [0], startPage: 0, endPage: 0, pages: {}});
         const prop$ = Rx.Observable.of({size: 5,
             maxStoredPages: 5,

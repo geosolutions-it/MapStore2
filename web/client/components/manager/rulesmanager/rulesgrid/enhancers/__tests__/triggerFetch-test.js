@@ -11,8 +11,9 @@ const triggerFetch = require('../triggerFetch');
 const Rx = require("rxjs");
 const axios = require('../../../../../../libs/ajax');
 const triggerInterceptors = (config) => {
-    if (config.url.indexOf("geofence/rest/rules/count") !== -1) {
+    if (config.url.indexOf("rules/count") !== -1) {
         config.url = "base/web/client/test-resources/geofence/rest/rules/count";
+        config.baseURL = "";
     }
     return config;
 };

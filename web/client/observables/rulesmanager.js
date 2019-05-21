@@ -12,7 +12,8 @@ const {getLayerCapabilities, describeLayer} = require("./wms");
 const {describeFeatureType} = require("./wfs");
 const {RULE_SAVED} = require("../actions/rulesmanager");
 
-const xmlToJson$ = response => {
+// TODO: remove. This should be done inside API
+const xmlToJson = response => {
     if (!isString(response)) {
         return Rx.Observable.of(response);
     }
@@ -35,28 +36,33 @@ const getUpdateType = (o, n) => {
     }
     return "simple";
 };
-const loadSinglePage = (page = 0, filters = {}, size = 10) => Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
-                            .switchMap( response => xmlToJson$(response)
-                            .map(({RuleList = {}}) => ({ page, rules: ([].concat(RuleList.rule || [])).map(r => {
-                                if (!r.constraints) {
-                                    return r;
-                                }
-                                const style = [].concat(r.constraints.allowedStyles.style || []);
-                                r.constraints.allowedStyles = {style};
-                                return r;
-                            }
-                            )}))
-                        );
+const loadSinglePage = (page = 0, filters = {}, size = 10) =>
+    Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
+        .switchMap( response => xmlToJson(response)
+        .map(({RuleList = {}, rules = []}) => ({
+            page,
+            rules: (rules.concat(RuleList.rule || [])).map(r => {
+                if (!r.constraints) {
+                    return r;
+                }
+                const style = [].concat(r.constraints.allowedStyles.style || []);
+                r.constraints.allowedStyles = {style};
+                return r;
+            })})
+        )
+);
 const countUsers = (filter = "") => Rx.Observable.defer(() => GeoFence.getUsersCount(filter));
-const loadUsers = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() => GeoFence.getUsers(filter, page, size))
-.switchMap( response => xmlToJson$(response).
-                map(({UserList = {}}) => ({users: [].concat(UserList.User || [])}))
+const loadUsers = (filter = "", page = 0, size = 10) =>
+    Rx.Observable.defer(() =>
+        GeoFence.getUsers(filter, page, size))
+                .switchMap( response => xmlToJson(response)
+                .map(({UserList = {}}) => ({users: [].concat(UserList.User || [])}))
 );
 
 const countRoles = (filter = "") => Rx.Observable.defer(() => GeoFence.getGroupsCount(filter));
 
 const loadRoles = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() => GeoFence.getGroups(filter, page, size))
-.switchMap( response => xmlToJson$(response).
+    .switchMap( response => xmlToJson(response).
                 map(({UserGroupList = {}}) => ({users: [].concat(UserGroupList.UserGroup || [])}))
 );
 const deleteRule = (id) => Rx.Observable.defer(() => GeoFence.deleteRule(id));
