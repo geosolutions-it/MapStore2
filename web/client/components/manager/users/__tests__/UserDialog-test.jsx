@@ -106,6 +106,11 @@ describe("Test UserDialog Component", () => {
             <UserDialog user={{...enabledUser, newPassword: "aaabbbà", confirmPassword: "aaabbbà"}}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.isValidPassword()).toBe(false);
+        // New user, empty password
+        comp = ReactDOM.render(
+            <UserDialog user={{...newUser, newPassword: "", confirmPassword: ""}}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        expect(comp.isValidPassword()).toBe(false);
     });
     it('Test without password fields', () => {
         let comp = ReactDOM.render(
