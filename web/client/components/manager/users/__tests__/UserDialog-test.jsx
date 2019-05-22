@@ -216,10 +216,10 @@ describe("Test UserDialog Component", () => {
 
         expect(comp).toExist();
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "button");
-        expect(buttons[1].className).toBe("square-button btn btn-lg btn-success");
+        expect(buttons[1].className).toBe("square-button btn btn-success");
         let userGroupButton = buttons[3];
         ReactTestUtils.Simulate.click(userGroupButton);
-        expect(userGroupButton.className).toBe("square-button btn btn-lg btn-success");
-        expect(buttons[3].className).toBe("square-button btn btn-lg btn-success");
+        expect(userGroupButton.className).toBe("square-button btn btn-success");
+        expect(buttons[3].className).toBe("square-button btn btn-success");
     });
 });

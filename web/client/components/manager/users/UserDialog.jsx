@@ -15,9 +15,9 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-
 const {Alert, Tabs, Tab, Button, Glyphicon, Checkbox, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-
+const tooltip = require('../../../components/misc/enhancers/tooltip');
+const GlyphiconTooltip = tooltip(Glyphicon);
 const Dialog = require('../../../components/misc/Dialog');
 const UserGroups = require('./UserGroups');
 const assign = require('object-assign');
@@ -47,7 +47,8 @@ class UserDialog extends React.Component {
         inputStyle: PropTypes.object,
         attributes: PropTypes.array,
         minPasswordSize: PropTypes.number,
-        hidePasswordFields: PropTypes.bool
+        hidePasswordFields: PropTypes.bool,
+        buttonTooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
     };
 
     static defaultProps = {
@@ -102,13 +103,16 @@ class UserDialog extends React.Component {
     };
 
     renderPasswordFields = () => {
+
         return (
           <div>
               <FormGroup validationState={this.getPwStyle()}>
                   <ControlLabel><Message msgId="user.password"/>
+                    <b><font color="000000">*</font></b>
+                    <GlyphiconTooltip tooltipId="user.passwordMessage" tooltipPosition="right"
+                    glyph="info-sign" style={{position: "relative", marginLeft: "10px", display: "inline-block", width: 24}}
+                    helpText="Password must contain at least 6 characters"/>
                   </ControlLabel>
-                  <Glyphicon glyph="info-sign" style={{position: "absolute", left: "85px", top: "150px"}}
-                   title="Password must contain at least 6 characters"/>
                   <FormControl ref="newPassword"
                    key="newPassword"
                    type="password"
@@ -118,7 +122,7 @@ class UserDialog extends React.Component {
                    onChange={this.handleChange} />
               </FormGroup>
               <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") }>
-                  <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
+                  <ControlLabel><Message msgId="user.retypePwd"/><b><font color="000000">*</font></b></ControlLabel>
                   <FormControl ref="confirmPassword"
                       key="confirmPassword"
                       name="confirmPassword"
@@ -132,9 +136,9 @@ class UserDialog extends React.Component {
     };
 
     renderGeneral = () => {
-        return (<div style={{clear: "both"}}>
+        return (<div style={{clear: "both", marginTop: "10px"}}>
           <FormGroup>
-              <ControlLabel><Message msgId="user.username"/></ControlLabel>
+              <ControlLabel><Message msgId="user.username"/><b><font color="000000">*</font></b></ControlLabel>
               <FormControl ref="name"
                   key="name"
                   type="text"
@@ -150,7 +154,7 @@ class UserDialog extends React.Component {
             <option value="USER">USER</option>
           </select>
           <FormGroup>
-              <ControlLabel><Message msgId="users.enabled"/></ControlLabel>
+              <ControlLabel style={{"float": "left", marginRight: "10px"}}><Message msgId="users.enabled"/></ControlLabel>
               <Checkbox
                   defaultChecked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
                   type="checkbox"
@@ -158,12 +162,13 @@ class UserDialog extends React.Component {
                   name="enabled"
                   onClick={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
           </FormGroup>
+          <i>Fields marked with asterisk (<b><font color="000000">*</font></b>) are required</i>
           </div>);
     };
 
     renderAttributes = () => {
         return this.props.attributes.map((attr, index) => {
-            return (<FormGroup key={"form-n-" + index}>
+            return (<FormGroup key={"form-n-" + index} style={{marginTop: "10px"}}>
               <ControlLabel>{attr.name}</ControlLabel>
               <FormControl ref={"attribute." + attr.name}
               key={"attribute." + attr.name}
@@ -226,13 +231,13 @@ class UserDialog extends React.Component {
           </span>
           <div role="body">
           <Tabs defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel" id="userDetails-tabs">
-              <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 1 ? "success" : "primary"}><Glyphicon glyph="user"/></Button>} >
+              <Tab eventKey={1} title={<Button className="square-button" bsStyle={this.state.key === 1 ? "success" : "primary"}><Glyphicon glyph="user"/></Button>} >
                   {this.renderGeneral()}
               </Tab>
-              <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 2 ? "success" : "primary"}><Glyphicon glyph="info-sign"/></Button>} >
+              <Tab eventKey={2} title={<Button className="square-button" bsStyle={this.state.key === 2 ? "success" : "primary"}><Glyphicon glyph="info-sign"/></Button>} >
                   {this.renderAttributes()}
               </Tab>
-              <Tab eventKey={3} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 3 ? "success" : "primary"}><Glyphicon glyph="1-group"/></Button>} >
+              <Tab eventKey={3} title={<Button className="square-button" bsStyle={this.state.key === 3 ? "success" : "primary"}><Glyphicon glyph="1-group"/></Button>} >
                   {this.renderGroups()}
               </Tab>
           </Tabs>

@@ -790,6 +790,7 @@
             "passwordInvalid": "无效的密码",
             "username": "用户名",
             "password": "密码",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "密码已更改",
             "passwordError": "更改密码时出错",
             "signIn":"签到",

@@ -813,6 +813,7 @@
             "passwordInvalid": "Neispravna zaporka",
             "username": "Korisničko ime",
             "password": "Zaporka",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "Zaporka je promijenjena",
             "passwordError": "Greška prilikom izmjene zaporke",
             "signIn": "Prijava",

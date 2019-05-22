@@ -83,10 +83,10 @@ describe("Test GroupDialog Component", () => {
 
         expect(comp).toExist();
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "button");
-        expect(buttons[1].className).toBe("square-button btn btn-lg btn-success");
+        expect(buttons[1].className).toBe("square-button btn btn-success");
         let groupGroupButton = buttons[2];
         ReactTestUtils.Simulate.click(groupGroupButton);
-        expect(groupGroupButton.className).toBe("square-button btn btn-lg btn-success");
-        expect(buttons[2].className).toBe("square-button btn btn-lg btn-success");
+        expect(groupGroupButton.className).toBe("square-button btn btn-success");
+        expect(buttons[2].className).toBe("square-button btn btn-success");
     });
 });

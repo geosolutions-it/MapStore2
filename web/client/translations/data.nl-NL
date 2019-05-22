@@ -779,6 +779,7 @@
             "passwordInvalid": "Verkeerd wachtwoord",
             "username": "Gebruikersnaam",
             "password": "Paswoord",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "Wachtwoord gewijzigd",
             "passwordError": "Fout bij het wijzigen van het wachtwoord",
             "signIn":"Certificeer",

@@ -816,6 +816,7 @@
             "passwordInvalid": "Invalid password",
             "username": "Username",
             "password": "Password",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
             "signIn":"Sign-in",

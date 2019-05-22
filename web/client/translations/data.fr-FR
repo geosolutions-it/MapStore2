@@ -841,6 +841,7 @@
             "passwordInvalid": "Mot de passe incorrect",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
+            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères",
             "passwordChanged": "Mot de passe changé",
             "passwordError": "Erreur de changement de mot de passe",
             "signIn":"S'authentifier",
