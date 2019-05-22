@@ -45,7 +45,6 @@ class UserDialog extends React.Component {
         style: PropTypes.object,
         buttonSize: PropTypes.string,
         inputStyle: PropTypes.object,
-        inputPasswordStyle: PropTypes.object,
         attributes: PropTypes.array,
         minPasswordSize: PropTypes.number,
         hidePasswordFields: PropTypes.bool
@@ -72,14 +71,6 @@ class UserDialog extends React.Component {
         inputStyle: {
             height: "32px",
             width: "260px",
-            marginTop: "3px",
-            marginBottom: "20px",
-            padding: "5px",
-            border: "1px solid #078AA3"
-        },
-        inputPasswordStyle: {
-            height: "32px",
-            width: "135px",
             marginTop: "3px",
             marginBottom: "20px",
             padding: "5px",
@@ -116,20 +107,16 @@ class UserDialog extends React.Component {
               <FormGroup validationState={this.getPwStyle()}>
                   <ControlLabel><Message msgId="user.password"/>
                   </ControlLabel>
-                  <Glyphicon glyph="info-sign" style={{position: "absolute", left: "85px", top: "150px"}} title="Password must contain at least 6 characters"/>
-
-                    <FormControl ref="newPassword"
-                        key="newPassword"
-                        type="password"
-                        name="newPassword"
-                        autoComplete="new-password"
-                        style={this.props.inputStyle}
-                        onChange={this.handleChange} />
-
-
+                  <Glyphicon glyph="info-sign" style={{position: "absolute", left: "85px", top: "150px"}}
+                   title="Password must contain at least 6 characters"/>
+                  <FormControl ref="newPassword"
+                   key="newPassword"
+                   type="password"
+                   name="newPassword"
+                   autoComplete="new-password"
+                   style={this.props.inputStyle}
+                   onChange={this.handleChange} />
               </FormGroup>
-
-
               <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") }>
                   <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
                   <FormControl ref="confirmPassword"
