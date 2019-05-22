@@ -4,11 +4,19 @@
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver", "https://nominatim.openstreetmap.org", "http://cloudsdi.geo-solutions.it"]
     },
     "geoStoreUrl": "rest/geostore/",
+    "geoFencePath1": "geofence/rest",
     "geoFencePath": "rest/geofence",
-    "geoFenceUrl": "https://gs-stable.geo-solutions.it/geoserver/",
+    "geoFenceUrl": "/geoserver/",
+    "geoFenceUrl1": "https://mappe.comune.genova.it/",
+    "geoFenceServiceType": "geoserver",
+    "geoFenceServiceType1": "geofence",
     "geoFenceGeoServerInstance": {
-      "url": "http://gs-stable.geo-solutions.it/geoserver/",
+      "url": "/geoserver/",
       "id": 1
+    },
+    "geoFenceGeoServerInstance1": {
+          "url": "https://mappe.comune.genova.it/geoserver/",
+          "id": 1
     },
     "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
@@ -579,6 +587,7 @@
         }],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
         "rulesmanager": [
+            "Home",
             "Redirect" ,
             {
                 "name": "OmniBar",

@@ -28,6 +28,7 @@ const RULE_SERVICES = {
 
 /**
  * API for GeoFence Services
+ * The API can be configured to use Standalone version or GeoServer integrated one.
  */
 var Api = {
     // RULES
@@ -38,6 +39,10 @@ var Api = {
         return Api.getRuleService().loadRules(page, rulesFiltersValues, entries);
     },
 
+    /**
+     * Call the API to get the RulesCount with the provided rulesFilter
+     * @returns {Promise<Number>} a promise that emits the count of rules using the current filter
+     */
     getRulesCount: (rulesFiltersValues) => {
         return Api.getRuleService().getRulesCount(rulesFiltersValues);
     },

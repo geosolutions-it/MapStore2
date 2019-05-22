@@ -38,7 +38,6 @@ const getUpdateType = (o, n) => {
 };
 const loadSinglePage = (page = 0, filters = {}, size = 10) =>
     Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
-        .switchMap( response => xmlToJson(response)
         .map(({RuleList = {}, rules = []}) => ({
             page,
             rules: (rules.concat(RuleList.rule || [])).map(r => {
@@ -49,8 +48,7 @@ const loadSinglePage = (page = 0, filters = {}, size = 10) =>
                 r.constraints.allowedStyles = {style};
                 return r;
             })})
-        )
-);
+        );
 const countUsers = (filter = "") => Rx.Observable.defer(() => GeoFence.getUsersCount(filter));
 const loadUsers = (filter = "", page = 0, size = 10) =>
     Rx.Observable.defer(() =>

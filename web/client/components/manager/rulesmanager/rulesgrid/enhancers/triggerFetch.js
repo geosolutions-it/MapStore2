@@ -24,7 +24,7 @@ module.exports = ($props) => {
             return getCount(filters)
             .do(() => setLoading(false))
             // TODO: bring this conversion inside the API
-            .do((rowsCount) => onLoad({pages: {}, rowsCount: rowsCount.count || rowsCount}))
+            .do((rowsCount) => onLoad({pages: {}, rowsCount}))
             .catch((e) => Rx.Observable.of({
                 error: e
             }).do(() => onLoadError({

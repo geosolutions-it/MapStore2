@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../../libs/ajax');
-const Rx = require('rxjs');
-const { isString } = require('lodash');
-const { parseString } = require('xml2js');
-const { stripPrefix } = require('xml2js/lib/processors');
 
 const EMPTY_RULE = {
     constraints: {},
@@ -22,16 +18,59 @@ const EMPTY_RULE = {
     workspace: ""
 };
 
-const xmlToJson = xml => {
-    if (!isString(xml)) {
-        return Rx.Observable.of(xml);
-    }
-    return Rx.Observable.bindNodeCallback((data, callback) => parseString(data, {
-        tagNameProcessors: [stripPrefix],
-        explicitArray: false,
-        mergeAttrs: true
-    }, callback))(xml);
-};
+const convertRuleGS2GF = ({
+    id,
+    priority,
+    access: grant,
+    layer,
+    workspace,
+    service,
+    request,
+    userName: username,
+    roleName: rolename,
+    limits, // TODO: parse and manage
+    addressRange: ipaddress
+
+}) => ({
+    id,
+    priority,
+    grant,
+    layer,
+    workspace,
+    service,
+    request,
+    username,
+    rolename,
+    limits,
+    ipaddress
+});
+
+const convertRuleGF2GS = ({
+    id,
+    priority,
+    grant,
+    layer,
+    workspace,
+    service,
+    request,
+    username,
+    rolename,
+    limits,
+    ipaddress
+
+}) => ({
+    id,
+    priority,
+    access: grant,
+    layer,
+    workspace,
+    service,
+    request,
+    userName: username,
+    roleName: rolename,
+    limits, // TODO: parse and manage
+    addressRange: ipaddress
+});
 
 const cleanConstraints = (rule) => {
     if (!rule.constraints) {
@@ -47,7 +86,6 @@ const cleanConstraints = (rule) => {
     return { ...rule, constraints };
 };
 
-const toJSONPromise = xml => xmlToJson(xml).toPromise();
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
@@ -83,14 +121,16 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
         };
         const options = {
             params, 'headers': {
-                'Content': 'application/xml'
+                'Content': 'application/json'
             }
         };
         return axios.get('/rules', addBaseUrl(options))
-            .then((response) => {
-                return toJSONPromise(response.data);
-            }
-            );
+            .then(({data}) => {
+                return {
+                    count: data.count,
+                    rules: (data.rules || []).map( convertRuleGS2GF )
+                };
+            });
     },
 
     getRulesCount: (rulesFiltersValues) => {
@@ -98,7 +138,7 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
             'params': assignFiltersValue(rulesFiltersValues)
         };
         return axios.get('/rules/count', addBaseUrl(options)).then((response) => {
-            return response.data;
+            return response.data.count;
         });
     },
 
@@ -127,7 +167,7 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
         if (!newRule.grant) {
             newRule.grant = "ALLOW";
         }
-        return axios.post('/rules', cleanConstraints(newRule), addBaseUrl({
+        return axios.post('/rules', {Rule: convertRuleGF2GS(cleanConstraints(newRule))}, addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -138,7 +178,8 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
         // id, priority and grant aren't updatable
         const { id, priority, grant, position, ...others } = cleanConstraints(rule);
         const newRule = { ...EMPTY_RULE, ...others };
-        return axios.put(`/rules/id/${id}`, newRule, addBaseUrl({
+
+        return axios.put(`/rules/id/${id}`, { Rule: convertRuleGF2GS(newRule) }, addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }

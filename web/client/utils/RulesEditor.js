@@ -18,7 +18,7 @@ const RulesEditorUtils = {
         return isEqual(currentRule, initRule);
     },
     isRuleValid: ({ipaddress = ""} = {}) => {
-        if (ipaddress.length > 0 ) {
+        if (ipaddress !== null && ipaddress.length > 0 ) {
             return !!ipaddress.match(checkIp);
         }
         return true;
