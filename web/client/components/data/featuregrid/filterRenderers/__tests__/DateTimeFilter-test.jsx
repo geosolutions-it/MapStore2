@@ -5,14 +5,19 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const DateTimeFilter = require('../DateTimeFilter');
-const expect = require('expect');
-const Moment = require('moment');
-const momentLocalizer = require('react-widgets/lib/localizers/moment');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import DateTimeFilter from '../DateTimeFilter';
+import expect from 'expect';
+import Moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 momentLocalizer(Moment);
+
+const intlMock = {
+    formatMessage: () => 'any message'
+};
+
 describe('Test for DateTimeFilter component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -25,7 +30,7 @@ describe('Test for DateTimeFilter component', () => {
         setTimeout(done);
     });
     it('render with defaults', () => {
-        ReactDOM.render(<DateTimeFilter/>, document.getElementById("container"));
+        ReactDOM.render(<DateTimeFilter intl={intlMock}/>, document.getElementById("container"));
         const el = document.getElementsByTagName("input")[0];
         expect(el).toExist();
     });

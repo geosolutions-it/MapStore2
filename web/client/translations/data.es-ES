@@ -1279,7 +1279,8 @@
                     "editMode": "La búsqueda rápida no está disponible en modo de edición",
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
-                    "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10"
+                    "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
+                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha."
                 }
             },
             "toolbar": {

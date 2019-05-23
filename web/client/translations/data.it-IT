@@ -1279,7 +1279,8 @@
                     "editMode": "La ricerca veloce non è disponibile in modalità editing",
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
-                    "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10"
+                    "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
+                    "date":"Digita una data o un'espressione. Utilizza {format} per la data"
                 }
             },
             "toolbar": {
