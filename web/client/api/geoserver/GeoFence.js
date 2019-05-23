@@ -8,7 +8,8 @@
 
 const axios = require('../../libs/ajax');
 const assign = require('object-assign');
-
+const {castArray, get} = require('lodash');
+const CatalogAPI = require('../CSW');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 
@@ -25,6 +26,36 @@ const RULE_SERVICES = {
     geoserver: require('./geofence/RuleService')
 };
 
+const LAYER_SERVICES = {
+    csw: ({ getGeoServerInstance}) => ({
+        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+            const { url: baseURL } = getGeoServerInstance();
+            const catalogUrl = baseURL + 'csw';
+            const { workspace = "" } = parentsFilter;
+            return CatalogAPI.workspaceSearch(catalogUrl, (page) * size + 1, size, layerFilter, workspace)
+                .then((layers) => ({ data: layers.records.map(layer => ({ name: layer.dc.identifier.replace(/^.*?:/g, '') })), count: layers.numberOfRecordsMatched }));
+        }
+    }),
+    rest: ({ addBaseUrlGS }) => ({
+        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+            const { workspace = "" } = parentsFilter;
+            return axios.get('/rest/layers.json', addBaseUrlGS({
+                'headers': {
+                    'Accept': 'application/json'
+                }
+            }))
+            .then(response => get(response, 'data.layers.layer'))
+            .then((layers = []) => castArray(layers))
+                .then(layers => layers.filter(l => !workspace || l && l.name && l.name.indexOf(`${workspace}:`) === 0))
+            .then(layers => ({
+                data: layers
+                    .filter((r, i) => i >= page * size && i < (page + 1) * size) // emulate pagination
+                    .map(layer => ({ name: layer.name.replace(/^.*?:/g, '') })),
+                count: layers.length
+            }));
+        }
+    })
+};
 
 /**
  * API for GeoFence Services
@@ -60,16 +91,26 @@ var Api = {
     },
 
     // USERS-ROLES
-    getGroupsCount: function(filter = " ") {
-        return Api.getUserService().getGroupsCount(filter);
+    getRolesCount: function(filter = " ") {
+        return Api.getUserService().getRolesCount(filter);
     },
-    getGroups: function(filter, page, entries = 10) {
-        return Api.getUserService().getGroups(filter, page, entries);
+    /**
+     * Create a promise that resolves the users matched with the filter passed
+     * @param {String} [filter] the text to search
+     * @returns {Promise<object>} the object with this shape: `{roles: [{name: "USER"}]}`
+     */
+    getRoles: function(filter, page, entries = 10) {
+        return Api.getUserService().getRoles(filter, page, entries);
     },
+
     getUsersCount: function(filter = " ") {
         return Api.getUserService().getUsersCount(filter);
     },
-
+    /**
+     * Create a promise that resolves the users matched with the filter passed
+     * @param {String} [filter] the text to search
+     * @returns {Promise<object>} the object with this shape: `{users: [{name: "USER"}]}`
+     */
     getUsers: function(filter, page, entries = 10) {
         return Api.getUserService().getUsers(filter, page, entries);
     },
@@ -82,6 +123,14 @@ var Api = {
             return response.data;
         });
     },
+    /**
+     * Returns a promise that resolves the list of layer, paginated, based on the filter search.
+     *
+     * @returns {Promise<object>} an object with this shape: `{data: [{name: "LAYER_NAME"}], count: 1}`. Count is the total number of result, out of pagination
+     */
+    getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+        return Api.getLayerService().getLayers(layerFilter, page, size, parentsFilter);
+    },
     getGeoServerInstance: () => ConfigUtils.getDefaults().geoFenceGeoServerInstance,
 
     /**
@@ -89,12 +138,18 @@ var Api = {
      */
     getUserService: () => USER_SERVICES[Api.getUserServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS }),
     getRuleService: () => RULE_SERVICES[Api.getRuleServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance}),
+    getLayerService: () => LAYER_SERVICES[Api.getLayerServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance }),
     /**
-     * Get the API type configured
-     * @returns {string} one of `geofence`. TODO: add other service types (geostore, geoserver)
+     * Get the user service type configured
+     * @returns {string} one of `geofence`| `geoserver`. TODO: add other service types `geostore`
      */
     getUserServiceType: () => ConfigUtils.getDefaults().geoFenceUserServiceType || ConfigUtils.getDefaults().geoFenceServiceType || 'geofence',
+    /**
+    * Get the rule service type type configured. Can be geoserver or geofence.
+    * @returns {string} one of `geofence`. TODO: add other service types (geostore, geoserver)
+    */
     getRuleServiceType: () => ConfigUtils.getDefaults().geoFenceServiceType || 'geofence',
+    getLayerServiceType: () => ConfigUtils.getDefaults().geoFenceLayerServiceType || 'csw',
 
     addBaseUrl: function(options = {}) {
         return assign(options, {

@@ -7,49 +7,70 @@
  */
 const axios = require('../../../libs/ajax');
 
+// apply filters to results
+const filterRoles = (f = "") => (role = "") => role.indexOf(f.replace('%', '')) >= 0;
+const filterUsers = (f = "") => ({ userName = "" }) => userName.indexOf(f.replace('%', '')) >= 0;
 
+
+// simulate pagination.
+const virtualPagingFilter = (page, size) => (r, i) => i >= page * size && i < (page + 1) * size;
+
+/**
+ * Implementation of GeoFence API of UserService that uses GeoServer REST API
+ * This implementation interacts with the GeoServer integrated version of GeoFence.
+ */
 module.exports = ({ addBaseUrlGS }) => {
-    // TODO: cache;
+    // retrieves roles from rest API
+    // TODO: cache
     const getRoles = () => axios.get(`/rest/security/roles.json`, addBaseUrlGS({
         'headers': {
-            'Accept': 'application/xml'
+            'Accept': 'application/json'
         }
-    }))
-        .then(response => response && response.data && response.data.roles || []);
-    const filterRoles = (f = "") => (role = "") => role.indexOf(f.replace('%', '')) >= 0;
+    })).then(response => response && response.data && response.data.roles || []);
 
+    // retrieves users from rest API
     const getUsers = () => axios.get(`/rest/security/usergroup/users.json`, addBaseUrlGS({
-        'headers': {
-            'Accept': 'application/xml'
-        }
-    }))
-        .then(response => response && response.data && response.data.users || []);
-    // TODO: implement
-    const filterUsers = (f = "") => ({ userName = "" }) => userName.indexOf(f.replace('%', '')) >= 0;
+            'headers': {
+                'Accept': 'application/json'
+            }
+        })).then(response => response && response.data && response.data.users || []);
+
+
     return {
-        getGroupsCount: (filter = " ") => {
+        getRolesCount: (filter = " ") => {
             return getRoles()
                 .then((roles = []) => roles.filter(filterRoles(filter)).length);
         },
-        getGroups: (filter, page, entries = 10) => {
+
+        getRoles: (filter, page, size = 10) => {
             return getRoles()
+                // filter by `filter` parameter
                 .then((roles = []) => roles.filter(filterRoles(filter)))
                 // paginate
-                .then(roles => roles.filter((r, i) => i >= page * entries))
-                // TODO: fix this bad naming that uses the users variable to contain roles
-                .then(users => ({ users }));
+                .then(roles => roles.filter(virtualPagingFilter(page, size)))
+                // transform from GeoServer in to the expected format
+                .then(roles => ({
+                    roles: roles
+                        .map(name => ({enabled: true, name}))
+                }));
         },
         getUsersCount: (filter = " ") => {
             return getUsers()
                 .then((users = []) => users.filter(filterUsers(filter)).length);
         },
 
-        getUsers: (filter, page, entries = 10) => {
+        getUsers: (filter, page, size = 10) => {
             return getUsers()
+                // filter by `filter` parameter
                 .then((users = []) => users.filter(filterUsers(filter)))
                 // paginate
-                .then(roles => roles.filter((r, i) => i >= page * entries))
-                .then(users => ({ users }));
+                .then(users => users.filter(virtualPagingFilter(page, size)))
+                // convert into the expected format
+                .then(users => ({
+                    users: users.map(({ userName, enabled}) => ({
+                    userName,
+                    enabled
+                })) }));
         }
     };
 };

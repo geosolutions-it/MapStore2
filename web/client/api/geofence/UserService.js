@@ -6,10 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../libs/ajax');
+const { toJSONPromise } = require('./common');
 
-
+/**
+ * Implementation of GeoFence API of UserService that uses GeoFence REST API
+ * This implementation interacts with the Stand-Alone version of GeoFence.
+ */
 module.exports = ({ addBaseUrl }) => ({
-    getGroupsCount: (filter = " ") => {
+    getRolesCount: (filter = " ") => {
         const encodedFilter = encodeURIComponent(`%${filter}%`);
         return axios.get(`/groups/count/${encodedFilter}`, addBaseUrl({
             'headers': {
@@ -19,16 +23,16 @@ module.exports = ({ addBaseUrl }) => ({
             return response.data;
         });
     },
-    getGroups: (filter, page, entries = 10) => {
+    getRoles: (filter, page, entries = 10) => {
         const params = {
             page,
             entries,
             nameLike: `%${filter}%`
         };
         const options = { params };
-        return axios.get(`/groups`, addBaseUrl(options)).then((response) => {
-            return response.data;
-        });
+        return axios.get(`/groups`, addBaseUrl(options))
+            .then((response) => toJSONPromise(response.data))
+            .then(({UserGroupList = {}}) => ({roles: [].concat(UserGroupList.UserGroup || [])}));
     },
     getUsersCount: (filter = " ") => {
         const encodedFilter = encodeURIComponent(`%${filter}%`);
@@ -49,7 +53,8 @@ module.exports = ({ addBaseUrl }) => ({
         };
         const options = { params };
         return axios.get(`/users`, addBaseUrl(options)).then((response) => {
-            return response.data;
-        });
+            return toJSONPromise(response.data);
+        })
+        .then(({ UserList = {} }) => ({ users: [].concat(UserList.User || []) }));
     }
 });

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../../libs/ajax');
+const { pickBy } = require('lodash');
 
 const EMPTY_RULE = {
     constraints: {},
@@ -18,6 +19,11 @@ const EMPTY_RULE = {
     workspace: ""
 };
 
+/**
+ * Convert from GeoServer REST format into GeoFence (internal) format
+ * @param {object} rule in GeoServer format
+ * @returns {object} the rule in GeoFence Format
+ */
 const convertRuleGS2GF = ({
     id,
     priority,
@@ -45,6 +51,11 @@ const convertRuleGS2GF = ({
     ipaddress
 });
 
+/**
+ * Convert from the GeoFence (and internal) rule format into the GeoServer REST format
+ * @param {object} rule in GeoFence Format
+ * @retrns {object} the rule in GeoServer Format
+ */
 const convertRuleGF2GS = ({
     id,
     priority,
@@ -72,6 +83,13 @@ const convertRuleGF2GS = ({
     addressRange: ipaddress
 });
 
+/**
+ *
+ * @param {object} object the rule
+ */
+const clearNullEntries = object => pickBy(object, v => v !== null);
+
+// TODO: missing documentation
 const cleanConstraints = (rule) => {
     if (!rule.constraints) {
         return rule;
@@ -89,12 +107,18 @@ const cleanConstraints = (rule) => {
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
+
+/**
+ * Returns the parameter for GeoServer REST GeoFence (integrated) API key
+ * @param {string} key the key of the filter map
+ */
 const normalizeKey = (key) => {
     switch (key) {
+        // found out that is case sensitive
         case 'username':
             return 'userName';
         case 'rolename':
-            return 'groupName';
+            return 'roleName';
         default:
             return key;
     }
@@ -129,10 +153,16 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
                 return {
                     count: data.count,
                     rules: (data.rules || []).map( convertRuleGS2GF )
+                    // remove null. undefined is expected as no-data value
+                    .map( clearNullEntries )
                 };
             });
     },
-
+    /**
+     * Count Rules with match with the selected filter
+     * @param {object} filter the filter to apply
+     * @returns {Promise<Number>}
+     */
     getRulesCount: (rulesFiltersValues) => {
         const options = {
             'params': assignFiltersValue(rulesFiltersValues)
@@ -141,7 +171,12 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
             return response.data.count;
         });
     },
-
+    /**
+     * Move the `rules` passed at the the `targetPriority` position.
+     * @param {number|string} targetPriority the position where to place the rules
+     * @param {array[object]} rules the rules to move
+     * @returns {Promise}
+     */
     moveRules: (targetPriority, rules) => {
         const options = {
             'params': {

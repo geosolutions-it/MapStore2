@@ -6,10 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../libs/ajax');
-const Rx = require('rxjs');
-const { isString } = require('lodash');
-const { parseString } = require('xml2js');
-const { stripPrefix } = require('xml2js/lib/processors');
+const { toJSONPromise } = require('./common');
 
 const EMPTY_RULE = {
     constraints: {},
@@ -20,17 +17,6 @@ const EMPTY_RULE = {
     service: "",
     username: "",
     workspace: ""
-};
-
-const xmlToJson = xml => {
-    if (!isString(xml)) {
-        return Rx.Observable.of(xml);
-    }
-    return Rx.Observable.bindNodeCallback((data, callback) => parseString(data, {
-        tagNameProcessors: [stripPrefix],
-        explicitArray: false,
-        mergeAttrs: true
-    }, callback))(xml);
 };
 
 const cleanConstraints = (rule) => {
@@ -47,7 +33,6 @@ const cleanConstraints = (rule) => {
     return { ...rule, constraints };
 };
 
-const toJSONPromise = xml => xmlToJson(xml).toPromise();
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
