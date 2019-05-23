@@ -7,7 +7,7 @@ Add an entry in the changelog like this:
 ```
 ## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/2018.02.00) (2018-09-11)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2018.01.00...v2018.02.00)**
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.01.00...v2018.02.00)**
 
  - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Aenhancement)**
 
