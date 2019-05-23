@@ -1,5 +1,5 @@
 # Change Log
-## [2019.01.01](https://github.com/geosolutions-it/MapStore2/tree/2019.01.01) (2019-05-22)
+## [2019.01.01](https://github.com/geosolutions-it/MapStore2/tree/v2019.01.01) (2019-05-22)
 
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2019.01.00...v2019.01.01)**
 
