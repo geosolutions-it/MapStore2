@@ -5,7 +5,7 @@ Then you can check each entry on the GitHub issue when done until the release is
 ## Changelog generation
 Add an entry in the changelog like this:
 ```
-## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/2018.02.00) (2018-09-11)
+## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/v2018.02.00) (2018-09-11)
 
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.01.00...v2018.02.00)**
 
