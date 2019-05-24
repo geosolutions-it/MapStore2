@@ -114,7 +114,7 @@ module.exports = {
     getStylesAndAttributes: (layer, workspace) => {
         const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
         const name = `${workspace}:${layer}`;
-        const l = {url: `${fixUrl(url)}ows`, name};
+        const l = {url: `${fixUrl(url)}wms`, name};
         return Rx.Observable.combineLatest(getLayerCapabilities(l)
                 .map((cp) => ({style: cp.style, ly: {bbox: WMS.getBBox(cp), name, url: `${fixUrl(url)}wms`, type: "wms", visibility: true, format: "image/png", title: cp.title}})),
                 describeLayer(l).map(({data}) => data.layerDescriptions[0])

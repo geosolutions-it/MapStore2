@@ -82,6 +82,9 @@ var Api = {
         return Api.getRuleService().moveRules(targetPriority, rules);
     },
 
+    updateRule: (rule) => {
+        return Api.getRuleService().updateRule(rule);
+    },
     deleteRule: (ruleId) => {
         return Api.getRuleService().deleteRule(ruleId);
     },

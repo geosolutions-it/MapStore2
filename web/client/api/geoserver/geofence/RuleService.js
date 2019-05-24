@@ -211,10 +211,9 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
 
     updateRule: (rule) => {
         // id, priority and grant aren't updatable
-        const { id, priority, grant, position, ...others } = cleanConstraints(rule);
-        const newRule = { ...EMPTY_RULE, ...others };
+        const newRule = { ...EMPTY_RULE, ...cleanConstraints(rule) };
 
-        return axios.put(`/rules/id/${id}`, { Rule: convertRuleGF2GS(newRule) }, addBaseUrl({
+        return axios.put(`/rules/id/${rule.id}`, {Rule: convertRuleGF2GS(newRule)}, addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
