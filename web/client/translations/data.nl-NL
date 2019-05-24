@@ -818,7 +818,8 @@
             "confirmDeleteUser": "Weet u zeker dat u deze gebruiker wilt verwijderen?",
             "errorDelete": "Er is een fout opgetreden bij het wissen van deze gebruiker:",
             "errorSaving": "Er is een fout opgetreden bij het opslaan van deze gebruiker",
-            "selectedGroups": "BEPAALDE GROEPEN"
+            "selectedGroups": "BEPAALDE GROEPEN",
+            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
           "searchGroups": "groepen opzoeken...",

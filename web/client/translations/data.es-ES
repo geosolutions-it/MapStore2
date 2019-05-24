@@ -880,7 +880,8 @@
             "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
             "errorDelete": "A ocurrido un error al borrar el usuario:",
             "errorSaving": "A ocurrido un error al guardar el usuario:",
-            "selectedGroups": "GRUPOS SELECCIONADOS"
+            "selectedGroups": "GRUPOS SELECCIONADOS",
+            "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)"
         },
         "usergroups": {
           "searchGroups": "buscar grupo ...",

@@ -879,7 +879,8 @@
             "confirmDeleteUser": "Bist du sicher, das du diesen Benutzer löschen möchtest?",
             "errorDelete": "Es gab einen Fehler beim Löschen von Benutzer:",
             "errorSaving": "Es gab einen Fehler beim Speichern von Benutzer:",
-            "selectedGroups": "Ausgewählte Gruppen"
+            "selectedGroups": "Ausgewählte Gruppen",
+            "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder"
         },
         "usergroups": {
           "searchGroups": "Suche Gruppen...",

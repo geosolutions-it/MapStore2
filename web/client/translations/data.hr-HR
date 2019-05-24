@@ -876,7 +876,8 @@
             "confirmDeleteUser": "Želite li zaista izbrisati ovoga korisnika?",
             "errorDelete": "Došlo je do greške prilikom brisanja ovoga korisnika:",
             "errorSaving": "Došlo je do greške prilikom spremanja ovoga korisnika:",
-            "selectedGroups": "ODABRANE GRUPE"
+            "selectedGroups": "ODABRANE GRUPE",
+            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
           "searchGroups": "Pretraži grupe...",

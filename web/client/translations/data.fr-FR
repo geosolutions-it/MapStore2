@@ -880,7 +880,8 @@
             "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
             "errorDelete": "Une erreur s'est produite lors de la suppression de cet utilisateur:",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de cet utilisateur:",
-            "selectedGroups": "CERTAINS GROUPES"
+            "selectedGroups": "CERTAINS GROUPES",
+            "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires"
         },
         "usergroups": {
           "searchGroups": "rechercher des groupes...",

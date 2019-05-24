@@ -879,7 +879,8 @@
             "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
             "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
             "errorSaving": "Si è verificato un errore salvando questo utente:",
-            "selectedGroups": "GRUPPI SELEZIONATI"
+            "selectedGroups": "GRUPPI SELEZIONATI",
+            "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
         },
         "usergroups": {
           "searchGroups": "Cerca gruppi...",
