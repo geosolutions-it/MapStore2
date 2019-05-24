@@ -583,7 +583,10 @@
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Les resultados Nominatim tienen prioridad = 5",
-            "serviceslistempty": "Ningún servicio personalizado definido"
+            "serviceslistempty": "Ningún servicio personalizado definido",
+            "service_missing": "el servicio {serviceType} no está configurado",
+            "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}"
+
         },
         "draw": {
             "fill": "Relleno",
@@ -828,6 +831,7 @@
                 "targetLayer": "Capa objetivo",
                 "clear": "Eliminar filtro",
                 "operation": "Operación",
+                "placeholder": "Selecciona una capa",
                 "errors": {
                     "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
                 }

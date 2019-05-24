@@ -583,7 +583,9 @@
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
-            "serviceslistempty": "Nessun servizio definito"
+            "serviceslistempty": "Nessun servizio definito",
+            "service_missing": "Il servizio {serviceType} non è configurato",
+            "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}"
         },
         "draw": {
             "fill": "Riempimento",
@@ -828,6 +830,7 @@
                 "targetLayer": "Livello Filtro",
                 "clear": "Pulisci Filtro",
                 "operation": "Operazione",
+                "placeholder": "Seleziona il livello",
                 "errors": {
                     "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
                 }
