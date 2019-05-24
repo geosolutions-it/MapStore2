@@ -200,7 +200,7 @@ class Toolbar extends React.Component {
                         key="featuresGrid"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-featuresGrid">{this.props.text.featuresGridTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.brosweData}>
+                        <Button bsStyle="primary" className="square-button-md" onClick={this.browseData}>
                             <Glyphicon glyph="features-grid" />
                         </Button>
                     </OverlayTrigger>
@@ -270,7 +270,7 @@ class Toolbar extends React.Component {
         </ButtonGroup>) : null;
     }
 
-    brosweData = () => {
+    browseData = () => {
         this.props.onToolsActions.onBrowseData({
             url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
             name: this.props.selectedLayers[0].name,
