@@ -6,15 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {isString} = require('lodash');
-const {containsHTML} = require('../../../../../utils/StringUtils');
+const React = require("react");
+const PropTypes = require("prop-types");
+const { isString } = require("lodash");
+const { containsHTML } = require("../../../../../utils/StringUtils");
 
-const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title", "feature"];
+const alwaysExcluded = [
+    "exclude",
+    "titleStyle",
+    "listStyle",
+    "componentStyle",
+    "title",
+    "feature"
+];
 
 class PropertiesViewer extends React.Component {
-    static displayName = 'PropertiesViewer';
+    static displayName = "PropertiesViewer";
 
     static propTypes = {
         title: PropTypes.string,
@@ -44,13 +51,21 @@ class PropertiesViewer extends React.Component {
         }
     };
 
-
     getBodyItems = () => {
         return Object.keys(this.props)
-            .filter(this.toExlude)
-            .map((key) => {
+            .filter(this.toExclude)
+            .map(key => {
                 const val = this.renderProperty(this.props[key]);
-                return <p key={key} style={this.props.listStyle}><b>{key}</b> {containsHTML(val) ? <span dangerouslySetInnerHTML={{__html: val}}/> : val}</p>;
+                return (
+                    <p key={key} style={this.props.listStyle}>
+                        <b>{key}</b>{" "}
+                        {containsHTML(val) ? (
+                            <span dangerouslySetInnerHTML={{ __html: val }} />
+                        ) : (
+                            val
+                        )}
+                    </p>
+                );
             });
     };
 
@@ -71,22 +86,25 @@ class PropertiesViewer extends React.Component {
             return null;
         }
         return (
-            <div style={{
-                padding: "4px",
-                margin: 0,
-                borderRadius: "4px"
-            }}>
+            <div
+                style={{
+                    padding: "4px",
+                    margin: 0,
+                    borderRadius: "4px"
+                }}
+            >
                 {items}
             </div>
         );
     };
 
-    renderProperty = (prop) => {
+    renderProperty = prop => {
         if (isString(prop)) {
             return prop;
         }
         return JSON.stringify(prop);
     };
+
     render() {
         return (
             <div style={this.props.componentStyle}>
@@ -96,10 +114,10 @@ class PropertiesViewer extends React.Component {
         );
     }
 
-    toExlude = (propName) => {
-        return alwaysExcluded
-            .concat(this.props.exclude)
-            .indexOf(propName) === -1;
+    toExclude = propName => {
+        return (
+            alwaysExcluded.concat(this.props.exclude).indexOf(propName) === -1
+        );
     };
 }
 
