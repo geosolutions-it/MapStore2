@@ -91,7 +91,7 @@
                 "right": "Derecha",
                 "bottom": "Bottom",
                 "top": "Cima"
-            }
+            },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
             "templatePreview": "Vista previa de la plantilla"
         },
