@@ -25,7 +25,8 @@ const {
     loadingStyleSelector,
     getUpdatedLayer,
     errorStyleSelector,
-    canEditStyleSelector
+    canEditStyleSelector,
+    styleServiceSelector
 } = require('../selectors/styleeditor');
 
 const { userRoleSelector } = require('../selectors/security');
@@ -58,16 +59,6 @@ class StyleEditorPanel extends React.Component {
     static defaultProps = {
         layer: {},
         onInit: () => {},
-        styleService: {
-            baseUrl: '/geoserver/',
-            formats: [
-                'css',
-                'sld'
-            ],
-            availableUrls: [
-                'http://localhost:8080/geoserver/'
-            ]
-        },
         editingAllowedRoles: [
             'ADMIN'
         ]
@@ -137,21 +128,31 @@ const StyleEditorPlugin = compose(
                 getUpdatedLayer,
                 errorStyleSelector,
                 userRoleSelector,
-                canEditStyleSelector
+                canEditStyleSelector,
+                styleServiceSelector
             ],
-            (status, loading, layer, error, userRole, canEdit) => ({
+            (status, loading, layer, error, userRole, canEdit, styleService) => ({
                 isEditing: status === 'edit',
                 loading,
                 layer,
                 error: !!(error && error.availableStyles),
                 userRole,
-                canEdit
+                canEdit,
+                styleService
             })
         ),
         {
             onInit: initStyleService,
             onUpdateParams: updateSettingsParams
-        }
+        },
+        (stateProps, dispatchProps, ownProps) => ({
+            ...ownProps,
+            ...stateProps,
+            ...dispatchProps,
+            styleService: ownProps.styleService
+                ? { ...ownProps.styleService, isStatic: true }
+                : { ...stateProps.styleService }
+        })
     ),
     emptyState(
         ({ error }) => error,
