@@ -378,10 +378,12 @@
         },
         "toc": {
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
+            "toggleGroupVisibility": "Alternar la visibilidad del grupo",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
             "addLayer": "Añadir capa",
             "addGroup": "Añadir grupo",
+            "addSubGroup": "Añadir subgrupo al grupo seleccionado",
             "toolZoomToLayerTooltip": "Zoom a la extensión de capa seleccionada",
             "toolZoomToLayersTooltip": "Zoom a la extensión de capas seleccionadas",
             "toolLayerSettingsTooltip": "Configuración de capa seleccionada",

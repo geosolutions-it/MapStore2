@@ -378,10 +378,12 @@
         },
         "toc": {
             "toggleLayerVisibility": "Ändere die Ebenen Sichtbarkeit",
+            "toggleGroupVisibility": "Gruppensichtbarkeit umschalten",
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
             "addGroup": "Gruppe hinzufügen",
+            "addSubGroup": "Fügen Sie der ausgewählten Gruppe eine Untergruppe hinzu",
             "toolZoomToLayerTooltip": "Zoom auf den ausgewählten Ebenen",
             "toolZoomToLayersTooltip": "Zoom auf ausgewählte Ebenen",
             "toolLayerSettingsTooltip": "Ausgewählte Ebeneneinstellungen",

@@ -72,6 +72,7 @@ class Toolbar extends React.Component {
             createWidgetTooltip: '',
             addLayerTooltip: '',
             addGroupTooltip: '',
+            addSubGroupTooltip: '',
             zoomToTooltip: {
                 LAYER: '',
                 LAYERS: ''
@@ -199,7 +200,7 @@ class Toolbar extends React.Component {
                     <OverlayTrigger
                         key="addGroup"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-addGroup">{this.props.text.addGroupTooltip}</Tooltip>}>
+                            overlay={<Tooltip id="toc-tooltip-addGroup">{this.getStatus() === 'GROUP' ? this.props.text.addSubGroupTooltip : this.props.text.addGroupTooltip}</Tooltip>}>
                             <Button key="addGroup" bsStyle="primary" className="square-button-md" onClick={this.addGroup}>
                             <Glyphicon glyph="add-folder" />
                         </Button>
@@ -226,7 +227,7 @@ class Toolbar extends React.Component {
                     <OverlayTrigger
                         key="settings"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status ? 'LAYER_LOAD_ERROR' && 'LAYER' : status]}</Tooltip>}>
+                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status === 'LAYER_LOAD_ERROR' ? 'LAYER' : status]}</Tooltip>}>
                         <Button active={this.props.settings.expanded} bsStyle={this.props.settings.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => { this.showSettings(status); }}>
                             <Glyphicon glyph="wrench"/>
                         </Button>
@@ -365,7 +366,7 @@ class Toolbar extends React.Component {
 
     removeNodes = () => {
         this.props.selectedLayers.forEach((layer) => {
-            this.props.onToolsActions.onRemove(layer.id, 'layers', layer);
+            this.props.onToolsActions.onRemove(layer.id, 'layers');
         });
         this.props.onToolsActions.onClear();
         this.closeDeleteDialog();

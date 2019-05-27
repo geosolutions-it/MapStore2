@@ -256,8 +256,9 @@ function layers(state = { flat: [] }, action) {
             });
         }
         case ADD_GROUP: {
+            const id = action.group.replace(/\./g, '\${dot}');
             const newGroups = insertNode(state.groups, {
-                id: action.parent ? (action.parent + '.' + action.group) : action.group,
+                id: action.parent ? (action.parent + '.' + id) : id,
                 title: action.group,
                 name: action.group,
                 nodes: [],
