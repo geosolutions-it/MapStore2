@@ -817,6 +817,7 @@
             "passwordInvalid": "Clave incorrecta",
             "username": "Nombre de usuario",
             "password": "Clave",
+            "passwordMessage": "La contraseña debe contener al menos 6 caracteres",
             "passwordChanged": "Clave cambiada",
             "passwordError": "Error en el cambio de clave",
             "signIn":"Login",
@@ -879,7 +880,8 @@
             "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
             "errorDelete": "A ocurrido un error al borrar el usuario:",
             "errorSaving": "A ocurrido un error al guardar el usuario:",
-            "selectedGroups": "GRUPOS SELECCIONADOS"
+            "selectedGroups": "GRUPOS SELECCIONADOS",
+            "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)"
         },
         "usergroups": {
           "searchGroups": "buscar grupo ...",
