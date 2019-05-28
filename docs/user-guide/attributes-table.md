@@ -16,6 +16,9 @@ The attribute table will open showing the data table and a set of functionalitie
 
 <img src="../img/attributes-table-1.jpg" style="max-width:600px;"/>
 
+!!! warning
+    When GeoServer is set to strict CITE compliance for WFS (by default), the feature grid do not work correctly.
+    This is because MapStore uses by default WFS 1.1.0 with startIndex/maxFeatures. This is not strict compliant with WFS 1.1.0 (GeoServer supports it but the request in strict mode is invalid). To solve it un-check the CITE compliance checkbox in the "WFS" page of GeoServer "Services" configurations using the GeoServer web interface.
 
 Editing
 -------

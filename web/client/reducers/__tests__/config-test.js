@@ -161,4 +161,17 @@ describe('Test the mapConfig reducer', () => {
             coordinates: [[1, 2], [4, 5]]
         });
     });
+    it('test MAP_INFO_LOADED accepts string or numeric mapId', () => {
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: "1", config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
+        state = mapConfig(state, {type: "MAP_INFO_LOADED", mapId: 1, info: {canEdit: true, canDelete: true}});
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.canEdit).toBe(true);
+        state = {};
+        state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: 1, config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
+        state = mapConfig(state, {type: "MAP_INFO_LOADED", mapId: "1", info: {canEdit: true, canDelete: true}});
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.canEdit).toBe(true);
+    });
 });

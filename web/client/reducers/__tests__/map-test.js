@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+const expect = require('expect');
+const {round} = require('lodash');
 
-var mapConfig = require('../map');
+const mapConfig = require('../map');
+const {PAN_TO} = require('../../actions/map');
 
 
 describe('Test the map reducer', () => {
@@ -158,6 +160,24 @@ describe('Test the map reducer', () => {
         expect(state.mapOptions.view.resolutions).toExist();
     });
 
+    it('pan to with center as array', () => {
+        const action = {
+            type: PAN_TO,
+            center: [2, 2]
+        };
+        const state = mapConfig({}, action);
+        expect(state.center).toEqual( { x: 2, y: 2, srs: "EPSG:4326" } );
+    });
+    it('pan to with center as object', () => {
+        const action = {
+            type: PAN_TO,
+            center: { x: 1000, y: 1000, crs: "EPSG:3857" }
+        };
+        const state = mapConfig({}, action);
+        expect(round(state.center.x, 8)).toEqual(0.00898315);
+        expect(round(state.center.y, 8)).toEqual(0.00898315);
+        expect(state.center.srs).toEqual("EPSG:4326");
+    });
     it('change map style', () => {
         const action = {
             type: 'CHANGE_MAP_STYLE',

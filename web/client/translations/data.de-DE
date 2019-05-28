@@ -924,6 +924,7 @@
             "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
+            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen",
             "passwordChanged": "Passwort geändert",
             "passwordError": "Fehler beim Ändern des Passworts",
             "signIn":"Anmelden",
@@ -962,7 +963,8 @@
             "confirmDeleteUser": "Bist du sicher, das du diesen Benutzer löschen möchtest?",
             "errorDelete": "Es gab einen Fehler beim Löschen von Benutzer:",
             "errorSaving": "Es gab einen Fehler beim Speichern von Benutzer:",
-            "selectedGroups": "Ausgewählte Gruppen"
+            "selectedGroups": "Ausgewählte Gruppen",
+            "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder"
         },
         "usergroups": {
           "searchGroups": "Suche Gruppen...",
@@ -1635,6 +1637,7 @@
             "createStyleErrorMessage": "Stil konnte nicht im Stildienst gespeichert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
             "updateStyleErrorTitle": "Stil bearbeiten",
             "updateStyleErrorMessage": "Der Stil konnte im Stildienst nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "validationErrorTitle": "Validierungsfehler",
             "genericValidationError": "Stil ist nicht gültig und konnte nicht angewendet werden.",
             "setDefaultStyle": "Legen Sie den ausgewählten Stil als Standard für die aktuelle Ebene fest",
             "setDefaultStyleSuccessTitle": "Erfolg beim Setzen des Standardstils",

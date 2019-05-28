@@ -19,15 +19,15 @@ const paramsDesc = [{
     "default": '',
     validate: (val) => val !== ''
 }, {
-    label: 'ProjectVersion (1.0.0): ',
+    label: 'Project Version (1.0.0): ',
     name: 'projectVersion',
     "default": '1.0.0',
     validate: () => true
 }, {
-    label: 'ProjectDescription: ',
+    label: 'Project Description: (Project Name)',
     name: 'projectDescription',
     "default": '',
-    validate: (val) => val !== ''
+    validate: () => true
 }, {
     label: 'Repository URL: ',
     name: 'repoURL',
@@ -48,7 +48,7 @@ function doWork(params) {
     const options = {
         name: params.projectName,
         version: params.projectVersion,
-        description: params.projectDescription,
+        description: params.projectDescription || params.projectName,
         repository: params.repoURL,
         scripts: require('./utility/projects/projectScripts.json')
     };
@@ -65,10 +65,14 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('package.json file created\n');
-            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', 'web/client/.babelrc']);
+            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', 'web/client/.babelrc', 'Dockerfile']);
         })
         .then(() => {
-            process.stdout.write('Static files copied\n');
+            process.stdout.write('copied static files\n');
+            return project.copyTemplates('docker', params.outFolder + "/docker", options);
+        })
+        .then(() => {
+            process.stdout.write('docker folder\n');
             process.stdout.write('Copying template files\n');
             return project.copyTemplates(projectFolder + '/templates', params.outFolder, options);
         })
@@ -96,7 +100,7 @@ function readParam(rl, params, result) {
                 if (param.validate(result[param.name])) {
                     resolve(readParam(rl, other, result));
                 } else {
-                    reject(result);
+                    reject(new Error(`the ${param.name}: ${answer} is not valid`));
                 }
             });
         }
@@ -113,8 +117,8 @@ function readParams() {
 if (process.argv.length === 2) {
     readParams().then((params) => {
         doWork(params);
-    }).catch(() => {
-        throw new Error("Wrong parameters!");
+    }).catch((e) => {
+        throw new Error(e.message);
     });
 } else if (!projectType || !projectName || !projectVersion || !projectDescription || !repoURL || !outFolder) {
     process.stdout.write('Usage: node ./createProject.js <projectType> <projectName> <projectVersion> <projectDescription> <GitHUB repo URL> <outputFolder>\n');

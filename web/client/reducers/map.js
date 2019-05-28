@@ -73,9 +73,10 @@ function mapConfig(state = null, action) {
         });
     }
     case PAN_TO: {
+        // action.center now can be also an array (with the coord specified in 4326)
         const center = CoordinatesUtils.reproject(
                 action.center,
-                action.center.crs,
+                action.center.crs || 'EPSG:4326',
                 'EPSG:4326');
         return assign({}, state, {
             center,
