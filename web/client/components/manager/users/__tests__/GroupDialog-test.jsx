@@ -82,11 +82,26 @@ describe("Test GroupDialog Component", () => {
             document.getElementById("container"));
 
         expect(comp).toExist();
-        let buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "button");
-        expect(buttons[1].className).toBe("square-button btn btn-lg btn-success");
-        let groupGroupButton = buttons[2];
+        const tabs = document.querySelectorAll('.nav.nav-justified > li');
+        expect(tabs[0].getAttribute('class')).toBe('active');
+        const groupGroupButton = tabs[1].children[0];
         ReactTestUtils.Simulate.click(groupGroupButton);
-        expect(groupGroupButton.className).toBe("square-button btn btn-lg btn-success");
-        expect(buttons[2].className).toBe("square-button btn btn-lg btn-success");
+        expect(tabs[1].getAttribute('class')).toBe('active');
+    });
+
+    it('Testing asterisk inside mandatory field', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} />,
+            document.getElementById("container"));
+
+        expect(comp).toExist();
+        const labels = document.querySelectorAll('.control-label');
+        const [ groupName, description ] = labels;
+        expect(groupName.children.length).toBe(2);
+        expect(groupName.children[0].innerHTML).toBe('usergroups.groupName');
+        expect(groupName.children[1].innerHTML).toBe('*');
+
+        expect(description.children.length).toBe(1);
+        expect(description.children[0].innerHTML).toBe('usergroups.groupDescription');
     });
 });

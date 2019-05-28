@@ -382,6 +382,7 @@ class LayerTree extends React.Component {
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
                                 addLayerTooltip: <Message msgId="toc.addLayer" />,
+                                addLayerToGroupTooltip: <Message msgId="toc.addLayerToGroup" />,
                                 addGroupTooltip: <Message msgId="toc.addGroup" />,
                                 addSubGroupTooltip: <Message msgId="toc.addSubGroup" />,
                                 createWidgetTooltip: <Message msgId="toc.createWidget"/>,

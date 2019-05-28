@@ -85,9 +85,9 @@ class GroupDialog extends React.Component {
     };
 
     renderGeneral = () => {
-        return (<div style={{clear: "both"}}>
+        return (<div style={{clear: "both", marginTop: "10px"}}>
         <FormGroup>
-            <ControlLabel><Message msgId="usergroups.groupName"/></ControlLabel>
+            <ControlLabel><Message msgId="usergroups.groupName"/>{' '}<span style={{ fontWeight: 'bold' }}>*</span></ControlLabel>
             <FormControl ref="groupName"
                 key="groupName"
                 type="text"
@@ -110,6 +110,7 @@ class GroupDialog extends React.Component {
                 onChange={this.handleChange}
                 value={this.props.group && this.props.group.description || ""}/>
         </FormGroup>
+        <div style={{ fontStyle: 'italic' }}><Message msgId="users.requiredFiedsMessage"/></div>
         </div>);
     };
 
@@ -168,7 +169,7 @@ class GroupDialog extends React.Component {
 
     renderMembersTab = () => {
         let availableUsers = this.props.availableUsers.filter((user) => findIndex(this.getCurrentGroupMembers(), member => member.id === user.id) < 0).map(u => ({value: u.id, label: u.name}));
-        return (<div>
+        return (<div style={{marginTop: "10px"}}>
             <label key="member-label" className="control-label"><Message msgId="usergroups.groupMembers" /></label>
             <div key="member-list" style={
             {
@@ -177,7 +178,7 @@ class GroupDialog extends React.Component {
                 overflow: "auto",
                 boxShadow: "inset 0 2px 5px 0 #AAA"
             }} >{this.renderMembers()}</div>
-            <div key="add-member" >
+            <div key="add-member" style={{marginTop: "10px"}}>
                 <label key="add-member-label" className="control-label"><Message msgId="usergroups.addMember" /></label>
                 <Select
                     isLoading={this.props.availableUsersLoading}
@@ -210,18 +211,18 @@ class GroupDialog extends React.Component {
               >
             <span role="header">
                 <button onClick={this.props.onClose} className="login-panel-close close">
-                    {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
+                    {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>
                 <span className="user-panel-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
             </span>
             <div role="body">
-            <Tabs defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 1 ? "success" : "primary"}><Glyphicon glyph="1-group"/></Button>} >
+            <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
+                <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
                     {this.renderGeneral()}
                     {this.checkNameLenght()}
                     {this.checkDescLenght()}
                 </Tab>
-                <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle={this.state.key === 2 ? "success" : "primary"}><Glyphicon glyph="1-group-add"/></Button>} >
+                <Tab eventKey={2} title={<Glyphicon glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
                     {this.renderMembersTab()}
                 </Tab>
             </Tabs>

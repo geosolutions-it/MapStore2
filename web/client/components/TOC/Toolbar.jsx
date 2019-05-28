@@ -71,6 +71,7 @@ class Toolbar extends React.Component {
             confirmDeleteCancelText: '',
             createWidgetTooltip: '',
             addLayerTooltip: '',
+            addLayerToGroupTooltip: '',
             addGroupTooltip: '',
             addSubGroupTooltip: '',
             zoomToTooltip: {
@@ -190,7 +191,7 @@ class Toolbar extends React.Component {
                     <OverlayTrigger
                         key="addLayer"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-addLayer">{this.props.text.addLayerTooltip}</Tooltip>}>
+                            overlay={<Tooltip id="toc-tooltip-addLayer">{status === 'GROUP' ? this.props.text.addLayerToGroupTooltip : this.props.text.addLayerTooltip}</Tooltip>}>
                             <Button key="addLayer" bsStyle="primary" className="square-button-md" onClick={this.addLayer}>
                                 <Glyphicon glyph="add-layer" />
                             </Button>
@@ -200,7 +201,7 @@ class Toolbar extends React.Component {
                     <OverlayTrigger
                         key="addGroup"
                         placement="top"
-                            overlay={<Tooltip id="toc-tooltip-addGroup">{this.getStatus() === 'GROUP' ? this.props.text.addSubGroupTooltip : this.props.text.addGroupTooltip}</Tooltip>}>
+                            overlay={<Tooltip id="toc-tooltip-addGroup">{status === 'GROUP' ? this.props.text.addSubGroupTooltip : this.props.text.addGroupTooltip}</Tooltip>}>
                             <Button key="addGroup" bsStyle="primary" className="square-button-md" onClick={this.addGroup}>
                             <Glyphicon glyph="add-folder" />
                         </Button>
@@ -238,7 +239,7 @@ class Toolbar extends React.Component {
                         key="featuresGrid"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-featuresGrid">{this.props.text.featuresGridTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.brosweData}>
+                        <Button bsStyle="primary" className="square-button-md" onClick={this.browseData}>
                             <Glyphicon glyph="features-grid" />
                         </Button>
                     </OverlayTrigger>
@@ -308,7 +309,7 @@ class Toolbar extends React.Component {
         </ButtonGroup>) : null;
     }
 
-    brosweData = () => {
+    browseData = () => {
         this.props.onToolsActions.onBrowseData({
             url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
             name: this.props.selectedLayers[0].name,

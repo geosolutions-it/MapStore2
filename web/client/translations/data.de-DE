@@ -382,6 +382,7 @@
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
+            "addLayerToGroup": "Ebene zur ausgewählten Gruppe hinzufügen",
             "addGroup": "Gruppe hinzufügen",
             "addSubGroup": "Fügen Sie der ausgewählten Gruppe eine Untergruppe hinzu",
             "toolZoomToLayerTooltip": "Zoom auf den ausgewählten Ebenen",
@@ -823,6 +824,7 @@
             "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
+            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen",
             "passwordChanged": "Passwort geändert",
             "passwordError": "Fehler beim Ändern des Passworts",
             "signIn":"Anmelden",
@@ -885,7 +887,8 @@
             "confirmDeleteUser": "Bist du sicher, das du diesen Benutzer löschen möchtest?",
             "errorDelete": "Es gab einen Fehler beim Löschen von Benutzer:",
             "errorSaving": "Es gab einen Fehler beim Speichern von Benutzer:",
-            "selectedGroups": "Ausgewählte Gruppen"
+            "selectedGroups": "Ausgewählte Gruppen",
+            "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder"
         },
         "usergroups": {
           "searchGroups": "Suche Gruppen...",

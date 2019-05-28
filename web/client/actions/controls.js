@@ -59,8 +59,11 @@ function setControlProperty(control, property, value, toggle) {
  * Sets a list of properties at once
  * @memberof actions.controls
  * @param {string} control  control name
- * @param {object} properties the properties to set, as key (property name), value pairs
+ * @param {array} properties the properties to set, pairs of keys and related values
  * @return {object} of type `SET_CONTROL_PROPERTIES` with control and properties
+ *
+ * @example
+ * setControlProperties('metadataexplorer', 'enabled', true, 'group', 'newgroup')
  */
 function setControlProperties(control, ...properties) {
     return {
