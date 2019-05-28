@@ -30,7 +30,6 @@ describe("Test the MultiGeomThumb component", () => {
         expect(rect).toExist();
         const path = TestUtils.scryRenderedDOMComponentsWithTag(cmp, 'path');
         expect(path.length).toBe(0);
-        expect(rect.attributes.style.value).toBe("fill: rgb(255, 255, 255); stroke-width: 2; stroke: rgb(255, 204, 51); fill-opacity: 0; opacity: 1;");
         expect(rect.attributes.width.value).toBe("50");
         expect(rect.attributes.height.value).toBe("50");
         expect(rect.attributes.x.value).toBe("20");
@@ -51,7 +50,6 @@ describe("Test the MultiGeomThumb component", () => {
 
         const svg = TestUtils.findRenderedDOMComponentWithTag(cmp, 'svg');
         expect(rect).toExist();
-        expect(rect.attributes.style.value).toBe("fill: rgb(255, 255, 255); stroke-width: 2; stroke: rgb(255, 204, 51); fill-opacity: 0; opacity: 1;");
         expect(rect.attributes.width.value).toBe("50");
         expect(rect.attributes.height.value).toBe("50");
         expect(rect.attributes.x.value).toBe("40");
