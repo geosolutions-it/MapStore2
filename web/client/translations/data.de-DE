@@ -583,7 +583,9 @@
             "s_wfs_opt_props_label" : "Optionale Requisiten",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
-            "serviceslistempty": "Keine benutzerdefinierten Services definiert"
+            "serviceslistempty": "Keine benutzerdefinierten Services definiert",
+            "service_missing": "{serviceType} dienst ist nicht konfiguriert",
+            "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}"
         },
         "draw": {
             "fill": "Füllung",
@@ -828,6 +830,7 @@
                 "targetLayer": "Zielschicht",
                 "clear": "Filter löschen",
                 "operation": "Betrieb",
+                "placeholder": "Wählen Sie eine Ebene aus",
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering ist für die ausgewählte Ebene nicht verfügbar"
                 }

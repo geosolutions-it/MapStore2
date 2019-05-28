@@ -583,7 +583,9 @@
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
-            "serviceslistempty": "No custom services defined"
+            "serviceslistempty": "No custom services defined",
+            "service_missing": "{serviceType} service is not configured",
+            "generic_error": "An error occurred during search. Error details: {message}"
         },
         "draw": {
             "fill": "Fill",
@@ -828,6 +830,7 @@
                 "targetLayer": "Target layer",
                 "clear": "Clear filter",
                 "operation": "Operation",
+                "placeholder": "Select layer",
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
                 }
