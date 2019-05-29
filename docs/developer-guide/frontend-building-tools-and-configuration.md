@@ -9,7 +9,7 @@ In particular:
  * **[webpack](http://webpack.github.io/)**: as the bundling tool, for development (see [webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/webpack.config.js)), deploy (see [prod-webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/prod-webpack.config.js)) and test (see [test.webpack.js](https://github.com/geosolutions-it/MapStore2/blob/master/tests.webpack.js)
  * **[karma](http://karma-runner.github.io/)** is used as the test suite runner, with several plugins to allow for custom reporting, browser running and so on; the test suite running is configured through different configuration files, for **[single running](https://github.com/geosolutions-it/MapStore2/blob/master/karma.conf.single-run.js)**  or **[continuous testing](https://github.com/geosolutions-it/MapStore2/blob/master/karma.conf.continuous-test.js)**
  * **[istanbul](https://gotwarlost.github.io/istanbul/)/[coveralls](https://www.npmjs.com/package/coveralls)** are used for code coverage reporting
- * **[eslint](eslint.org)** is used to enforce coding styles guidelines, the tool is configured using a **[.eslintrc](https://github.com/geosolutions-it/MapStore2/blob/master/.eslintrc)** file
+ * **[eslint](https://eslint.org)** is used to enforce coding styles guidelines, the tool is configured using a **[.eslintrc](https://github.com/geosolutions-it/MapStore2/blob/master/.eslintrc)** file
 
 # Available scripts
  * download dependencies and init developer environment

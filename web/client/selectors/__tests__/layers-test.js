@@ -7,8 +7,12 @@
 */
 
 const expect = require('expect');
-const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector, getLayersWithDimension} = require('../layers');
+const {
+    layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector,
+    currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector,
+    getLayersWithDimension, elementSelector
+} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -111,14 +115,9 @@ describe('Test layers selectors', () => {
         }});
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
-        expect(props[1].style).toEqual({
-            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
+        const {defaultIconStyle} = require('../../utils/SearchUtils');
+
+        expect(props[1].style).toEqual(defaultIconStyle);
     });
 
     it('test layerSelectorWithMarkers with custom style', () => {
@@ -126,14 +125,7 @@ describe('Test layers selectors', () => {
             color: '#ff0000'
         };
 
-        const defaultIconStyle = {
-            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        };
+        const {defaultIconStyle} = require('../../utils/SearchUtils');
 
         const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
             markerPosition: {
@@ -187,7 +179,51 @@ describe('Test layers selectors', () => {
             style: 'generic'
         });
     });
-
+    it('test layerSelectorWithMarkers with overlay layers from additionallayers', () => {
+        const state = {
+            additionallayers: [
+                 {
+                     id: 'layer_002',
+                     owner: 'styleeditor',
+                     actionType: 'overlay',
+                     settings: {
+                         name: 'workspace:layer_001',
+                         properties: {
+                             pop: 500000
+                         }
+                     },
+                     options: {
+                        type: "vector",
+                        name: 'layer_002',
+                        id: 'layer_002',
+                        style: 'generic'
+                     }
+                 }
+             ],
+             layers: {
+                 flat: [
+                    {
+                        type: 'wms',
+                        id: 'layer_001',
+                        style: ''
+                    }
+                ]
+            }
+         };
+        const props = layerSelectorWithMarkers(state);
+        expect(props.length).toBe(2);
+        expect(props[0]).toEqual({
+            type: 'wms',
+            id: 'layer_001',
+            style: ''
+        });
+        expect(props[1]).toEqual({
+            type: "vector",
+            name: 'layer_002',
+            id: 'layer_002',
+            style: 'generic'
+        });
+    });
     it('test groupsSelector from layers flat one group', () => {
         const props = groupsSelector({layers: {
             flat: [{type: "osm", id: "layer1", group: "group1"}, {type: "wms", id: "layer2", group: "group1"}],
@@ -477,4 +513,201 @@ describe('Test layers selectors', () => {
         expect(getLayersWithDimension(state, 'reference').length).toBe(0);
     });
 
+    it('test elementSelector with a sub group node and a layer node', () => {
+        let settings = {
+            "expanded": true,
+            "node": "first.second",
+            "nodeType": "groups",
+            "options": {}
+        };
+        const flat = [
+          {
+            id: 'topp:states__6',
+            format: 'image/png8',
+            search: {
+              url: 'https://demo.geo-solutions.it:443/geoserver/wfs',
+              type: 'wfs'
+            },
+            name: 'topp:states',
+            opacity: 1,
+            description: 'This is some census data on the states.',
+            title: 'USA Population',
+            type: 'wms',
+            url: 'https://demo.geo-solutions.it:443/geoserver/wms',
+            bbox: {
+              crs: 'EPSG:4326',
+              bounds: {
+                minx: -124.73142200000001,
+                miny: 24.955967,
+                maxx: -66.969849,
+                maxy: 49.371735
+              }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {},
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            catalogURL: 'https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states',
+            useForElevation: false,
+            hidden: false,
+            params: {
+              layers: 'topp:states'
+            },
+            loading: false,
+            loadingError: false,
+            group: 'first.second.third'
+          }
+        ];
+        const groups = [
+            {
+              id: 'first',
+              title: 'first',
+              name: 'first',
+              nodes: [
+                {
+                  id: 'first.second',
+                  title: 'second',
+                  name: 'second',
+                  nodes: [
+                    {
+                      id: 'first.second.third',
+                      title: 'third',
+                      name: 'third',
+                      nodes: [
+                        'topp:states__6'
+                      ],
+                      expanded: true
+                    }
+                  ],
+                  expanded: true
+                }
+              ],
+              expanded: true
+            }
+        ];
+        // group node
+        let state = {
+            layers: {
+                flat,
+                groups,
+                settings
+            }
+        };
+        let element = {
+            "id": "first.second",
+            "title": "second",
+            "name": "second",
+            "nodes": [
+                {
+                    "id": "first.second.third",
+                    "title": "third",
+                    "name": "third",
+                    "nodes": [
+                        {
+                            "id": "topp:states__6",
+                            "format": "image/png8",
+                            "search": {
+                                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                                "type": "wfs"
+                            },
+                            "name": "topp:states",
+                            "opacity": 1,
+                            "description": "This is some census data on the states.",
+                            "title": "USA Population",
+                            "type": "wms",
+                            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+                            "bbox": {
+                                "crs": "EPSG:4326",
+                                "bounds": {
+                                    "minx": -124.73142200000001,
+                                    "miny": 24.955967,
+                                    "maxx": -66.969849,
+                                    "maxy": 49.371735
+                                }
+                            },
+                            "visibility": true,
+                            "singleTile": false,
+                            "allowedSRS": {},
+                            "dimensions": [],
+                            "hideLoading": false,
+                            "handleClickOnLayer": false,
+                            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+                            "useForElevation": false,
+                            "hidden": false,
+                            "params": {
+                                "layers": "topp:states"
+                            },
+                            "loading": false,
+                            "loadingError": false,
+                            "group": "first.second.third",
+                            "expanded": false
+                        }
+                    ],
+                    "expanded": true,
+                    "visibility": true
+                }
+            ],
+            "expanded": true,
+            "visibility": true
+        };
+        expect(elementSelector(state)).toEqual(element);
+
+        // layer node
+        settings = {
+            "expanded": true,
+            "node": "topp:states__6",
+            "nodeType": "layers",
+            "options": {
+                "opacity": 1
+            }
+        };
+        state = {
+            layers: {
+                flat,
+                groups,
+                settings
+            }
+        };
+        element = {
+            "id": "topp:states__6",
+            "format": "image/png8",
+            "search": {
+                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                "type": "wfs"
+            },
+            "name": "topp:states",
+            "opacity": 1,
+            "description": "This is some census data on the states.",
+            "title": "USA Population",
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "bbox": {
+                "crs": "EPSG:4326",
+                "bounds": {
+                    "minx": -124.73142200000001,
+                    "miny": 24.955967,
+                    "maxx": -66.969849,
+                    "maxy": 49.371735
+                }
+            },
+            "visibility": true,
+            "singleTile": false,
+            "allowedSRS": {},
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+            "useForElevation": false,
+            "hidden": false,
+            "params": {
+                "layers": "topp:states"
+            },
+            "loading": false,
+            "loadingError": false,
+            "group": "first.second.third"
+        };
+        expect(elementSelector(state)).toEqual(element);
+    });
 });

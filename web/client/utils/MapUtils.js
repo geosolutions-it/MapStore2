@@ -24,6 +24,16 @@ const GOOGLE_MERCATOR = {
 };
 
 const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
+
+/**
+ * `ZOOM_TO_EXTENT_HOOK` hook takes 2 arguments:
+ * - `extent`: array of the extent [minx, miny, maxx, maxy]
+ * - `options` object, with the following attributes:
+ *   - `crs`: crs of the extent
+ *   - `maxZoom`: max zoom for the zoom to functionality.
+ *   - `padding`: object with attributes, `top`, `right`, `bottom` and `top` with the size, in pixels of the padding for the visible part of the map. When supported by the mapping lib, it will zoom to visible area
+ */
+const ZOOM_TO_EXTENT_HOOK = 'ZOOM_TO_EXTENT_HOOK';
 const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
 const RESOLUTION_HOOK = 'RESOLUTION_HOOK';
 const COMPUTE_BBOX_HOOK = 'COMPUTE_BBOX_HOOK';
@@ -294,40 +304,6 @@ const groupSaveFormatted = (node) => {
     return {id: node.id, expanded: node.expanded};
 };
 
-/**
-* It extracts tile matrix set from layers and add them to sources object
-*
-* @param sourcesFromLayers {object} layers grouped by url
-* @param sources {object} current source object if exists, default { }
-* @return {object} new sources object with data from layers
-*/
-const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
-    return sourcesFromLayers && Object.keys(sourcesFromLayers).reduce((src, url) => {
-        const matrixIds = sourcesFromLayers[url].reduce((a, b) => {
-            return assign(a, {[b.id || b.name]: { srs: [...Object.keys(b.matrixIds)], matrixIds: assign({}, b.matrixIds)}});
-        }, {});
-
-        const newMatrixSet = sourcesFromLayers[url].reduce((nMS, l) => {
-
-            const matrixSetObject = l.tileMatrixSet.reduce((i, tM) => assign({}, i, {[tM['ows:Identifier']]: assign({}, tM)}), {});
-
-            const matrixFilteredByLayers = Object.keys(matrixSetObject).reduce((mFBL, key) => {
-
-                const layers = Object.keys(matrixIds)
-                    .filter(layerId => head(matrixIds[layerId].srs.filter(mId => mId === key)))
-                    .map(layerId => matrixIds[layerId].matrixIds[key]);
-
-                const TileMatrix = layers[0] && matrixSetObject[key].TileMatrix.map((m, idx) => layers[0][idx] && layers[0][idx].ranges ? assign({}, m, {ranges: layers[0][idx].ranges}) : assign({}, m));
-
-                return !head(layers) ? assign({}, mFBL) : assign({}, mFBL, {[key]: assign({}, matrixSetObject[key], {TileMatrix}) });
-            }, {});
-
-            return assign({}, nMS, matrixFilteredByLayers);
-        }, {});
-        return assign({}, src, { [url]: assign({}, sources[url] || {}, { tileMatrixSet: assign({}, src[url] && src[url].tileMatrixSet || {}, newMatrixSet)})});
-    }, assign({}, sources)) || sources;
-};
-
 function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, additionalOptions) {
 
     const map = {
@@ -353,14 +329,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         return node && node.nodes ? groupSaveFormatted(node) : null;
     }).filter(g => g);
 
-
-    /* layers gruped by url to create the source object */
-    const groupByUrl = layers.filter(l => l.tileMatrixSet).reduce((a, l) => {
-        return a[l.url] ? assign({}, a, {[l.url]: [...a[l.url], l]}) : assign({}, a, {[l.url]: [l]});
-    }, {});
-
-    /* extract and add tilematrixseto to sources object  */
-    const sources = extractTileMatrixSetFromLayers(groupByUrl);
+    // extract sources map
+    const sources = LayersUtils.extractSourcesFromLayers(layers);
 
     /* removes tilematrixset from layers and reduced matrix ids to a list */
     const formattedLayers = layers.map(l => {
@@ -384,7 +354,7 @@ function isSimpleGeomType(geomType) {
 function getSimpleGeomType(geomType = "Point") {
     switch (geomType) {
         case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
-        case "MultiPoint": return "Point";
+        case "MultiPoint": case "Marker": return "Point";
         case "MultiLineString": return "LineString";
         case "MultiPolygon": return "Polygon";
         default: return geomType;
@@ -422,6 +392,7 @@ module.exports = {
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
     DEFAULT_SCREEN_DPI,
+    ZOOM_TO_EXTENT_HOOK,
     registerHook,
     getHook,
     dpi2dpm,
@@ -443,7 +414,6 @@ module.exports = {
     saveMapConfiguration,
     isSimpleGeomType,
     getSimpleGeomType,
-    extractTileMatrixSetFromLayers,
     getIdFromUri,
     parseLayoutValue
 };

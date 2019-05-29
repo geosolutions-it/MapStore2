@@ -31,7 +31,7 @@ class MeasureDialog extends React.Component {
     };
 
     render() {
-        return this.props.show ? <Dialog>
+        return this.props.show ? <Dialog id="measure-dialog" style={{zIndex: 1991}}>
             <div key="header" role="header">
                 <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
                 <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>

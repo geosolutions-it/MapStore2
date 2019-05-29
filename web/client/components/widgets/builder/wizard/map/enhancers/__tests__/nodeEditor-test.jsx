@@ -51,5 +51,22 @@ describe('nodeEditor enhancer', () => {
             map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}/>, document.getElementById("container"));
         expect(spyonChange).toHaveBeenCalled();
     });
+    it('nodeEditor onUpdateParams callback', () => {
+        const Sink = nodeEditor(createSink(props => {
+            expect(props.onUpdateParams).toExist();
+            props.onUpdateParams({something: "newValue"}, true);
+
+        }));
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<Sink
+            settings={{nodeType: "layer", props: {oldKey: "oldValue"}}}
+            onChange={actions.onChange}
+            editNode={"LAYER"}
+            map={{ groups: [{ id: 'GROUP' }], layers: [{ id: "LAYER", group: "GROUP", options: {} }] }} />, document.getElementById("container"));
+        expect(spyonChange).toHaveBeenCalledWith("map.layers[0].something", "newValue");
+    });
 
 });

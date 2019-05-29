@@ -79,6 +79,7 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 - `group`: `{string}`: the group of the layer (in the TOC). Nested groups can be indicated using `/`. i.e. `Group/SubGroup`. A special group, `background`, is used to identify background layers. These layers will not be available in the TOC, but only in the background switcher, and only one layer of this group can be visible.
 - `thumbURL`: `{string}`: the URL of the thumbnail for the layer, used in the background switcher ( if the layer is a background layer )
 - `visibility`: `{boolean}`: indicates if the layer is visible or not
+- `queriable`: `{boolean}`: Indicates if the layer is queriable (e.g. getFeatureInfo). If not present the default is true for every layer that have some implementation available (WMS, WMTS). Usually used to set it explicitly to false, where the query service is not available.
 
 i.e.
 
@@ -185,6 +186,220 @@ in `localConfig.json`
         ...
     }
 }
+```
+
+#### WMTS
+WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `tileMatrixSet`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.). 
+
+A WMTS layer can have a `requestEncoding` that is RESTful or KVP. In case of RESTful the URL is a template where to place the request parameters ( see the example below ), while in the KVP the request parameters are in the query string. See the WMTS standard for more details.
+
+e.g. (RESTful):
+
+```json
+
+{
+  "version": 2,
+  // ...
+  "map": {
+    // ...
+    "layers": [
+        // WMTS layer sample
+        {
+        "id": "bmapoberflaeche__11",
+        "name": "layer_name",
+        // ...
+        "type": "wmts",
+        "url": [ // MULTIPLE URLS are allowed
+            "https://maps1.sampleServer/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
+            "https://maps2.sampleServer/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
+            "https://maps3.sampleServer/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
+            "https://maps4.sampleServer/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
+            "https://maps.sampleServer/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg"
+        ],
+        "allowedSRS": {
+          "EPSG:3857": true
+        },
+        "matrixIds": [
+          "google3857",
+          "EPSG:3857"
+        ],
+        "tileMatrixSet": true,
+        // KVP (By default) or RESTful
+        "requestEncoding": "RESTful",
+        // identifier for the source
+        "capabilitiesURL": "https://sampleServer.org/wmts/1.0.0/WMTSCapabilities.xml",
+      }
+    ],
+    "sources": {
+      // source of the layer above
+      "https://sampleServer.org/wmts/1.0.0/WMTSCapabilities.xml": {
+        "tileMatrixSet": {
+          "google3857": {
+            "ows:Identifier": "google3857",
+            "ows:BoundingBox": {
+              "$": {
+                "crs": "urn:ogc:def:crs:EPSG:6.18.3:3857"
+              },
+              "ows:LowerCorner": "977650 5838030",
+              "ows:UpperCorner": "1913530 6281290"
+            },
+            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG:6.18.3:3857",
+            "WellKnownScaleSet": "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible",
+            "TileMatrix": [
+              {
+                "ows:Identifier": "0",
+                "ScaleDenominator": "559082264.029",
+                "TopLeftCorner": "-20037508.3428 20037508.3428",
+                "TileWidth": "256",
+                "TileHeight": "256",
+                "MatrixWidth": "1",
+                "MatrixHeight": "1"
+              },
+              {
+                "ows:Identifier": "1",
+                "ScaleDenominator": "279541132.015",
+                "TopLeftCorner": "-20037508.3428 20037508.3428",
+                "TileWidth": "256",
+                "TileHeight": "256",
+                "MatrixWidth": "2",
+                "MatrixHeight": "2"
+              },
+              // ...more levels
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+e.g. (KVP)
+
+```json
+{
+  "version": 2,
+  "map": {
+    // ...
+    "projection": "EPSG:900913",
+    "layers": [
+      // ...
+      {
+        // requestEncoding is KVP by default
+        "id": "EMSA:S52 Standard__6",
+        "name": "EMSA:S52 Standard",
+        "description": "S52 Standard",
+        "title": "S52 Standard",
+        "type": "wmts",
+        // if the capabilitiesURL is not present, the `url` will be used to identify the source.
+        // (for retro-compatibility with existing layers)
+        "url": "http://some.domain/geoserver/gwc/service/wmts",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": "-180.0",
+            "miny": "-79.99999999999945",
+            "maxx": "180.0",
+            "maxy": "83.99999999999999"
+          }
+        },
+        // list of allowed SRS
+        "allowedSRS": {
+          "EPSG:4326": true,
+          "EPSG:3857": true,
+          "EPSG:900913": true
+        },
+        // list of the available matrixes for the layer
+        "matrixIds": [
+          "EPSG:3395",
+          "EPSG:32761",
+          "EPSG:3857",
+          "EPSG:4326",
+          "EPSG:900913",
+          "EPSG:32661"
+        ],
+        "tileMatrixSet": true
+      }
+    ],
+    // ...
+    "sources": {
+      "http://some.domain/geoserver/gwc/service/wmts": {
+        "tileMatrixSet": {
+          "EPSG:32761": {/*...*/},
+          "EPSG:3857": {/*...*/},
+          "EPSG:4326": {/*...*/},
+          "EPSG:32661": {/*...*/},
+          "EPSG:3395": {/*...*/},
+          "EPSG:900913": {
+            "ows:Identifier": "EPSG:900913",
+            // the supported CRS
+            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913",
+            "TileMatrix": [
+              {
+                "ows:Identifier": "EPSG:900913:0",
+                "ScaleDenominator": "5.590822639508929E8",
+                "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                "TileWidth": "256",
+                "TileHeight": "256",
+                "MatrixWidth": "1",
+                "MatrixHeight": "1",
+
+                "ranges": {
+                  "cols": {
+                    "min": "0",
+                    "max": "0"
+                  },
+                  "rows": {
+                    "min": "0",
+                    "max": "0"
+                  }
+                }
+              },
+              {
+                "ows:Identifier": "EPSG:900913:1",
+                "ScaleDenominator": "2.7954113197544646E8",
+                "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                "TileWidth": "256",
+                "TileHeight": "256",
+                "MatrixWidth": "2",
+                "MatrixHeight": "2",
+                // these ranges limit the tiles available for the grid level
+                "ranges": {
+                  "cols": {
+                    "min": "0",
+                    "max": "1"
+                  },
+                  "rows": {
+                    "min": "0",
+                    "max": "1"
+                  }
+                }
+              },
+              {
+                "ows:Identifier": "EPSG:900913:2",
+                "ScaleDenominator": "1.3977056598772323E8",
+                "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                "TileWidth": "256",
+                "TileHeight": "256",
+                "MatrixWidth": "4",
+                "MatrixHeight": "4",
+                "ranges": {
+                  "cols": {
+                    "min": "0",
+                    "max": "3"
+                  },
+                  "rows": {
+                    "min": "0",
+                    "max": "3"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
 ```
 
 #### Bing
@@ -357,4 +572,10 @@ NLS.OS_npe
 NLS.OS_7th
 NLS.OS_London
 NLS.GSGS_Ireland
+PDOK.brtachtergrondkaart
+PDOK.brtachtergrondkaartgrijs
+PDOK.brtachtergrondkaartpastel
+PDOK.brtachtergrondkaartwater
+PDOK.luchtfotoRGB
+PDOK.luchtfotoIR
 ```

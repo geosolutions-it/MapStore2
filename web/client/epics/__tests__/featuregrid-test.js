@@ -48,7 +48,7 @@ const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
-const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
+const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
 const {toggleSyncWms, QUERY, querySearchResponse} = require('../../actions/wfsquery');
 const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
@@ -71,7 +71,7 @@ const {
     onCloseFeatureGridConfirmed,
     onFeatureGridZoomAll,
     resetControlsOnEnterInEditMode,
-    closeIdentifyEpic,
+    closeIdentifyWhenOpenFeatureGrid,
     startSyncWmsFilter,
     stopSyncWmsFilter,
     handleDrawFeature,
@@ -1035,13 +1035,13 @@ describe('featuregrid Epics', () => {
         }, {});
     });
 
-    it('test closeIdentifyEpic', (done) => {
-        testEpic(closeIdentifyEpic, 1, openFeatureGrid(), actions => {
+    it('test closeIdentifyWhenOpenFeatureGrid', (done) => {
+        testEpic(closeIdentifyWhenOpenFeatureGrid, 1, openFeatureGrid(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case PURGE_MAPINFO_RESULTS:
-                        expect(action.type).toBe(PURGE_MAPINFO_RESULTS);
+                    case CLOSE_IDENTIFY:
+                        expect(action.type).toBe(CLOSE_IDENTIFY);
                         break;
                     default:
                         expect(true).toBe(false);

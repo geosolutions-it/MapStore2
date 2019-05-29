@@ -22,7 +22,8 @@ const {
     layerErrorSelector,
     activeSelector,
     authkeyParamNameSelector,
-    searchTextSelector
+    searchTextSelector,
+    groupSelector
 } = require("../catalog");
 
 const {set} = require('../../utils/ImmutableUtils');
@@ -30,7 +31,8 @@ const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
         metadataexplorer: {
-            enabled: true
+            enabled: true,
+            group: 'mygroup'
         }
     },
     catalog: {
@@ -83,6 +85,10 @@ const state = {
 };
 
 describe('Test catalog selectors', () => {
+    it('test groupSelector', () => {
+        const retVal = groupSelector(state);
+        expect(retVal).toBe('mygroup');
+    });
     it('test resultSelector', () => {
         const retVal = resultSelector(state);
         expect(retVal).toExist();
@@ -113,6 +119,38 @@ describe('Test catalog selectors', () => {
         const retVal = selectedServiceTypeSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe("wms");
+    });
+    it('selectedServiceTypeSelector with points', () => {
+        const state2 = {
+            catalog: {
+                selectedService: "Service.with.Points",
+                services: {
+                    'Basic CSW Service': {
+                        url: 'https://demo.geo-solutions.it/geoserver/csw',
+                        type: 'csw',
+                        title: 'Basic CSW Service'
+                    },
+                    'Basic WMS Service': {
+                        url: 'https://demo.geo-solutions.it/geoserver/wms',
+                        type: 'wms',
+                        title: 'Basic WMS Service'
+                    },
+                    'Basic WMTS Service': {
+                        url: 'https://demo.geo-solutions.it/geoserver/gwc/service/wmts',
+                        type: 'wmts',
+                        title: 'Basic WMTS Service'
+                    },
+                    "Service.with.Points": {
+                        url: 'https://server.dom/geoserver/gwc/service/wmts',
+                        type: 'wmts',
+                        title: 'Basic WMTS Service'
+                    }
+                }
+            }
+        };
+        const retVal = selectedServiceTypeSelector(state2);
+        expect(retVal).toExist();
+        expect(retVal).toBe("wmts");
     });
     it('test searchOptionsSelector', () => {
         const retVal = searchOptionsSelector(state);

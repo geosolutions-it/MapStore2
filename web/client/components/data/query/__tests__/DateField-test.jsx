@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
+const ReactTestUtils = require('react-dom/test-utils');
 
 const DateField = require('../DateField.jsx');
 
@@ -39,18 +40,13 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-
         expect(datefield).toExist();
-
-        const dateFieldDOMNode = expect(ReactDOM.findDOMNode(datefield));
+        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
         expect(dateFieldDOMNode).toExist();
-
-        let childNodes = dateFieldDOMNode.actual.getElementsByTagName('DIV');
+        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
         expect(childNodes.length).toBe(2);
-
         let dateRow = childNodes[0];
         expect(dateRow).toExist();
-
         expect(dateRow.childNodes.length).toBe(1);
     });
 
@@ -68,18 +64,74 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-
         expect(datefield).toExist();
-
-        const dateFieldDOMNode = expect(ReactDOM.findDOMNode(datefield));
+        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
         expect(dateFieldDOMNode).toExist();
-
-        let childNodes = dateFieldDOMNode.actual.getElementsByTagName('DIV');
+        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
         expect(childNodes.length).toBe(5);
-
         let dateRow = childNodes[0];
         expect(dateRow).toExist();
-
         expect(dateRow.childNodes.length).toBe(2);
+    });
+
+    it('creates the DateField with date-time type', () => {
+        let operator = ">";
+        let fieldName = "valueField";
+        let fieldRowId = 200;
+        let fieldValue = {startDate: new Date(86400000), endDate: null};
+
+        const datefield = ReactDOM.render(
+            <DateField
+                timeEnabled
+                dateEnabled
+                attType="date-time"
+                operator={operator}
+                fieldName={fieldName}
+                fieldRowId={fieldRowId}
+                fieldValue={fieldValue}/>,
+            document.getElementById("container")
+        );
+        expect(datefield).toExist();
+        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
+        expect(dateFieldDOMNode).toExist();
+        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
+        expect(childNodes.length).toBe(2);
+        let dateRow = childNodes[0];
+        expect(dateRow).toExist();
+        expect(dateRow.childNodes.length).toBe(1);
+        const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(datefield, "button");
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].title).toBe("Select Date");
+        expect(buttons[1].title).toBe("Select Time");
+    });
+
+    it('creates the DateField with time type', () => {
+        let operator = ">";
+        let fieldName = "valueField";
+        let fieldRowId = 200;
+        let fieldValue = {startDate: new Date(86400000), endDate: null};
+
+        const datefield = ReactDOM.render(
+            <DateField
+                timeEnabled
+                dateEnabled={false}
+                attType="time"
+                operator={operator}
+                fieldName={fieldName}
+                fieldRowId={fieldRowId}
+                fieldValue={fieldValue}/>,
+            document.getElementById("container")
+        );
+        expect(datefield).toExist();
+        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
+        expect(dateFieldDOMNode).toExist();
+        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
+        expect(childNodes.length).toBe(2);
+        let dateRow = childNodes[0];
+        expect(dateRow).toExist();
+        expect(dateRow.childNodes.length).toBe(1);
+        const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(datefield, "button");
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].title).toBe("Select Time");
     });
 });

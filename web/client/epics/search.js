@@ -10,6 +10,7 @@ const {TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
+    ZOOM_ADD_POINT,
     searchTextLoading,
     searchResultLoaded,
     searchResultError,
@@ -17,7 +18,15 @@ const {TEXT_SEARCH_STARTED,
     selectNestedService,
     searchTextChanged,
     resultsPurge
-    } = require('../actions/search');
+} = require('../actions/search');
+const {defaultIconStyle} = require('../utils/SearchUtils');
+
+const {
+    updateAdditionalLayer
+} = require('../actions/additionallayers');
+const {
+    zoomToPoint
+} = require('../actions/map');
 
 const mapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -27,7 +36,6 @@ const {changeMapView} = require('../actions/map');
 const toBbox = require('turf-bbox');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 const assign = require('object-assign');
-const {updateResultsStyle} = require('../actions/search');
 
 const {get} = require('lodash');
 
@@ -47,9 +55,16 @@ const searchEpic = action$ =>
         Rx.Observable.from(
             (action.services || [ {type: "nominatim"} ])
              // Create an stream for each Service
-            .map((service) =>
-                Rx.Observable.defer(() =>
-                    API.Utils.getService(service.type)(action.searchText, service.options)
+            .map((service) => {
+                const serviceInstance = API.Utils.getService(service.type);
+                if (!serviceInstance) {
+                    const err = new Error("Service Missing");
+                    err.msgId = "search.service_missing";
+                    err.serviceType = service.type;
+                    return Rx.Observable.of(err).do((e) => {throw e; });
+                }
+                return Rx.Observable.defer(() =>
+                    serviceInstance(action.searchText, service.options)
                         .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
                 ))
                 .retryWhen(errors => errors.delay(200).scan((count, err) => {
@@ -57,9 +72,9 @@ const searchEpic = action$ =>
                         throw err;
                     }
                     return count + 1;
-                }, 0))
-            ) // map
-        ) // from
+                }, 0));
+            }) // map
+        )// from
         // merge all results from the streams
         .mergeAll()
         .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(b, "__PRIORITY__") - get(a, "__PRIORITY__") ) .slice(0, 15))
@@ -67,7 +82,10 @@ const searchEpic = action$ =>
         .startWith(searchTextLoading(true))
         .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
         .concat([searchTextLoading(false)])
-        .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
+        .catch(e => {
+            const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
+            return Rx.Observable.from([searchResultError(err), searchTextLoading(false)]);
+        })
 );
 
 /**
@@ -108,7 +126,6 @@ const searchItemSelected = action$ =>
                 // center by the max. extent defined in the map's config
                 let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
                 let actions = [
-                    updateResultsStyle(action.resultsStyle || null),
                     changeMapView(newCenter, newZoom, {
                         bounds: {
                             minx: bbox[0],
@@ -149,11 +166,42 @@ const searchItemSelected = action$ =>
         return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
     });
 
+
+/**
+ * Gets every `ZOOM_ADD_POINT` event.
+ * it creates/updates an additional layer for showing a marker for a given point
+ *
+*/
+const zoomAndAddPointEpic = (action$, store) =>
+        action$.ofType(ZOOM_ADD_POINT)
+        .switchMap(action => {
+            const feature = {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [action.pos.x, action.pos.y]
+                }
+            };
+
+            const state = store.getState();
+            return Rx.Observable.from([
+                updateAdditionalLayer("search", "search", 'overlay', {
+                    features: [feature],
+                    type: "vector",
+                    name: "searchPoints",
+                    id: "searchPoints",
+                    visibility: true,
+                    style: state.search && state.search.style || defaultIconStyle
+                }),
+                zoomToPoint(action.pos, action.zoom, action.crs)
+            ]);
+        });
     /**
      * Actions for search
      * @name epics.search
      */
 module.exports = {
+    zoomAndAddPointEpic,
     searchEpic,
     searchItemSelected
 };

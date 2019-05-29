@@ -49,7 +49,7 @@ class About extends React.Component {
             className="map-logo"
             body={
                 <AboutContent/>
-            }/>) : (<Dialog id="mapstore-about" style={assign({}, {display: this.props.enabled ? "block" : "none"})}>
+            }/>) : (<Dialog id="mapstore-about" style={assign({}, {zIndex: 1992, display: this.props.enabled ? "block" : "none"})}>
                 <span role="header"><span className="about-panel-title"><I18N.Message msgId="about_title"/></span><button onClick={this.props.onClose} className="about-panel-close close">{this.props.modalConfig.closeGlyph ? <Glyphicon glyph={this.props.modalConfig.closeGlyph}/> : <span>×</span>}</button></span>
                 <div role="body"><AboutContent/></div>
             </Dialog>);

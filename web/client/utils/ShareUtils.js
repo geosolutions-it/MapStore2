@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Url = require('url');
-
+const { trimStart } = require('lodash');
 /**
  * Utility functions for Share tools.
  * @memberof utils
@@ -49,6 +49,17 @@ var ShareUtils = {
     getApiUrl: (url) => {
         let urlParsedObj = Url.parse(url, false);
         return urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.pathname;
+    },
+    /**
+     * Remove all query from url and hash
+     * @param  {string} url the current context
+     * @return {string}     the current context without query params
+     */
+    removeQueryFromUrl: (url = '') => {
+        const { hash = '', ...parsedUrl } = Url.parse(url);
+        const parseHash = Url.parse(hash && trimStart(hash, '#') || '');
+        const formatHash = Url.format({ ...parseHash, query: null, search: null });
+        return Url.format({ ...parsedUrl, query: null, search: null, hash: formatHash ? `#${formatHash}` : null });
     }
 };
 

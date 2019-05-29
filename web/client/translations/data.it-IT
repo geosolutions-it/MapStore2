@@ -82,8 +82,21 @@
             "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
             "templateFormatInfoAlertExample": "id della feature è ${ properties }",
-            "templatePreview": "Anteprima template"
+            "templatePreview": "Anteprima template",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Titolo",
+                "description": "Descrizione",
+                "both": "Titolo e Descrizione",
+                "none": "Nessun Tooltip",
+                "labelPlacement": "Posizione",
+                "right": "Destra",
+                "bottom": "Sotto",
+                "top": "Sopra"
+            }
         },
+        "longitude": "Longitudine",
+        "latitude": "Latitudine",
         "notification": {
             "update": "Aggiorna",
             "warning": "Attenzione",
@@ -160,13 +173,14 @@
         },
         "home":{
             "open": "Apri",
-            "shortDescription": "Modern webmapping con OpenLayers, Leaflet e React<br/><small>visita la pagina di <a href=\"/mapstore/docs/\">documentazione</a></small>",
+            "shortDescription": "Modern webmapping con OpenLayers, Leaflet e React<br/><small>visita la pagina di <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentazione</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
+            "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
             "Examples": "Esempi",
             "LinkedinGroup": "Gruppo Linkedin Mapstore",
             "scrollTop": "Torna all'inizio della pagina",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Resta in contatto e tieniti aggiornato con le mailing list",
                 "subscribe_users": "Sottoscrivi la mailing list degli utenti",
@@ -361,11 +375,19 @@
             "showLegend": "Mostra legenda",
             "hideLegend": "Nascondi legenda"
         },
+        "addgroup": {
+            "addbtn": "Aggiungi",
+            "groupName": "Nome del gruppo"
+        },
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
+            "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
             "addLayer": "Aggiungi Livello",
+            "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
+            "addGroup": "Aggiungi Gruppo",
+            "addSubGroup": "Aggiungi sotto gruppo al gruppo selezionato",
             "toolZoomToLayerTooltip": "Zoom all' estensione del livello",
             "toolZoomToLayersTooltip": "Zoom all' estensione del livelli",
             "toolLayerSettingsTooltip": "Modifica proprietà del livello selezionato",
@@ -494,6 +516,8 @@
         "identifyTitle": "Informazioni Sulle Feature",
         "identifyNoQueryableLayers": "Nessun livello interrogabile attivo",
         "identifyRevGeocodeHeader": "Coordinate",
+        "identifyShowCoordinateEditor": "Mostra l'editor",
+        "identifyHideCoordinateEditor": "Nascondi l'editor",
         "identifyRevGeocodeModalTitle": "Indirizzo",
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",
@@ -532,7 +556,11 @@
             "showLabel": "Mostra etichetta di misurazione"
         },
         "search":{
-            "placeholder": "Cerca un indirizzo o inserisci coordinate...",
+            "decimal": "Decimali",
+            "aeronautical": "Aeronautiche",
+            "changeSearchInputField": "Cambia lo strumento di ricerca",
+            "addressSearch": "Cerca un indirizzo",
+            "coordinatesSearch": "Cerca per coordinate",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",
@@ -557,7 +585,9 @@
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
-            "serviceslistempty": "Nessun servizio definito"
+            "serviceslistempty": "Nessun servizio definito",
+            "service_missing": "Il servizio {serviceType} non è configurato",
+            "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}"
         },
         "drawLocal": {
             "draw": {
@@ -777,6 +807,7 @@
                 "targetLayer": "Livello Filtro",
                 "clear": "Pulisci Filtro",
                 "operation": "Operazione",
+                "placeholder": "Seleziona il livello",
                 "errors": {
                     "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
                 }
@@ -796,6 +827,7 @@
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
@@ -858,7 +890,8 @@
             "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
             "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
             "errorSaving": "Si è verificato un errore salvando questo utente:",
-            "selectedGroups": "GRUPPI SELEZIONATI"
+            "selectedGroups": "GRUPPI SELEZIONATI",
+            "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
         },
         "usergroups": {
           "searchGroups": "Cerca gruppi...",
@@ -898,7 +931,11 @@
             "QRCodeLinkTitle": "Usando il QR Code",
             "msgCopiedUrl": "Copiato",
             "msgToCopyUrl": "Clicca per copiare",
-            "sharedTitle": "Guarda la mia nuova mappa: "
+            "sharedTitle": "Guarda la mia nuova mappa: ",
+            "advancedOptions": "Opzioni avanzate",
+            "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
+            "wrongBboxParamTitle": "Parametro bbox non valido",
+            "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Istantanea",
@@ -1281,9 +1318,16 @@
                     "showChartData": "Mostra dati del grafico",
                     "edit": "Modifica",
                     "delete": "Elimina",
+                    "collapse": "Minimizza",
                     "confirmDelete": "Sei sicuro?",
                     "downloadData": "Scarica dati",
-                    "exportImage": "Esporta Immagine"
+                    "exportImage": "Esporta immagine",
+                    "pin": "Blocca",
+                    "unpin": "Sblocca",
+                    "hide": "Nascondi",
+                    "hideDescription": "Nascondi questo widget per altri utenti",
+                    "unhide": "Mostra",
+                    "unhideDescription": "Mostra il widget ad altri utenti"
                 }
             },
             "chartType": {
@@ -1374,6 +1418,20 @@
             "advancedOptions":{
                 "line": "Opzioni avanzate",
                 "bar": "Opzioni avanzate"
+            },
+            "tray": {
+                "title": "widget",
+                "expandTray": "Espandi il vassoio dei widget",
+                "collapseTray": "Minimizza vassoio dei widget",
+                "expandAll": "Espandi tutti i widget",
+                "collapseAll": "Minimizza tutti i widget",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La timeline e i widget non possono essere visualizzati allo stesso tempo. Utilizzare il la barra degli widget per visualizzare uno o l'altro",
+                        "timelineTitle": "La timeline è stata minimizzata",
+                        "widgetsTitle": "I widget sono stati minimizzati"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1490,6 +1548,7 @@
             "createStyleErrorMessage": "Lo stile non può essere salvato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
             "updateStyleErrorTitle": "Modifica stile",
             "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione.",
+            "validationErrorTitle": "Errore di validazione",
             "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo.",
             "setDefaultStyle": "Imposta lo stile selezionato come predefinito per il layer corrente",
             "setDefaultStyleSuccessTitle": "Stile predefinito aggiornamento",
@@ -1540,6 +1599,8 @@
                 "snapToGuideLayer": "Aggancia al livello guida",
                 "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
             },
+            "hide": "Nascondi timeline",
+            "show": "Mostra timeline",
             "currentTime": "Istante corrente",
             "rangeStart": "Vai all'intervallo di tempo corrente",
             "rangeEnd": "Vai all'intervallo di tempo corrente",
@@ -1551,6 +1612,10 @@
             "disablePlayBack": "Disabilita i controlli di riproduzione",
             "expand" : "Espandi",
             "collapse" : "Riduci",
+            "collapsed": {
+                "title": "La timeline è stata collassata",
+                "tooltip": "Clicca qui per espanderla di nuovo"
+            },
             "errors": {
                 "multidim_error_title": "Il servizio di backend non risponde",
                 "multidim_error_message": "I servizi richiesti per il supporto multidimensionale non rispondono. Si prega di riprovare più tardi o contattare l'amministratore."

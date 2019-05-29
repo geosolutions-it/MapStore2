@@ -11,7 +11,7 @@ const ApiProviders = {
 };
 /**
  * MapStore Persistence layer.
- * By default MapStore persists resources on geostrore. You can add a persistence provider creating an object that
+ * By default MapStore persists resources on geostore. You can add a persistence provider creating an object that
  * implements the CRUD interface (createResource, getResource, updateResource and deleteResource)
  * and adding it to the API providers calling `addApi`.
  * Then you can select your provider by settings the  `persistenceApi` property in `localConfig.json`

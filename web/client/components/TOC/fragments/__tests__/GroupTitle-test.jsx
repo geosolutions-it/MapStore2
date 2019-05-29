@@ -12,6 +12,7 @@ const GroupTitle = require('../GroupTitle');
 
 const expect = require('expect');
 const ReactTestUtils = require('react-dom/test-utils');
+const {getTooltip} = require('../../../../utils/TOCUtils');
 
 describe('test GroupTitle module component', () => {
     beforeEach((done) => {
@@ -66,6 +67,7 @@ describe('test GroupTitle module component', () => {
 
     it('tests GroupTitle with tooltip', () => {
         const l = {
+            name: "1.3",
             title: {
                 'default': 'Group',
                 'it-IT': 'Gruppo'
@@ -90,5 +92,25 @@ describe('test GroupTitle module component', () => {
         expect(domNode).toExist();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe(null);
+    });
+
+    it('tests GroupTitle with customtooltip fragments', () => {
+        const node = {
+            name: 'group1',
+            title: {
+                'default': 'Group',
+                'it-IT': 'Gruppo'
+            },
+            id: "group1",
+            description: "desc",
+            tooltipOptions: "both"
+        };
+        const currentLocale = "it-IT";
+        const comp = ReactDOM.render(<GroupTitle node={node} tooltip currentLocale={currentLocale}/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        ReactTestUtils.Simulate.mouseOver(domNode);
+        expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-group');
+        expect(getTooltip(node, currentLocale)).toBe("Gruppo - desc");
     });
 });
