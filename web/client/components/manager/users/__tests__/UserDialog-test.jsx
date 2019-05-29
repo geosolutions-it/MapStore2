@@ -43,7 +43,7 @@ const newUser = {
     "enabled": true
 };
 
-describe.only("Test UserDialog Component", () => {
+describe("Test UserDialog Component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
