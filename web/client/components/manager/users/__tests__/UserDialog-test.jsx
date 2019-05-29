@@ -43,7 +43,7 @@ const newUser = {
     "enabled": true
 };
 
-describe("Test UserDialog Component", () => {
+describe.only("Test UserDialog Component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -202,25 +202,7 @@ describe("Test UserDialog Component", () => {
             }} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        expect(domnode.getElementsByClassName("btn-success").length).toBe(2);
-    });
-    it('Testing selected user-dialog-tab is highlighted', () => {
-        let comp = ReactDOM.render(
-            <UserDialog user={{
-                id: 1,
-                name: "USER1",
-                role: "USER",
-                enabled: true,
-                status: "saved"
-            }} />, document.getElementById("container"));
-
-        expect(comp).toExist();
-        let buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "button");
-        expect(buttons[1].className).toBe("square-button btn btn-lg btn-success");
-        let userGroupButton = buttons[3];
-        ReactTestUtils.Simulate.click(userGroupButton);
-        expect(userGroupButton.className).toBe("square-button btn btn-lg btn-success");
-        expect(buttons[3].className).toBe("square-button btn btn-lg btn-success");
+        expect(domnode.getElementsByClassName("btn-success").length).toBe(1);
     });
     it('Testing selected user-dialog-tab is highlighted', () => {
         let comp = ReactDOM.render(
