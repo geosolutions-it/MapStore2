@@ -2,15 +2,14 @@ const { get, head } = require('lodash');
 const {createSelector} = require('reselect');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const moment = require('moment');
+const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector } = require('../selectors/dimension');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
 const MAX_ITEMS = 50;
-
-const isCollapsed = state => get(state, 'timeline.settings.collapsed');
 
 const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
 /**
@@ -89,7 +88,7 @@ const rangeDataToItems = (rangeData = {}, range) => {
 };
 /**
  * Transforms time values from layer state or rangeData (histogram,values) into items for timeline.
- * @param {object} data layer time dimension data
+ * @param {object} data layer timedimension data
  * @param {object} range start/end object that represent the view range
  * @param {object} rangeData object that contains domain or histogram
  */
@@ -102,12 +101,6 @@ const getTimeItems = (data = {}, range, rangeData) => {
     return [];
 };
 
-/**
- * Selector that retrieves the time data from the state (layer configuration, dimension state...) and convert it
- * into timeline object data.
- * @param {object} state the state
- * @return {object[]} items to show in the timeline in the [visjs timeline data object format](http://visjs.org/docs/timeline/#Data_Format)
- */
 const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
@@ -126,11 +119,18 @@ const itemsSelector = createShallowSelector(
 );
 const loadingSelector = state => get(state, "timeline.loading");
 const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
+const calculateOffsetTimeSelector = (state) => {
+    const offset = get(state, "timeline.offsetTime");
+    const time = currentTimeSelector(state);
+    return time && offset && moment(time).add(offset) || time && moment(time).add(1, 'month');
+};
 
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
 const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
 const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(state), "source.url");
+
+const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
 const currentTimeRangeSelector = createSelector(
     currentTimeSelector,
@@ -139,26 +139,16 @@ const currentTimeRangeSelector = createSelector(
 );
 const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
-/**
- * Select layers visible in the timeline
- */
-const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
-
-const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
-const isVisible = state => !isCollapsed(state) && hasLayers(state);
-
 
 module.exports = {
-    isVisible,
-    isCollapsed,
     currentTimeRangeSelector,
-    timelineLayersSelector,
-    hasLayers,
+    mouseEventSelector,
     itemsSelector,
     rangeSelector,
     isAutoSelectEnabled,
     loadingSelector,
     selectedLayerSelector,
+    calculateOffsetTimeSelector,
     selectedLayerData,
     selectedLayerTimeDimensionConfiguration,
     selectedLayerDataRangeSelector,

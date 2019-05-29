@@ -59,9 +59,4 @@ describe('test StyleToolbar module component', () => {
         expect(buttons.length).toBe(4);
     });
 
-    it('test StyleToolbar modal uses portal', () => {
-        ReactDOM.render(<StyleToolbar showModal />, document.getElementById("container"));
-        const modalContainer = document.body.children[1].querySelector('.ms-resizable-modal');
-        expect(modalContainer).toExist();
-    });
 });

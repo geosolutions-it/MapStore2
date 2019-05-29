@@ -10,7 +10,6 @@ const PropTypes = require('prop-types');
 const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');
 const Sidebar = require('react-sidebar').default;
-const { Resizable } = require('react-resizable');
 const Message = require('../../components/I18N/Message');
 
 class Menu extends React.Component {
@@ -27,9 +26,7 @@ class Menu extends React.Component {
         dynamicWidth: PropTypes.number,
         overlapMap: PropTypes.bool,
         changeMapStyle: PropTypes.func,
-        layout: PropTypes.object,
-        resizable: PropTypes.bool,
-        onResize: PropTypes.func
+        layout: PropTypes.object
     };
 
     static defaultProps = {
@@ -37,9 +34,7 @@ class Menu extends React.Component {
         single: false,
         width: 300,
         overlapMap: true,
-        layout: {},
-        resizable: false,
-        onResize: () => {}
+        layout: {}
     };
 
     componentDidMount() {
@@ -55,10 +50,6 @@ class Menu extends React.Component {
             this.props.changeMapStyle(style, "drawerMenu");
         }
     }
-
-    getWidth = () => {
-        return this.props.dynamicWidth || this.props.width;
-    };
 
     renderChildren = (child, index) => {
         const props = {
@@ -100,13 +91,12 @@ class Menu extends React.Component {
             <span className="title">{this.props.title}</span>
             <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
         </div>);
-        const content = (<div className={"nav-content"}>
+        return (<div className={"nav-content"}>
             {header}
             <div className={"nav-body"}>
             {this.props.children.filter((child) => !this.props.single || this.props.activeKey === child.props.eventKey).map(this.renderChildren)}
             </div>
         </div>);
-        return this.props.resizable ? <Resizable axis="x" resizeHandles={['e']} width={this.getWidth()} onResize={this.resize}>{content}</Resizable> : content;
     };
 
     render() {
@@ -115,7 +105,7 @@ class Menu extends React.Component {
                 sidebar: {
                     ...this.props.layout,
                     zIndex: 1022,
-                    width: this.getWidth()
+                    width: this.props.dynamicWidth || this.props.width
                 },
                 overlay: {
                     zIndex: 1021
@@ -135,12 +125,6 @@ class Menu extends React.Component {
             </Sidebar>
         );
     }
-
-
-    resize = (event, { size }) => {
-        this.props.onResize(size.width);
-    };
-
 }
 
 module.exports = Menu;

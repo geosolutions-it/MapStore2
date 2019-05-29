@@ -18,8 +18,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 * {
 *   "name": "MapSearch",
 *   "cfg": {
-*     "splitTools": true,
-*     "showOptions": true
+*     "splitTools": true
 *   }
 * }
 */
@@ -29,7 +28,6 @@ const SearchBar = connect((state) => ({
     placeholderMsgId: "maps.search",
     typeAhead: false,
     splitTools: false,
-    showOptions: false,
     isSearchClickable: true,
     start: state && state.maps && state.maps.start,
     limit: state && state.maps && state.maps.limit,

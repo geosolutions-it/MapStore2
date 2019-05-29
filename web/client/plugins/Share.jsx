@@ -6,42 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import { connect } from '../utils/PluginsUtils';
-import assign from 'object-assign';
-import { Glyphicon } from 'react-bootstrap';
-import Message from '../components/I18N/Message';
-import { toggleControl, setControlProperty } from '../actions/controls';
-import ConfigUtils from '../utils/ConfigUtils';
-import ShareUtils from '../utils/ShareUtils';
-import { versionSelector } from '../selectors/version';
-import * as shareEpics from '../epics/share';
-import SharePanel from '../components/share/SharePanel';
-import { createSelector } from 'reselect';
-import { mapSelector } from '../selectors/map';
-import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
-import { get } from 'lodash';
-import controls from '../reducers/controls';
 
-/**
- * Get wider and valid extent in viewport
- * @param bbox {object} viewport bbox
- * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
- * @param bbox.crs {string} bbox crs
- * @param dest {string} SRS of the returned extent
- * @return {array} [ minx, miny, maxx, maxy ]
-*/
-const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
-    if (!bounds || !crs) return null;
-    const { extent } = getViewportGeometry(bounds, crs);
-    if (extent.length === 4) {
-        return reprojectBbox(extent, crs, dest);
-    }
-    const [ rightExtentWidth, leftExtentWidth ] = extent.map((bbox) => bbox[2] - bbox[0]);
-    return rightExtentWidth > leftExtentWidth
-        ? reprojectBbox(extent[0], crs, dest)
-        : reprojectBbox(extent[1], crs, dest);
-};
+const React = require('react');
+
+const {connect} = require('../utils/PluginsUtils');
+const assign = require('object-assign');
+const {Glyphicon} = require('react-bootstrap');
+const Message = require('../components/I18N/Message');
+const {toggleControl} = require('../actions/controls');
+const ConfigUtils = require('../utils/ConfigUtils');
+const ShareUtils = require('../utils/ShareUtils');
+const {versionSelector} = require('../selectors/version');
 
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
@@ -58,38 +33,27 @@ const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
  * @prop {boolean} [embedOptions.showTOCToggle] true by default, set to false to hide the "show TOC" toggle.
  * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
- * @prop {function} [getCount] function used to get the count for social links.
- * @prop {boolean} [hideAdvancedSettings] hide advanced settings (bbox param)
+ * @prop {getCount} [getCount] function used to get the count for social links.
  */
-
-const Share = connect(createSelector([
-    state => state.controls && state.controls.share && state.controls.share.enabled,
-    versionSelector,
-    mapSelector,
-    state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, settings) => ({
-    isVisible,
+const Share = connect((state) => ({
+    isVisible: state.controls && state.controls.share && state.controls.share.enabled,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
     shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
-    version,
-    bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
-    settings
-})), {
-    onClose: toggleControl.bind(null, 'share', null),
-    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
-})(SharePanel);
+    version: versionSelector(state)
+}), {
+    onClose: toggleControl.bind(null, 'share', null)
+})(require('../components/share/SharePanel'));
 
-export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('routing') && state('routing').endsWith('new')}",
-    BurgerMenu: {
-        name: 'share',
-        position: 1000,
-        text: <Message msgId="share.title"/>,
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
-    }
-});
-
-export const reducers = { controls };
-export const epics = shareEpics;
+module.exports = {
+    SharePlugin: assign(Share, {
+        disablePluginIf: "{state('routing') && state('routing').endsWith('new')}",
+        BurgerMenu: {
+            name: 'share',
+            position: 1000,
+            text: <Message msgId="share.title"/>,
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        }
+    })
+};

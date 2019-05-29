@@ -16,10 +16,6 @@ var {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
     UPDATE_RESULTS_STYLE,
-    changeActiveSearchTool, CHANGE_SEARCH_TOOL,
-    zoomAndAddPoint, ZOOM_ADD_POINT,
-    changeFormat, CHANGE_FORMAT,
-    changeCoord, CHANGE_COORD,
     searchResultLoaded,
     searchTextLoading,
     searchResultError,
@@ -47,7 +43,7 @@ describe('Test correctness of the search actions', () => {
         expect(action.error.message).toBe("MESSAGE");
         expect(action.type).toBe(TEXT_SEARCH_ERROR);
     });
-    it('search results', () => {
+    it('serch results', () => {
         const testVal = ['result1', 'result2'];
         const retval = searchResultLoaded(testVal);
         expect(retval).toExist();
@@ -61,7 +57,7 @@ describe('Test correctness of the search actions', () => {
         expect(retval2.results).toEqual(testVal);
         expect(retval2.append).toBe(true);
     });
-    it('search item selected', () => {
+    it('serch item selected', () => {
         const retval = selectSearchItem("A", "B", {color: '#ff0000'});
         expect(retval).toExist();
         expect(retval.type).toBe(TEXT_SEARCH_ITEM_SELECTED);
@@ -69,13 +65,13 @@ describe('Test correctness of the search actions', () => {
         expect(retval.mapConfig).toBe("B");
         expect(retval.resultsStyle).toEqual({color: '#ff0000'});
     });
-    it('search item cancelled', () => {
+    it('serch item cancelled', () => {
         const retval = cancelSelectedItem("ITEM");
         expect(retval).toExist();
         expect(retval.type).toBe(TEXT_SEARCH_CANCEL_ITEM);
         expect(retval.item).toEqual("ITEM");
     });
-    it('search nested service selected', () => {
+    it('serch nested service selected', () => {
         const items = [{text: "TEXT"}];
         const services = [{type: "wfs"}, {type: "wms"}];
         const retval = selectNestedService(services, items, "TEST");
@@ -90,39 +86,5 @@ describe('Test correctness of the search actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_RESULTS_STYLE);
         expect(retval.style).toEqual({color: '#ff0000'});
-    });
-    it('update active search tool', () => {
-        const activeSearchTool = "decimal";
-        const retval = changeActiveSearchTool(activeSearchTool);
-        expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_SEARCH_TOOL);
-        expect(retval.activeSearchTool).toEqual(activeSearchTool);
-    });
-    it('zoom to point and add a marker there', () => {
-        const pos = {x: 1, y: 2};
-        const zoom = 12;
-        const crs = "EPSG:4326";
-        const retval = zoomAndAddPoint(pos, zoom, crs);
-        expect(retval).toExist();
-        expect(retval.type).toBe(ZOOM_ADD_POINT);
-        expect(retval.pos).toEqual(pos);
-        expect(retval.zoom).toEqual(zoom);
-        expect(retval.crs).toEqual(crs);
-    });
-    it('change coordinate', () => {
-        const coord = "lat";
-        const val = 12;
-        const retval = changeCoord(coord, val);
-        expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_COORD);
-        expect(retval.coord).toEqual(coord);
-        expect(retval.val).toEqual(val);
-    });
-    it('change format', () => {
-        const format = "decimal";
-        const retval = changeFormat(format);
-        expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_FORMAT);
-        expect(retval.format).toEqual(format);
     });
 });

@@ -63,13 +63,13 @@ let supportedLocales = {
     }
 };
 const DATE_FORMATS = {
-    "default": "YYYY/MM/DD",
-    "en-US": "MM/DD/YYYY",
-    "it-IT": "DD/MM/YYYY",
-    "nl-NL": "DD/MM/YYYY",
-    "zh-ZH": "YYYY/MM/DD",
-    "hr-HR": "DD/MM/YYYY",
-    "pt-PT": "DD/MM/YYYY"
+    "default": "yyyy/MM/dd",
+    "en-US": "MM/dd/yyyy",
+    "it-IT": "dd/MM/yyyy",
+    "nl-NL": "dd/MM/yyyy",
+    "zh-ZH": "yyyy/MM/dd",
+    "hr-HR": "dd/MM/yyyy",
+    "pt-PT": "dd/MM/yyyy"
 };
 
 let errorParser = {};
@@ -131,7 +131,6 @@ const LocaleUtils = {
     getDateFormat(locale) {
         return DATE_FORMATS[locale] || DATE_FORMATS.default;
     },
-    DATE_FORMATS,
     getMessageById: function(messages, msgId) {
         var message = messages;
         msgId.split('.').forEach(part => {

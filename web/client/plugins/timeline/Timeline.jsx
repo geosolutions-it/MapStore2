@@ -7,12 +7,12 @@
  */
 const React = require('react');
 const { connect } = require('react-redux');
-const { isString, differenceBy, isNil } = require('lodash');
-const { currentTimeSelector } = require('../../selectors/dimension');
+const { isString, differenceBy } = require('lodash');
+const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 
 
 const { selectTime, selectLayer, onRangeChanged } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, currentTimeRangeSelector, rangeSelector, timelineLayersSelector } = require('../../selectors/timeline');
+const { itemsSelector, loadingSelector, selectedLayerSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
 const { moveTime, setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
@@ -34,11 +34,10 @@ const moment = require('moment');
  * Typically `loading` attribute
  */
 const timeLayersSelector = createShallowSelectorCreator(
-    (a, b) => {
-        return a === b
-            || !isNil(a) && !isNil(b) && a.id === b.id && a.title === b.title && a.name === b.name;
+    (a = {}, b = {}) => {
+        return a.id === b.id && a.title === b.title && a.name === b.name;
     }
-)(timelineLayersSelector, layers => layers);
+)(layersWithTimeDataSelector, layers => layers);
 
 /**
  * Provides time dimension data for layers

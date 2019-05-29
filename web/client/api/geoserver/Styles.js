@@ -12,27 +12,11 @@ const { getNameParts, stringifyNameParts } = require('../../utils/StyleEditorUti
 const contentTypes = {
     css: 'application/vnd.geoserver.geocss+css',
     sld: 'application/vnd.ogc.sld+xml',
-    sldse: 'application/vnd.ogc.se+xml',
+    // sldse: 'application/vnd.ogc.se+xml',
     zip: 'application/zip'
 };
 
-/**
- * get correct content type based on format and version of style
- * @param {string} format
- * @param {object} languageVersion eg: { version: "1.0.0" }
- */
-const getContentType = (format, languageVersion) => {
-    if (format === 'sld') {
-        return languageVersion && languageVersion.version && languageVersion.version === '1.1.0'
-            ? contentTypes.sldse
-            : contentTypes.sld;
-    }
-    // set content type to sld if is missed
-    // to avoid 415 error with unknown content types
-    return contentTypes[format] || contentTypes.sld;
-};
-
-const formatRequestData = ({options = {}, format, baseUrl, name, workspace, languageVersion}, isNameParam) => {
+const formatRequestData = ({options = {}, format, baseUrl, name, workspace}, isNameParam) => {
     const paramName = isNameParam ? {name: encodeURIComponent(name)} : {};
     const opts = {
         ...options,
@@ -42,7 +26,7 @@ const formatRequestData = ({options = {}, format, baseUrl, name, workspace, lang
         },
         headers: {
             ...(options.headers || {}),
-            'Content-Type': getContentType(format, languageVersion)
+            'Content-Type': contentTypes[format]
         }
     };
     const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles${!isNameParam ? `/${encodeURIComponent(name)}` : '.json'}`;
@@ -89,9 +73,9 @@ const Api = {
     * @param {string} params.code style code
     * @return {object} response
     */
-    createStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion}) => {
+    createStyle: ({baseUrl, code, options, format = 'sld', styleName}) => {
         const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion}, true);
+        const data = formatRequestData({options, format, baseUrl, name, workspace}, true);
         return axios.post(data.url, code, data.options);
     },
     /**
@@ -104,9 +88,9 @@ const Api = {
     * @param {string} params.code style code
     * @return {object} response
     */
-    updateStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion}) => {
+    updateStyle: ({baseUrl, code, options, format = 'sld', styleName}) => {
         const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion});
+        const data = formatRequestData({options, format, baseUrl, name, workspace});
         return axios.put(data.url, code, data.options);
     },
     /**

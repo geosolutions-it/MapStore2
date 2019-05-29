@@ -34,7 +34,7 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 
 const {isObject, head} = require('lodash');
 
-const { setControlProperties} = require('../actions/controls');
+const {setControlProperty} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
 
 const {getMetadataRecordById} = require("../actions/catalog");
@@ -175,7 +175,6 @@ class LayerTree extends React.Component {
         activateSettingsTool: PropTypes.bool,
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
-        maxDepth: PropTypes.number,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
         chartStyle: PropTypes.object,
@@ -195,11 +194,9 @@ class LayerTree extends React.Component {
         filteredGroups: PropTypes.array,
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
-        onAddGroup: PropTypes.func,
         onGetMetadataRecord: PropTypes.func,
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
-        activateAddGroupButton: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool
@@ -240,7 +237,6 @@ class LayerTree extends React.Component {
         activateQueryTool: false,
         activateDownloadTool: false,
         activateWidgetTool: false,
-        maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -270,11 +266,9 @@ class LayerTree extends React.Component {
         filteredGroups: [],
         noFilterResults: false,
         onAddLayer: () => {},
-        onAddGroup: () => {},
         onGetMetadataRecord: () => {},
         hideLayerMetadata: () => {},
         activateAddLayerButton: false,
-        activateAddGroupButton: false,
         catalogActive: false,
         refreshLayerVersion: () => {},
         metadataTemplate: null
@@ -350,7 +344,6 @@ class LayerTree extends React.Component {
                             layerMetadata={this.props.layerMetadata}
                             wfsdownload={this.props.wfsdownload}
                             metadataTemplate={this.props.metadataTemplate}
-                            maxDepth={this.props.maxDepth}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
@@ -359,7 +352,6 @@ class LayerTree extends React.Component {
                                 activateDownloadTool: this.props.activateDownloadTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
-                                activateAddGroup: this.props.activateAddGroupButton,
                                 includeDeleteButtonInSettings: false,
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool
@@ -381,10 +373,6 @@ class LayerTree extends React.Component {
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
-                                addLayerTooltip: <Message msgId="toc.addLayer" />,
-                                addLayerToGroupTooltip: <Message msgId="toc.addLayerToGroup" />,
-                                addGroupTooltip: <Message msgId="toc.addGroup" />,
-                                addSubGroupTooltip: <Message msgId="toc.addSubGroup" />,
                                 createWidgetTooltip: <Message msgId="toc.createWidget"/>,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
@@ -421,7 +409,6 @@ class LayerTree extends React.Component {
                                 onHideSettings: this.props.hideSettings,
                                 onReload: this.props.refreshLayerVersion,
                                 onAddLayer: this.props.onAddLayer,
-                                onAddGroup: this.props.onAddGroup,
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
@@ -450,10 +437,10 @@ class LayerTree extends React.Component {
 }
 
 /**
- * Provides Table Of Content visualization.
- * @memberof plugins
+ * TOC plugins
  * @name TOC
  * @class
+ * @memberof plugins
  * @prop {boolean} cfg.activateFilterLayer: activate filter layers tool, default `true`
  * @prop {boolean} cfg.activateMapTitle: show map title, default `true`
  * @prop {boolean} cfg.activateTitleTooltip: show tooltip with full title on layers and groups, default `true`
@@ -467,12 +454,81 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
- * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `false`
+ * @prop {object} cfg.layerOptions: options to pass to the layer.
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
- * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
+ * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
+ * For instance you can pass some styling props to the legend.
+ * this example is to make the legend scrollable horizontally
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *    "legendContainerStyle": {
+ *     "overflowX": "auto"
+ *    },
+ *    "legendStyle": {
+ *      "maxWidth": "250%"
+ *    }
+ *   }
+ *  }
+ * ```
+ * Another layerOptionS entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
+ * For the moment only indicators of type `dimension` are supported.
  * example :
  * ```
+ *  "indicators: [{
+ *      "key": "dimension", // key: required id for the entry to render
+ *      "type": "dimension", // type: only one supported is dimension
+ *      "glyph": "calendar", // glyph to use
+ *      "props": { // props to pass to the indicator
+ *          "style": {
+ *               "color": "#dddddd",
+ *               "float": "right"
+ *          },
+ *          "tooltip": "dateFilter.supportedDateFilter", // tooltip (can be also a localized msgId)
+ *          "placement": "bottom" // tooltip position
+ *      },
+ *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
+ *          "name": "time"
+ *      }
+ *  }]
+ * ```
+ */
+const TOCPlugin = connect(tocSelector, {
+    groupPropertiesChangeHandler: changeGroupProperties,
+    layerPropertiesChangeHandler: changeLayerProperties,
+    retrieveLayerData: getLayerCapabilities,
+    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
+    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onContextMenu: contextNode,
+    onBrowseData: browseData,
+    onDownload: download,
+    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
+    onSettings: showSettings,
+    onZoomToExtent: zoomToExtent,
+    hideSettings,
+    updateSettings,
+    updateNode,
+    removeNode,
+    onSelectNode: selectNode,
+    onFilter: filterLayers,
+    onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onGetMetadataRecord: getMetadataRecordById,
+    hideLayerMetadata,
+    onNewWidget: () => createWidget(),
+    refreshLayerVersion
+})(LayerTree);
+
+const API = {
+    csw: require('../api/CSW')
+};
+/**
+ * Provides Table Of Content visualization.
+ * @memberof plugins
+ * @name TOC
+ * @class
+ * @prop {string[]|string|object|function} metadataTemplate custom template for displaying metadata
+ * @example
  * {
  * "name": "TOC",
  *      "cfg": {
@@ -507,91 +563,7 @@ class LayerTree extends React.Component {
  *          "</div>"]
  *      }
  *  }
- * ```
- *
- * @prop {object} cfg.layerOptions: options to pass to the layer.
- * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
- * For instance you can pass some styling props to the legend.
- * this example is to make the legend scrollable horizontally
- * ```
- * "layerOptions": {
- *  "legendOptions": {
- *    "legendContainerStyle": {
- *     "overflowX": "auto"
- *    },
- *    "legendStyle": {
- *      "maxWidth": "250%"
- *    }
- *   }
- *  }
- * ```
- * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
- * For the moment only indicators of type `dimension` are supported.
- * example :
- * ```
- * "layerOptions" : {
- *   "indicators: [{
- *      "key": "dimension", // key: required id for the entry to render
- *      "type": "dimension", // type: only one supported is dimension
- *      "glyph": "calendar", // glyph to use
- *      "props": { // props to pass to the indicator
- *          "style": {
- *               "color": "#dddddd",
- *               "float": "right"
- *          },
- *          "tooltip": "dateFilter.supportedDateFilter", // tooltip (can be also a localized msgId)
- *          "placement": "bottom" // tooltip position
- *      },
- *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
- *          "name": "time"
- *      }
- *   }]
- * }
- * ```
- *
- * Another layerOptions entry is `tooltipOptions` which contains options for customizing the tooltip
- * You can customize the max length for the tooltip with `maxLength` (Default is 807)
- * You can change the conjuction string in the "both" case with `separator` (Default is " - ")
- * for example
- * ```
- * "layerOptions" : {
- *   "tooltipOptions": {
- *     "maxLength": 200,
- *     "separator": " : "
- *   }
- * }
- * ```
-  */
-const TOCPlugin = connect(tocSelector, {
-    groupPropertiesChangeHandler: changeGroupProperties,
-    layerPropertiesChangeHandler: changeLayerProperties,
-    retrieveLayerData: getLayerCapabilities,
-    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
-    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
-    onContextMenu: contextNode,
-    onBrowseData: browseData,
-    onDownload: download,
-    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
-    onSettings: showSettings,
-    onZoomToExtent: zoomToExtent,
-    hideSettings,
-    updateSettings,
-    updateNode,
-    removeNode,
-    onSelectNode: selectNode,
-    onFilter: filterLayers,
-    onAddLayer: setControlProperties.bind(null, "metadataexplorer", "enabled", true, "group"),
-    onAddGroup: setControlProperties.bind(null, "addgroup", "enabled", true, "parent"),
-    onGetMetadataRecord: getMetadataRecordById,
-    hideLayerMetadata,
-    onNewWidget: () => createWidget(),
-    refreshLayerVersion
-})(LayerTree);
-
-const API = {
-    csw: require('../api/CSW')
-};
-
+ */
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {

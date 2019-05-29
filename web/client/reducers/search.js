@@ -6,23 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
-    TEXT_SEARCH_RESULTS_LOADED,
-    TEXT_SEARCH_RESULTS_PURGE,
-    TEXT_SEARCH_RESET,
-    TEXT_SEARCH_ADD_MARKER,
-    TEXT_SEARCH_TEXT_CHANGE,
-    TEXT_SEARCH_LOADING,
-    TEXT_SEARCH_ERROR,
-    TEXT_SEARCH_NESTED_SERVICES_SELECTED,
-    TEXT_SEARCH_CANCEL_ITEM,
-    TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
-    UPDATE_RESULTS_STYLE,
-    CHANGE_SEARCH_TOOL,
-    CHANGE_FORMAT,
-    CHANGE_COORD
-} = require('../actions/search');
-const {RESET_CONTROLS} = require('../actions/controls');
+var {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_TEXT_CHANGE, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR,
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM, TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE, UPDATE_RESULTS_STYLE} = require('../actions/search');
+var {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 /**
@@ -108,7 +94,6 @@ function search(state = null, action) {
     case TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE:
         return assign({}, state, {highlightedFeature: action.highlightedFeature});
     case TEXT_SEARCH_RESET:
-        return { style: state.style || {} };
     case RESET_CONTROLS:
         return null;
     case TEXT_SEARCH_NESTED_SERVICES_SELECTED:
@@ -124,12 +109,6 @@ function search(state = null, action) {
         });
     case UPDATE_RESULTS_STYLE:
         return assign({}, state, {style: action.style});
-    case CHANGE_SEARCH_TOOL:
-        return {...state, activeSearchTool: action.activeSearchTool};
-    case CHANGE_FORMAT:
-        return {...state, format: action.format};
-    case CHANGE_COORD:
-        return {...state, coordinate: {...state.coordinate, [action.coord]: action.val}};
     default:
         return state;
     }

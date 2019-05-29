@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
+const assign = require('object-assign');
 const {Glyphicon, Button} = require('react-bootstrap');
 const ConfirmButton = require('../components/buttons/ConfirmButton');
 const Dialog = require('../components//misc/Dialog');
@@ -19,6 +20,7 @@ const {setSearchConfigProp, updateService, restServiceConfig} = require('../acti
 
 require('../components/mapcontrols/searchservicesconfig/SearchServices.css');
 
+const SearchServicesButton = require('./searchservicesconfig/ToggleButton');
 const ServiceList = require('../components/mapcontrols/searchservicesconfig/ServicesList.jsx');
 const WFSServiceProps = require('../components/mapcontrols/searchservicesconfig/WFSServiceProps.jsx');
 const ResultsProps = require('../components/mapcontrols/searchservicesconfig/ResultsProps.jsx');
@@ -168,6 +170,7 @@ class SearchServicesConfigPanel extends React.Component {
     onClose = () => {
         this.props.toggleControl("searchservicesconfig");
         this.props.restServiceConfig(0);
+        this.props.toggleControl("settings");
     };
 
     addService = () => {
@@ -214,7 +217,15 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
         updateService})(SearchServicesConfigPanel);
 
 module.exports = {
-    SearchServicesConfigPlugin: SearchServicesPlugin,
+    SearchServicesConfigPlugin: assign(SearchServicesPlugin, {
+        Settings: {
+            tool:
+                <SearchServicesButton key="searchservices"
+                text={<Message msgId="search.searchservicesbutton" />}
+            />,
+            position: 4
+        }
+    }),
     reducers: {
         searchconfig: require('../reducers/searchconfig')
     }

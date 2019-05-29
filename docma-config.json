@@ -1,0 +1,244 @@
+{
+    "debug": 1,
+    "jsdoc": {
+        "encoding": "utf8",
+        "recurse": false,
+        "pedantic": false,
+        "access": null,
+        "package": null,
+        "module": true,
+        "undocumented": false,
+        "undescribed": false,
+        "hierarchy": true,
+        "sort": "alphabetic",
+        "relativePath": null,
+        "filter": null,
+        "allowUnknownTags": true,
+        "plugins": ["plugins/markdown"]
+    },
+    "markdown": {
+        "gfm": true,
+        "tables": true,
+        "breaks": false,
+        "pedantic": false,
+        "sanitize": false,
+        "smartLists": true,
+        "smartypants": false,
+        "tasks": true,
+        "emoji": true
+    },
+    "app": {
+        "title": "MapStore documentation",
+        "base": "/mapstore/docs",
+        "entrance": "content:site",
+        "routing": { "method": "path", "caseSensitive": true }
+    },
+    "template": {
+        "path": "./docma-template",
+        "options": {
+            "title": "MapStore",
+            "sidebar": true,
+            "collapsed": false,
+            "outline": "tree",
+            "badges": true,
+            "search": true,
+            "navbar": true,
+            "navItems": [
+                {
+                    "iconClass": "ico-book",
+                    "label": "Guides",
+                    "items": [
+                        { "label": "Home", "href": "./" },
+                        { "separator": true },
+                        { "label": "Developer's guide", "href": "developer-guide" },
+                        { "separator": true },
+                        { "label": "Plugins Architecture", "href": "plugins-architecture" },
+                        { "label": "Configuring Plugins", "href": "plugins-documentation" },
+                        { "separator": true },
+                        { "label": "Project Creation Script", "href": "project-creation-script" }
+                    ]
+                },
+                {
+                    "iconClass": "ico-mouse-pointer",
+                    "label": "Reference",
+                    "items": [
+                        { "label": "Framework", "href": "api/framework"},
+                        { "separator": true },
+                        { "label": "JavaScript API", "href": "api/jsapi" },
+                        { "separator": true },
+                        { "label": "Plugins", "href": "api/plugins" }
+                    ]
+                },
+                {
+                    "iconClass": "ico-md ico-download",
+                    "label": "Download",
+                    "href": "index.html",
+                    "items": [
+                        {
+                            "label": "MapStore Releases",
+                            "href": "https://github.com/geosolutions-it/MapStore2/releases",
+                            "target": "_blank"
+                        },
+                        {
+                            "label": "MapStore tar.gz",
+                            "href": "https://github.com/geosolutions-it/MapStore2/tarball/master",
+                            "target": "_blank"
+                        },
+                        {
+                            "label": "MapStore .zip",
+                            "href": "https://github.com/geosolutions-it/MapStore2/zipball/master",
+                            "target": "_blank"
+                        }
+
+                    ]
+                },
+                {
+                    "iconClass": "ico-md ico-github",
+                    "label": "GitHub",
+                    "href": "https://github.com/geosolutions-it/MapStore2",
+                    "target": "_blank"
+                }
+            ]
+        }
+    },
+    "src": [
+        {
+          "framework": [
+            "web/client/api/SLDService.js",
+            "web/client/components/index.jsdoc",
+            "web/client/components/buttons/FullScreenButton.jsx",
+            "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
+            "web/client/components/buttons/GoFullButton.jsx",
+            "web/client/components/mapcontrols/search/SearchBar.jsx",
+            "web/client/components/mapcontrols/mouseposition/MousePosition.jsx",
+            "web/client/components/notifications/NotificationContainer.jsx",
+            "web/client/components/buttons/ToggleButton.jsx",
+            "web/client/components/data/identify/GeocodeViewer.jsx",
+            "web/client/components/data/identify/IdentifyContainer.jsx",
+            "web/client/components/data/query/AutocompleteField.jsx",
+            "web/client/components/map/leaflet/DrawSupport.jsx",
+            "web/client/components/plugins/PluginsContainer.jsx",
+            "web/client/components/mapcontrols/annotations/Annotations.jsx",
+            "web/client/components/mapcontrols/annotations/AnnotationsEditor.jsx",
+            "web/client/components/mapcontrols/annotations/AnnotationsConfig.js",
+            "web/client/components/misc/cardgrids/SideCard.jsx",
+            "web/client/components/misc/cardgrids/SideGrid.jsx",
+            "web/client/components/misc/enhancers/emptyState.jsx",
+            "web/client/components/misc/enhancers/tooltip.jsx",
+            "web/client/components/misc/panels/Accordion.jsx",
+            "web/client/components/misc/panels/DockablePanel.jsx",
+            "web/client/components/misc/panels/DockPanel.jsx",
+            "web/client/components/misc/panels/PanelHeader.jsx",
+            "web/client/components/misc/sidebar/Sidebar.jsx",
+            "web/client/components/misc/toolbar/Toolbar.jsx",
+            "web/client/components/misc/EmptyView.jsx",
+            "web/client/components/misc/ResizableModal.jsx",
+            "web/client/components/misc/Slider.jsx",
+            "web/client/components/TOC/FloatingLegend.jsx",
+            "web/client/components/TOC/TOCItemsSettings.jsx",
+            "web/client/components/TOC/fragments/settings/FeatureInfo.jsx",
+            "web/client/components/TOC/fragments/settings/FeatureInfoEditor.jsx",
+            "web/client/components/TOC/fragments/settings/ThematicLayer.jsx",
+            "web/client/components/errors/ResourceUnavailable.jsx",
+
+            "web/client/actions/index.jsdoc",
+            "web/client/actions/controls.js",
+            "web/client/actions/fullscreen.js",
+            "web/client/actions/globeswitcher.js",
+            "web/client/actions/floatinglegend.js",
+            "web/client/actions/maplayout.js",
+            "web/client/actions/maps.js",
+            "web/client/actions/maptype.js",
+            "web/client/actions/notifications.js",
+            "web/client/actions/search.js",
+
+            "web/client/selectors/index.jsdoc",
+            "web/client/selectors/featuregrid.js",
+            "web/client/selectors/floatinglegend.js",
+            "web/client/selectors/map.js",
+            "web/client/selectors/mapinfo.js",
+            "web/client/selectors/maplayout.js",
+            "web/client/selectors/maptype.js",
+            "web/client/selectors/tutorial.js",
+
+            "web/client/reducers/index.jsdoc",
+            "web/client/reducers/controls.js",
+            "web/client/reducers/featuregrid.js",
+            "web/client/reducers/globeswitcher.js",
+            "web/client/reducers/floatinglegend.js",
+            "web/client/reducers/maps.js",
+            "web/client/reducers/maptype.js",
+            "web/client/reducers/notifications.js",
+            "web/client/reducers/search.js",
+
+            "web/client/epics/index.jsdoc",
+            "web/client/epics/automapupdate.js",
+            "web/client/epics/catalog.js",
+            "web/client/epics/cookies.js",
+            "web/client/epics/featuregrid.js",
+            "web/client/epics/feedbackMask.js",
+            "web/client/epics/fullscreen.js",
+            "web/client/epics/globeswitcher.js",
+            "web/client/epics/maplayout.js",
+            "web/client/epics/maptype.js",
+            "web/client/epics/notifications.js",
+            "web/client/epics/search.js",
+            "web/client/epics/tutorial.js",
+            "web/client/epics/wfsquery.js",
+
+            "web/client/utils/index.jsdoc",
+            "web/client/utils/CoordinatesUtils.js",
+            "web/client/utils/LocaleUtils.js",
+            "web/client/utils/PluginsUtils.js",
+            "web/client/utils/PrintUtils.js",
+            "web/client/utils/ogc/Filter/FilterBuilder.js",
+            "web/client/utils/ogc/WFS/RequestBuilder.js",
+            "web/client/utils/ogc/WFST/RequestBuilder.js",
+            "web/client/utils/ShareUtils.js"
+          ],
+          "jsapi": "web/client/jsapi/MapStore2.js",
+            "plugins": [
+                "web/client/plugins/index.jsdoc",
+                "web/client/plugins/Annotations.jsx",
+                "web/client/plugins/AutoMapUpdate.jsx",
+                "web/client/plugins/BackgroundSelector.jsx",
+                "web/client/plugins/BackgroundSwitcher.jsx",
+                "web/client/plugins/CreateNewMap.jsx",
+                "web/client/plugins/DrawerMenu.jsx",
+                "web/client/plugins/FeatureEditor.jsx",
+                "web/client/plugins/FeedbackMask.jsx",
+                "web/client/plugins/GlobeViewSwitcher.jsx",
+                "web/client/plugins/GoFull.jsx",
+                "web/client/plugins/Map.jsx",
+                "web/client/plugins/MapSearch.jsx",
+                "web/client/plugins/Measure.jsx",
+                "web/client/plugins/MeasurePanel.jsx",
+                "web/client/plugins/MeasureResults.jsx",
+                "web/client/plugins/FullScreen.jsx",
+                "web/client/plugins/Identify.jsx",
+                "web/client/plugins/FloatingLegend.jsx",
+                "web/client/plugins/Locate.jsx",
+                "web/client/plugins/Login.jsx",
+                "web/client/plugins/MousePosition.jsx",
+                "web/client/plugins/Notifications.jsx",
+                "web/client/plugins/Print.jsx",
+                "web/client/plugins/QueryPanel.jsx",
+                "web/client/plugins/ScaleBox.jsx",
+                "web/client/plugins/ScrollTop.jsx",
+                "web/client/plugins/Search.jsx",
+                "web/client/plugins/SearchServicesConfig.jsx",
+                "web/client/plugins/TOC.jsx",
+                "web/client/plugins/ThematicLayer.jsx",
+                "web/client/plugins/WFSDownload.jsx",
+                "web/client/plugins/ZoomIn.jsx",
+                "web/client/plugins/ZoomOut.jsx"
+            ]
+        },
+        "./docs/**/*md",
+        {
+            "readme": "./README.md",
+            "developer-guide": "./docs/developer-guide/index.md",
+            "site": "./docs/index.md"
+        }
+    ]
+}

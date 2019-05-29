@@ -6,18 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const Message = require('../../I18N/Message');
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
+const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
 const {
-     Glyphicon
+     Glyphicon,
+     ButtonToolbar,
+     DropdownButton,
+     MenuItem
 } = require('react-bootstrap');
 
-const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
+const renderHeaderLeftTopItem = ({title, description, showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
         return <Glyphicon onClick={() => {toggleTableView(); }} glyph="arrow-left pull-left"/>;
     }
+    return title || description ? <InfoPopover placement="top" title={title} text={description}/> : null;
 };
 
 
@@ -29,24 +35,37 @@ module.exports = ({
     data = [],
     series = [],
     loading,
-    icons,
     showTable,
-    topRightItems,
+    canEdit = true,
     confirmDelete= false,
-    onDelete = () => {},
     toggleTableView= () => {},
     toggleDeleteConfirm= () => {},
+    exportCSV = () => {},
+    exportImage = () => {},
+    onEdit= () => {},
+    onDelete=() => {},
     ...props}) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
         headerStyle={headerStyle}
         title={title}
-        icons={icons}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm = {toggleDeleteConfirm}
-        topRightItems={topRightItems}
+        topRightItems={showTable
+            ? null : <ButtonToolbar>
+            <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
+                <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid"/>&nbsp;<Message msgId="widgets.widget.menu.showChartData" /></MenuItem>
+                {canEdit
+                    ? [
+                        <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>,
+                        <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>]
+                    : null}
+                <MenuItem onClick={() => exportCSV({data, title})} eventKey="4"><Glyphicon className="exportCSV" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
+                <MenuItem onClick={() => exportImage({widgetDivId: `widget-chart-${id}`, title})} eventKey="4"><Glyphicon className="exportImage" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.exportImage" /></MenuItem>
+            </DropdownButton>
+        </ButtonToolbar>}
         >
         {showTable
             ? <TableView data={data} {...props}/>

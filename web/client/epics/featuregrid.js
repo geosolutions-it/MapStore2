@@ -28,7 +28,7 @@ const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
-const { closeIdentify } = require('../actions/mapInfo');
+const {purgeMapInfoResults} = require('../actions/mapInfo');
 const {getCapabilities, parseLayerCapabilities} = require('../api/WMS');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -642,10 +642,10 @@ module.exports = {
     resetControlsOnEnterInEditMode: (action$) =>
         action$.ofType(TOGGLE_MODE)
         .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"])),
-    closeIdentifyWhenOpenFeatureGrid: (action$) =>
+    closeIdentifyEpic: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
         .switchMap(() => {
-            return Rx.Observable.of(closeIdentify());
+            return Rx.Observable.of(purgeMapInfoResults());
         }),
     /**
      * start sync filter with wms layer

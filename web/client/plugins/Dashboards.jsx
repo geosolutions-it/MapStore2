@@ -24,12 +24,6 @@ const DashboardGrid = require('./dashboard/DashboardsGrid');
 const PaginationToolbar = require('./dashboard/PaginationToolbar');
 const EmptyDashboardsView = require('./dashboard/EmptyDashboardsView');
 
-const dashboardsCountSelector = createSelector(
-    totalCountSelector,
-    count => ({ count })
-);
-
-
 class Dashboards extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -116,10 +110,12 @@ module.exports = {
             glyph: 'dashboard'
         },
         ContentTabs: {
-            name: 'dashboards',
-            key: 'dashboards',
+            name: 'maps',
             TitleComponent:
-                connect(dashboardsCountSelector)(({ count = ""}) => <Message msgId="resources.dashboards.title" msgParams={{ count: count + "" }} />),
+                connect(createSelector(
+                    totalCountSelector,
+                    count => ({count})
+                ))(({ count = ""}) => <Message msgId="resources.dashboards.title" msgParams={{ count: count + "" }} />),
             position: 2,
             tool: true,
             priority: 1

@@ -8,16 +8,9 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const {compose, defaultProps} = require('recompose');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
-const counterWidget = require('../../enhancers/counterWidget');
-const CounterWidget = compose(
-    defaultProps({
-        canEdit: true
-    }),
-    counterWidget
-    )(require('../CounterWidget'));
+const CounterWidget = require('../CounterWidget');
 describe('CounterWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

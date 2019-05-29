@@ -19,12 +19,12 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {currentLocaleSelector} = require("../selectors/locale");
-const {setControlProperty, setControlProperties} = require("../actions/controls");
+const {setControlProperty} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector
+    searchTextSelector
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -51,12 +51,12 @@ const catalogSelector = createSelector([
     format: newformat,
     newService,
     currentLocale,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || []
+    records: CatalogUtils.getCatalogRecords(selectedFormat, result, options)
 }));
 
 const catalogClose = () => {
     return (dispatch) => {
-        dispatch(setControlProperties('metadataexplorer', "enabled", false, "group", null));
+        dispatch(setControlProperty('metadataexplorer', "enabled", false));
         dispatch(changeCatalogMode("view"));
         dispatch(resetCatalog());
     };
@@ -92,8 +92,7 @@ class MetadataExplorerComponent extends React.Component {
 
         // side panel properties
         width: PropTypes.number,
-        dockStyle: PropTypes.object,
-        group: PropTypes.string
+        dockStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -120,17 +119,13 @@ class MetadataExplorerComponent extends React.Component {
             position: "right",
             zIndex: 1030
         },
-        dockStyle: {},
-        group: null
+        dockStyle: {}
     };
 
     render() {
-        const layerBaseConfig = {
-            group: this.props.group || undefined
-        };
-        const panel = <Catalog layerBaseConfig={layerBaseConfig} zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
+        const panel = <Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
         return (
-            <div id="catalog-root" style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+            <div style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
                 <ContainerDimensions>
                     {({ width }) => (<DockPanel
                         open={this.props.active}
@@ -162,9 +157,8 @@ const metadataExplorerSelector = createSelector([
     layerErrorSelector,
     activeSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
-    searchTextSelector,
-    groupSelector
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle, searchText, group) => ({
+    searchTextSelector
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle, searchText) => ({
     searchOptions,
     formats,
     result,
@@ -174,8 +168,7 @@ const metadataExplorerSelector = createSelector([
     layerError,
     active,
     dockStyle,
-    searchText,
-    group
+    searchText
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {

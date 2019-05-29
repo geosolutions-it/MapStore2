@@ -51,8 +51,7 @@ const {
     canEditStyleSelector,
     getAllStyles,
     styleServiceSelector,
-    getUpdatedLayer,
-    selectedStyleFormatSelector
+    getUpdatedLayer
 } = require('../../selectors/styleeditor');
 
 const { getEditorMode, STYLE_OWNER_NAME, getStyleTemplates } = require('../../utils/StyleEditorUtils');
@@ -171,8 +170,7 @@ const StyleList = compose(
                 position: 'relative'
             },
             maskStyle: {
-                overflowY: 'auto',
-                left: 0
+                overflowY: 'auto'
             }
         }
     )
@@ -191,20 +189,16 @@ const StyleToolbar = compose(
                 loadingStyleSelector,
                 selectedStyleSelector,
                 canEditStyleSelector,
-                getAllStyles,
-                styleServiceSelector,
-                selectedStyleFormatSelector
+                getAllStyles
             ],
-            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit, { defaultStyle }, { formats = [ 'sld' ] } = {}, format) => ({
+            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit, { defaultStyle }) => ({
                 status,
                 templateId,
                 error,
                 isCodeChanged: initialCode !== code,
                 loading,
                 selectedStyle: defaultStyle === selectedStyle ? '' : selectedStyle,
-                editEnabled: canEdit,
-                // enable edit only if service support current format
-                disableCodeEditing: formats.indexOf(format) === -1
+                editEnabled: canEdit
             })
         ),
         {

@@ -1,4 +1,5 @@
-/*
+import PropTypes from 'prop-types';
+/**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -11,9 +12,8 @@
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import QRCode from 'qrcode.react';
-import Message from '../../components/I18N/Message';
+const QRCode = require('qrcode.react');
+const Message = require('../../components/I18N/Message');
 
 class ShareQRCode extends React.Component {
     static propTypes = {
@@ -22,14 +22,14 @@ class ShareQRCode extends React.Component {
 
     render() {
         return (
-            <div className="qr-code">
-                <h4>
-                    <Message msgId="share.QRCodeLinkTitle" />
-                </h4>
-                <QRCode value={this.props.shareUrl} />
-            </div>
+        <div className="qr-code">
+            <h4>
+                 <Message msgId="share.QRCodeLinkTitle"/>
+            </h4>
+          <QRCode value={this.props.shareUrl} />
+      </div>
         );
     }
 }
 
-export default ShareQRCode;
+module.exports = ShareQRCode;

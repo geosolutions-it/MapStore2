@@ -12,7 +12,7 @@ const expect = require('expect');
 const assign = require('object-assign');
 const ConfigUtils = require('../../utils/ConfigUtils');
 
-class AppComponent extends React.Component {
+class AppComnponent extends React.Component {
     render() {
         return <div>TEST</div>;
     }
@@ -39,11 +39,10 @@ describe('standard application runner', () => {
     it('allows overriding appConfig', (done) => {
         const overrideCfg = (config) => {
             return assign({}, config, {
-                appComponent: AppComponent,
+                appComponent: AppComnponent,
                 onStoreInit: () => {
                     setTimeout(() => {
                         expect(document.body.innerHTML).toContain("TEST");
-                        expect(config.printingEnabled).toBe(true);
                         done();
                     }, 0);
                 }
@@ -52,17 +51,4 @@ describe('standard application runner', () => {
         mainApp({}, {plugins: {}}, overrideCfg);
     });
 
-    it('check printingEnabled set to false', (done) => {
-        const overrideCfg = (config) => {
-            return assign({}, config, {
-                onStoreInit: () => {
-                    setTimeout(() => {
-                        expect(config.printingEnabled).toBe(false);
-                        done();
-                    }, 0);
-                }
-            });
-        };
-        mainApp({printingEnabled: false}, {plugins: {}}, overrideCfg);
-    });
 });

@@ -23,9 +23,7 @@ const {
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
     TOGGLE_MAPINFO_STATE,
-    UPDATE_CENTER_TO_MARKER,
-    CHANGE_FORMAT,
-    TOGGLE_SHOW_COORD_EDITOR
+    UPDATE_CENTER_TO_MARKER
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -186,18 +184,6 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             centerToMarker: action.status
         });
-    }
-    case CHANGE_FORMAT: {
-        return {
-            ...state,
-            formatCoord: action.format
-        };
-    }
-    case TOGGLE_SHOW_COORD_EDITOR: {
-        return {
-            ...state,
-            showCoordinateEditor: !action.showCoordinateEditor
-        };
     }
     default:
         return state;

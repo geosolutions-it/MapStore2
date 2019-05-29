@@ -80,30 +80,17 @@ module.exports = compose(
         groups: get(splitMapAndLayers(map), 'layers.groups')
     })),
     // adapter for handlers
-    compose(
-        handleNodePropertyChanges,
-        withHandlers({
-            onUpdateNode: ({changeLayerProperty = () => {}, changeGroupProperty = () => {}, editNode}) => (node, type, newProps) => {
-                if (type === "layers") {
-                    Object.keys(newProps).map(k => changeLayerProperty(editNode, k, newProps[k]));
-                }
-                if (type === "groups") {
-                    Object.keys(newProps).map(k => changeGroupProperty(editNode, k, newProps[k]));
-                }
+    handleNodePropertyChanges,
+    withHandlers({
+        onUpdateNode: ({changeLayerProperty = () => {}, changeGroupProperty = () => {}, editNode}) => (node, type, newProps) => {
+            if (type === "layers") {
+                Object.keys(newProps).map(k => changeLayerProperty(editNode, k, newProps[k]));
             }
-        }),
-        withHandlers({
-            onUpdateParams: ({ settings = {}, onUpdateNode = () => { } }) => (newParams, doUpdate = true) => {
-                if (doUpdate) {
-                    onUpdateNode(
-                        settings.node,
-                        settings.nodeType,
-                        { ...settings.props, ...newParams }
-                    );
-                }
+            if (type === "groups") {
+                Object.keys(newProps).map(k => changeGroupProperty(editNode, k, newProps[k]));
             }
-        })
-    ),
+        }
+    }),
     // manage local changes
     settingsLifecycle,
     // manage tabs of node editor

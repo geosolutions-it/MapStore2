@@ -9,10 +9,12 @@
 const expect = require('expect');
 
 const {
-    UPDATE_ADDITIONAL_LAYER, updateAdditionalLayer,
-    REMOVE_ADDITIONAL_LAYER, removeAdditionalLayer,
-    REMOVE_ALL_ADDITIONAL_LAYERS, removeAllAdditionalLayers,
-    UPDATE_OPTIONS_BY_OWNER, updateOptionsByOwner
+    UPDATE_ADDITIONAL_LAYER,
+    REMOVE_ADDITIONAL_LAYER,
+    UPDATE_OPTIONS_BY_OWNER,
+    updateAdditionalLayer,
+    updateOptionsByOwner,
+    removeAdditionalLayer
 } = require('../additionallayers');
 
 describe('Test additional layers actions', () => {
@@ -51,10 +53,5 @@ describe('Test additional layers actions', () => {
         expect(retval.id).toBe(id);
         expect(retval.owner).toBe(owner);
         expect(retval.type).toBe(REMOVE_ADDITIONAL_LAYER);
-    });
-    it('Test removeAllAdditionalLayers action creator', () => {
-        const retval = removeAllAdditionalLayers();
-        expect(retval).toExist();
-        expect(retval.type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
     });
 });

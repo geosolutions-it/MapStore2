@@ -25,11 +25,6 @@ const MetadataModal = require('./maps/MetadataModal');
 
 const {loadMaps, setShowMapDetails} = require('../actions/maps');
 
-const mapsCountSelector = createSelector(
-    totalCountSelector,
-    count => ({ count })
-);
-
 const PaginationToolbar = connect((state) => {
     if (!state.maps ) {
         return {};
@@ -94,6 +89,12 @@ class Maps extends React.Component {
         maps: []
     };
 
+    componentDidMount() {
+        // if there is a change in the search text it uses that before the initialMapFilter
+        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, this.props.searchText || ConfigUtils.getDefaults().initialMapFilter || "*", this.props.mapsOptions);
+        this.props.setShowMapDetails(this.props.showMapDetails);
+    }
+
     render() {
         return (<MapsGrid
             maps={this.props.maps}
@@ -133,9 +134,11 @@ module.exports = {
         },
         ContentTabs: {
             name: 'maps',
-            key: 'maps',
             TitleComponent:
-                connect(mapsCountSelector)(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
+                connect(createSelector(
+                    totalCountSelector,
+                    count => ({ count })
+                ))(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
             position: 1,
             tool: true,
             priority: 1

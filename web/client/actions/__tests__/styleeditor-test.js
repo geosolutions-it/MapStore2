@@ -51,14 +51,12 @@ describe('Test the styleeditor actions', () => {
         const code = '* { stroke: #333333; }';
         const format = 'css';
         const init = true;
-        const languageVersion = { version: '1.0.0' };
         const retval = updateTemporaryStyle({
             temporaryId,
             templateId,
             code,
             format,
-            init,
-            languageVersion
+            init
         });
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_TEMPORARY_STYLE);
@@ -67,7 +65,6 @@ describe('Test the styleeditor actions', () => {
         expect(retval.code).toBe(code);
         expect(retval.format).toBe(format);
         expect(retval.init).toBe(init);
-        expect(retval.languageVersion).toEqual(languageVersion);
     });
     it('updateStatus', () => {
         const status = 'edit';
@@ -95,15 +92,13 @@ describe('Test the styleeditor actions', () => {
         const code = '* { stroke: #333333; }';
         const format = 'css';
         const init = true;
-        const languageVersion = { version: '1.0.0' };
-        const retval = selectStyleTemplate({ code, templateId, format, init, languageVersion });
+        const retval = selectStyleTemplate({ code, templateId, format, init });
         expect(retval).toExist();
         expect(retval.type).toBe(SELECT_STYLE_TEMPLATE);
         expect(retval.templateId).toBe(templateId);
         expect(retval.code).toBe(code);
         expect(retval.format).toBe(format);
         expect(retval.init).toBe(init);
-        expect(retval.languageVersion).toEqual(languageVersion);
     });
     it('createStyle', () => {
         const settings = { title: 'Title', _abstract: ''};

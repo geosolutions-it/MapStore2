@@ -67,7 +67,7 @@ html, body, #container, .fill {
 }
 
 .modal-dialog-container {
-    z-index: 2000;
+    z-index: 2000!important;
 }
 
 #mapstore-scalebox-container {

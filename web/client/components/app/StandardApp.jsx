@@ -27,22 +27,6 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 require('./appPolyfill');
 
-/**
- * Standard MapStore2 application component
- *
- * @name  StandardApp
- * @memberof components.app
- * @prop {function} appStore store creator function
- * @prop {object} pluginsDef plugins definition object (e.g. as loaded from plugins.js)
- * @prop {object} storeOpts options for the store
- * @prop {array} initialActions list of actions to be dispatched on startup
- * @prop {function|object} appComponent root component for the application
- * @prop {bool} printingEnabled initializes printing environment based on mapfish-print
- * @prop {function} onStoreInit optional callback called just after store creation
- * @prop {function} onInit optional callback called before first rendering, can delay first rendering
- * to do custom initialization (e.g. force SSO login)
- * @prop {string} mode current application mode (e.g. desktop/mobile) drives plugins loaded from localConfig
- */
 class StandardApp extends React.Component {
     static propTypes = {
         appStore: PropTypes.func,
@@ -52,7 +36,6 @@ class StandardApp extends React.Component {
         appComponent: PropTypes.func,
         printingEnabled: PropTypes.bool,
         onStoreInit: PropTypes.func,
-        onInit: PropTypes.func,
         mode: PropTypes.string
     };
 
@@ -66,7 +49,7 @@ class StandardApp extends React.Component {
     };
 
     state = {
-        initialized: false
+        store: null
     };
 
     addProjDefinitions(config) {
@@ -105,6 +88,9 @@ class StandardApp extends React.Component {
             });
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
             this.props.onStoreInit(this.store);
+            this.setState({
+                store: this.store
+            });
 
             if (!opts.persist) {
                 onInit(config);
@@ -117,35 +103,24 @@ class StandardApp extends React.Component {
         const {plugins, requires} = this.props.pluginsDef;
         const {pluginsDef, appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = this.props.appComponent;
-        return this.state.initialized ?
-            <Provider store={this.store}>
+        return this.state.store ?
+            <Provider store={this.state.store}>
                 <App {...other} plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
             </Provider>
-            : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
-                <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
+         : null;
     }
-    afterInit = () => {
-        if (this.props.printingEnabled) {
-            this.store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
-        }
-        this.props.initialActions.forEach((action) => {
-            this.store.dispatch(action());
-        });
-        this.setState({
-            initialized: true
-        });
-    };
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
         this.addProjDefinitions(config);
         const locale = LocaleUtils.getUserLocale();
         this.store.dispatch(loadLocale(null, locale));
-        if (this.props.onInit) {
-            this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
-        } else {
-            this.afterInit(config);
+        if (this.props.printingEnabled) {
+            this.store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
         }
+        this.props.initialActions.forEach((action) => {
+            this.store.dispatch(action());
+        });
     };
     /**
      * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.

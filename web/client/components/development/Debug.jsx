@@ -16,7 +16,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 class Debug extends React.Component {
     render() {
-        if (urlQuery && urlQuery.debug && __DEVTOOLS__ && !window.devToolsExtension) {
+        if (__DEVTOOLS__ && urlQuery.debug && !window.devToolsExtension) {
             const DevTools = require('./DevTools');
             return (
                 <DevTools/>

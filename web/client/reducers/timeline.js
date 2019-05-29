@@ -1,7 +1,7 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
 const { REMOVE_NODE } = require('../actions/layers');
 const { RESET_CONTROLS } = require('../actions/controls');
-const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, SET_COLLAPSED } = require('../actions/timeline');
+const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 const { assign, pickBy, has } = require('lodash');
 
@@ -48,15 +48,9 @@ const { assign, pickBy, has } = require('lodash');
 
  */
 module.exports = (state = {
-    settings: {
-        autoSelect: true, // selects the first layer available as guide layer. This is a configuration only setting for now
-        collapsed: false
-    }
+    settings: {autoSelect: true} // selects the first layer available as guide layer. This is a configuration only setting for now
 }, action) => {
     switch (action.type) {
-        case SET_COLLAPSED: {
-            return set(`settings.collapsed`, action.collapsed, state);
-        }
         case RANGE_CHANGED: {
             return set(`range`, {
                 start: action.start,

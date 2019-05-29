@@ -218,28 +218,3 @@ div#sync-popover.popover {
         display: block;
     }
 }
-
-/* Button with bottom border for collapsed items in list - see widgets tray */
-.btn-tray {
-
-    @ms-tray-bg: @ms2-color-background;
-    @ms-tray-color: lighten(@ms2-color-text, 10%);
-    @ms-tray-border: lighten(@ms2-color-primary, 10%);
-    @ms-tray-active-color: @ms2-color-primary;
-    @ms-tray-active-border: lighten(@ms2-color-shade-light, 15%);
-
-    .button-variant(@ms-tray-color; @ms-tray-bg; @ms-tray-border);
-    border-left: none;
-    border-top: none;
-    border-right: none; 
-    border-bottom: 3px solid @ms-tray-border;
-    &:active, &.active {
-        color: @ms-tray-active-color;
-        border-bottom: 3px solid @ms-tray-active-border;
-    }
-    &:focus, &.focus {
-        background-color: @ms-tray-bg;
-        color: @ms-tray-color;
-        border-bottom: 3px solid @ms-tray-border;
-    }
-}

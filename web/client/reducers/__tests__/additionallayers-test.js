@@ -12,8 +12,7 @@ const expect = require('expect');
 const {
     updateAdditionalLayer,
     updateOptionsByOwner,
-    removeAdditionalLayer,
-    removeAllAdditionalLayers
+    removeAdditionalLayer
 } = require('../../actions/additionallayers');
 
 const additionallayers = require('../additionallayers');
@@ -28,6 +27,7 @@ describe('Test additional layers reducer', () => {
             style: 'generic'
         };
         const state = additionallayers([], updateAdditionalLayer(id, owner, actionType, options));
+
         expect(state).toEqual([
             {
                 id,
@@ -39,7 +39,9 @@ describe('Test additional layers reducer', () => {
     });
 
     it('update options of additional layers by owner', () => {
+
         const owner = 'owner';
+
         const initialState = [
             {
                 id: 'layer_001',
@@ -65,6 +67,7 @@ describe('Test additional layers reducer', () => {
         ];
 
         const state = additionallayers(initialState, updateOptionsByOwner(owner, options));
+
         expect(state).toEqual([
             {
                 id: 'layer_001',
@@ -82,7 +85,9 @@ describe('Test additional layers reducer', () => {
     });
 
     it('remove additional layers by owner', () => {
+
         const owner = 'owner';
+
         const initialState = [
             {
                 id: 'layer_001',
@@ -101,6 +106,7 @@ describe('Test additional layers reducer', () => {
         ];
 
         const state = additionallayers(initialState, removeAdditionalLayer({owner}));
+
         expect(state).toEqual([]);
     });
 
@@ -126,27 +132,9 @@ describe('Test additional layers reducer', () => {
         ];
 
         const state = additionallayers(initialState, removeAdditionalLayer({id: 'layer_001'}));
+
         expect(state).toEqual([{...initialState[1]}]);
-    });
-    it('remove all additional layers', () => {
-        const owner = 'owner';
-        const initialState = [
-            {
-                id: 'layer_001',
-                owner,
-                actionType: 'override',
-                options: {
-                    style: 'generic'
-                }
-            }, {
-                id: 'layer_002',
-                owner,
-                actionType: 'override',
-                options: {}
-            }
-        ];
-        const state = additionallayers(initialState, removeAllAdditionalLayers());
-        expect(state).toEqual([]);
     });
 
 });
+

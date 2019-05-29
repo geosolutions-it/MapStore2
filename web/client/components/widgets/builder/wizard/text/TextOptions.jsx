@@ -13,7 +13,6 @@ const TitleInput = localizedProps("placeholder")(FormControl);
 
 const ReactQuill = require('react-quill');
 const Editor = localizedProps("placeholder")(ReactQuill);
-
 module.exports = ({ data = {}, onChange = () => { }}) => (
     <div>
         <Col key="form" xs={12}>
@@ -25,13 +24,7 @@ module.exports = ({ data = {}, onChange = () => { }}) => (
             </FormGroup>
             </Form>
         </Col>
-        <Editor modules={{
-                toolbar: [
-                    [{'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
-                    [{'list': 'bullet' }, {'align': [] }],
-                    [{'color': [] }, {'background': [] }, 'clean'], ['image', 'link']
-                ]
-            }} placeholder="widgets.builder.wizard.textPlaceholder" value={data && data.text || ''} onChange={(val) => onChange("text", val)} />
+        <Editor placeholder="widgets.builder.wizard.textPlaceholder" value={data && data.text || ''} onChange={(val) => onChange("text", val)} />
 </div>
 );
 

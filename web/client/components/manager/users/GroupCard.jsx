@@ -24,8 +24,6 @@ class GroupCard extends React.Component {
         style: PropTypes.object,
         group: PropTypes.object,
         innerItemStyle: PropTypes.object,
-        avatarStyle: PropTypes.object,
-        nameStyle: PropTypes.object,
         actions: PropTypes.array
     };
 
@@ -36,22 +34,7 @@ class GroupCard extends React.Component {
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
-        innerItemStyle: {
-            marginTop: "35px",
-            marginLeft: "9px"
-        },
-        avatarStyle: {
-            margin: "10px"
-        },
-        nameStyle: {
-            position: "absolute",
-            left: "80px",
-            top: "30px",
-            width: "75%",
-            borderBottom: "1px solid #ddd",
-            fontSize: 18,
-            fontWeight: "bold"
-        }
+        innerItemStyle: {"float": "left", margin: "10px"}
     };
 
     renderStatus = () => {
@@ -64,20 +47,16 @@ class GroupCard extends React.Component {
     };
 
     renderAvatar = () => {
-        return (<div key="avatar" style={this.props.avatarStyle} ><Button bsStyle="primary" type="button" className="square-button">
+        return (<div key="avatar" style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="1-group" />
             </Button></div>);
     };
 
     renderDescription = () => {
-        return (<div className="group-thumb-description" style={this.props.innerItemStyle}>
+        return (<div className="group-thumb-description">
             <div><strong><Message msgId="usergroups.description" /></strong></div>
             <div>{this.props.group.description ? this.props.group.description : <Message msgId="usergroups.noDescriptionAvailable" />}</div>
         </div>);
-    };
-
-    renderName = () => {
-        return (<div key="name" style={this.props.nameStyle}>{this.props.group.groupName}</div>);
     };
 
     render() {
@@ -85,12 +64,9 @@ class GroupCard extends React.Component {
            <GridCard className="group-thumb" style={this.props.style} header={this.props.group.groupName}
                 actions={this.props.actions}
                >
-            <div className="user-data-container">
-                {this.renderAvatar()}
-                {this.renderName()}
-                {this.renderDescription()}
-            </div>
+            {this.renderAvatar()}
             {this.renderStatus()}
+            {this.renderDescription()}
            </GridCard>
         );
     }

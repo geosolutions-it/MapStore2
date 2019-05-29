@@ -61,7 +61,7 @@ class GlobeViewSwitcherButton extends React.Component {
         notActiveTooltip: 'globeswitcher.tooltipActivate',
         tooltipPlace: 'left',
         defaultStyle: 'primary',
-        pressedStyle: 'success active',
+        pressedStyle: 'success',
         glyphicon: '3d',
         btnConfig: {
             className: "square-button"

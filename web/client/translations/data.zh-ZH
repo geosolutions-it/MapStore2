@@ -21,8 +21,6 @@
         "enable": "启用",
         "layers": "图层",
         "warning": "警告",
-        "errorTitleDefault": "Error",
-        "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
         "version": {
@@ -32,12 +30,6 @@
             "of": "of",
             "updating": "更新...",
             "layers": "图层"
-        },
-        "localeErrors": {
-            "404": "Translation file not found"
-        },
-        "details": {
-            "title": "About this map"
         },
         "layerProperties": {
             "windowTitle": "图层属性",
@@ -66,37 +58,8 @@
             "groupProperties": "组属性",
             "featureInfo": "特征信息",
             "featureInfoFormatLbl": "确定响应格式",
-            "legenderror": "图例不可用",
-            "editCustomFormat": "Edit custom format",
-            "exampleOfResponse": "Example",
-            "changedSettings": "Changed Settings",
-            "changedSettingsAlert": "You are closing the settings panel without save your changes",
-            "textFormatTitle": "TEXT",
-            "textFormatDescription": "Shows feature info results as plain text",
-            "htmlFormatTitle": "HTML",
-            "htmlFormatDescription": "Shows feature info results as html",
-            "propertiesFormatTitle": "PROPERTIES",
-            "propertiesFormatDescription": "Shows feature info results as properties list",
-            "templateFormatTitle": "TEMPLATE",
-            "templateFormatDescription": "Customize feature info results format",
-            "templateFormatInfoAlert1": "Click on edit button to add a new template.",
-            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
-            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
-            "templatePreview": "Template preview",
-            "tooltip": {
-                "label": "Tooltip",
-                "title": "Title",
-                "description": "Description",
-                "both": "Title and Description",
-                "none": "No Tooltip",
-                "labelPlacement": "Placement",
-                "right": "Right",
-                "bottom": "Bottom",
-                "top": "Top"
-            }
+            "legenderror": "图例不可用"
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
         "notification": {
             "update": "更新",
             "warning": "警告",
@@ -139,7 +102,6 @@
         "options": "选项",
         "settings": "设置",
         "help": "帮助",
-        "docs": "Docs",
         "gohome": "跳转首页",
         "back": "Back to the Importer",
         "printbutton": "打印",
@@ -151,8 +113,6 @@
         "elevation": "海拔",
         "close": "关闭",
         "cancel": "取消",
-        "no": "No",
-        "yes": "Yes",
         "confirm": "确认",
         "confirmTitle": "你确认吗?",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
@@ -173,14 +133,13 @@
         },
         "home":{
             "open": "打开",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"https://mapstore.readthedocs.io/en/latest/\">主页</a>。",
+            "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
             "Applications": "应用",
             "Examples": "例子",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "滚动到页面顶部",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Keep in touch and stay up-to-date with the mailing lists",
                 "subscribe_users": "Subscribe Users Mailing List",
@@ -246,63 +205,10 @@
         },
         "newMap": "新地图",
 		"maps": {
-            "title": "Maps",
+			"search": "搜索地图...",
             "addToFeaturedMaps": "Add to featured maps",
-            "removeFromFeaturedMaps": "Remove from featured maps",
-            "feedback": {
-                "noDetailsAvailable": "Details not available",
-                "successSavedMap": "The map has been created correctly",
-                "errorDeletingMap": "Error when deleting this map",
-                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for this map",
-                "errorDeletingDetailsOfMap": "Error when deleting details for this map",
-                "allResDeleted": "All resources associated with this map have been deleted successfully",
-                "errorFetchingDetailsOfMap": "Error when fetching details for this map",
-                "details": {
-                    "deletedSuccesfully": "The details have been removed correctly",
-                    "savedSuccesfully": "The details have been saved correctly",
-                    "updatedSuccesfully": "The details have been updated correctly"
-                },
-                "thumbnail": {
-                    "deletedSuccesfully": "The thumbnail have been removed correctly",
-                    "savedSuccesfully": "The thumbnail have been saved correctly",
-                    "updatedSuccesfully": "The thumbnail have been updated correctly"
-                },
-                "errorWhenSaving": "An error occurred during saving process",
-                "errorWhenUpdating": "An error occurred during updating process",
-                "errorWhenDeleting": "An error occurred during deleting process",
-                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
-            },
-			"search": "搜索地图..."
+            "removeFromFeaturedMaps": "Remove from featured maps"
 		},
-        "resources": {
-            "deleteConfirmTitle": "Are you sure",
-            "deleteConfirmMessage": "Are you sure you want do delete this resource?",
-            "deleteConfirmButtonText": "Delete",
-            "deleteCancelButtonText": "Close",
-            "resource": {
-                "deleteResource": "Delete",
-                "editResource": "Edit properties",
-                "addToFeatured": "Add to featured",
-                "removeFromFeatured": "Remove from featured",
-                "showDetails": "Show details"
-            },
-            "contents": {
-                "title": "Contents"
-            },
-            "dashboards": {
-                "newDashboard": "New Dashboard",
-                "title": "Dashboards ({count})",
-                "titleNoCount": "Dashboards",
-                "create": "Create Dashboard",
-                "noDashboardAvailable": "No dashboard available",
-                "createANewOne": "Create a new one",
-                "deleteError": "There was an error deleting the resource",
-                "errorLoadingDashboards": "There was an error loading dashboards"
-            },
-            "maps": {
-                "title": "Maps ({count})"
-            }
-        },
         "map": {
             "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "加载中...",
@@ -367,7 +273,6 @@
             "toolTrashLayerTooltip": "删除选定的图层",
             "toolTrashLayersTooltip": "删除选定的图层",
             "toolFeaturesGridTooltip": "打开属性表",
-            "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "没有结果",
             "filterPlaceholder": "过滤图层",
             "clearFilter": "清除过滤器",
@@ -397,54 +302,6 @@
                 "search": "更新搜索选项",
                 "title": "更新标题",
                 "dimensions": "更新维度"
-            },
-            "layerMetadata": {
-                "identifier": "Identifier",
-                "title": "Title",
-                "abstract": "Abstract",
-                "subject": "Subject",
-                "type": "Type",
-                "creator": "Creator",
-                "toolLayerMetadataTooltip": "Show the selected layer's metadata",
-                "layerMetadataPanelTitle": "Layer metadata",
-                "notification": {
-                    "warnigGetMetadataRecordById": "Error in metadata search"
-                }
-            },
-            "thematic": {
-                "classification_field": "Classification Field:",
-                "classification_method": "Classification Method:",
-                "classification_aggregate": "Aggregate Function:",
-                "classification_colors": "Color Ramp:",
-                "classification_intervals": "Intervals:",
-                "preview": "Preview",
-                "remove_thematic": "Back to Simple Style",
-                "values": {
-                    "equalInterval": "Equal Intervals",
-                    "quantile": "Quantile",
-                    "jenks": "Natural Breaks",
-                    "sum": "Sum",
-                    "avg": "Average",
-                    "count": "Count",
-                    "min": "Min",
-                    "max": "Max"
-                },
-                "configuration": "Configuration",
-                "apply": "Apply classification",
-                "restore": "Reset customizations",
-                "go_to_cfg": "Configure...",
-                "go_to_thema": "Use this configuration",
-                "cfgError": "Error in configuration JSON",
-                "classify": "Classify",
-                "remove": "Remove classification",
-                "data_panel": "Data",
-                "classification_stroke": "Stroke",
-                "classification_error": "Error calling the classification service: {message}",
-                "fields_error": "Error loading fields list: {message}",
-                "interval_limit": "Intervals should be a number between {min} and {max}",
-                "invalid_object": "Invalid service response",
-                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
-                "invalid_classes": "Max must be greater than min in every class"
             }
         },
         "print":{
@@ -488,8 +345,6 @@
         "identifyTitle": "特征信息",
         "identifyNoQueryableLayers": "没有有效的可查询层",
         "identifyRevGeocodeHeader": "坐标",
-        "identifyShowCoordinateEditor": "Show coordinate editor",
-        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "地址",
         "identifyRevGeocodeSubmitText": "更多信息",
         "identifyRevGeocodeCloseText": "关闭",
@@ -506,11 +361,6 @@
             "redoBtnTooltip": "前进"
         },
         "infoFormatLbl": "确定响应格式",
-        "measureSupport": {
-            "continueLine": "Click to continue drawing the line",
-            "continuePolygon": "Click to continue drawing the polygon",
-            "startDrawing": "Click to start drawing"
-        },
         "measureComponent": {
             "Measure": "测量",
             "MeasureLength": "测量距离",
@@ -526,11 +376,7 @@
             "bearingLabel": "方位角"
         },
         "search":{
-            "decimal": "十进制",
-            "aeronautical": "航空",
-            "changeSearchInputField": "更改搜索工具",
-            "addressSearch": "按地点名称搜索",
-            "coordinatesSearch": "按坐标搜索",
+            "placeholder": "按地点名称或坐标搜索 ...",
             "searchservicesbutton": "配置搜索服务",
             "configpaneltitle": "创建/编辑搜索服务",
             "serviceslistlabel": "可用的服务",
@@ -793,7 +639,6 @@
             "passwordInvalid": "无效的密码",
             "username": "用户名",
             "password": "密码",
-            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "密码已更改",
             "passwordError": "更改密码时出错",
             "signIn":"签到",
@@ -801,13 +646,7 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "请插入用户名和密码",
                 "usernamePwdIncorrect":"用户名或密码不正确"
-            },
-            "detailsName": "Name",
-            "detailsRole": "Role",
-            "detailsGroups": "Groups",
-            "detailsEmail": "E-mail",
-            "detailsCompany": "Company",
-            "detailsNotes": "Notes"
+            }
         },
         "annotations": {
             "edit": "编辑",
@@ -855,8 +694,7 @@
             "confirmDeleteUser": "Are you sure you want to delete this user?",
             "errorDelete": "There was an error deleting this user:",
             "errorSaving": "There was an error saving the user:",
-            "selectedGroups": "SELECTED GROUPS",
-            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
+            "selectedGroups": "SELECTED GROUPS"
         },
         "usergroups": {
           "searchGroups": "Search Groups...",
@@ -896,11 +734,7 @@
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl": "Copied",
             "msgToCopyUrl": "Click to copy",
-            "sharedTitle": "Check out my new map: ",
-            "advancedOptions": "Advanced Options",
-            "addBboxParam": "Add bbox param to sharing link",
-            "wrongBboxParamTitle": "Invalid bbox param",
-            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
+            "sharedTitle": "Check out my new map: "
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1408,7 +1242,6 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
-            "validationErrorTitle": "Validation Error",
             "genericValidationError": "Style is not valid and it could not be applied.",
             "setDefaultStyle": "Set selected style as default for the current layer",
             "setDefaultStyleSuccessTitle": "Success on set default style",
@@ -1477,34 +1310,9 @@
         },
         "rulesmanager": {
             "placeholders": {
-                "role": "Type to search Roles",
-                "user": "Type to search Users",
-                "service": "Type to search Services",
-                "request": "Type to search Requests",
-                "workspace": "Type to search Workspaces",
-                "layer": "Type to search Layers",
-                "access": "Type to search Access",
-                "ip": "###.###.###.###/##",
-                "priority": "Select Priority",
-                "filter": "Filter styles..."
+                "filter": "Search..."
             },
             "menutitle": "Manage GeoFence Rules",
-            "tooltip": {
-                "addT": "Add a rule",
-                "editT": "Edit selected rule",
-                "addBeT": "Add new rule before selected",
-                "addAfT": "Add new rule after selected",
-                "deleteT": "Remove selected rules",
-                "cacheT": "Clear cache",
-                "save": "Save current rule",
-                "close": "Exit from create rule"
-            },
-            "navItems": {
-                "main": "General Rule",
-                "style": "Style",
-                "filter": "Filters",
-                "attribute": "Attributes Rule"
-            },
             "title": "访问规则",
             "role": "角色",
             "user": "用户",

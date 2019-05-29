@@ -24,7 +24,7 @@ class DetailsPanel extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         style: PropTypes.object,
-        onClose: PropTypes.func,
+        onClose: PropTypes.function,
         dockProps: PropTypes.object,
         width: PropTypes.number,
         detailsText: PropTypes.string,

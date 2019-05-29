@@ -5,6 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+const assign = require('object-assign');
+const axios = require('axios');
+const uuid = require('uuid');
 const GeoCodingApi = require('../api/Nominatim');
 
 const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
@@ -25,8 +29,6 @@ const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
-const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
-const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 
 /**
  * Private
@@ -44,7 +46,7 @@ function loadFeatureInfo(reqId, data, rParams, lMetaData) {
 
 /**
  * Private
- * @return a ERROR_FEATURE_INFO action with the error occurred
+ * @return a ERROR_FEATURE_INFO action with the error occured
  */
 function errorFeatureInfo(reqId, e, rParams, lMetaData) {
     return {
@@ -58,7 +60,7 @@ function errorFeatureInfo(reqId, e, rParams, lMetaData) {
 
 /**
  * Private
- * @return a EXCEPTIONS_FEATURE_INFO action with the wms exception occurred
+ * @return a EXCEPTIONS_FEATURE_INFO action with the wms exception occured
  *         during a GetFeatureInfo request.
  */
 function exceptionsFeatureInfo(reqId, exceptions, rParams, lMetaData) {
@@ -97,6 +99,31 @@ function getVectorInfo(layer, request, metadata) {
         layer,
         request,
         metadata
+    };
+}
+
+
+/**
+ * Sends a GetFeatureInfo request and dispatches the right action
+ * in case of success, error or exceptions.
+ *
+ * @param basePath {string} base path to the service
+ * @param requestParams {object} map of params for a getfeatureinfo request.
+ */
+function getFeatureInfo(basePath, requestParams, lMetaData, options = {}) {
+    const param = assign({}, options, requestParams);
+    const reqId = uuid.v1();
+    return (dispatch) => {
+        dispatch(newMapInfoRequest(reqId, param));
+        axios.get(basePath, {params: param}).then((response) => {
+            if (response.data.exceptions) {
+                dispatch(exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData));
+            } else {
+                dispatch(loadFeatureInfo(reqId, response.data, requestParams, lMetaData));
+            }
+        }).catch((e) => {
+            dispatch(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData));
+        });
     };
 }
 
@@ -194,24 +221,6 @@ const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
 
-/**
- * change format of coordinate editor
- * @prop {string} format
-*/
-const changeFormat = (format) => ({
-    type: CHANGE_FORMAT,
-    format
-});
-
-/**
- * action for toggling the state of the showCoordinateEditor flag
- * @prop {boolean} showCoordinateEditor
-*/
-const toggleShowCoordinateEditor = (showCoordinateEditor) => ({
-    type: TOGGLE_SHOW_COORD_EDITOR,
-    showCoordinateEditor
-});
-
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -231,10 +240,8 @@ module.exports = {
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,
-    TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
-    CHANGE_FORMAT, changeFormat,
     closeIdentify,
-    exceptionsFeatureInfo,
+    getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,

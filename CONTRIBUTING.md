@@ -208,9 +208,7 @@ your branch so that it can be merged automatically.
 
 ## Improving Documentation
 
-All MapStore objects (i.e. components, plugins, actions, reducers etc) should be properly documented in their JS documentation, please follow the required **JSDoc** syntax looking at the online documentation available in the [JSDoc web site](http://usejsdoc.org/index.html) for more details. 
-
-Thank you for every contribution that helps to keep updated the MapStore's documentation.
+TBD
 
 ## Thank You
 

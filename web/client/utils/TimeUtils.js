@@ -1,6 +1,5 @@
 const {isString, isDate} = require('lodash');
 const moment = require('moment');
-const LocaleUtils = require('./LocaleUtils');
 
 const ROUND_RESOLUTION_REGEX = /PT?[\d\.]+[YMWDHMS]/;
 
@@ -151,72 +150,7 @@ const getStartEnd = (startTime, endTime) => {
     };
 };
 
-/**
- * get time zone offset for a given date (september and march have different tzoffset)
- * @param {object} date
- * @return {number} the offset in milliseconds
-*/
-const getTimezoneOffsetMillis = (date) => {
-    return (date).getTimezoneOffset() * 60000;
-};
-
-/**
- * @param {Date|string} date to parse
- * @return {string} time part of the TimeStamp
-*/
-const getUTCTimePart = (date) => {
-    let dateToParse = date;
-    if (!isDate(date) & isString(date)) {
-        dateToParse = new Date(date);
-    }
-    let hours = dateToParse.getUTCHours();
-    hours = hours < 10 ? "0" + hours : hours;
-    let minutes = dateToParse.getUTCMinutes();
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    let seconds = dateToParse.getUTCSeconds();
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    return `${hours}:${minutes}:${seconds}`;
-};
-
-/**
- * @param {Date|string} date to parse
- * @return {string} date part of the TimeStamp
-*/
-const getUTCDatePart = (date) => {
-    let dateToParse = date;
-    if (!isDate(date) & isString(date)) {
-        dateToParse = new Date(date);
-    }
-    let month = dateToParse.getUTCMonth() + 1;
-    let day = dateToParse.getUTCDate();
-    month = month < 10 ? "0" + month : month;
-    day = day < 10 ? "0" + day : day;
-    return `${dateToParse.getUTCFullYear()}-${month}-${day}`;
-};
-
-/**
- * generate the format for parsing a Date
- * @param {string} locale to get date format
- * @param {string} type of the dateTime attribute ("date", "time", "date-time")
- * @return {string} format to be returned
-*/
-const getDateTimeFormat = (locale, type) => {
-    const dateFormat = LocaleUtils.getDateFormat(locale);
-    const timeFormat = "HH:mm:SS";
-    switch (type) {
-        case "time":
-            return timeFormat;
-        case "date":
-            return dateFormat;
-        default:
-            return dateFormat + " " + timeFormat;
-    }
-};
 module.exports = {
-    getDateTimeFormat,
-    getTimezoneOffsetMillis,
-    getUTCTimePart,
-    getUTCDatePart,
     timeIntervalNumber,
     timeIntervalToSequence,
     timeIntervalToIntervalSequence,

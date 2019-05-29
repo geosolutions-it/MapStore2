@@ -63,8 +63,6 @@ const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
  */
 const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
 
-const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
-const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
 /**
  * Actions for timeline
  * @module actions.timeline
@@ -81,7 +79,5 @@ module.exports = {
     SELECT_LAYER,
     selectLayer,
     ENABLE_OFFSET,
-    enableOffset,
-    SET_COLLAPSED,
-    setCollapsed
+    enableOffset
 };

@@ -10,13 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
-const {compose, defaultProps} = require('recompose');
-const legendWidget = require('../../enhancers/legendWidget');
-
-const LegendWidget = compose(
-    defaultProps({canEdit: true}),
-    legendWidget
-)(require('../LegendWidget'));
+const LegendWidget = require('../LegendWidget');
 describe('LegendWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -67,7 +61,7 @@ describe('LegendWidget component', () => {
             opacity: 0.5
         }
         ];
-        ReactDOM.render(<LegendWidget dependencies={{layers: LAYERS}} />, document.getElementById("container"));
+        ReactDOM.render(<LegendWidget layers={LAYERS} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();

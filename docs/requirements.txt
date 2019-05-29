@@ -1,1 +1,0 @@
-mkdocs-material==3.2.0

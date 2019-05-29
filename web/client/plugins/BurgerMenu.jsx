@@ -23,8 +23,6 @@ const Container = connect(() => ({
 const ToolsContainer = require('./containers/ToolsContainer');
 const Message = require('./locale/Message');
 
-const { createPlugin } = require('../utils/PluginsUtils');
-
 require('./burgermenu/burgermenu.css');
 
 class BurgerMenu extends React.Component {
@@ -99,19 +97,16 @@ class BurgerMenu extends React.Component {
     }
 }
 
-module.exports = createPlugin(
-    'BurgerMenu',
-    {
-        component: connect((state) =>({
-            controls: state.controls
-        }))(BurgerMenu),
-        containers: {
-            OmniBar: {
-                name: "burgermenu",
-                position: 2,
-                tool: true,
-                priority: 1
-            }
+module.exports = {
+    BurgerMenuPlugin: assign(connect((state) => ({
+        controls: state.controls
+    }))(BurgerMenu), {
+        OmniBar: {
+            name: "burgermenu",
+            position: 2,
+            tool: true,
+            priority: 1
         }
-    }
-);
+    }),
+    reducers: {}
+};

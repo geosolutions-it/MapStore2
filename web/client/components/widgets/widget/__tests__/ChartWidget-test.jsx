@@ -10,13 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
-const {compose, defaultProps} = require('recompose');
-const chartWidget = require('../../enhancers/chartWidget');
-
-const ChartWidget = compose(defaultProps({
-    canEdit: true
-}), chartWidget)(require('../ChartWidget'));
-
+const ChartWidget = require('../ChartWidget');
 describe('ChartWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

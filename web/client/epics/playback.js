@@ -32,7 +32,7 @@ const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
 
-const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector, timelineLayersSelector } = require('../selectors/timeline');
+const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
 const { wrapStartStop } = require('../observables/epics');
@@ -166,16 +166,7 @@ module.exports = {
      */
     retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(PLAY).exhaustMap(() =>
-            getAnimationFrames(getState, {
-                fromValue:
-                    // if animation range is set, don't set from value on startup...
-                    (playbackRangeSelector(getState())
-                        && playbackRangeSelector(getState()).startPlaybackTime
-                        && playbackRangeSelector(getState()).endPlaybackTime)
-                    ? undefined
-                    // ...otherwise, start from the current time (start animation from cursor position)
-                    : currentTimeSelector(getState())
-                })
+            getAnimationFrames(getState)
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
                     error({
@@ -199,8 +190,6 @@ module.exports = {
                         )
                 )
                 .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
-                // this removes loading mask even if the STOP action is triggered before frame end (empty result)
-                .concat(Rx.Observable.of(timeDataLoading(false, false)))
                 .let(setupAnimation(getState))
         ),
     /**
@@ -249,7 +238,7 @@ module.exports = {
                     // need to select first
                     : Rx.Observable.of(
                         selectLayer(
-                            get(timelineLayersSelector(getState()), "[0].id")
+                            get(layersWithTimeDataSelector(getState()), "[0].id")
                         )
                     )
             ),

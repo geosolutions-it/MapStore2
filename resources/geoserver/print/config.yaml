@@ -87,7 +87,6 @@ layouts:
             - !legends
               horizontalAlignment: left
               #iconMaxWidth: 150
-              maxWidth: 150
               iconMaxHeight: 0
               layerSpace: 5
               layerFontSize: 12
@@ -192,7 +191,6 @@ layouts:
             - !legends
               horizontalAlignment: left
               #iconMaxWidth: 150
-              maxWidth: 160
               iconMaxHeight: 0
               layerSpace: 5
               layerFontSize: 12
@@ -480,10 +478,10 @@ layouts:
                 padding: 4
                 backgroundColor: white
                 vertAlign: bottom
-          widths: [500]
+          widths: [800]
           absoluteX: 30
           absoluteY: 800
-          width: 500
+          width: 800
           items:
             - !legends      
               failOnBrokenUrl: false
@@ -492,7 +490,7 @@ layouts:
               iconMaxHeight: 700
               maxHeight: 750
               maxColumns: 1
-              maxWidth: 500
+              maxWidth: 800
               layerSpace: 5
               layerFontSize: 12
               classIndentation: 5
@@ -645,7 +643,6 @@ layouts:
             - !legends
               horizontalAlignment: left
               #iconMaxWidth: 150
-              maxWidth: 240
               iconMaxHeight: 0
               layerSpace: 5
               layerFontSize: 12
@@ -750,7 +747,6 @@ layouts:
             - !legends
               horizontalAlignment: left
               #iconMaxWidth: 150
-              maxWidth: 240
               iconMaxHeight: 0
               layerSpace: 5
               layerFontSize: 12
@@ -1153,7 +1149,7 @@ layouts:
               iconMaxHeight: 700
               maxHeight: 700
               maxColumns: 3
-              maxWidth: 1000
+              maxWidth: 1200
               layerSpace: 5
               layerFontSize: 12
               classIndentation: 5

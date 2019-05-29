@@ -32,7 +32,6 @@ class Toolbar extends React.Component {
         settings: PropTypes.object,
         layerMetadata: PropTypes.object,
         wfsdownload: PropTypes.object,
-        maxDepth: PropTypes.number,
         metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func])
     };
 
@@ -53,13 +52,11 @@ class Toolbar extends React.Component {
             onHideSettings: () => {},
             onReload: () => {},
             onAddLayer: () => {},
-            onAddGroup: () => { },
             onDownload: () => {},
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
             onShow: () => {}
         },
-        maxDepth: 3,
         text: {
             settingsText: '',
             opacityText: '',
@@ -70,10 +67,6 @@ class Toolbar extends React.Component {
             confirmDeleteMessage: '',
             confirmDeleteCancelText: '',
             createWidgetTooltip: '',
-            addLayerTooltip: '',
-            addLayerToGroupTooltip: '',
-            addGroupTooltip: '',
-            addSubGroupTooltip: '',
             zoomToTooltip: {
                 LAYER: '',
                 LAYERS: ''
@@ -103,7 +96,6 @@ class Toolbar extends React.Component {
             activateDownloadTool: true,
             activateSettingsTool: true,
             activateAddLayer: true,
-            activateAddGroup: true,
             includeDeleteButtonInSettings: false,
             activateMetedataTool: true
         },
@@ -132,16 +124,7 @@ class Toolbar extends React.Component {
     isLoading = () => {
         return head(this.props.selectedLayers.filter(l => l.loading));
     }
-    /**
-     * retrieve current status based on selected layers and groups
-     * 'DESELECT' no selection
-     * 'LAYER' single layer selection
-     * 'LAYERS' multiple layer selection
-     * 'GROUP' single group selection, it select also children layers
-     * 'GROUPS' multiple group selection, it select also children layers
-     * 'LAYER_LOAD_ERROR' single layer selection with error
-     * 'LAYERS_LOAD_ERROR' multiple layer selection with error, all selected layer have an error
-     */
+
     getStatus = () => {
         const {selectedLayers, selectedGroups} = this.props;
         const isSingleGroup = this.isNestedGroup();
@@ -150,26 +133,10 @@ class Toolbar extends React.Component {
         status = isSingleGroup ? 'GROUP' : status;
         status = selectedLayers.length > 1 & selectedGroups.length === 0 ? 'LAYERS' : status;
         status = selectedGroups.length > 1 && !isSingleGroup ? 'GROUPS' : status;
-        status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? `${status}_LOAD_ERROR` : status;
+        status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? 'LAYERS_LOAD_ERROR' : status;
         return status;
     }
-    getSelectedGroup = () => {
-        return this.props.selectedGroups.length > 0 && this.props.selectedGroups[this.props.selectedGroups.length - 1];
-    };
-    getSelectedNodeDepth = () => {
-        if (this.getStatus() === 'DESELECT') {
-            return 0;
-        }
-        return this.getSelectedGroup().id.split('.').length + 1;
-    };
-    addLayer = () => {
-        const group = this.getSelectedGroup();
-        this.props.onToolsActions.onAddLayer(group && group.id);
-    };
-    addGroup = () => {
-        const group = this.getSelectedGroup();
-        this.props.onToolsActions.onAddGroup(group && group.id);
-    };
+
     render() {
         const status = this.getStatus();
         const currentEPSG = this.checkBbox();
@@ -187,26 +154,11 @@ class Toolbar extends React.Component {
                 transitionName="toc-toolbar-btn-transition"
                 transitionEnterTimeout={300}
                 transitionLeaveTimeout={300}>
-                {this.props.activateTool.activateAddLayer && (status === 'DESELECT' || status === 'GROUP') ?
-                    <OverlayTrigger
-                        key="addLayer"
-                        placement="top"
-                            overlay={<Tooltip id="toc-tooltip-addLayer">{status === 'GROUP' ? this.props.text.addLayerToGroupTooltip : this.props.text.addLayerTooltip}</Tooltip>}>
-                            <Button key="addLayer" bsStyle="primary" className="square-button-md" onClick={this.addLayer}>
-                                <Glyphicon glyph="add-layer" />
-                            </Button>
-                    </OverlayTrigger>
+                {this.props.activateTool.activateAddLayer && status === 'DESELECT' ?
+                    <Button key="addLayer" bsStyle="primary" bsSize="small" onClick={this.props.onToolsActions.onAddLayer}>
+                        {this.props.text.addLayer}
+                    </Button>
                 : null}
-                    {this.props.activateTool.activateAddGroup && (status === 'DESELECT' || status === 'GROUP') && this.getSelectedNodeDepth() <= this.props.maxDepth ?
-                    <OverlayTrigger
-                        key="addGroup"
-                        placement="top"
-                            overlay={<Tooltip id="toc-tooltip-addGroup">{status === 'GROUP' ? this.props.text.addSubGroupTooltip : this.props.text.addGroupTooltip}</Tooltip>}>
-                            <Button key="addGroup" bsStyle="primary" className="square-button-md" onClick={this.addGroup}>
-                            <Glyphicon glyph="add-folder" />
-                        </Button>
-                    </OverlayTrigger>
-                    : null}
                 {this.props.activateTool.activateZoomTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && currentEPSG ?
                     <OverlayTrigger
                         key="zoomTo"
@@ -224,11 +176,11 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYER_LOAD_ERROR') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="settings"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status === 'LAYER_LOAD_ERROR' ? 'LAYER' : status]}</Tooltip>}>
+                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status]}</Tooltip>}>
                         <Button active={this.props.settings.expanded} bsStyle={this.props.settings.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => { this.showSettings(status); }}>
                             <Glyphicon glyph="wrench"/>
                         </Button>
@@ -239,12 +191,12 @@ class Toolbar extends React.Component {
                         key="featuresGrid"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-featuresGrid">{this.props.text.featuresGridTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.browseData}>
+                        <Button bsStyle="primary" className="square-button-md" onClick={this.brosweData}>
                             <Glyphicon glyph="features-grid" />
                         </Button>
                     </OverlayTrigger>
                 : null}
-                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
@@ -254,7 +206,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {!this.isLoading() && status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR' ?
+                {!this.isLoading() && status === 'LAYERS_LOAD_ERROR' ?
                     <OverlayTrigger
                         key="reload"
                         placement="top"
@@ -309,7 +261,7 @@ class Toolbar extends React.Component {
         </ButtonGroup>) : null;
     }
 
-    browseData = () => {
+    brosweData = () => {
         this.props.onToolsActions.onBrowseData({
             url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
             name: this.props.selectedLayers[0].name,
@@ -347,7 +299,7 @@ class Toolbar extends React.Component {
 
     showSettings = (status) => {
         if (!this.props.settings.expanded) {
-            if (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') {
+            if (status === 'LAYER') {
                 this.props.onToolsActions.onSettings( this.props.selectedLayers[0].id, 'layers', {opacity: parseFloat(this.props.selectedLayers[0].opacity !== undefined ? this.props.selectedLayers[0].opacity : 1)});
             } else if (status === 'GROUP') {
                 this.props.onToolsActions.onSettings(this.props.selectedGroups[this.props.selectedGroups.length - 1].id, 'groups', {});
@@ -367,7 +319,7 @@ class Toolbar extends React.Component {
 
     removeNodes = () => {
         this.props.selectedLayers.forEach((layer) => {
-            this.props.onToolsActions.onRemove(layer.id, 'layers');
+            this.props.onToolsActions.onRemove(layer.id, 'layers', layer);
         });
         this.props.onToolsActions.onClear();
         this.closeDeleteDialog();

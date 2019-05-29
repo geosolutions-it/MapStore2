@@ -23,6 +23,7 @@ const {errorLoadingFont} = require('../actions/map');
 
 const {isString} = require('lodash');
 let plugins;
+const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit, resetLimitsOnInit} = require('../epics/map');
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
@@ -420,5 +421,5 @@ module.exports = {
         maptype: require('../reducers/maptype'),
         additionallayers: require('../reducers/additionallayers')
     },
-    epics: require('../epics/map')
+    epics: assign({}, { handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit, resetLimitsOnInit})
 };

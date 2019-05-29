@@ -63,8 +63,7 @@ class Catalog extends React.Component {
         zoomToLayer: PropTypes.bool,
         hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
-        hideExpand: PropTypes.bool,
-        layerBaseConfig: PropTypes.object
+        hideExpand: PropTypes.bool
     };
 
     static contextTypes = {
@@ -108,8 +107,7 @@ class Catalog extends React.Component {
         saving: false,
         services: {},
         wrapOptions: false,
-        zoomToLayer: true,
-        layerBaseConfig: {}
+        zoomToLayer: true
     };
 
     state = {
@@ -225,7 +223,6 @@ class Catalog extends React.Component {
                     hideThumbnail={this.props.hideThumbnail}
                     hideIdentifier={this.props.hideIdentifier}
                     hideExpand={this.props.hideExpand}
-                    layerBaseConfig={this.props.layerBaseConfig}
                 />
         </div>);
     };

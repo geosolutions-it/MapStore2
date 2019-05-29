@@ -23,10 +23,6 @@
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
         "method": "bearer"
-      }, {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
     }],
     "monitorState": [
       {"name": "routing", "path": "routing.location.pathname"},
@@ -151,7 +147,7 @@
                     "activateMapTitle": false,
                     "activateSortLayer": false
                 }
-            }, "AddGroup", {
+            }, {
                 "name": "TOCItemsSettings",
                 "cfg": {
                     "width": 300
@@ -169,7 +165,6 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                  "showOptions": false,
                   "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
@@ -272,15 +267,13 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
-                    "activateAddGroupButton": true,
                     "activateMetedataTool": false
                 }
             },
-            "AddGroup",
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ShapeFile", {
+            }, "Print", "ShapeFile", "Timeline", "Playback", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -349,25 +342,10 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets", "WidgetsTray",
-            "Timeline",
-            "Playback",
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "FloatingLegend",
             "FeedbackMask",
-            {
-              "name": "StyleEditor",
-              "cfg": {
-                "styleService": {
-                  "baseUrl": "https://gs-stable.geo-solutions.it/geoserver/",
-                  "formats": [
-                    "css",
-                    "sld"
-                  ],
-                  "availableUrls": [
-                    "http://gs-stable.geo-solutions.it/geoserver/"
-                  ]
-                }
-              }
-            }
+            "StyleEditor"
         ],
         "embedded": [{
                 "name": "Map",
@@ -445,7 +423,7 @@
                     "activateRemoveLayer": false
                 }
 
-            }, "AddGroup", "MapFooter", {
+            }, "MapFooter", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -453,7 +431,6 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                  "showOptions": false,
                   "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {

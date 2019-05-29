@@ -432,11 +432,7 @@ var ConfigUtils = {
     replacePlaceholders: function(inputUrl) {
         let currentUrl = inputUrl;
         (currentUrl.match(/\{.*?\}/g) || []).forEach((placeholder) => {
-            const replacement = defaultConfig[placeholder.substring(1, placeholder.length - 1)];
-            // replacement must exist, or the URL is intended as a real template for the URL (e.g REST URLs of WMTS)
-            if (replacement !== undefined) {
-                currentUrl = currentUrl.replace(placeholder, replacement || '');
-            }
+            currentUrl = currentUrl.replace(placeholder, defaultConfig[placeholder.substring(1, placeholder.length - 1)] || '');
         });
         return currentUrl;
     },

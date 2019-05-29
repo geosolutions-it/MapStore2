@@ -7,11 +7,7 @@
  */
 
 const {compose} = require('recompose');
-const { editableWidget, defaultIcons, withHeaderTools } = require('./tools');
-
 module.exports = compose(
     require("./deleteWidget"),
-    editableWidget(),
-    defaultIcons(),
-    withHeaderTools()
+    require("./wpsCounter")
 );

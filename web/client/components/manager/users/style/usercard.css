@@ -39,11 +39,14 @@
 }
 .group-thumb .group-thumb-description {
     /* ellipsis for description */
+    margin: 10px;
     display: block; /* Fallback for non-webkit */
     display: -webkit-box;
+    padding: 5px;
     magin: 0 auto;
     height: 75px; /* font-size * webkit-line-clamp + padding */
     font-size: 12px;
+    line-height: 1;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
