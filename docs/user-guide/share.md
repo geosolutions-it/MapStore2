@@ -23,3 +23,9 @@ From the *Social* tab, you can share the map on social networks.
 From the *Embed* tab, you can embed the iframe code in your website or using APIs (for expert developers).
 
 <p align = "center" ><img src="../img/share-3.jpg" style="max-width:500px;" /></p>
+
+If you enable the *Advanced Options* an additional option to the sharable map link can be added to include the **bbox** as query parameter, the value corresponds to the current extent in the viewport.
+
+<p align = "center" ><img src="../img/share-bbox.jpg" style="max-width:500px;" /></p>
+
+The **bbox** query parameter is needed to zoom the map to a specific extent at startup.

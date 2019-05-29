@@ -924,6 +924,7 @@
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
@@ -962,7 +963,8 @@
             "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
             "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
             "errorSaving": "Si è verificato un errore salvando questo utente:",
-            "selectedGroups": "GRUPPI SELEZIONATI"
+            "selectedGroups": "GRUPPI SELEZIONATI",
+            "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
         },
         "usergroups": {
           "searchGroups": "Cerca gruppi...",
@@ -1635,6 +1637,7 @@
             "createStyleErrorMessage": "Lo stile non può essere salvato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
             "updateStyleErrorTitle": "Modifica stile",
             "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione.",
+            "validationErrorTitle": "Errore di validazione",
             "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo.",
             "setDefaultStyle": "Imposta lo stile selezionato come predefinito per il layer corrente",
             "setDefaultStyleSuccessTitle": "Stile predefinito aggiornamento",

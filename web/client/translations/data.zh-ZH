@@ -897,6 +897,7 @@
             "passwordInvalid": "无效的密码",
             "username": "用户名",
             "password": "密码",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "密码已更改",
             "passwordError": "更改密码时出错",
             "signIn":"签到",
@@ -935,7 +936,8 @@
             "confirmDeleteUser": "Are you sure you want to delete this user?",
             "errorDelete": "There was an error deleting this user:",
             "errorSaving": "There was an error saving the user:",
-            "selectedGroups": "SELECTED GROUPS"
+            "selectedGroups": "SELECTED GROUPS",
+            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
           "searchGroups": "Search Groups...",
@@ -1581,6 +1583,7 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "validationErrorTitle": "Validation Error",
             "genericValidationError": "Style is not valid and it could not be applied.",
             "setDefaultStyle": "Set selected style as default for the current layer",
             "setDefaultStyleSuccessTitle": "Success on set default style",

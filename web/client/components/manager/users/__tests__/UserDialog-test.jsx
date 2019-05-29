@@ -9,6 +9,7 @@ const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const UserDialog = require('../UserDialog');
+const ReactTestUtils = require('react-dom/test-utils');
 const enabledUser = {
     id: 1,
     name: "USER1",
@@ -105,6 +106,11 @@ describe("Test UserDialog Component", () => {
             <UserDialog user={{...enabledUser, newPassword: "aaabbbà", confirmPassword: "aaabbbà"}}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.isValidPassword()).toBe(false);
+        // New user, empty password
+        comp = ReactDOM.render(
+            <UserDialog user={{...newUser, newPassword: "", confirmPassword: ""}}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        expect(comp.isValidPassword()).toBe(false);
     });
     it('Test without password fields', () => {
         let comp = ReactDOM.render(
@@ -167,7 +173,7 @@ describe("Test UserDialog Component", () => {
             }} onSave={handlers.onSave} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        domnode.getElementsByTagName("button").item(4).click();
+        domnode.getElementsByTagName("button").item(1).click();
 
         expect(spy.calls.length).toBe(1);
     });
@@ -182,7 +188,7 @@ describe("Test UserDialog Component", () => {
             }} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        expect(domnode.getElementsByClassName("btn-primary")[3].disabled).toBe(true);
+        expect(domnode.getElementsByClassName("btn-primary")[0].disabled).toBe(true);
         expect(domnode.getElementsByClassName("spinner").length).toNotBe(0);
     });
     it('displays the success style', () => {
@@ -197,5 +203,55 @@ describe("Test UserDialog Component", () => {
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
         expect(domnode.getElementsByClassName("btn-success").length).toBe(1);
+    });
+    it('Testing selected user-dialog-tab is highlighted', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={{
+                id: 1,
+                name: "USER1",
+                role: "USER",
+                enabled: true,
+                status: "saved"
+            }} />, document.getElementById("container"));
+
+        expect(comp).toExist();
+
+        const tabs = document.querySelectorAll('.nav.nav-justified > li');
+        expect(tabs[0].getAttribute('class')).toBe('active');
+        const userGroupButton = tabs[2].children[0];
+        ReactTestUtils.Simulate.click(userGroupButton);
+        expect(tabs[2].getAttribute('class')).toBe('active');
+    });
+
+    it('Testing asterisk inside mandatory fields', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={{
+                id: 1,
+                name: "USER1",
+                role: "USER",
+                enabled: true,
+                status: "saved"
+            }} />,
+            document.getElementById("container"));
+
+        expect(comp).toExist();
+        const labels = document.querySelectorAll('.control-label');
+        const [
+            username,
+            password,
+            retypePassword
+        ] = labels;
+        expect(username.children.length).toBe(2);
+        expect(username.children[0].innerHTML).toBe('user.username');
+        expect(username.children[1].innerHTML).toBe('*');
+
+        expect(password.children.length).toBe(3);
+        expect(password.children[0].innerHTML).toBe('user.password');
+        expect(password.children[1].innerHTML).toBe('*');
+        expect(password.children[2].getAttribute('class')).toBe('glyphicon glyphicon-info-sign');
+
+        expect(retypePassword.children.length).toBe(2);
+        expect(retypePassword.children[0].innerHTML).toBe('user.retypePwd');
+        expect(retypePassword.children[1].innerHTML).toBe('*');
     });
 });

@@ -61,12 +61,12 @@ class FloatingLegendComponent extends React.Component {
 
     renderPanel() {
         const Plugin = this.props.items && head(this.props.items.filter(item => item && item.name === this.props.pluginName));
-        return Plugin && Plugin.plugin && <Plugin.plugin {...(Plugin.cgf || {})} items={Plugin.items || []} menuButtonStyle={{display: 'none'}}/>;
+        return Plugin && Plugin.plugin && <Plugin.plugin {...(Plugin.cfg || {})} items={Plugin.items || []} menuButtonStyle={{display: 'none'}}/>;
     }
 
     renderToggleButton() {
         const Plugin = this.props.items && head(this.props.items.filter(item => item && item.name === this.props.pluginName));
-        return Plugin && Plugin.button && <Plugin.button {...(Plugin.cgf || {})} tooltipId={this.props.tooltipId}/>;
+        return Plugin && Plugin.button && <Plugin.button {...(Plugin.cfg || {})} tooltipId={this.props.tooltipId}/>;
     }
 
     render() {

@@ -15,6 +15,18 @@ describe('CoordinatesUtils', () => {
 
         setTimeout(done);
     });
+    it('convert lat lon to mercator without specifying source and dest', () => {
+        const point = [45, 13];
+        const transformed = CoordinatesUtils.reproject(point, "", "");
+        expect(transformed).toNotExist();
+        expect(transformed).toEqual(null);
+        const transformed2 = CoordinatesUtils.reproject(point, null, null);
+        expect(transformed2).toNotExist();
+        expect(transformed2).toEqual(null);
+        const transformed3 = CoordinatesUtils.reproject(point, undefined, undefined);
+        expect(transformed3).toNotExist();
+        expect(transformed3).toEqual(null);
+    });
     it('convert lat lon to mercator', () => {
         var point = [45, 13];
 
