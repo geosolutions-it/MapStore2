@@ -8,9 +8,6 @@
 
 var expect = require('expect');
 var {
-    ERROR_FEATURE_INFO,
-    EXCEPTIONS_FEATURE_INFO,
-    LOAD_FEATURE_INFO,
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
@@ -20,7 +17,6 @@ var {
     GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
-    getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
@@ -29,112 +25,12 @@ var {
     hideMapinfoRevGeocode,
     getVectorInfo,
     toggleMapInfoState,
-    updateCenterToMarker
+    updateCenterToMarker,
+    TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
+    CHANGE_FORMAT, changeFormat
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
-
-    it('get feature info data', (done) => {
-        /*eslint-disable */
-        let reqId;
-        /*eslint-enable */
-        getFeatureInfo('base/web/client/test-resources/featureInfo-response.json', {p: "p"}, "meta")((e) => {
-            if (e.type === NEW_MAPINFO_REQUEST) {
-                reqId = e.reqId;
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-                    expect(e.reqId).toExist();
-                    expect(e.request).toExist();
-                    expect(e.request.p).toBe("p");
-                } catch (ex) {
-                    done(ex);
-                }
-            } else if (e.type === LOAD_FEATURE_INFO) {
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(LOAD_FEATURE_INFO);
-                    expect(e.data).toExist();
-                    expect(e.requestParams).toExist();
-                    expect(e.reqId).toExist();
-                    expect(e.reqId).toBe(reqId);
-                    expect(e.requestParams.p).toBe("p");
-                    expect(e.layerMetadata).toBe("meta");
-                    done();
-                } catch (ex) {
-                    done(ex);
-                }
-            }
-        });
-    });
-
-    it('get feature info exception', (done) => {
-            /*eslint-disable */
-            let reqId;
-            /*eslint-enable */
-        getFeatureInfo('base/web/client/test-resources/featureInfo-exception.json', {p: "p"}, "meta")((e) => {
-            if (e.type === NEW_MAPINFO_REQUEST) {
-                reqId = e.reqId;
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-                    expect(e.reqId).toExist();
-                    expect(e.request).toExist();
-                    expect(e.request.p).toBe("p");
-                } catch (ex) {
-                    done(ex);
-                }
-            } else if (e.type === EXCEPTIONS_FEATURE_INFO) {
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                    expect(e.exceptions).toExist();
-                    expect(e.reqId).toExist();
-                    expect(e.reqId).toBe(reqId);
-                    expect(e.requestParams).toExist();
-                    expect(e.requestParams.p).toBe("p");
-                    expect(e.layerMetadata).toBe("meta");
-                    done();
-                } catch (ex) {
-                    done(ex);
-                }
-            }
-        });
-    });
-
-    it('get feature info error', (done) => {
-        /*eslint-disable */
-        let reqId;
-        /*eslint-enable */
-        getFeatureInfo('requestError.json', {p: "p"}, "meta")((e) => {
-            if (e.type === NEW_MAPINFO_REQUEST) {
-                reqId = e.reqId;
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-                    expect(e.reqId).toExist();
-                    expect(e.request).toExist();
-                    expect(e.request.p).toBe("p");
-                } catch (ex) {
-                    done(ex);
-                }
-            } else if (e.type === ERROR_FEATURE_INFO) {
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(ERROR_FEATURE_INFO);
-                    expect(e.error).toExist();
-                    expect(e.reqId).toExist();
-                    expect(e.reqId).toBe(reqId);
-                    expect(e.requestParams).toExist();
-                    expect(e.requestParams.p).toBe("p");
-                    expect(e.layerMetadata).toBe("meta");
-                    done();
-                } catch (ex) {
-                    done(ex);
-                }
-            }
-        });
-    });
 
     it('gets vector info', () => {
         const retval = getVectorInfo('layer', 'request', 'metadata');
@@ -205,5 +101,17 @@ describe('Test correctness of the map actions', () => {
         const retval = updateCenterToMarker('enabled');
         expect(retval.type).toBe(UPDATE_CENTER_TO_MARKER);
         expect(retval.status).toBe('enabled');
+    });
+    it('toggleShowCoordinateEditor', () => {
+        const showCoordinateEditor = true;
+        const retval = toggleShowCoordinateEditor(showCoordinateEditor);
+        expect(retval.type).toBe(TOGGLE_SHOW_COORD_EDITOR);
+        expect(retval.showCoordinateEditor).toBe(showCoordinateEditor);
+    });
+    it('changeFormat', () => {
+        const format = "decimal";
+        const retval = changeFormat(format);
+        expect(retval.type).toBe(CHANGE_FORMAT);
+        expect(retval.format).toBe(format);
     });
 });

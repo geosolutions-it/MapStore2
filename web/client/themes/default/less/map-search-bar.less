@@ -1,6 +1,8 @@
 /* search */
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
+    background-color: @ms2-color-background;
 	width: 500px;
+    border-radius: 0;
 }
 /* remove default inbox bootstrap shadow on focus for the input */
 div.MapSearchBar .form-control:focus {
@@ -15,22 +17,6 @@ div.MapSearchBar .input-group-addon {
 	border: 0;
 	border-radius: 0;
 	font-size: @grid-icon-size;
-}
-
-.MapSearchBar .input-group-addon .magnifying-glass:hover.clickable,
-.MapSearchBar .input-group-addon .searchclear:hover {
-    opacity: 0.75
-}
-
-.MapSearchBar .input-group-addon .magnifying-glass.clickable,
-.MapSearchBar .input-group-addon .searchclear,
-.MapSearchBar .input-group-addon .searcherror {
-    margin-right: 4px;
-    cursor: pointer
-}
-
-.MapSearchBar .input-group-addon .searcherror {
-	color: @ms2-color-danger;
 }
 
 #mapstore-navbar .navbar-dx .search-result-list {
@@ -126,8 +112,72 @@ div.MapSearchBar .input-group-addon {
 	background-color: @ms2-color-background;
 }
 
-.MapSearchBar .input-group input {
-    height: @square-btn-size !important;
-    border: none !important;
-    outline: none !important;
+
+.MapSearchBar .input-group {
+    background-color: @ms2-color-background;
+    .searchInput {
+        width: 75%;
+        height: @square-btn-size !important;
+        border: none;
+        outline: none !important;
+    }
+    .coordinateEditor {
+        width: 75%;
+        align-items: center;
+        box-sizing: border-box;
+        margin: 8px 15px !important;
+
+        .entryRow {
+            padding: 5px;
+            .coordinateLabel {
+                margin-top: 9px;
+            }
+            .form-group{
+                width: 100%;
+            }
+            input {
+                font-family: @font-family-monospace;
+                height: 34px;
+            }
+        }
+    }
+    // search toolbar
+    .search-toolbar-options {
+        .magnifying-glass {
+            pointer-events: none;
+            &.clickable {
+                pointer-events: auto
+            }
+        }
+        width: 25%;
+        padding: 0;
+        .dropdown-menu > .active > a,
+        .dropdown-menu > .active > a .glyphicon {
+          &,
+          &:hover,
+          &:focus {
+            color: @dropdown-link-active-color;
+            text-decoration: none;
+            outline: 0;
+            background-color: @dropdown-link-active-bg;
+          }
+        }
+        .btn-group-menu-options {
+            position: absolute;
+            top: 13px;
+            right: 5px;
+            display: block;
+            [disabled]{
+                background-color: @ms2-color-background;
+                color: @ms2-color-primary;
+                opacity: 0.75;
+            }
+            &.btn-group {
+                .btn-danger {
+                    background-color: @ms2-color-background;
+                    color: @ms2-color-danger;
+                }
+            }
+        }
+    }
 }

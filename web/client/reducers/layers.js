@@ -7,7 +7,7 @@
  */
 
 var { LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
-    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER,
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER, ADD_GROUP,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
     } = require('../actions/layers');
 
@@ -54,7 +54,20 @@ const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
     }else {
         newGroups = LayersUtils.deepChange(newGroups, group.id, 'nodes', foreground ? [node].concat(group.nodes.slice(0)) : group.nodes.concat(node));
     }
-    return LayersUtils.removeEmptyGroups(newGroups);
+    return newGroups;
+};
+
+const insertNode = (nodes, node, parent) => {
+    if (!parent) {
+        return [...nodes, node];
+    }
+    return nodes.map(n => isString(n) ? n : (n.id === parent ? {
+        ...n,
+        nodes: [...n.nodes, node]
+    } : {
+        ...n,
+        nodes: insertNode(n.nodes, node, parent)
+    }));
 };
 
 function layers(state = { flat: [] }, action) {
@@ -159,12 +172,11 @@ function layers(state = { flat: [] }, action) {
             }
         }
         case UPDATE_NODE: {
-
             const selector = action.nodeType === 'groups' ? 'group' : 'id';
-
             if (selector === 'group') {
                 const groups = state.groups ? [].concat(state.groups) : [];
-                const newGroups = LayersUtils.deepChange(groups, action.node, 'title', action.options.title);
+                // updating correctly options in a (deep) subgroup
+                let newGroups = LayersUtils.deepChange(groups, action.node, action.options);
                 return assign({}, state, {groups: newGroups});
             }
 
@@ -209,11 +221,13 @@ function layers(state = { flat: [] }, action) {
                 };
             }
             if (action.nodeType === 'layers') {
-                const newGroups = deepRemove(state.groups, action.node);
+                const newGroups = action.removeEmpty ?
+                    LayersUtils.removeEmptyGroups(deepRemove(state.groups, action.node)) :
+                    deepRemove(state.groups, action.node);
                 const newLayers = state.flat.filter((layer) => layer.id !== action.node);
                 return assign({}, state, {
                     flat: newLayers,
-                    groups: LayersUtils.removeEmptyGroups(newGroups)
+                    groups: newGroups
                 });
             }
             return state;
@@ -238,6 +252,19 @@ function layers(state = { flat: [] }, action) {
             const newLayers = state.flat.filter((layer) => layer.id !== action.layerId);
             return assign({}, state, {
                 flat: newLayers,
+                groups: newGroups
+            });
+        }
+        case ADD_GROUP: {
+            const id = action.group.replace(/\./g, '\${dot}');
+            const newGroups = insertNode(state.groups, {
+                id: action.parent ? (action.parent + '.' + id) : id,
+                title: action.group,
+                name: action.group,
+                nodes: [],
+                expanded: true
+            }, action.parent);
+            return assign({}, state, {
                 groups: newGroups
             });
         }

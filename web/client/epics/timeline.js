@@ -10,8 +10,8 @@ const {REMOVE_NODE} = require('../actions/layers');
 const {error} = require('../actions/notifications');
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector, timelineLayersSelector } = require('../selectors/timeline');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
@@ -128,8 +128,12 @@ const loadRangeData = (id, timeData, getState) => {
         }
 
         const domainValues = domain && domain.indexOf('--') < 0 && domain.split(',');
-        // const total = values.reduce((a, b) => a + b, 0);
 
+        /*
+         * shape of range: {start: "T_START", end: "T_END"}
+         * shape of histogram {values: [1, 2, 3], domain: "T_START/T_END/RESOLUTION" }
+         * shape of domain: {values: ["T1", "T2", ....]}, present only if not in the form "T1--T2"
+         */
         return Rx.Observable.of({
             range,
             histogram: histogram && histogram.Domain
@@ -186,18 +190,20 @@ module.exports = {
      * Initializes the time line
      */
     setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, UPDATE_LAYER_DIMENSION_DATA)
-        .exhaustMap(() => isAutoSelectEnabled(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
-        && !selectedLayerSelector(getState())
-            ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
-                .concat(
-                    Rx.Observable.of(1).switchMap( () =>
-                        snapTime(getState(), get(layersWithTimeDataSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
-                            .filter( v => v)
-                            .map(time => setCurrentTime(time)))
-                )
-            : Rx.Observable.empty()
+        .exhaustMap(() =>
+            isAutoSelectEnabled(getState())
+            && get(timelineLayersSelector(getState()), "[0].id")
+            && !selectedLayerSelector(getState())
+                ? Rx.Observable.of(selectLayer(get(timelineLayersSelector(getState()), "[0].id")))
+                    .concat(
+                        Rx.Observable.of(1).switchMap( () =>
+                            snapTime(getState(), get(timelineLayersSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
+                                .filter( v => v)
+                                .map(time => setCurrentTime(time)))
+                    )
+                : Rx.Observable.empty()
     ),
-     /**
+    /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist
      * The policy is:
      *  - if current time is not defined, it will be placed to the center of the current timeline's viewport. If the viewport is undefined it is set to "now"

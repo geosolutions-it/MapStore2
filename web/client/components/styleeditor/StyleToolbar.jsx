@@ -9,6 +9,7 @@
 const React = require('react');
 const Toolbar = require('../misc/toolbar/Toolbar');
 const ResizableModal = require('../misc/ResizableModal');
+const Portal = require('../misc/Portal');
 const Message = require('../I18N/Message');
 const { Alert } = require('react-bootstrap');
 
@@ -51,7 +52,8 @@ const StyleToolbar = ({
     onSelectStyle = () => {},
     onEditStyle = () => {},
     onUpdate = () => {},
-    onSetDefault = () => {}
+    onSetDefault = () => {},
+    disableCodeEditing
 }) => (
     <div>
         <Toolbar
@@ -101,7 +103,7 @@ const StyleToolbar = ({
                     glyph: 'code',
                     tooltipId: 'styleeditor.editSelectedStyle',
                     visible: !status && editEnabled ? true : false,
-                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1,
+                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || disableCodeEditing,
                     onClick: () => onEditStyle()
                 },
                 {
@@ -151,14 +153,16 @@ const StyleToolbar = ({
                 },
                 ...(!!status ? [] : buttons)
             ]} />
-        <ResizableModal
-            show={showModal}
-            fitContent
-            title={showModal && showModal.title}
-            onClose={() => onShowModal(null)}
-            buttons={showModal && showModal.buttons}>
-            {showModal && showModal.message}
-        </ResizableModal>
+        <Portal>
+            <ResizableModal
+                show={showModal}
+                fitContent
+                title={showModal && showModal.title}
+                onClose={() => onShowModal(null)}
+                buttons={showModal && showModal.buttons}>
+                {showModal && showModal.message}
+            </ResizableModal>
+        </Portal>
     </div>
 );
 

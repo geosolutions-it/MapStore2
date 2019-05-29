@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ConfigUtils = require('../MapStore2/web/client/utils/ConfigUtils');
+const ConfigUtils = require('@mapstore/utils/ConfigUtils');
 /**
  * Add custom (overriding) translations with:
  *
@@ -29,21 +29,21 @@ ConfigUtils.setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
  *
  * Or override the application configuration file with (e.g. only one page with a mapviewer):
  *
- * const appConfig = assign({}, require('../MapStore2/web/client/product/appConfig'), {
+ * const appConfig = assign({}, require('@mapstore/product/appConfig'), {
  *     pages: [{
  *         name: "mapviewer",
  *         path: "/",
- *         component: require('../MapStore2/web/client/product/pages/MapViewer')
+ *         component: require('@mapstore/product/pages/MapViewer')
  *     }]
  * });
  */
-const appConfig = require('../MapStore2/web/client/product/appConfig');
+const appConfig = require('@mapstore/product/appConfig');
 
 /**
  * Define a custom list of plugins with:
  *
  * const plugins = require('./plugins');
  */
-const plugins = require('../MapStore2/web/client/product/plugins');
+const plugins = require('@mapstore/product/plugins');
 
-require('../MapStore2/web/client/product/main')(appConfig, plugins);
+require('@mapstore/product/main')(appConfig, plugins);

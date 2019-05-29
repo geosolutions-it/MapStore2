@@ -8,11 +8,11 @@
 
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
-const { isString, isObject, isArray, head, isEmpty, findIndex} = require('lodash');
-const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
-const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
-    return regex.test(url) && url.match(regex)[0] || null;
-};
+const uuidv1 = require('uuid/v1');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
+
+let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
+
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
 };
@@ -118,14 +118,19 @@ const getGroupNodes = (node) => {
     return [];
 };
 
+
+/**
+ * adds or update node property in a nested node
+ * if propName is an object it overrides a whole group of options instead of one
+*/
 const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
             if (isObject(node)) {
                 if (node.id === findValue) {
-                    return assign({}, node, {[propName]: propValue});
-                }else if (node.nodes) {
-                    return assign({}, node, {nodes: deepChange(node.nodes, findValue, propName, propValue)});
+                    return {...node, ...(isObject(propName) ? propName : {[propName]: propValue})};
+                } else if (node.nodes) {
+                    return {...node, nodes: deepChange(node.nodes, findValue, propName, propValue)};
                 }
             }
             return node;
@@ -135,23 +140,77 @@ const deepChange = (nodes, findValue, propName, propValue) => {
 };
 
 /**
+ * Extracts the sourceID of a layer.
+ * @param {object} layer the layer object
+ */
+const getSourceId = (layer = {}) => layer.capabilitiesURL || head(castArray(layer.url));
+/**
 * It extracts tile matrix set from sources and add them to the layer
 *
 * @param sources {object} sources object from state or configuration
 * @param layer {object} layer to check
 * @return {object} new layers with tileMatrixSet and matrixIds (if needed)
 */
-
 const extractTileMatrixFromSources = (sources, layer) => {
     if (!sources || !layer) {
         return {};
     }
+    const sourceId = getSourceId(layer);
     const matrixIds = layer.matrixIds && layer.matrixIds.reduce((a, mI) => {
-        const ids = sources[layer.url] && sources[layer.url].tileMatrixSet && sources[layer.url].tileMatrixSet[mI] && sources[layer.url].tileMatrixSet[mI].TileMatrix.map(i => ({identifier: i['ows:Identifier'], ranges: i.ranges})) || [];
+        const ids = sources[sourceId] && sources[sourceId].tileMatrixSet && sources[sourceId].tileMatrixSet[mI] && sources[sourceId].tileMatrixSet[mI].TileMatrix.map(i => ({identifier: i['ows:Identifier'], ranges: i.ranges})) || [];
         return ids.length === 0 ? assign({}, a) : assign({}, a, {[mI]: [...ids]});
     }, {}) || null;
-    const tileMatrixSet = layer.tileMatrixSet && layer.matrixIds.map(mI => sources[layer.url].tileMatrixSet[mI]).filter(v => v) || null;
+    const tileMatrixSet = layer.tileMatrixSet && layer.matrixIds.map(mI => sources[sourceId].tileMatrixSet[mI]).filter(v => v) || null;
     return tileMatrixSet && matrixIds && {tileMatrixSet, matrixIds} || {};
+};
+
+/**
+* It extracts tile matrix set from layers and add them to sources map object
+*
+* @param  {object} sourcesFromLayers layers grouped by url
+* @param {object} [sources] current sources map object
+* @return {object} new sources object with data from layers
+*/
+const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
+    return sourcesFromLayers && Object.keys(sourcesFromLayers).reduce((src, url) => {
+        const matrixIds = sourcesFromLayers[url].reduce((a, b) => {
+            return assign(a, { [b.id || b.name]: { srs: [...Object.keys(b.matrixIds)], matrixIds: assign({}, b.matrixIds) } });
+        }, {});
+
+        const newMatrixSet = sourcesFromLayers[url].reduce((nMS, l) => {
+
+            const matrixSetObject = l.tileMatrixSet.reduce((i, tM) => assign({}, i, { [tM['ows:Identifier']]: assign({}, tM) }), {});
+
+            const matrixFilteredByLayers = Object.keys(matrixSetObject).reduce((mFBL, key) => {
+
+                const layers = Object.keys(matrixIds)
+                    .filter(layerId => head(matrixIds[layerId].srs.filter(mId => mId === key)))
+                    .map(layerId => matrixIds[layerId].matrixIds[key]);
+
+                const TileMatrix = layers[0] && matrixSetObject[key].TileMatrix.map((m, idx) => layers[0][idx] && layers[0][idx].ranges ? assign({}, m, { ranges: layers[0][idx].ranges }) : assign({}, m));
+
+                return !head(layers) ? assign({}, mFBL) : assign({}, mFBL, { [key]: assign({}, matrixSetObject[key], { TileMatrix }) });
+            }, {});
+
+            return assign({}, nMS, matrixFilteredByLayers);
+        }, {});
+        return assign({}, src, { [url]: assign({}, sources[url] || {}, { tileMatrixSet: assign({}, src[url] && src[url].tileMatrixSet || {}, newMatrixSet) }) });
+    }, assign({}, sources)) || sources;
+};
+
+/**
+ * Creates a map of `sourceId: sourceObject` from the layers array.
+ * @param {object[]} layers array of layer objects
+ */
+const extractSourcesFromLayers = layers => {
+    /* layers grouped by url to create the source object */
+    const groupByUrl = layers.filter(l => l.tileMatrixSet).reduce((a, l) => {
+        const sourceId = getSourceId(l);
+        return a[sourceId] ? assign({}, a, { [sourceId]: [...a[sourceId], l] }) : assign({}, a, { [sourceId]: [l] });
+    }, {});
+
+    /* extract and add tilematrixset to sources object  */
+    return extractTileMatrixSetFromLayers(groupByUrl);
 };
 
 /**
@@ -184,6 +243,9 @@ const SecurityUtils = require('./SecurityUtils');
 const LayerCustomUtils = {};
 
 const LayersUtils = {
+    getSourceId,
+    extractSourcesFromLayers,
+    extractTileMatrixSetFromLayers,
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
         case 'elevation':
@@ -331,8 +393,29 @@ const LayersUtils = {
         }
         return mapState;
     },
+    /**
+     * used for converting a geojson file with fileName into a vector layer
+     * it supports FeatureCollection or Feature
+     * @param {object} geoJSON object to put into features
+     * @param {string} id layer id
+     * @return {object} vector layer containing the geojson in features array
+    */
     geoJSONToLayer: (geoJSON, id) => {
         const bbox = toBbox(geoJSON);
+        let features = [];
+        if (geoJSON.type === "FeatureCollection") {
+            features = geoJSON.features.map((feature, idx) => {
+                if (!feature.id) {
+                    feature.id = idx;
+                }
+                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
+                    feature.geometry.bbox = [null, null, null, null];
+                }
+                return feature;
+            });
+        } else {
+            features = [pick({...geoJSON, id: isNil(geoJSON.id) ? uuidv1() : geoJSON.id}, ["geometry", "type", "style", "id"])];
+        }
         return {
             type: 'vector',
             visibility: true,
@@ -349,15 +432,7 @@ const LayersUtils = {
                 },
                 crs: "EPSG:4326"
             },
-            features: geoJSON.features.map((feature, idx) => {
-                if (!feature.id) {
-                    feature.id = idx;
-                }
-                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
-                    feature.geometry.bbox = [null, null, null, null];
-                }
-                return feature;
-            })
+            features
         };
     },
     saveLayer: (layer) => {
@@ -377,7 +452,6 @@ const LayersUtils = {
             style: layer.style,
             styleName: layer.styleName,
             availableStyles: layer.availableStyles,
-            capabilitiesURL: layer.capabilitiesURL,
             title: layer.title,
             transparent: layer.transparent,
             tiled: layer.tiled,
@@ -390,25 +464,42 @@ const LayersUtils = {
             allowedSRS: layer.allowedSRS,
             matrixIds: layer.matrixIds,
             tileMatrixSet: layer.tileMatrixSet,
+            requestEncoding: layer.requestEncoding,
             dimensions: layer.dimensions || [],
             maxZoom: layer.maxZoom,
             maxNativeZoom: layer.maxNativeZoom,
             hideLoading: layer.hideLoading || false,
             handleClickOnLayer: layer.handleClickOnLayer || false,
+            queryable: layer.queryable,
             featureInfo: layer.featureInfo,
             catalogURL: layer.catalogURL,
+            capabilitiesURL: layer.capabilitiesURL,
             useForElevation: layer.useForElevation || false,
             hidden: layer.hidden || false,
             origin: layer.origin,
-            thematic: layer.thematic
+            thematic: layer.thematic,
+            tooltipOptions: layer.tooltipOptions,
+            tooltipPlacement: layer.tooltipPlacement
         },
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {});
     },
     /**
-    * default regex rule for searching for a /geoserver/ string in a url
+    * default initial constant regex rule for searching for a /geoserver/ string in a url
+    * useful for a reset to an initial state of the rule
     */
-    REG_GEOSERVER_RULE,
+    REG_GEOSERVER_RULE: regGeoServerRule,
+    /**
+     * Override default REG_GEOSERVER_RULE variable
+     * @param {regex} regex custom regex to override
+     */
+    setRegGeoserverRule: (regex) => {
+        regGeoServerRule = regex;
+    },
+    /**
+     * Get REG_GEOSERVER_RULE regex variable
+     */
+    getRegGeoserverRule: () => regGeoServerRule,
     /**
     * it tests if a url is matched by a regex,
     * if so it returns the matched string
@@ -416,14 +507,17 @@ const LayersUtils = {
     * @param object.regex the regex to use for parsing the url
     * @param object.url the url to test
     */
-    findGeoServerName,
+    findGeoServerName: ({url, regexRule}) => {
+        const regex = regexRule || LayersUtils.getRegGeoserverRule();
+        return regex.test(url) && url.match(regex)[0] || null;
+    },
     /**
      * This method search for a /geoserver/  string inside the url
      * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
      * otherwise it returns the default getCapabilitiesUrl
     */
     getCapabilitiesUrl: (layer) => {
-        const matchedGeoServerName = findGeoServerName({url: layer.url});
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
         let reqUrl = layer.url;
         if (!!matchedGeoServerName) {
             let urlParts = reqUrl.split(matchedGeoServerName);

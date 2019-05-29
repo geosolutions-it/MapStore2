@@ -61,7 +61,7 @@ class FullScreenButton extends React.Component {
         notActiveTooltip: 'fullscreen.tooltipActivate',
         tooltipPlace: 'left',
         defaultStyle: 'primary',
-        pressedStyle: 'success',
+        pressedStyle: 'success active',
         glyphicon: '1-full-screen',
         btnConfig: {
             className: "square-button"

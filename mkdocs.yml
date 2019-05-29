@@ -1,0 +1,84 @@
+site_name: MapStore
+site: 'https://mapstore.geo-solutions.it'
+theme:
+  name: 'material'
+  custom_dir: 'docs/theme'
+  language: 'en'
+  feature:
+    tabs: true
+  logo: 'img/mapstore2-logo.png'
+  company_url: 'http://www.geo-solutions.it'
+  company_contacts: 'GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272'
+  palette:
+    primary: 'teal'
+    accent: 'teal'
+  font:
+    text: 'Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif'
+    code: 'Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif'
+extra:
+  repo_icon: 'github'
+  social:
+    - type: 'github'
+      link: 'https://github.com/geosolutions-it'
+    - type: 'twitter'
+      link: 'https://twitter.com/geosolutions_it'
+    - type: 'linkedin'
+      link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
+extra_javascript:
+  - 'https://code.jquery.com/jquery-3.3.1.min.js'
+extra_css:
+  - 'theme/css/extra.css'
+repo_name: 'geosolutions-it/MapStore2'
+repo_url: 'https://github.com/geosolutions-it/MapStore2/'
+repo_issues: 'https://github.com/geosolutions-it/MapStore2/issues'
+edit_uri: ''
+docs_dir: 'docs'
+markdown_extensions:
+  - admonition
+  - markdown.extensions.attr_list
+pages:
+  - User Guide:
+    - Home Page Overview: 'user-guide/home-page.md'
+    - Managing Users and Groups:
+      - Overview: 'user-guide/managing-users-and-groups.md'
+      - Managing Users: 'user-guide/managing-users.md'
+      - Managing Groups: 'user-guide/managing-groups.md'
+      - Managing User Rights on Maps: 'user-guide/managing-user-rights.md'
+    - Exploring Maps:
+      - Overview: 'user-guide/exploring-maps.md'
+      - Table of Contents: 'user-guide/toc.md'
+      - Managing Layer Settings: 'user-guide/layer-settings.md'
+      - Attribute Table: 'user-guide/attributes-table.md'
+      - Creating Widgets: 'user-guide/widgets.md'
+      - Menu Bar: 'user-guide/menu-bar.md'
+      - Printing a Map: 'user-guide/print.md'
+      - Adding Local Vector Files: 'user-guide/local-files.md'
+      - Managing Remote Services from the Catalog: 'user-guide/catalog.md'
+      - Saving a Map: 'user-guide/save.md'
+      - Performing Measurments: 'user-guide/measure.md'
+      - Adding Annotations: 'user-guide/annotations.md'
+      - Sharing a Map: 'user-guide/share.md'
+      - Side Bar: 'user-guide/side-bar.md'
+      - Basemap Switcher: 'user-guide/basemap.md'
+      - Timeline: 'user-guide/timeline.md'
+      - Footer: 'user-guide/footer.md'
+    - Exploring Dashboards: 'user-guide/exploring-dashboards.md'
+  - Developer Guide:
+    - Dev Setup and Run: 'developer-guide/index.md'
+    - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
+    - Developing with MapStore: 'developer-guide/developing-with-mapstore-2-intro.md'
+    - How to:
+      - Dev How To: 'developer-guide/dev-how-to.md'
+      - Writing Plugins: 'developer-guide/plugins-howto.md'
+      - Writing Epics: 'developer-guide/writing-epics.md'
+      - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
+    - Configuration: 'developer-guide/configuration-files.md'
+    - Migration: 'developer-guide/mapstore-migration-guide.md'
+    - How to Release: 'developer-guide/release.md'
+    - Projects:
+      - MapStore Projects: 'developer-guide/mapstore-projects.md'
+      - Project Creation Script: 'developer-guide/project-creation-script.md'
+    - Plugins:
+      - Plugins Architecture: 'developer-guide/plugins-architecture.md'
+      - Configuring Plugins: 'developer-guide/plugins-documentation.md'
+  - Quick Start: 'quick-start.md'

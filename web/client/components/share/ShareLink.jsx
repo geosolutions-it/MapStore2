@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,48 +11,44 @@ const PropTypes = require('prop-types');
     copy to the clipbard the relatie url.
 */
 
-// components required
-const React = require('react');
-const CopyToClipboard = require('react-copy-to-clipboard');
-const Message = require('../../components/I18N/Message');
-const {Glyphicon, FormControl, FormGroup, Tooltip, Button} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-
-// css required
-require('./share.css');
+import React from 'react';
+import PropTypes from 'prop-types';
+import Message from '../../components/I18N/Message';
+import ShareCopyToClipboard from './ShareCopyToClipboard';
+import { FormControl } from 'react-bootstrap';
 
 class ShareLink extends React.Component {
+
     static propTypes = {
         shareUrl: PropTypes.string
     };
 
-    state = {copied: false};
+    state = {
+        copied: false
+    };
 
     render() {
-        const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom" style={{zIndex: 2001}}>
-          {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
-      </Tooltip>);
-        const copyTo = (<OverlayTrigger placement="bottom" overlay={tooltip}>
-                            <CopyToClipboard text={this.props.shareUrl} onCopy={ () => this.setState({copied: true}) } >
-                                <Button className="buttonCopy" bsStyle="info" bsSize="large" onMouseLeave={() => {this.setState({copied: false}); }} >
-                                    <Glyphicon glyph="copy"/>
-                                </Button>
-                            </CopyToClipboard>
-                        </OverlayTrigger>);
         return (
             <div className="input-link">
-                  <h4>
-                     <Message msgId="share.directLinkTitle"/>
-                  </h4>
-                  <FormGroup>
-                      <div className="input-group">
-                          <FormControl onFocus={ev => ev.target.select()} ref="copytext" type="text" value={this.props.shareUrl} readOnly/>
-                          <span className="input-group-addon">{copyTo}</span>
-                      </div>
-                  </FormGroup>
+                <div className="input-link-head">
+                    <h4>
+                        <Message msgId="share.directLinkTitle"/>
+                    </h4>
+                    <ShareCopyToClipboard
+                        copied={this.state.copied}
+                        shareUrl={this.props.shareUrl}
+                        onCopy={() => this.setState({ copied: true })}
+                        onMouseLeave={() => this.setState({ copied: false })}/>
+                </div>
+                <pre style={{ padding: 0 }}>
+                    <FormControl
+                        type="text"
+                        value={this.props.shareUrl}
+                        onFocus={ev => ev.target.select()}/>
+                </pre>
             </div>
         );
     }
 }
 
-module.exports = ShareLink;
+export default ShareLink;

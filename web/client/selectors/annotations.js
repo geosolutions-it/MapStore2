@@ -19,7 +19,7 @@ const removingSelector = (state) => get(state, "annotations.removing");
 const closingSelector = (state) => !!get(state, "annotations.closing");
 const editingSelector = (state) => get(state, "annotations.editing");
 const currentSelector = (state) => get(state, "annotations.current");
-const modeSelector = (state) => editingSelector(state) && 'editing' || currentSelector(state) && 'detail' || 'list';
+const modeSelector = (state) => editingSelector(state) && 'editing' || annotationsLayerSelector(state) && currentSelector(state) && 'detail' || 'list';
 
 const annotationsInfoSelector = (state) => (assign({}, {
     editing: editingSelector(state),
@@ -40,11 +40,12 @@ const annotationsSelector = (state) => ({
 const annotationsListSelector = createSelector([
     annotationsInfoSelector,
     annotationsSelector,
-    annotationsLayerSelector
-], (info, annotations, layer) => (assign({}, {
+    annotationsLayerSelector,
+    modeSelector
+], (info, annotations, layer, mode) => (assign({}, {
     removing: annotations.removing,
     closing: !!annotations.closing,
-    mode: annotations.editing && 'editing' || annotations.current && 'detail' || 'list',
+    mode,
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
@@ -61,6 +62,7 @@ const annotationSelector = createSelector([annotationsListSelector], (annotation
 });
 
 module.exports = {
+    modeSelector,
     annotationsLayerSelector,
     annotationsInfoSelector,
     annotationsSelector,

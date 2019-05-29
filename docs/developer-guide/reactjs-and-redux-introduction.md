@@ -4,7 +4,7 @@ The main tecnologies used on the mapstore 2 are:
  * Redux (state management)
 
 ## ReactJS
-[ReactJS](https://facebook.github.io/react/index.html) 0.15.x is used to develop MapStore2. The main purpose of ReactJS is to allow writing the **View** of the application, through the composition of _small components_, in a _declarative way_.
+[ReactJS](https://facebook.github.io/react/index.html) 0.15.x is used to develop MapStore. The main purpose of ReactJS is to allow writing the **View** of the application, through the composition of _small components_, in a _declarative way_.
 
 Components are written using a "templating" language, called [**JSX**](https://react-bootstrap.github.io/introduction.html), that is a sort of composition of HTML and Javascript code. The difference between JSX and older approaches like _JSP_ is that JSX templates are mixed with Javascript code inside javascript files.
 
@@ -140,7 +140,7 @@ store.subscribe(function handleChange() {});
 ```
 
 ## Redux Middlewares
-Redux data flow is synchronous. To provide asynchronous functionalities (e.g. Ajax) redux needs a [middleware](http://redux.js.org/docs/advanced/Middleware.html). Actually MapStore 2 uses 2 middlewares for this purpose:
+Redux data flow is synchronous. To provide asynchronous functionalities (e.g. Ajax) redux needs a [middleware](http://redux.js.org/docs/advanced/Middleware.html). Actually MapStore uses 2 middlewares for this purpose:
  * Redux thunk (going to be fully replaced by redux-observable)
  * Redux Observable
 
@@ -161,10 +161,10 @@ function changeTitleAsync() {
 }
 ```
 
-This middleware is there from the beginning of the MapStore 2 history. During the years, some better middlewares have been developed for this purpose. We want to replace it in the future with redux-observable.
+This middleware is there from the beginning of the MapStore history. During the years, some better middlewares have been developed for this purpose. We want to replace it in the future with redux-observable.
 
 ### Redux Observable and epics
-This middleware provides support for side-effects in MapStore 2 using rxjs. The core object of this middleware is the `epic`
+This middleware provides support for side-effects in MapStore using rxjs. The core object of this middleware is the `epic`
 
 ```javascript
 function (action$: Observable<Action>, store: Store): Observable<Action>;

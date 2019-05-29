@@ -15,6 +15,18 @@ describe('CoordinatesUtils', () => {
 
         setTimeout(done);
     });
+    it('convert lat lon to mercator without specifying source and dest', () => {
+        const point = [45, 13];
+        const transformed = CoordinatesUtils.reproject(point, "", "");
+        expect(transformed).toNotExist();
+        expect(transformed).toEqual(null);
+        const transformed2 = CoordinatesUtils.reproject(point, null, null);
+        expect(transformed2).toNotExist();
+        expect(transformed2).toEqual(null);
+        const transformed3 = CoordinatesUtils.reproject(point, undefined, undefined);
+        expect(transformed3).toNotExist();
+        expect(transformed3).toEqual(null);
+    });
     it('convert lat lon to mercator', () => {
         var point = [45, 13];
 
@@ -173,6 +185,19 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[1]).toBe(0.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[2]).toBe(105.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[3]).toBe(1.0);
+        expect(CoordinatesUtils.getGeoJSONExtent({ "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+               [100.0, 1.0], [100.0, 0.0] ]
+                ]
+            },
+            "properties": {
+                "prop0": "value0",
+                "prop1": {"this": "that"}
+            }
+        })).toEqual([ 100, 0, 101, 1 ]);
     });
     it('test coordsOLtoLeaflet on point', () => {
         let geojsonPoint = {

@@ -23,6 +23,7 @@ function wmtsToLeafletOptions(options) {
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     return assign({
+        requestEncoding: options.requestEncoding,
         layer: options.name,
         style: options.style || "",
         format: options.format || 'image/png',

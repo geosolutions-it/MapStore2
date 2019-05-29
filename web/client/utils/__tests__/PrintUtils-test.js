@@ -7,6 +7,7 @@
  */
 const expect = require('expect');
 const PrintUtils = require('../PrintUtils');
+const ConfigUtils = require('../ConfigUtils');
 
 const layer = {
     url: "http://mygeoserver",
@@ -127,7 +128,15 @@ const testSpec = {
         "width": 368
     }
 };
+let rules;
 describe('PrintUtils', () => {
+    beforeEach(() => {
+        rules = ConfigUtils.getConfigProp('authenticationRules');
+        ConfigUtils.setConfigProp('useAuthenticationRules', false);
+    });
+    afterEach(() => {
+        ConfigUtils.setConfigProp('authenticationRules', rules);
+    });
 
     it('custom params are applied to wms layers', () => {
 
@@ -147,6 +156,23 @@ describe('PrintUtils', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
+    });
+
+    it('custom params include security token for wms layers', () => {
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                "urlPattern": ".*geoserver.*",
+                "method": "test",
+                "authkeyParamName": "authkey",
+                "token": "mykey"
+            }
+        ]);
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        const specs = PrintUtils.getMapfishLayersSpecification([layer], {}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].customParams.authkey).toExist();
+        expect(specs[0].customParams.authkey).toBe("mykey");
     });
     it('wms layer generation for legend includes scale', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], testSpec, 'legend');

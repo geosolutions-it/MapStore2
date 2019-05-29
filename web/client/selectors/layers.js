@@ -10,8 +10,10 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
+const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
+const {flattenGroups} = require('../utils/TOCUtils');
 
 const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -26,14 +28,6 @@ const geoColderSelector = state => state.search && state.search;
 const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
 const additionalLayersSelector = state => get(state, "additionallayers", []);
 
-const defaultIconStyle = {
-    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-};
 
 const layerSelectorWithMarkers = createSelector(
     [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector],
@@ -41,20 +35,22 @@ const layerSelectorWithMarkers = createSelector(
 
         // Perform an override action on the layers using options retrieved from additional layers
         const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
+        const overlayLayers = additionalLayers.filter(({actionType}) => actionType === 'overlay').map(l => l.options);
         let newLayers = layers.map(layer => {
             const { options } = head(overrideLayers.filter(overrideLayer => overrideLayer.id === layer.id)) || {};
             return options ? {...layer, ...options} : {...layer};
         });
-
+        newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
         if (geocoder && geocoder.markerPosition) {
+            let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
                 {
                     overrideOLStyle: true,
-                    style: isObject(geocoder.style) && !isEmpty(geocoder.style) && {...defaultIconStyle, ...geocoder.style} || defaultIconStyle
+                    style: {...defaultIconStyle, ...geocoderStyle}
                 }, geocoder.markerLabel
             ));
         }
@@ -96,6 +92,18 @@ const getLayersWithDimension = (state, dimension) =>
             l
             && l.dimensions
             && find(castArray(l.dimensions), {name: dimension}));
+
+/**
+ * gets the actual node opened in settings modal
+*/
+const elementSelector = (state) => {
+    const settings = layerSettingSelector(state);
+    const layers = layersSelector(state);
+    const groups = groupsSelector(state);
+    return settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
+    settings.nodeType === 'groups' && isArray(groups) && head(flattenGroups(groups, 0, true).filter(group => group.id === settings.node)) || {};
+};
+
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
@@ -114,5 +122,6 @@ module.exports = {
     backgroundControlsSelector,
     currentBackgroundSelector,
     tempBackgroundSelector,
-    centerToMarkerSelector
+    centerToMarkerSelector,
+    elementSelector
 };

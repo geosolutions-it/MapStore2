@@ -104,7 +104,6 @@ const FeatureInfo = defaultProps({
     defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
 })(require('../../components/TOC/fragments/settings/FeatureInfo'));
 
-let settingsPlugins = null;
 const configuredPlugins = {};
 
 const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
@@ -121,10 +120,12 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     return plugin;
 };
 
+let settingsPlugins;
+
 module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig, loadedPlugins}) => {
     if (!settingsPlugins) {
         settingsPlugins = assign({}, (PluginsUtils.getPluginItems({}, plugins, pluginsConfig, "TOC", props.id, true, loadedPlugins, (p) => p.container === 'TOCItemSettings') || [])
-            .reduce((previoius, p) => ({[p.name]: p}), {}));
+            .reduce((previous, p) => ({...previous, [p.name]: p}), {}));
     }
 
     return [
@@ -152,14 +153,14 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
             onClose: () => settingsPlugins && settingsPlugins.StyleEditor && props.onToggleStyleEditor && props.onToggleStyleEditor(null, false),
             onClick: () => settingsPlugins && settingsPlugins.StyleEditor && props.onToggleStyleEditor && props.onToggleStyleEditor(null, true),
             visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
-            Component: props.activeTab === 'style' && props.element.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />)
+            Component: props.activeTab === 'style' && props.settings.options.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />)
             || settingsPlugins.StyleEditor && getConfiguredPlugin({...settingsPlugins.StyleEditor, cfg: {...settingsPlugins.StyleEditor.cfg, active: true }}, loadedPlugins, <LoadingView width={100} height={100} />)
             || StyleList,
             toolbar: [
                 {
                     glyph: 'list',
                     tooltipId: 'toc.thematic.classify',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.element.thematic && props.element.search || false,
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.settings.options.thematic && props.element.search || false,
                     onClick: () => props.onUpdateParams && props.onUpdateParams({
                         thematic: {
                             unconfigured: true
@@ -169,7 +170,7 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
                 {
                     glyph: 'trash',
                     tooltipId: 'toc.thematic.remove_thematic',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && props.element.thematic || false,
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && props.settings.options.thematic || false,
                     onClick: () => props.onUpdateParams && props.onUpdateParams({
                         thematic: null
                     })
