@@ -373,11 +373,19 @@
             "showLegend": "Afficher la légende",
             "hideLegend": "Cacher la légende"
         },
+        "addgroup": {
+            "addbtn": "Ajouter",
+            "groupName": "Nom de groupe"
+        },
         "toc": {
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
+            "toggleGroupVisibility": "Basculer la visibilité du groupe",
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
             "addLayer": "Ajouter la couche",
+            "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
+            "addGroup": "Ajouter un groupe",
+            "addSubGroup": "Ajouter un sous-groupe au groupe sélectionné",
             "toolZoomToLayerTooltip": "Zoomer sur l'extension de la couche sélectionnée",
             "toolZoomToLayersTooltip": "Zoomer sur l'extension des couches sélectionnées",
             "toolLayerSettingsTooltip": "Réglages de la couche sélectionnée",

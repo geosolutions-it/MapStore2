@@ -26,6 +26,7 @@ const onToolsActions = {
     onHideSettings: () => {},
     onReload: () => {},
     onAddLayer: () => {},
+    onAddGroup: () => {},
     onGetMetadataRecord: () => {},
     onHideLayerMetadata: () => {},
     onShow: () => {}
@@ -45,14 +46,18 @@ describe('TOC Toolbar', () => {
 
     it('deselected element', () => {
         const spyAddLayer = expect.spyOn(onToolsActions, 'onAddLayer');
-        ReactDOM.render(<Toolbar text={{addLayer: 'ADD LAYER'}} onToolsActions={onToolsActions}/>, document.getElementById("container"));
+        const spyAddGroup = expect.spyOn(onToolsActions, 'onAddGroup');
+        ReactDOM.render(<Toolbar onToolsActions={onToolsActions}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group").item(0);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(1);
-        expect(btn[0].innerHTML).toBe('ADD LAYER');
+        expect(btn.length).toBe(2);
+        expect(btn[0].innerHTML).toContain('add-layer');
+        expect(btn[1].innerHTML).toContain('add-folder');
         TestUtils.Simulate.click(btn[0]);
         expect(spyAddLayer).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[1]);
+        expect(spyAddGroup).toHaveBeenCalled();
     });
 
     it('layer single selection', () => {
@@ -289,6 +294,8 @@ describe('TOC Toolbar', () => {
     });
 
     it('group single selection', () => {
+        const spyAddLayer = expect.spyOn(onToolsActions, 'onAddLayer');
+        const spyAddGroup = expect.spyOn(onToolsActions, 'onAddGroup');
         const spyZoom = expect.spyOn(onToolsActions, 'onZoom');
         const spySettings = expect.spyOn(onToolsActions, 'onSettings');
 
@@ -339,8 +346,12 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(3);
+        expect(btn.length).toBe(5);
         TestUtils.Simulate.click(btn[0]);
+        expect(spyAddLayer).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[1]);
+        expect(spyAddGroup).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[2]);
         expect(spyZoom).toHaveBeenCalledWith({
             maxx: 30,
             maxy: 29,
@@ -348,12 +359,49 @@ describe('TOC Toolbar', () => {
             miny: -9
         }, 'EPSG:4326');
 
-        TestUtils.Simulate.click(btn[1]);
+        TestUtils.Simulate.click(btn[3]);
         expect(spySettings).toHaveBeenCalledWith('g001', 'groups', {});
 
-        TestUtils.Simulate.click(btn[2]);
+        TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
+    });
+
+    it('add group max depth ok', () => {
+        const selectedGroups = [{
+            id: 'g001',
+            title: 'group001',
+            name: 'group001name',
+            nodes: []
+        }];
+
+        const cmp = ReactDOM.render(<Toolbar maxDepth={2} selectedGroups={selectedGroups} onToolsActions={onToolsActions} />, document.getElementById("container"));
+
+        const modal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(modal).toNotExist();
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(3);
+    });
+
+    it('add group max depth reached', () => {
+        const selectedGroups = [{
+            id: 'g001.g002',
+            title: 'group001',
+            name: 'group001name',
+            nodes: []
+        }];
+        const cmp = ReactDOM.render(<Toolbar maxDepth={2} selectedGroups={selectedGroups} onToolsActions={onToolsActions} />, document.getElementById("container"));
+
+        const modal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(modal).toNotExist();
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(2);
     });
 
     it('group multiple selections', () => {

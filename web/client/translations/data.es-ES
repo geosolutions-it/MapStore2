@@ -372,11 +372,19 @@
             "showLegend": "Mostrar leyenda",
             "hideLegend": "Ocultar leyenda"
         },
+        "addgroup": {
+            "addbtn": "Añadir",
+            "groupName": "Nombre del grupo"
+        },
         "toc": {
             "toggleLayerVisibility": "Activar/desactivar visibilidad de la capa",
+            "toggleGroupVisibility": "Alternar la visibilidad del grupo",
             "displayLegendAndTools": "Mostrar la leyenda",
             "zoomToLayerExtent": "Zoom a la extensión de la capa",
             "addLayer": "Añadir capa",
+            "addLayerToGroup": "Añadir capa al grupo seleccionado",
+            "addGroup": "Añadir grupo",
+            "addSubGroup": "Añadir subgrupo al grupo seleccionado",
             "toolZoomToLayerTooltip": "Zoom a la extensión de la capa seleccionada",
             "toolZoomToLayersTooltip": "Zoom a la extensión de las capas seleccionadas",
             "toolLayerSettingsTooltip": "Configuración de la capa seleccionada",
