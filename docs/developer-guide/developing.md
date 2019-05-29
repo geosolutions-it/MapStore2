@@ -1,6 +1,6 @@
 # Developing with MapStore
 
-Due to the dual nature of the project (Java backend and JavaScript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools
+Due to the dual nature of the project (Java backend and JavaScript frontend) building and developing using the MapStore framework requires two distinct set of tools
 
 * [Apache Maven](https://maven.apache.org/) for Java
 * [NPM](https://www.npmjs.com/) for JavaScript.
@@ -9,7 +9,7 @@ A basic knowledge of both tools is required.
 
 # Developing and debugging the framework
 
-To start developing the MapStore 2 framework you have to:
+To start developing the MapStore framework you have to:
 
 * download developer tools and frontend dependencies locally:
 
@@ -31,7 +31,7 @@ The HomePage contains links to the available demo applications.
 
 ## Frontend debugging
 
-The development instance uses file watching and live reload, so each time a MapStore 2 file is changed, the browser will reload the updated application.
+The development instance uses file watching and live reload, so each time a MapStore file is changed, the browser will reload the updated application.
 
 Use your favourite editor / IDE to develop and debug on the browser as needed.
 
@@ -123,7 +123,7 @@ if you want to change the default port for mapstore back-end you have to edit `p
 
 ## Frontend testing
 
-To run the MapStore 2 frontend test suite you can use:
+To run the MapStore frontend test suite you can use:
 
 `npm test`
 

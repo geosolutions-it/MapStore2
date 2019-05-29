@@ -1,10 +1,10 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 const {error} = require('./notifications');
 const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
@@ -34,6 +34,13 @@ function errorLoadingFont(err = {family: ""}) {
         autoDismiss: 10
     });
 }
+
+/**
+ * zoom to a specific point
+ * @param {object} pos as array [x, y] or object {x: ..., y:...}
+ * @param {number} zoom level to zoom to
+ * @param {string} crs of the point
+*/
 function zoomToPoint(pos, zoom, crs) {
     return {
         type: ZOOM_TO_POINT,
@@ -93,6 +100,11 @@ function changeZoomLevel(zoomLvl, mapStateSource) {
     };
 }
 
+
+/**
+ * pan to a specific point
+ * @param {object} center as {x, y, crs}
+*/
 function panTo(center) {
     return {
         type: PAN_TO,

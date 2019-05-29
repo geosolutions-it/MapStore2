@@ -82,8 +82,21 @@
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
-            "templatePreview": "Template preview"
+            "templatePreview": "Template preview",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -160,13 +173,14 @@
         },
         "home":{
             "open": "Open",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
+            "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Keep in touch and stay up-to-date with the mailing lists",
                 "subscribe_users": "Subscribe Users Mailing List",
@@ -494,6 +508,8 @@
         "identifyTitle": "Feature Info",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordinates",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More Info",
         "identifyRevGeocodeCloseText": "Close",
@@ -532,7 +548,11 @@
             "showLabel": "Show measurement label"
         },
         "search":{
-            "placeholder": "Search by location name or coordinates ...",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
+            "changeSearchInputField": "Change the search tool",
+            "addressSearch": "Search by location name",
+            "coordinatesSearch": "Search by coordinates",
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",
@@ -557,7 +577,9 @@
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
-            "serviceslistempty": "No custom services defined"
+            "serviceslistempty": "No custom services defined",
+            "service_missing": "{serviceType} service is not configured",
+            "generic_error": "An error occurred during search. Error details: {message}"
         },
         "drawLocal": {
             "draw": {
@@ -777,6 +799,7 @@
                 "targetLayer": "Target layer",
                 "clear": "Clear filter",
                 "operation": "Operation",
+                "placeholder": "Select layer",
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
                 }
@@ -889,16 +912,20 @@
             "titlePanel": "Share the map",
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
+            "embeddedLinkTitle": "Via the embedded code",
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
-            "embeddedLinkTitle": "Via the embedded code",
             "forceDrawer": "Show TOC",
             "apiLinkTitle": "Using APIs",
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl": "Copied",
             "msgToCopyUrl": "Click to copy",
-            "sharedTitle": "Check out my new map: "
+            "sharedTitle": "Check out my new map: ",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1281,9 +1308,16 @@
                     "showChartData": "Show chart data",
                     "edit": "Edit",
                     "delete": "Delete",
+                    "collapse": "Collapse",
                     "confirmDelete": "Are you sure?",
                     "downloadData": "Download Data",
-                    "exportImage": "Export Image"
+                    "exportImage": "Export Image",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Hide",
+                    "hideDescription": "Hide this widget to other users",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Unhide the widget to other users"
                 }
             },
             "chartType": {
@@ -1375,6 +1409,20 @@
             "advancedOptions":{
                 "line": "Advanced Options",
                 "bar": "Advanced Options"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expand widgets tray",
+                "collapseTray": "Collapse widgets tray",
+                "expandAll": "Expand all widgets",
+                "collapseAll": "Collapse all widgets",
+                "notifications" : {
+                    "collapsed": {
+                        "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
+                        "timelineTitle": "Timeline has been collapsed",
+                        "widgetsTitle": "Widgets has been collapsed"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1491,6 +1539,7 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "validationErrorTitle": "Validation Error",
             "genericValidationError": "Style is not valid and it could not be applied.",
             "setDefaultStyle": "Set selected style as default for the current layer",
             "setDefaultStyleSuccessTitle": "Success on set default style",
@@ -1541,6 +1590,8 @@
                 "snapToGuideLayer": "Snap to guide layer",
                 "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
             },
+            "hide": "Hide timeline",
+            "show": "Show timeline",
             "currentTime": "Go to current time",
             "rangeStart":"Go to the current time range",
             "rangeEnd" : "Go to the current time range",
@@ -1552,6 +1603,10 @@
             "disablePlayBack": "Disable playback controls",
             "expand" : "Expand time slider",
             "collapse" : "Collapse time slider",
+            "collapsed": {
+                "title": "Timeline has been collapsed",
+                "tooltip": "Click here to expand it again"
+            },
             "errors": {
                 "multidim_error_title": "Backend service is not responding",
                 "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."

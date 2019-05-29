@@ -72,10 +72,10 @@ class SettingsButton extends React.Component {
         wrapWithPanel: false,
         panelStyle: {
             minWidth: "300px",
-            zIndex: 100,
+            zIndex: 1996,
             position: "absolute",
             overflow: "auto",
-            top: "100px",
+            top: "90px",
             left: "calc(50% - 150px)",
             backgroundColor: "white"
         },

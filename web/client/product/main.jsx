@@ -20,7 +20,7 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
         const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
-        const {pages, initialState, storeOpts, appEpics = {}, themeCfg} = config;
+        const {pages, initialState, storeOpts, appEpics = {}, themeCfg, printingEnabled = true} = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
@@ -31,13 +31,14 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
         const {setSupportedLocales} = require('../epics/localconfig');
+        const {readQueryParamsOnMapEpic} = require('../epics/share');
 
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
             maptype: require('../reducers/maptype'),
             maps: require('../reducers/maps'),
             maplayout: require('../reducers/maplayout'),
             version: require('../reducers/version')
-        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales});
+        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales, readQueryParamsOnMapEpic});
 
         const initialActions = [
             () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),
@@ -51,7 +52,7 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
             pluginsDef,
             initialActions,
             appComponent: StandardRouter,
-            printingEnabled: true,
+            printingEnabled,
             themeCfg
         });
 

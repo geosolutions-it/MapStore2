@@ -204,8 +204,13 @@ const converters = {
     wmts: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
+                let urls = castArray(WMTSUtils.getGetTileURL(record) || (options && options.url));
+                if (urls.length === 1) {
+                    urls = urls[0];
+                }
+                const capabilitiesURL = WMTSUtils.getCapabilitiesURL(record);
                 const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
-                    const tileMatrix = head((record.TileMatrixSet || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                    const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
                     const tileMatrixSRS = tileMatrix && CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
                     const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
                         identifier: limit.TileMatrix,
@@ -234,6 +239,10 @@ const converters = {
                 description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
                 identifier: getNodeText(record["ows:Identifier"]),
                 tags: "",
+                style: record.style,
+                capabilitiesURL: capabilitiesURL,
+                queryable: record.queryable,
+                requestEncoding: record.requestEncoding,
                 tileMatrixSet: record.TileMatrixSet,
                 matrixIds,
                 TileMatrixSetLink: castArray(record.TileMatrixSetLink),
@@ -248,7 +257,7 @@ const converters = {
                 },
                 references: [{
                     type: "OGC:WMTS",
-                    url: record.GetTileUrl || (options && options.url),
+                    url: urls,
                     SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]
@@ -334,7 +343,7 @@ const CatalogUtils = {
      * Convert a record into a MS2 layer
      * @param  {Object} record            The record
      * @param  {String} [type="wms"]      The layer type
-     * @param  {Object} options an object with additinal options.
+     * @param  {Object} options an object with additional options.
      *  - `catalogURL` to attach to the layer
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
@@ -347,12 +356,36 @@ const CatalogUtils = {
         // let's extract the references we need
         const {wms, wmts} = extractOGCServicesReferences(record);
         const ogcServiceReference = wms || wmts;
+
         // typically you should remove authkey parameters
-        const {url: originalUrl, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(ogcServiceReference.url), ["request", "layer", "service", "version"].concat(removeParams));
+        const cleanURL = URL => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(URL), ["request", "layer", "layers", "service", "version"].concat(removeParams));
+        let originalUrl;
+        let params;
+        const urls = ogcServiceReference.url;
+
+        // extract additional parameters and alternative URLs.
+        if (isArray(urls)) {
+            originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
+            params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
+        } else {
+            const { url: uu, params: pp } = cleanURL(urls);
+            originalUrl = uu;
+            params = pp;
+        }
+
+        // calculate and normalize URL
+        // if array of 1 element, take simply the string
+        const toLayerURL = u => isArray(u) && u.length === 1 ? u[0] : u;
+        const layerURL = toLayerURL(url || originalUrl);
+
         const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
         return {
             type: type,
-            url: url || originalUrl,
+            requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
+            style: record.style,
+            url: layerURL,
+            capabilitiesURL: record.capabilitiesURL,
+            queryable: record.queryable,
             visibility: true,
             dimensions: record.dimensions || [],
             name: ogcServiceReference.params && ogcServiceReference.params.name,

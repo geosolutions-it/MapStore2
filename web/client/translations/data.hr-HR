@@ -82,8 +82,21 @@
             "templateFormatInfoAlert1": "Klikni na dugme za editiranje za dodavanje novog predloška.",
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
-            "templatePreview": "Pregled predloška"
+            "templatePreview": "Pregled predloška",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Ažuriranje",
             "warning": "Upozorenje",
@@ -160,13 +173,14 @@
         },
         "home":{
             "open": "Otvori",
-            "shortDescription": "Moderan webmapping pomoću OpenLayers, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"/mapstore/docs/\">dokumentacijom</a></small>",
+            "shortDescription": "Moderan webmapping pomoću OpenLayers, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentacijom</a></small>",
             "forkMeOnGitHub": "Forkaj me na GitHub-u",
-            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
+            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"https://mapstore.readthedocs.io/en/latest/\">početnu stranicu</a> za više informacija.",
             "Applications": "Aplikacije",
             "Examples": "Primjeri",
             "LinkedinGroup": "Mapstore Linkedin grupa",
             "scrollTop": "Pomakni gore na vrh stranice",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Ostanite u kontaktu i informirani putem E-mail lista",
                 "subscribe_users": "Pretplati se na korisničku E-mail listu",
@@ -494,6 +508,8 @@
         "identifyTitle": "Informacije o objektu",
         "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
         "identifyRevGeocodeHeader": "Koordinate",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Adresa",
         "identifyRevGeocodeSubmitText": "Više informacija",
         "identifyRevGeocodeCloseText": "Zatvori",
@@ -532,7 +548,11 @@
             "showLabel": "Prikaži oznaku mjerenja"
         },
         "search":{
-            "placeholder": "Pretraži po imenu lokacije ili koordinatama ...",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
+            "changeSearchInputField": "Change the search tool",
+            "addressSearch": "Traži po nazivu mjesta",
+            "coordinatesSearch": "Pretraživanje po koordinatama",
             "searchservicesbutton": "Konfiguriraj servise pretraživanja",
             "configpaneltitle": "Kreiraj/izmijeni servis pretraživanja",
             "serviceslistlabel": "Dostupni servisi",
@@ -898,7 +918,11 @@
             "QRCodeLinkTitle": "QR kod",
             "msgCopiedUrl": "Kopirano",
             "msgToCopyUrl": "Klikni za kopiranje",
-            "sharedTitle": "Posjeti moju novu kartu: "
+            "sharedTitle": "Posjeti moju novu kartu: ",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Pregled snimke",
@@ -1491,6 +1515,7 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "validationErrorTitle": "Validation Error",
             "genericValidationError": "Style is not valid and it could not be applied.",
             "setDefaultStyle": "Set selected style as default for the current layer",
             "setDefaultStyleSuccessTitle": "Success on set default style",

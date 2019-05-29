@@ -49,4 +49,10 @@ describe('ShareUtils test', () => {
         expect(ShareUtils.getApiUrl(LOCALURL_PATH)).toBe(LOCALURL_PATH);
         expect(ShareUtils.getApiUrl(LOCALURL_PATH + MAPSTORE_PATH + QUERY_STRING)).toBe(LOCALURL_PATH + MAPSTORE_PATH);
     });
+    it('removeQueryFromUrl', () => {
+        const expectedUrl = 'http://my-url/#/viewer/openlayers/1';
+        const urlWithQueries = 'http://my-url/?debug=true#/viewer/openlayers/1?bbox=minx,miny,maxx,maxy';
+        const urlWithoutQueries = ShareUtils.removeQueryFromUrl(urlWithQueries);
+        expect(urlWithoutQueries).toBe(expectedUrl);
+    });
 });

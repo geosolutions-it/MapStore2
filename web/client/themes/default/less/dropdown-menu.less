@@ -5,12 +5,29 @@
 	padding: 15px;
 	font-weight: bold;
 }
-
+/* when flipped we need to let the dropdown to display on top */
+.react-selectize.bootstrap3.dropdown-menu.flipped {
+    top: auto;
+}
+//
+.react-selectize.bootstrap3.root-node.simple-select{
+    width: 100%
+}
+.first-selectize {
+    padding-right: 10px;
+    padding-left: 0px;
+}
+.second-selectize{
+    padding: 0;
+}
 .dropdown-menu .glyphicon {
 	font-size: @icon-size-md;
 	margin-right: 15px;
 	color: @ms2-color-primary;
 	vertical-align: middle;
+}
+.dropdown-menu .active .glyphicon {
+    color: @ms2-color-background;
 }
 
 /* dropdown */

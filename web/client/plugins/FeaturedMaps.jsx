@@ -80,6 +80,7 @@ const featuredMapsPluginSelector = createSelector([
     resourceSelector
 ], (mapType, role, isMobile, searchText, resource) => ({
     mapType,
+    role,
     permission: role === 'ADMIN',
     pagination: isMobile ? 'virtual-scroll-horizontal' : 'show-more',
     searchText,
@@ -95,6 +96,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
                 isEqual(previous.resource, next.resource)
                 && previous.searchText === next.searchText
                 && previous.permission === next.permission
+                && previous.role === next.role
             )
             .do(({permission: newPermission, viewSize: newViewSize, searchText: newSearchText, pageSize: newPageSize} = {}) =>
                 loadFirst({permission: newPermission, viewSize: newViewSize, searchText: newSearchText, pageSize: newPageSize})

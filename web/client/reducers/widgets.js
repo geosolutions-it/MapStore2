@@ -7,7 +7,7 @@
  */
 
 const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET,
-ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES} = require('../actions/widgets');
+    ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES, TOGGLE_COLLAPSE, TOGGLE_COLLAPSE_ALL, TOGGLE_TRAY, toggleCollapse} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
@@ -17,8 +17,8 @@ const {
 } = require('../actions/dashboard');
 
 const set = require('lodash/fp/set');
-const { get, find} = require('lodash');
-const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
+const { get, find, omit, mapValues, castArray} = require('lodash');
+const {arrayUpsert, compose, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
     dependencies: {
@@ -37,6 +37,8 @@ const emptyState = {
         }
     }
 };
+
+
 /**
  * Manages the state of the widgets
  * @prop {array} widgets version identifier
@@ -134,6 +136,99 @@ function widgetsReducer(state = emptyState, action) {
             return set(`dependencies`, dependencies, state);
         case RESET_DEPENDENCIES:
             return set('dependencies', emptyState.dependencies, state);
+        case TOGGLE_COLLAPSE:
+            /*
+             * Collapse functionality has been implemented keeping the widget unchanged, adding it's layout is added to a map of collapsed objects.
+             * The widgets plugin filters out the collapsed widget from the widgets list to render
+             * So the containers triggers a layout change that removes the layout.
+             * So when we want to expand again the widget, we have to restore the original layout settings.
+             * This allows to save (and restore) collapsed state of the widgets in one unique separated object.
+             */
+            const {widget = {}} = action;
+
+            // locked widgets can not be collapsed
+            if (widget.dataGrid && widget.dataGrid.static) {
+                return state;
+            }
+            const widgetCollapsedState = get(state, `containers[${action.target}].collapsed[${widget.id}`);
+            if (widgetCollapsedState) {
+                // EXPAND
+
+                const newLayoutValue = [
+                    ...get(state, `containers[${action.target}].layout`, []),
+                    ...castArray(
+                        get(widgetCollapsedState, `layout`, [])
+                    ) // add stored old layout, if exists
+                ];
+                const updatedLayoutsMap = mapValues(
+                    get(state, `containers[${action.target}].layouts`, {}),
+                    (v = [], k) => ([
+                        ...v,
+                        ...castArray(
+                            get(widgetCollapsedState, `layouts[${k}]`, [])
+                        )
+                    ])
+                );
+                return omit(
+                    compose(
+                        // restore original layout for the widget
+                        set(
+                            `containers[${action.target}].layout`,
+                            newLayoutValue
+                        ),
+                        // restore original layout for each break point
+                        set(
+                            `containers[${action.target}].layouts`,
+                            updatedLayoutsMap
+                        )
+                        // restore original layout for each breakpoint (md, xs, ...) for the widget
+                    )(state),
+                `containers[${action.target}].collapsed[${widget.id}]`);
+            }
+
+            return set(`containers[${action.target}].collapsed[${widget.id}]`, {
+                // COLLAPSE
+
+                // NOTE: when the collapse is toggled, the widget is not visible anymore
+                // because it is filtered out from the view ( by the selector)
+                // this causes a second action CHANGE_LAYOUT, automatically triggered
+                // by react-grid-layout that removes the layout objects from the
+                // `layout` and `layouts` state parts
+
+                // get layout object for each k for the widget
+                layout: find(
+                    get(state, `containers[${action.target}].layout`, []),
+                    { i: widget.id }
+                ),
+                // get layout object for each breakpoint (md, xs...) for the widget
+                layouts: mapValues(
+                    get(state, `containers[${action.target}].layouts`, {}),
+                    v => find(v, {i: widget.id})
+                )
+            }, state);
+        case TOGGLE_COLLAPSE_ALL: {
+            // get widgets excluding static widgets
+            const widgets = get(state, `containers[${action.target}].widgets`, [])
+                .filter( w => !w.dataGrid || !w.dataGrid.static );
+            const collapsedWidgets = widgets.filter(w => get(state, `containers[${action.target}].collapsed[${w.id}]`));
+            const expandedWidgets = widgets.filter(w => !get(state, `containers[${action.target}].collapsed[${w.id}]`));
+            const shouldExpandAll = expandedWidgets.length === 0;
+            if (shouldExpandAll) {
+                return collapsedWidgets.reduce((acc, w) => widgetsReducer(
+                    acc,
+                    toggleCollapse(w)
+                ), state);
+            } else if (expandedWidgets.length > 0) {
+                return expandedWidgets.reduce((acc, w) => widgetsReducer(
+                    acc,
+                    toggleCollapse(w)
+                ), state);
+            }
+            return state;
+        }
+        case TOGGLE_TRAY: {
+            return set('tray', action.value, state);
+        }
         default:
             return state;
     }

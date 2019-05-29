@@ -30,14 +30,26 @@ describe('Test for BaseDateTimeFilter component', () => {
         expect(el).toExist();
     });
     it('render with value', () => {
-        ReactDOM.render(<BaseDateTimeFilter type="date" value={"2017-01-05Z"}/>, document.getElementById("container"));
+        ReactDOM.render(<BaseDateTimeFilter type="date" value="2017-01-05Z"/>, document.getElementById("container"));
         const el = document.getElementsByTagName("input")[0];
         expect(el).toExist();
         const input = document.getElementsByTagName("input")[0];
         expect(input.value.indexOf(5) > 0).toBe(true);
-        ReactDOM.render(<BaseDateTimeFilter type="time" value={"04:04:04Z"}/>, document.getElementById("container"));
+        ReactDOM.render(<BaseDateTimeFilter type="time" value="04:04:04Z"/>, document.getElementById("container"));
         expect(el).toExist();
-        ReactDOM.render(<BaseDateTimeFilter type="datetime" value={"2017-01-05T04:04:04Z"}/>, document.getElementById("container"));
+        ReactDOM.render(<BaseDateTimeFilter type="date-time" value="2017-01-05T04:04:04Z"/>, document.getElementById("container"));
+        expect(el).toExist();
+
+    });
+    it('render with value as startDate', () => {
+        ReactDOM.render(<BaseDateTimeFilter type="date" value={{startDate: "2017-01-05Z"}}/>, document.getElementById("container"));
+        const el = document.getElementsByTagName("input")[0];
+        expect(el).toExist();
+        const input = document.getElementsByTagName("input")[0];
+        expect(input.value.indexOf(5) > 0).toBe(true);
+        ReactDOM.render(<BaseDateTimeFilter type="time" value={{startDate: "04:04:04Z"}}/>, document.getElementById("container"));
+        expect(el).toExist();
+        ReactDOM.render(<BaseDateTimeFilter type="date-time" value={{startDate: "2017-01-05T04:04:04Z"}}/>, document.getElementById("container"));
         expect(el).toExist();
 
     });

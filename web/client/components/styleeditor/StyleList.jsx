@@ -9,7 +9,6 @@
 const React = require('react');
 
 const { Glyphicon: GlyphiconRB } = require('react-bootstrap');
-
 const BorderLayout = require('../layout/BorderLayout');
 const emptyState = require('../misc/enhancers/emptyState');
 const withLocal = require("../misc/enhancers/localizedProps");
@@ -26,6 +25,16 @@ const SideGrid = emptyState(
         glyph: '1-stilo'
     }
 )(require('../misc/cardgrids/SideGrid'));
+
+// get the text to use in the icon
+const getFormatText = (format) => {
+    const text = {
+        sld: 'SLD',
+        css: 'CSS',
+        mbstyle: 'MBS'
+    };
+    return text[format] || format || '';
+};
 
 /**
  * Component for rendering a grid of style templates.
@@ -83,7 +92,7 @@ const StyleList = ({
                                 backgroundColor="#333333"
                                 texts={[
                                     {
-                                        text: style.format.toUpperCase(),
+                                        text: getFormatText(style.format).toUpperCase(),
                                         fill: formatColors[style.format] || '#f2f2f2',
                                         style: {
                                             fontSize: 70,

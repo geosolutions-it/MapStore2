@@ -1,7 +1,7 @@
 const path = require("path");
 
-const themeEntries = require('./MapStore2/themes.js').themeEntries;
-const extractThemesPlugin = require('./MapStore2/themes.js').extractThemesPlugin;
+const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
+const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const paths = {
@@ -11,7 +11,7 @@ const paths = {
     code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
 };
 
-module.exports = require('./MapStore2/buildConfig')(
+module.exports = require('./MapStore2/build/buildConfig')(
     {
         '__PROJECTNAME__': path.join(__dirname, "js", "app"),
         '__PROJECTNAME__-embedded': path.join(__dirname, "MapStore2", "web", "client", "product", "embedded"),
@@ -25,24 +25,28 @@ module.exports = require('./MapStore2/buildConfig')(
     '.__PROJECTNAME__',
     [
         new HtmlWebpackPlugin({
-            template: path.join(paths.framework, 'indexTemplate.html'),
+            template: path.join(__dirname, 'indexTemplate.html'),
             chunks: ['__PROJECTNAME__'],
             inject: true,
             hash: true
         }),
         new HtmlWebpackPlugin({
-            template: path.join(paths.framework, 'embeddedTemplate.html'),
+            template: path.join(__dirname, 'embeddedTemplate.html'),
             chunks: ['__PROJECTNAME__-embedded'],
             inject: true,
             hash: true,
             filename: 'embedded.html'
         }),
         new HtmlWebpackPlugin({
-            template: path.join(paths.framework, 'apiTemplate.html'),
+            template: path.join(__dirname, 'apiTemplate.html'),
             chunks: ['__PROJECTNAME__-api'],
             inject: 'head',
             hash: true,
             filename: 'api.html'
         })
-    ]
+    ],
+    {
+        "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+        "@js": path.resolve(__dirname, "js")
+    }
 );

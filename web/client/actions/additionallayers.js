@@ -10,6 +10,7 @@
 const UPDATE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER';
 const UPDATE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:UPDATE_OPTIONS_BY_OWNER';
 const REMOVE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:REMOVE_ADDITIONAL_LAYER';
+const REMOVE_ALL_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:REMOVE_ALL_ADDITIONAL_LAYERS';
 
 /**
  * Add/updated an additional layer to the list.
@@ -62,6 +63,14 @@ const removeAdditionalLayer = ({id, owner} = {}) => {
         owner
     };
 };
+/**
+ * Remove all additional layers.
+ * @memberof actions.additionallayers
+ * @return {object} of type `REMOVE_ALL_ADDITIONAL_LAYERS`
+ */
+const removeAllAdditionalLayers = () => ({
+    type: REMOVE_ALL_ADDITIONAL_LAYERS
+});
 
 /**
  * Actions for additionallayers.
@@ -71,10 +80,8 @@ const removeAdditionalLayer = ({id, owner} = {}) => {
  */
 
 module.exports = {
-    UPDATE_ADDITIONAL_LAYER,
-    updateAdditionalLayer,
-    REMOVE_ADDITIONAL_LAYER,
-    removeAdditionalLayer,
-    UPDATE_OPTIONS_BY_OWNER,
-    updateOptionsByOwner
+    UPDATE_ADDITIONAL_LAYER, updateAdditionalLayer,
+    REMOVE_ADDITIONAL_LAYER, removeAdditionalLayer,
+    REMOVE_ALL_ADDITIONAL_LAYERS, removeAllAdditionalLayers,
+    UPDATE_OPTIONS_BY_OWNER, updateOptionsByOwner
 };

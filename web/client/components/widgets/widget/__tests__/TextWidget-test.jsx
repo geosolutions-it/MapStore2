@@ -11,7 +11,13 @@ const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 
 const expect = require('expect');
-const TextWidget = require('../TextWidget');
+const {compose, defaultProps} = require('recompose');
+const textWidget = require('../../enhancers/textWidget');
+
+const TextWidget = compose(
+    defaultProps({canEdit: true}),
+    textWidget
+)(require('../TextWidget'));
 
 describe('TextWidget component', () => {
     beforeEach((done) => {

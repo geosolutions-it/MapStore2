@@ -82,8 +82,21 @@
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
-            "templatePreview": "Vista previa de template"
+            "templatePreview": "Vista previa de template",
+            "tooltip": {
+                "label": "Información sobre herramientas",
+                "title": "Título",
+                "description": "Descripción",
+                "both": "Título y Descripción",
+                "none": "Sin información sobre herramientas",
+                "labelPlacement": "Colocación",
+                "right": "Derecha",
+                "bottom": "Bottom",
+                "top": "Cima"
+            }
         },
+        "longitude": "Longitud",
+        "latitude": "Latitud",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -160,13 +173,14 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Modern webmapping con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
+            "shortDescription": "Modern webmapping con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
+            "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"https://mapstore.readthedocs.io/en/latest/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Esté informado a la última sobre los cambios en el desrrollo via listas de correo",
                 "subscribe_users": "Suscribirse a las listas de correo de usuarios",
@@ -494,6 +508,8 @@
         "identifyTitle": "Informaciones de las features",
         "identifyNoQueryableLayers": "Noy hay capas a las que poder preguntar",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
+        "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
@@ -532,7 +548,11 @@
             "showLabel": "Mostrar etiqueta de medición"
         },
         "search":{
-            "placeholder": "Búsqueda por toponimo o coordenadas...",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronáutica",
+            "changeSearchInputField": "Cambiar la herramienta de búsqueda",
+            "addressSearch": "Buscar por nombre de ubicación",
+            "coordinatesSearch": "buscar por coordenadas",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un sercio de búsqueda",
             "serviceslistlabel": "Servicios disponibles",
@@ -557,7 +577,10 @@
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Les resultados Nominatim tienen prioridad = 5",
-            "serviceslistempty": "Ningún servicio personalizado definido"
+            "serviceslistempty": "Ningún servicio personalizado definido",
+            "service_missing": "el servicio {serviceType} no está configurado",
+            "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}"
+
         },
         "drawLocal": {
             "draw": {
@@ -777,6 +800,7 @@
                 "targetLayer": "Capa objetivo",
                 "clear": "Eliminar filtro",
                 "operation": "Operación",
+                "placeholder": "Selecciona una capa",
                 "errors": {
                     "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
                 }
@@ -898,7 +922,11 @@
             "QRCodeLinkTitle": "código qr",
             "msgCopiedUrl": "Url Copiada",
             "msgToCopyUrl": "Pinche para copiar",
-            "sharedTitle": "Mira mi nuevo mapa: "
+            "sharedTitle": "Mira mi nuevo mapa: ",
+            "advancedOptions": "Opciones avanzadas",
+            "addBboxParam": "Añadir bbox param al enlace de compartir",
+            "wrongBboxParamTitle": "Bbox no válido",
+            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Previsualisación de la captura del mapa",
@@ -1281,9 +1309,16 @@
                     "showChartData": "Mostrar datos de gráfico",
                     "edit": "Editar",
                     "delete": "Borrar",
+                    "collapse": "Contraer",
                     "confirmDelete": "Está seguro?",
                     "downloadData": "Descargar datos",
-                    "exportImage": "Exportar imagen"
+                    "exportImage": "Exportar imagen",
+                    "pin": "Alfiler",
+                    "unpin": "Desprender",
+                    "hide": "Esconder",
+                    "hideDescription": "Ocultar este widget a otros usuarios",
+                    "unhide": "Ocultar",
+                    "unhideDescription": "Mostrar el widget a otros usuarios"
                 }
             },
             "chartType": {
@@ -1374,6 +1409,20 @@
             "advancedOptions":{
                 "line": "Opciones avanzadas",
                 "bar": "Opciones avanzadas"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expandir la bandeja de widgets",
+                "collapseTray": "Contraer la bandeja de widgets",
+                "expandAll": "Expandir todos los widgets",
+                "collapseAll": "Contraer todos los widgets",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La línea de tiempo y los widgets no pueden permanecer al mismo tiempo. Use en la bandeja del widget para cambiar entre la línea de tiempo y los widgets",
+                        "timelineTitle": "La línea de tiempo ha sido colapsada",
+                        "widgetsTitle": "Widgets ha sido colapsado"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1490,6 +1539,7 @@
             "createStyleErrorMessage": "El estilo no se pudo guardar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
             "updateStyleErrorTitle": "Editar estilo",
             "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "validationErrorTitle": "Error de validacion",
             "genericValidationError": "El estilo no es válido y no se pudo aplicar.",
             "setDefaultStyle": "Establecer el estilo seleccionado como predeterminado para la capa actual",
             "setDefaultStyleSuccessTitle": "Éxito en el estilo por defecto establecido",
@@ -1540,6 +1590,8 @@
                 "snapToGuideLayer": "Ajustar a capa de guía",
                 "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
             },
+            "hide": "Esconder la línea de tiempo",
+            "show": "Mostrar la línea de tiempo",
             "currentTime": "Ir a la hora actual",
             "rangeStart": "Ir al rango de tiempo actual",
             "rangeEnd": "Ir al rango de tiempo actual",
@@ -1551,6 +1603,10 @@
             "disablePlayBack": "Deshabilita los controles de reproducción",
             "expand" : "Expandir el control deslizante de tiempo",
             "collapse" : "colapsar el control deslizante de tiempo",
+             "collapsed": {
+                "title": "La línea de tiempo ha sido colapsada",
+                "tooltip": "Haga clic aquí para ampliarlo de nuevo."
+            },
             "errors": {
                 "multidim_error_title": "El servicio de backend no responde",
                 "multidim_error_message": "Los servicios requeridos para soporte multidinensional no están respondiendo. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."

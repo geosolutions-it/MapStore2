@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,15 +7,19 @@ const PropTypes = require('prop-types');
  */
 
 
-const React = require('react');
-const Dialog = require('../misc/Dialog');
-const ShareSocials = require('./ShareSocials');
-const ShareLink = require('./ShareLink');
-const ShareEmbed = require('./ShareEmbed');
-const ShareApi = require('./ShareApi');
-const ShareQRCode = require('./ShareQRCode');
-const {Glyphicon, Tabs, Tab} = require('react-bootstrap');
-const Message = require('../../components/I18N/Message');
+import React from 'react';
+import PropTypes from 'prop-types';
+import Dialog from '../misc/Dialog';
+import ShareSocials from './ShareSocials';
+import ShareLink from './ShareLink';
+import ShareEmbed from './ShareEmbed';
+import ShareApi from './ShareApi';
+import ShareQRCode from './ShareQRCode';
+import { Glyphicon, Tabs, Tab, Checkbox } from 'react-bootstrap';
+import Message from '../../components/I18N/Message';
+import { join } from 'lodash';
+import { removeQueryFromUrl } from '../../utils/ShareUtils';
+import SwitchPanel from '../misc/switch/SwitchPanel';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -51,7 +54,12 @@ class SharePanel extends React.Component {
         onClose: PropTypes.func,
         getCount: PropTypes.func,
         closeGlyph: PropTypes.string,
-        version: PropTypes.string
+        version: PropTypes.string,
+        bbox: PropTypes.object,
+        hideAdvancedSettings: PropTypes.bool,
+        settings: PropTypes.object,
+        onUpdateSettings: PropTypes.func,
+        selectedTab: PropTypes.string
     };
 
     static defaultProps = {
@@ -61,7 +69,43 @@ class SharePanel extends React.Component {
         shareUrlReplaceString: "$1embedded.html#/$3",
         embedOptions: {},
         showAPI: true,
-        closeGlyph: "1-close"
+        closeGlyph: "1-close",
+        settings: {},
+        onUpdateSettings: () => {}
+    };
+
+    state = {
+        eventKey: 1
+    };
+
+    componentWillMount() {
+        const tabs = {
+            link: 1,
+            social: 2,
+            embed: 3
+        };
+        const bbox = join(this.props.bbox, ',');
+        this.setState({
+            bbox,
+            eventKey: tabs[this.props.selectedTab] || 1
+        });
+    }
+
+    componentWillReceiveProps(newProps) {
+        const bbox = join(this.props.bbox, ',');
+        const newBbox = join(newProps.bbox, ',');
+        if (bbox !== newBbox) {
+            this.setState({
+                bbox: newBbox
+            });
+        }
+    }
+
+    getShareUrl = () => {
+        const shareUrl = removeQueryFromUrl(this.props.shareUrl);
+        return (this.props.settings.bboxEnabled && !this.props.hideAdvancedSettings && this.state.bbox)
+            ? `${shareUrl}?bbox=${this.state.bbox}`
+            : shareUrl;
     };
 
     generateUrl = (orig = location.href, pattern, replaceString) => {
@@ -75,25 +119,27 @@ class SharePanel extends React.Component {
     render() {
         // ************************ CHANGE URL PARAMATER FOR EMBED CODE ****************************
         /* if the property shareUrl is not defined it takes the url from location.href */
-        const shareUrl = this.props.shareUrl || location.href;
-        let shareEmbeddedUrl = this.props.shareUrl || location.href;
+        const cleanShareUrl = this.getShareUrl();
+        const shareUrl = cleanShareUrl || location.href;
+        let shareEmbeddedUrl = cleanShareUrl || location.href;
         if (this.props.shareUrlRegex && this.props.shareUrlReplaceString) {
             shareEmbeddedUrl = this.generateUrl(shareEmbeddedUrl, this.props.shareUrlRegex, this.props.shareUrlReplaceString);
         }
-        const shareApiUrl = this.props.shareApiUrl || this.props.shareUrl || location.href;
-        const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
-        const direct = <div><ShareLink shareUrl={shareUrl}/><ShareQRCode shareUrl={shareUrl}/></div>;
-        const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
-        {this.props.showAPI ? <ShareApi shareUrl={shareApiUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
 
-        const tabs = (<Tabs defaultActiveKey={1} id="sharePanel-tabs">
-            <Tab eventKey={1} title={<Message msgId="share.direct" />}>{direct}</Tab>
-            <Tab eventKey={2} title={<Message msgId="share.social" />}>{social}</Tab>
-            <Tab eventKey={3} title={<Message msgId="share.code" />}>{code}</Tab>
+        const shareApiUrl = this.props.shareApiUrl || cleanShareUrl || location.href;
+        const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
+        const direct = <div><ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/><ShareQRCode shareUrl={shareUrl}/></div>;
+        const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
+        {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
+
+        const tabs = (<Tabs defaultActiveKey={this.state.eventKey} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
+            <Tab eventKey={1} title={<Message msgId="share.direct" />}>{this.state.eventKey === 1 && direct}</Tab>
+            <Tab eventKey={2} title={<Message msgId="share.social" />}>{this.state.eventKey === 2 && social}</Tab>
+            <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab>
           </Tabs>);
 
         let sharePanel =
-            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win">
+            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win" style={{zIndex: 1993}}>
                 <span role="header">
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>
@@ -104,6 +150,21 @@ class SharePanel extends React.Component {
                 </span>
                 <div role="body" className="share-panels">
                     {tabs}
+                    {!this.props.hideAdvancedSettings &&
+                    <SwitchPanel
+                        title={<Message msgId="share.advancedOptions"/>}
+                        expanded={this.state.showAdvanced}
+                        onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
+                        <Checkbox
+                            checked={this.props.settings.bboxEnabled ? true : false}
+                            onChange={() =>
+                                this.props.onUpdateSettings({
+                                    ...this.props.settings,
+                                    bboxEnabled: !this.props.settings.bboxEnabled
+                                })}>
+                            <Message msgId="share.addBboxParam" />
+                        </Checkbox>
+                    </SwitchPanel>}
                 </div>
             </Dialog>);
 
@@ -111,4 +172,4 @@ class SharePanel extends React.Component {
     }
 }
 
-module.exports = SharePanel;
+export default SharePanel;

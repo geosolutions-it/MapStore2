@@ -55,13 +55,14 @@ function updateStatus(status) {
 * @param {object} styleProps { code, templateId, format, init } init set initialCode
 * @return {object} of type `SELECT_STYLE_TEMPLATE` styleProps
 */
-function selectStyleTemplate({ code, templateId, format, init } = {}) {
+function selectStyleTemplate({ code, templateId, format, languageVersion, init } = {}) {
     return {
         type: SELECT_STYLE_TEMPLATE,
         code,
         templateId,
         format,
-        init
+        init,
+        languageVersion
     };
 }
 /**
@@ -70,14 +71,15 @@ function selectStyleTemplate({ code, templateId, format, init } = {}) {
 * @param {object} styleProps { temporaryId, templateId, code, format, init } init set initialCode
 * @return {object} of type `UPDATE_TEMPORARY_STYLE` styleProps
 */
-function updateTemporaryStyle({ temporaryId, templateId, code, format, init } = {}) {
+function updateTemporaryStyle({ temporaryId, templateId, code, format, languageVersion, init } = {}) {
     return {
         type: UPDATE_TEMPORARY_STYLE,
         temporaryId,
         templateId,
         code,
         format,
-        init
+        init,
+        languageVersion
     };
 }
 /**

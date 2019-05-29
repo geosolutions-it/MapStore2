@@ -21,6 +21,7 @@ var {
     ZOOM_TO_EXTENT,
     RESIZE_MAP,
     CHANGE_MAP_LIMITS,
+    ZOOM_TO_POINT, zoomToPoint,
     errorLoadingFont,
     changeMapView,
     clickOnMap,
@@ -199,5 +200,17 @@ describe('Test correctness of the map actions', () => {
         expect(action.restrictedExtent).toBe(restrictedExtent);
         expect(action.crs).toBe(crs);
         expect(action.minZoom).toBe(minZoom);
+    });
+
+    it('zoomToPoint', () => {
+        const pos = {x: 1, y: 2};
+        const zoom = 12;
+        const crs = "EPSG:4326";
+        const retval = zoomToPoint(pos, zoom, crs);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(ZOOM_TO_POINT);
+        expect(retval.pos).toEqual(pos);
+        expect(retval.zoom).toEqual(zoom);
+        expect(retval.crs).toEqual(crs);
     });
 });

@@ -8,12 +8,13 @@
 
 const React = require('react');
 const assign = require('object-assign');
-const {omit, isObject, head, isArray, isString, memoize, get} = require('lodash');
+const { omit, isObject, head, isArray, isString, memoize, get, endsWith } = require('lodash');
 const {combineReducers} = require('redux');
 const {connect} = require('react-redux');
 const url = require('url');
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
+
 /**
  * Gives a reduced version of the status to check.
  * It cached the last state to prevent re-evaluations if the input didn't change.
@@ -39,10 +40,15 @@ const filterState = memoize((state, monitor) => {
     }, '');
 });
 
-const isPluginConfigured = (pluginsConfig, plugin) => {
-    const cfg = pluginsConfig;
-    const pluginName = plugin.substring(0, plugin.length - 6);
-    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName));
+const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.substring(0, plugin.length - 6) || plugin;
+
+const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
+
+const getPluginConfiguration = (cfg, plugin) => {
+    const pluginName = getPluginSimpleName(plugin);
+    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName).map(cfgObj => isString(cfgObj) ? {
+        name: cfgObj
+    } : cfgObj)) || {};
 };
 
 /*eslint-disable */
@@ -84,19 +90,33 @@ const handleExpression = (state, context, expression) => {
  * @param  {Object} [plugins={}] the plugins object to get requires
  * @return {Boolean}             the result of the expression evaluation in the given context.
  */
-const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
+const filterDisabledPlugins = (item = {}, state = {}, plugins = {}) => {
     // checks for disablePluginIf first in cfg then in plugin definition (cfg overrides plugin default)
-    const disablePluginIf = item && item.cfg && item.cfg.disablePluginIf || item && item.plugin && item.plugin.disablePluginIf;
-    if (disablePluginIf && !(item && item.cfg && item.cfg.skipAutoDisable)) {
+    const disablePluginIf = get(item, 'cfg.disablePluginIf') || get(item, 'plugin.disablePluginIf');
+    if (disablePluginIf && !get(item, 'cfg.skipAutoDisable')) {
         return !handleExpression(state, plugins.requires, disablePluginIf);
     }
     return true;
 };
-const showIn = (state, requires, cfg, name, id, isDefault) => {
-    return (id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1 ||
-            cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1 ||
-            !cfg.showIn && isDefault) &&
-            !(cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1 || id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1);
+
+const isContainedInList = (prop, list, state, requires) => {
+    return prop && list && handleExpression(state, requires, list).indexOf(prop) !== -1;
+};
+
+const showIn = (state, requires, cfg = {}, name, id, isDefault) => {
+    return (
+            // showIn contains plugin id
+            isContainedInList(id, cfg.showIn, state, requires) ||
+            // showIn contains plugin name
+            isContainedInList(name, cfg.showIn, state, requires) ||
+            // always show in default container
+            !cfg.showIn && isDefault
+        ) && !(
+            // dot not show if hideFrom contains id
+            isContainedInList(id, cfg.hideFrom, state, requires) ||
+            // dot not show if hideFrom contains name
+            isContainedInList(name, cfg.hideFrom, state, requires)
+        );
 };
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
@@ -106,17 +126,24 @@ const includeLoaded = (name, loadedPlugins, plugin) => {
     return plugin;
 };
 
-const includeLoadedItem = (name, loadedPlugins, plugin) => {
-    if (loadedPlugins[name]) {
-        return assign(loadedPlugins[name], plugin, {loadPlugin: undefined});
-    }
-    return plugin;
+const getPriority = (plugin, override = {}, container) => {
+    return (
+        get(override, container + ".priority") ||
+        get(plugin, container + ".priority") ||
+        0
+    );
 };
 
-const getMorePrioritizedContainer = (pluginImpl, plugins, priority) => {
+const getMorePrioritizedContainer = (pluginImpl, override = {}, plugins, priority) => {
     return plugins.reduce((previous, current) => {
-        const pluginName = current.name || current;
-        return pluginImpl[pluginName] && pluginImpl[pluginName].priority > previous.priority ? {plugin: {name: pluginName, impl: pluginImpl[pluginName]}, priority: pluginImpl[pluginName].priority} : previous;
+        const containerName = current.name || current;
+        const pluginPriority = getPriority(pluginImpl, override, containerName);
+        return pluginPriority > previous.priority ? {
+            plugin: {
+                name: containerName,
+                impl: assign({}, pluginImpl[containerName], override[containerName])
+            },
+            priority: pluginPriority} : previous;
     }, {plugin: null, priority: priority});
 };
 
@@ -133,32 +160,69 @@ const parsePluginConfig = (state, requires, cfg) => {
     return parseExpression(state, requires, cfg);
 };
 
-const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins, filter) => {
+const canContain = (container, plugin, override = {}) => {
+    return plugin[container] || override[container] || false;
+};
+
+const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => {
+    return getMorePrioritizedContainer(pluginImpl,
+        override,
+        plugins,
+        priority).plugin === null;
+};
+
+const isValidConfiguration = (cfg) => {
+    return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
+};
+
+const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
-            .filter((plugin) => plugins[plugin][name])
+            // extract basic info for each plugins (name, implementation and config)
+            .map(pluginName => ({
+                name: pluginName,
+                impl: plugins[pluginName],
+                config: getPluginConfiguration(pluginsConfig, pluginName)
+            }))
+            // include only plugins that are configured for the current mode
+            .filter((plugin) => isValidConfiguration(plugin.config))
+            // include only plugins that support container as a parent
+            .filter((plugin) => canContain(containerName, plugin.impl, plugin.config.override))
+            // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
             .filter((plugin) => {
-                const cfgObj = isPluginConfigured(pluginsConfig, plugin);
-                return cfgObj && showIn(state, plugins.requires, cfgObj, name, id, isDefault);
+                return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
             })
-            .filter((plugin) => getMorePrioritizedContainer(plugins[plugin], pluginsConfig, plugins[plugin][name].priority || 0).plugin === null)
+            // include only plugins for which container is the preferred container
+            .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
+                getPriority(plugin.impl, plugin.config.override, containerName)))
             .map((plugin) => {
-                const pluginName = plugin.substring(0, plugin.length - 6);
-                const pluginImpl = includeLoadedItem(pluginName, loadedPlugins, plugins[plugin]);
-                const pluginCfg = isPluginConfigured(pluginsConfig, plugin);
-                const item = pluginImpl[name].impl || pluginImpl[name];
-                return assign({
+                const pluginName = getPluginSimpleName(plugin.name);
+                const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
+                const containerProperties = assign(
+                    {},
+                    get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName),
+                    get(plugin.config, 'override.' + containerName)
+                );
+                return assign(
+                    {
                         name: pluginName
                     },
-                    item,
-                    pluginCfg.override && pluginCfg.override[name] || {},
+                    containerProperties,
                     {
-                        cfg: assign({ }, pluginImpl.cfg || {}, pluginCfg && parsePluginConfig(state, plugins.requires, pluginCfg.cfg || {}) || undefined)
+                        cfg: assign(
+                            {},
+                            pluginImpl.cfg || {},
+                            parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) || undefined
+                        )
                     },
                     {
                         plugin: pluginImpl,
                         items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
-            }).filter((item) => filterDisabledPlugins(item, state, plugins) && (!filter || filter(item)));
+            })
+            // filter disabled plugins
+            .filter((item) => filterDisabledPlugins(item, state, plugins))
+            // apply optional user filter
+            .filter((item) => (!filter || filter(item)));
 };
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
@@ -181,6 +245,13 @@ const defaultEpicWrapper = epic => (...args) =>
       setTimeout(() => { throw error; }, 0);
       return source;
   });
+
+const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
+
+const getPluginImplementation = (impl, stateSelector) => {
+    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
+};
+
 /**
  * Utilities to manage plugins
  * @memberof utils
@@ -273,20 +344,24 @@ const PluginsUtils = {
         return {
             id: id || name,
             name,
-            impl: includeLoaded(name, loadedPlugins, impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector)),
+            impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector)),
             cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
     },
     getPluginItems,
-    getConfiguredPlugin: (pluginDef, loadedPlugins, loaderComponent) => {
+    getConfiguredPlugin: (pluginDef, loadedPlugins = {}, loaderComponent) => {
         if (pluginDef) {
-            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || (pluginDef.plugin && !pluginDef.plugin.loadPlugin && pluginDef.plugin);
+            const impl = loadedPlugins[pluginDef.name] ||
+                !pluginDef.plugin.loadPlugin && pluginDef.plugin;
+            const id = isObject(pluginDef) ? pluginDef.id : null;
+            const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
+            const Plugin = getPluginImplementation(impl, stateSelector);
             const result = (props) => {
                 return Plugin ? (<Plugin key={pluginDef.id}
-                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} />) : loaderComponent;
+                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} items={pluginDef.items || []}/>) : loaderComponent;
             };
-            result.loaded = !!Plugin;
+            result.loaded = !!impl;
             return result;
         }
         return pluginDef;
@@ -311,7 +386,77 @@ const PluginsUtils = {
     connect: (mapStateToProps, mapDispatchToProps, mergeProps, options) => {
         return connect(mapStateToProps, mapDispatchToProps, mergeProps || pluginsMergeProps, options);
     },
+    /**
+     * Use this function to export a plugin from a module.
+     *
+     * @param {string} name name of the plugin (without the Plugin postfix)
+     * @param {object} config configuration object, with the following (optional) properties:
+     * @param {object|function} config.component: ReactJS component that implements the plugin functionalities, can be null if the plugin supports lazy loading
+     * @param {object} config.options: generic plugins configuration options (e.g. disablePluginIf)
+     * @param {object} config.containers: object with supported containers (key=container name, value=container config)
+     * @param {object} config.reducers: reducers the plugin will need
+     * @param {object} config.epics: epics the plugin will need to work
+     * @param {boolean} config.lazy: true if the plugin implements on-demand loading,
+     * @param {function} config.enabler: function used in lazy mode to decide when plugin needs to be loaded (receives redux state as the only param)
+     * @param {promise} config.loader: promise that will return the loaded implementation
+     *
+     * @example statically loaded plugin
+     * createPlugin('My', {
+     *  component: MyPluginComponent,
+     *  options: {...},
+     *  containers: {
+     *      Toolbar: {
+     *          priority: 1,
+     *          tool: true,
+     *          ...
+     *      }
+     *  },
+     *  reducers: {my: require('...')},
+     *  epics: {myEpic: require('...')}
+     * });
+     *
+     * @example lazy loaded plugin
+     * createPlugin('My', {
+     *  enabler: (state) => state.my.enabled || false,
+     *  loader: () => new Promise((resolve) => {
+     *    require.ensure(['...'], () => {
+     *        const MyComponent = require('...');
+     *        ...
+     *        const MyPlugin = connect(...)(MyComponent);
+     *        resolve(MyPlugin);
+     *    });
+     *  },
+     *  options: {...},
+     *  containers: {
+     *      Toolbar: {
+     *          priority: 1,
+     *          tool: true,
+     *          ...
+     *      }
+     *  },
+     *  reducers: {my: require('...')},
+     *  epics: {myEpic: require('...')}
+     * });
+     */
+    createPlugin: (name, { component, options = {}, containers = {}, reducers = {}, epics = {}, lazy = false, enabler = () => true, loader}) => {
+        const pluginName = normalizeName(name);
+        const pluginImpl = lazy ? {
+            loadPlugin: (resolve) => {
+                loader().then(loadedImpl => {
+                    resolve(assign(loadedImpl, { isMapStorePlugin: true }));
+                });
+            },
+            enabler
+        } : assign(component, {isMapStorePlugin: true});
+        return {
+            [pluginName]: assign(pluginImpl, containers, options),
+            reducers,
+            epics
+        };
+    },
     handleExpression,
-    getMorePrioritizedContainer
+    getMorePrioritizedContainer,
+    getPluginConfiguration,
+    isMapStorePlugin
 };
 module.exports = PluginsUtils;

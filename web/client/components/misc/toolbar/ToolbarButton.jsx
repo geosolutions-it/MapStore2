@@ -6,20 +6,31 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
+const {compose} = require('recompose');
+const Message = require('../../I18N/Message');
+const { omit } = require('lodash');
+
 const {Button, Glyphicon} = require('react-bootstrap');
 const Loader = require('../Loader');
 const tooltip = require('../enhancers/tooltip');
+const popover = require('../enhancers/popover');
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text
+ * Has tooltip and popover HOCs, so you can add properties like `popover`, `tooltip`, `tooltipId` and so on...
+ * @see components.misc.enhancers.tooltip and @see components.misc.enhancers.popover.
  * @class TooltipButton
  * @memberof components.misc.toolbar
- * @prop glyph [glyph] the icon to use
- * @prop text [text] the text to display
+ * @prop {string} [glyph] the icon to use
+ * @prop {element} [text] the text to display
+ * @prop {string} [textId] if present, has higher priority of `text` and uses the string as key to localize the toolbar button text
+ * @prop {object} [popover] @see components.misc.enhancers.popover
+ * @prop {element} [tooltip] @see components.misc.enhancers.tooltip
+ * @prop {string} [tooltipId] @see components.misc.enhancers.tooltip
  */
 
-module.exports = tooltip(({glyph, loading, text="", glyphClassName="", loaderProps = {}, ...props} = {}) =>
-    <Button {...props}>
+module.exports = compose(tooltip, popover)(({ glyph, loading, text = "", textId, glyphClassName="", loaderProps = {}, ...props} = {}) =>
+    <Button {...omit(props, ["pullRight"])}>
         {glyph && !loading ? <Glyphicon glyph={glyph} className={glyphClassName}/> : null}
-        {text}
+        {textId ? <Message msgId={textId} /> : text}
         {loading ? <Loader className={`ms-loader${props.bsStyle && ' ms-loader-' + props.bsStyle || ''}${props.bsSize && ' ms-loader-' + props.bsSize || ''}`} {...loaderProps}/> : null}
     </Button>);

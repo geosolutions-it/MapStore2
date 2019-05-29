@@ -25,7 +25,7 @@ module.exports = {
             text: <Message msgId="docs"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
-            selector: () => ({href: 'docs', target: 'blank'}),
+            selector: () => ({href: 'https://mapstore.readthedocs.io/en/latest/', target: 'blank'}),
             priority: 2,
             doNotHide: true
         }

@@ -14,6 +14,7 @@ const {
     errorStyleSelector,
     loadingStyleSelector,
     formatStyleSelector,
+    languageVersionStyleSelector,
     codeStyleSelector,
     initialCodeStyleSelector,
     selectedStyleSelector,
@@ -24,7 +25,8 @@ const {
     styleServiceSelector,
     canEditStyleSelector,
     getUpdatedLayer,
-    getAllStyles
+    getAllStyles,
+    selectedStyleFormatSelector
 } = require('../styleeditor');
 
 describe('Test styleeditor selector', () => {
@@ -103,6 +105,17 @@ describe('Test styleeditor selector', () => {
 
         expect(retval).toExist();
         expect(retval).toBe('css');
+    });
+    it('test languageVersionStyleSelector', () => {
+        const state = {
+            styleeditor: {
+                languageVersion: { version: '1.0.0' }
+            }
+        };
+        const retval = languageVersionStyleSelector(state);
+
+        expect(retval).toExist();
+        expect(retval).toEqual({ version: '1.0.0' });
     });
     it('test codeStyleSelector', () => {
         const state = {
@@ -431,5 +444,45 @@ describe('Test styleeditor selector', () => {
             defaultStyle: 'point',
             enabledStyle: 'square'
         });
+    });
+    it('test temporaryIdSelector', () => {
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        style: 'point',
+                        availableStyles: [
+                            {
+                                name: 'point',
+                                format: 'sld'
+                            },
+                            {
+                                name: 'generic',
+                                format: 'css'
+                            }
+                        ]
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    expanded: true,
+                    node: 'layerId',
+                    nodeType: 'layers',
+                    options: {
+                        opacity: 1,
+                        style: 'generic'
+                    }
+                }
+            }
+        };
+        const retval = selectedStyleFormatSelector(state);
+        expect(retval).toExist();
+        expect(retval).toBe('css');
+
     });
 });
