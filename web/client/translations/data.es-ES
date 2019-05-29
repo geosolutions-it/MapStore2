@@ -105,7 +105,9 @@
             "noBackgroundLayerSupported": "No hay capas de fondo soportadas para este tipo de mapa.",
             "updateOldMap": "Este es un mapa antiguo, de modo que no todas las funcionalidades pueden ser habilitadas. Pinche en el botón de actulizar el mapa o ignore este aviso si no quiere actualizarlo.",
             "warningSaveUpdatedMap": "Algunas capas no han sido actualizadas correctamente",
-            "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente"
+            "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente",
+            "incompatibleBackgroundAndProjection":"La proyección que seleccionó no es compatible con el fondo, cambie a un fondo compatible -o un vacío-, luego seleccione esta proyección!",
+            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa"
         },
         "dock": {
             "row": "{rowsSelected} fila seleccionada",
