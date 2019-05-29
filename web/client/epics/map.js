@@ -8,6 +8,7 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
+const { mapPaddingSelector } = require('../selectors/maplayout');
 
 const {
     CREATION_ERROR_LAYER,
@@ -18,6 +19,7 @@ const {
     changeMapLimits
 } = require('../actions/map');
 const {configuredExtentCrsSelector, configuredRestrictedExtentSelector, configuredMinZoomSelector, mapSelector, mapIdSelector} = require('../selectors/map');
+
 
 const { loadMapInfo} = require('../actions/config');
 const {LOGIN_SUCCESS} = require('../actions/security');

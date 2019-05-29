@@ -32,6 +32,7 @@ var {
     SHOW_LAYER_METADATA,
     HIDE_LAYER_METADATA,
     UPDATE_SETTINGS_PARAMS,
+    ADD_GROUP,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -55,7 +56,8 @@ var {
     filterLayers,
     showLayerMetadata,
     hideLayerMetadata,
-    updateSettingsParams
+    updateSettingsParams,
+    addGroup
 } = require('../layers');
 var {getLayerCapabilities} = require('../layerCapabilities');
 
@@ -140,6 +142,17 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.type).toBe(REMOVE_NODE);
         expect(retval.node).toBe('sampleNode');
         expect(retval.nodeType).toBe('sampleType');
+        expect(retval.removeEmpty).toBe(false);
+    });
+
+    it('removeNode with removeEmpty', () => {
+        var retval = removeNode('sampleNode', 'sampleType', true);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_NODE);
+        expect(retval.node).toBe('sampleNode');
+        expect(retval.nodeType).toBe('sampleType');
+        expect(retval.removeEmpty).toBe(true);
     });
 
     it('updateNode', () => {
@@ -303,5 +316,19 @@ describe('Test correctness of the layers actions', () => {
         expect(action.type).toBe(UPDATE_SETTINGS_PARAMS);
         expect(action.newParams).toBe(newParams);
         expect(action.update).toBe(update);
+    });
+
+    it('add root group', () => {
+        const action = addGroup('newgroup');
+        expect(action.type).toBe(ADD_GROUP);
+        expect(action.group).toBe('newgroup');
+        expect(action.parent).toNotExist();
+    });
+
+    it('add nested group', () => {
+        const action = addGroup('newgroup', 'group1.group2');
+        expect(action.type).toBe(ADD_GROUP);
+        expect(action.group).toBe('newgroup');
+        expect(action.parent).toBe('group1.group2');
     });
 });

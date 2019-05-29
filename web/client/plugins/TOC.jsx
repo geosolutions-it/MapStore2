@@ -34,7 +34,7 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 
 const {isObject, head} = require('lodash');
 
-const {setControlProperty} = require('../actions/controls');
+const { setControlProperties} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
 
 const {getMetadataRecordById} = require("../actions/catalog");
@@ -175,6 +175,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: PropTypes.bool,
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
+        maxDepth: PropTypes.number,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
         chartStyle: PropTypes.object,
@@ -194,9 +195,11 @@ class LayerTree extends React.Component {
         filteredGroups: PropTypes.array,
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
+        onAddGroup: PropTypes.func,
         onGetMetadataRecord: PropTypes.func,
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
+        activateAddGroupButton: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool
@@ -237,6 +240,7 @@ class LayerTree extends React.Component {
         activateQueryTool: false,
         activateDownloadTool: false,
         activateWidgetTool: false,
+        maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -266,9 +270,11 @@ class LayerTree extends React.Component {
         filteredGroups: [],
         noFilterResults: false,
         onAddLayer: () => {},
+        onAddGroup: () => {},
         onGetMetadataRecord: () => {},
         hideLayerMetadata: () => {},
         activateAddLayerButton: false,
+        activateAddGroupButton: false,
         catalogActive: false,
         refreshLayerVersion: () => {},
         metadataTemplate: null
@@ -344,6 +350,7 @@ class LayerTree extends React.Component {
                             layerMetadata={this.props.layerMetadata}
                             wfsdownload={this.props.wfsdownload}
                             metadataTemplate={this.props.metadataTemplate}
+                            maxDepth={this.props.maxDepth}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
@@ -352,6 +359,7 @@ class LayerTree extends React.Component {
                                 activateDownloadTool: this.props.activateDownloadTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
+                                activateAddGroup: this.props.activateAddGroupButton,
                                 includeDeleteButtonInSettings: false,
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool
@@ -373,6 +381,10 @@ class LayerTree extends React.Component {
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
+                                addLayerTooltip: <Message msgId="toc.addLayer" />,
+                                addLayerToGroupTooltip: <Message msgId="toc.addLayerToGroup" />,
+                                addGroupTooltip: <Message msgId="toc.addGroup" />,
+                                addSubGroupTooltip: <Message msgId="toc.addSubGroup" />,
                                 createWidgetTooltip: <Message msgId="toc.createWidget"/>,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
@@ -409,6 +421,7 @@ class LayerTree extends React.Component {
                                 onHideSettings: this.props.hideSettings,
                                 onReload: this.props.refreshLayerVersion,
                                 onAddLayer: this.props.onAddLayer,
+                                onAddGroup: this.props.onAddGroup,
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
@@ -454,6 +467,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
+ * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `false`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
@@ -566,7 +580,8 @@ const TOCPlugin = connect(tocSelector, {
     removeNode,
     onSelectNode: selectNode,
     onFilter: filterLayers,
-    onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onAddLayer: setControlProperties.bind(null, "metadataexplorer", "enabled", true, "group"),
+    onAddGroup: setControlProperties.bind(null, "addgroup", "enabled", true, "parent"),
     onGetMetadataRecord: getMetadataRecordById,
     hideLayerMetadata,
     onNewWidget: () => createWidget(),

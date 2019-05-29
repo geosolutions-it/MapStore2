@@ -375,11 +375,19 @@
             "showLegend": "Show legend",
             "hideLegend": "Hide legend"
         },
+        "addgroup": {
+            "addbtn": "Add",
+            "groupName": "Group name"
+        },
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
+            "toggleGroupVisibility": "Toggle group visibility",
             "displayLegendAndTools": "Display legend and tools",
             "zoomToLayerExtent": "Zoom to layer extent",
             "addLayer": "Add Layer",
+            "addLayerToGroup": "Add layer to selected group",
+            "addGroup": "Add Group",
+            "addSubGroup": "Add sub group to the selected group",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
             "toolLayerSettingsTooltip": "Selected layer settings",
@@ -819,6 +827,7 @@
             "passwordInvalid": "Invalid password",
             "username": "Username",
             "password": "Password",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
             "signIn":"Sign-in",
@@ -881,7 +890,8 @@
             "confirmDeleteUser": "Are you sure you want to delete this user?",
             "errorDelete": "There was an error deleting this user:",
             "errorSaving": "There was an error saving the user:",
-            "selectedGroups": "SELECTED GROUPS"
+            "selectedGroups": "SELECTED GROUPS",
+            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
           "searchGroups": "Search Groups...",

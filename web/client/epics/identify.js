@@ -7,10 +7,12 @@
 */
 const Rx = require('rxjs');
 
+
 const {get, find} = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
+
 const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
@@ -20,6 +22,7 @@ const { closeAnnotations } = require('../actions/annotations');
 const { MAP_CONFIG_LOADED } = require('../actions/config');
 const { stopGetFeatureInfoSelector, queryableLayersSelector, identifyOptionsSelector } = require('../selectors/mapinfo');
 const { centerToMarkerSelector } = require('../selectors/layers');
+
 const { mapSelector, projectionDefsSelector, projectionSelector } = require('../selectors/map');
 const { boundingMapRectSelector } = require('../selectors/maplayout');
 const { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox } = require('../utils/CoordinatesUtils');

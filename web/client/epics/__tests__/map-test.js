@@ -4,20 +4,24 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
-*/
+ */
+
 const expect = require('expect');
 
 const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions} = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
 const { MAP_INFO_LOAD_START, configureMap} = require('../../actions/config');
+
 const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 const MapUtils = require('../../utils/MapUtils');
 
 const {
     CHANGE_MAP_VIEW,
     zoomToExtent
+
 } = require('../../actions/map');
+
 
 const {LOGIN_SUCCESS} = require('../../actions/security');
 
