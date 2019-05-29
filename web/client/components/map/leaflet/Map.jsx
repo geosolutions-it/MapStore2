@@ -30,7 +30,7 @@ class LeafletMap extends React.Component {
         onClick: PropTypes.func,
         onRightClick: PropTypes.func,
         mapOptions: PropTypes.object,
-        limits: PropTypes.limits,
+        limits: PropTypes.object,
         zoomControl: PropTypes.bool,
         mousePointer: PropTypes.string,
         onMouseMove: PropTypes.func,

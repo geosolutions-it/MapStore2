@@ -141,13 +141,9 @@ Layers.registerType('wms', {
             urls: urls,
             params: queryParameters,
             tileGrid: new ol.tilegrid.TileGrid({
-                // TODO: custom grid sets with custom extent
                 extent: extent,
-                // TODO: custom grid sets resolutions and tile size (needed to generate resolutions)
                 resolutions: mapUtils.getResolutions(),
                 tileSize: options.tileSize ? options.tileSize : 256,
-                // TODO: GWC grid sets with `alignTopLeft=true` may require `extent[0], extent[3]`
-
                 origin: options.origin ? options.origin : [extent[0], extent[1]]
             })
         }, options);
@@ -188,12 +184,9 @@ Layers.registerType('wms', {
             if (oldOptions.srs !== newOptions.srs) {
                 const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
                 layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
-                    // TODO: custom grid sets extents
                     extent: extent,
-                    // TODO: custom grid sets resolutions and tile size (needed to generate resolutions)
                     resolutions: mapUtils.getResolutions(),
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    // TODO: GWC grid sets with `alignTopLeft=true` may require `extent[0], extent[3]`
                     origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
                 });
             }
