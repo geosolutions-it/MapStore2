@@ -8,7 +8,6 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const { mapPaddingSelector } = require('../selectors/maplayout');
 
 const {
     CREATION_ERROR_LAYER,
