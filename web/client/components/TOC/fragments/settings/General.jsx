@@ -30,7 +30,8 @@ class General extends React.Component {
         groups: PropTypes.array,
         nodeType: PropTypes.string,
         pluginCfg: PropTypes.object,
-        showTooltipOptions: PropTypes.bool
+        showTooltipOptions: PropTypes.bool,
+        allowNew: PropTypes.bool
     };
     static contextTypes = {
         messages: PropTypes.object
@@ -41,7 +42,8 @@ class General extends React.Component {
         onChange: () => {},
         nodeType: 'layers',
         showTooltipOptions: true,
-        pluginCfg: {}
+        pluginCfg: {},
+        allowNew: false
     };
 
 
@@ -135,8 +137,9 @@ class General extends React.Component {
                             this.updateEntry("group", {target: {value: value || "Default"}});
                         }}
                         theme = "bootstrap3"
-                        createFromSearch={createFromSearch}
-
+                        createFromSearch={this.props.allowNew ? createFromSearch : undefined}
+                        hideResetButton={!this.props.allowNew}
+                        editable={this.props.allowNew}
                         onValueChange={function(item) {
                             // here, we add the selected item to the options array, the "new-option"
                             // property, added to items created by the "create-from-search" function above,

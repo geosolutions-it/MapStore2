@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const { toggleControl, setControlProperty } = require('../../actions/controls');
+const { toggleControl, setControlProperty, setControlProperties } = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
 const {closeIdentify, purgeMapInfoResults} = require('../../actions/mapInfo');
 
@@ -110,5 +110,28 @@ describe('map layout epics', () => {
         };
         const state = { controls: { drawer: { enabled: true, resizedWidth: 512} } };
         testEpic(updateMapLayoutEpic, 1, setControlProperty("drawer", "resizedWidth", 512), epicResult, state);
+    });
+
+    it('tests layout updated on setControlProperties', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        left: 0, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            left: 0,
+                            right: 658,
+                            bottom: 30
+                        }
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = { controls: { metadataexplorer: { enabled: true, group: "parent" } } };
+        testEpic(updateMapLayoutEpic, 1, setControlProperties("metadataexplorer", "enabled", true, "group", "parent"), epicResult, state);
     });
 });

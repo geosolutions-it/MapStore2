@@ -375,11 +375,19 @@
             "showLegend": "Show legend",
             "hideLegend": "Hide legend"
         },
+        "addgroup": {
+            "addbtn": "Add",
+            "groupName": "Group name"
+        },
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
+            "toggleGroupVisibility": "Toggle group visibility",
             "displayLegendAndTools": "Display legend and tools",
             "zoomToLayerExtent": "Zoom to layer extent",
             "addLayer": "Add Layer",
+            "addLayerToGroup": "Add layer to selected group",
+            "addGroup": "Add Group",
+            "addSubGroup": "Add sub group to the selected group",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
             "toolLayerSettingsTooltip": "Selected layer settings",

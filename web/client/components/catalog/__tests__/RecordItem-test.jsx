@@ -402,6 +402,68 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
     });
 
+    it('check event handlers with layerBaseConfig and csw service', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<ReactItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="csw"
+            layerBaseConfig={{
+                extraProp: 'val1'
+            }}
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
+    });
+
+    it('check event handlers with layerBaseConfig and wms service', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<ReactItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="wms"
+            layerBaseConfig={{
+                extraProp: 'val1'
+            }}
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
+    });
+
     it('test create record item with no get capabilities links', () => {
         // instanciating a record item component
         const component = ReactDOM.render(<ReactItem record={sampleRecord} showGetCapLinks/>,

@@ -159,7 +159,7 @@
                     "activateMapTitle": false,
                     "activateSortLayer": false
                 }
-            }, {
+            }, "AddGroup", {
                 "name": "TOCItemsSettings",
                 "cfg": {
                     "width": 300
@@ -281,9 +281,12 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
+                    "activateAddGroupButton": true,
                     "activateMetedataTool": false
                 }
             },
+            "AddGroup",
+            "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
@@ -299,8 +302,7 @@
             }, {
               "name": "About",
               "showIn": ["BurgerMenu"]
-            },
-            "TOCItemsSettings"
+            }
             , {
               "name": "MousePosition",
               "cfg": {
@@ -453,7 +455,7 @@
                     "activateRemoveLayer": false
                 }
 
-            }, "MapFooter", {
+            }, "AddGroup", "MapFooter", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
