@@ -19,10 +19,8 @@ const {
     PRINT_CANCEL
 } = require('../actions/print');
 
-const {get} = require('lodash');
-
 const {TOGGLE_CONTROL} = require('../actions/controls');
-const {isObject} = require('lodash');
+const {isObject, get} = require('lodash');
 
 const assign = require('object-assign');
 
