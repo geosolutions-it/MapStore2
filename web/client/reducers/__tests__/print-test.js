@@ -45,6 +45,34 @@ describe('Test the print reducer', () => {
         expect(state.spec.resolution).toBe(96);
     });
 
+    it('load capabilities do not override sheet', () => {
+        const state = print({ capabilities: {}, spec: {sheet: 'A3'} }, {
+            type: PRINT_CAPABILITIES_LOADED,
+            capabilities: {
+                layouts: [{ name: 'A4' }, {name: 'A3'}],
+                dpis: [{ value: 96 }]
+            }
+        });
+        expect(state.capabilities.layouts.length).toBe(2);
+        expect(state.capabilities.dpis.length).toBe(1);
+        expect(state.spec.sheet).toBe('A3');
+        expect(state.spec.resolution).toBe(96);
+    });
+
+    it('load capabilities override sheet if user defined does not exist', () => {
+        const state = print({ capabilities: {}, spec: { sheet: 'A3' } }, {
+            type: PRINT_CAPABILITIES_LOADED,
+            capabilities: {
+                layouts: [{ name: 'A4' }],
+                dpis: [{ value: 96 }]
+            }
+        });
+        expect(state.capabilities.layouts.length).toBe(1);
+        expect(state.capabilities.dpis.length).toBe(1);
+        expect(state.spec.sheet).toBe('A4');
+        expect(state.spec.resolution).toBe(96);
+    });
+
     it('load capabilities error', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: PRINT_CAPABILITIES_ERROR,
