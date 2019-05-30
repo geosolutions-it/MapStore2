@@ -846,7 +846,7 @@ const customTemplates = [
 }
 `,
         types: ['polygon', 'vector'],
-        title: 'Label & Fill',
+        title: 'Label and Fill',
         format: 'css',
         preview: <SVGPreview
             type="polygon"
@@ -1059,7 +1059,7 @@ const customTemplates = [
 }
 `,
         types: ['polygon', 'point', 'vector'],
-        title: 'Label & Marker',
+        title: 'Label and Marker',
         format: 'css',
         preview: <SVGPreview
             type="polygon"
