@@ -115,6 +115,52 @@ describe('Test the mapConfig reducer', () => {
         });
         expect(mapConfig({}, {type: MAP_CREATED, resourceId: 2})).toEqual({});
     });
+    it('loads annotations layer and generate correctly the geodesic lines if needed', () => {
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: [1361886.8627049, 5723464.1181097], zoom: 11, layers: [
+            {
+                type: 'vector',
+                id: "annotations",
+                features: [{
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        geometry: {
+                            type: "MultiPoint",
+                            coordinates: [[1, 2], [4, 5]]
+                        },
+                        properties: {
+                            useGeodesicLines: true
+                        }
+                    },
+                    {
+                        type: "Feature",
+                        geometry: {
+                            type: "LineString",
+                            coordinates: [[1, 2], [4, 5]]
+                        },
+                        properties: {},
+                        style: [{
+                            color: "#303030"
+                        }]
+                    }]
+                }]
+            }] }}});
+        expect(state.map).toExist();
+        expect(state.layers).toExist();
+        const newAnnotationsFeature = state.layers[0].features[0].features[0];
+        const otherLineString = state.layers[0].features[0].features[1];
+        expect(newAnnotationsFeature.geometry).toEqual({
+            type: "MultiPoint",
+            coordinates: [[1, 2], [4, 5]]
+        });
+        expect(newAnnotationsFeature.properties.geometryGeodesic.type).toBe("LineString");
+        expect(newAnnotationsFeature.properties.geometryGeodesic.coordinates.length).toBe(100);
+        expect(otherLineString.properties).toEqual({});
+        expect(otherLineString.geometry).toEqual({
+            type: "LineString",
+            coordinates: [[1, 2], [4, 5]]
+        });
+    });
     it('test MAP_INFO_LOADED accepts string or numeric mapId', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: "1", config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
         state = mapConfig(state, {type: "MAP_INFO_LOADED", mapId: 1, info: {canEdit: true, canDelete: true}});

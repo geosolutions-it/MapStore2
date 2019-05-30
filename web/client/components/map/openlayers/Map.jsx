@@ -38,6 +38,7 @@ class OpenlayersMap extends React.Component {
         resize: PropTypes.number,
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
+        resetGeometry: PropTypes.func,
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,
@@ -118,21 +119,44 @@ class OpenlayersMap extends React.Component {
         // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
+            const checkPoint = (geometry = {}) => {
+                if (geometry.getType() === "Point") {
+                    this.markerPresent = true;
+                    const getCoord = geometry.getFirstCoordinate();
+                    return ol.proj.toLonLat(getCoord, this.props.projection);
+                }
+                return null;
+            };
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 let pos = event.coordinate.slice();
                 let coords = ol.proj.toLonLat(pos, this.props.projection);
                 let tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 let layerInfo;
+                this.markerPresent = false;
                 map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
                     if (layer && layer.get('handleClickOnLayer')) {
-                        layerInfo = layer.get('msId');
+
                         const geom = feature.getGeometry();
-                        // TODO getFirstCoordinate makes sense only for points, maybe centroid is more appropriate
-                        const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
-                        coords = ol.proj.toLonLat(getCoord, this.props.projection);
+                        const type = geom.getType();
+                        coords = checkPoint(geom) || coords;
+                        if (!this.markerPresent) {
+                            // if no marker is present then take the clicked point
+
+                            if (type === "GeometryCollection"/*TODO add support for "FeatureCollection"*/) {
+                                geom.getGeometries().forEach(f => {
+                                    coords = checkPoint(f.getGeometry());
+                                });
+                            } else {
+                                coords = ol.proj.toLonLat(pos, this.props.projection);
+                            }
+                        } else {
+                            layerInfo = layer.get('msId');
+
+                        }
+                        tLng = CoordinatesUtils.normalizeLng(coords[0]);
                     }
-                    tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 });
+
                 const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                 this.props.onClick({
                     pixel: {
@@ -164,6 +188,7 @@ class OpenlayersMap extends React.Component {
         if (this.props.registerHooks) {
             this.registerHooks();
         }
+
     }
 
     componentWillReceiveProps(newProps) {

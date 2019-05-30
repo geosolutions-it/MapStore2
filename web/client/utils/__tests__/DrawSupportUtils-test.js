@@ -43,5 +43,4 @@ describe('LocaleUtils', () => {
         const convertedBounds = boundsToOLExtent(bounds);
         expect(convertedBounds.length).toBe(4);
     });
-
 });

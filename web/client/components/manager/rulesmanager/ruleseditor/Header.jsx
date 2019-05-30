@@ -37,5 +37,3 @@ module.exports = ({layer, rule = {}, onNavChange = () => {}, onExit = () => {}, 
                 </Nav>
             </div>);
 };
-
-

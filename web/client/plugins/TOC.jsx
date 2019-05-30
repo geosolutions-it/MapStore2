@@ -21,7 +21,7 @@ const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelecto
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
-const {generalInfoFormatSelector} = require("../selectors/mapinfo");
+const {generalInfoFormatSelector} = require("../selectors/mapInfo");
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -40,6 +40,7 @@ const {createWidget} = require('../actions/widgets');
 const {getMetadataRecordById} = require("../actions/catalog");
 
 const {activeSelector} = require("../selectors/catalog");
+const {isCesium} = require('../selectors/maptype');
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -80,8 +81,9 @@ const tocSelector = createSelector(
         mapNameSelector,
         activeSelector,
         widgetBuilderAvailable,
-        generalInfoFormatSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
+        generalInfoFormatSelector,
+        isCesium
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive) => ({
         enabled,
         groups,
         settings,
@@ -115,7 +117,7 @@ const tocSelector = createSelector(
             },
             {
                 options: { showComponent: false },
-                func: (node) => head(node.nodes.filter(l => l.hidden))
+                func: (node) => head(node.nodes.filter(l => l.hidden || l.id === "annotations" && isCesiumActive))
             }
         ]),
         catalogActive,
@@ -449,6 +451,7 @@ class LayerTree extends React.Component {
     }
 }
 
+
 /**
  * Provides Table Of Content visualization.
  * @memberof plugins
@@ -561,7 +564,7 @@ class LayerTree extends React.Component {
  *   }
  * }
  * ```
-  */
+ */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,

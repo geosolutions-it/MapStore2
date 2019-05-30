@@ -9,6 +9,7 @@
 const CoordinatesUtils = require('./CoordinatesUtils');
 const SecurityUtils = require('./SecurityUtils');
 const MapUtils = require('./MapUtils');
+const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 
 const {isArray} = require('lodash');
@@ -19,8 +20,10 @@ const defaultScales = MapUtils.getGoogleMercatorScales(0, 21);
 
 const assign = require('object-assign');
 
+// Non è detto che sia uniforme!!
 const getGeomType = function(layer) {
-    return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
+    return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
+        layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
 };
 /**
  * Utilities for Print
@@ -232,20 +235,26 @@ const PrintUtils = {
         },
         vector: {
             map: (layer, spec) => ({
-                type: 'Vector',
-                name: layer.name,
-                "opacity": layer.opacity || 1.0,
-                styleProperty: "ms_style",
-                styles: {
-                    1: PrintUtils.toOpenLayers2Style(layer, layer.style)
-                },
-                geoJson: CoordinatesUtils.reprojectGeoJson({
-                    type: "FeatureCollection",
-                    features: layer.features.map( f => ({...f, properties: {...f.properties, ms_style: 1}}))
-                },
-                "EPSG:4326",
-                spec.projection)
-            })
+                    type: 'Vector',
+                    name: layer.name,
+                    "opacity": layer.opacity || 1.0,
+                    styleProperty: "ms_style",
+                    styles: {
+                        1: PrintUtils.toOpenLayers2Style(layer, layer.style),
+                        "Polygon": PrintUtils.toOpenLayers2Style(layer, layer.style, "Polygon"),
+                        "LineString": PrintUtils.toOpenLayers2Style(layer, layer.style, "LineString"),
+                        "Point": PrintUtils.toOpenLayers2Style(layer, layer.style, "Point"),
+                        "FeatureCollection": PrintUtils.toOpenLayers2Style(layer, layer.style, "FeatureCollection")
+                    },
+                    geoJson: CoordinatesUtils.reprojectGeoJson({
+                        type: "FeatureCollection",
+                        features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) ||
+                                    layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
+                    },
+                    "EPSG:4326",
+                    spec.projection)
+                }
+            )
         },
         osm: {
             map: () => ({
@@ -331,13 +340,14 @@ const PrintUtils = {
     rgbaTorgb: (rgba = "") => {
         return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
     },
+
     /**
      * Useful for print (Or generic Openlayers 2 conversion style)
      * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
      */
-    toOpenLayers2Style: function(layer, style) {
+    toOpenLayers2Style: function(layer, style, styleType) {
         if (!style) {
-            return PrintUtils.getOlDefaultStyle(layer);
+            return PrintUtils.getOlDefaultStyle(layer, styleType);
         }
         // commented the available options.
         return {
@@ -372,8 +382,8 @@ const PrintUtils = {
      * Provides the default style for
      * each vector type.
      */
-    getOlDefaultStyle(layer) {
-        switch (getGeomType(layer)) {
+    getOlDefaultStyle(layer, styleType) {
+        switch (styleType || getGeomType(layer) || "") {
             case 'Polygon':
             case 'MultiPolygon': {
                 return {

@@ -22,11 +22,16 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
+const CHANGE_PAGE = 'IDENTIFY:CHANGE_PAGE';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
+
+const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
+const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
 
 /**
  * Private
@@ -190,6 +195,25 @@ function featureInfoClick(point, layer) {
     };
 }
 
+function toggleHighlightFeature(enabled) {
+    return {
+        type: TOGGLE_HIGHLIGHT_FEATURE,
+        enabled
+    };
+}
+
+/**
+ * Changes the current page of the feature info.
+ * The index is relative only to valid responses, excluding invalid.(see validResponsesSelector)
+ * @param {number} index index of the page
+ */
+function changePage(index) {
+    return {
+        type: CHANGE_PAGE,
+        index
+    };
+}
+
 const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
@@ -228,9 +252,12 @@ module.exports = {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
+    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
+    CHANGE_PAGE, changePage,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,
+    TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
     closeIdentify,

@@ -11,10 +11,9 @@ const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');
-const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
+const {isArray, flattenDeep, chunk, cloneDeep, slice, head, last} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
-const {head} = require('lodash');
 const greatCircle = require('@turf/great-circle').default;
 const toPoint = require('turf-point');
 
@@ -559,10 +558,20 @@ const CoordinatesUtils = {
             const p2 = coordinates[i + 1];
             const start = toPoint(p1);
             const end = toPoint(p2);
-            const grCircle = greatCircle(start, end, options);
-            arcs = [...arcs, ...grCircle.geometry.coordinates];
+            if (!(p1[0] === p2[0] && p1[1] === p2[1])) {
+                let grCircle = greatCircle(start, end, options);
+                arcs = [...arcs, ...grCircle.geometry.coordinates];
+            }
         }
         return arcs;
+    },
+    transformArcsToLine: (coordinates, npoints = 100) => {
+        if (coordinates.length <= npoints) {
+            return [head(coordinates), last(coordinates)];
+        } else if (coordinates.length > npoints) {
+            return [head(coordinates)].concat(CoordinatesUtils.transformArcsToLine(slice(coordinates, npoints)));
+        }
+        return [];
     },
     coordsOLtoLeaflet: ({coordinates, type}) => {
         switch (type) {
@@ -657,6 +666,23 @@ const CoordinatesUtils = {
         return axios.get(url || getProjUrl(EPSG), null, {
             timeout: 2000
         });
+    },
+    /**
+     * Parse the URN to get EPSG code
+     * @param {object|string} crs object or string
+     * @return {string} EPSG in the form EPSG:NNNN
+     */
+    parseURN: (crs) => {
+        const code = crs && crs.properties && crs.properties.name || crs && crs.name || crs && crs.properties && crs.properties.code || crs;
+
+        let crsCode = code && last(code.split(":"));
+
+        if (crsCode === "WGS 1984" || crsCode === "WGS84") {
+            return "EPSG:4326";
+        } else if (crsCode) {
+            // TODO check is valid EPSG code
+            return "EPSG:" + crsCode;
+        }
     },
     determineCrs,
     parseString: (str) => {

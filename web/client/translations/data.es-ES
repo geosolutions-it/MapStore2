@@ -39,6 +39,8 @@
         "details": {
             "title": "Información en este mapa"
         },
+        "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
+        "remove": "Borrar",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -361,6 +363,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error al cargar el mapa",
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li></ul> <p>"
@@ -513,6 +516,9 @@
         "identifyTitle": "Información de las características",
         "identifyNoQueryableLayers": "Noy hay capas a las que poder preguntar",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyZoomToFeature": "Zoom a la función",
+        "identifyStopHighlightingFeatures": "Dejar de resaltar features",
+        "identifyHighlightFeatures": "Resaltar features",
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
         "identifyRevGeocodeModalTitle": "Dirección",
@@ -550,7 +556,10 @@
             "areaLabel": "Área",
             "bearingLabel": "Azimut",
             "formula": "Fórmula para cálculo de distancia",
-            "showLabel": "Mostrar etiqueta de medición"
+            "showLabel": "Mostrar etiqueta de medición",
+            "addAsAnnotation": "Añadir como anotación",
+            "newMeasure": "Nueva anotación",
+            "selectTool": "Seleccione una herramienta de medición"
         },
         "search":{
             "decimal": "Decimal",
@@ -585,6 +594,31 @@
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
             "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}"
+        },
+        "draw": {
+            "fill": "Relleno",
+            "text": "Texto",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "Línea de guión",
+            "stroke": "Línea",
+            "opacity": "Opacidad",
+            "width": "Anchura",
+            "font": {
+                "textColor": "Color",
+                "family": "Familia",
+                "size": "Tamaño",
+                "style": "Estilo",
+                "weight": "Peso",
+                "textAlign": "Alineación"
+            },
+            "marker": {
+                "layout": "Diseño",
+                "shape": "Forma",
+                "size": "Tamaño",
+                "type": "Tipo",
+                "icon": "Icono"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -810,6 +844,80 @@
                 }
             }
         },
+        "annotations": {
+            "errorLoadingSymbols": "Hubo un problema al cargar la lista de símbolos. Por favor, contacte al administrador para verificar las opciones de configuración.",
+            "edit": "Editar",
+            "remove": "Borrar",
+            "save": "Guardar",
+            "cancel": "Cancelar",
+            "back": "Espalda",
+            "applyStyle": "Aplicar estilo",
+            "addMarker": "Agrega una geometría",
+            "styleGeometry": "Cambia estilo",
+            "deleteGeometry": "Eliminar todas las geometrías de anotación",
+            "removeannotation": "Desea eliminar la anotación con título: {title}?",
+            "removegeometry": "Desea eliminar todos los puntos de anotación?",
+            "confirm": "Confirmar",
+            "title": "Anotaciones",
+            "mandatory": "Campo obligatorio",
+            "emptygeometry": "Geometría no puede estar vacía",
+            "add": "Nueva",
+            "filter": "Filtrar las anotaciones...",
+            "titleUndoGeom": "La geometría ha cambiado",
+            "undoGeom": "Estás seguro de salir sin guardar? (Perderá los cambios)",
+            "confirmGeom": "Confirmar",
+            "cancelModalGeom": "Cancelar",
+            "deleteFeature": "Eliminar esta característica",
+            "undoDeleteFeature": "Estás seguro de eliminar esta característica?",
+            "undo": "Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
+            "zoomTo": "Zoom",
+            "insertText": "Por favor inserte la anotación de texto",
+            "downloadtooltip": "Descargar anotaciones",
+            "downloadcurrenttooltip": "Descargar la anotación actual",
+            "downloadError": "Error de exportación",
+            "loadtooltip": "Importar anotaciones",
+            "loadtitle": "Importar Anotaciones",
+            "selectfiletext": "Coloque su archivo aquí o haga clic para seleccionar el archivo de anotación para importar. (archivos compatibles: JSON)",
+            "loadoverride": "Reemplazar anotaciones",
+            "loaderror": "Seleccione uno o más archivos de anotaciones. (archivos compatibles: json)",
+            "defaulttitle": "Edita el título predeterminado",
+            "field": {
+                "title": "Título",
+                "description": "Descripción"
+            },
+            "titles": {
+                "marker": " Marcador",
+                "line": " Línea",
+                "polygon": " Polígono",
+                "text": " Texto",
+                "circle": " Circulo"
+            },
+            "editor": {
+                "decimal": "Decimal",
+                "aeronautical": "Aeronáutico",
+                "title": {
+                    "Polygon": "Editor de polígonos",
+                    "LineString": "Editor LineString",
+                    "Bearing": "Editor de rodamientos",
+                    "Circle": "Editor de círculos",
+                    "Point": "Editor de marcadores",
+                    "MultiPoint": "Editor LineString",
+                    "Text": "Editor de texto"
+                },
+                "center": "Centro",
+                "add": "Agregar nuevas coordenadas",
+                "addByClick": "Agregue nuevas coordenadas haciendo clic en el botón más o en el mapa",
+                "valid": "La geometría es válida",
+                "radius": "Radio",
+                "text": "Texto",
+                "lat": "Latitud",
+                "lon": "Longitud",
+                "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Iniciar sesión",
             "logout": "Cerrar sesión",
@@ -839,30 +947,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Empresa",
             "detailsNotes": "Notas"
-        },
-        "annotations": {
-            "edit": "Editar",
-            "remove": "Borrar",
-            "save": "Guardar",
-            "cancel": "Cancelar",
-            "back": "Volver",
-            "addMarker": "Añadir un nuevo punto en el mapa",
-            "styleGeometry": "Elige un estilo diferente para los puntos",
-            "deleteGeometry": "Eliminar puntos existentes",
-            "removeannotation": "¿Desea eliminar la anotación?",
-            "removegeometry": "¿Desea eliminar todos los puntos de anotación?",
-            "confirm": "Confirmar",
-            "title": "Anotaciones",
-            "mandatory": "Campo obligatorio",
-            "emptygeometry": "Geometría no puede estar vacía",
-            "add": "Nueva",
-            "filter": "Filtrar las anotaciones...",
-            "undo": "¿Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
-            "zoomTo": "Zoom",
-            "field": {
-                "title": "Título",
-                "description": "Descripción"
-            }
         },
         "users": {
             "title": "Administrador de cuentas de usuario",
@@ -961,6 +1045,22 @@
             "add": "Añadir",
             "cancel": "Cancelar",
             "success": " Importación correcta"
+        },
+        "mapImport": {
+            "title": "Datos de importacion",
+            "dropZone": {
+                "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
+                "selectFiles": "Selecciona archivos...",
+                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore2<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se anulará en el caso de los archivos de configuración </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Archivo no compatible",
+                "unknownError": "hubo un error desconocido durante la importación"
+            }
+        },
+        "mapExport": {
+            "title": "Exportar datos"
         },
         "catalog": {
             "title": "Catálogo",

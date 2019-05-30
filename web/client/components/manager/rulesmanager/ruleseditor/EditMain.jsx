@@ -38,5 +38,3 @@ module.exports = ({rule = {}, setOption= () => {}, active = true}) => {
         </Grid>
     );
 };
-
-

@@ -11,6 +11,63 @@ const expect = require('expect');
 const ol = require('openlayers');
 const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
+const {circle, geomCollFeature} = require('../../../../test-resources/drawsupport/features');
+
+const viewOptions = {
+    projection: 'EPSG:3857',
+    center: [0, 0],
+    zoom: 5
+};
+let olMap = new ol.Map({
+    target: "map",
+    view: new ol.View(viewOptions)
+});
+olMap.disableEventListener = () => {};
+
+const testHandlers = {
+    onStatusChange: () => {},
+    onSelectFeatures: () => {},
+    onGeometryChanged: () => {},
+    onEndDrawing: () => {},
+    onDrawingFeatures: () => {}
+};
+
+/*  used to render the DrawSupport component with some default props*/
+const renderDrawSupport = (props = {}) => {
+    return ReactDOM.render(
+        <DrawSupport
+            features={props.features | []}
+            map={props.map || olMap}
+            {...testHandlers}
+            {...props}
+        />, document.getElementById("container"));
+};
+
+/**
+ * it renders Drawsupport in edit mode with singleclick Listener enabled and
+ * it dispatches a singleclick mouse event
+*/
+const renderAndClick = (props = {}, options = {}) => {
+    let support = renderDrawSupport();
+    // entering componentWillReceiveProps
+    support = renderDrawSupport({
+        drawStatus: "drawOrEdit",
+        features: [props.feature],
+        options: {
+            drawEnabled: false,
+            editEnabled: true,
+            addClickCallback: true
+        },
+        ...props
+    });
+    support.props.map.dispatchEvent({
+        type: "singleclick",
+        coordinate: options.singleClickCoordiante || [500, 30]
+    });
+    return support;
+};
+
 
 describe('Test DrawSupport', () => {
     beforeEach((done) => {
@@ -20,6 +77,13 @@ describe('Test DrawSupport', () => {
 
     afterEach((done) => {
         document.body.innerHTML = '';
+        olMap = new ol.Map({
+            target: "map",
+            view: new ol.View(viewOptions)
+        });
+        olMap.disableEventListener = () => {};
+
+        expect.restoreSpies();
         setTimeout(done);
     });
 
@@ -34,7 +98,8 @@ describe('Test DrawSupport', () => {
 
     it('creates a drawing layer', () => {
         const fakeMap = {
-            addLayer: () => {}
+            addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})})
         };
         const spy = expect.spyOn(fakeMap, "addLayer");
         const support = ReactDOM.render(
@@ -48,26 +113,33 @@ describe('Test DrawSupport', () => {
     it('starts drawing', () => {
         const fakeMap = {
             addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
+            enableEventListener: () => {},
+            removeInteraction: () => {},
+            removeLayer: () => {},
             getInteractions: () => ({
                 getLength: () => 0
             })
         };
-        const spyAdd = expect.spyOn(fakeMap, "addLayer");
-        const spyInteraction = expect.spyOn(fakeMap, "addInteraction");
+        const spyAddLayer = expect.spyOn(fakeMap, "addLayer");
+        const spyAddInteraction = expect.spyOn(fakeMap, "addInteraction");
         const support = ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point"/>, document.getElementById("container"));
-        expect(spyAdd.calls.length).toBe(1);
-        expect(spyInteraction.calls.length).toBe(1);
+        ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="LineString  "/>, document.getElementById("container"));
+        expect(spyAddLayer.calls.length).toBe(2);
+        expect(spyAddInteraction.calls.length).toBe(2);
     });
 
     it('starts drawing bbox', () => {
         const fakeMap = {
             addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
             getInteractions: () => ({
@@ -88,6 +160,7 @@ describe('Test DrawSupport', () => {
     it('starts drawing circle', () => {
         const fakeMap = {
             addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
             getInteractions: () => ({
@@ -108,6 +181,7 @@ describe('Test DrawSupport', () => {
     it('starts drawing with editing', () => {
         const fakeMap = {
             addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
             getInteractions: () => ({
@@ -128,24 +202,30 @@ describe('Test DrawSupport', () => {
     it('select interaction', () => {
         const fakeMap = {
             addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
+            on: () => {},
             getInteractions: () => ({
                 getLength: () => 0
             })
         };
 
-        const testHandlers = {
-            onStatusChange: () => {}
+        const ft = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
         };
-
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
         const support = ReactDOM.render(
-            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+            <DrawSupport features={[ft]} map={fakeMap}/>, document.getElementById("container"));
         expect(support).toExist();
         ReactDOM.render(
-            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{editEnabled: true}}
-                 onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+            <DrawSupport features={[ft]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Point"
+                options={{editEnabled: true, selectEnabled: true}}
+                onSelectFeatures={testHandlers.onStatusChange}/>, document.getElementById("container"));
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
               name: 'My Point'
@@ -160,6 +240,7 @@ describe('Test DrawSupport', () => {
     it('translate interaction', () => {
         const fakeMap = {
             addLayer: () => {},
+            getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
             getInteractions: () => ({
@@ -167,9 +248,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onStatusChange: () => {}
-        };
 
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
         const support = ReactDOM.render(
@@ -245,6 +323,7 @@ describe('Test DrawSupport', () => {
             getInteractions: () => ({
                 getLength: () => 0
             }),
+            on: () => {},
             getView: () => ({
                 getProjection: () => ({
                     getCode: () => 'EPSG:4326'
@@ -276,7 +355,7 @@ describe('Test DrawSupport', () => {
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon" options={{
                     drawEnabled: false, editEnabled: true}}
                 />, document.getElementById("container"));
-        expect(support.translateInteraction).toNotExist();
+        expect(support.translateInteraction).toExist();
     });
 
     it('end drawing', () => {
@@ -293,10 +372,6 @@ describe('Test DrawSupport', () => {
                 })
             })
         };
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {}
-        };
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
               name: 'My Point'
@@ -309,6 +384,51 @@ describe('Test DrawSupport', () => {
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{stopAfterDrawing: true}}
                 onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+    });
+
+    it('end drawing a circle feature ', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const feature = new ol.Feature({
+              geometry: new ol.geom.Circle([13.0, 43.0], 100),
+              name: 'My Point'
+        });
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Circle" options={{
+                    stopAfterDrawing: true,
+                    geodesic: true
+                }}
+                onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: feature
@@ -330,10 +450,6 @@ describe('Test DrawSupport', () => {
                     getCode: () => 'EPSG:4326'
                 })
             })
-        };
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {}
         };
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
@@ -411,9 +527,11 @@ describe('Test DrawSupport', () => {
                   [13, 44]
                 ]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
-            }
+            },
+            style: {type: "Polygon", "Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon}
         };
 
         const support = ReactDOM.render(
@@ -456,6 +574,7 @@ describe('Test DrawSupport', () => {
                   [13, 44]
                 ]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -496,6 +615,7 @@ describe('Test DrawSupport', () => {
                 type: 'Point',
                 coordinates: [13, 43]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -536,6 +656,7 @@ describe('Test DrawSupport', () => {
                 type: 'LineString',
                 coordinates: [[13, 43], [14, 44]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -576,6 +697,7 @@ describe('Test DrawSupport', () => {
                 type: 'LineString',
                 coordinates: [[13, 43], [14, 44]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -690,6 +812,7 @@ describe('Test DrawSupport', () => {
                 type: 'Circle',
                 coordinates: [[13, 43], [14, 44]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -735,6 +858,7 @@ describe('Test DrawSupport', () => {
                   [13, 44]
                 ]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -766,7 +890,7 @@ describe('Test DrawSupport', () => {
         expect(style.getFill().getColor()[0]).toBe(255);
         expect(style.getFill().getColor()[1]).toBe(255);
         expect(style.getFill().getColor()[2]).toBe(0);
-        expect(style.getFill().getColor()[3]).toNotExist();
+        expect(style.getFill().getColor()[3]).toBe(1);
     });
 
     it('styling fill transparency', () => {
@@ -795,7 +919,11 @@ describe('Test DrawSupport', () => {
                 strokeColor: '#ff0'
             });
         expect(style).toExist();
-        expect(style.getStroke().getColor()).toBe('#ff0');
+        expect(style.getStroke().getColor().length).toBe(4);
+        expect(style.getStroke().getColor()[0]).toBe(255);
+        expect(style.getStroke().getColor()[1]).toBe(255);
+        expect(style.getStroke().getColor()[2]).toBe(0);
+        expect(style.getStroke().getColor()[3]).toBe(1);
     });
 
     it('styling icon url', () => {
@@ -834,6 +962,8 @@ describe('Test DrawSupport', () => {
             getInteractions: () => ({
                 getLength: () => 0
             }),
+            on: () => {},
+            un: () => {},
             getView: () => ({
                 getProjection: () => ({
                     getCode: () => 'EPSG:4326'
@@ -904,6 +1034,7 @@ describe('Test DrawSupport', () => {
             getInteractions: () => ({
                 getLength: () => 0
             }),
+            on: () => {},
             getView: () => ({
                 getProjection: () => ({
                     getCode: () => 'EPSG:4326'
@@ -948,6 +1079,7 @@ describe('Test DrawSupport', () => {
             disableEventListener: () => {},
             enableEventListener: () => {},
             addInteraction: () => {},
+            on: () => {},
             removeInteraction: () => {},
             getInteractions: () => ({
                 getLength: () => 0
@@ -988,7 +1120,7 @@ describe('Test DrawSupport', () => {
                 }}
                 />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(2);
+        expect(spyAddInteraction.calls.length).toBe(3);
     });
 
     it('draw or edit, endevent', () => {
@@ -1009,11 +1141,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {},
-            onGeometryChanged: () => {}
-        };
         const geoJSON = {
             type: 'Feature',
             geometry: {
@@ -1068,11 +1195,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {},
-            onGeometryChanged: () => {}
-        };
         const geoJSON = {
             type: 'Feature',
             geometry: {
@@ -1111,7 +1233,34 @@ describe('Test DrawSupport', () => {
         expect(spyChangeStatus.calls.length).toBe(1);
         expect(spyChange.calls.length).toBe(1);
     });
+    it('drawsupport test for polygonCoordsFromCircle', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
 
+        const support = ReactDOM.render(
+            <DrawSupport features={[circle]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        const center = [1, 1];
+        const radius = 100;
+        const coords = support.polygonCoordsFromCircle(center, radius);
+
+        expect(coords[0].length).toBe(101);
+
+    });
     it('test createOLGeometry type Circle geodesic', () => {
         const support = ReactDOM.render(<DrawSupport options={{geodesic: true}}/>, document.getElementById("container"));
         const type = 'Circle';
@@ -1178,7 +1327,6 @@ describe('Test DrawSupport', () => {
         const geodesicCenter = geometryProperties.geodesicCenter;
         expect(geodesicCenter).toEqual(undefined);
     });
-
     it('test fromOLFeature verify radius', () => {
 
         const fakeMap = {
@@ -1346,5 +1494,591 @@ describe('Test DrawSupport', () => {
             options={{geodesic: true}}/>, document.getElementById("container"));
 
         expect(spyonEndDrawing).toNotHaveBeenCalled();
+    });
+    it('edit a feature, then update its style', (done) => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 44]
+                ]]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id"
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1,
+                fillColor: "#0000FF",
+                fillOpacity: 1
+            }]
+        };
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport
+                features={[feature]}
+                map={fakeMap}
+                drawStatus="drawOrEdit"
+                drawMethod="Polygon"
+                options={{
+                    drawEnabled: false,
+                    editEnabled: true
+                }}
+            />, document.getElementById("container"));
+
+        ReactDOM.render(
+            <DrawSupport
+                features={[{
+                    ...feature,
+                style: [{
+                    id: "style-id",
+                    color: "#FFFFFF",
+                    opacity: 0.5,
+                    fillColor: "#FFFFFF",
+                    fillOpacity: 0.5
+                }]}]}
+                map={fakeMap}
+                drawStatus="updateStyle"
+                drawMethod="Polygon"
+                options={{
+                    drawEnabled: false,
+                    editEnabled: true
+                }}
+        />, document.getElementById("container"));
+
+        setTimeout( () => {
+            const drawnFt = support.drawLayer.getSource().getFeatures()[0];
+            expect(drawnFt.getStyle()).toExist();
+            expect(drawnFt.getStyle()()).toExist();
+            expect(drawnFt.getStyle()()[0].getStroke().getColor()).toEqual("rgba(255, 255, 255, 0.5)");
+            expect(drawnFt.getStyle()()[0].getFill().getColor()).toEqual("rgba(255, 255, 255, 0.5)");
+            done();
+        }, 100);
+    });
+
+    it('test draw callbacks in edit mode with Polygons feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 43]
+                ]]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                canEdit: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1,
+                fillColor: "#0000FF",
+                fillOpacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: feature.geometry.type
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        const ft = spyOnDrawingFeatures.calls[0].arguments[0][0];
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Polygon");
+        expect(ft.properties).toEqual({
+            "name": "some name",
+            "id": "a-unique-id",
+            "canEdit": true
+        });
+        done();
+    });
+    it('test draw callbacks in edit mode with LineString feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 43]
+                ]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                canEdit: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: feature.geometry.type
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+
+    it('test draw callbacks in edit mode with Text feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                isText: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                label: "a text",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: "Text"
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+
+    it('test draw callbacks in edit mode with Circle feature', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                radius: 1111,
+                isCircle: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: "Circle"
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test drawend callbacks with Circle, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Circle(center, radius)
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[2]).toEqual("");
+        expect(ArgsGeometryChanged[3]).toEqual(false);
+        expect(ArgsGeometryChanged[4]).toEqual(true);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+
+        done();
+    });
+
+    it('test drawend callbacks with Text, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "Text",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                stopAfterDrawing: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const coordinate = [1300, 4300];
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Point(coordinate)
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[2]).toEqual("enterEditMode");
+        expect(ArgsGeometryChanged[3]).toEqual(true);
+        expect(ArgsGeometryChanged[4]).toEqual(false);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+        expect(ArgsEndDrawing[0].features[0].properties.isText).toBe(true);
+        expect(ArgsEndDrawing[0].features[0].properties.valueText).toBe(".");
+        done();
+    });
+    it('test drawend callbacks with Polygon, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "Polygon",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                stopAfterDrawing: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Polygon([[[1300, 4300], [8, 9], [8, 59]]])
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[2]).toEqual("enterEditMode");
+        expect(ArgsGeometryChanged[3]).toEqual(false);
+        expect(ArgsGeometryChanged[4]).toEqual(false);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+        expect(ArgsEndDrawing[0].features[0].geometry.coordinates[0].length).toBe(4);
+        done();
+    });
+
+    it('test drawend callbacks with LineString, transformed int feature collection', (done) => {
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            features: [null],
+            drawMethod: "LineString",
+            drawStatus: "drawOrEdit",
+            options: {
+                transformToFeatureCollection: true,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.LineString([[1300, 4300], [8, 9], [8, 59]])
+            })
+        });
+        const drawOwner = null;
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+        expect(ArgsGeometryChanged[3]).toEqual(false);
+        expect(ArgsGeometryChanged[4]).toEqual(false);
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(drawOwner);
+        expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
+        expect(ArgsEndDrawing[0].features[0].geometry.coordinates.length).toBe(3);
+        done();
+    });
+
+    it('test drawend callbacks with Circle, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Circle(center, radius)
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(null);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+
+    it('test drawend callbacks with MultiLineString, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "MultiLineString",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.MultiLineString([[[1300, 4300], [8, 9], [8, 59]]])
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+
+    it('test drawend callbacks with MultiPoint, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "MultiPoint",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new ol.Feature({
+                geometry: new ol.geom.Point([1300, 4300])
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+    it('test select interaction, retrieving a drawn feature', (done) => {
+        const spyOnSelectFeatures = expect.spyOn(testHandlers, "onSelectFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "LineString",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                selected: geomCollFeature,
+                transformToFeatureCollection: false,
+                selectEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const feature = new ol.Feature({
+            geometry: new ol.geom.Point(13.0, 43.0),
+            name: 'My Point'
+        });
+        support.selectInteraction.dispatchEvent({
+            type: 'select',
+            feature: feature
+        });
+        expect(spyOnSelectFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test modifyend event for modifyInteraction with Circle, exported FeatureCollection', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: true,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.modifyInteraction.dispatchEvent({
+            type: 'modifyend',
+            features: new ol.Collection(
+                [new ol.Feature({
+                    geometry: new ol.geom.Circle(center, radius)
+                })]
+            )
+        });
+        expect(spyOnGeometryChanged).toNotHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnDrawingFeatures.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(1);
+
+        done();
+    });
+
+    it('test modifyend event for modifyInteraction with Circle, exported FeatureCollection', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.modifyInteraction.dispatchEvent({
+            type: 'modifyend',
+            features: new ol.Collection(
+                [new ol.Feature({
+                    geometry: new ol.geom.Circle(center, radius)
+                })]
+            )
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toNotHaveBeenCalled();
+
+        done();
     });
 });

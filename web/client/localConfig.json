@@ -35,6 +35,14 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
+        "annotations": {
+          "config": {
+            "multiGeometry": true,
+            "validationErrors": {}
+          },
+          "format": "aeronautical",
+          "defaultTextAnnotation": "New"
+        },
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
         },
@@ -232,6 +240,7 @@
             {
                 "name": "Identify",
                 "cfg": {
+                    "showHighlightFeatureButton": true,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
                     }
@@ -293,7 +302,8 @@
             }, {
               "name": "About",
               "showIn": ["BurgerMenu"]
-            }, {
+            }
+            , {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,
