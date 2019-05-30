@@ -1,4 +1,13 @@
 # Change Log
+## [2019.01.01](https://github.com/geosolutions-it/MapStore2/tree/v2019.01.01) (2019-05-22)
+
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2019.01.00...v2019.01.01)**
+
+ - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed+label%3Aenhancement)**
+
+ - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed+label%3Abug)**
+
+ - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed)**
 
 ## [2019.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2019.01.00) (2019-02-26)
 
@@ -12,7 +21,7 @@
 
 ## [2018.02.01](https://github.com/geosolutions-it/MapStore2/tree/2018.02.01) (2018-11-16)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2018.02.00...v2018.02.01)**
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.02.00...v2018.02.01)**
 
  - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed+label%3Aenhancement)**
 
@@ -22,7 +31,7 @@
 
 ## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/2018.02.00) (2018-09-11)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2018.01.00...v2018.02.00)**
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.01.00...v2018.02.00)**
 
  - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Aenhancement)**
 
