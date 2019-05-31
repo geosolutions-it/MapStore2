@@ -31,7 +31,8 @@ class BackgroundSelector extends React.Component {
         onPropertiesChange: PropTypes.func,
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
-        onStartChange: PropTypes.func
+        onStartChange: PropTypes.func,
+        projection: PropTypes.string
     };
 
     static defaultProps = {
@@ -65,7 +66,7 @@ class BackgroundSelector extends React.Component {
     getIcons = (side, frame, margin, vertical) => {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
             let thumb = this.getThumb(layer);
-            return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
+            return <PreviewIcon projection={this.props.projection} vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
         }) : [];
     };
 

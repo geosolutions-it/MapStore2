@@ -106,7 +106,9 @@
             "noBackgroundLayerSupported": "Er is geen achtergrondlaag ondersteund voor dit type kaart.",
             "updateOldMap": "Dit is een oude kaart, dus niet alle functionaliteiten kunnen worden ingeschakeld. Klik op de knop Bijwerken om de kaart bij te werken of sluit deze melding als u deze niet wilt bijwerken.",
             "warningSaveUpdatedMap": "Sommige lagen zijn niet correct bijgewerkt",
-            "saveUpdatedMap": "Alle lagen zijn succesvol bijgewerkt"
+            "saveUpdatedMap": "Alle lagen zijn succesvol bijgewerkt",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} geselecteerde lijn",
@@ -345,7 +347,8 @@
                     "title": "Error loading map",
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
-                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul><p>",
+                    "title" : "Map cannot be viewed"
                 }
             }
         },

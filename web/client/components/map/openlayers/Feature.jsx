@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
 const React = require('react');
+const PropTypes = require('prop-types');
+var ol = require('openlayers');
 const axios = require('axios');
-const ol = require('openlayers');
 const { isEqual, find, castArray } = require('lodash');
 const { parseStyles } = require('./VectorStyle');
 const { transformPolygonToCircle } = require('../../../utils/DrawSupportUtils');
 const { createStylesAsync } = require('../../../utils/VectorStyleUtils');
+
 
 class Feature extends React.Component {
     static propTypes = {
@@ -35,14 +36,14 @@ class Feature extends React.Component {
     componentDidMount() {
         this.addFeatures(this.props);
     }
-
     shouldComponentUpdate(nextProps) {
-        // TODO check if shallow comparison is enough properties and geometry
-        return !isEqual(nextProps.properties, this.props.properties) ||
-            !isEqual(nextProps.geometry, this.props.geometry) ||
-            !isEqual(nextProps.features, this.props.features) ||
-            !isEqual(nextProps.style, this.props.style);
+        return !isEqual(nextProps.properties, this.props.properties)
+            || !isEqual(nextProps.geometry, this.props.geometry)
+            || !isEqual(nextProps.features, this.props.features)
+            || !isEqual(nextProps.crs, this.props.crs)
+            || !isEqual(nextProps.style, this.props.style);
     }
+
 
     componentWillUpdate(nextProps) {
         this.removeFromContainer();
@@ -59,7 +60,6 @@ class Feature extends React.Component {
 
     addFeatures = (props) => {
         const format = new ol.format.GeoJSON();
-
         let ftGeometry = null;
         let canRender = false;
 
@@ -81,7 +81,7 @@ class Feature extends React.Component {
             }, {
                     // reproject features from featureCrs
                     dataProjection: props.featuresCrs
-            });
+                });
             this._feature.map(f => {
                 let newF = f;
                 if (f.getProperties().isCircle) {
@@ -124,7 +124,7 @@ class Feature extends React.Component {
                 const layersSource = this.props.container.getSource();
                 this._feature.map((feature) => {
                     let featureId = feature.getId();
-                    if (featureId === undefined) {
+                    if (featureId === undefined || !layersSource.getFeatureById(featureId)) {
                         layersSource.removeFeature(feature);
                     } else {
                         layersSource.removeFeature(layersSource.getFeatureById(featureId));

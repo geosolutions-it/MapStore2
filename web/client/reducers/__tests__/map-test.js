@@ -8,9 +8,8 @@
 const expect = require('expect');
 const {round} = require('lodash');
 
-const mapConfig = require('../map');
-const {PAN_TO} = require('../../actions/map');
-
+var mapConfig = require('../map');
+const { changeMapLimits, PAN_TO } = require('../../actions/map');
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {
@@ -216,6 +215,22 @@ describe('Test the map reducer', () => {
         };
         let state = mapConfig({}, action);
         expect(state.resize).toEqual(1);
+    });
+    it('change the restricted extent of a map', () => {
+        const action = changeMapLimits({
+            restrictedExtent: [9, 9, 9, 9],
+            crs: "EPSG:4326"
+        });
+        let state = mapConfig({}, action);
+        expect(state.limits.restrictedExtent.length).toBe(4);
+        expect(state.limits.restrictedExtent).toEqual([9, 9, 9, 9]);
+    });
+    it('change min zoom a map', () => {
+        const action = changeMapLimits({
+            minZoom: 1
+        });
+        let state = mapConfig({}, action);
+        expect(state.limits.minZoom).toBe(1);
     });
 
     it('zoom to a point', () => {

@@ -68,6 +68,13 @@ var Layers = {
     },
     isSupported(type) {
         return !!layerTypes[type];
+    },
+    isCompatible(type, options) {
+        const layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.isCompatible) {
+            return layerCreator.isCompatible(options);
+        }
+        return true;
     }
 };
 

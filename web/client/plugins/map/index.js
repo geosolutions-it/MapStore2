@@ -17,7 +17,7 @@ const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped, selectFeatures, drawingFeatures} = require('../../actions/draw');
 const {updateHighlighted} = require('../../actions/highlight');
-
+const {warning} = require('../../actions/notifications');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {projectionDefsSelector} = require('../../selectors/map');
@@ -38,7 +38,8 @@ module.exports = (mapType, actions) => {
         onMouseMove: changeMousePosition,
         onLayerLoading: layerLoading,
         onLayerLoad: layerLoad,
-        onLayerError: layerError
+        onLayerError: layerError,
+        onWarning: warning
     }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition.enabled ? dispatchProps.onMouseMove : () => {}
@@ -90,10 +91,11 @@ module.exports = (mapType, actions) => {
     })(components.SelectionSupport || Empty);
 
     require('../../components/map/' + mapType + '/plugins/index');
+    const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
 
     return {
         Map: LMap,
-        Layer: components.Layer || Empty,
+        Layer: LLayer,
         Feature: components.Feature || Empty,
         tools: {
             measurement: MeasurementSupport,

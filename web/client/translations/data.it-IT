@@ -107,7 +107,9 @@
             "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa.",
             "updateOldMap": "Questa è una vecchia mappa perciò non tutte le funzionalità sono abilitate. Clicca su Aggiorna per aggiornare la mappa o semplicemnte chiudi la notifica se non desideri aggiornarla",
             "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
-            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo"
+            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"Uno o più livelli non sono completamente compatibili con la proiezione selezionata. I dati potrebbero essere (tutti o in parte) non visibili in mappa"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",
@@ -366,7 +368,8 @@
                     "title": "Errore di caricamento della mappa",
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
-                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
+                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
+                    "title" : "La mappa non può essere visualizzata"
                 }
             }
         },

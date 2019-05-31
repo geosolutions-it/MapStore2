@@ -22,6 +22,7 @@ const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
+const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
 
 
 function errorLoadingFont(err = {family: ""}) {
@@ -153,6 +154,14 @@ function resizeMap() {
         type: RESIZE_MAP
     };
 }
+function changeMapLimits({restrictedExtent, crs, minZoom}) {
+    return {
+        type: CHANGE_MAP_LIMITS,
+        restrictedExtent,
+        crs,
+        minZoom
+    };
+}
 
 module.exports = {
     CHANGE_MAP_VIEW,
@@ -170,6 +179,7 @@ module.exports = {
     UPDATE_VERSION,
     INIT_MAP,
     RESIZE_MAP,
+    CHANGE_MAP_LIMITS,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -184,5 +194,6 @@ module.exports = {
     errorLoadingFont,
     updateVersion,
     initMap,
-    resizeMap
+    resizeMap,
+    changeMapLimits
 };

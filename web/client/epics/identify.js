@@ -7,24 +7,29 @@
 */
 const Rx = require('rxjs');
 
-const { get } = require('lodash');
+const {get, find} = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
+
 const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
+
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
 const { MAP_CONFIG_LOADED } = require('../actions/config');
+
 const { stopGetFeatureInfoSelector, identifyOptionsSelector, clickPointSelector, clickLayerSelector } = require('../selectors/mapInfo');
 const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
 const { modeSelector } = require('../selectors/featuregrid');
-const { mapSelector } = require('../selectors/map');
+const { mapSelector, projectionDefsSelector, projectionSelector } = require('../selectors/map');
 const { boundingMapRectSelector } = require('../selectors/maplayout');
+const { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox } = require('../utils/CoordinatesUtils');
+
 const { isHighlightEnabledSelector } = require('../selectors/mapInfo');
-const { centerToVisibleArea, isInsideVisibleArea } = require('../utils/CoordinatesUtils');
+
 const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const { parseURN } = require('../utils/CoordinatesUtils');
@@ -173,6 +178,11 @@ module.exports = {
             .switchMap(() => {
                 const state = store.getState();
                 const map = mapSelector(state);
+                const mapProjection = projectionSelector(state);
+                const projectionDefs = projectionDefsSelector(state);
+                const currentprojectionDefs = find(projectionDefs, {'code': mapProjection});
+                const projectionExtent = currentprojectionDefs && currentprojectionDefs.extent;
+                const reprojectExtent = projectionExtent && reprojectBbox(projectionExtent, mapProjection, "EPSG:4326");
                 const boundingMapRect = boundingMapRectSelector(state);
                 const coords = action.point && action.point && action.point.latlng;
                 const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
@@ -185,6 +195,9 @@ module.exports = {
                 // exclude cesium with cartographic options
                 if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution)) {
                     return Rx.Observable.of(updateCenterToMarker('disabled'));
+                }
+                if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
+                    return Rx.Observable.empty();
                 }
                 const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                 return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));

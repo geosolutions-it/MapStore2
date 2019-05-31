@@ -8,22 +8,27 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const { mapPaddingSelector } = require('../selectors/maplayout');
 
 const {
     CREATION_ERROR_LAYER,
     INIT_MAP,
     ZOOM_TO_EXTENT,
-    changeMapView
+    CHANGE_MAP_CRS,
+    changeMapView,
+    changeMapLimits
 } = require('../actions/map');
-const {mapSelector, mapIdSelector} = require('../selectors/map');
+const {configuredExtentCrsSelector, configuredRestrictedExtentSelector, configuredMinZoomSelector, mapSelector, mapIdSelector} = require('../selectors/map');
+
 
 const { loadMapInfo} = require('../actions/config');
 const {LOGIN_SUCCESS} = require('../actions/security');
 
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
+const { mapPaddingSelector } = require('../selectors/maplayout');
+
 const {setControlProperty} = require('../actions/controls');
+const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const MapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -83,6 +88,15 @@ const handleCreationLayerError = (action$, store) =>
         return !!layer && isSupportedLayer(layer, maptype) ? Rx.Observable.from([
             changeLayerProperties(a.options.id, {invalid: true})
         ]) : Rx.Observable.empty();
+    });
+
+const resetLimitsOnInit = (action$, store) =>
+    action$.ofType(MAP_CONFIG_LOADED, CHANGE_MAP_CRS)
+    .switchMap(() => {
+        const confExtentCrs = configuredExtentCrsSelector(store.getState());
+        const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
+        const minZoom = configuredMinZoomSelector(store.getState());
+        return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
     });
 
 const resetMapOnInit = action$ =>
@@ -200,5 +214,6 @@ module.exports = {
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
+    resetLimitsOnInit,
     zoomToExtentEpic
 };

@@ -108,7 +108,9 @@
             "noBackgroundLayerSupported": "Não existem temas base suportados para este tipo de mapa.",
             "updateOldMap": "Este é um mapa activo, logo nem todas as funcionalidades poderão ser activadas. Clique no botão para actualizar o mapa ou ignore esta notificação se não pretender actualizar.",
             "warningSaveUpdatedMap": "Alguns temas não foram actualizados correctamente",
-            "saveUpdatedMap": "Todos os temas foram actualizados com sucesso"
+            "saveUpdatedMap": "Todos os temas foram actualizados com sucesso",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} registo seleccionado",
@@ -367,7 +369,8 @@
                     "title": "Error loading map",
                     "notFound": "Mapa não encontrado",
                     "notAccessible": "Mapa não acessível",
-                    "unknownError": "<p><small>Uma das seguintes razões poderá ser a causa:</small> <ul><li>não tem permissões de acesso</li> <li>está a tentar a aceder a um mapa não existente</li> <li>o mapa foi removido</li></ul><p>"
+                    "unknownError": "<p><small>Uma das seguintes razões poderá ser a causa:</small> <ul><li>não tem permissões de acesso</li> <li>está a tentar a aceder a um mapa não existente</li> <li>o mapa foi removido</li> <li>the projection of the map is not configured</li></ul><p>",
+                    "title" : "Map cannot be viewed"
                 }
             }
         },

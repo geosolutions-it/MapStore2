@@ -107,7 +107,9 @@
             "noBackgroundLayerSupported": "Es gibt keine unterstützten Hintergrundschichten für diese Art von Karte.",
             "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
             "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
-            "saveUpdatedMap": "All the layers have been successfully updated"
+            "saveUpdatedMap": "All the layers have been successfully updated",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt"
         },
         "dock": {
             "row": "{rowsSelected} reihe ausgewählt",
@@ -366,7 +368,8 @@
                     "title": "Fehler beim Laden der Karte",
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
-                    "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li></ul> <p>"
+                    "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li> <li>Die Projektion der Karte ist nicht konfiguriert</li></ul> <p>",
+                    "title" : "Karte kann nicht angezeigt werden"
                 }
             }
         },

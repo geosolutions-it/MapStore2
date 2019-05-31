@@ -244,9 +244,12 @@ Layers.registerType('wms', {
                             urls: urls,
                             params: queryParameters,
                             tileGrid: new ol.tilegrid.TileGrid({
+                                // TODO: custom grid sets extents
                                 extent: extent,
+                                // TODO: custom grid sets resolutions and tile size (needed to generate resolutions)
                                 resolutions: mapUtils.getResolutions(),
                                 tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
+                                // TODO: GWC grid sets with `alignTopLeft=true` may require `extent[0], extent[3]`
                                 origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
                             })
                         }, newOptions.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
