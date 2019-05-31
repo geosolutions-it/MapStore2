@@ -72,7 +72,7 @@ const addStateHandlers = compose(
         },
         change: (state) => (v, valuefield) => {
             if (!state.selected && !state.open) {
-                state.onChangeDrawingStatus('clean', null, "queryform", [], {});
+                state.onChangeDrawingStatus('clean', '', "queryform", [], {});
             }
             return ({
                 delayDebounce: 500,

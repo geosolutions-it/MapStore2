@@ -20,9 +20,7 @@ var {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
-    filterRequestParams,
-    validateStringAttribute,
-    getCleanTemplate
+    filterRequestParams
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -389,30 +387,6 @@ describe('MapInfoUtils', () => {
         }, includeOptions, excludeParams)).toEqual({ buffer: 'buffer', cql_filter: 'cql_filter', filter: 'filter', propertyName: 'propertyName' });
     });
 
-    it('validateStringAttribute', () => {
-        const testObj = {
-            properties: {
-                name: 'object-name'
-            }
-        };
-        expect(validateStringAttribute(testObj, 'properties.name')).toBe(true);
-        expect(validateStringAttribute(testObj, ' properties.name ')).toBe(true);
-        expect(validateStringAttribute(testObj, '${properties.name}')).toBe(false);
-        expect(validateStringAttribute(testObj, '${properties.name}', 2, 1)).toBe(true);
-        expect(validateStringAttribute(testObj, '${ properties.name }', 2, 1)).toBe(true);
-        expect(validateStringAttribute(testObj, 'properties.desc')).toBe(false);
-    });
-
-    it('getCleanTemplate', () => {
-        const template = '<p>the name is ${ properties.name } and the description ${ properties.desc } and again the name is ${ <strong>properties.name</strong> }</p>';
-        const testObj = {
-            properties: {
-                name: 'object-name'
-            }
-        };
-        expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
-
-    });
     it('buildIdentifyRequest cql_filter management for wms and wmts2', () => {
         let props = {
             map: {
@@ -486,4 +460,3 @@ describe('MapInfoUtils', () => {
     });
 
 });
-

@@ -20,7 +20,7 @@ const {
 } = require('../actions/print');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
-const {isObject} = require('lodash');
+const {isObject, get} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -37,6 +37,10 @@ const initialSpec = {
     description: ''
 };
 
+const getSheetName = (name = '') => {
+    return name.split('_')[0];
+};
+
 function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
     switch (action.type) {
     case TOGGLE_CONTROL: {
@@ -46,13 +50,9 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         return state;
     }
     case PRINT_CAPABILITIES_LOADED: {
-        let sheetName = action.capabilities
-                && action.capabilities.layouts
-                && action.capabilities.layouts.length
-                && action.capabilities.layouts[0].name;
-        if (sheetName && sheetName.indexOf('_') !== -1) {
-            sheetName = sheetName.substring(0, sheetName.indexOf("_"));
-        }
+        const layouts = get(action, 'capabilities.layouts', [{name: 'A4'}]);
+        const sheetName = layouts.filter(l => getSheetName(l.name) === state.spec.sheet).length ?
+            state.spec.sheet : getSheetName(layouts[0].name);
         return assign({}, state, {
             capabilities: action.capabilities,
             spec: assign({}, state.spec || {}, {

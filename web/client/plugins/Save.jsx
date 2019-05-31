@@ -23,11 +23,13 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
-
 const MapUtils = require('../utils/MapUtils');
 const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
-const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, (map, additionalOptions, layers, groups, show, textSearchConfig) => ({
+
+const selector = createSelector(
+    mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector,
+    (map, additionalOptions, layers, groups, show, textSearchConfig) => ({
     currentZoomLvl: map && map.zoom,
     show,
     map,

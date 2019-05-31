@@ -7,6 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
+const {isNil} = require('lodash');
 const {FormattedNumber} = require('react-intl');
 class NumberFormat extends React.Component {
     static propTypes = {
@@ -18,12 +19,8 @@ class NumberFormat extends React.Component {
         intl: PropTypes.object
     };
 
-    static defaultProps = {
-        value: new Date()
-    };
-
     render() {
-        return this.context.intl ? <FormattedNumber value={this.props.value} {...this.props.numberParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
+        return this.context.intl ? <FormattedNumber value={this.props.value} {...this.props.numberParams} /> : <span>{!isNil(this.props.value) && !isNaN(this.props.value) && this.props.value.toString && this.props.value.toString() || ''}</span>;
     }
 }
 

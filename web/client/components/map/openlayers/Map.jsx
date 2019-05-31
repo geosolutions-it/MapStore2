@@ -15,7 +15,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 const mapUtils = require('../../../utils/MapUtils');
 const projUtils = require('../../../utils/openlayers/projUtils');
 
-const {isEqual, throttle} = require('lodash');
+const { isEqual, throttle } = require('lodash');
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -49,16 +49,16 @@ class OpenlayersMap extends React.Component {
 
     static defaultProps = {
         id: 'map',
-        onMapViewChanges: () => {},
-        onCreationError: () => {},
+        onMapViewChanges: () => { },
+        onCreationError: () => { },
         onClick: null,
-        onMouseMove: () => {},
+        onMouseMove: () => { },
         mapOptions: {},
         projection: 'EPSG:3857',
         projectionDefs: [],
-        onLayerLoading: () => {},
-        onLayerLoad: () => {},
-        onLayerError: () => {},
+        onLayerLoading: () => { },
+        onLayerLoad: () => { },
+        onLayerError: () => { },
         resize: 0,
         registerHooks: true,
         interactive: true
@@ -88,12 +88,12 @@ class OpenlayersMap extends React.Component {
         }, interactionsOptions, {}));
         if (interactionsOptions === undefined || interactionsOptions.dragPan === undefined || interactionsOptions.dragPan) {
             interactions.extend([
-                new ol.interaction.DragPan({kinetic: false})
+                new ol.interaction.DragPan({ kinetic: false })
             ]);
         }
         if (interactionsOptions === undefined || interactionsOptions.mouseWheelZoom === undefined || interactionsOptions.mouseWheelZoom) {
             interactions.extend([
-                new ol.interaction.MouseWheelZoom({duration: 0})
+                new ol.interaction.MouseWheelZoom({ duration: 0 })
             ]);
         }
         let controls = ol.control.defaults(assign({
@@ -141,20 +141,29 @@ class OpenlayersMap extends React.Component {
                     if (this.props.projection !== 'EPSG:900913' && this.props.projection !== 'EPSG:3857') {
                         coords = CoordinatesUtils.reproject(pos, this.props.projection, "EPSG:4326");
                     } else {
-                        coords = {x: pos[0], y: pos[1]};
+                        coords = { x: pos[0], y: pos[1] };
                     }
-                    let tLng = CoordinatesUtils.normalizeLng(coords.x);
+
                     let layerInfo;
+                    this.markerPresent = false;
+                    /*
+                     * Handle special case for vector features with handleClickOnLayer=true
+                     * Modifies the clicked point coordinates to center the marker and sets the layerInfo for
+                     * the clickPoint event (used as flag to show or hide marker)
+                     */
                     map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
                         if (layer && layer.get('handleClickOnLayer')) {
-                            layerInfo = layer.get('msId');
                             const geom = feature.getGeometry();
-                            // TODO getFirstCoordinate makes sense only for points, maybe centroid is more appropriate
-                            const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
-                            coords = CoordinatesUtils.reproject(getCoord, this.props.projection, "EPSG:4326");
+                            // TODO: We should find out a better way to identify it then checking geometry type
+                            if (!this.markerPresent && geom.getType() === "Point") {
+                                this.markerPresent = true;
+                                layerInfo = layer.get('msId');
+                                const arr = ol.proj.toLonLat(geom.getFirstCoordinate(), this.props.projection);
+                                coords = { x: arr[0], y: arr[1] };
+                            }
                         }
-                        tLng = CoordinatesUtils.normalizeLng(coords.x);
                     });
+                    const tLng = CoordinatesUtils.normalizeLng(coords.x);
                     const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
                         pixel: {
@@ -236,7 +245,7 @@ class OpenlayersMap extends React.Component {
 
     componentWillUnmount() {
         const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container
-        && document.querySelector(this.props.mapOptions.attribution.container);
+            && document.querySelector(this.props.mapOptions.attribution.container);
         if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
             attributionContainer.removeChild(attributionContainer.querySelector('.ol-attribution'));
         }
@@ -410,7 +419,7 @@ class OpenlayersMap extends React.Component {
                 width: this.map.getSize()[0],
                 height: this.map.getSize()[1]
             };
-            this.props.onMapViewChanges({x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326'}, view.getZoom(), {
+            this.props.onMapViewChanges({ x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326' }, view.getZoom(), {
                 bounds: {
                     minx: bbox[0],
                     miny: bbox[1],
@@ -432,7 +441,7 @@ class OpenlayersMap extends React.Component {
     createView = (center, zoom, projection, options, limits = {}) => {
         // limit has a crs defined
         const extent = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, CoordinatesUtils.normalizeSRS(projection));
-        const newOptions = !options || (options && !options.view) ? assign({}, options, {extent}) : assign({}, options);
+        const newOptions = !options || (options && !options.view) ? assign({}, options, { extent }) : assign({}, options);
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
@@ -450,11 +459,11 @@ class OpenlayersMap extends React.Component {
         var view = this.map.getView();
         const currentCenter = this.props.center;
         const centerIsUpdated = newProps.center.y === currentCenter.y &&
-                                newProps.center.x === currentCenter.x;
+            newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdated) {
             // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
-            let center = CoordinatesUtils.reproject({x: newProps.center.x, y: newProps.center.y}, 'EPSG:4326', newProps.projection, true);
+            let center = CoordinatesUtils.reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
         if (Math.round(newProps.zoom) !== this.props.zoom) {
@@ -466,7 +475,7 @@ class OpenlayersMap extends React.Component {
     };
 
     normalizeCenter = (center) => {
-        let c = CoordinatesUtils.reproject({x: center[0], y: center[1]}, this.props.projection, 'EPSG:4326', true);
+        let c = CoordinatesUtils.reproject({ x: center[0], y: center[1] }, this.props.projection, 'EPSG:4326', true);
         return [c.x, c.y];
     };
 
@@ -509,7 +518,7 @@ class OpenlayersMap extends React.Component {
         mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
             const bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
             this.map.getView().fit(bounds, {
-               padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
+                padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
                 duration
             });

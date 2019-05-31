@@ -7,7 +7,7 @@
  */
 
 var Layers = require('../../../../utils/openlayers/Layers');
-const {getStyle} = require('../VectorStyle');
+const VectorStyle = require('../VectorStyle');
 var ol = require('openlayers');
 const {isEqual} = require('lodash');
 
@@ -19,7 +19,7 @@ Layers.registerType('vector', {
             features: features
         });
 
-        const style = getStyle(options);
+        const style = VectorStyle.getStyle(options);
 
         return new ol.layer.Vector({
             msId: options.id,
@@ -39,7 +39,7 @@ Layers.registerType('vector', {
         }
 
         if (!isEqual(oldOptions.style, newOptions.style)) {
-            layer.setStyle(getStyle(newOptions));
+            layer.setStyle(VectorStyle.getStyle(newOptions));
         }
     },
     render: () => {

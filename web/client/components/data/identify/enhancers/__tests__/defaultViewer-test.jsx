@@ -8,7 +8,7 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const {defaultViewerHandlers, switchControlledDefaultViewer, defaultViewerDefaultProps} = require('../defaultViewer');
+const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../defaultViewer');
 const TestUtils = require('react-dom/test-utils');
 
 describe("test defaultViewer enhancers", () => {
@@ -30,21 +30,6 @@ describe("test defaultViewer enhancers", () => {
         expect(testComponent.innerHTML).toBe('text/plain');
     });
 
-    it('test switchControlledDefaultViewer', () => {
-        const Component = switchControlledDefaultViewer(({index = 0, setIndex = () => {}}) => <div id="test-component" onClick={() => setIndex(2)}>{index}</div>);
-        ReactDOM.render(<Component header />, document.getElementById("container"));
-        let testComponent = document.getElementById('test-component');
-        expect(testComponent.innerHTML).toBe('0');
-        TestUtils.Simulate.click(testComponent);
-        expect(testComponent.innerHTML).toBe('2');
-
-        ReactDOM.render(<Component />, document.getElementById("container"));
-        testComponent = document.getElementById('test-component');
-        expect(testComponent.innerHTML).toBe('0');
-        TestUtils.Simulate.click(testComponent);
-        expect(testComponent.innerHTML).toBe('0');
-    });
-
     it('test defaultViewerHanlders onNext', done => {
         const Component = defaultViewerHandlers(({onNext = () => {}, index = 0}) =>
             <span>
@@ -52,10 +37,10 @@ describe("test defaultViewer enhancers", () => {
             </span>
         );
 
-        ReactDOM.render(<Component index={0} setIndex={index => {
+        ReactDOM.render(<Component validResponses={[{dummy: "dummy response"}]} index={0} setIndex={index => {
             expect(index).toBe(0);
             done();
-        }} validator={() => ({getValidResponses: (responses) => responses})} format="text/plain" responses={[{}]}/>, document.getElementById("container"));
+        }} />, document.getElementById("container"));
 
         const testComponentNext = document.getElementById('test-component-next');
         TestUtils.Simulate.click(testComponentNext);

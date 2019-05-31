@@ -32,7 +32,6 @@ module.exports = {
         PrintPlugin: require('../../plugins/Print'),
         FullScreenPlugin: require('../../plugins/FullScreen'),
         SnapshotPlugin: require('../../plugins/Snapshot'),
-        ShapeFilePlugin: require('../../plugins/ShapeFile'),
         MetadataExplorerPlugin: require('../../plugins/MetadataExplorer'),
         SettingsPlugin: require('../../plugins/Settings'),
         ExpanderPlugin: require('../../plugins/Expander'),

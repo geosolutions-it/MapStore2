@@ -16,7 +16,6 @@ const {
     clean,
     get,
     getCustomEditor,
-    forceSelection,
     remove
 } = require('../EditorRegistry');
 const attribute = "STATE_NAME";
@@ -141,38 +140,5 @@ describe('EditorRegistry tests ', () => {
         const NumbEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "number", props: {}});
         expect(NumbEditor).toExist();
 
-    });
-
-    it('forceSelection allowEmpty=true', () => {
-        const oldValue = "old";
-        const changedValue = "new";
-        const data = ["new", "old", "agile"];
-        const allowEmpty = true;
-        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
-        expect(newVal).toBe("new");
-    });
-    it('forceSelection allowEmpty=true with "" value', () => {
-        const oldValue = "old";
-        const changedValue = "";
-        const data = ["new", "old", "agile"];
-        const allowEmpty = true;
-        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
-        expect(newVal).toBe("");
-    });
-    it('forceSelection allowEmpty=false with "" value', () => {
-        const oldValue = "old";
-        const changedValue = "";
-        const data = ["new", "old", "agile"];
-        const allowEmpty = false;
-        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
-        expect(newVal).toBe("old");
-    });
-    it('forceSelection allowEmpty=false with "agile" value', () => {
-        const oldValue = "old";
-        const changedValue = "agile";
-        const data = ["new", "old", "agile"];
-        const allowEmpty = false;
-        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
-        expect(newVal).toBe("agile");
     });
 });
