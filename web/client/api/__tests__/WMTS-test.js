@@ -66,7 +66,6 @@ describe.only('Test correctness of the WMTS APIs', () => {
                     expect(record.queryable).toBe(true);
                     expect(record.GetTileURL).toBe("http://sample.server/geoserver/gwc/service/wmts?");
                     expect(WMTSUtils.getGetTileURL(record)).toBe(record.GetTileURL);
-                    done();
                 });
                 expect(result.records[0].format).toBe("image/png");
                 done();
