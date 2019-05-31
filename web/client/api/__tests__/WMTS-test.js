@@ -10,7 +10,7 @@ const expect = require('expect');
 const API = require('../WMTS');
 const WMTSUtils = require('../../utils/WMTSUtils');
 
-describe('Test correctness of the WMTS APIs', () => {
+describe.only('Test correctness of the WMTS APIs', () => {
     it('GetRecords KVP', (done) => {
         API.getRecords('base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml', 0, 3, '').then((result) => {
             try {
@@ -66,6 +66,7 @@ describe('Test correctness of the WMTS APIs', () => {
                     expect(record.queryable).toBe(true);
                     expect(record.GetTileURL).toBe("http://sample.server/geoserver/gwc/service/wmts?");
                     expect(WMTSUtils.getGetTileURL(record)).toBe(record.GetTileURL);
+                    done();
                 });
                 expect(result.records[0].format).toBe("image/png");
                 done();
