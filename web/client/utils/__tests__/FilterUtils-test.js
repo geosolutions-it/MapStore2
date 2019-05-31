@@ -310,6 +310,8 @@ describe('FilterUtils', () => {
                 + '<ogc:LowerBoundary><ogc:Literal>' + startDate + '</ogc:Literal></ogc:LowerBoundary>'
                 + '<ogc:UpperBoundary><ogc:Literal>' + endDate + '</ogc:Literal></ogc:UpperBoundary>'
             + '</ogc:PropertyIsBetween></ogc:Or>');
+        let cqlFilter = FilterUtils.toCQLFilter(objFilter);
+        expect(cqlFilter).toBe("((attributeEmpty>='2000-01-01T00:00:00.000Z' AND attributeEmpty<='3000-01-01T00:00:00.000Z'))");
     });
     it('Check  for options.cqlFilter are merged with existing fields', () => {
         const versionOGC = "1.1.0";
