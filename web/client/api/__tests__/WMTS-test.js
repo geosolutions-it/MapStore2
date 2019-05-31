@@ -10,7 +10,7 @@ const expect = require('expect');
 const API = require('../WMTS');
 const WMTSUtils = require('../../utils/WMTSUtils');
 
-describe.only('Test correctness of the WMTS APIs', () => {
+describe('Test correctness of the WMTS APIs', () => {
     it('GetRecords KVP', (done) => {
         API.getRecords('base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml', 0, 3, '').then((result) => {
             try {
