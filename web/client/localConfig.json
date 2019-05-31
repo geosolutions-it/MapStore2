@@ -1,7 +1,15 @@
 {
     "proxyUrl": {
         "url": "proxy/?url=",
-        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver", "https://nominatim.openstreetmap.org", "http://cloudsdi.geo-solutions.it"]
+        "useCORS": [
+          "http://demo.geo-solutions.it/geoserver",
+          "https://demo.geo-solutions.it:443/geoserver",
+          "https://demo.geo-solutions.it/geoserver",
+          "https://nominatim.openstreetmap.org",
+          "http://cloudsdi.geo-solutions.it",
+          "https://gs-stable.geo-solutions.it/geoserver",
+          "https://gs-stable.geo-solutions.it:443/geoserver"
+        ]
     },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
@@ -55,24 +63,24 @@
                 "isNew": true,
                 "autoload": false
             },
-            "selectedService": "Demo CSW Service",
+            "selectedService": "gs_stable_csw",
             "services": {
-              "Demo CSW Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/csw",
+              "gs_stable_csw": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
                 "type": "csw",
-                "title": "Demo CSW Service",
+                "title": "GeoSolutions GeoServer CSW",
                 "autoload": true
               },
-              "Demo WMS Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/wms",
+              "gs_stable_wms": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
                 "type": "wms",
-                "title": "Demo WMS Service",
+                "title": "GeoSolutions GeoServer WMS",
                 "autoload": false
               },
-              "Demo WMTS Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+              "gs_stable_wmts": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
                 "type": "wmts",
-                "title": "Demo WMTS Service",
+                "title": "GeoSolutions GeoServer WMTS",
                 "autoload": false
               }
             }
@@ -547,9 +555,9 @@
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
-              "url": "https://demo.geo-solutions.it/geoserver/csw",
+              "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
               "type": "csw",
-              "title": "Demo CSW Service",
+              "title": "GeoSolutions GeoServer CSW",
               "autoload": true
             },
             "containerPosition": "columns"
