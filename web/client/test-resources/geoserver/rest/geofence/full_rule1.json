@@ -1,0 +1,46 @@
+{
+    "id": 12,
+    "priority": 0,
+    "userName": null,
+    "roleName": "GROUP_ADMIN",
+    "addressRange": null,
+    "workspace": "tiger",
+    "layer": "poi",
+    "service": "GWC",
+    "request": "DISPATCH",
+    "access": "ALLOW",
+    "limits": null,
+    "layerDetails": {
+      "layerType": "VECTOR",
+      "defaultStyle": "cite_lakes",
+      "cqlFilterRead": "INCLUDE",
+      "cqlFilterWrite": "INCLUDE",
+      "allowedArea": "MULTIPOLYGON (((-74.01254028081894 40.71084201335907, -74.01254028081894 40.707499980926514, -74.00995463132858 40.707499980926514, -74.00995463132858 40.71084201335907, -74.01254028081894 40.71084201335907)))",
+      "allowedStyles": [
+        "grass",
+        "point"
+      ],
+      "attributes": [
+        {
+          "name": "the_geom",
+          "dataType": "org.locationtech.jts.geom.Point",
+          "accessType": "READONLY"
+        },
+        {
+          "name": "MAINPAGE",
+          "dataType": "java.lang.String",
+          "accessType": "NONE"
+        },
+        {
+          "name": "THUMBNAIL",
+          "dataType": "java.lang.String",
+          "accessType": "NONE"
+        },
+        {
+          "name": "NAME",
+          "dataType": "java.lang.String",
+          "accessType": "READWRITE"
+        }
+      ]
+    }
+}

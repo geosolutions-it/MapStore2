@@ -7,6 +7,8 @@
  */
 const axios = require('../../../libs/ajax');
 const { pickBy } = require('lodash');
+const { convertRuleGS2GF, convertRuleGF2GS } = require('../../../utils/RuleServiceUtils');
+
 
 const EMPTY_RULE = {
     constraints: {},
@@ -18,70 +20,6 @@ const EMPTY_RULE = {
     username: "",
     workspace: ""
 };
-
-/**
- * Convert from GeoServer REST format into GeoFence (internal) format
- * @param {object} rule in GeoServer format
- * @returns {object} the rule in GeoFence Format
- */
-const convertRuleGS2GF = ({
-    id,
-    priority,
-    access: grant,
-    layer,
-    workspace,
-    service,
-    request,
-    userName: username,
-    roleName: rolename,
-    limits, // TODO: parse and manage
-    addressRange: ipaddress
-
-}) => ({
-    id,
-    priority,
-    grant,
-    layer,
-    workspace,
-    service,
-    request,
-    username,
-    rolename,
-    limits,
-    ipaddress
-});
-
-/**
- * Convert from the GeoFence (and internal) rule format into the GeoServer REST format
- * @param {object} rule in GeoFence Format
- * @retrns {object} the rule in GeoServer Format
- */
-const convertRuleGF2GS = ({
-    id,
-    priority,
-    grant,
-    layer,
-    workspace,
-    service,
-    request,
-    username,
-    rolename,
-    limits,
-    ipaddress
-
-}) => ({
-    id,
-    priority,
-    access: grant,
-    layer,
-    workspace,
-    service,
-    request,
-    userName: username,
-    roleName: rolename,
-    limits, // TODO: parse and manage
-    addressRange: ipaddress
-});
 
 /**
  *
@@ -214,7 +152,7 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
         const { id, priority, grant, position, ...others } = cleanConstraints(rule);
         const newRule = { ...EMPTY_RULE, ...others };
 
-        return axios.put(`/rules/id/${id}`, { Rule: convertRuleGF2GS(newRule) }, addBaseUrl({
+        return axios.post(`/rules/id/${id}`, { Rule: convertRuleGF2GS(newRule) }, addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
