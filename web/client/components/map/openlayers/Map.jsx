@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const ol = require('openlayers');
+const proj4 = require('proj4').default;
 const PropTypes = require('prop-types');
 const React = require('react');
 const assign = require('object-assign');
@@ -66,11 +67,12 @@ class OpenlayersMap extends React.Component {
 
     componentDidMount() {
         this.props.projectionDefs.forEach(p => {
-            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent);
+            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent, p.axisOrientation || proj4.defs(p.code).axis || 'enu');
         });
         // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
         // normally it happens ad application level.
         let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
+        ol.proj.setProj4(proj4);
         let interactionsOptions = assign(this.props.interactive ? {} : {
             doubleClickZoom: false,
             dragPan: false,
