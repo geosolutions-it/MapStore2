@@ -36,8 +36,8 @@ const cleanConstraints = (rule) => {
         return r;
     }
     let constraints = { ...rule.constraints };
-    constraints.allowedStyles = constraints.allowedStyles && constraints.allowedStyles.style || [];
-    constraints.attributes = constraints.attributes && constraints.attributes.attribute || [];
+    constraints.allowedStyles = {style: constraints.allowedStyles && constraints.allowedStyles.style || []};
+    constraints.attributes = {attribute: constraints.attributes && constraints.attributes.attribute || []};
     constraints.restrictedAreaWkt = constraints.restrictedAreaWkt || "";
     return { ...rule, constraints };
 };

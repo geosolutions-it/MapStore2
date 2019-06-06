@@ -101,9 +101,9 @@ module.exports = {
             cqlFilterRead: constraints.cqlFilterRead,
             cqlFilterWrite: constraints.cqlFilterWrite,
             allowedArea: constraints.restrictedAreaWkt,
-            allowedStyles: constraints.allowedStyle && constraints.allowedStyle.style && castArray(constraints.allowedStyles.style),
-            attributes: constraints.attributes && constraints.attributes
-                && constraints.attributes.map( ({name, access}) =>
+            allowedStyles: constraints.allowedStyles && constraints.allowedStyles.style && castArray(constraints.allowedStyles.style),
+            attributes: constraints.attributes && constraints.attributes.attribute
+                && constraints.attributes.attribute.map( ({name, access}) =>
                     ({
                         name,
                         accessType: access
