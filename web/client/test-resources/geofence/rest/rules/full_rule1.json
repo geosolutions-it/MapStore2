@@ -1,0 +1,39 @@
+{
+  "NOTE": "this is a full rule in the GeoFence stand-alone and internal MapStore format",
+  "constraints": {
+    "type": "VECTOR",
+    "defaultStyle": "poi",
+    "allowedStyles": [
+      "poi",
+      "burg"
+    ],
+    "cqlFilterRead": "INCLUDE",
+    "cqlFilterWrite": "INCLUDE",
+    "restrictedAreaWkt": "MULTIPOLYGON (((-74.01254028081894 40.71084201335907, -74.01254028081894 40.707499980926514, -74.00995463132858 40.707499980926514, -74.00995463132858 40.71084201335907, -74.01254028081894 40.71084201335907)))",
+    "attributes": [
+      {
+        "name": "the_geom",
+        "access": "READONLY"
+      },
+      {
+        "name": "MAINPAGE",
+        "access": "NONE"
+      },
+      {
+        "name": "NAME",
+        "access": "READWRITE"
+      },
+      {
+        "name": "THUMBNAIL",
+        "access": "NONE"
+      }
+    ]
+  },
+  "ipaddress": "192.168.255.255/16",
+  "layer": "poi",
+  "request": "GETFEATUREWITHLOCK",
+  "rolename": "ADMIN",
+  "service": "WFS",
+  "username": "admin",
+  "workspace": "tiger"
+}
