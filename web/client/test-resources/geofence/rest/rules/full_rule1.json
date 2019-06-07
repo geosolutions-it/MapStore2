@@ -1,39 +1,43 @@
 {
-  "NOTE": "this is a full rule in the GeoFence stand-alone and internal MapStore format",
+  "grant": "ALLOW",
+  "position": {
+    "value": 0,
+    "position": "offsetFromTop"
+  },
+  "rolename": "ADMIN",
+  "username": "admin",
+  "ipaddress": "192.168.1.1/8",
+  "service": "WFS",
+  "request": "DESCRIBEFEATURETYPE",
+  "workspace": "tiger",
+  "layer": "poi",
   "constraints": {
     "type": "VECTOR",
-    "defaultStyle": "poi",
-    "allowedStyles": [
-      "poi",
-      "burg"
-    ],
+    "defaultStyle": "burg",
+    "allowedStyles": {
+      "style": [
+        "point",
+        "poi"
+      ]
+    },
     "cqlFilterRead": "INCLUDE",
     "cqlFilterWrite": "INCLUDE",
-    "restrictedAreaWkt": "MULTIPOLYGON (((-74.01254028081894 40.71084201335907, -74.01254028081894 40.707499980926514, -74.00995463132858 40.707499980926514, -74.00995463132858 40.71084201335907, -74.01254028081894 40.71084201335907)))",
-    "attributes": [
-      {
-        "name": "the_geom",
-        "access": "READONLY"
-      },
-      {
-        "name": "MAINPAGE",
-        "access": "NONE"
-      },
-      {
-        "name": "NAME",
-        "access": "READWRITE"
-      },
-      {
-        "name": "THUMBNAIL",
-        "access": "NONE"
-      }
-    ]
-  },
-  "ipaddress": "192.168.255.255/16",
-  "layer": "poi",
-  "request": "GETFEATUREWITHLOCK",
-  "rolename": "ADMIN",
-  "service": "WFS",
-  "username": "admin",
-  "workspace": "tiger"
+    "restrictedAreaWkt": "MULTIPOLYGON (((-74.01196092367172 40.70918709039688, -74.01196092367172 40.708114206790924, -74.00962203741074 40.708114206790924, -74.00962203741074 40.70918709039688, -74.01196092367172 40.70918709039688)))",
+    "attributes": {
+      "attribute": [
+        {
+          "name": "the_geom",
+          "access": "READONLY"
+        },
+        {
+          "name": "THUMBNAIL",
+          "access": "NONE"
+        },
+        {
+          "name": "MAINPAGE",
+          "access": "NONE"
+        }
+      ]
+    }
+  }
 }

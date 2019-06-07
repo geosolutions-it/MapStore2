@@ -24,7 +24,7 @@ const loadSinglePage = (page = 0, filters = {}, size = 10) =>
     Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
         .map(({RuleList = {}, rules = []}) => ({
             page,
-            rules: (rules.concat(RuleList.rule || [])).map(r => {
+            rules: rules.map(r => {
                 if (!r.constraints) {
                     return r;
                 }

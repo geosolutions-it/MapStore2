@@ -12,7 +12,7 @@ const saveRule = stream$ => stream$
                 .catch(e => {
                     let isDuplicate = false;
                     if (e.data) {
-                        isDuplicate = data.indexOf("Duplicat") === 0;
+                        isDuplicate = e.data.indexOf("Duplicat") === 0;
                     }
                     return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: isDuplicate ? "rulesmanager.errorDuplicateRule" : "rulesmanager.errorUpdatingRule"}));
                 })

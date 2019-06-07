@@ -44,7 +44,7 @@ module.exports = {
         rolename,
         limits,
         ipaddress,
-        constraints: layerDetails && {
+        constraints: layerDetails && layer && {
             type: layerDetails.layerType,
             defaultStyle: layerDetails.defaultStyle,
             cqlFilterRead: layerDetails.cqlFilterRead,
@@ -95,7 +95,7 @@ module.exports = {
         roleName: rolename,
         limits, // TODO: parse and manage
         addressRange: ipaddress,
-        layerDetails: constraints && {
+        layerDetails: constraints && layer && {
             layerType: constraints.type,
             defaultStyle: constraints.defaultStyle,
             cqlFilterRead: constraints.cqlFilterRead,

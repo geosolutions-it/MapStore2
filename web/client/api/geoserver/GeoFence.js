@@ -92,9 +92,6 @@ var Api = {
     addRule: (rule) => {
         return Api.getRuleService().addRule(rule);
     },
-    updateRule: (rule) => {
-        return Api.getRuleService().updateRule(rule);
-    },
 
     // USERS-ROLES
     getRolesCount: function(filter = " ") {
