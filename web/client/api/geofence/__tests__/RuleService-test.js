@@ -12,7 +12,7 @@ const RuleService = require('../RuleService')({
     getGeoServerInstance: () => ({url: BASE_URL})
 });
 const RULES = require('raw-loader!../../../test-resources/geofence/rest/rules/rules_1.xml');
-const RULES_JSON = require('../../../test-resources/geofence/rest/rules/rules_1.json');
+// const RULES_JSON = require('../../../test-resources/geofence/rest/rules/rules_1.json');
 const GF_RULE = require('../../../test-resources/geofence/rest/rules/full_rule1.json');
 const expect = require('expect');
 

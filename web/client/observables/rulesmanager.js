@@ -22,7 +22,7 @@ const getUpdateType = (o, n) => {
 };
 const loadSinglePage = (page = 0, filters = {}, size = 10) =>
     Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
-        .map(({RuleList = {}, rules = []}) => ({
+        .map(({rules = []}) => ({
             page,
             rules: rules.map(r => {
                 if (!r.constraints) {
