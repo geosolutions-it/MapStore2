@@ -55,9 +55,15 @@ var Api = {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/target";
         return axios.get(url, options);
     },
-    runImport: function( geoserverBaseUrl, importId, options) {
+    runImport: function( geoserverBaseUrl, importId, options = {}) {
         let url = geoserverBaseUrl + "imports/" + importId + "?async=true";
-        return axios.post(url, null, options);
+        return axios.post(url, null, {
+            ...options,
+            headers: {
+                ...(options.headers || {}),
+                'Content-Type': ''
+            }
+        });
     },
     deleteImport: function(geoserverBaseUrl, importId, options) {
         let url = geoserverBaseUrl + "imports/" + importId;
