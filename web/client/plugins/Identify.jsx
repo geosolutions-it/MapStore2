@@ -6,61 +6,79 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
 const {Glyphicon} = require('react-bootstrap');
-
 const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+const { createSelector, createStructuredSelector} = require('reselect');
+const assign = require('object-assign');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const { generalInfoFormatSelector, clickPointSelector } = require('../selectors/mapinfo');
+const { mapTypeSelector } = require('../selectors/maptype');
+
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
 
-const {hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor} = require('../actions/mapInfo');
-const {changeMousePointer} = require('../actions/map');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
+const { changeMousePointer, zoomToExtent} = require('../actions/map');
+
+
 const {currentLocaleSelector} = require('../selectors/locale');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
-const {compose, defaultProps} = require('recompose');
+const { compose, defaultProps } = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
-const {switchControlledDefaultViewer, defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
-const {identifyLifecycle, switchControlledIdentify} = require('../components/data/identify/enhancers/identify');
-const defaultIdentifyButtons = require('./identify/defaultIdentifyButtons');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
+const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
+const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
+const getToolButtons = require('./identify/toolButtons');
+const getNavigationButtons = require('./identify/navigationButtons');
 const Message = require('./locale/Message');
-
-const assign = require('object-assign');
 
 require('./identify/identify.css');
 
-const selector = createSelector([
-    (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
-    (state) => state.mapInfo && state.mapInfo.responses || [],
-    (state) => state.mapInfo && state.mapInfo.requests || [],
-    generalInfoFormatSelector,
-    mapSelector,
-    layersSelector,
-    clickPointSelector,
-    (state) => state.mapInfo && state.mapInfo.showModalReverse,
-    (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
-    (state) => state.mapInfo && state.mapInfo.warning,
-    currentLocaleSelector,
-    state => mapLayoutValuesSelector(state, {height: true}),
-    (state) => state.mapInfo && state.mapInfo.formatCoord,
-    (state) => state.mapInfo && state.mapInfo.showCoordinateEditor
-], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor) => ({
-    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor
-}));
+const selector = createStructuredSelector({
+    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    responses: responsesSelector,
+    validResponses: validResponsesSelector,
+    requests: (state) => state.mapInfo && state.mapInfo.requests || [],
+    format: generalInfoFormatSelector,
+    map: mapSelector,
+    layers: layersSelector,
+    point: clickPointSelector,
+    showModalReverse: (state) => state.mapInfo && state.mapInfo.showModalReverse,
+    reverseGeocodeData: (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
+    warning: (state) => state.mapInfo && state.mapInfo.warning,
+    currentLocale: currentLocaleSelector,
+    dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
+    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
+    showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
+    showEmptyMessageGFI: state => showEmptyMessageGFISelector(state)
+});
 // result panel
 
-
+/**
+ * Enhancer to enable set index only if Component has not header in viewerOptions props
+ */
+const identifyIndex = compose(
+        connect(
+            createSelector(indexSelector, (index) => ({ index })),
+            {
+                setIndex: changePage
+            }
+        ),
+        defaultProps({
+            index: 0
+        })
+    )
+;
 const DefaultViewer = compose(
-    switchControlledDefaultViewer,
+    identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
     loadingState(({responses}) => responses.length === 0)
 )(require('../components/data/identify/DefaultViewer'));
+
 
 const identifyDefaultProps = defaultProps({
     formatCoord: "decimal",
@@ -106,19 +124,21 @@ const identifyDefaultProps = defaultProps({
     showLayerTitle: true,
     position: 'right',
     size: 660,
-    getButtons: defaultIdentifyButtons,
+    getToolButtons,
+    getNavigationButtons,
     showFullscreen: false,
-    validator: MapInfoUtils.getValidator,
+    validResponses: [],
+    validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors
     zIndex: 1050
 });
 
 /**
- * Identify plugin. This plugin allows to perform getfeature info.
+ * Identify plugin. This plugin allows to perform get feature info.
  * It can be configured to have a mobile or a desktop flavor.
  * It's enabled by default. The bubbling of an on_click_map action to GFI is stopped
  * if Annotations or FeatureGrid plugins are editing, draw or measurement supports are
  * active, the query panel is active or the identify plugin is disabled.
- * To restore old behaviour, in mapInfo state, set disabledAlwaysOn to true and
+ * To restore old behavior, in mapInfo state, set disabledAlwaysOn to true and
  * manage the plugin using toggleControl action with 'info' as control name.
  * It's possible also possible disable the plugin by changeMapInfoState or toggleMapInfoState actions
  *
@@ -130,6 +150,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.draggable {boolean} draggable info window, when modal
  * @prop cfg.viewerOptions {object}
+ * @prop cfg.showHighlightFeatureButton {boolean} show the highlight feature button if the interrogation returned valid features (openlayers only)
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
@@ -148,6 +169,18 @@ const identifyDefaultProps = defaultProps({
  *       }
  *    }
  * }
+ *
+ * If you want ot configure the showEmptyMessageGFI you need to update the "initialState.defaultState"
+ * @example
+ * ```
+ * "mapInfo": {
+ *   "enabled": true,
+ *   "configuration": {
+ *     "showEmptyMessageGFI": false
+ *   }
+ * }
+ * ```
+
  */
 
 const IdentifyPlugin = compose(
@@ -164,15 +197,31 @@ const IdentifyPlugin = compose(
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
     }),
+    // highlight support
+    compose(
+        connect(
+            createStructuredSelector({
+                highlight: isHighlightEnabledSelector,
+                currentFeature: currentFeatureSelector,
+                currentFeatureCrs: currentFeatureCrsSelector
+            }), {
+                toggleHighlightFeature,
+                zoomToExtent
+            }
+        ),
+        zoomToFeatureHandler
+    ),
+    // disable with not supported mapTypes. TODO: remove when reproject (leaflet) and features draw available (cesium)
+    connect(createSelector(mapTypeSelector, mapType => ({mapType})), {}, ({mapType}, _, { showHighlightFeatureButton, ...props }) => ({...props, showHighlightFeatureButton: mapType === 'openlayers' && showHighlightFeatureButton}) ),
     identifyDefaultProps,
-    switchControlledIdentify,
+    identifyIndex,
     defaultViewerHandlers,
     identifyLifecycle
 )(require('../components/data/identify/IdentifyContainer'));
 
 // configuration UI
 const FeatureInfoFormatSelector = connect((state) => ({
-    infoFormat: state.mapInfo && state.mapInfo.infoFormat
+    infoFormat: generalInfoFormatSelector(state)
 }), {
     onInfoFormatChange: changeMapInfoFormat
 })(require("../components/misc/FeatureInfoFormatSelector"));

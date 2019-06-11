@@ -1,7 +1,7 @@
 {
 	"proxyUrl": "/mapstore/proxy/?url=",
 	"geoStoreUrl": "/mapstore/rest/geostore",
-	"printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
+	"printUrl": "/geoserver/pdf/info.json",
   "themePrefix": "__PROJECTNAME__",
 	"translationsPath": "./MapStore2/web/client/translations",
 	"plugins": {

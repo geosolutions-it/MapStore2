@@ -19,5 +19,10 @@ module.exports = require('./MapStore2/build/buildConfig')(
     extractThemesPlugin,
     false,
     "dist/",
-    '.__PROJECTNAME__'
+    '.__PROJECTNAME__',
+    [],
+    {
+        "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+        "@js": path.resolve(__dirname, "js")
+    }
 );

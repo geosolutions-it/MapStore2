@@ -53,12 +53,19 @@ const errorStyleSelector = state => get(state, 'styleeditor.error') || {};
  */
 const loadingStyleSelector = state => get(state, 'styleeditor.loading');
 /**
- * selects current format of selected style from state
+ * selects current format of temporary style from state
  * @memberof selectors.styleeditor
  * @param  {object} state the state
  * @return {string}
  */
 const formatStyleSelector = state => get(state, 'styleeditor.format') || 'css';
+/**
+ * selects current langage version of temporary style from state
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @return {object}
+ */
+const languageVersionStyleSelector = state => get(state, 'styleeditor.languageVersion') || {};
 /**
  * selects code of style in editing from state
  * @memberof selectors.styleeditor
@@ -146,6 +153,17 @@ const selectedStyleSelector = state => {
     || updatedLayer.availableStyles && updatedLayer.availableStyles[0] && updatedLayer.availableStyles[0].name;
 };
 /**
+ * selects format of selected style from state
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @return {string}
+ */
+const selectedStyleFormatSelector = state => {
+    const { availableStyles = []} = getUpdatedLayer(state) || {};
+    const styleName = selectedStyleSelector(state);
+    return head(availableStyles.filter(({ name }) => name === styleName).map(({ format }) => format));
+};
+/**
  * selects all style values of selected layer (availableStyles, defaultStyle, enabledStyle) from state
  * @memberof selectors.styleeditor
  * @param  {object} state the state
@@ -177,6 +195,7 @@ module.exports = {
     errorStyleSelector,
     loadingStyleSelector,
     formatStyleSelector,
+    languageVersionStyleSelector,
     codeStyleSelector,
     initialCodeStyleSelector,
     selectedStyleSelector,
@@ -187,5 +206,6 @@ module.exports = {
     styleServiceSelector,
     canEditStyleSelector,
     getUpdatedLayer,
+    selectedStyleFormatSelector,
     getAllStyles
 };

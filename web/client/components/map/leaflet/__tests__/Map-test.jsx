@@ -482,7 +482,9 @@ describe('LeafletMap', () => {
             center={{ y: 0, x: 0 }}
             zoom={11}
             registerHooks
-            mapOptions={{ zoomAnimation: false }}
+            mapOptions={{ zoomAnimation: false,
+                // had to add maxZoom to avoid https://github.com/Leaflet/Leaflet/issues/5153 in the second hook call
+                maxZoom: 21 }}
             onMapViewChanges={testHandlers.onMapViewChanges} />,
         document.getElementById("container"));
         expect(map).toExist();

@@ -46,4 +46,26 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(spyonChange).toHaveBeenCalled();
         expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(20);
     });
+    it('Test AeronauticalCoordinateEditor onChange not exceed maxDegrees', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<AeronauticalCoordinateEditor
+            coordinate="lon"
+            value={180}
+            onChange={actions.onChange} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(3);
+        expect(elements[0].value).toBe('180');
+        expect(elements[1].value).toBe('0');
+        expect(elements[2].value).toBe('0');
+        ReactTestUtils.Simulate.change(elements[1], { target: { value: "20" } });
+        expect(spyonChange).toHaveBeenCalled();
+        expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(180);
+        expect(elements[0].value).toBe('180');
+        expect(elements[1].value).toBe('0');
+        expect(elements[2].value).toBe('0');
+    });
 });

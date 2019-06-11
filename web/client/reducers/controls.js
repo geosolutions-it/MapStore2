@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS} = require('../actions/controls');
+const { TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, RESET_CONTROLS} = require('../actions/controls');
 const assign = require('object-assign');
 /**
  * Manages the state of the controls in MapStore2
@@ -66,6 +66,11 @@ function controls(state = {}, action) {
                 [action.property]: action.value
             })
         });
+    case SET_CONTROL_PROPERTIES: {
+        return assign({}, state, {
+            [action.control]: assign({}, state[action.control], action.properties)
+        });
+    }
     case RESET_CONTROLS: {
         const newControls = Object.keys(state).filter(c => (action.skip || []).indexOf(c) === -1);
         const resetted = newControls.reduce((previous, controlName) => {

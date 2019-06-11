@@ -63,7 +63,7 @@ class CesiumMap extends React.Component {
     componentWillMount() {
         /*
          this prevent the Safari browser to zoom and mess up with the view.
-         added only for Safari's broswers (mobile and not) bescause from safari 10 it
+         added only for Safari's browsers (mobile and not) bescause from safari 10 it
          won't allow you to disable pinch to zoom with the user-scalable attribute.
          see https://stackoverflow.com/questions/4389932/how-do-you-disable-viewport-zooming-on-mobile-safari/39711930#39711930
          */

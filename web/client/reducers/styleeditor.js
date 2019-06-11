@@ -41,6 +41,7 @@ function styleeditor(state = {}, action) {
                 code: action.code,
                 format: action.format,
                 error: null,
+                languageVersion: action.languageVersion,
                 initialCode: action.init ? action.code : state.initialCode
             };
         }
@@ -86,10 +87,10 @@ function styleeditor(state = {}, action) {
         }
         case ERROR_STYLE: {
             const message = action.error && action.error.statusText || '';
-            const position = message.match(/line\s([\d]+)|column\s([\d]+)/g);
+            const position = message.match(/line\s([\d]+)|column\s([\d]+)|lineNumber:\s([\d]+)|columnNumber:\s([\d]+)/g);
             const errorInfo = position && position.length === 2 && position.reduce((info, pos) => {
                 const splittedValues = pos.split(' ');
-                const param = splittedValues[0];
+                const param = splittedValues[0].replace(/Number:/g, '');
                 const value = parseFloat(splittedValues[1]);
                 return param && !isNaN(value) && {
                     ...info,

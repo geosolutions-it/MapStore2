@@ -56,8 +56,8 @@ describe('Test layers selectors', () => {
                 latlng: {lat: 45, lng: 43}
             }
         }});
-
-        expect(props.length).toBe(2);
+        // 1 for marker, 1 for highlight
+        expect(props.length).toBe(3);
         expect(props[1].type).toBe("vector");
     });
     it('test layerSelectorWithMarkers with geocoder marker as lat lon', () => {

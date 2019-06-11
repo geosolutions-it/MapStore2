@@ -44,5 +44,9 @@ module.exports = require('./MapStore2/build/buildConfig')(
             hash: true,
             filename: 'api.html'
         })
-    ]
+    ],
+    {
+        "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+        "@js": path.resolve(__dirname, "js")
+    }
 );

@@ -14,15 +14,15 @@ const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 * A Generic Reusable Toolbar. Build in animations.
 * @class Toolbar
 * @memberof components.misc.toolbar
-* @param  {Array}  [buttons=[]]       Array of buttons. Button objects support the following properties:
+* @param  {object[]} [buttons=[]] Array of buttons. Button objects support the following properties:
 *  - *visible*: true by default, set to `false` to make the button disappear
 *  - *Element*: a component to render instead of the ToolbarButton, it can be a DropdownToolbarOptions
 *  - All the react-bootstrap buttons properties.
 *  - All the properties for @see components.misc.enhancers
-*  . All properties for @see components.misc.toolbar.ToolbarButton and react-bootstrap button
-* @param  {Object} [btnDefaultProps] A series of default Props for buttons
-* @param  {Object} [btnGroupProps] Props to add to the react-bootstrap `ButtonGroup` component
-* @param  {Object|boolean} [transitionProps] properties of ReactCSSTransitionGroup. If false transition are  disabled. (for vertical toolbar)
+*  - All properties for @see components.misc.toolbar.ToolbarButton and react-bootstrap button
+* @param  {object} [btnDefaultProps] A series of default Props for buttons
+* @param  {object} [btnGroupProps] Props to add to the react-bootstrap `ButtonGroup` component
+* @param  {object|boolean} [transitionProps] properties of ReactCSSTransitionGroup. If false transition are  disabled. (for vertical toolbar)
 */
 module.exports = ({
    buttons = [],

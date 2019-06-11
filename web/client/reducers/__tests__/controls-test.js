@@ -8,7 +8,7 @@
 const expect = require('expect');
 
 const controls = require('../controls');
-const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS} = require('../../actions/controls');
+const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, RESET_CONTROLS} = require('../../actions/controls');
 
 describe('Test the controls reducer', () => {
     it('default case', () => {
@@ -83,6 +83,20 @@ describe('Test the controls reducer', () => {
         });
         expect(state.mycontrol).toExist();
         expect(state.mycontrol.prop).toBe(undefined);
+    });
+
+    it('set a list of control properties', () => {
+        const state = controls({}, {
+            type: SET_CONTROL_PROPERTIES,
+            control: 'mycontrol',
+            properties: {
+                'prop1': 'val1',
+                'prop2': 'val2'
+            }
+        });
+        expect(state.mycontrol).toExist();
+        expect(state.mycontrol.prop1).toBe('val1');
+        expect(state.mycontrol.prop2).toBe('val2');
     });
 
     it('reset the controls without skip ', () => {

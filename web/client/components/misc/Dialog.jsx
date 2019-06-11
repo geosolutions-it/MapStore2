@@ -3,8 +3,7 @@
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root dir
- ectory of this source tree.
+ * LICENSE file in the root directory of this source tree.
  */
 
 const React = require('react');
@@ -60,10 +59,10 @@ class Dialog extends React.Component {
                 background: "rgba(255, 255, 255, 0.5)",
                 zIndex: 2
             }}><div style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -40%)"
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -40%)"
             }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
     };
@@ -88,7 +87,7 @@ class Dialog extends React.Component {
         const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} handle=".draggable-header, .draggable-header *">
             {body}
         </Draggable>) : body;
-        let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);
+        let containerStyle = assign({}, this.props.style.display ? {display: this.props.style.display} : {}, this.props.backgroundStyle);
         return this.props.modal ?
             <div ref={(mask) => { this.mask = mask; }} onClick={this.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
                 {dialog}

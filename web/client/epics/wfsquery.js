@@ -160,7 +160,9 @@ const redrawSpatialFilterEpic = (action$, store) =>
                 coordinates: spatialFieldGeomCoordSelector(state)
             }
         };
-        let drawSpatialFilter = spatialFieldGeomSelector(state) ? changeDrawingStatus("drawOrEdit", spatialField.method, "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) : changeDrawingStatus("clean", spatialField.method, "queryform", [], {drawEnabled: false, editEnabled: false});
+        let drawSpatialFilter = spatialFieldGeomSelector(state) ?
+            changeDrawingStatus("drawOrEdit", spatialField.method || '', "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) :
+            changeDrawingStatus("clean", spatialField.method || '', "queryform", [], {drawEnabled: false, editEnabled: false});
          // if a geometry is present it will redraw the spatial field
         return Rx.Observable.of(drawSpatialFilter);
     });

@@ -1,8 +1,16 @@
-var PropTypes = require('prop-types');
-var React = require('react');
-var ol = require('openlayers');
-var Layers = require('../../../utils/openlayers/Layers');
-var assign = require('object-assign');
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const PropTypes = require('prop-types');
+const React = require('react');
+const ol = require('openlayers');
+const Layers = require('../../../utils/openlayers/Layers');
+const assign = require('object-assign');
+const {isFinite} = require('lodash');
 
 require('./overview.css');
 
@@ -63,7 +71,7 @@ class Overview extends React.Component {
         return null;
     }
 
-    dragstart = (e) => {
+    dragstart = (event) => {
         if (!this.dragging) {
             this.dragBox = this.box.cloneNode();
             this.dragBox.setAttribute("class", "ol-overview-dargbox");
@@ -79,18 +87,18 @@ class Overview extends React.Component {
             } else {
                 this.offsetStartLeft = parseInt(this.box.style.left.slice(0, -2), 10);
             }
-            this.mouseStartTop = e.pageY;
-            this.mouseStartLeft = e.pageX;
+            this.mouseStartTop = event.pageY;
+            this.mouseStartLeft = event.pageX;
             this.dragging = true;
         }
     };
 
-    draggingel = (e) => {
+    draggingel = (event) => {
         if (this.dragging === true) {
-            this.dragBox.style.top = this.offsetStartTop + e.pageY - this.mouseStartTop + 'px';
-            this.dragBox.style.left = this.offsetStartLeft + e.pageX - this.mouseStartLeft + 'px';
-            e.stopPropagation();
-            e.preventDefault();
+            this.dragBox.style.top = this.offsetStartTop + event.pageY - this.mouseStartTop + 'px';
+            this.dragBox.style.left = this.offsetStartLeft + event.pageX - this.mouseStartLeft + 'px';
+            event.stopPropagation();
+            event.preventDefault();
         }
     };
 
@@ -112,10 +120,12 @@ class Overview extends React.Component {
         let mapSize = this.props.map.getSize();
         let xMove = offset.left * Math.abs(mapSize[0] / vWidth);
         let yMove = offset.top * Math.abs(mapSize[1] / vHeight);
+        xMove = isFinite(xMove) ? xMove : 0;
+        yMove = isFinite(yMove) ? yMove : 0;
         let bottomLeft = [0 + xMove, mapSize[1] + yMove];
         let topRight = [mapSize[0] + xMove, 0 + yMove];
-        let left = this.props.map.getCoordinateFromPixel(bottomLeft);
-        let top = this.props.map.getCoordinateFromPixel(topRight);
+        let left = this.props.map.getCoordinateFromPixel(bottomLeft) || [0, 0];
+        let top = this.props.map.getCoordinateFromPixel(topRight) || [0, 0];
         let extent = [left[0], left[1], top[0], top[1]];
         this.props.map.getView().fit(extent, mapSize, {nearest: true});
     };

@@ -39,6 +39,8 @@
         "details": {
             "title": "O karti"
         },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Svojstva sloja",
             "title": "Naslov",
@@ -105,7 +107,9 @@
             "noBackgroundLayerSupported": "Nema dostupnih pozadinskih slojeva za ovaj tip karte.",
             "updateOldMap": "Ovo je stara karta, stoga sve funkcionalnosti ne mogu biti omogućene. Kliknite na dugme za ažuriranje ili zanemarite ovo upozorenje ako ne želite ažurirati kartu.",
             "warningSaveUpdatedMap": "Neki od slojeva se nisu ispravno ažurirali",
-            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani"
+            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} redak odabran",
@@ -361,9 +365,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error loading map",
                     "notFound": "Karta nije pronađena",
                     "notAccessible": "Karta nije dostupna",
-                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li><ul><p>"
+                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li> <li>the projection of the map is not configured</li></ul><p>",
+                    "title" : "Map cannot be viewed"
                 }
             }
         },
@@ -542,7 +548,10 @@
             "areaLabel": "Površina",
             "bearingLabel": "Azimut",
             "formula": "Formula za izračun udaljenosti",
-            "showLabel": "Prikaži oznaku mjerenja"
+            "showLabel": "Prikaži oznaku mjerenja",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "Decimal",
@@ -575,6 +584,31 @@
             "s_result_props_label": "Svojstva prikaza rezultata",
             "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
             "serviceslistempty": "Nije definiran niti jedan servis"
+        },
+        "draw": {
+            "fill": "Fill",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "LineDash",
+            "stroke": "Stroke",
+            "opacity": "Opacity",
+            "width": "Width",
+            "font": {
+                "textColor": "Color",
+                "family": "Family",
+                "size": "Size",
+                "style": "Style",
+                "weight": "Weight",
+                "textAlign": "Align"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -813,6 +847,7 @@
             "passwordInvalid": "Neispravna zaporka",
             "username": "Korisničko ime",
             "password": "Zaporka",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "Zaporka je promijenjena",
             "passwordError": "Greška prilikom izmjene zaporke",
             "signIn": "Prijava",
@@ -829,15 +864,17 @@
             "detailsNotes": "Bilješke"
         },
         "annotations": {
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
             "edit": "Uredi",
             "remove": "Izbriši",
             "save": "Spremi",
             "cancel": "Odustani",
             "back": "Natrag",
+            "applyStyle": "Apply Style",
             "addMarker": "Dodaj novu točku na karti",
             "styleGeometry": "Odaberi različiti stil za točke",
-            "deleteGeometry": "Ukloni postojeće točke",
-            "removeannotation": "Želite li ukloniti pribilješku?",
+            "deleteGeometry": "Ukloni geometrije napomena",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
             "removegeometry": "Želite li ukloniti sve pribilješke?",
             "confirm": "Potvrdi",
             "mandatory": "Obavezno polje",
@@ -845,11 +882,59 @@
             "add": "Nova",
             "filter": "Filtriraj pribilješke...",
             "undo": "Želite li zaista napustiti trenutno uređivanje pribilješki?",
+            "titleUndoGeom": "The geometry has changed",
+            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
+            "confirmGeom": "Confirm",
+            "cancelModalGeom": "Cancel",
+            "deleteFeature": "Delete this feature",
+            "undoDeleteFeature": "Are you sure to delete this feature?",
             "title": "Pribilješke",
             "zoomTo": "Približi",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
             "field": {
                 "title": "Naslov",
                 "description": "Opis"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Polygon editor",
+                    "LineString": "LineString Editor",
+                    "Bearing": "Bearing Editor",
+                    "Circle": "Circle editor",
+                    "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
+                    "Text": "Text editor"
+                },
+                "center": "Center",
+                "add": "Add new coordinates",
+                "addByClick": "Add new coordinates by clicking the plus button or on the map",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
             }
         },
         "users": {
@@ -875,7 +960,8 @@
             "confirmDeleteUser": "Želite li zaista izbrisati ovoga korisnika?",
             "errorDelete": "Došlo je do greške prilikom brisanja ovoga korisnika:",
             "errorSaving": "Došlo je do greške prilikom spremanja ovoga korisnika:",
-            "selectedGroups": "ODABRANE GRUPE"
+            "selectedGroups": "ODABRANE GRUPE",
+            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
           "searchGroups": "Pretraži grupe...",
@@ -948,6 +1034,22 @@
             "add": "Dodaj",
             "cancel": "Odustani",
             "success": " ispravno uvezeno"
+        },
+        "mapImport": {
+            "title": "Import Data",
+            "dropZone": {
+                "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Select Files...",
+                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "File not supported",
+                "unknownError": "there was an unknown error during import"
+            }
+        },
+        "mapExport": {
+            "title": "Export Data"
         },
         "catalog": {
             "title": "Katalog",
@@ -1302,9 +1404,16 @@
                     "showChartData": "Prikaži podatke grafikona",
                     "edit": "Uredi",
                     "delete": "Izbriši",
+                    "collapse": "Collapse",
                     "confirmDelete": "Jeste li sigurni?",
                     "downloadData": "Preuzmi podatke",
-                    "exportImage": "Izvezi sliku"
+                    "exportImage": "Izvezi sliku",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Hide",
+                    "hideDescription": "Hide this widget to other users",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Unhide the widget to other users"
                 }
             },
             "chartType": {
@@ -1396,6 +1505,13 @@
             "advancedOptions":{
                 "line": "Napredne mogućnosti",
                 "bar": "Napredne mogućnosti"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expand widgets tray",
+                "collapseTray": "Collapse widgets tray",
+                "expandAll": "Expand all widgets",
+                "collapseAll": "Collapse all widgets"
             }
         },
         "dashboard": {
@@ -1512,6 +1628,7 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "validationErrorTitle": "Validation Error",
             "genericValidationError": "Style is not valid and it could not be applied.",
             "setDefaultStyle": "Set selected style as default for the current layer",
             "setDefaultStyleSuccessTitle": "Success on set default style",

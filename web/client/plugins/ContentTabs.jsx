@@ -11,9 +11,37 @@ const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
 const ToolsContainer = require('./containers/ToolsContainer');
 const Message = require('../components/I18N/Message');
 
-const {withState} = require('recompose');
+const {connect} = require('react-redux');
 const assign = require('object-assign');
+const {createSelector} = require('reselect');
+const {onTabSelected} = require('../actions/contenttabs');
+
+const selectedSelector = createSelector(
+    state => state && state.contenttabs && state.contenttabs.selected,
+    selected => ({ selected })
+);
+
 const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${index}` }</span>;
+
+/**
+ * @name ContentTabs
+ * @memberof plugins
+ * @class
+ * @classdesc
+ * ContentTabs plugin is used in home page allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
+ * <br/>Each contained plugin has to have the contenttabs configuration property in its plugin configuration.
+ * The key property is mandatory following and position property is used to order give tabs order.
+ * An example of the contenttabs config in Maps plugin
+ * @example
+ *   ContentTabs: {
+ *       name: 'maps',
+ *       key: 'maps',
+ *       TitleComponent:
+ *       connect(mapsCountSelector)(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
+ *       position: 1,
+ *       tool: true
+ *   }
+ */
 class ContentTabs extends React.Component {
     static propTypes = {
         selected: PropTypes.number,
@@ -22,6 +50,7 @@ class ContentTabs extends React.Component {
         items: PropTypes.array,
         id: PropTypes.string,
         onSelect: PropTypes.func
+
     };
     static defaultProps = {
         selected: 0,
@@ -44,13 +73,13 @@ class ContentTabs extends React.Component {
                 container={(props) => <div {...props}>
                     <div style={{marginTop: "10px"}}>
                         <Nav bsStyle="tabs" activeKey="1" onSelect={k => this.props.onSelect(k)}>
-                            {this.props.items.map(
+                            {[...this.props.items].sort((a, b) => a.position - b.position).map(
                                 ({ TitleComponent = DefaultTitle, ...item }, idx) =>
                                     (<NavItem
-                                        active={idx === this.props.selected}
+                                        active={(item.key || idx) === this.props.selected}
                                         eventKey={item.key || idx} >
                                             <TitleComponent index={idx} item={item} />
-                                        </NavItem>))}
+                                    </NavItem>))}
                         </Nav>
                         </div>
                     {props.children}
@@ -58,7 +87,7 @@ class ContentTabs extends React.Component {
                 toolStyle="primary"
                 stateSelector="contentTabs"
                 activeStyle="default"
-                tools={[...this.props.items].sort((a, b) => a.position - b.position).filter( (e, i) => i === this.props.selected)}
+                tools={[...this.props.items].sort((a, b) => a.position - b.position).filter( ({key}, i) => (key || i) === this.props.selected)}
                 panels={[]}
             /></Col>
             </Row>
@@ -69,7 +98,9 @@ class ContentTabs extends React.Component {
 }
 
 module.exports = {
-    ContentTabsPlugin: assign(withState('selected', 'onSelect', 0)(ContentTabs), {
+    ContentTabsPlugin: assign(connect(selectedSelector, {
+        onSelect: onTabSelected
+    })(ContentTabs), {
         NavMenu: {
             position: 2,
             label: <Message msgId="resources.contents.title" />,
@@ -77,5 +108,6 @@ module.exports = {
             glyph: 'dashboard'
         }
     }),
-    reducers: {}
+    reducers: {contenttabs: require('../reducers/contenttabs')},
+    epics: require('../epics/contenttabs')
 };
