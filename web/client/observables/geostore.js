@@ -160,18 +160,20 @@ const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, 
  * @param {object} API the API to use
  * @return an observable that emits the resource
  */
-const getResource = (id, { includeAttributes = true, withData = true } = {}, API = GeoStoreDAO) =>
+const getResource = (id, { includeAttributes = true, withData = true, withPermissions = false } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
         Rx.Observable.defer(() => API.getShortResource(id)).pluck("ShortResource"),
         ...(includeAttributes ? [ Rx.Observable.defer(() => API.getResourceAttributes(id))] : []),
-        ...(withData ? [Rx.Observable.defer(() =>API.getData(id))] : [])
-    ]).map(([resource, attributes, data]) => ({
+        ...(withData ? [Rx.Observable.defer(() =>API.getData(id))] : []),
+        ...(withPermissions ? [Rx.Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [])
+    ]).map(([resource, attributes, data, permissions]) => ({
         ...resource,
         attributes: (attributes || []).reduce((acc, curr) => ({
             ...acc,
             [curr.name]: curr.value
         }), {}),
-        data
+        data,
+        permissions
     }));
 
 
@@ -239,11 +241,11 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
  * @param {object} API the API to use
  * @return an observable that emits the id of the updated resource
  */
-const updateResource = ({ id, data, category, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
+const updateResource = ({ id, data, category, permission, metadata, linkedResources = {}, isNew = false } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
         // update metadata
         Rx.Observable.defer(
-            () => API.putResourceMetadata(id, metadata.name, metadata.description)
+            () => API.putResourceMetadataAndAttributes(id, metadata)
         ).switchMap(res =>
             // update data if present. NOTE: sequence instead of parallel because of geostore issue #179
             data
@@ -278,9 +280,24 @@ const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoS
                 [id, ...ids].map(i => API.deleteResource(i))
             )
     );
+
+/**
+* Updates a resource attribute
+* @param {number} id the id of the resource which we want to update/create the attribute value
+* @param {string} name the attribute name
+* @param {string} value the attribute value
+* @return an observable that emits the id of the updated resource
+ */
+const updateResourceAttribute = ({ id, name, value } = {}, API = GeoStoreDAO) =>
+            // update metadata
+            Rx.Observable.defer(
+                () => API.updateResourceAttribute(id, name, value)
+            ).switchMap(() => Rx.Observable.of(id));
+
 module.exports = {
     getResource,
     createResource,
     updateResource,
-    deleteResource
+    deleteResource,
+    updateResourceAttribute
 };

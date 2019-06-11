@@ -31,6 +31,7 @@ const cleanStyleFromKml = (xml) => {
 };
 const FileUtils = {
     MIME_LOOKUPS: {
+        'avi': 'video/avi',
         'gpx': 'application/gpx+xml',
         'kmz': 'application/vnd.google-earth.kmz',
         'kml': 'application/vnd.google-earth.kml+xml',

@@ -20,6 +20,7 @@ module.exports = {
          getIcon: (options) => {
              return [new ol.style.Style({
                    image: new ol.style.Icon(({
+                     rotation: options.style.rotation,
                      anchor: [12, 12],
                      anchorXUnits: 'pixels',
                      anchorYUnits: 'pixels',
@@ -27,6 +28,7 @@ module.exports = {
                  }))
              }), new ol.style.Style({
                  image: new ol.style.Icon(({
+                     rotation: options.style.rotation,
                      src: extraMarker,
                      anchor: [markers.size[0] / 2, markers.size[1]],
                      anchorXUnits: 'pixels',
@@ -35,6 +37,7 @@ module.exports = {
                      offset: [markers.colors.indexOf(options.style.iconColor || 'blue') * markers.size[0], markers.shapes.indexOf(options.style.iconShape || 'circle') * markers.size[1]]
                  })),
                  text: new ol.style.Text({
+                     rotation: options.style.rotation,
                      text: glyphs[options.style.iconGlyph],
                      font: '14px FontAwesome',
                      offsetY: -markers.size[1] * 2 / 3,
@@ -42,6 +45,7 @@ module.exports = {
                  })
              })].concat(options.style.highlight ? [new ol.style.Style({
                  text: new ol.style.Text({
+                     rotation: options.style.rotation,
                      text: '\ue165',
                      font: '18px mapstore2',
                      offsetY: -markers.size[1] - 10,
@@ -58,6 +62,7 @@ module.exports = {
                      anchorXUnits: options.style.anchorXUnits || ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
                      anchorYUnits: options.style.anchorYUnits || ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
                      size: options.style.size || [16, 16],
+                     rotation: options.style.rotation,
                      anchorOrigin: options.style.anchorOrigin || "bottom-right",
                      src: options.style.iconUrl
                  }))

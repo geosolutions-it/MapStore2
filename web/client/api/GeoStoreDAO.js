@@ -17,6 +17,20 @@ const generateMetadata = (name, description) =>
     "<description><![CDATA[" + description + "]]></description>"
     + "<metadata></metadata>"
     + "<name><![CDATA[" + (name || "") + "]]></name>";
+const createAttributeList = (metadata) => {
+    const attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
+        return key !== "name" && key !== "description" && key !== "id";
+    }));
+
+    const xmlAttrs = Object.keys(attributes).map((key) => {
+        return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
+    });
+    let attributesSection = "";
+    if (xmlAttrs.length > 0) {
+        attributesSection = "<Attributes>" + xmlAttrs.join("") + "</Attributes>";
+    }
+    return attributesSection;
+};
 let parseOptions = (opts) => opts;
 
 let parseAdminGroups = (groupsObj) => {
@@ -166,15 +180,25 @@ const Api = {
     /**
      * same of getPermissions but clean data properly and returns only the array of rules.
      */
-    getResourcePermissions: function(resourceId, options) {
+    getResourcePermissions: function(resourceId, options, withSelector = true) {
         return Api.getPermissions(resourceId, options)
-            .then(rl => _.castArray(_.get(rl, 'SecurityRuleList.SecurityRule')))
+            .then(rl => _.castArray( withSelector ? _.get(rl, 'SecurityRuleList.SecurityRule') : rl))
             .then(rules => (rules && rules[0] && rules[0] !== "") ? rules : []);
     },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,
             "<Resource>" + generateMetadata(newName, newDescription) + "</Resource>",
+            this.addBaseUrl(_.merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options)));
+    },
+    putResourceMetadataAndAttributes: function(resourceId, metadata, options) {
+        return axios.put(
+            "resources/resource/" + resourceId,
+            "<Resource>" + generateMetadata(metadata.name, metadata.description) + createAttributeList(metadata) + "</Resource>",
             this.addBaseUrl(_.merge({
                 headers: {
                     'Content-Type': "application/xml"
@@ -229,17 +253,7 @@ const Api = {
         const name = metadata.name;
         const description = metadata.description || "";
         // filter attributes from the metadata object excluding the default ones
-        const attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
-            return key !== "name" && key !== "description" && key !== "id";
-        }));
-
-        const xmlAttrs = Object.keys(attributes).map((key) => {
-            return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
-        });
-        let attributesSection = "";
-        if (xmlAttrs.length > 0) {
-            attributesSection = "<Attributes>" + xmlAttrs.join("") + "</Attributes>";
-        }
+        const attributesSection = createAttributeList(metadata);
         return axios.post(
             "resources/",
                 "<Resource>" + generateMetadata(name, description) + "<category><name>" + (category || "") + "</name></category>" +

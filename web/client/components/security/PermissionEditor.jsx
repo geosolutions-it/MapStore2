@@ -26,8 +26,6 @@ class PermissionEditor extends React.Component {
         // props
         id: PropTypes.string,
         user: PropTypes.object,
-        onGroupsChange: PropTypes.func,
-        onAddPermission: PropTypes.func,
         buttonSize: PropTypes.string,
         includeCloseButton: PropTypes.bool,
         disabled: PropTypes.bool,
@@ -35,6 +33,8 @@ class PermissionEditor extends React.Component {
         style: PropTypes.object,
         fluid: PropTypes.bool,
         // CALLBACKS
+        onGroupsChange: PropTypes.func,
+        onAddPermission: PropTypes.func,
         onErrorCurrentMap: PropTypes.func,
         onUpdateCurrentMap: PropTypes.func,
         onNewGroupChoose: PropTypes.func,
@@ -54,16 +54,16 @@ class PermissionEditor extends React.Component {
     static defaultProps = {
         disabled: true,
         id: "PermissionEditor",
-        onGroupsChange: ()=> {},
-        onAddPermission: ()=> {},
-        onNewGroupChoose: ()=> {},
-        onNewPermissionChoose: ()=> {},
         user: {
             name: "Guest"
         },
         style: {},
         buttonSize: "small",
         // CALLBACKS
+        onGroupsChange: ()=> {},
+        onAddPermission: ()=> {},
+        onNewGroupChoose: ()=> {},
+        onNewPermissionChoose: ()=> {},
         onErrorCurrentMap: ()=> {},
         onUpdateCurrentMap: ()=> {},
         availablePermissions: ["canRead", "canWrite"],
@@ -189,7 +189,8 @@ class PermissionEditor extends React.Component {
     render() {
         // Hack to convert map permissions to a simpler format, TODO: remove this
         if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
-            this.localGroups = this.props.map.permissions.SecurityRuleList.SecurityRule.map(function(rule) {
+            this.localGroups = this.props.map.permissions.SecurityRuleList.SecurityRule
+            .map(function(rule) {
                 if (rule && rule.group && rule.canRead) {
                     return {name: rule.group.groupName, permission: rule.canWrite ? "canWrite" : "canRead" };
                 }

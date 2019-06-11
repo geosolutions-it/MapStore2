@@ -41,11 +41,13 @@ class ShapeFile extends React.Component {
         visible: PropTypes.bool,
         toggleControl: PropTypes.func,
         closeGlyph: PropTypes.string,
+        uploadMessage: PropTypes.string,
         buttonSize: PropTypes.string
     };
 
     static defaultProps = {
         id: "mapstore-shapefile-upload",
+        uploadMessage: "shapefile.placeholder",
         wrap: true,
         wrapWithPanel: false,
         panelStyle: {
@@ -74,7 +76,7 @@ class ShapeFile extends React.Component {
             Point: <StylePoint/>
         };
         const panel = (<ShapeFileUploadAndStyle role="body" {...this.props} stylers={stylers}
-            uploadMessage={<Message msgId="shapefile.placeholder"/>}
+            uploadMessage={<Message msgId={this.props.uploadMessage}/>}
             cancelMessage={<Message msgId="shapefile.cancel"/>}
             addMessage={<Message msgId="shapefile.add"/>}
             />);
