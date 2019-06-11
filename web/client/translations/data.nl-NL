@@ -25,6 +25,8 @@
         "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "version": {
             "label": "Versie"
         },
@@ -999,6 +1001,7 @@
             "success": " Import geslaagd"
         },
         "catalog": {
+            "notAvailable": "Not Available",
             "title": "Catalogus",
             "tooltip": "De catalogus doorlopen",
             "addToMap": "Aan de kaart toevoegen",
@@ -1019,7 +1022,12 @@
             "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet",
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
-            "hideDescription": "Hide full description"
+            "hideDescription": "Hide full description",
+            "templateFormatDescriptionExample": "The description of layer is ${ description }",
+            "showTemplate": "Show metadata template",
+            "showPreview": "Show preview",
+            "advancedSettings": "Advanced Settings",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}"
         },
         "uploader": {
             "filename": "File Name",

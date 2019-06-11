@@ -22,7 +22,11 @@ const {
     FOCUS_SERVICES_LIST,
     ADD_CATALOG_SERVICE,
     DELETE_CATALOG_SERVICE,
-    SAVING_SERVICE
+    SAVING_SERVICE,
+    TOGGLE_THUMBNAIL,
+    CHANGE_METADATA_TEMPLATE,
+    TOGGLE_TEMPLATE,
+    TOGGLE_ADVANCED_SETTINGS
 } = require('../actions/catalog');
 const {
     MAP_CONFIG_LOADED
@@ -36,7 +40,12 @@ const emptyService = {
     type: "wms",
     title: "",
     isNew: true,
-    autoload: false
+    autoload: false,
+    showAdvancedSettings: false,
+    showTemplate: false,
+    enableShowTemplate: false,
+    hideThumbnail: false,
+    metadataTemplate: "<p>${description}</p>"
 };
 
 function catalog(state = {
@@ -114,8 +123,15 @@ function catalog(state = {
         return assign({}, state, {newService: assign({}, state.newService, {url: action.url})});
     case CHANGE_AUTOLOAD:
         return assign({}, state, {newService: assign({}, state.newService, {autoload: action.autoload})});
-    case CHANGE_TYPE:
-        return assign({}, state, {newService: assign({}, state.newService, {type: action.newType.toLowerCase()})});
+    case CHANGE_TYPE: {
+        const type = action.newType.toLowerCase();
+        let templateOptions = {enableShowTemplate: true};
+        if (type !== "csw") {
+            // reset the template options
+            templateOptions = {showTemplate: false, metadataTemplate: "", enableShowTemplate: false};
+        }
+        return assign({}, state, {newService: assign({}, state.newService, {type, ...templateOptions})});
+    }
     case ADD_CATALOG_SERVICE: {
         let newServices;
         if (action.service.isNew) {
@@ -167,6 +183,22 @@ function catalog(state = {
             loadingError: null,
             layerError: null
         });
+    }
+    case TOGGLE_THUMBNAIL: {
+        return set("newService.hideThumbnail", !state.newService.hideThumbnail, state);
+    }
+    case CHANGE_METADATA_TEMPLATE: {
+        return set("newService.metadataTemplate", action.metadataTemplate, state);
+    }
+    case TOGGLE_TEMPLATE: {
+        let newState = set("newService.showTemplate", !state.newService.showTemplate, state);
+        if (newState.newService.showTemplate) {
+            newState = set("newService.metadataTemplate", newState.newService.metadataTemplate || "<p>${description}</p>", newState);
+        }
+        return newState;
+    }
+    case TOGGLE_ADVANCED_SETTINGS: {
+        return set("newService.showAdvancedSettings", !state.newService.showAdvancedSettings, state);
     }
     default:
         return state;
