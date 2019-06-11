@@ -14,6 +14,7 @@ const extraMarker = markers.icons[0];
 const extraMarkerShadow = markers.icons[1];
 
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
+const {isArray, isNumber} = require('lodash');
 
 const getHighlishtStyle = ({highlight, rotation}) => (highlight ? [new ol.style.Style({
     text: new ol.style.Text({
@@ -63,9 +64,9 @@ module.exports = {
              let markerStyle = [new ol.style.Style({
                 image: new ol.style.Icon(({
                      anchor: anchor || [0.5, 1],
-                     anchorXUnits: style.anchorXUnits || ( anchor || anchor === 0) ? 'pixels' : 'fraction',
-                     anchorYUnits: style.anchorYUnits || ( anchor || anchor === 0) ? 'pixels' : 'fraction',
-                     size: style.size,
+                     anchorXUnits: style.anchorXUnits || (( anchor || anchor === 0) ? 'pixels' : 'fraction'),
+                     anchorYUnits: style.anchorYUnits || (( anchor || anchor === 0) ? 'pixels' : 'fraction'),
+                     size: isArray(style.size) ? style.size : isNumber(style.size) ? [style.size, style.size] : undefined,
                      rotation: style.rotation,
                      anchorOrigin: style.anchorOrigin || "top-left",
                      src: style.iconUrl || style.symbolUrlCustomized || style.symbolUrl
@@ -81,9 +82,7 @@ module.exports = {
                        })
                    }), markerStyle[0]];
              }
-             // TODO verify if this needs highlight
-             // if so, add .concat(getHighlishtStyle(options.style.highlight));
-             return markerStyle.concat(getHighlishtStyle(style.highlight));
+             return markerStyle.concat(getHighlishtStyle(style));
          }
     },
     html: {

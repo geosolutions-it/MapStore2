@@ -13,11 +13,11 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const xml2js = require('xml2js');
 const xmlBuilder = new xml2js.Builder();
 const {registerErrorParser} = require('../utils/LocaleUtils');
-const generateMetadata = (name, description) =>
+const generateMetadata = (name = "", description = "") =>
     "<description><![CDATA[" + description + "]]></description>"
     + "<metadata></metadata>"
-    + "<name><![CDATA[" + (name || "") + "]]></name>";
-const createAttributeList = (metadata) => {
+    + "<name><![CDATA[" + (name) + "]]></name>";
+const createAttributeList = (metadata = {}) => {
     const attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
         return key !== "name" && key !== "description" && key !== "id";
     }));
@@ -76,6 +76,7 @@ registerErrorParser('geostore', {...errorParser});
  * API for local config
  */
 const Api = {
+    createAttributeList,
     generateMetadata,
     authProviderName: "geostore",
     addBaseUrl: function(options) {
