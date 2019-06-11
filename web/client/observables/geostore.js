@@ -241,7 +241,7 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
  * @param {object} API the API to use
  * @return an observable that emits the id of the updated resource
  */
-const updateResource = ({ id, data, category, permission, metadata, linkedResources = {}, isNew = false } = {}, API = GeoStoreDAO) =>
+const updateResource = ({ id, data, category, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
         // update metadata
         Rx.Observable.defer(
