@@ -14,9 +14,11 @@ const extraMarker = markers.icons[0];
 const extraMarkerShadow = markers.icons[1];
 
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
+const {isArray, isNumber, isNil} = require('lodash');
 
-const getHighlishtStyle = highlight => (highlight ? [new ol.style.Style({
+const getHighlishtStyle = ({highlight, rotation = 0}) => (highlight ? [new ol.style.Style({
     text: new ol.style.Text({
+        rotation,
         text: '\ue165',
         font: '18px mapstore2',
         offsetY: -markers.size[1] - 10,
@@ -26,16 +28,19 @@ const getHighlishtStyle = highlight => (highlight ? [new ol.style.Style({
 
 module.exports = {
      extra: {
-         getIcon: (options) => {
+         getIcon: (options = {}) => {
+             const rotation = !isNil(options.style && options.style.rotation) ? options.style.rotation : 0;
              return [new ol.style.Style({
                    image: new ol.style.Icon(({
-                       anchor: [12, 12],
-                       anchorXUnits: 'pixels',
-                       anchorYUnits: 'pixels',
-                       src: extraMarkerShadow
+                     rotation,
+                     anchor: [12, 12],
+                     anchorXUnits: 'pixels',
+                     anchorYUnits: 'pixels',
+                     src: extraMarkerShadow
                  }))
              }), new ol.style.Style({
                  image: new ol.style.Icon({
+                     rotation,
                      src: extraMarker,
                      anchor: [markers.size[0] / 2, markers.size[1]],
                      anchorXUnits: 'pixels',
@@ -44,23 +49,27 @@ module.exports = {
                      offset: [markers.colors.indexOf(options.style.iconColor || 'blue') * markers.size[0], markers.shapes.indexOf(options.style.iconShape || 'circle') * markers.size[1]]
                  }),
                  text: new ol.style.Text({
+                     rotation,
                      text: glyphs[options.style.iconGlyph],
                      font: '14px FontAwesome',
                      offsetY: -markers.size[1] * 2 / 3,
                      fill: new ol.style.Fill({color: '#FFFFFF'})
                  })
-             })].concat(getHighlishtStyle(options.style.highlight));
+
+             })].concat(getHighlishtStyle(options.style));
          }
      },
      standard: {
          getIcon: ({style, iconAnchor }) => {
+             const rotation = !isNil(style && style.rotation) ? style.rotation : 0;
              const anchor = style.iconAnchor || iconAnchor;
              let markerStyle = [new ol.style.Style({
                 image: new ol.style.Icon(({
                      anchor: anchor || [0.5, 1],
-                     anchorXUnits: style.anchorXUnits || ( anchor || anchor === 0) ? 'pixels' : 'fraction',
-                     anchorYUnits: style.anchorYUnits || ( anchor || anchor === 0) ? 'pixels' : 'fraction',
-                     size: style.size,
+                     anchorXUnits: style.anchorXUnits || (( anchor || anchor === 0) ? 'pixels' : 'fraction'),
+                     anchorYUnits: style.anchorYUnits || (( anchor || anchor === 0) ? 'pixels' : 'fraction'),
+                     size: isArray(style.size) ? style.size : isNumber(style.size) ? [style.size, style.size] : undefined,
+                     rotation,
                      anchorOrigin: style.anchorOrigin || "top-left",
                      src: style.iconUrl || style.symbolUrlCustomized || style.symbolUrl
                  }))
@@ -75,9 +84,7 @@ module.exports = {
                        })
                    }), markerStyle[0]];
              }
-             // TODO verify if this needs highlight
-             // if so, add .concat(getHighlishtStyle(options.style.highlight));
-             return markerStyle.concat(getHighlishtStyle(style.highlight));
+             return markerStyle.concat(getHighlishtStyle(style));
          }
     },
     html: {

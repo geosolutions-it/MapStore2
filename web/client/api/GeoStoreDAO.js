@@ -4,34 +4,48 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-const axios = require('../libs/ajax');
-const _ = require('lodash');
+*/
+const { castArray, findIndex, get, has, isArray, merge, omit, pick} = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
-const ConfigUtils = require('../utils/ConfigUtils');
 const xml2js = require('xml2js');
 const xmlBuilder = new xml2js.Builder();
+
+const axios = require('../libs/ajax');
+const ConfigUtils = require('../utils/ConfigUtils');
 const {registerErrorParser} = require('../utils/LocaleUtils');
-const generateMetadata = (name, description) =>
+
+const generateMetadata = (name = "", description = "") =>
     "<description><![CDATA[" + description + "]]></description>"
     + "<metadata></metadata>"
-    + "<name><![CDATA[" + (name || "") + "]]></name>";
+    + "<name><![CDATA[" + (name) + "]]></name>";
+const createAttributeList = (metadata = {}) => {
+    const attributes = metadata.attributes || omit(metadata, ["name", "description", "id"]);
+
+    const xmlAttrs = Object.keys(attributes).map((key) => {
+        return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
+    });
+    let attributesSection = "";
+    if (xmlAttrs.length > 0) {
+        attributesSection = "<Attributes>" + xmlAttrs.join("") + "</Attributes>";
+    }
+    return attributesSection;
+};
 let parseOptions = (opts) => opts;
 
 let parseAdminGroups = (groupsObj) => {
-    if (!groupsObj || !groupsObj.UserGroupList || !groupsObj.UserGroupList.UserGroup || !_.isArray(groupsObj.UserGroupList.UserGroup)) return [];
-    return groupsObj.UserGroupList.UserGroup.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
+    if (!groupsObj || !groupsObj.UserGroupList || !groupsObj.UserGroupList.UserGroup || !isArray(groupsObj.UserGroupList.UserGroup)) return [];
+    return groupsObj.UserGroupList.UserGroup.filter(obj => !!obj.id).map((obj) => pick(obj, ["id", "groupName", "description"]));
 };
 
 let parseUserGroups = (groupsObj) => {
-    if (!groupsObj || !groupsObj.User || !groupsObj.User.groups || !groupsObj.User.groups.group || !_.isArray(groupsObj.User.groups.group)) {
-        if (_.has(groupsObj.User.groups.group, "id", "groupName")) {
+    if (!groupsObj || !groupsObj.User || !groupsObj.User.groups || !groupsObj.User.groups.group || !isArray(groupsObj.User.groups.group)) {
+        if (has(groupsObj.User.groups.group, "id", "groupName")) {
             return [groupsObj.User.groups.group];
         }
         return [];
     }
-    return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
+    return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => pick(obj, ["id", "groupName", "description"]));
 };
 
 const boolToString = (b) => b ? "true" : "false";
@@ -62,6 +76,7 @@ registerErrorParser('geostore', {...errorParser});
  * API for local config
  */
 const Api = {
+    createAttributeList,
     generateMetadata,
     authProviderName: "geostore",
     addBaseUrl: function(options) {
@@ -90,7 +105,7 @@ const Api = {
     },
     getUserDetails: function(username, password, options) {
         const url = "users/user/details";
-        return axios.get(url, this.addBaseUrl(_.merge({
+        return axios.get(url, this.addBaseUrl(merge({
             auth: {
                 username: username,
                 password: password
@@ -105,14 +120,14 @@ const Api = {
     login: function(username, password, options) {
         const url = "session/login";
         let authData;
-        return axios.post(url, null, this.addBaseUrl(_.merge((username && password) ? {
+        return axios.post(url, null, this.addBaseUrl(merge((username && password) ? {
             auth: {
                 username: username,
                 password: password
             }
         } : {}, options))).then((response) => {
             authData = response.data;
-            return axios.get("users/user/details", this.addBaseUrl(_.merge({
+            return axios.get("users/user/details", this.addBaseUrl(merge({
                 headers: {
                     'Authorization': 'Bearer ' + response.data.access_token
                 },
@@ -127,7 +142,7 @@ const Api = {
     changePassword: function(user, newPassword, options) {
         return axios.put(
             "users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>",
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
                 }
@@ -136,7 +151,7 @@ const Api = {
     updateResourceAttribute: function(resourceId, name, value, type, options) {
         return axios.put(
             "resources/resource/" + resourceId + "/attributes/" + name + "/" + value, null,
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
                 }
@@ -145,7 +160,7 @@ const Api = {
     getResourceAttribute: function(resourceId, name, options = {}) {
         return axios.get(
             "resources/resource/" + resourceId + "/attributes/" + name,
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
                 }
@@ -160,22 +175,32 @@ const Api = {
                 },
                 ...options
             })).then(({ data } = {}) => data)
-            .then(data => _.castArray(_.get(data, "AttributeList.Attribute") || []))
+            .then(data => castArray(get(data, "AttributeList.Attribute") || []))
             .then(attributes => attributes || []);
     },
     /**
      * same of getPermissions but clean data properly and returns only the array of rules.
      */
-    getResourcePermissions: function(resourceId, options) {
+    getResourcePermissions: function(resourceId, options, withSelector = true) {
         return Api.getPermissions(resourceId, options)
-            .then(rl => _.castArray(_.get(rl, 'SecurityRuleList.SecurityRule')))
+            .then(rl => castArray( withSelector ? get(rl, 'SecurityRuleList.SecurityRule') : rl))
             .then(rules => (rules && rules[0] && rules[0] !== "") ? rules : []);
     },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,
             "<Resource>" + generateMetadata(newName, newDescription) + "</Resource>",
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options)));
+    },
+    putResourceMetadataAndAttributes: function(resourceId, metadata, options) {
+        return axios.put(
+            "resources/resource/" + resourceId,
+            "<Resource>" + generateMetadata(metadata.name, metadata.description) + createAttributeList(metadata) + "</Resource>",
+            this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
                 }
@@ -185,7 +210,7 @@ const Api = {
         return axios.put(
             "data/" + resourceId,
             content,
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': typeof content === 'string' ? "text/plain; charset=utf-8" : 'application/json; charset=utf-8"'
                 }
@@ -193,7 +218,7 @@ const Api = {
     },
     writeSecurityRules: function(SecurityRuleList = {}) {
         return "<SecurityRuleList>" +
-        (_.castArray(SecurityRuleList.SecurityRule) || []).map( rule => {
+        (castArray(SecurityRuleList.SecurityRule) || []).map( rule => {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     return "<SecurityRule>"
@@ -229,17 +254,7 @@ const Api = {
         const name = metadata.name;
         const description = metadata.description || "";
         // filter attributes from the metadata object excluding the default ones
-        const attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
-            return key !== "name" && key !== "description" && key !== "id";
-        }));
-
-        const xmlAttrs = Object.keys(attributes).map((key) => {
-            return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
-        });
-        let attributesSection = "";
-        if (xmlAttrs.length > 0) {
-            attributesSection = "<Attributes>" + xmlAttrs.join("") + "</Attributes>";
-        }
+        const attributesSection = createAttributeList(metadata);
         return axios.post(
             "resources/",
                 "<Resource>" + generateMetadata(name, description) + "<category><name>" + (category || "") + "</name></category>" +
@@ -251,7 +266,7 @@ const Api = {
                                 ? JSON.stringify(data)
                                 : data)
                         || "") + "]]></data></store></Resource>",
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
                 }
@@ -260,7 +275,7 @@ const Api = {
     deleteResource: function(resourceId, options) {
         return axios.delete(
             "resources/resource/" + resourceId,
-            this.addBaseUrl(_.merge({
+            this.addBaseUrl(merge({
             }, options)));
     },
     getUserGroups: function(options) {
@@ -347,9 +362,9 @@ const Api = {
             let restUsers = group.users || group.restUsers && group.restUsers.User || [];
             restUsers = Array.isArray(restUsers) ? restUsers : [restUsers];
             // old users not present in the new users list
-            let toRemove = restUsers.filter( (user) => _.findIndex(group.newUsers, u => u.id === user.id) < 0);
+            let toRemove = restUsers.filter( (user) => findIndex(group.newUsers, u => u.id === user.id) < 0);
             // new users not present in the old users list
-            let toAdd = group.newUsers.filter( (user) => _.findIndex(restUsers, u => u.id === user.id) < 0);
+            let toAdd = group.newUsers.filter( (user) => findIndex(restUsers, u => u.id === user.id) < 0);
 
             // create callbacks
             let removeCallbacks = toRemove.map( (user) => () => this.removeUserFromGroup(user.id, group.id, options) );
@@ -384,7 +399,7 @@ const Api = {
     },
     verifySession: function(options) {
         const url = "users/user/details";
-        return axios.get(url, this.addBaseUrl(_.merge({
+        return axios.get(url, this.addBaseUrl(merge({
             params: {
                 includeattributes: true
             }

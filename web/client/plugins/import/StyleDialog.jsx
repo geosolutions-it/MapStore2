@@ -37,11 +37,13 @@ class StyleDialog extends React.Component {
         visible: PropTypes.bool,
         onClose: PropTypes.func,
         closeGlyph: PropTypes.string,
+        uploadMessage: PropTypes.string,
         buttonSize: PropTypes.string
     };
 
     static defaultProps = {
         id: "mapstore-shapefile-upload",
+        uploadMessage: "shapefile.placeholder",
         wrap: true,
         wrapWithPanel: false,
         panelStyle: {
@@ -71,8 +73,9 @@ class StyleDialog extends React.Component {
         };
         const panel = (<StylePanel
             {...this.props}
-            setLayers={this.props.setLayers} stylers={stylers}
-            uploadMessage={<Message msgId="shapefile.placeholder"/>}
+            setLayers={this.props.setLayers}
+            stylers={stylers}
+            uploadMessage={<Message msgId={this.props.uploadMessage}/>}
             cancelMessage={<Message msgId="shapefile.cancel"/>}
             addMessage={<Message msgId="shapefile.add"/>}
             />);
