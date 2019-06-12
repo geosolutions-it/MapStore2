@@ -603,9 +603,11 @@ const LayersUtils = {
         const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
         return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
     },
-
+    /**
+     * Return capabilities valid for the layer object
+     */
     formatCapabitiliesOptions: function(capabilities) {
-        return capabilities
+        return isObject(capabilities)
             ? {
                 capabilities,
                 capabilitiesLoading: null,

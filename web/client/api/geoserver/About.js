@@ -11,8 +11,21 @@ import { get, mapKeys, camelCase } from 'lodash';
 
 let cache = {};
 
-const toCamelCase = obj => obj.map(item => mapKeys(item, (value, key) => camelCase(key)));
+// transform keys of an array of items to camelCase
+const toCamelCase = items => items.map(item => mapKeys(item, (value, key) => camelCase(key)));
 
+/**
+* Api for GeoServer about via rest
+* @name api.geoserver
+*/
+
+/**
+* Get version and manifest
+* @memberof api.geoserver
+* @param {object} params {baseUrl}
+* @param {string} params.baseUrl base url of GeoServer eg: http://localhost:8080/geoserver/
+* @return {promise} it returns an object with manifest and version
+*/
 export const getVersion = function({ baseUrl }) {
     if (cache[baseUrl]) return new Promise((resolve) => resolve(cache[baseUrl]));
     return axios.all([
@@ -32,3 +45,5 @@ export const getVersion = function({ baseUrl }) {
     });
 };
 
+// clear local cache
+export const clearCache = () => { cache = {}; };

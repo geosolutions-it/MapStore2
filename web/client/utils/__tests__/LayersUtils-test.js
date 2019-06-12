@@ -981,4 +981,23 @@ describe('LayersUtils', () => {
         expect(LayersUtils.getRegGeoserverRule()).toBe(LayersUtils.REG_GEOSERVER_RULE);
     });
 
+
+    it('test formatCapabitiliesOptions', () => {
+
+        expect(LayersUtils.formatCapabitiliesOptions()).toEqual({});
+
+        const capabilities = {
+            style: { name: 'generic' },
+            _abstract: 'description',
+            latLonBoundingBox: [-180, -90, 180, 90]
+        };
+        expect(LayersUtils.formatCapabitiliesOptions(capabilities))
+            .toEqual({
+                capabilities,
+                capabilitiesLoading: null,
+                description: 'description',
+                boundingBox: [-180, -90, 180, 90],
+                availableStyles: [{ name: 'generic' }]
+            });
+    });
 });

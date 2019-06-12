@@ -71,6 +71,13 @@ const Api = {
         opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
         return axios.put(url, body, opts);
     },
+    /**
+    * Get style service configuration based on url
+    * @memberof api.geoserver
+    * @param {object} params {baseUrl, style, options, format, styleName}
+    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+    * @return {promise} it returns a valid styleService object or null
+    */
     getStyleService: function({ baseUrl }) {
         return getVersion({ baseUrl })
             .then(({ version, manifest }) => {
