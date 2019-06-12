@@ -11,12 +11,14 @@ const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');
-const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
+const {isArray, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
-const {head} = require('lodash');
 const greatCircle = require('@turf/great-circle').default;
 const toPoint = require('turf-point');
+const bboxPolygon = require('@turf/bbox-polygon').default;
+const overlap = require('@turf/boolean-overlap').default;
+const contains = require('@turf/boolean-contains').default;
 
 const FORMULAS = {
     /**
@@ -102,13 +104,23 @@ const normalizePoint = (point) => {
         srs: point.srs || 'EPSG:4326'
     };
 };
-
+const numberize = (point) => {
+    let outpoint = point;
+    if (!isNumber(point.x)) {
+        outpoint.x = parseFloat(point.x);
+    }
+    if (!isNumber(point.y)) {
+        outpoint.y = parseFloat(point.y);
+    }
+    return outpoint;
+};
 const reproject = (point, source, dest, normalize = true) => {
     const sourceProj = source && Proj4js.defs(source) ? new Proj4js.Proj(source) : null;
     const destProj = dest && Proj4js.defs(dest) ? new Proj4js.Proj(dest) : null;
     if (sourceProj && destProj) {
         let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
-        const transformed = assign({}, source === dest ? p : Proj4js.transform(sourceProj, destProj, p), {srs: dest});
+
+        const transformed = assign({}, source === dest ? numberize(p) : Proj4js.transform(sourceProj, destProj, numberize(p)), {srs: dest});
         if (normalize) {
             return normalizePoint(transformed);
         }
@@ -132,16 +144,17 @@ const supportedSplitExtentEPSG = [
 
 const normalizeExtent = (bounds, projection) => {
     const extent = projection !== 'EPSG:4326' ? [
-        reproject([bounds.minx, bounds.miny], projection, 'EPSG:4326'),
-        reproject([bounds.maxx, bounds.maxy], projection, 'EPSG:4326')
+
+        reproject([parseFloat(bounds.minx), parseFloat(bounds.miny)], projection, 'EPSG:4326'),
+        reproject([parseFloat(bounds.maxx), parseFloat(bounds.maxy)], projection, 'EPSG:4326')
     ].reduce((a, b) => [...a, b.x, b.y], [])
-    : [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
+    : [parseFloat(bounds.minx), parseFloat(bounds.miny), parseFloat(bounds.maxx), parseFloat(bounds.maxy)];
 
     let isWorldView = false;
     if (projection === 'EPSG:4326') {
-        isWorldView = Math.abs(bounds.maxx - bounds.minx) > 360;
+        isWorldView = Math.abs(bounds.maxx - bounds.minx) >= 360;
     } else if (projection === 'EPSG:900913' || projection === 'EPSG:3857') {
-        isWorldView = Math.abs(bounds.maxx - bounds.minx) > 20037508.342789244 * 2;
+        isWorldView = Math.abs(bounds.maxx - bounds.minx) >= 20037508.342789244 * 2;
     }
 
     return isWorldView ? [0, extent[1], 360, extent[3]] :
@@ -174,6 +187,14 @@ const reprojectExtent = (extent, projection, isIDL) => {
     ].reduce((a, b) => [...a, b.x, b.y], []));
 };
 
+const getPolygonFromExtent = (extent) => {
+    if (extent) {
+        if (extent.hasOwnProperty('geometry') && extent.geometry.type === "Polygon") {
+            return extent;
+        }
+        return bboxPolygon(extent);
+    }
+};
 /**
  * Reproject extent to verify the intersection with the international date line (isIDL)
  * if on IDL return double extent array
@@ -559,10 +580,20 @@ const CoordinatesUtils = {
             const p2 = coordinates[i + 1];
             const start = toPoint(p1);
             const end = toPoint(p2);
-            const grCircle = greatCircle(start, end, options);
-            arcs = [...arcs, ...grCircle.geometry.coordinates];
+            if (!(p1[0] === p2[0] && p1[1] === p2[1])) {
+                let grCircle = greatCircle(start, end, options);
+                arcs = [...arcs, ...grCircle.geometry.coordinates];
+            }
         }
         return arcs;
+    },
+    transformArcsToLine: (coordinates, npoints = 100) => {
+        if (coordinates.length <= npoints) {
+            return [head(coordinates), last(coordinates)];
+        } else if (coordinates.length > npoints) {
+            return [head(coordinates)].concat(CoordinatesUtils.transformArcsToLine(slice(coordinates, npoints)));
+        }
+        return [];
     },
     coordsOLtoLeaflet: ({coordinates, type}) => {
         switch (type) {
@@ -593,7 +624,7 @@ const CoordinatesUtils = {
      * Return the viewport geometry from the view bounds
      * @param bounds {object} bounds {minx, miny, maxx, maxy}
      * @param projection {string} the projection of bounds coordinates
-     * @return {object} geomtry {type, radius, projection, coordinates, extent, center}
+     * @return {object} geometry {type, radius, projection, coordinates, extent, center}
      */
     getViewportGeometry: (bounds, projection) => {
         if (head(supportedSplitExtentEPSG.filter(epsg => epsg === projection))) {
@@ -658,6 +689,23 @@ const CoordinatesUtils = {
             timeout: 2000
         });
     },
+    /**
+     * Parse the URN to get EPSG code
+     * @param {object|string} crs object or string
+     * @return {string} EPSG in the form EPSG:NNNN
+     */
+    parseURN: (crs) => {
+        const code = crs && crs.properties && crs.properties.name || crs && crs.name || crs && crs.properties && crs.properties.code || crs;
+
+        let crsCode = code && last(code.split(":"));
+
+        if (crsCode === "WGS 1984" || crsCode === "WGS84") {
+            return "EPSG:4326";
+        } else if (crsCode) {
+            // TODO check is valid EPSG code
+            return "EPSG:" + crsCode;
+        }
+    },
     determineCrs,
     parseString: (str) => {
         const coord = str.split(' ');
@@ -694,7 +742,7 @@ const CoordinatesUtils = {
     /**
      * Return true if coordinates are inside of visible area
      * @param coords {object} coordinates {lat, lng}
-     * @param map {object} must containt present map
+     * @param map {object} must contain present map
      * @param layout {object} current layout on map {bottom, top, left, right}
      * @param resolution {number} resolutions of current map zoom
      * @return {bool}
@@ -736,7 +784,7 @@ const CoordinatesUtils = {
     /**
      * Return new center position based of visible area
      * @param center {object} new visible center {lat, lng}
-     * @param map {object} must containt present map
+     * @param map {object} must contain present map
      * @param layout {object} current layout on map {bottom, top, left, right}
      * @param resolution {number} resolutions of current map zoom
      * @return {object} {pos, zoom, crs}
@@ -794,14 +842,21 @@ const CoordinatesUtils = {
     },
     /**
      * choose to round or floor value incase of 0 fractional digits
-     * @return {number} the rounded value or the orignal one
+     * @return {number} the rounded value or the original one
     */
     roundCoord: ({ roundingBehaviour = "round", value = 0, maximumFractionDigits = 0 } = {}) => {
         if (maximumFractionDigits === 0 && Math[roundingBehaviour]) {
             return Math[roundingBehaviour](value);
         }
         return value;
-    }
+    },
+    getExtentFromNormalized,
+    getPolygonFromExtent,
+    isPointInsideExtent: (point = {lat: 1, lng: 1}, extent) => {
+        return contains(getPolygonFromExtent(extent), toPoint([point.lng, point.lat]));
+    },
+    isBboxCompatible: (extent1, extent2) => overlap(extent1, extent2) || contains(extent1, extent2) || contains(extent2, extent1)
+
 };
 
 module.exports = CoordinatesUtils;

@@ -1,3 +1,11 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 
 const React = require('react');
 const {compose, branch} = require('recompose');
@@ -30,19 +38,20 @@ const targetCollect = (connect, monitor) => ({
     isOver: monitor.isOver()
 });
 
-module.exports = branch(
-        ({isDraggable} = {}) => isDraggable,
-        compose(
-            dragSource('row', itemSource, sourceCollect),
-            dropTarget('row', itemTarget, targetCollect),
-            Component => ({connectDragSource, connectDragPreview, connectDropTarget, isDragging, isOver, ...props}) => {
-                const pos = props.draggingItem && props.draggingItem.sortId < props.sortId;
 
-                return connectDragPreview(connectDropTarget(
-                    <div className={`ms-dragg ${isDragging ? 'ms-dragging ' : ''}${isOver ? 'ms-over ' : ''} ${pos ? 'ms-above ' : 'ms-below '}`}>
-                        <div>
-                            <Component {...props} connectDragSource={connectDragSource} isDragging={isDragging} isOver={isOver} />
-                            </div>
-                    </div>));
-            })
-        );
+module.exports = branch(
+    ({isDraggable} = {}) => isDraggable,
+    compose(
+        dragSource('row', itemSource, sourceCollect),
+        dropTarget('row', itemTarget, targetCollect),
+        Component => ({connectDragSource, connectDragPreview, connectDropTarget, isDragging, isOver, ...props}) => {
+            const pos = props.draggingItem && props.draggingItem.sortId < props.sortId;
+
+            return connectDragPreview(connectDropTarget(
+                <div className={`ms-dragg ${isDragging ? 'ms-dragging ' : ''}${isOver ? 'ms-over ' : ''} ${pos ? 'ms-above ' : 'ms-below '}`}>
+                    <div>
+                        <Component {...props} connectDragSource={connectDragSource} isDragging={isDragging} isOver={isOver} />
+                    </div>
+                </div>));
+        })
+);

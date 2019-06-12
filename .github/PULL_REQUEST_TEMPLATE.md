@@ -2,7 +2,7 @@
 A few sentences describing the overall goals of the pull request' s commits.
 
 ## Issues
- - Fix #<issue>
+ - #<issue>
  - ...
 
 **Please check if the PR fulfills these requirements**

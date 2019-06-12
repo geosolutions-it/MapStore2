@@ -52,7 +52,8 @@ const TOCItemSettings = (props, context) => {
         dock = true,
         showFullscreen,
         draggable,
-        position = 'left'
+        position = 'left',
+        tabsConfig = {}
     } = props;
 
     const tabs = getTabs(props, context);
@@ -122,6 +123,7 @@ const TOCItemSettings = (props, context) => {
             {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
                 <tab.Component
                     {...props}
+                    {...tabsConfig[tab.id]}
                     key={'ms-tab-settings-body-' + tab.id}
                     containerWidth={width}
                     element={element}

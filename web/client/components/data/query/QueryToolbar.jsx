@@ -150,7 +150,7 @@ class QueryToolbar extends React.Component {
     };
 
     reset = () => {
-        this.props.actions.onChangeDrawingStatus('clean', null, "queryform", []);
+        this.props.actions.onChangeDrawingStatus('clean', '', "queryform", []);
         this.props.actions.onReset();
     };
 }

@@ -145,4 +145,43 @@ describe('Test correctness of the GeoStore APIs', () => {
             done();
         });
     });
+    it("test generateMetadata default", () => {
+        const metadata = API.generateMetadata();
+        const name = "";
+        const description = "";
+        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name>`);
+    });
+    it("test generateMetadata with name and desc", () => {
+        const name = "Map 1";
+        const description = "this map shows high traffic zones";
+        const metadata = API.generateMetadata(name, description);
+        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name>`);
+    });
+    it("test createAttributeList default", () => {
+        expect(API.createAttributeList()).toEqual("");
+    });
+    it("test createAttributeList no attributes", () => {
+        expect(API.createAttributeList({attributes: {}})).toEqual("");
+    });
+    it("test createAttributeList with attributes", () => {
+        const name = "name";
+        const description = "description";
+        let metadata = {
+            name,
+            description,
+            attributes: {
+                nina: "nina",
+                eating: "eating",
+                plastic: "plastic"
+            }
+        };
+        metadata = API.createAttributeList(metadata);
+        expect(metadata).toEqual(
+            "<Attributes>" +
+                "<attribute><name>nina</name><value>nina</value><type>STRING</type></attribute>" +
+                "<attribute><name>eating</name><value>eating</value><type>STRING</type></attribute>" +
+                "<attribute><name>plastic</name><value>plastic</value><type>STRING</type></attribute>" +
+            "</Attributes>"
+        );
+    });
 });

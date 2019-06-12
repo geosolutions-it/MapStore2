@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-
+const {isArray, head, isNaN} = require('lodash');
 function degToDms(deg) {
     // convert decimal deg to minutes and seconds
     var d = Math.floor(deg);
@@ -141,7 +141,45 @@ function convertUom(value, source = "m", dest = "m") {
     return value;
 }
 
+
+const validateCoord = c => (!isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
+
+/**
+ * validate a geometry feature,
+ * if invalid return an empty one
+*/
+const validateFeatureCoordinates = ({coordinates, type} = {}) => {
+    let filteredCoords = coordinates;
+    if (type === "LineString") {
+        filteredCoords = coordinates.filter(validateCoord);
+        if (filteredCoords.length < 2) {
+            // if invalid return empty LineString
+            return [];
+        }
+    } else if (type === "Polygon") {
+        filteredCoords = head(coordinates).filter(validateCoord);
+        if (filteredCoords.length < 3) {
+            // if invalid return empty Polygon
+            return [[]];
+        }
+        // close polygon
+        filteredCoords = [filteredCoords.concat([head(filteredCoords)])];
+    }
+    return filteredCoords;
+};
+
+const isValidGeometry = ({coordinates, type} = {}) => {
+    if (!type || !coordinates || coordinates && isArray(coordinates) && coordinates.length === 0) {
+        return false;
+    }
+    let validatedCoords = validateFeatureCoordinates({coordinates, type});
+    validatedCoords = type === "Polygon" ? head(validatedCoords) : validatedCoords;
+    return validatedCoords.length > 0;
+};
+
 module.exports = {
+    validateFeatureCoordinates,
+    isValidGeometry,
     convertUom,
     getFormattedBearingValue,
     degToDms

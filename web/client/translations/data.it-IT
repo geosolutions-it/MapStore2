@@ -39,6 +39,8 @@
         "details": {
             "title": "Info su questa mappa"
         },
+        "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
+        "remove": "Rimuovi",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -105,7 +107,9 @@
             "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa.",
             "updateOldMap": "Questa è una vecchia mappa perciò non tutte le funzionalità sono abilitate. Clicca su Aggiorna per aggiornare la mappa o semplicemnte chiudi la notifica se non desideri aggiornarla",
             "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
-            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo"
+            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"Uno o più livelli non sono completamente compatibili con la proiezione selezionata. I dati potrebbero essere (tutti o in parte) non visibili in mappa"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",
@@ -361,9 +365,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Errore di caricamento della mappa",
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
-                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
+                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
+                    "title" : "La mappa non può essere visualizzata"
                 }
             }
         },
@@ -372,11 +378,19 @@
             "showLegend": "Mostra legenda",
             "hideLegend": "Nascondi legenda"
         },
+        "addgroup": {
+            "addbtn": "Aggiungi",
+            "groupName": "Nome del gruppo"
+        },
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
+            "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
             "addLayer": "Aggiungi Livello",
+            "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
+            "addGroup": "Aggiungi Gruppo",
+            "addSubGroup": "Aggiungi sotto gruppo al gruppo selezionato",
             "toolZoomToLayerTooltip": "Zoom all' estensione del livello",
             "toolZoomToLayersTooltip": "Zoom all' estensione del livelli",
             "toolLayerSettingsTooltip": "Modifica proprietà del livello selezionato",
@@ -505,6 +519,9 @@
         "identifyTitle": "Informazioni Sulle Feature",
         "identifyNoQueryableLayers": "Nessun livello interrogabile attivo",
         "identifyRevGeocodeHeader": "Coordinate",
+        "identifyZoomToFeature": "Zoom alla feature",
+        "identifyStopHighlightingFeatures": "Non evidenziare le feature interrogate",
+        "identifyHighlightFeatures": "Evidenzia le features interrogate",
         "identifyShowCoordinateEditor": "Mostra l'editor",
         "identifyHideCoordinateEditor": "Nascondi l'editor",
         "identifyRevGeocodeModalTitle": "Indirizzo",
@@ -542,7 +559,10 @@
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
             "formula": "Formula per il calcolo della distanza",
-            "showLabel": "Mostra etichetta di misurazione"
+            "showLabel": "Mostra etichetta di misurazione",
+            "addAsAnnotation": "Aggiungi come annotazione",
+            "newMeasure": "Nuova annotazione",
+            "selectTool": "Seleziona uno strumento di misura"
         },
         "search":{
             "decimal": "Decimali",
@@ -577,6 +597,31 @@
             "serviceslistempty": "Nessun servizio definito",
             "service_missing": "Il servizio {serviceType} non è configurato",
             "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}"
+        },
+        "draw": {
+            "fill": "Riempimento",
+            "text": "Testo",
+            "fontTitle": "Font",
+            "color": "Colore",
+            "lineDash": "Tratteggio",
+            "stroke": "Linea",
+            "opacity": "Opacità",
+            "width": "Larghezza",
+            "font": {
+                "textColor": "Colore",
+                "family": "Famiglia",
+                "size": "Taglia",
+                "style": "Stile",
+                "weight": "Peso",
+                "textAlign": "Allineamento"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Forma",
+                "size": "Grandezza",
+                "type": "Tipo",
+                "icon": "Icona"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -802,6 +847,80 @@
                 }
             }
         },
+        "annotations": {
+            "errorLoadingSymbols": "Si è verificato un problema durante il caricamento dell'elenco dei simboli. Per favore, contatta l'amministratore per verificare le opzioni di configurazione",
+            "edit": "Modifica",
+            "remove": "Rimuovi",
+            "save": "Salva",
+            "cancel": "Annulla",
+            "back": "Indietro",
+            "applyStyle": "Applica stile",
+            "addMarker": "Aggiungi una geometria",
+            "styleGeometry": "Cambia stile",
+            "deleteGeometry": "Rimuovi tutte le feature",
+            "removeannotation": "Vuoi rimuovere l'annotazione con titolo: {title}?",
+            "removegeometry": "Vuoi rimuovere tutti i punti dell'annotazione?",
+            "confirm": "Conferma",
+            "mandatory": "Campo obbligatorio",
+            "emptygeometry": "La geometria non può essere vuota",
+            "add": "Nuova",
+            "filter": "Filtra le annotazioni...",
+            "titleUndoGeom": "La geometria è cambiata",
+            "undoGeom": "Sei sicuro di uscire senza salvare? (Perderai ogni modifica)",
+            "confirmGeom": "Conferma",
+            "deleteFeature": "Elimina questa feature",
+            "undoDeleteFeature": "Sei sicuro di eliminare questa feature?",
+            "cancelModalGeom": "Annulla",
+            "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
+            "title": "Annotazioni",
+            "zoomTo": "Zoom",
+            "insertText": "Inserisci il testo dell'annotatzione",
+            "downloadtooltip": "Esporta annotazioni",
+            "downloadcurrenttooltip": "Esporta annotazione corrente",
+            "downloadError": "Errore di esportazione",
+            "loadtooltip": "Importa annotazioni",
+            "loadtitle": "Importa Annotazioni",
+            "selectfiletext": "Rilascia il file qui o fai clic per selezionare il file di annotazione da importare. (file supportati: JSON)",
+            "loadoverride": "Sostituisci annotazioni",
+            "loaderror": "Seleziona uno o più file di annotazioni. (formati supportati: json)",
+            "defaulttitle": "Edita il titolo",
+            "field": {
+                "title": "Titolo",
+                "description": "Descrizione"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Linea",
+                "polygon": " Poligono",
+                "text": " Testo",
+                "circle": " Cerchio"
+            },
+            "editor": {
+                "decimal": "Decimali",
+                "aeronautical": "Aeronautiche",
+                "title": {
+                    "Polygon": "Editor del poligono",
+                    "LineString": "Editor della linea",
+                    "Bearing": "Editor della direzione",
+                    "Circle": "Editor del cerchio",
+                    "Point": "Editor del marker",
+                    "MultiPoint": "Editor della linea",
+                    "Text": "Editor del testo"
+                },
+                "center": "Centro",
+                "add": "Aggiungi una nuova coordinata",
+                "addByClick": "Aggiungi nuove coordinate cliccando sul pulsante + o sulla mappa",
+                "valid": "La geometria è valida",
+                "radius": "Raggio",
+                "text": "Testo",
+                "lat": "Latitudine",
+                "lon": "Longitudine",
+                "notValidMarker": "Inserisci una coordinata valida (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Tutte le coordinate devono essere valide (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -816,6 +935,7 @@
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
@@ -830,30 +950,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Company",
             "detailsNotes": "Note"
-        },
-        "annotations": {
-            "edit": "Modifica",
-            "remove": "Rimuovi",
-            "save": "Salva",
-            "cancel": "Annulla",
-            "back": "Indietro",
-            "addMarker": "Aggiungi un punto sulla mappa",
-            "styleGeometry": "Scegli lo stile per il punto",
-            "deleteGeometry": "Rimuovi i punti esistenti",
-            "removeannotation": "Vuoi rimuovere l'annotazione?",
-            "removegeometry": "Vuoi rimuovere tutti i punti dell'annotazione?",
-            "confirm": "Conferma",
-            "mandatory": "Campo obbligatorio",
-            "emptygeometry": "La geometria non può essere vuota",
-            "add": "Nuova",
-            "filter": "Filtra le annotazioni...",
-            "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
-            "title": "Annotazioni",
-            "zoomTo": "Zoom",
-            "field": {
-                "title": "Titolo",
-                "description": "Descrizione"
-            }
         },
         "users": {
             "title": "Gestione Account",
@@ -878,7 +974,8 @@
             "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
             "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
             "errorSaving": "Si è verificato un errore salvando questo utente:",
-            "selectedGroups": "GRUPPI SELEZIONATI"
+            "selectedGroups": "GRUPPI SELEZIONATI",
+            "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
         },
         "usergroups": {
           "searchGroups": "Cerca gruppi...",
@@ -951,6 +1048,22 @@
             "add": "Importa",
             "cancel": "Annulla",
             "success": " correttamente importato"
+        },
+        "mapImport": {
+            "title": "Importa dati",
+            "dropZone": {
+                "heading": "<p> <h4> Rilascia qui la configurazione o i file vettoriali </h4> <small> o </small> </p>",
+                "selectFiles": "Seleziona i file...",
+                "infoSupported": "<p> <small> File di configurazione supportati: formato legacy di MapStore2<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di file di configurazione </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "File non supportato",
+                "unknownError": "si è verificato un errore sconosciuto durante l'importazione"
+            }
+        },
+        "mapExport": {
+            "title": "Esporta dati"
         },
         "catalog": {
             "title": "Catalogo",

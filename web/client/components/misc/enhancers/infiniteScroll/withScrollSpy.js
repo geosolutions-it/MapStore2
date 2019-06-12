@@ -15,13 +15,13 @@ require('rxjs');
  * The enhancer manages also some props for various optimizations:
  *  - to support pagination and loading to call scroll only when data
  * Scroll spy options are (wrapped in an object):
- * @param  {String}  [dataProp="items"]      the property for data to check. Defining the dataProp the onLoadMore will be called with the argument of the next page (current items.length / pageSize)
- * @param  {String}  querySelector           selector to get the element from the current component DOM element
- * @param  {Boolean} [closest=false]         if true, the querySelector will be used to search 1st parent. see [closest](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest)
- * @param  {String}  [loadingProp="loading"] property to check for loading status. If props[loadingProp] is true, the scroll events will be stopped
- * @param  {Number}  [pageSize=10]           page size. It is used to count items and guess the next page number.
- * @param  {Number}  [offsetSize=200]        offset, in pixels, before the end of page to call the scroll spy. If the user scrolls the `onLoadMore` handler will be colled when he reaches the end_of_the_page - offsetSize pixels.
- * @param  {Number} [skip=0]                 optional number of items to skip in count
+ * @param  {string}  [dataProp="items"]      the property for data to check. Defining the dataProp the onLoadMore will be called with the argument of the next page (current items.length / pageSize)
+ * @param  {string}  querySelector           selector to get the element from the current component DOM element
+ * @param  {boolean} [closest=false]         if true, the querySelector will be used to search 1st parent. see [closest](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest)
+ * @param  {string}  [loadingProp="loading"] property to check for loading status. If props[loadingProp] is true, the scroll events will be stopped
+ * @param  {number}  [pageSize=10]           page size. It is used to count items and guess the next page number.
+ * @param  {number}  [offsetSize=200]        offset, in pixels, before the end of page to call the scroll spy. If the user scrolls the `onLoadMore` handler will be colled when he reaches the end_of_the_page - offsetSize pixels.
+ * @param  {number}  [skip=0]                optional number of items to skip in count
  * @return {HOC}                             An Higher Order Component that will call `onLoadMore` when you should load more elements in the context, for example, of an infinite scroll.
  * @example
  * const Cmp = withScrollSpy({items: "items", querySelector: "div"})(MyComponent);

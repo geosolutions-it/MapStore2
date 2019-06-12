@@ -14,7 +14,10 @@ const {
     mapIdSelector,
     projectionDefsSelector,
     mapNameSelector,
-    mapInfoDetailsUriFromIdSelector
+    mapInfoDetailsUriFromIdSelector,
+    configuredRestrictedExtentSelector,
+    configuredExtentCrsSelector,
+    configuredMinZoomSelector
 } = require('../map');
 const center = {x: 1, y: 1};
 let state = {
@@ -100,5 +103,37 @@ describe('Test map selectors', () => {
     it('test mapNameSelector no state', () => {
         const props = mapNameSelector({});
         expect(props).toBe('');
+    });
+    it('test configuredExtentSelectorCrs', () => {
+        const props = configuredExtentCrsSelector({localConfig: {mapConstraints: {crs: 'EPSG:4326'}}});
+        expect(props).toBe('EPSG:4326');
+    });
+    it('test configuredExtentSelector', () => {
+        const props = configuredRestrictedExtentSelector({localConfig: {mapConstraints: {restrictedExtent: [12, 12, 12, 12]}}});
+        expect(props.length).toBe(4);
+    });
+    it('test configuredMinZoomSelector', () => {
+        const minZoom = configuredMinZoomSelector({ localConfig: { mapConstraints: { minZoom: 12 } } });
+        expect(minZoom).toBe(12);
+    });
+    it('test configuredMinZoomSelector with different projection', () => {
+        const minZoom = configuredMinZoomSelector({
+            localConfig: {
+                mapConstraints: {
+                    minZoom: 12,
+                    projectionsConstraints: {
+                        "EPSG:1234": {
+                            minZoom: 14
+                        }
+                    }
+                }
+            },
+            map: {
+                present: {
+                    projection: "EPSG:1234"
+                }
+            }
+        });
+        expect(minZoom).toBe(14);
     });
 });

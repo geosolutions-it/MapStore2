@@ -34,7 +34,8 @@ class DefaultViewer extends React.Component {
         onNext: PropTypes.func,
         onPrevious: PropTypes.func,
         onUpdateIndex: PropTypes.func,
-        setIndex: PropTypes.func
+        setIndex: PropTypes.func,
+        showEmptyMessageGFI: PropTypes.bool
     };
 
     static defaultProps = {
@@ -52,6 +53,7 @@ class DefaultViewer extends React.Component {
         },
         containerProps: {},
         index: 0,
+        showEmptyMessageGFI: true,
         onNext: () => {},
         onPrevious: () => {},
         setIndex: () => {}
@@ -79,12 +81,12 @@ class DefaultViewer extends React.Component {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
             });
-            return (
+            return this.props.showEmptyMessageGFI ? (
                 <Alert bsStyle={"info"}>
                     <Message msgId={"noInfoForLayers"} />
                     <b>{titles.join(', ')}</b>
                 </Alert>
-            );
+            ) : null;
         }
         return null;
     };

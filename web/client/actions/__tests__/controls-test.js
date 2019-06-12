@@ -10,6 +10,7 @@ var expect = require('expect');
 var {
     TOGGLE_CONTROL, toggleControl,
     SET_CONTROL_PROPERTY, setControlProperty,
+    SET_CONTROL_PROPERTIES, setControlProperties,
     RESET_CONTROLS, resetControls,
     on
 } = require('../controls');
@@ -68,5 +69,39 @@ describe('Test correctness of the controls actions', () => {
         expect(retval.control).toBe(testControl);
         expect(retval.property).toBe(testProperty);
         expect(retval.value).toBe(testValue);
+    });
+
+    it('setControlProperties', () => {
+        const testControl = 'test';
+        const testProperty1 = 'prop1';
+        const testValue1 = 'val1';
+        const testProperty2 = 'prop2';
+        const testValue2 = 'val2';
+        var retval = setControlProperties(testControl, testProperty1, testValue1, testProperty2, testValue2);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_CONTROL_PROPERTIES);
+        expect(retval.control).toBe(testControl);
+        expect(retval.properties).toExist();
+        expect(retval.properties[testProperty1]).toBe(testValue1);
+        expect(retval.properties[testProperty2]).toBe(testValue2);
+    });
+
+    it('setControlProperties wrong params ignored', () => {
+        const testControl = 'test';
+        const testProperty1 = 'prop1';
+        const testValue1 = 'val1';
+        const testProperty2 = 'prop2';
+        const testValue2 = 'val2';
+        const testProperty3 = 'prop3';
+        var retval = setControlProperties(testControl, testProperty1, testValue1, testProperty2, testValue2, testProperty3);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_CONTROL_PROPERTIES);
+        expect(retval.control).toBe(testControl);
+        expect(retval.properties).toExist();
+        expect(retval.properties[testProperty1]).toBe(testValue1);
+        expect(retval.properties[testProperty2]).toBe(testValue2);
+        expect(retval.properties[testProperty3]).toNotExist();
     });
 });

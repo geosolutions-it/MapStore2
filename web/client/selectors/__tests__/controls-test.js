@@ -16,7 +16,8 @@ const {
     initialSettingsSelector,
     originalSettingsSelector,
     activeTabSettingsSelector,
-    drawerEnabledControlSelector
+    drawerEnabledControlSelector,
+    showCoordinateEditorSelector
 } = require("../controls");
 
 const state = {
@@ -107,6 +108,11 @@ describe('Test controls selectors', () => {
     });
     it('test drawerEnabledControlSelector', () => {
         const retVal = drawerEnabledControlSelector({controls: {drawer: {enabled: true}}});
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test showCoordinateEditorSelector', () => {
+        const retVal = showCoordinateEditorSelector({controls: {measure: {showCoordinateEditor: true}}});
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });

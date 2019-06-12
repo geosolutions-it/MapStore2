@@ -155,7 +155,7 @@
 		}, {
 				"name": "Print"
 		}, {
-				"name": "ShapeFile",
+				"name": "MapImport",
 				"cfg": {
 					"wrap": true
 				}
