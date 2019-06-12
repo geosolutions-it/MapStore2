@@ -35,37 +35,39 @@ import defaultThumb from './img/default.jpg';
 class RecordItem extends React.Component {
     static propTypes = {
         addAuthentication: PropTypes.bool,
+        authkeyParamNames: PropTypes.array,
         buttonSize: PropTypes.string,
+        catalogURL: PropTypes.string,
+        catalogType: PropTypes.string,
         crs: PropTypes.string,
         currentLocale: PropTypes.string,
+        hideThumbnail: PropTypes.bool,
+        hideIdentifier: PropTypes.bool,
+        layerBaseConfig: PropTypes.object,
         onCopy: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
-        authkeyParamNames: PropTypes.array,
         showGetCapLinks: PropTypes.bool,
-        zoomToLayer: PropTypes.bool,
-        catalogURL: PropTypes.string,
-        catalogType: PropTypes.string,
-        hideThumbnail: PropTypes.bool,
-        hideIdentifier: PropTypes.bool
+        zoomToLayer: PropTypes.bool
     };
 
     static defaultProps = {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
+        hideThumbnail: false,
+        hideIdentifier: false,
+        hideExpand: true,
+        layerBaseConfig: {},
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
         onZoomToExtent: () => {},
-        style: {},
         showGetCapLinks: true,
-        zoomToLayer: true,
-        hideThumbnail: false,
-        hideIdentifier: false,
-        hideExpand: false
+        style: {},
+        zoomToLayer: true
     };
 
     static contextTypes = {
@@ -105,7 +107,7 @@ class RecordItem extends React.Component {
 
         // let's create the buttons
         let buttons = [];
-        // TODO addLayer and addwmtsLayer do almost the same thing and they should be unified
+        // TODO addWmsLayer and addwmtsLayer do almost the same thing and they should be unified
         if (wms) {
             buttons.push(
                 <Button
@@ -113,7 +115,7 @@ class RecordItem extends React.Component {
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
-                    onClick={() => { this.addLayer(wms); }}
+                    onClick={() => { this.addWmsLayer(wms); }}
                     key="addlayer">
                         <Glyphicon glyph="plus" />
                 </Button>
@@ -146,13 +148,13 @@ class RecordItem extends React.Component {
             );
         }
         // create get capabilities links that will be used to share layers info
-        // if (this.props.showGetCapLinks) {
-        let links = getRecordLinks(record);
-        if (links.length > 0) {
-            buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
-                onCopy={this.props.onCopy} buttonSize={this.props.buttonSize} addAuthentication={this.props.addAuthentication}/>);
+        if (this.props.showGetCapLinks) {
+            let links = getRecordLinks(record);
+            if (links.length > 0) {
+                buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
+                    onCopy={this.props.onCopy} buttonSize={this.props.buttonSize} addAuthentication={this.props.addAuthentication}/>);
+            }
         }
-        // }
 
         return buttons;
     };
@@ -177,6 +179,7 @@ class RecordItem extends React.Component {
         // IMPORTANT: if those values are changed then this defaults needs to change too
         const previewWidth = 104;
         const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        console.log("this.props.hideExpand", this.props.hideExpand);
         return record ? (
             <ContainerDimensions>
                 {({ width }) =>
@@ -188,7 +191,7 @@ class RecordItem extends React.Component {
                     description={this.renderDescription(record)}
                     caption={
                         <div>
-                            {!this.props.hideIdentifier && <div>{record && record.identifier}</div>}
+                            {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
                             <div>{!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                             {!this.props.hideExpand &&
                                 <div
@@ -197,7 +200,8 @@ class RecordItem extends React.Component {
                                     ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}
                                 </div>
                             }
-                        </div>}
+                        </div>
+                    }
                     tools={
                         <Toolbar
                             btnDefaultProps={{
@@ -215,9 +219,12 @@ class RecordItem extends React.Component {
                                     glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
                                     visible: (
                                         // check based on the width of the description
-                                        this.displayExpand(width, previewWidth, record) ||
-                                        // check based on the value of the template
-                                        !!(record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))),
+                                        !this.props.hideExpand && (
+                                            this.displayExpand(width, previewWidth, record) ||
+                                            // check based on the value of the template
+                                            !!(record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
+                                        )
+                                    ),
                                     tooltipId: this.state.fullText ? 'collapse' : 'expand',
                                     onClick: () => this.setState({ fullText: !this.state.fullText })
                                 }
@@ -229,7 +236,7 @@ class RecordItem extends React.Component {
         ) : null;
     }
 
-    addLayer = (wms) => {
+    addWmsLayer = (wms) => {
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
@@ -238,7 +245,7 @@ class RecordItem extends React.Component {
                 recordToLayer(this.props.record, "wms", {
                     removeParams: this.props.authkeyParamNames,
                     catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
-                }));
+                }, this.props.layerBaseConfig));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
@@ -254,7 +261,7 @@ class RecordItem extends React.Component {
         } else {
             this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", {
                 removeParams: this.props.authkeyParamNames
-            }));
+            }, this.props.layerBaseConfig));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
@@ -263,7 +270,7 @@ class RecordItem extends React.Component {
         }
     };
     addEsriLayer = () => {
-        this.props.onLayerAdd(esriToLayer(this.props.record));
+        this.props.onLayerAdd(esriToLayer(this.props.record, this.props.layerBaseConfig));
         if (this.props.record.boundingBox && this.props.zoomToLayer) {
             let extent = this.props.record.boundingBox.extent;
             let crs = this.props.record.boundingBox.crs;
