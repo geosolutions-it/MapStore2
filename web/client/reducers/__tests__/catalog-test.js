@@ -268,12 +268,14 @@ describe('Test the catalog reducer', () => {
         }, {type: TOGGLE_TEMPLATE});
         expect(state.newService.metadataTemplate).toBe("<p>${description}</p>");
         expect(state.newService.showTemplate).toBe(true);
+        expect(state.hideExpand).toBe(false);
     });
     it('TOGGLE_TEMPLATE toggling off the template ', () => {
         const state = catalog({
             newService: {showTemplate: true, metadataTemplate: "<p>${descriptionTest}</p>"}
         }, {type: TOGGLE_TEMPLATE});
         expect(state.newService.showTemplate).toBe(false);
+        expect(state.hideExpand).toBe(true);
         expect(state.newService.metadataTemplate).toBe("<p>${descriptionTest}</p>");
 
     });

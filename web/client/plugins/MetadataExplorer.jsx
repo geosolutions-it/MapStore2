@@ -25,14 +25,13 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector
+    searchTextSelector, groupSelector, hideExpandSelector
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
-
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
@@ -44,15 +43,17 @@ const catalogSelector = createSelector([
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
-    (state) => currentLocaleSelector(state)
-], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    (state) => currentLocaleSelector(state),
+    (state) => hideExpandSelector(state)
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, hideExpand) =>({
     authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
     newService,
     currentLocale,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || []
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || [],
+    hideExpand
 }));
 
 const catalogClose = () => {

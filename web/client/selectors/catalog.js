@@ -20,5 +20,6 @@ module.exports = {
     activeSelector: (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled"),
     authkeyParamNameSelector: (state) => {
         return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
-    }
+    },
+    hideExpandSelector: (state) => get(state, "catalog.hideExpand", true)
 };

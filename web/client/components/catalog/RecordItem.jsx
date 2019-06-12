@@ -179,7 +179,6 @@ class RecordItem extends React.Component {
         // IMPORTANT: if those values are changed then this defaults needs to change too
         const previewWidth = 104;
         const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
-        console.log("this.props.hideExpand", this.props.hideExpand);
         return record ? (
             <ContainerDimensions>
                 {({ width }) =>
