@@ -14,9 +14,9 @@ const extraMarker = markers.icons[0];
 const extraMarkerShadow = markers.icons[1];
 
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
-const {isArray, isNumber} = require('lodash');
+const {isArray, isNumber, isNil} = require('lodash');
 
-const getHighlishtStyle = ({highlight, rotation}) => (highlight ? [new ol.style.Style({
+const getHighlishtStyle = ({highlight, rotation = 0}) => (highlight ? [new ol.style.Style({
     text: new ol.style.Text({
         rotation,
         text: '\ue165',
@@ -28,10 +28,11 @@ const getHighlishtStyle = ({highlight, rotation}) => (highlight ? [new ol.style.
 
 module.exports = {
      extra: {
-         getIcon: (options) => {
+         getIcon: (options = {}) => {
+             const rotation = !isNil(options.style && options.style.rotation) ? options.style.rotation : 0;
              return [new ol.style.Style({
                    image: new ol.style.Icon(({
-                     rotation: options.style.rotation,
+                     rotation,
                      anchor: [12, 12],
                      anchorXUnits: 'pixels',
                      anchorYUnits: 'pixels',
@@ -39,7 +40,7 @@ module.exports = {
                  }))
              }), new ol.style.Style({
                  image: new ol.style.Icon({
-                     rotation: options.style.rotation,
+                     rotation,
                      src: extraMarker,
                      anchor: [markers.size[0] / 2, markers.size[1]],
                      anchorXUnits: 'pixels',
@@ -48,7 +49,7 @@ module.exports = {
                      offset: [markers.colors.indexOf(options.style.iconColor || 'blue') * markers.size[0], markers.shapes.indexOf(options.style.iconShape || 'circle') * markers.size[1]]
                  }),
                  text: new ol.style.Text({
-                     rotation: options.style.rotation,
+                     rotation,
                      text: glyphs[options.style.iconGlyph],
                      font: '14px FontAwesome',
                      offsetY: -markers.size[1] * 2 / 3,
@@ -60,6 +61,7 @@ module.exports = {
      },
      standard: {
          getIcon: ({style, iconAnchor }) => {
+             const rotation = !isNil(style && style.rotation) ? style.rotation : 0;
              const anchor = style.iconAnchor || iconAnchor;
              let markerStyle = [new ol.style.Style({
                 image: new ol.style.Icon(({
@@ -67,7 +69,7 @@ module.exports = {
                      anchorXUnits: style.anchorXUnits || (( anchor || anchor === 0) ? 'pixels' : 'fraction'),
                      anchorYUnits: style.anchorYUnits || (( anchor || anchor === 0) ? 'pixels' : 'fraction'),
                      size: isArray(style.size) ? style.size : isNumber(style.size) ? [style.size, style.size] : undefined,
-                     rotation: style.rotation,
+                     rotation,
                      anchorOrigin: style.anchorOrigin || "top-left",
                      src: style.iconUrl || style.symbolUrlCustomized || style.symbolUrl
                  }))

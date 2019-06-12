@@ -9,25 +9,6 @@
 import * as Icons from '../Icons';
 import expect from 'expect';
 
-/*eslint-disable */
-const logAllInfo = (style, title) => {
-    console.log(title);
-    console.log("getFill", style.getFill && style.getFill());
-    console.log("getStroke", style.getStroke && style.getStroke());
-    console.log("getText", style.getText && style.getText());
-    console.log("getAnchor", style.getAnchor && style.getAnchor());
-    console.log("getColor", style.getColor && style.getColor());
-    console.log("getImage", style.getImage && style.getImage());
-    console.log("getOpacity", style.getOpacity && style.getOpacity());
-    console.log("getOrigin", style.getOrigin && style.getOrigin());
-    console.log("getRotation", style.getRotation && style.getRotation());
-    console.log("getSize", style.getSize && style.getSize());
-    console.log("getScale", style.getScale && style.getScale());
-    console.log("getSnapToPixel", style.getSnapToPixel && style.getSnapToPixel());
-    console.log("getFont", style.getFont && style.getFont());
-    console.log("getSrc", style.getSrc && style.getSrc());
-};
-/*eslint-enable */
 describe('Icons openlayers styles', () => {
 
     it('test extra getIcon with complete options, no highlight', () => {
@@ -105,7 +86,6 @@ describe('Icons openlayers styles', () => {
         const icon = styles[0];
         const iconImage = icon.getImage();
         expect(iconImage).toExist();
-        logAllInfo(iconImage, "iconImage");
         expect(iconImage.getAnchor()).toEqual([7, 7]);
         expect(iconImage.getOpacity()).toEqual(1);
         expect(iconImage.getOrigin()).toEqual([0, 0]);
@@ -134,7 +114,6 @@ describe('Icons openlayers styles', () => {
         const icon = styles[1];
         const iconImage = icon.getImage();
         expect(iconImage).toExist();
-        logAllInfo(iconImage, "iconImage");
         expect(iconImage.getAnchor()).toEqual([7, 7]);
         expect(iconImage.getOpacity()).toEqual(1);
         expect(iconImage.getOrigin()).toEqual([0, 0]);
@@ -173,7 +152,6 @@ describe('Icons openlayers styles', () => {
         const icon = styles[0];
         const iconImage = icon.getImage();
         expect(iconImage).toExist();
-        logAllInfo(iconImage, "iconImage");
         expect(iconImage.getAnchor()).toEqual([2, 2]);
     });
     it('test html icon, not implemented', () => {
