@@ -119,9 +119,9 @@ describe('DateTimePicker component', () => {
     it('DateTimePicker should fails to parse date with invalid format', function(done) {
         const format='DD/MM/YYYY hh:mm:ss'; // eslint-disable-line space-infix-ops
         const date = '05/22/2010';
-        const handleChange = (value, operator) => {
+        const handleChange = (value, stringValue) => {
             expect(value).toEqual(null);
-            expect(operator).toEqual('!==');
+            expect(stringValue).toEqual('!==');
             done();
         };
         ReactDOM.render(<DateTimePicker onChange={handleChange} format={format} />, document.getElementById("container"));

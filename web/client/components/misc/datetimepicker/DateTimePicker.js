@@ -76,7 +76,6 @@ class DateTimePicker extends Component {
 
     state = {
         open: '',
-        focusInTransit: false,
         focused: false,
         inputValue: '',
         operator: '',
@@ -88,15 +87,10 @@ class DateTimePicker extends Component {
         this.setDateFromValueProp(value, operator);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value || prevProps.operator !== this.props.operator) {
             const { value, operator } = this.props;
             this.setDateFromValueProp(value, operator);
-        }
-        if (!prevState.focusInTransit && this.state.focusInTransit) {
-            setTimeout(() => {
-                this.setState({ focusInTransit: false });
-            });
         }
     }
 
@@ -150,12 +144,12 @@ class DateTimePicker extends Component {
                 }
                 <div className={`rw-popup-container rw-popup-animating`} style={{ display: timeVisible ? "block" : "none", overflow: timeVisible ? "visible" : "hidden", height: "216px" }}>
                     <div className={`rw-popup rw-widget`} style={{ transform: timeVisible ? 'translateY(0)' : 'translateY(-100%)', position: timeVisible ? '' : 'absolute' }}>
-                        <Hours ref={this.attachTimeRef} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
                     </div>
                 </div>
                 <div className={`rw-calendar-popup rw-popup-container ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '375px' }}>
                     <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
-                        <Calendar tabIndex="-1" ref={this.attachCalRef} onChange={this.handleCalendarChange} onNavigate={this.handleMapNavChange} {...props} />
+                        <Calendar tabIndex="-1" ref={this.attachCalRef} onMouseDown={this.handleMouseDown} onChange={this.handleCalendarChange} {...props} />
                     </div>
                 </div>
             </div>
@@ -163,30 +157,31 @@ class DateTimePicker extends Component {
     }
 
     inputFlush = false;
+    // Ignore blur to manual control de-rendering of cal/time popup
+    ignoreBlur = false;
 
     handleWidgetFocus = () => {
         this.setState({ focused: true });
+        this.ignoreBlur = false;
     }
 
     handleWidgetBlur = () => {
-        setTimeout(() => {
-            if (!this.state.focusInTransit) {
-                this.setState({ open: '', focused: false });
-                return;
-            }
-        });
+        if (this.ignoreBlur) {
+            return;
+        }
+        this.setState({ open: '', focused: false });
     }
 
-    handleMapNavChange = () => {
-        this.setState({ focusInTransit: true });
+    handleMouseDown = () => {
+        this.ignoreBlur = true;
     }
 
     toggleCalendar = () => {
-        this.setState(prevState => ({ open: prevState.open !== 'date' ? 'date' : '', focusInTransit: true }));
+        this.setState(prevState => ({ open: prevState.open !== 'date' ? 'date' : '' }));
     }
 
     toggleTime = () => {
-        this.setState(prevState => ({ open: prevState.open !== 'time' ? 'time' : '', focusInTransit: true }));
+        this.setState(prevState => ({ open: prevState.open !== 'time' ? 'time' : '' }));
     }
 
     handleInputBlur = () => {
@@ -199,7 +194,7 @@ class DateTimePicker extends Component {
                 date: parsed
             });
             this.inputFlush = false;
-            this.props.onChange(parsed, `${this.state.operator}${this.state.inputValue}`);
+            this.props.onChange(parsed, `${this.state.operator}${dateStr}`);
         }
     }
 
@@ -276,17 +271,15 @@ class DateTimePicker extends Component {
 
         if (!timeVisible && !calVisible && e.key === 'Enter') {
             // enter key is pressed while hours and calendar are not visible
-            setTimeout(() => {
-                // date has changed
-                const parsed = this.parse(this.state.inputValue);
-                const dateStr = this.format(parsed);
-                this.setState({
-                    inputValue: dateStr,
-                    date: parsed
-                });
-                this.inputFlush = false;
-                this.props.onChange(parsed, `${this.state.operator}${this.state.inputValue}`);
+            // date has changed
+            const parsed = this.parse(this.state.inputValue);
+            const dateStr = this.format(parsed);
+            this.setState({
+                inputValue: dateStr,
+                date: parsed
             });
+            this.inputFlush = false;
+            this.props.onChange(parsed, `${this.state.operator}${dateStr}`);
         }
     }
 
@@ -301,20 +294,16 @@ class DateTimePicker extends Component {
     handleCalendarChange = value => {
         const date = setTime(value, new Date());
         const inputValue = this.format(date);
+        this.setState({ date, inputValue, open: '' });
         this.props.onChange(date, `${this.state.operator}${inputValue}`);
-        setTimeout(() => {
-            this.setState({ date, inputValue, open: '' });
-        });
     }
 
     handleTimeSelect = time => {
         const selectedDate = this.state.date || new Date();
         const date = setTime(selectedDate, time.date);
         const inputValue = this.format(date);
+        this.setState({ date, inputValue, open: '' });
         this.props.onChange(date, `${this.state.operator}${inputValue}`);
-        setTimeout(() => {
-            this.setState({ date, inputValue, open: '' });
-        });
     }
 
     attachTimeRef = ref => (this.timeRef = ref)
