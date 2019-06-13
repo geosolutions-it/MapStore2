@@ -188,7 +188,6 @@ So, every time you have to do an ajax call, you will need to use axios:
 Example with `defer`:
 
 ```javascript
-
 const axios = require('../libs/ajax');
 const fetchDataEpic = (action$, store) => action$
     .ofType(FETCH_DATA)
