@@ -55,12 +55,13 @@ var Api = {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/target";
         return axios.get(url, options);
     },
-    runImport: function( geoserverBaseUrl, importId, options = {}) {
+    runImport: function( geoserverBaseUrl, importId, opts = {}) {
         let url = geoserverBaseUrl + "imports/" + importId + "?async=true";
+        const {headers = {}, ...options } = opts;
         return axios.post(url, null, {
             ...options,
             headers: {
-                ...(options.headers || {}),
+                ...headers,
                 'Content-Type': ''
             }
         });

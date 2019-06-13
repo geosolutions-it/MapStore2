@@ -121,7 +121,7 @@ class ManagerMenu extends React.Component {
 module.exports = {
     ManagerMenuPlugin: assign(connect((state) => ({
         enableRulesManager: isRulesManagerConfigured(state),
-        enableImporter: () => isImporterConfigured(state),
+        enableImporter: isImporterConfigured(state),
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
     }), {
