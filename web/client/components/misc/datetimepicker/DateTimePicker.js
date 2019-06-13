@@ -114,7 +114,7 @@ class DateTimePicker extends Component {
         const { calendar, time, toolTip, placeholder, tabIndex } = this.props;
         const props = Object.keys(this.props).reduce((acc, key) => {
             if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
-                // these props might have undesired effects to the subsequent components
+                // remove these props because they might have undesired effects to the subsequent components
                 return acc;
             }
             acc[key] = this.props[key];
