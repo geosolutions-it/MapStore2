@@ -33,7 +33,6 @@ const HolyGrail = require('../../containers/HolyGrail');
   *         // ...
   *         {
   *             "name": "Importer",
-  *             "hide": true
   *            "cfg": {} // see plugin configuration
   *         }
   *     ]
