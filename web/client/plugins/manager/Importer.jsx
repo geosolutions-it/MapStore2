@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -30,8 +30,11 @@ const getURL = function(props) {
 };
 
 /**
- * ImporterPlugin. User Interface for the Importer REST API in GeoServer
- * @name importer
+ * ImporterPlugin. User Interface for the Importer REST API in GeoServer.
+ * Notice: This plugin can be included in a stand-alone page. See `pages/Importer.jsx`
+ * @name Importer
+ * @memberof plugins.manager
+ * @prop {string} [geoserverRestURL] the URL of geoserver rest to use. By default `/geoserver/rest/`
  * @prop {string} defaultPresets the ID of the preset to use
  * @prop {object[]} datastoreTemplates allow to create some datastore when create a new workspace. Typically it can be used to setup the workspace to import vector data in database
  * @prop {object[]} presets: the presets. For the moment only the one with `defaultPresets` ID is used.

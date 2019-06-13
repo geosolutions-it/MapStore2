@@ -1,12 +1,12 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 const url = require('url');
@@ -23,8 +23,22 @@ const HolyGrail = require('../../containers/HolyGrail');
   * @class
   * @classdesc
   * Importer allow a user with admin permissions to import data in GeoServer.
-  * This page have to be configured in appConfig `pages`.
-  * The app is available at http://localhos:8081/#/importer
+  *
+  * Requirements:
+  *
+  * - This page have to be configured in appConfig `pages`. this way
+  * ```javascript
+  *    pages: [
+  *    //...
+  *    {
+  *      name: "importer",
+  *      path: "/importer",
+  *      component: require('path_to_/pages/Importer')
+  *    }]
+  * ```
+  * - `localConfig.json` must include an 'importer' entry in the plugins
+  *
+  * Then this page will be available at http://localhos:8081/#/importer
   *
   * @example
   * // localConfig configuration example
