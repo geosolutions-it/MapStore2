@@ -12,7 +12,7 @@ const {set} = require('lodash');
 
 describe('Test importer selector', () => {
     it.only('test isImporterConfigured default', () => {
-        expect(isImporterConfigured(set({}, 'localConfig.plugins.rulesmanager', {"some": "configuration"}))).toBe(true);
+        expect(isImporterConfigured(set({}, 'localConfig.plugins.importer', {"some": "configuration"}))).toBe(true);
         expect(isImporterConfigured(set({}, 'localConfig.plugins', { "some": "configuration" }))).toBe(false);
     });
 });
