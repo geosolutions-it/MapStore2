@@ -195,6 +195,12 @@ describe('map epics', () => {
             a0(dispatch);
         }, STATE_NORMAL);
     });
+    it('checkMapPermissions after login with no mapId', (done) => {
+        testEpic(addTimeoutEpic(checkMapPermissions, 0), 1, {type: LOGIN_SUCCESS}, ([a]) => {
+            expect(a.type).toBe(TEST_TIMEOUT);
+            done();
+        }, {});
+    });
     it('test the re-configuration of the max extent after the initialization of the map', (done) => {
         const state = {
             map: {

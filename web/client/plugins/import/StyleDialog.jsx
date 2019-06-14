@@ -35,6 +35,7 @@ class StyleDialog extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         visible: PropTypes.bool,
+        modal: PropTypes.bool,
         onClose: PropTypes.func,
         closeGlyph: PropTypes.string,
         uploadMessage: PropTypes.string,
@@ -45,6 +46,7 @@ class StyleDialog extends React.Component {
         id: "mapstore-shapefile-upload",
         uploadMessage: "shapefile.placeholder",
         wrap: true,
+        modal: true,
         wrapWithPanel: false,
         panelStyle: {
             minWidth: "360px",
@@ -85,7 +87,7 @@ class StyleDialog extends React.Component {
             return (<Dialog
                 id="import-style-dialog"
                 onClose={this.props.onClose}
-                modal show header={<Message msgId="shapefile.title" />}>
+                modal={this.props.modal} show header={<Message msgId="shapefile.title" />}>
                 {panel}
             </Dialog>);
         }

@@ -204,6 +204,10 @@ const zoomToExtentEpic = (action$, {getState = () => {} }) =>
  */
 const checkMapPermissions = (action$, {getState = () => {} }) =>
         action$.ofType(LOGIN_SUCCESS)
+        .filter(() => {
+            const mapId = mapIdSelector(getState());
+            return mapId; // sometimes mapId is null
+        })
         .map(() => {
             const mapId = mapIdSelector(getState());
             return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, mapId);
