@@ -67,6 +67,13 @@ const assignFiltersValue = (rulesFiltersValues = {}) => {
         .reduce((params, { key, normKey }) => ({ ...params, [normKey]: normalizeFilterValue(rulesFiltersValues[key]) }), {});
 };
 
+/**
+ * Creates an API to interacts with geoserver-integrated version of GeoFence
+ * @param {object} config
+ * @param {function} config.addBaseUrl function that add the baseURL to the axios options.
+ * @param {function} config.addBaseUrlGS function that add the GeoServer URL to the BaseURL (used to empty the cache)
+ * @param {function} config.getGeoServerInstance function that returns the instance object `{id: 1, url: "some-url"}`
+ */
 const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
     cleanCache: () => {
         return axios.get('rest/geofence/ruleCache/invalidate', addBaseUrlGS())
