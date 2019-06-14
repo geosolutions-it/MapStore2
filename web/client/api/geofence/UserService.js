@@ -9,7 +9,7 @@ const axios = require('../../libs/ajax');
 const { toJSONPromise } = require('./common');
 
 /**
- * Implementation of GeoFence API of UserService that uses GeoFence REST API
+ * Implementation for GeoFence API of UserService that uses GeoFence REST API
  * This implementation interacts with the Stand-Alone version of GeoFence.
  */
 module.exports = ({ addBaseUrl }) => ({
