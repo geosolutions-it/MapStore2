@@ -21,5 +21,5 @@ module.exports = {
     authkeyParamNameSelector: (state) => {
         return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
     },
-    hideExpandSelector: (state) => get(state, "catalog.hideExpand", true)
+    hideExpandSelector: (state) => get(state, "catalog.hideExpand", false)
 };

@@ -43,7 +43,6 @@ const emptyService = {
     autoload: false,
     showAdvancedSettings: false,
     showTemplate: false,
-    enableShowTemplate: false,
     hideThumbnail: false,
     metadataTemplate: "<p>${description}</p>"
 };
@@ -114,21 +113,21 @@ function catalog(state = {
         return state;
     }
     case FOCUS_SERVICES_LIST:
-        return assign({}, state, {openCatalogServiceList: action.status});
-    case CHANGE_TITLE:
-        return assign({}, state, {newService: assign({}, state.newService, {title: action.title})});
+        return set("openCatalogServiceList", action.status, state);
     case CHANGE_TEXT:
         return set("searchOptions.text", action.text, state);
+    case CHANGE_TITLE:
+        return set("newService.title", action.title, state);
     case CHANGE_URL:
-        return assign({}, state, {newService: assign({}, state.newService, {url: action.url})});
+        return set("newService.url", action.url, state);
     case CHANGE_AUTOLOAD:
-        return assign({}, state, {newService: assign({}, state.newService, {autoload: action.autoload})});
+        return set("newService.autoload", action.autoload, state);
     case CHANGE_TYPE: {
         const type = action.newType.toLowerCase();
-        let templateOptions = {enableShowTemplate: true};
+        let templateOptions = {};
         if (type !== "csw") {
             // reset the template options
-            templateOptions = {showTemplate: false, metadataTemplate: "", enableShowTemplate: false};
+            templateOptions = {showTemplate: false, metadataTemplate: ""};
         }
         return assign({}, state, {newService: assign({}, state.newService, {type, ...templateOptions})});
     }

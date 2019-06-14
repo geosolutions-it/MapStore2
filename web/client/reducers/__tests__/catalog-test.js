@@ -129,35 +129,29 @@ describe('Test the catalog reducer', () => {
         let newType = "wms";
         const state = catalog({}, {type: CHANGE_TYPE, newType});
         expect(state.newService.type).toBe(newType);
-        expect(state.newService.enableShowTemplate).toBe(false);
     });
     it('CHANGE_TYPE from csw to wms', () => {
-        let newType = "wms";
         const state = catalog({
             newService: {
                 type: "csw",
-                enableShowTemplate: true,
                 showTemplate: true,
                 metadataTemplate: "{description}"
             }
-        }, {type: CHANGE_TYPE, newType});
-        expect(state.newService.type).toBe(newType);
-        expect(state.newService.enableShowTemplate).toBe(false);
+        }, {type: CHANGE_TYPE, newType: "wms"});
+        expect(state.newService.type).toBe("wms");
         expect(state.newService.showTemplate).toBe(false);
         expect(state.newService.metadataTemplate).toBe("");
     });
     it('CHANGE_TYPE from to wms to csw', () => {
-        let newType = "csw";
         const state = catalog(
             {
                 newService: {
-                    type: "wms", enableShowTemplate: false
+                    type: "wms"
                 }
-            }, {type: CHANGE_TYPE, newType});
-        expect(state.newService.type).toBe(newType);
-        expect(state.newService.enableShowTemplate).toBe(true);
-        expect(state.newService.showTemplate).toBe(undefined);
-        expect(state.newService.metadataTemplate).toBe(undefined);
+            }, {type: CHANGE_TYPE, newType: "csw"});
+        expect(state.newService.type).toBe("csw");
+        expect(state.newService.showTemplate).toEqual(undefined);
+        expect(state.newService.metadataTemplate).toEqual(undefined);
     });
     it('CHANGE_TEXT', () => {
         let val = "text";
@@ -220,7 +214,6 @@ describe('Test the catalog reducer', () => {
         expect(state.newService.url).toBe(emptyService.url);
         expect(state.newService.showAdvancedSettings).toBe(false);
         expect(state.newService.showTemplate).toBe(false);
-        expect(state.newService.enableShowTemplate).toBe(false);
         expect(state.newService.hideThumbnail).toBe(false);
         expect(state.newService.metadataTemplate).toBe("<p>${description}</p>");
 

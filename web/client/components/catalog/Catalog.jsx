@@ -429,7 +429,7 @@ class Catalog extends React.Component {
                                         </Checkbox>
                                     </Col>
                                 </FormGroup>
-                                {(!isNil(this.props.newService.enableShowTemplate) ? this.props.newService.enableShowTemplate : true) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
+                                {(!isNil(this.props.newService.type) ? this.props.newService.type === "csw" : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
                                     <Col xs={12}>
                                         <Checkbox
                                             onChange={() => this.props.onToggleTemplate()}

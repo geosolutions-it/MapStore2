@@ -7,9 +7,8 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {isObject, isArray, trim } from 'lodash';
+import {isObject, isArray, trim, isNil} from 'lodash';
 import {Image, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
-import ContainerDimensions from 'react-container-dimensions';
 
 import {
     buildSRSMap,
@@ -59,7 +58,7 @@ class RecordItem extends React.Component {
         currentLocale: 'en-US',
         hideThumbnail: false,
         hideIdentifier: false,
-        hideExpand: true,
+        hideExpand: false,
         layerBaseConfig: {},
         onCopy: () => {},
         onError: () => {},
@@ -69,12 +68,13 @@ class RecordItem extends React.Component {
         style: {},
         zoomToLayer: true
     };
+    state = {}
 
     static contextTypes = {
         messages: PropTypes.object
     };
 
-    state = {};
+    state = {}
 
     componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
@@ -177,17 +177,19 @@ class RecordItem extends React.Component {
         const {esri} = extractEsriReferences(record);
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then this defaults needs to change too
-        const previewWidth = 104;
         const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
         return record ? (
-            <ContainerDimensions>
-                {({ width }) =>
                 <SideCard
                     style={{transform: "none"}}
                     fullText={this.state.fullText}
                     preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
                     title={record && this.getTitle(record.title)}
-                    description={this.renderDescription(record)}
+                    description={<div ref={sideCardDesc => {
+                        // using localState in order to force rerender
+                        if (isNil(this.state.sideCardDescWidth)) {
+                            this.setState({sideCardDescWidth: sideCardDesc && sideCardDesc.clientWidth || 0});
+                        }
+                    }}>{this.renderDescription(record)}</div>}
                     caption={
                         <div>
                             {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
@@ -218,8 +220,8 @@ class RecordItem extends React.Component {
                                     glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
                                     visible: (
                                         // check based on the width of the description
-                                        !this.props.hideExpand && (
-                                            this.displayExpand(width, previewWidth, record) ||
+                                        (
+                                            this.displayExpand() ||
                                             // check based on the value of the template
                                             !!(record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
                                         )
@@ -228,10 +230,7 @@ class RecordItem extends React.Component {
                                     onClick: () => this.setState({ fullText: !this.state.fullText })
                                 }
                             ]}/>
-                    }
-                    stylePreview={{width: previewWidth, height: previewWidth}}
-                    />}
-            </ContainerDimensions>
+                    }/>
         ) : null;
     }
 
@@ -278,17 +277,13 @@ class RecordItem extends React.Component {
     };
     /**
      * it manages visibility of expand button.
-     * it checks if the width of descriptionRuler is higher than the width of the card
-     * @param {number} width of the card
+     * it checks if the width of descriptionRuler is higher than the width of the desc-section
      * @return {boolean} the value of the check
     */
-    displayExpand = (width, previewWidth, record) => {
-        const buttonWidth = 30 + 2; // 30px for the button width and 2x for the border
-        const buttonGroupMargin = 20; // 10px per side
-        const buttonsNumber = 1 + (record && this.renderButtons(record) || []).length; // one is for expand then add the remaining ones
-        const toolbarWidth = buttonWidth * buttonsNumber + buttonGroupMargin;
-        const descriptionWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
-        return descriptionWidth > (width - (previewWidth + toolbarWidth));
+    displayExpand = () => {
+        const descriptionRulerWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
+        const descriptionWidth = this.state.sideCardDescWidth;
+        return descriptionRulerWidth > descriptionWidth;
     };
 }
 

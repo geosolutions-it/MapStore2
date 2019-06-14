@@ -207,9 +207,9 @@ describe('Test catalog selectors', () => {
     });
     it('test hideExpandSelector', () => {
         let hideExpand = hideExpandSelector({});
-        expect(hideExpand).toBe(true);
-        hideExpand = hideExpandSelector({catalog: {hideExpand: false}});
         expect(hideExpand).toBe(false);
+        hideExpand = hideExpandSelector({catalog: {hideExpand: true}});
+        expect(hideExpand).toBe(true);
     });
 
 });
