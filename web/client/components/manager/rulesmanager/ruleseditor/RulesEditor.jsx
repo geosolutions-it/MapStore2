@@ -8,27 +8,21 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const {connect} = require('react-redux');
-const {createSelector} = require("reselect");
-const {compose} = require('recompose');
-const enhancer = require("./EditorEnhancer");
-const {cleanEditing, saveRule, setLoading} = require("../../actions/rulesmanager");
-const {activeRuleSelector, geometryStateSel} = require("../../selectors/rulesmanager");
-
-const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
-const Message = require('../../components/I18N/Message');
-const BorderLayout = require("../../components/layout/BorderLayout");
-const Header = require("../../components/manager/rulesmanager/ruleseditor/Header");
-const MainEditor = require("../../components/manager/rulesmanager/ruleseditor/EditMain");
-const StylesEditor = require("../../components/manager/rulesmanager/ruleseditor/StylesEditor");
-const FiltersEditor = require("../../components/manager/rulesmanager/ruleseditor/FiltersEditor");
-const AttributesEditor = require("../../components/manager/rulesmanager/ruleseditor/AttributesEditor");
-const ModalDialog = require("./ModalDialog");
+const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../../../utils/RulesEditor");
+const Message = require('../../../I18N/Message');
+const BorderLayout = require("../../../layout/BorderLayout");
+const Header = require("./Header");
+const MainEditor = require("./EditMain");
+const StylesEditor = require("./StylesEditor");
+const FiltersEditor = require("./FiltersEditor");
+const AttributesEditor = require("./AttributesEditor");
+const ModalDialog = require("../ModalDialog");
 
 
 class RuleEditor extends React.Component {
     static propTypes = {
         initRule: PropTypes.object,
+        disableDetails: PropTypes.bool,
         activeRule: PropTypes.object,
         activeEditor: PropTypes.string,
         onNavChange: PropTypes.func,
@@ -54,12 +48,13 @@ class RuleEditor extends React.Component {
         type: ""
     }
     render() {
-        const {loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties} = this.props;
+        const { loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties, disableDetails} = this.props;
         const {modalProps} = this.state || {};
         return (
             <BorderLayout
                 className="bg-body"
                 header={<Header
+                                disableDetails={disableDetails}
                                 layer={layer}
                                 loading={loading}
                                 type={type}
@@ -139,11 +134,4 @@ class RuleEditor extends React.Component {
 
     }
 }
-
-module.exports = compose(
-    connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({activeRule, geometryState})), {
-        onExit: cleanEditing,
-        onSave: saveRule,
-        setLoading
-    }),
-    enhancer)(RuleEditor);
+module.exports = RuleEditor;

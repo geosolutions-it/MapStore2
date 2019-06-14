@@ -24,7 +24,7 @@ const HolyGrail = require('../../containers/HolyGrail');
   * @memberof pages
   * @class
   * @classdesc
-  * Rules Manager allow a user with admin permissions to easly manage geofence's rules.
+  * Rules Manager allow a user with admin permissions to easily manage GeoFence's rules.
   * Configure geoFenceUrl and geoFenceGeoServerInstance params in localConfig.<br/>
   * Add services configuration to overwrite the default values used by the service and the request
   * selectors. See the page's plugins configuration in the following example. <br/>
