@@ -577,7 +577,8 @@ module.exports = {
                         .switchMap(() => Rx.Observable.of(openFeatureGrid()))
 
                     ).takeUntil(
-                        action$.ofType(LOCATION_CHANGE)
+                        action$.ofType(LOCATION_CHANGE, TOGGLE_CONTROL)
+                            .filter(action => action.type === LOCATION_CHANGE || action.control && action.control === 'drawer')
                             .merge(
                                 action$
                                     // a close feature grid event not between feature info click and hide mapinfo marker
