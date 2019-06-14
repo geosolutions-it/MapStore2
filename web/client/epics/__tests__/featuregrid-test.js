@@ -1702,6 +1702,25 @@ describe('featuregrid Epics', () => {
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
     });
+
+    it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+    });
+
+    it('autoReopenFeatureGridOnFeatureInfoClose: other toggle control apart from drawer cannot cancel ability to open feature grid', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(OPEN_FEATURE_GRID);
+            done();
+        };
+        testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), toggleControl('notdrawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+    });
+
     it('autoReopenFeatureGridOnFeatureInfoClose: feature info doesn\'t reopen feature grid after close', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(2);
