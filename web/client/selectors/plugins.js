@@ -11,5 +11,5 @@
  * @param {string} entry the name of the entry
  * @return {boolean} true if the entry exists, false otherwise
  */
-export const isPluginsEntryConfigured = plugin => state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins[plugin];
+export const isPageConfigured = plugin => state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins[plugin];
 

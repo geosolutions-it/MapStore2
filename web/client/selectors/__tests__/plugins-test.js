@@ -7,12 +7,12 @@
 */
 
 const expect = require('expect');
-const { isPluginsEntryConfigured } = require('../plugins');
+const { isPageConfigured } = require('../plugins');
 const {set} = require('lodash');
 
 describe('Test page selector', () => {
     it('test isImporterConfigured default', () => {
-        expect(isPluginsEntryConfigured('importer')(set({}, 'localConfig.plugins.importer', {"some": "configuration"}))).toBe(true);
-        expect(isPluginsEntryConfigured('importer')(set({}, 'localConfig.plugins', { "some": "configuration" }))).toBe(false);
+        expect(isPageConfigured('importer')(set({}, 'localConfig.plugins.importer', {"some": "configuration"}))).toBe(true);
+        expect(isPageConfigured('importer')(set({}, 'localConfig.plugins', { "some": "configuration" }))).toBe(false);
     });
 });
