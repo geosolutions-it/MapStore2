@@ -8,15 +8,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../../../utils/RulesEditor");
-const Message = require('../../../I18N/Message');
-const BorderLayout = require("../../../layout/BorderLayout");
-const Header = require("./Header");
-const MainEditor = require("./EditMain");
-const StylesEditor = require("./StylesEditor");
-const FiltersEditor = require("./FiltersEditor");
-const AttributesEditor = require("./AttributesEditor");
-const ModalDialog = require("../ModalDialog");
+const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
+const Message = require('../../components/I18N/Message');
+const BorderLayout = require("../../components/layout/BorderLayout");
+const Header = require("../../components/manager/rulesmanager/ruleseditor/Header");
+const MainEditor = require("../../components/manager/rulesmanager/ruleseditor/EditMain");
+const StylesEditor = require("../../components/manager/rulesmanager/ruleseditor/StylesEditor");
+const FiltersEditor = require("../../components/manager/rulesmanager/ruleseditor/FiltersEditor");
+const AttributesEditor = require("../../components/manager/rulesmanager/ruleseditor/AttributesEditor");
+const ModalDialog = require("../../components/manager/rulesmanager/ModalDialog");
 
 
 class RuleEditor extends React.Component {
@@ -66,9 +66,9 @@ class RuleEditor extends React.Component {
                                 onNavChange={onNavChange}/>}
             >
                 <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
-                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
-                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule.constraints} active={activeEditor === "3"}/>
-                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule.constraints} setOption={setConstraintsOption}/>
+                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
+                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule && activeRule.constraints} active={activeEditor === "3"}/>
+                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption}/>
                 <ModalDialog {...modalProps}/>
             </BorderLayout>);
     }

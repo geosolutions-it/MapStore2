@@ -17,7 +17,7 @@ const { cleanEditing, saveRule, setLoading } = require("../actions/rulesmanager"
 const { activeRuleSelector, geometryStateSel } = require("../selectors/rulesmanager");
 const { isEditorActive, isLoading} = require('../selectors/rulesmanager');
 
-const RulesEditor = require('../components/manager/rulesmanager/RulesEditor');
+const RulesEditor = require('./manager/RulesEditor');
 const Toolbar = require('./manager/RulesToolbar');
 const enhancer = require("./manager/EditorEnhancer");
 
