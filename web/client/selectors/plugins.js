@@ -9,7 +9,7 @@
 /**
  * Check if an entry in localConfig is configured for a specific entry of `plugins`
  * @param {string} entry the name of the entry
- * @return {boolean} true if the entry exists, false otherwise
+ * @return {function} a selector that returns true if the entry exists, false otherwise
  */
 export const isPageConfigured = plugin => state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins[plugin];
 
