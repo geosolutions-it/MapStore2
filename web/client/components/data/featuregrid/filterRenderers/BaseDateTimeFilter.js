@@ -1,31 +1,35 @@
- /**
-  * Copyright 2017, GeoSolutions Sas.
-  * All rights reserved.
-  *
-  * This source code is licensed under the BSD-style license found in the
-  * LICENSE file in the root directory of this source tree.
-  */
+/**
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-require('react-widgets/lib/less/react-widgets.less');
-const {DateTimePicker} = require('react-widgets');
+import React from 'react';
+import PropTypes from 'prop-types';
+import {intlShape} from 'react-intl';
+import {getContext} from 'recompose';
+import DateTimePicker from '../../../misc/datetimepicker';
+import LocaleUtils from '../../../../utils/LocaleUtils';
+import { getDateTimeFormat } from '../../../../utils/TimeUtils';
+import AttributeFilter from './AttributeFilter';
+import utcDateWrapper from '../../../misc/enhancers/utcDateWrapper';
+import 'react-widgets/lib/less/react-widgets.less';
 
-const LocaleUtils = require('../../../../utils/LocaleUtils');
-const {getDateTimeFormat} = require('../../../../utils/TimeUtils');
-const AttributeFilter = require('./AttributeFilter');
-const utcDateWrapper = require('../../../misc/enhancers/utcDateWrapper');
 const UTCDateTimePicker = utcDateWrapper({
     dateProp: "value",
     dateTypeProp: "type",
     setDateProp: "onChange"
 })(DateTimePicker);
 
+
 class DateFilter extends AttributeFilter {
     static propTypes = {
         type: PropTypes.string,
         disabled: PropTypes.boolean,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        intl: intlShape
     };
     static contextTypes = {
         messages: PropTypes.object,
@@ -39,9 +43,12 @@ class DateFilter extends AttributeFilter {
     };
     renderInput = () => {
         if (this.props.column.filterable === false) {
-            return <span/>;
+            return <span />;
         }
+        const format = getDateTimeFormat(this.context.locale, this.props.type);
         const placeholder = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
+        const toolTip = this.props.intl && this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format}) || `Insert date in ${format} format`;
+
         const inputKey = 'header-filter-' + this.props.column.key;
         let val;
         // reset correctly the value; if it is null or startDate is null then reset
@@ -51,20 +58,26 @@ class DateFilter extends AttributeFilter {
             val = this.props.value && this.props.value.startDate || this.props.value;
         }
         const dateValue = this.props.value ? val : null;
+        const operator = this.props.value && this.props.value.operator;
         return (<UTCDateTimePicker
             key={inputKey}
             disabled={this.props.disabled}
-            format={getDateTimeFormat(this.context.locale, this.props.type)}
+            format={format}
             placeholder={placeholder}
             value={dateValue}
+            toolTip={toolTip}
+            operator={operator}
             type={this.props.type}
             time={this.props.type === 'date-time' || this.props.type === 'time'}
             calendar={this.props.type === 'date-time' || this.props.type === 'date'}
-            onChange={date => this.handleChange(date)}/>);
+            onChange={(date, stringDate) => this.handleChange(date, stringDate)}
+        />);
     }
-    handleChange = (value) => {
-        this.props.onChange({value, attribute: this.props.column && this.props.column.name});
+    handleChange = (value, stringValue) => {
+        this.props.onChange({ value, stringValue, attribute: this.props.column && this.props.column.name });
     }
 }
 
-module.exports = DateFilter;
+export default getContext({
+    intl: intlShape
+})(DateFilter);

@@ -1280,7 +1280,8 @@
                     "editMode": "La recherche rapide n'est pas disponible en mode édition",
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
-                    "number": "Tapez un nombre ou une expression..."
+                    "number": "Tapez un nombre ou une expression...",
+                    "date": "Tapez une date ou une expression. Utilisez {format} pour la date."
                 }
             },
             "toolbar": {

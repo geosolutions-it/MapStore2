@@ -1279,7 +1279,8 @@
                     "editMode": "Quick search is not available in edit mode",
                     "default": "Search...",
                     "string": "Type text to filter...",
-                    "number": "Type a number or an expression. Examples: 10, > 2, < 10"
+                    "number": "Type a number or an expression. Examples: 10, > 2, < 10",
+                    "date": "Type a date or an expression. Use {format} for the date."
                 }
             },
             "toolbar": {
