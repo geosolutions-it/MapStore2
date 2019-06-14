@@ -11,8 +11,7 @@ const {connect} = require('react-redux');
 
 const { itemSelected } = require('../../actions/manager');
 const assign = require('object-assign');
-const {isRulesManagerConfigured} = require("../../selectors/rulesmanager");
-const { isImporterConfigured } = require("../../selectors/importer");
+const { isPluginsEntryConfigured } = require("../../selectors/plugins");
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
 
 const Container = connect(() => ({
@@ -118,10 +117,13 @@ class ManagerMenu extends React.Component {
     }
 }
 
+const IMPORTER_ID = 'importer';
+const RULE_MANAGER_ID = 'rulesmanager';
+
 module.exports = {
     ManagerMenuPlugin: assign(connect((state) => ({
-        enableRulesManager: isRulesManagerConfigured(state),
-        enableImporter: isImporterConfigured(state),
+        enableRulesManager: isPluginsEntryConfigured(RULE_MANAGER_ID)(state),
+        enableImporter: isPluginsEntryConfigured(IMPORTER_ID)(state),
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
     }), {
