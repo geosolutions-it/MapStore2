@@ -27,9 +27,9 @@ here an example of how operators allow manipulating an event streams to count cl
 
 ```text
 clickStream:    ---c----c--c----c------c--> <-- Stream of clicks
-                vvvvv map(c becomes 1) vvvv <-- opeartor that trasforms each event into a `1`
+                vvvvv map(c becomes 1) vvvv <-- operator that transforms each event into a `1`
                 ---1----1--1----1------1--> <-- new stream returned by the operator
-                vvvvvvvvv scan(+) vvvvvvvvv <-- opeartor that does the sum
+                vvvvvvvvv scan(+) vvvvvvvvv <-- operator that does the sum
 counterStream:  ---1----2--3----4------5--> <-- click count stream returned by the operator
 ```
 
@@ -70,7 +70,7 @@ This function **must return** a new stream that emits the actions we want to dis
 
 Typically the stream returned by an epic is always listening for new actions and dispatches other actions:
 
-> ** actions in, actions out **.
+> **actions in, actions out**.
 
 Let's analyze the epic reported as first example:
 
@@ -101,9 +101,9 @@ const notifyMapLoaded = (action$, store) => action$
 );
 ```
 
-## Create complext data flows triggered by actions
+## Create complex data flows triggered by actions
 
-Typical opeartor to start creating a complext data flow involves operators like:
+Typical operator to start creating a complext data flow involves operators like:
 
 - [switchMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-switchMap)
 - [mergeMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap)
@@ -111,11 +111,13 @@ Typical opeartor to start creating a complext data flow involves operators like:
 
 The base concept of all these solutions is to create one or more new streams (using a function passed as argument) and then emit the events on the final Observer.
 
-> Note: Creating ([Higher order observables](https://gianttoast.gitbooks.io/rxjs-observables/content/higher-order-observables.html), that are basically streams of streams) and merging their events is a common pattern in RxJs, so, mergeMap and switchMap are simpler shortcuts to increase readability and maintainability of the code:  
+> Note: Creating ([Higher order observables](https://gianttoast.gitbooks.io/rxjs-observables/content/higher-order-observables.html), that are basically streams of streams) and merging their events is a common pattern in RxJs, so, mergeMap and switchMap are simpler shortcuts to increase readability and maintainability of the code:
+>
 > - mergeMap() is just map() + mergeAll()
 > - switchMap() is just map() + switch().
 
 Example:
+
 ```javascript
 const countDown = action$ => action$
     .ofType(START_COUNTDOWN)
@@ -125,7 +127,6 @@ const countDown = action$ => action$
             .takeUntil(Rx.Observable.timer(seconds * 1000))
     );
 ```
-
 
 ```text
 ---{seconds: 5}------------------------> action in
@@ -141,6 +142,7 @@ At the end the stream will be closed after the n seconds because of the takeUnti
 `.takeUntil(Rx.Observable.timer(seconds * 1000))` unsubscribes the observable when the stream passed as function emits a value.
 
 `switchMap` operator unsubscribes its observable ( so stops getting events from it ) even if another event comes on the main stream (so in this case another `START_COUNTDOWN` action).
+
 ```text
 ---{seconds: 5}------{seconds: 5}----------------------->   action in
 vvvvvvvvvvvvvvvvv switchMap vvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -149,7 +151,7 @@ vvvvvvvvvvvvvvvvv switchMap vvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 If you don't want to stop listening you may need to use, instead, `mergeMap`.
 
-Imagine to have to modify the epic above to manage many countdown, identified by an `id`. In this case a START_COUNDOWN event should not stop the ones already started. You can do it using mergeMap.
+Imagine to have to modify the epic above to manage many countdown, identified by an `id`. In this case a START_COUNTDOWN event should not stop the ones already started. You can do it using mergeMap.
 
 ```javascript
 const countDown = action$ => action$
@@ -162,6 +164,7 @@ const countDown = action$ => action$
             .takeUntil(Rx.Observable.timer(seconds * 1000))
     );
 ```
+
 In this case the streams will look like this:
 
 ```text
@@ -172,40 +175,24 @@ vvvvvvvvvvvvvvvvvvvvvvvvvv switchMap vvvvvvvvvvvvvvvvvvvvvvvvvv
 
 ```
 
-
 ## Doing AJAX
 
 Ajax calls in MapStore should all pass by `libs/ajax.js`. This is an `axios` instance that add the support for using proxies or CORS.
 
-Axios is a library that uses es6 Promises to do ajax calls. Luckily RxJs allow to use Promises instead of streams in most of the cases. In the other cases, there are specific operators called `fromPromise` or `defer` that you can use to wrap your Promise into a stream.
+Axios is a library that uses es6 Promises to do ajax calls. Luckily RxJs allow to use Promises instead of streams in most of the cases. In the other cases, there is a specific operator called `defer` that you can use to wrap your Promise into a stream.
 
-> NOTE: it is perfectly normal to consider the concept of Promise as a special case of a stream, that emit one value, then closes.
+> NOTE: it is perfectly normal to consider the concept of Promise as a special case of a stream, that emit only one value, then closes.
 
-
-So,everytime you have to do an ajax call, you will need to use axios:
+So, every time you have to do an ajax call, you will need to use axios:
 
 Example with `defer`:
 
 ```javascript
-
 const axios = require('../libs/ajax');
 const fetchDataEpic = (action$, store) => action$
     .ofType(FETCH_DATA)
     .switchMap(
         Rx.Observable.defer(() => axios.get("MY_DATA")) // defer gets a function
-            map(response => dataFetched(response.data))
-    );
-```
-
-Example with `fromPromise`
-
-```javascript
-
-const axios = require('../libs/ajax');
-const fetchDataEpic = (action$, store) => action$
-    .ofType(FETCH_DATA)
-    .switchMap(
-        Rx.Observable.fromPromise(axios.get("MY_DATA"))
             map(response => dataFetched(response.data))
     );
 ```
