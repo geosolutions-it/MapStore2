@@ -112,6 +112,34 @@ describe('OpenlayersMap', () => {
         expect(ol.proj.get('EPSG:25830')).toExist();
     });
 
+    it('custom projection with axisOrientation', () => {
+        proj.defs("EPSG:31468", "+proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs");
+        const projectionDefs = [{
+            code: "EPSG:31468",
+            axisOrientation: "neu",
+            "extent": [
+                4036308.74,
+                5255076.75,
+                4617579.38,
+                6108355.90
+            ],
+            "worldExtent": [
+                5.87,
+                47.27,
+                13.84,
+                55.09
+            ]
+        }];
+        const comp = (<OpenlayersMap projection="EPSG:31468" projectionDefs={projectionDefs} center={{ y: 43.9, x: 10.3 }} zoom={11}
+        />);
+
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        expect(map.map.getView().getProjection().getCode()).toBe('EPSG:31468');
+        expect(ol.proj.get('EPSG:31468')).toExist();
+        expect(ol.proj.get('EPSG:31468').getAxisOrientation()).toBe('neu');
+    });
+
     it('check if the handler for "click" event is called with elevation', () => {
         const testHandlers = {
             handler: () => { }
