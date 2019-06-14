@@ -7,7 +7,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {isObject, isArray, trim, isNil} from 'lodash';
+import {isObject, isArray, trim } from 'lodash';
 import {Image, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
 
 import {
@@ -68,14 +68,22 @@ class RecordItem extends React.Component {
         style: {},
         zoomToLayer: true
     };
-    state = {}
+    state = {
+        visibleExpand: false
+    }
 
     static contextTypes = {
         messages: PropTypes.object
     };
 
-    state = {}
-
+    componentDidMount() {
+        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        const record = this.props.record;
+        this.setState({visibleExpand: this.displayExpand() ||
+            // check based on the value of the template
+            !!(record && record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
+        });
+    }
     componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
     }
@@ -177,18 +185,14 @@ class RecordItem extends React.Component {
         const {esri} = extractEsriReferences(record);
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then this defaults needs to change too
-        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
         return record ? (
                 <SideCard
                     style={{transform: "none"}}
                     fullText={this.state.fullText}
                     preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
                     title={record && this.getTitle(record.title)}
-                    description={<div ref={sideCardDesc => {
-                        // using localState in order to force rerender
-                        if (isNil(this.state.sideCardDescWidth)) {
-                            this.setState({sideCardDescWidth: sideCardDesc && sideCardDesc.clientWidth || 0});
-                        }
+                    description={<div className ref={sideCardDesc => {
+                        this.sideCardDesc = sideCardDesc;
                     }}>{this.renderDescription(record)}</div>}
                     caption={
                         <div>
@@ -218,14 +222,7 @@ class RecordItem extends React.Component {
                                 ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
                                 {
                                     glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
-                                    visible: (
-                                        // check based on the width of the description
-                                        (
-                                            this.displayExpand() ||
-                                            // check based on the value of the template
-                                            !!(record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
-                                        )
-                                    ),
+                                    visible: this.state.visibleExpand,
                                     tooltipId: this.state.fullText ? 'collapse' : 'expand',
                                     onClick: () => this.setState({ fullText: !this.state.fullText })
                                 }
@@ -281,8 +278,9 @@ class RecordItem extends React.Component {
      * @return {boolean} the value of the check
     */
     displayExpand = () => {
+
         const descriptionRulerWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
-        const descriptionWidth = this.state.sideCardDescWidth;
+        const descriptionWidth = this.sideCardDesc ? this.sideCardDesc.clientWidth : 0;
         return descriptionRulerWidth > descriptionWidth;
     };
 }
