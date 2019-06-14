@@ -31,13 +31,12 @@ const Editor = compose(
     enhancer)(RulesEditor);
 
 /**
-  * @name RulesEditor
-  * @memberof plugins
-  * @prop {boolean} cfg.disableDetails disable details tab. (Style/Filters/Attribute). Useful to avoid issues with GeoServer integrated version that do not full support this advanced features via REST. See
-  * @class
-  * @classdesc
-  * Rules-editor it's part of rules-manager page. It allow a admin user to add, modify and delete geofence rules
-*/
+ *  Rules-editor it's part of rules-manager page. It allow a admin user to add, modify and delete geofence rules
+ * @name RulesEditor
+ * @memberof plugins
+ * @prop {boolean} cfg.disableDetails disable details tab. (Style/Filters/Attribute). Useful to avoid issues with GeoServer integrated version that do not full support this advanced features via REST
+ * @class
+ */
 class RulesEditorComponent extends React.Component {
      static propTypes = {
          id: PropTypes.string,
