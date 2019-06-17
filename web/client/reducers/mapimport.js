@@ -65,7 +65,7 @@ function mapimport(state = initialState, action) {
             return assign({}, state, {bbox: action.bbox});
         }
         case ON_SUCCESS: {
-            return assign({}, state, {success: action.message, errors: null});
+            return assign({}, state, {success: action.message, errors: null, error: null});
         }
         case TOGGLE_CONTROL: {
             // TODO check this. if it must remain
