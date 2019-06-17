@@ -1,23 +1,12 @@
 const Rx = require('rxjs');
 
-
-const {parseString} = require('xml2js');
-const {stripPrefix} = require('xml2js/lib/processors');
-const CatalogAPI = require('../api/CSW');
 const GeoFence = require('../api/geoserver/GeoFence');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {trim} = require("lodash");
+const { trim} = require("lodash");
 const WMS = require('../api/WMS');
 const {getLayerCapabilities, describeLayer} = require("./wms");
 const {describeFeatureType} = require("./wfs");
 const {RULE_SAVED} = require("../actions/rulesmanager");
-
-const xmlToJson$ = response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
-    tagNameProcessors: [stripPrefix],
-    explicitArray: false,
-    mergeAttrs: true
-}, callback))(response);
-
 
 const fixUrl = (url) => {
     const u = trim(url, "/");
@@ -31,31 +20,29 @@ const getUpdateType = (o, n) => {
     }
     return "simple";
 };
-const loadSinglePage = (page = 0, filters = {}, size = 10) => Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
-                            .switchMap( response => xmlToJson$(response)
-                            .map(({RuleList = {}}) => ({ page, rules: ([].concat(RuleList.rule || [])).map(r => {
-                                if (!r.constraints) {
-                                    return r;
-                                }
-                                const style = [].concat(r.constraints.allowedStyles.style || []);
-                                r.constraints.allowedStyles = {style};
-                                return r;
-                            }
-                            )}))
-                        );
+const loadSinglePage = (page = 0, filters = {}, size = 10) =>
+    Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
+        .map(({rules = []}) => ({
+            page,
+            rules: rules.map(r => {
+                if (!r.constraints) {
+                    return r;
+                }
+                const style = [].concat(r.constraints.allowedStyles.style || []);
+                r.constraints.allowedStyles = {style};
+                return r;
+            })})
+        );
 const countUsers = (filter = "") => Rx.Observable.defer(() => GeoFence.getUsersCount(filter));
-const loadUsers = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() => GeoFence.getUsers(filter, page, size))
-.switchMap( response => xmlToJson$(response).
-                map(({UserList = {}}) => ({users: [].concat(UserList.User || [])}))
-);
+const loadUsers = (filter = "", page = 0, size = 10) =>
+    Rx.Observable.defer(() => GeoFence.getUsers(filter, page, size));
 
-const countRoles = (filter = "") => Rx.Observable.defer(() => GeoFence.getGroupsCount(filter));
+const countRoles = (filter = "") => Rx.Observable.defer(() => GeoFence.getRolesCount(filter));
 
-const loadRoles = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() => GeoFence.getGroups(filter, page, size))
-.switchMap( response => xmlToJson$(response).
-                map(({UserGroupList = {}}) => ({users: [].concat(UserGroupList.UserGroup || [])}))
-);
+const loadRoles = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() => GeoFence.getRoles(filter, page, size));
+
 const deleteRule = (id) => Rx.Observable.defer(() => GeoFence.deleteRule(id));
+
 // Full update we need to delete, save and move
 const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) =>getUpdateType(oR, r) === 'full')
         .switchMap(({rule, origRule}) => deleteRule(rule.id)
@@ -104,21 +91,18 @@ module.exports = {
         })) || loadUsers(userFilter, page, size).map(({users}) => ({data: users}));
     },
     getRoles: (roleFilter = "", page = 0, size = 10, parentsFilter = {}, countEl = false) => {
-        return countEl && Rx.Observable.combineLatest([countRoles(roleFilter), loadRoles(roleFilter, page, size)], (count, {users}) => ({
-            count,
-            data: users
-        })) || loadRoles(roleFilter, page, size).map(({users}) => ({data: users}));
+        return countEl
+            ? Rx.Observable.combineLatest([countRoles(roleFilter), loadRoles(roleFilter, page, size)],
+                (count, {roles}) => ({
+                        count,
+                        data: roles
+                    }))
+            : loadRoles(roleFilter, page, size).map(({ roles }) => ({ data: roles}));
     },
     getWorkspaces: ({size}) => Rx.Observable.defer(() => GeoFence.getWorkspaces())
                         .map(({workspaces = {}}) => ({count: size, data: [].concat(workspaces.workspace)})),
-    loadLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
-        const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
-        const catalogUrl = baseURL + 'csw';
-        const {workspace = ""} = parentsFilter;
-        return Rx.Observable.defer(() =>
-        CatalogAPI.workspaceSearch(catalogUrl, (page) * size + 1, size, layerFilter, workspace))
-        .map((layers) => ({data: layers.records.map(layer => ({name: layer.dc.identifier.replace(/^.*?:/g, '')})), count: layers.numberOfRecordsMatched}));
-    },
+    loadLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) =>
+        Rx.Observable.defer( () => GeoFence.getLayers(layerFilter, page, size, parentsFilter)),
     updateRule: (rule, origRule) => {
         const fullUp = Rx.Observable.of({rule, origRule}).let(fullUpdate);
         const simpleUpdate = Rx.Observable.of({rule, origRule}).let(justUpdate);
@@ -130,7 +114,7 @@ module.exports = {
     getStylesAndAttributes: (layer, workspace) => {
         const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
         const name = `${workspace}:${layer}`;
-        const l = {url: `${fixUrl(url)}ows`, name};
+        const l = {url: `${fixUrl(url)}wms`, name};
         return Rx.Observable.combineLatest(getLayerCapabilities(l)
                 .map((cp) => ({style: cp.style, ly: {bbox: WMS.getBBox(cp), name, url: `${fixUrl(url)}wms`, type: "wms", visibility: true, format: "image/png", title: cp.title}})),
                 describeLayer(l).map(({data}) => data.layerDescriptions[0])

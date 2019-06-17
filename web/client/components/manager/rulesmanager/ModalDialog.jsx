@@ -7,9 +7,9 @@
  */
 const React = require('react');
 
-const Message = require('../../components/I18N/Message');
-const Portal = require('../../components/misc/Portal');
-const ResizableModal = require('../../components/misc/ResizableModal');
+const Message = require('../../I18N/Message');
+const Portal = require('../../misc/Portal');
+const ResizableModal = require('../../misc/ResizableModal');
 
 module.exports = ({title = "", showDialog = false, buttons = [], closeAction = () => {}, msg = "Missing message"}) => {
     return (

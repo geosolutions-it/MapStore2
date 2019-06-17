@@ -8,13 +8,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const {connect} = require('react-redux');
-const {createSelector} = require("reselect");
-const {compose} = require('recompose');
-const enhancer = require("./EditorEnhancer");
-const {cleanEditing, saveRule, setLoading} = require("../../actions/rulesmanager");
-const {activeRuleSelector, geometryStateSel} = require("../../selectors/rulesmanager");
-
 const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require("../../components/layout/BorderLayout");
@@ -23,12 +16,13 @@ const MainEditor = require("../../components/manager/rulesmanager/ruleseditor/Ed
 const StylesEditor = require("../../components/manager/rulesmanager/ruleseditor/StylesEditor");
 const FiltersEditor = require("../../components/manager/rulesmanager/ruleseditor/FiltersEditor");
 const AttributesEditor = require("../../components/manager/rulesmanager/ruleseditor/AttributesEditor");
-const ModalDialog = require("./ModalDialog");
+const ModalDialog = require("../../components/manager/rulesmanager/ModalDialog");
 
 
 class RuleEditor extends React.Component {
     static propTypes = {
         initRule: PropTypes.object,
+        disableDetails: PropTypes.bool,
         activeRule: PropTypes.object,
         activeEditor: PropTypes.string,
         onNavChange: PropTypes.func,
@@ -54,12 +48,13 @@ class RuleEditor extends React.Component {
         type: ""
     }
     render() {
-        const {loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties} = this.props;
+        const { loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties, disableDetails} = this.props;
         const {modalProps} = this.state || {};
         return (
             <BorderLayout
                 className="bg-body"
                 header={<Header
+                                disableDetails={disableDetails}
                                 layer={layer}
                                 loading={loading}
                                 type={type}
@@ -71,9 +66,9 @@ class RuleEditor extends React.Component {
                                 onNavChange={onNavChange}/>}
             >
                 <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
-                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
-                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule.constraints} active={activeEditor === "3"}/>
-                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule.constraints} setOption={setConstraintsOption}/>
+                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
+                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule && activeRule.constraints} active={activeEditor === "3"}/>
+                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption}/>
                 <ModalDialog {...modalProps}/>
             </BorderLayout>);
     }
@@ -139,11 +134,4 @@ class RuleEditor extends React.Component {
 
     }
 }
-
-module.exports = compose(
-    connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({activeRule, geometryState})), {
-        onExit: cleanEditing,
-        onSave: saveRule,
-        setLoading
-    }),
-    enhancer)(RuleEditor);
+module.exports = RuleEditor;

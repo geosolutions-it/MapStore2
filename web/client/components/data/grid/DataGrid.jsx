@@ -8,7 +8,6 @@
 const PropTypes = require('prop-types');
 const Grid = require('react-data-grid');
 const ReactDOM = require('react-dom');
-const forceScrollTop = require('./forceScrollTop');
 
 class DataGrid extends Grid {
     static propTypes = {
@@ -81,11 +80,4 @@ class DataGrid extends Grid {
     }
 }
 
-module.exports =
-    /*
-     * NOTE: forceScrollTop is a workaround to avoid to show empty rows during virtual scrolling.
-     * TODO: it should be fixed at higher level
-     */
-    forceScrollTop(
-        DataGrid
-    );
+module.exports = DataGrid;

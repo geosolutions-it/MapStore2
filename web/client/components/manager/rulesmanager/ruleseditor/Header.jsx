@@ -10,7 +10,7 @@ const Toolbar = require('../../../misc/toolbar/Toolbar');
 const {NavItem, Nav} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {areDetailsActive} = require("../../../../utils/RulesEditor");
-module.exports = ({layer, rule = {}, onNavChange = () => {}, onExit = () => {}, disableSave = true, onSave = () => {}, activeTab = "1", loading = false, type = ""}) => {
+module.exports = ({layer, rule = {}, onNavChange = () => {}, onExit = () => {}, disableSave = true, disableDetails = false, onSave = () => {}, activeTab = "1", loading = false, type = ""}) => {
     const buttons = [{
             glyph: '1-close',
             tooltipId: 'rulesmanager.tooltip.close',
@@ -23,7 +23,7 @@ module.exports = ({layer, rule = {}, onNavChange = () => {}, onExit = () => {}, 
             onClick: onSave,
             disabled: disableSave || loading
         }];
-    const detailsActive = areDetailsActive(layer, rule);
+    const detailsActive = !disableDetails && areDetailsActive(layer, rule);
     return (<div className="ms-panel-header-container">
                 <div className="ms-toolbar-container">
                     <Toolbar btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary', tooltipPosition: 'bottom'}} buttons={buttons}/>

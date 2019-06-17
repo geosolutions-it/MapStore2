@@ -33,7 +33,6 @@ module.exports = {
         MapSearchPlugin: require('../../plugins/MapSearch'),
         LanguagePlugin: require('../../plugins/Language'),
         ManagerPlugin: require('../../plugins/manager/Manager'),
-        RulesManagerPlugin: require('../../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../../plugins/manager/ManagerMenu'),
         SharePlugin: require('../../plugins/Share'),
         SavePlugin: require('../../plugins/Save'),

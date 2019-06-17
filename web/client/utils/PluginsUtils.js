@@ -83,7 +83,7 @@ const handleExpression = (state, context, expression) => {
     return expression;
 };
 /**
- * filters the plugins passed evaluating the dsiablePluginIf expression with the given context
+ * filters the plugins passed evaluating the disablePluginIf expression with the given context
  * @memberof utils.PluginsUtils
  * @param  {Object} item         the plugins
  * @param  {function} [state={}]   The state to evaluate
@@ -287,14 +287,14 @@ const PluginsUtils = {
      * Create an object structured like following:
      * ```
      * {
-     *   bodyPlugins: [...all the configs without cfg.contanerPosition attribute ]
-     *   columns: [...all the configs configured with cfg.contanerPosition: "columns"]
-     *   header: [...all the configs configured with cfg.contanerPosition: "header"]
-     *   ... and so on, for every cfg.contanerPosition value found
+     *   bodyPlugins: [...all the configs without cfg.containerPosition attribute ]
+     *   columns: [...all the configs configured with cfg.containerPosition: "columns"]
+     *   header: [...all the configs configured with cfg.containerPosition: "header"]
+     *   ... and so on, for every cfg.containerPosition value found
      * }
      * ```
      * @param  {object[]} pluginsConfig The configurations of plugins
-     * @return {object}   An object that spreads the configruations in arrays by their `cfg.containerPosition`.
+     * @return {object}   An object that spreads the configurations in arrays by their `cfg.containerPosition`.
      */
     mapPluginsPosition: (pluginsConfig = []) =>
         pluginsConfig.reduce( (o, p) => {
@@ -310,12 +310,12 @@ const PluginsUtils = {
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {}),
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
-     * @param {object} state the state. This is required to laod plugins that depend from the state itself
+     * @param {object} state the state. This is required to load plugins that depend from the state itself
      * @param {object} plugins all the plugins, like this:
      * ```
      *  {
-     *      P1Plugin: connectdComponent1,
-     *      P2Plugin: connectdComponent2
+     *      P1Plugin: connectedComponent1,
+     *      P2Plugin: connectedComponent2
      *  }
      * ```
      * @param {array} pluginConfig the configurations of the plugins
@@ -378,10 +378,10 @@ const PluginsUtils = {
      * The plugin config properties are taken from the **pluginCfg** property.
 
      * @param {function} [mapStateToProps] state to properties selector
-     * @param {function} [mapDispatchToProps] dispatchable actions selector
+     * @param {function} [mapDispatchToProps] dispatch-able actions selector
      * @param {function} [mergeProps] merge function, if not defined, the internal override applies
      * @param {object} [options] connect options (look at react-redux docs for details)
-     * @returns {function} funtion to be applied to the dumb object to connect it to state / dispatchers
+     * @returns {function} function to be applied to the dumb object to connect it to state / dispatchers
      */
     connect: (mapStateToProps, mapDispatchToProps, mergeProps, options) => {
         return connect(mapStateToProps, mapDispatchToProps, mergeProps || pluginsMergeProps, options);

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RuleList>
+    <rule grant="ALLOW">
+        <id>700</id>
+        <priority>122</priority>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <ipaddress>172.19.0.0/16</ipaddress>
+        <workspace>WORKSPACE</workspace>
+        <layer>LAYER_1</layer>
+    </rule>
+    <rule grant="DENY">
+        <id>715</id>
+        <priority>130</priority>
+        <username>TEST_USER</username>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <workspace>WORKSPACE</workspace>
+        <layer>LAYER_1</layer>
+    </rule>
+    <rule grant="ALLOW">
+        <id>783</id>
+        <priority>137</priority>
+        <rolename>TEST_ROLE</rolename>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <ipaddress>172.19.0.0/16</ipaddress>
+        <workspace>WORKSPACE</workspace>
+        <layer>TEST_LAYER</layer>
+    </rule>
+    <rule grant="DENY">
+        <id>505</id>
+        <priority>140</priority>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <service>WFS</service>
+        <request>LOCKFEATURE</request>
+    </rule>
+    <rule grant="DENY">
+        <id>591</id>
+        <priority>141</priority>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <service>WFS</service>
+        <request>GETFEATUREWITHLOCK</request>
+    </rule>
+    <rule grant="DENY">
+        <id>504</id>
+        <priority>147</priority>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <service>WFS</service>
+        <request>TRANSACTION</request>
+    </rule>
+    <rule grant="ALLOW">
+        <id>838</id>
+        <priority>158</priority>
+        <instance>
+            <id>5</id>
+            <name>default-gs</name>
+        </instance>
+        <workspace>WORKSPACE</workspace>
+        <layer>LAYER</layer>
+        <constraints>
+            <type>VECTOR</type>
+            <allowedStyles/>
+            <attributes>
+                <attribute access="READONLY">
+                    <datatype>java.lang.String</datatype>
+                    <name>ATTR_1</name>
+                </attribute>
+                <attribute access="READONLY">
+                    <datatype>java.lang.String</datatype>
+                    <name>ATTR_2</name>
+                </attribute>
+                <attribute access="READONLY">
+                    <name>ATTR_3</name>
+                </attribute>
+                <attribute access="READONLY">
+                    <datatype>com.vividsolutions.jts.geom.Polygon</datatype>
+                    <name>GEOMETRY</name>
+                </attribute>
+                <attribute access="READONLY">
+                    <datatype>java.sql.Date</datatype>
+                    <name>AGGIORNAMENTO</name>
+                </attribute>
+                <attribute access="READONLY">
+                    <datatype>java.math.BigDecimal</datatype>
+                    <name>ID</name>
+                </attribute>
+            </attributes>
+        </constraints>
+    </rule>
+</RuleList>

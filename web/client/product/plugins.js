@@ -61,7 +61,6 @@ module.exports = {
         ManagerPlugin: require('../plugins/manager/Manager'),
         UserManagerPlugin: require('../plugins/manager/UserManager'),
         GroupManagerPlugin: require('../plugins/manager/GroupManager'),
-        RulesManagerPlugin: require('../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         RedirectPlugin: require('../plugins/Redirect'),
         SharePlugin: require('../plugins/Share'),

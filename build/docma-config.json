@@ -222,6 +222,8 @@
                 "web/client/plugins/Notifications.jsx",
                 "web/client/plugins/Print.jsx",
                 "web/client/plugins/QueryPanel.jsx",
+                "web/client/plugins/RulesEditor.jsx",
+                "web/client/plugins/RulesDataGrid.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
@@ -233,7 +235,10 @@
                 "web/client/plugins/Widgets.jsx",
                 "web/client/plugins/WidgetsTray.jsx",
                 "web/client/plugins/ZoomIn.jsx",
-                "web/client/plugins/ZoomOut.jsx"
+                "web/client/plugins/ZoomOut.jsx",
+
+                "web/client/product/pages/index.jsdoc",
+                "web/client/product/pages/RulesManager.jsx"
             ]
         }
     ]
