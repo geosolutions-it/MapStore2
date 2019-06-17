@@ -165,23 +165,41 @@ const isVisible = state => !isCollapsed(state) && hasLayers(state);
  */
 const multidimOptionsSelectorCreator = layerId => state => {
     const { bbox: viewport } = mapSelector(state);
-    const crs = get(layerDimensionDataSelectorCreator(layerId, "space")(state), 'domain.CRS');
+    const timeDimensionData = layerDimensionDataSelectorCreator(layerId, "space")(state);
+    const sourceVersion = get(timeDimensionData, 'source.version');
+    // clean up possible string values.
     const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
         return { ...p, [c]: parseFloat(viewport.bounds[c]) };
     }, {});
-    if (!crs || !bounds || !isMapSync(state)) { // TODO: optional filtering
+    if (!bounds || !isMapSync(state)) { // TODO: optional filtering
         return {};
     }
-    // TODO: reprojectBbox (and the view)
-    let [minx, miny, maxx, maxy] = reprojectBbox(bounds, projectionSelector(state), crs);
-    // workaround for dateline issues. anyway it takes only half of the data. TODO: update when geoserver support it.
-    if (maxx < minx && crs === "EPSG:4326") {
-        maxx = maxx + 360;
+    if (sourceVersion !== "1.1") {
+        const crs = get(timeDimensionData, 'domain.CRS');
+
+        if (!crs || !bounds || !isMapSync(state)) { // TODO: optional filtering
+            return {};
+        }
+        // TODO: reprojectBbox (and the view)
+        let [minx, miny, maxx, maxy] = reprojectBbox(bounds, projectionSelector(state), crs);
+        // workaround for dateline issues. anyway it takes only half of the data.
+        // Only version 1.1 of the extension supports cross-dateline queries
+        if (maxx < minx && crs === "EPSG:4326") {
+            maxx = maxx + 360;
+        }
+        const bbox = `${minx},${miny},${maxx},${maxy}`;
+        return {
+            bbox,
+            crs
+        };
     }
+    // version 1.1 supports bbox in form minx,miny,maxx,maxy,crs
+    let {minx, miny, maxx, maxy} = bounds;
+    const crs = viewport.crs;
     return {
-        bbox: `${minx},${miny},${maxx},${maxy}`,
-        crs
+        bbox: `${minx},${miny},${maxx},${maxy},${crs}`
     };
+
 };
 
 module.exports = {
