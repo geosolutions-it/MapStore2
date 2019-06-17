@@ -205,7 +205,7 @@ class Importer extends React.Component {
     render() {
         let message = this.props.selectedImport ? "importer.dropfileImport" : "importer.dropfile";
         return (
-            <Grid fluid>
+            <Grid className="importer-plugin" fluid>
                 <Row>
                     <Col md={6}>
                     <FileUploader

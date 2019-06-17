@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 
 const { itemSelected } = require('../../actions/manager');
 const assign = require('object-assign');
-const {isRulesManagerConfigured} = require("../../selectors/rulesmanager");
+const { isPageConfigured } = require("../../selectors/plugins");
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
 
 const Container = connect(() => ({
@@ -39,7 +39,8 @@ class ManagerMenu extends React.Component {
         mapType: PropTypes.string,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
-        enableRulesManager: PropTypes.bool
+        enableRulesManager: PropTypes.bool,
+        enableImporter: PropTypes.bool
     };
 
     static contextTypes = {
@@ -58,6 +59,11 @@ class ManagerMenu extends React.Component {
             "msgId": "rulesmanager.menutitle",
             "glyph": "admin-geofence",
             "path": "/rules-manager"
+            },
+        {
+            "msgId": "importer.title",
+            "glyph": "upload",
+            "path": "/importer"
         }],
         role: "",
         onItemClick: () => {},
@@ -76,13 +82,19 @@ class ManagerMenu extends React.Component {
     };
 
     getTools = () => {
-        return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.entries.filter(e => this.props.enableRulesManager || e.path !== "/rules-manager").sort((a, b) => a.position - b.position).map((entry) => {
-            return {
-                action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
-                text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
-                cfg: {...entry}
-            };
-        })];
+        return [{element:
+            <span key="burger-menu-title">{this.props.title}</span>},
+                ...this.props.entries
+                    .filter(e => this.props.enableRulesManager || e.path !== "/rules-manager")
+                    .filter(e => this.props.enableImporter || e.path !== "/importer")
+                    .sort((a, b) => a.position - b.position).map((entry) => {
+                        return {
+                            action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
+                            text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
+                            cfg: {...entry}
+                        };
+                    })
+        ];
     };
 
     render() {
@@ -105,9 +117,13 @@ class ManagerMenu extends React.Component {
     }
 }
 
+const IMPORTER_ID = 'importer';
+const RULE_MANAGER_ID = 'rulesmanager';
+
 module.exports = {
     ManagerMenuPlugin: assign(connect((state) => ({
-        enableRulesManager: isRulesManagerConfigured(state),
+        enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
+        enableImporter: isPageConfigured(IMPORTER_ID)(state),
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
     }), {

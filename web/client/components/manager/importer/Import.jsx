@@ -27,7 +27,6 @@ class Task extends React.Component {
         deleteImport: PropTypes.func,
         deleteTask: PropTypes.func,
         deleteAction: PropTypes.node,
-        editAction: PropTypes.node,
         placement: PropTypes.string
     };
 
@@ -39,7 +38,6 @@ class Task extends React.Component {
     static defaultProps = {
         placement: "bottom",
         deleteAction: <Message msgId="importer.task.delete"/>,
-        editAction: <Message msgId="importer.task.edit"/>,
         timeout: 10000,
         "import": {},
         loadTask: () => {},
@@ -86,7 +84,6 @@ class Task extends React.Component {
 
     renderTask = (task) => {
         let tooltipDelete = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
-        let tooltipEdit = <Tooltip id="import-edit-action">{this.props.editAction}</Tooltip>;
         return (<tr key={task && task.id}>
             <td><a onClick={(e) => {e.preventDefault(); this.props.loadTask(task.id); }} >{task.id}</a></td>
             <td><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderProgressTask(task)}{this.renderLoadingTask(task)}</td>
@@ -96,14 +93,6 @@ class Task extends React.Component {
                         <Glyphicon glyph="remove"/>
                     </Button>
                 </OverlayTrigger>
-                {task.state === "COMPLETE" ?
-                    <OverlayTrigger overlay={tooltipEdit} placement={this.props.placement}>
-                        <Button className="importer-button" bsSize="xsmall" onClick={this.editDefaultStyle.bind(null, task.id)}>
-                            <Glyphicon glyph="pencil"/>
-                            <Message msgId="importer.task.edit" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
             </td>
         </tr>);
     };
