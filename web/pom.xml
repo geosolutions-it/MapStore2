@@ -226,6 +226,7 @@
                                     <include>**/*.html</include>
                                     <include>**/*.json</include>
                                     <include>**/img/*</include>
+                                    <include>product/assets/symbols/*</include>
                                     <include>**/*.less</include>
                                 </includes>
                                 <excludes>

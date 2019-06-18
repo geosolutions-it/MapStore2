@@ -8,8 +8,7 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP} = require('../actions/map');
-
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP, CHANGE_MAP_LIMITS } = require('../actions/map');
 
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
@@ -29,6 +28,14 @@ function mapConfig(state = null, action) {
             zoom: action.zoom,
             mapStateSource: action.mapStateSource
         });
+    case CHANGE_MAP_LIMITS:
+        return assign({}, state, {
+        limits: {
+            restrictedExtent: action.restrictedExtent,
+            crs: action.crs,
+            minZoom: action.minZoom
+        }
+    });
     case CHANGE_MAP_CRS:
         return assign({}, state, {
             projection: action.crs
@@ -73,9 +80,10 @@ function mapConfig(state = null, action) {
         });
     }
     case PAN_TO: {
+        // action.center now can be also an array (with the coord specified in 4326)
         const center = CoordinatesUtils.reproject(
                 action.center,
-                action.center.crs,
+                action.center.crs || 'EPSG:4326',
                 'EPSG:4326');
         return assign({}, state, {
             center,

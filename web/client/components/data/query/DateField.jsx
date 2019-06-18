@@ -11,6 +11,7 @@ const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
 momentLocalizer(moment);
 const utcDateWrapper = require('../../misc/enhancers/utcDateWrapper');
+const Message = require('../../I18N/Message');
 const {getDateTimeFormat} = require('../../../utils/TimeUtils');
 const {DateTimePicker} = require('react-widgets');
 const {Row, Col} = require('react-bootstrap');
@@ -32,16 +33,17 @@ require('react-widgets/lib/less/react-widgets.less');
 */
 class DateField extends React.Component {
     static propTypes = {
-        timeEnabled: PropTypes.bool,
+        attType: PropTypes.string,
         dateEnabled: PropTypes.bool,
-        operator: PropTypes.string,
         fieldName: PropTypes.string,
         fieldRowId: PropTypes.number,
-        attType: PropTypes.string,
         fieldValue: PropTypes.object,
         fieldException: PropTypes.string,
+        operator: PropTypes.string,
         onUpdateField: PropTypes.func,
-        onUpdateExceptionField: PropTypes.func
+        onUpdateExceptionField: PropTypes.func,
+        showLabels: PropTypes.bool,
+        timeEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -58,7 +60,8 @@ class DateField extends React.Component {
         fieldValue: null,
         fieldException: null,
         onUpdateField: () => {},
-        onUpdateExceptionField: () => {}
+        onUpdateExceptionField: () => {},
+        showLabels: false
     };
     render() {
         // these values are already parsed by the enhancer
@@ -71,6 +74,7 @@ class DateField extends React.Component {
                 (<div>
                     <Row>
                         <Col xs={6}>
+                            {this.props.showLabels && <Message msgId="queryform.from"/>}
                             <UTCDateTimePicker
                                 type={this.props.attType}
                                 defaultValue={startdate}
@@ -81,6 +85,7 @@ class DateField extends React.Component {
                                 onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
                         </Col>
                         <Col xs={6}>
+                            {this.props.showLabels && <Message msgId="queryform.to"/>}
                             <UTCDateTimePicker
                                 type={this.props.attType}
                                 defaultValue={enddate}
@@ -95,6 +100,7 @@ class DateField extends React.Component {
              :
                 (<Row>
                     <Col xs={12}>
+                        {this.props.showLabels && <Message msgId="queryform.date"/>}
                         <UTCDateTimePicker
                             type={this.props.attType}
                             defaultValue={startdate}

@@ -8,181 +8,117 @@
 
 const axios = require('../../libs/ajax');
 const assign = require('object-assign');
+const {castArray, get} = require('lodash');
+const CatalogAPI = require('../CSW');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
-const EMPTY_RULE = {
-        constraints: {},
-        ipaddress: "",
-        layer: "",
-        request: "",
-        rolename: "",
-        service: "",
-        username: "",
-        workspace: ""
-    };
-const cleanConstraints = (rule) => {
-    if (!rule.constraints ) {
-        return rule;
-    }else if (rule.grant === "DENY") {
-        const {constraints: omit, ...r} = rule;
-        return r;
-    }
-    let constraints = {...rule.constraints};
-    constraints.allowedStyles = constraints.allowedStyles && constraints.allowedStyles.style || [];
-    constraints.attributes = constraints.attributes && constraints.attributes.attribute || [];
-    constraints.restrictedAreaWkt = constraints.restrictedAreaWkt || "";
-    return {...rule, constraints};
+
+/**
+ * Services to retrieve users and groups (roles)
+ */
+const USER_SERVICES = {
+    geofence: require('../geofence/UserService'),
+    geoserver: require('./geofence/UserService')
 };
+
+const RULE_SERVICES = {
+    geofence: require('../geofence/RuleService'),
+    geoserver: require('./geofence/RuleService')
+};
+
+const LAYER_SERVICES = {
+    csw: ({ getGeoServerInstance}) => ({
+        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+            const { url: baseURL } = getGeoServerInstance();
+            const catalogUrl = baseURL + 'csw';
+            const { workspace = "" } = parentsFilter;
+            return CatalogAPI.workspaceSearch(catalogUrl, (page) * size + 1, size, layerFilter, workspace)
+                .then((layers) => ({ data: layers.records.map(layer => ({ name: layer.dc.identifier.replace(/^.*?:/g, '') })), count: layers.numberOfRecordsMatched }));
+        }
+    }),
+    rest: ({ addBaseUrlGS }) => ({
+        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+            const { workspace = "" } = parentsFilter;
+            return axios.get('/rest/layers.json', addBaseUrlGS({
+                'headers': {
+                    'Accept': 'application/json'
+                }
+            }))
+            .then(response => get(response, 'data.layers.layer'))
+            .then((layers = []) => castArray(layers))
+                .then(layers => layers.filter(l => !workspace || l && l.name && l.name.indexOf(`${workspace}:`) === 0))
+            .then(layers => ({
+                data: layers
+                    .filter((r, i) => i >= page * size && i < (page + 1) * size) // emulate pagination
+                    .map(layer => ({ name: layer.name.replace(/^.*?:/g, '') })),
+                count: layers.length
+            }));
+        }
+    })
+};
+
+/**
+ * API for GeoFence Services
+ * The API can be configured to use Standalone version or GeoServer integrated one.
+ */
 var Api = {
+    // RULES
     cleanCache: () => {
-        return axios.get('rest/geofence/ruleCache/invalidate', Api.addBaseUrlGS())
-            .then(function(response) {
-                return response.data;
-            }
-        );
+        return Api.getRuleService().cleanCache();
     },
-    loadRules: function(page, rulesFiltersValues, entries = 10) {
-        const params = {
-            page,
-            entries,
-            ...this.assignFiltersValue(rulesFiltersValues)
-        };
-        const options = {params, 'headers': {
-            'Content': 'application/json'
-        }};
-        return axios.get('geofence/rest/rules', this.addBaseUrl(options))
-            .then(function(response) {
-                return response.data;
-            }
-        );
+    loadRules: (page, rulesFiltersValues, entries = 10) => {
+        return Api.getRuleService().loadRules(page, rulesFiltersValues, entries);
     },
 
-    getRulesCount: function(rulesFiltersValues) {
-        const options = {
-            'params': this.assignFiltersValue(rulesFiltersValues)
-        };
-        return axios.get('geofence/rest/rules/count', this.addBaseUrl(options)).then(function(response) {
-            return response.data;
-        });
+    /**
+     * Call the API to get the RulesCount with the provided rulesFilter
+     * @returns {Promise<Number>} a promise that emits the count of rules using the current filter
+     */
+    getRulesCount: (rulesFiltersValues) => {
+        return Api.getRuleService().getRulesCount(rulesFiltersValues);
     },
 
-    moveRules: function(targetPriority, rules) {
-        const options = {
-            'params': {
-                'targetPriority': targetPriority,
-                'rulesIds': rules && rules.map(rule => rule.id).join()
-            }
-        };
-        return axios.get('geofence/rest/rules/move', this.addBaseUrl(options)).then(function(response) {
-            return response.data;
-        });
+    moveRules: (targetPriority, rules) => {
+        return Api.getRuleService().moveRules(targetPriority, rules);
     },
 
-    deleteRule: function(ruleId) {
-        return axios.delete('geofence/rest/rules/id/' + ruleId, this.addBaseUrl({}));
+    updateRule: (rule) => {
+        return Api.getRuleService().updateRule(rule);
+    },
+    deleteRule: (ruleId) => {
+        return Api.getRuleService().deleteRule(ruleId);
     },
 
-    addRule: function(rule) {
-        const newRule = {...rule};
-        if (!newRule.instance) {
-            const {id: instanceId} = ConfigUtils.getDefaults().geoFenceGeoServerInstance;
-            newRule.instance = {id: instanceId};
-        }
-        if (!newRule.grant) {
-            newRule.grant = "ALLOW";
-        }
-        return axios.post('geofence/rest/rules', cleanConstraints(newRule), this.addBaseUrl({
-            'headers': {
-                'Content': 'application/json'
-            }
-        }));
+    addRule: (rule) => {
+        return Api.getRuleService().addRule(rule);
     },
 
-    updateRule: function(rule) {
-        // id, priority and grant aren't updatable
-        const {id, priority, grant, position, ...others} = cleanConstraints(rule);
-        const newRule = {...EMPTY_RULE, ...others};
-        return axios.put(`geofence/rest/rules/id/${id}`, newRule, this.addBaseUrl({
-            'headers': {
-                'Content': 'application/json'
-            }
-        }));
+    // USERS-ROLES
+    getRolesCount: function(filter = " ") {
+        return Api.getUserService().getRolesCount(filter);
+    },
+    /**
+     * Create a promise that resolves the users matched with the filter passed
+     * @param {String} [filter] the text to search
+     * @returns {Promise<object>} the object with this shape: `{roles: [{name: "USER"}]}`
+     */
+    getRoles: function(filter, page, entries = 10) {
+        return Api.getUserService().getRoles(filter, page, entries);
     },
 
-    assignFiltersValue: function(rulesFiltersValues = {}) {
-        return Object.keys(rulesFiltersValues).map(key => ({key, normKey: this.normalizeKey(key)}))
-                .reduce((params, {key, normKey}) => ({...params, [normKey]: this.normalizeFilterValue(rulesFiltersValues[key])}), {});
-    },
-
-    normalizeFilterValue(value) {
-        return value === "*" ? undefined : value;
-    },
-    normalizeKey(key) {
-        switch (key) {
-            case 'username':
-                return 'userName';
-            case 'rolename':
-                return 'groupName';
-            default:
-                return key;
-        }
-    },
-    assignFilterValue: function(queryParameters, filterName, filterAny, filterValue) {
-        if (!filterValue) {
-            return;
-        }
-        if (filterValue === '*') {
-            assign(queryParameters, {[filterAny]: 1});
-        } else {
-            assign(queryParameters, {[filterName]: filterValue});
-        }
-    },
-    getGroupsCount: function(filter = " ") {
-        const encodedFilter = encodeURIComponent(`%${filter}%`);
-        return axios.get(`geofence/rest/groups/count/${encodedFilter}`, this.addBaseUrl({
-            'headers': {
-                'Accept': 'text/plain'
-            }
-        })).then(function(response) {
-            return response.data;
-        });
-    },
-    getGroups: function(filter, page, entries = 10) {
-        const params = {
-            page,
-            entries,
-            nameLike: `%${filter}%`
-        };
-        const options = {params};
-        return axios.get(`geofence/rest/groups`, this.addBaseUrl(options)).then(function(response) {
-            return response.data;
-        });
-    },
     getUsersCount: function(filter = " ") {
-        const encodedFilter = encodeURIComponent(`%${filter}%`);
-        return axios.get(`geofence/rest/users/count/${encodedFilter}`, this.addBaseUrl({
-            'headers': {
-                'Accept': 'text/plain'
-            }
-        })).then(function(response) {
-            return response.data;
-        });
+        return Api.getUserService().getUsersCount(filter);
     },
-
+    /**
+     * Create a promise that resolves the users matched with the filter passed
+     * @param {String} [filter] the text to search
+     * @returns {Promise<object>} the object with this shape: `{users: [{name: "USER"}]}`
+     */
     getUsers: function(filter, page, entries = 10) {
-        const params = {
-            page,
-            entries,
-            nameLike: `%${filter}%`
-        };
-        const options = {params};
-        return axios.get(`geofence/rest/users`, this.addBaseUrl(options)).then(function(response) {
-            return response.data;
-        });
+        return Api.getUserService().getUsers(filter, page, entries);
     },
-
     getWorkspaces: function() {
-        return axios.get('rest/workspaces', this.addBaseUrlGS({
+        return axios.get('rest/workspaces', Api.addBaseUrlGS({
             'headers': {
                 'Accept': 'application/json'
             }
@@ -190,13 +126,37 @@ var Api = {
             return response.data;
         });
     },
-
-    nullToAny: function(value) {
-        return !value ? '*' : value;
+    /**
+     * Returns a promise that resolves the list of layer, paginated, based on the filter search.
+     *
+     * @returns {Promise<object>} an object with this shape: `{data: [{name: "LAYER_NAME"}], count: 1}`. Count is the total number of result, out of pagination
+     */
+    getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+        return Api.getLayerService().getLayers(layerFilter, page, size, parentsFilter);
     },
+    getGeoServerInstance: () => ConfigUtils.getDefaults().geoFenceGeoServerInstance,
+
+    /**
+     * Get the API to use as user service (to retrieve users and roles)
+     */
+    getUserService: () => USER_SERVICES[Api.getUserServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS }),
+    getRuleService: () => RULE_SERVICES[Api.getRuleServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance}),
+    getLayerService: () => LAYER_SERVICES[Api.getLayerServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance }),
+    /**
+     * Get the user service type configured
+     * @returns {string} one of `geofence`| `geoserver`. TODO: add other service types `geostore`
+     */
+    getUserServiceType: () => ConfigUtils.getDefaults().geoFenceUserServiceType || ConfigUtils.getDefaults().geoFenceServiceType || 'geofence',
+    /**
+    * Get the rule service type type configured. Can be geoserver or geofence.
+    * @returns {string} one of `geofence`. TODO: add other service types (geostore, geoserver)
+    */
+    getRuleServiceType: () => ConfigUtils.getDefaults().geoFenceServiceType || 'geofence',
+    getLayerServiceType: () => ConfigUtils.getDefaults().geoFenceLayerServiceType || 'csw',
 
     addBaseUrl: function(options = {}) {
-        return assign(options, {baseURL: ConfigUtils.getDefaults().geoFenceUrl});
+        return assign(options, {
+            baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
     },
     addBaseUrlGS: function(options = {}) {
         const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};

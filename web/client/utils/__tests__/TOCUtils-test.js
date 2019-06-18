@@ -110,6 +110,7 @@ describe('TOCUtils', () => {
         const tooltip = getTooltip(node, currentLocale);
         expect(tooltip).toBe("Livello - desc");
     });
+
     it('test getTooltipFragment', () => {
         const node = {
             name: 'layer00',
@@ -172,7 +173,6 @@ describe('TOCUtils', () => {
         const {title, tooltipText} = getTitleAndTooltip({node, currentLocale});
         expect(title).toBe("Livello");
         expect(tooltipText).toBe("Livello - desc");
-
     });
     it('test getTitleAndTooltip NoTooltip', () => {
         const node = {

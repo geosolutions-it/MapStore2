@@ -153,7 +153,7 @@
             "web/client/selectors/featuregrid.js",
             "web/client/selectors/floatinglegend.js",
             "web/client/selectors/map.js",
-            "web/client/selectors/mapinfo.js",
+            "web/client/selectors/mapInfo.js",
             "web/client/selectors/maplayout.js",
             "web/client/selectors/maptype.js",
             "web/client/selectors/tutorial.js",
@@ -163,6 +163,7 @@
             "web/client/reducers/featuregrid.js",
             "web/client/reducers/globeswitcher.js",
             "web/client/reducers/floatinglegend.js",
+            "web/client/reducers/mapInfo.js",
             "web/client/reducers/maps.js",
             "web/client/reducers/maptype.js",
             "web/client/reducers/notifications.js",
@@ -221,6 +222,8 @@
                 "web/client/plugins/Notifications.jsx",
                 "web/client/plugins/Print.jsx",
                 "web/client/plugins/QueryPanel.jsx",
+                "web/client/plugins/RulesEditor.jsx",
+                "web/client/plugins/RulesDataGrid.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
@@ -232,7 +235,10 @@
                 "web/client/plugins/Widgets.jsx",
                 "web/client/plugins/WidgetsTray.jsx",
                 "web/client/plugins/ZoomIn.jsx",
-                "web/client/plugins/ZoomOut.jsx"
+                "web/client/plugins/ZoomOut.jsx",
+
+                "web/client/product/pages/index.jsdoc",
+                "web/client/product/pages/RulesManager.jsx"
             ]
         }
     ]

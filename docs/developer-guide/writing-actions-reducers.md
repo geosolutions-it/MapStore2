@@ -99,14 +99,20 @@ Then in the reducer we can have different implementations.
 Here we show the one using **arrayUpdate** from @mapstore/utils/ImmutableUtils for updating objects in array
 ```
 import {UPDATE_LAYER_FEATURE} from '@mapstore/actions/layer';
+import {find} from 'lodash';
+const defaultState = {
+    features: [{ id: 1, type: "Feature", geometry: { type : "Point", coordinates: [1, 2]}}]
+};
 
-export default function layer(state, action) {
+export default function layer(state = defaultState, action) {
     switch (action.type) {
         case UPDATE_LAYER_FEATURE: {
-            // lodash find
+            // let's assume that action.props = {newProp: "newValue"}
             const feature = find(state.features, {id: action.id});
-            // merge the old and the new feature object, replacing the existing element in the array
-            return arrayUpdate("features", {...feature, ...action.props}, {id: action.id}, state);
+            // merging the old feature object with the new prop while replacing the existing element in the array
+            const newFeature = {...feature, ...action.props};
+            return arrayUpdate("features", newFeature, {id: action.id}, state);
+            // after this you expect to find the new properties in the feature specified by the id
         }
         default: return state;
     }
@@ -145,12 +151,14 @@ describe('Test correctness of the map actions', () => {
 
 ```
 In order to speed up the unit test runner, you can:
-- change the path in build\tests.webpack.js to point to the folder parent of __tests__ for example '../web/client/actions'
+- change the path in tests.webpack.js (custom/standard project) or build\tests.webpack.js (framework) to point to the folder parent of __tests__
+for example `'/js/actions'` for custom/standard project or `'../web/client/actions'` for framework
+
 - then run this command:
 `npm run continuoustest`
 
 This allows to run only the tests contained to the specified path.
-**Note:** When all tests are successfully passing remember to restore it to its orignal value '../web'
+**Note:** When all tests are successfully passing remember to restore it to its original value.
 
 ## How to test a reducer
 Here things can become more complicated depending on your reducer but in general you want to test all cases
@@ -158,7 +166,7 @@ Here things can become more complicated depending on your reducer but in general
 // copyright section
 import expect from 'expect';
 import {panTo} from '@mapstore/actions/map';
-import map from '@mapstore/reducers/map';
+import map from '@js/reducers/map'; // the one created before not the one present in @mapstore/reducers
 describe('Test correctness of the map reducers', () => {
     it('testing PAN_TO', () => {
         const center = [2, 3];
@@ -170,8 +178,8 @@ describe('Test correctness of the map reducers', () => {
 });
 ```
 
-Here for speedup testing you can again modify the build\tests.webpack.js
-in order to point to the reducers folder and then runnning
+Here for speedup testing you can again modify the tests.webpack.js (custom/standard project) or build\tests.webpack.js (framework)
+in order to point to the reducers folder and then running
 `npm run continuoustest`
 
 ## Actions and epics

@@ -13,7 +13,7 @@ const {connect} = require("react-redux");
 const { onEditRule, delRules, onCacheClean} = require('../../actions/rulesmanager');
 const {rulesEditorToolbarSelector} = require('../../selectors/rulesmanager');
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
-const Modal = require("./ModalDialog");
+const Modal = require("../../components/manager/rulesmanager/ModalDialog");
 const Message = require("../../components/I18N/Message");
 
 const ToolbarWithModal = ({modalsProps, loading, ...props}) => {

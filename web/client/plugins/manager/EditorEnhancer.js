@@ -26,6 +26,7 @@ const dataStreamFactory = prop$ => {
                 }).do(() => setLoading(false));
     }).let(emitStop);
 };
+
 module.exports = compose(connect(() => ({}), {
     onChangeDrawingStatus: changeDrawingStatus,
     onError: error

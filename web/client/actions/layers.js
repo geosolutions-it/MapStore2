@@ -18,6 +18,7 @@ const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
 const LAYER_ERROR = 'LAYER_ERROR';
 const ADD_LAYER = 'ADD_LAYER';
+const ADD_GROUP = 'ADD_GROUP';
 const REMOVE_LAYER = 'REMOVE_LAYER';
 const SHOW_SETTINGS = 'SHOW_SETTINGS';
 const HIDE_SETTINGS = 'HIDE_SETTINGS';
@@ -114,12 +115,12 @@ function sortNode(node, order, sortLayers = null) {
     };
 }
 
-function removeNode(node, type, properties) {
+function removeNode(node, type, removeEmpty = false) {
     return {
         type: REMOVE_NODE,
         node: node,
         nodeType: type,
-        properties
+        removeEmpty
     };
 }
 
@@ -161,6 +162,14 @@ function addLayer(layer, foreground = true) {
         type: ADD_LAYER,
         layer,
         foreground
+    };
+}
+
+function addGroup(group, parent) {
+    return {
+        type: ADD_GROUP,
+        group,
+        parent
     };
 }
 
@@ -270,9 +279,10 @@ module.exports = {
     changeLayerProperties, changeLayerParams, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
     layersRefreshed, layersRefreshError, refreshLayerVersion, updateLayerDimension, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
-    hideLayerMetadata, download, updateSettingsParams,
+    hideLayerMetadata, download, updateSettingsParams, addGroup,
     CHANGE_LAYER_PROPERTIES, CHANGE_LAYER_PARAMS, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
+    ADD_GROUP,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_LAYERS_DIMENSION, BROWSE_DATA, DOWNLOAD,
     CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA, UPDATE_SETTINGS_PARAMS
 };

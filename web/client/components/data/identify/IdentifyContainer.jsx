@@ -10,12 +10,11 @@ const React = require('react');
 const {Row, Col} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
-const MapInfoUtils = require('../../../utils/MapInfoUtils');
 const DockablePanel = require('../../misc/panels/DockablePanel');
 const GeocodeViewer = require('./GeocodeViewer');
 const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
-
+const Coordinate = require('./coordinates/Coordinate');
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -24,11 +23,9 @@ const Portal = require('../../misc/Portal');
  * @prop {dock} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
  * @prop {function} viewer component that will be used as viewer of Identify
  * @prop {object} viewerOptions options to use with the viewer, eg { header: MyHeader, container: MyContainer }
- * @prop {function} getButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
+ * @prop {function} getToolButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
+ * @prop {function} getNavigationButtons must return an array of navigation buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  */
-
-const CoordinatesEditor = require('../../../plugins/identify/CoordinatesEditor');
-
 module.exports = props => {
     const {
         enabled,
@@ -42,9 +39,10 @@ module.exports = props => {
         position,
         size,
         fluid,
-        validator = MapInfoUtils.getValidator,
+        validResponses = [],
         viewer = () => null,
-        getButtons = () => [],
+        getToolButtons = () => [],
+        getNavigationButtons = () => [],
         showFullscreen,
         reverseGeocodeData = {},
         point,
@@ -54,6 +52,7 @@ module.exports = props => {
         warning,
         clearWarning,
         zIndex,
+        showEmptyMessageGFI,
         // coord editor props
         enabledCoordEditorButton,
         showCoordinateEditor,
@@ -67,19 +66,19 @@ module.exports = props => {
     let lngCorrected = null;
     if (latlng) {
         /* lngCorrected is the converted longitude in order to have the value between
-        the range (-180 / +180).*/
-        lngCorrected = latlng && Math.round(latlng.lng * 100000) / 100000;
+         * the range (-180 / +180).
+         * Precision has to be >= than the coordinate editor precision
+         * especially in the case of aeronautical degree edito which is 12
+        */
+        lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
         /* the following formula apply the converion */
         lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
     }
-
-    const validatorFormat = validator(format);
-    const validResponses = validatorFormat.getValidResponses(responses);
     const Viewer = viewer;
-    const buttons = getButtons({...props, lngCorrected, validResponses, latlng});
+    // TODO: put all the header (Toolbar, navigation, coordinate editor) outside the container
+    const toolButtons = getToolButtons({...props, lngCorrected, validResponses, latlng});
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
-    const CoordEditor = enabledCoordEditorButton && showCoordinateEditor ? CoordinatesEditor : null;
     return (
         <div>
             <DockablePanel
@@ -96,24 +95,37 @@ module.exports = props => {
                 style={dockStyle}
                 showFullscreen={showFullscreen}
                 zIndex={zIndex}
-                header={[ CoordEditor &&
-                    <CoordEditor
-                        isDraggable={false}
-                        removeVisible={false}
+                header={[
+                    <Coordinate
+                        key="coordinate-editor"
                         formatCoord={formatCoord}
-                        coordinate={point.latlng ? {lat: point.latlng.lat, lon: lngCorrected } : {lat: "", lon: ""}}
+                        enabledCoordEditorButton={enabledCoordEditorButton}
                         onChange={onChangeClickPoint}
                         onChangeFormat={onChangeFormat}
-                    /> || null,
+                        edit={showCoordinateEditor}
+                        coordinate={{
+                            lat: latlng && latlng.lat,
+                            lon: lngCorrected
+                        }}
+                        />,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
-                    buttons.length > 0 ? (
-                    <Row className="text-center">
-                        <Col xs={12}>
-                            <Toolbar
-                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={buttons}/>
-                        </Col>
-                    </Row>) : null
+                    <Row key="button-row" className="text-center" style={{position: 'relative'}}>
+                            <Col key="tools" xs={12}>
+                                <Toolbar
+                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                    buttons={toolButtons}/>
+                            </Col>
+                        <div key="navigation" style={{
+                                zIndex: 1,
+                                position: "absolute",
+                                right: 0,
+                                margin: "0 10px"
+                            }}>
+                                <Toolbar
+                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                    buttons={getNavigationButtons(props)} />
+                        </div>
+                    </Row>
                 ].filter(headRow => headRow)}>
                 <Viewer
                     index={index}
@@ -121,6 +133,7 @@ module.exports = props => {
                     format={format}
                     missingResponses={missingResponses}
                     responses={responses}
+                    showEmptyMessageGFI={showEmptyMessageGFI}
                     {...viewerOptions}/>
             </DockablePanel>
             <Portal>

@@ -7,28 +7,42 @@
  */
 
 const React = require('react');
-
-const {createSelector} = require('reselect');
-const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
 
+const {createSelector} = require('reselect');
+const { compose } = require('recompose');
+const {connect} = require('react-redux');
+
+const { cleanEditing, saveRule, setLoading } = require("../actions/rulesmanager");
+const { activeRuleSelector, geometryStateSel } = require("../selectors/rulesmanager");
 const { isEditorActive, isLoading} = require('../selectors/rulesmanager');
 
-const Editor = require('./manager/RulesEditor');
+const RulesEditor = require('./manager/RulesEditor');
 const Toolbar = require('./manager/RulesToolbar');
+const enhancer = require("./manager/EditorEnhancer");
+
+
+const Editor = compose(
+    connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({ activeRule, geometryState })), {
+        onExit: cleanEditing,
+        onSave: saveRule,
+        setLoading
+    }),
+    enhancer)(RulesEditor);
 
 /**
-  * @name RulesEditor
-  * @memberof plugins
-  * @class
-  * @classdesc
-  * Rules-editor it's part of rules-manager page. It allow a admin user to add, modify and delete geofence rules
-*/
+ *  Rules-editor it's part of rules-manager page. It allow a admin user to add, modify and delete geofence rules
+ * @name RulesEditor
+ * @memberof plugins
+ * @prop {boolean} cfg.disableDetails disable details tab. (Style/Filters/Attribute). Useful to avoid issues with GeoServer integrated version that do not full support this advanced features via REST
+ * @class
+ */
 class RulesEditorComponent extends React.Component {
      static propTypes = {
          id: PropTypes.string,
          editing: PropTypes.bool,
          limitDockHeight: PropTypes.bool,
+         disableDetails: PropTypes.bool,
          fluid: PropTypes.bool,
          zIndex: PropTypes.number,
          dockSize: PropTypes.number,
@@ -56,7 +70,7 @@ class RulesEditorComponent extends React.Component {
 
 
         return this.props.editing
-                ? <div className="rulesmanager-editor"><Editor loading={this.props.loading} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
+            ? <div className="rulesmanager-editor"><Editor disableDetails={this.props.disableDetails} loading={this.props.loading} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
                 : (<div className="ms-vertical-toolbar rules-editor re-toolbar" id={this.props.id}>
                     <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
                     </div>);

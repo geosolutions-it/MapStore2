@@ -1,0 +1,43 @@
+{
+  "grant": "ALLOW",
+  "position": {
+    "value": 0,
+    "position": "offsetFromTop"
+  },
+  "rolename": "ADMIN",
+  "username": "admin",
+  "ipaddress": "192.168.1.1/8",
+  "service": "WFS",
+  "request": "DESCRIBEFEATURETYPE",
+  "workspace": "tiger",
+  "layer": "poi",
+  "constraints": {
+    "type": "VECTOR",
+    "defaultStyle": "burg",
+    "allowedStyles": {
+      "style": [
+        "point",
+        "poi"
+      ]
+    },
+    "cqlFilterRead": "INCLUDE",
+    "cqlFilterWrite": "INCLUDE",
+    "restrictedAreaWkt": "MULTIPOLYGON (((-74.01196092367172 40.70918709039688, -74.01196092367172 40.708114206790924, -74.00962203741074 40.708114206790924, -74.00962203741074 40.70918709039688, -74.01196092367172 40.70918709039688)))",
+    "attributes": {
+      "attribute": [
+        {
+          "name": "the_geom",
+          "access": "READONLY"
+        },
+        {
+          "name": "THUMBNAIL",
+          "access": "NONE"
+        },
+        {
+          "name": "MAINPAGE",
+          "access": "NONE"
+        }
+      ]
+    }
+  }
+}

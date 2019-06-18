@@ -10,6 +10,10 @@
  * Utils used in DrawSupport for leaflet and openlayers
 */
 
+const ol = require('openlayers');
+const {isArray} = require('lodash');
+const {reproject} = require('./CoordinatesUtils');
+
 /**
  * Transforms a leaflet bounds object into an array.
  * @prop {object} the bounds
@@ -42,8 +46,34 @@ const fromLeafletFeatureToQueryform = (layer) => {
         projection
     };
 };
+const calculateRadius = (center, coordinates) => {
+    return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
+};
+
+const transformPolygonToCircle = (feature, mapCrs) => {
+
+    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
+        return feature;
+    }
+    if (feature.getProperties() && feature.getProperties().isCircle && feature.getProperties().center && feature.getProperties().center[0] && feature.getProperties().center[1]) {
+        // center must be a valid point
+        const extent = feature.getGeometry().getExtent();
+        let center;
+        if (feature.getProperties().center) {
+            center = reproject(feature.getProperties().center, "EPSG:4326", mapCrs);
+            center = [center.x, center.y];
+        } else {
+            center = ol.extent.getCenter(extent);
+        }
+        const radius = feature.getProperties().radius || calculateRadius(center, feature.getGeometry().getCoordinates());
+        feature.setGeometry(new ol.geom.Circle(center, radius));
+        return feature;
+    }
+    return feature;
+};
 
 module.exports = {
+    transformPolygonToCircle,
     boundsToOLExtent,
     fromLeafletFeatureToQueryform
 };

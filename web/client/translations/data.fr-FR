@@ -40,6 +40,8 @@
         "details": {
             "title": "Info sur cette carte"
         },
+        "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GFI",
+        "remove": "Effacer",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -106,7 +108,9 @@
             "noBackgroundLayerSupported": "Il n'y a pas de couches de fond supportées pour ce type de carte.",
             "updateOldMap": "Ceci est une carte ancienne, toutes les fonctionnalités ne peuvent pas s'y retrouver. Cliquez sur le bouton de mise à jour pour rafraîchir la carte ou ne tenez pas compte de cet avertissement pour ne pas rafraîchir la carte.",
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
-            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour"
+            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"la couche(s) actuelle et la projection cartographique ne sont pas totalement compatibles. Certaines ou toutes les données risquent de ne pas apparaître sur la carte"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",
@@ -362,9 +366,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Erreur lors du chargement de la carte",
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte non accessible",
-                    "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li><ul> <p>"
+                    "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "title" : "La carte ne peut pas être vue"
                 }
             }
         },
@@ -373,11 +379,19 @@
             "showLegend": "Afficher la légende",
             "hideLegend": "Cacher la légende"
         },
+        "addgroup": {
+            "addbtn": "Ajouter",
+            "groupName": "Nom de groupe"
+        },
         "toc": {
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
+            "toggleGroupVisibility": "Basculer la visibilité du groupe",
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
             "addLayer": "Ajouter la couche",
+            "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
+            "addGroup": "Ajouter un groupe",
+            "addSubGroup": "Ajouter un sous-groupe au groupe sélectionné",
             "toolZoomToLayerTooltip": "Zoomer sur l'extension de la couche sélectionnée",
             "toolZoomToLayersTooltip": "Zoomer sur l'extension des couches sélectionnées",
             "toolLayerSettingsTooltip": "Réglages de la couche sélectionnée",
@@ -506,6 +520,9 @@
         "identifyTitle": "Informations de l'objet",
         "identifyNoQueryableLayers": "Aucune couche active rencontrée",
         "identifyRevGeocodeHeader": "Coordonnées",
+        "identifyZoomToFeature": "Zoom aud to feature",
+        "identifyStopHighlightingFeatures": "Arrêtez de mettre en évidence les fonctionnalités",
+        "identifyHighlightFeatures": "Caractéristiques marquantes",
         "identifyShowCoordinateEditor": "Afficher l'éditeur de coordonnées",
         "identifyHideCoordinateEditor": "Masquer l'éditeur de coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
@@ -543,7 +560,10 @@
             "areaLabel": "Surface",
             "bearingLabel": "Direction",
             "formula": "Formule pour le calcul de la distance",
-            "showLabel": "Afficher l'étiquette de mesure"
+            "showLabel": "Afficher l'étiquette de mesure",
+            "addAsAnnotation": "Ajouter comme annotation",
+            "newMeasure": "Nouvelle annotation",
+            "selectTool": "Sélectionnez un outil de mesure"
         },
         "search":{
             "decimal": "Décimal",
@@ -575,7 +595,34 @@
             "s_wfs_opt_props_label" : "Supports optionnels",
             "s_result_props_label": "Propriétés d'affichage des résultats",
             "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5",
-            "serviceslistempty": "Aucun service personnalisé n'a été défini"
+            "serviceslistempty": "Aucun service personnalisé n'a été défini",
+            "service_missing": "Le service {serviceType} n'est pas configuré",
+            "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur: {message}"
+        },
+        "draw": {
+            "fill": "Remplissage",
+            "text": "Texte",
+            "fontTitle": "Font",
+            "color": "Couleur",
+            "lineDash": "Ligne tiret",
+            "stroke": "Ligne",
+            "opacity": "Opacité",
+            "width": "Largeur",
+            "font": {
+                "textColor": "Couleur",
+                "family": "Famille",
+                "size": "Taille",
+                "style": "Style",
+                "weight": "Poids",
+                "textAlign": "Alignement"
+            },
+            "marker": {
+                "layout": "Disposition",
+                "shape": "Forme",
+                "size": "Taille",
+                "type": "Type",
+                "icon": "Icône"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -795,33 +842,84 @@
                 "targetLayer": "Couche cible",
                 "clear": "Effacer le filtre",
                 "operation": "Opération",
+                "placeholder": "Sélectionner une couche",
                 "errors": {
                     "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
                 }
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",
             "edit": "Modifier",
             "remove": "Effacer",
             "save": "Enregistrer",
             "cancel": "Annuler",
             "back": "Arrière",
-            "addMarker": "Ajouter un nouveau point sur la carte",
-            "styleGeometry": "Choisissez un style différent pour les points",
-            "deleteGeometry": "Supprimer les points existants",
-            "removeannotation": "Voulez-vous supprimer l'annotation?",
+            "applyStyle": "Appliquer le style",
+            "addMarker": "Ajouter une géométrie",
+            "styleGeometry": "Changer le style",
+            "deleteGeometry": "Supprimer toutes les géométries d'annotations",
+            "removeannotation": "Voulez-vous supprimer l'annotation avec titre: {title}?",
             "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
-            "confirm": "confirmer",
+            "confirm": "Confirmer",
             "title": "Annotations",
             "mandatory": "champ obligatoire",
             "emptygeometry": "La géométrie ne peut pas être vide",
             "add": "Nouvelle",
             "filter": "Filtrer les annotations...",
+            "titleUndoGeom": "La géométrie a changé",
+            "undoGeom": "Êtes-vous sûr de quitter sans enregistrer? (Vous perdrez tous les changements)",
+            "confirmGeom": "Confirmer",
+            "cancelModalGeom": "Annuler",
+            "deleteFeature": "Supprimer cette fonctionnalité",
+            "undoDeleteFeature": "Êtes-vous sûr de supprimer cette fonctionnalité?",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
+            "insertText": "Veuillez insérer l'annotation de texte",
+            "downloadtooltip": "Télécharger les annotations",
+            "downloadcurrenttooltip": "Télécharger l'annotation en cours",
+            "downloadError": "Erreur d'exportation",
+            "loadtooltip": "Importer des annotations",
+            "loadtitle": "Importer des Annotations",
+            "selectfiletext": "Déposez votre fichier ici ou cliquez pour sélectionner le fichier d'annotation à importer. (fichiers supportés: JSON)",
+            "loadoverride": "Remplacer les annotations",
+            "loaderror": "Sélectionnez un ou plusieurs fichiers d'annotations. (fichiers supportés: json)",
+            "defaulttitle": "Modifier le titre par défaut",
             "field": {
-                "title": "titre",
+                "title": "Titre",
                 "description": "Description"
+            },
+            "titles": {
+                "marker": " Marqueur",
+                "line": " Ligne",
+                "polygon": " Polygone",
+                "text": " Texte",
+                "circle": " Cercle"
+            },
+            "editor": {
+                "decimal": "Décimal",
+                "aeronautical": "Aéronautique",
+                "title": {
+                    "Polygon": "Éditeur de polygone",
+                    "LineString": "Éditeur de ligne",
+                    "Bearing": "éditeur de relèvement",
+                    "Circle": "Éditeur de cercle",
+                    "Point": "Éditeur de marqueur",
+                    "MultiPoint": "Éditeur de ligne",
+                    "Text": "Éditeur de texte"
+                },
+                "center": "Centre",
+                "add": "Ajouter de nouvelles coordonnées",
+                "addByClick": "Ajouter de nouvelles coordonnées en cliquant sur le bouton plus ou sur la carte",
+                "valid": "La géométrie est valide",
+                "radius": "Rayon",
+                "text": "Texte",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{
@@ -838,6 +936,7 @@
             "passwordInvalid": "Mot de passe incorrect",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
+            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères",
             "passwordChanged": "Mot de passe changé",
             "passwordError": "Erreur de changement de mot de passe",
             "signIn":"S'authentifier",
@@ -876,7 +975,8 @@
             "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
             "errorDelete": "Une erreur s'est produite lors de la suppression de cet utilisateur:",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de cet utilisateur:",
-            "selectedGroups": "CERTAINS GROUPES"
+            "selectedGroups": "CERTAINS GROUPES",
+            "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires"
         },
         "usergroups": {
           "searchGroups": "rechercher des groupes...",
@@ -949,6 +1049,22 @@
             "add": "Ajouter",
             "cancel": "Annuler",
             "success": " Import correct"
+        },
+        "mapImport": {
+            "title": "Importer des données",
+            "dropZone": {
+                "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
+                "selectFiles": "Sélectionnez les fichiers...",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Fichier non pris en charge",
+                "unknownError": "il y avait une erreur inconnue lors de l'importation"
+            }
+        },
+        "mapExport": {
+            "title": "Exporter des données"
         },
         "catalog": {
             "title": "Catalogue",
@@ -1164,7 +1280,8 @@
                     "editMode": "La recherche rapide n'est pas disponible en mode édition",
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
-                    "number": "Tapez un nombre ou une expression..."
+                    "number": "Tapez un nombre ou une expression...",
+                    "date": "Tapez une date ou une expression. Utilisez {format} pour la date."
                 }
             },
             "toolbar": {
@@ -1533,6 +1650,7 @@
             "createStyleErrorMessage": "Le style n'a pas pu être enregistré sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
             "updateStyleErrorTitle": "Modifier le style",
             "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "validationErrorTitle": "Erreur de validation",
             "genericValidationError": "Le style n'est pas valide et il n'a pas pu être appliqué.",
             "setDefaultStyle": "Définir le style sélectionné par défaut pour le calque actuel",
             "setDefaultStyleSuccessTitle": "Succès sur le style par défaut",

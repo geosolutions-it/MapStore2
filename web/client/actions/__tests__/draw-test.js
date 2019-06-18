@@ -60,6 +60,26 @@ describe('Test correctness of the draw actions', () => {
         expect(retval.features).toExist();
         expect(retval.features).toBe(features);
     });
+    it('Test geometryChanged features, owner, enableEdit, textChanged', () => {
+        const features = [{
+            geometry: {
+                type: "Point",
+                coordinates: []
+            }
+        }];
+        const owner = "annotations";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.owner).toBe(owner);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
     it('Test drawStopped action creator', () => {
         const retval = drawStopped();
         expect(retval).toExist();

@@ -1,0 +1,127 @@
+{
+  "NOTE__": "This is how the JSON from GeoFence API should be converted",
+  "page": 0,
+  "rules": [
+    {
+      "grant": "ALLOW",
+      "id": "700",
+      "priority": "122",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "ipaddress": "172.19.0.0/16",
+      "workspace": "WORKSPACE",
+      "layer": "LAYER_1"
+    },
+
+    {
+      "grant": "DENY",
+      "id": "715",
+      "priority": "130",
+      "username": "TEST_USER",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "workspace": "WORKSPACE",
+      "layer": "LAYER_1"
+    },
+    {
+      "grant": "ALLOW",
+      "id": "783",
+      "priority": "137",
+      "rolename": "TEST_ROLE",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "ipaddress": "172.19.0.0/16",
+      "workspace": "WORKSPACE",
+      "layer": "TEST_LAYER"
+    },
+    {
+      "grant": "DENY",
+      "id": "505",
+      "priority": "140",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "service": "WFS",
+      "request": "LOCKFEATURE"
+    },
+    {
+      "grant": "DENY",
+      "id": "591",
+      "priority": "141",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "service": "WFS",
+      "request": "GETFEATUREWITHLOCK"
+    },
+    {
+      "grant": "DENY",
+      "id": "504",
+      "priority": "147",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "service": "WFS",
+      "request": "TRANSACTION"
+    },
+    {
+      "grant": "ALLOW",
+      "id": "838",
+      "priority": "158",
+      "instance": {
+        "id": "5",
+        "name": "default-gs"
+      },
+      "workspace": "WORKSPACE",
+      "layer": "LAYER",
+      "constraints": {
+        "type": "VECTOR",
+        "allowedStyles": {
+          "style": []
+        },
+        "attributes": {
+          "attribute": [
+            {
+              "access": "READONLY",
+              "datatype": "java.lang.String",
+              "name": "ATTR_1"
+            },
+            {
+              "access": "READONLY",
+              "datatype": "java.lang.String",
+              "name": "ATTR_2"
+            },
+            {
+              "access": "READONLY",
+              "name": "ATTR_3"
+            },
+            {
+              "access": "READONLY",
+              "datatype": "com.vividsolutions.jts.geom.Polygon",
+              "name": "GEOMETRY"
+            },
+            {
+              "access": "READONLY",
+              "datatype": "java.sql.Date",
+              "name": "ATTR_4"
+            },
+            {
+              "access": "READONLY",
+              "datatype": "java.math.BigDecimal",
+              "name": "ID"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

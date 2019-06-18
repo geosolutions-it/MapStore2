@@ -21,7 +21,6 @@ const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../actions/draw');
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const {setControlProperty} = require('../actions/controls');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
@@ -37,26 +36,21 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES} = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES } = require('../actions/featuregrid');
 
-const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
+const {TOGGLE_CONTROL, resetControls, setControlProperty} = require('../actions/controls');
+const {queryPanelSelector, showCoordinateEditorSelector} = require('../selectors/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
-
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, hasSupportedGeometry, queryOptionsSelector} = require('../selectors/featuregrid');
-const {queryPanelSelector} = require('../selectors/controls');
-
+    isFeatureGridOpen, hasSupportedGeometry, queryOptionsSelector } = require('../selectors/featuregrid');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
-
 const {getLayerFromId} = require('../selectors/layers');
-
 const {interceptOGCError} = require('../utils/ObservableUtils');
-
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
-
 const {queryFormUiStateSelector} = require('../selectors/queryform');
+
 /**
 @return a spatial filter with coordinates reprojeted to nativeCrs
 */
@@ -417,13 +411,18 @@ module.exports = {
                     .switchMap(() => Rx.Observable.of(drawSupportReset())))
 
     ),
-    closeRightPanelOnFeatureGridOpen: (action$) =>
+    closeRightPanelOnFeatureGridOpen: (action$, store) =>
         action$.ofType(OPEN_FEATURE_GRID)
             .switchMap( () => {
-                return Rx.Observable.from(
-                    [setControlProperty('metadataexplorer', 'enabled', false),
+                let actions = [
+                    setControlProperty('metadataexplorer', 'enabled', false),
                     setControlProperty('annotations', 'enabled', false),
-                    setControlProperty('details', 'enabled', false)]);
+                    setControlProperty('details', 'enabled', false)
+                ];
+                if (showCoordinateEditorSelector(store.getState())) {
+                    actions.push(setControlProperty('measure', 'enabled', false));
+                }
+                return Rx.Observable.from(actions);
             }),
     /**
      * intercept geometry changed events in draw support to update current
@@ -578,7 +577,8 @@ module.exports = {
                         .switchMap(() => Rx.Observable.of(openFeatureGrid()))
 
                     ).takeUntil(
-                        action$.ofType(LOCATION_CHANGE)
+                        action$.ofType(LOCATION_CHANGE, TOGGLE_CONTROL)
+                            .filter(action => action.type === LOCATION_CHANGE || action.control && action.control === 'drawer')
                             .merge(
                                 action$
                                     // a close feature grid event not between feature info click and hide mapinfo marker

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Rules count="2">
+    <Rule id="2">
+        <access>ALLOW</access>
+        <priority>0</priority>
+        <roleName>ADMIN</roleName>
+    </Rule>
+    <Rule id="1">
+        <access>ALLOW</access>
+        <priority>1</priority>
+    </Rule>
+</Rules>

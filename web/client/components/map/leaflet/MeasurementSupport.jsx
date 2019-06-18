@@ -169,6 +169,7 @@ class MeasurementSupport extends React.Component {
         metric: PropTypes.bool,
         feet: PropTypes.bool,
         nautic: PropTypes.bool,
+        enabled: PropTypes.bool,
         useTreshold: PropTypes.bool,
         projection: PropTypes.string,
         measurement: PropTypes.object,
@@ -204,7 +205,13 @@ class MeasurementSupport extends React.Component {
             const uomOptions = this.uomAreaOptions(newProps);
             this.drawControl.setOptions({...uomOptions, uom: newProps.uom});
         }
-        if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType) {
+        if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ||
+            /* check also when a default is set
+             * if so the first condition does not match
+             * because the old geomType is not changed (it was already defined as default)
+             * and the measure tool is getting enabled
+            */
+            (newProps.measurement.geomType && this.props.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
             this.addDrawInteraction(newProps);
         }
         if (!newProps.measurement.geomType) {
@@ -228,6 +235,13 @@ class MeasurementSupport extends React.Component {
         this.lastLayer = evt.layer;
 
         let feature = this.lastLayer && this.lastLayer.toGeoJSON() || {};
+        if (this.props.measurement.geomType === 'LineString') {
+            feature = assign({}, feature, {
+                geometry: assign({}, feature.geometry, {
+                    coordinates: transformLineToArcs(feature.geometry.coordinates)
+                })
+            });
+        }
         if (this.props.measurement.geomType === 'Point') {
             let pos = this.drawControl._marker.getLatLng();
             let point = {

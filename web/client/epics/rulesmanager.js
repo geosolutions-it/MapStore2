@@ -9,8 +9,11 @@ const {get} = require("lodash");
 const saveRule = stream$ => stream$
                 .mapTo({type: RULE_SAVED})
                 .concat(Rx.Observable.of(drawSupportReset()))
-                .catch(({data}) => {
-                    const isDuplicate = data.indexOf("Duplicat") === 0;
+                .catch(e => {
+                    let isDuplicate = false;
+                    if (e.data) {
+                        isDuplicate = e.data.indexOf("Duplicat") === 0;
+                    }
                     return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: isDuplicate ? "rulesmanager.errorDuplicateRule" : "rulesmanager.errorUpdatingRule"}));
                 })
                 .startWith(setLoading(true))

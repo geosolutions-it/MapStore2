@@ -85,6 +85,14 @@ const Persistence = {
     */
     updateResource: (...args) => Persistence.getApi().updateResource(...args),
     /**
+    * Updates a resource attribute
+    * @param {number} id the id of the resource which we want to update/create the attribute value
+    * @param {string} name the attribute name
+    * @param {string} value the attribute value
+    * @return an observable that emits the id of the updated resource
+    */
+    updateResourceAttribute: (...args) => Persistence.getApi().updateResourceAttribute(...args),
+    /**
     * Deletes a resource and its linked attributes
     * @param {object} resource the resource with the id
     * @param {object} options properties: deleteLinkedResources default true

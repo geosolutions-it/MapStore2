@@ -11,6 +11,7 @@ const ol = require('openlayers');
 const Feature = require('../Feature.jsx');
 const expect = require('expect');
 require('../../../../utils/openlayers/Layers');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 require('../plugins/VectorLayer');
 
 describe('Test Feature', () => {
@@ -215,12 +216,13 @@ describe('Test Feature', () => {
                  crs={"EPSG:4326"}
                  />, document.getElementById("container"));
 
-        expect(layer).toExist();
-        // count layers
-        expect(container.getSource().getFeatures().length === 1 );
-
-        let style = layer._feature[0].getStyle();
-        expect(style).toNotExist();
+        setTimeout(() => {
+            expect(layer).toExist();
+            // count layers
+            expect(container.getSource().getFeatures().length === 1 );
+            let style = layer._feature[0].getStyle();
+            expect(style).toNotExist();
+        }, 0);
 
         options.features.features[0].properties.name = 'other name';
 
@@ -237,8 +239,11 @@ describe('Test Feature', () => {
                  style={{}}
                  />, document.getElementById("container"));
 
-        style = layer._feature[0].getStyle();
-        expect(style).toExist();
+        setTimeout(() => {
+            let style = layer._feature[0].getStyle();
+            expect(style).toExist();
+        }, 0);
+
         // change geometry
         layer = ReactDOM.render(
             <Feature type="vector"
@@ -309,12 +314,13 @@ describe('Test Feature', () => {
                  crs={"EPSG:4326"}
                  />, document.getElementById("container"));
 
-        expect(layer).toExist();
-        // count layers
-        expect(container.getSource().getFeatures().length === 1 );
-
-        let style = layer._feature[0].getStyle();
-        expect(style).toNotExist();
+        setTimeout(() => {
+            expect(layer).toExist();
+            // count layers
+            expect(container.getSource().getFeatures().length === 1 );
+            let style = layer._feature[0].getStyle();
+            expect(style).toNotExist();
+        }, 0);
 
         options.features.features[0].properties.name = 'other name';
         const newGeometry = {
@@ -335,8 +341,10 @@ describe('Test Feature', () => {
                  crs={"EPSG:4326"}
                  />, document.getElementById("container"));
 
-        style = layer._feature[0].getStyle();
-        expect(style).toNotExist();
+        setTimeout(() => {
+            let style = layer._feature[0].getStyle();
+            expect(style).toNotExist();
+        }, 0);
 
         layer = ReactDOM.render(
             <Feature type="vector"
@@ -347,11 +355,13 @@ describe('Test Feature', () => {
                  container={container}
                  featuresCrs={"EPSG:4326"}
                  crs={"EPSG:4326"}
-                 style={{}}
-                 />, document.getElementById("container"));
-
-        style = layer._feature[0].getStyle();
-        expect(style).toExist();
+                 style={{type: "Polygon", "Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon}}
+                 />, document.getElementById("container")
+        );
+        setTimeout(() => {
+            let style = layer._feature[0].getStyle();
+            expect(style).toExist();
+        }, 0);
         const count = container.getSource().getFeatures().length;
         expect(count).toBe(1);
     });

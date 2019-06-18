@@ -13,7 +13,6 @@ const {createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
-const {loadMapInfo} = require('../actions/config');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
 const {saveMapResource, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
@@ -74,7 +73,6 @@ class SaveAs extends React.Component {
         resetCurrentMap: PropTypes.func,
         metadataChanged: PropTypes.func,
         onMapSave: PropTypes.func,
-        loadMapInfo: PropTypes.func,
         textSearchConfig: PropTypes.object
     };
 
@@ -86,7 +84,6 @@ class SaveAs extends React.Component {
         additionalOptions: {},
         onMapSave: () => {},
         onDisplayMetadataEdit: () => {},
-        loadMapInfo: () => {},
         show: false
     };
 
@@ -173,7 +170,6 @@ module.exports = {
             onUpdateCurrentMap: updateCurrentMap,
             onErrorCurrentMap: errorCurrentMap,
             onMapSave: saveMapResource,
-            loadMapInfo,
             metadataChanged,
             editMap,
             resetCurrentMap,

@@ -9,8 +9,8 @@
 const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker } = require('../identify');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature } = require('../../actions/mapInfo');
+const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh } = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 const { registerHook } = require('../../utils/MapUtils');
@@ -279,7 +279,46 @@ describe('identify Epics', () => {
             }
         }, state);
     });
-
+    it('getFeatureInfoOnFeatureInfoClick with highlight', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                highlight: true
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a2).toExist();
+                expect(a2.type).toBe(LOAD_FEATURE_INFO);
+                expect(a2.data).toExist();
+                expect(a2.requestParams).toExist();
+                expect(a2.reqId).toExist();
+                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
     it('handleMapInfoMarker show', done => {
         testEpic(handleMapInfoMarker, 1, featureInfoClick({}), ([ a ]) => {
             expect(a.type).toBe(SHOW_MAPINFO_MARKER);
@@ -369,6 +408,7 @@ describe('identify Epics', () => {
 
         testEpic(zoomToVisibleAreaEpic, 1, sentActions, expectedAction, state);
     });
+
     it('onMapClick triggers featureinfo when selected', done => {
         testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
             expect(action.type === FEATURE_INFO_CLICK);
@@ -430,5 +470,28 @@ describe('identify Epics', () => {
 
         testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
     });
+    it('featureInfoClickOnHighligh', (done) => {
+        const sentActions = toggleHighlightFeature(true);
 
+        const expectedAction = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case FEATURE_INFO_CLICK:
+                        done();
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+        };
+
+        testEpic(featureInfoClickOnHighligh, 1, sentActions, expectedAction, {
+            mapInfo: {
+                clickPoint: {
+                    "dummy": "point"
+                }
+            }
+        });
+    });
 });

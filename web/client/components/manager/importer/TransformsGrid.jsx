@@ -59,8 +59,8 @@ class TransformsGrid extends React.Component {
                 <thead>
                   <tr>
                     <th><Message msgId="importer.number"/></th>
-                    <th><Message msgId="importer.transforms.type" /></th>
-                    <th><Message msgId="importer.transforms.actions" /></th>
+                    <th><Message msgId="importer.transform.type" /></th>
+                    <th><Message msgId="importer.transform.actions" /></th>
                   </tr>
                 </thead>
                 <tbody>

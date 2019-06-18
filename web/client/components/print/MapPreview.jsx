@@ -96,11 +96,13 @@ class MapPreview extends React.Component {
                         key={feature.id}
                         type={feature.type}
                         geometry={feature.geometry}
+                        features={feature.features}
                         msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
                         layerStyle={layer.style}
                         style={ feature.style || layer.style || null }
-                        properties={feature.properties}/>
+                        properties={feature.properties}
+                    />
                 );
             });
         }

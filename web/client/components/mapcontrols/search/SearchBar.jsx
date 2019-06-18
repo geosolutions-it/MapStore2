@@ -239,7 +239,12 @@ class SearchBar extends React.Component {
         key={key}
         onClick={onClick}
         className={className}/>);
-
+    getError = (e) => {
+        if (e) {
+            return (<Message msgId={e.msgId || "search.generic_error"} msgParams={{message: e.message, serviceType: e.serviceType}}/>);
+        }
+        return null;
+    }
 
 /**
  * if one tool is disabled the other one is enabled
@@ -299,7 +304,7 @@ class SearchBar extends React.Component {
                             className: "square-button-md no-border",
                             bsStyle: "default",
                             pullRight: true,
-                            visible: activeTool === "addressSearch" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || activeTool === "coordinatesSearch" && (!!this.props.coordinate.lon || !!this.props.coordinate.lat),
+                            visible: activeTool === "addressSearch" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || activeTool === "coordinatesSearch" && (isNumber(this.props.coordinate.lon) || isNumber(this.props.coordinate.lat)),
                             onClick: () => {
                                 if (activeTool === "addressSearch") {
                                     this.clearSearch();
@@ -312,14 +317,17 @@ class SearchBar extends React.Component {
                             className: "square-button-md no-border " + (this.props.isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
                             bsStyle: "default",
                             pullRight: true,
-                            visible: activeTool === "addressSearch" && (!(this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || !this.props.splitTools),
+                            visible: activeTool === "addressSearch" && (!(this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || !this.props.splitTools) || activeTool === "coordinatesSearch",
                             onClick: () => {
-                                if (this.props.isSearchClickable || activeTool !== "addressSearch") {
+                                if (activeTool === "coordinatesSearch" && this.areValidCoordinates()) {
+                                    this.zoomToPoint();
+                                }
+                                if (this.props.isSearchClickable) {
                                     this.search();
                                 }
                             }
                         }, {
-                            tooltip: this.props.error && this.props.error.message || "null",
+                            tooltip: this.getError(this.props.error),
                             tooltipPosition: "bottom",
                             className: "square-button-md no-border",
                             glyph: "warning-sign",
@@ -328,27 +336,6 @@ class SearchBar extends React.Component {
                             visible: !!this.props.error,
                             onClick: this.clearSearch
                         }, {
-                        buttonConfig: {
-                            title: <Glyphicon glyph="cog"/>,
-                            tooltipId: "search.changeSearchInputField",
-                            tooltipPosition: "bottom",
-                            className: "square-button-md no-border",
-                            pullRight: true
-                        },
-                        menuOptions: [
-                            {
-                                active: this.props.format === "decimal",
-                                onClick: () => { this.props.onChangeFormat("decimal"); },
-                                text: <Message msgId="search.decimal"/>
-                            }, {
-                                active: this.props.format === "aeronautical",
-                                onClick: () => { this.props.onChangeFormat("aeronautical"); },
-                                text: <Message msgId="search.aeronautical"/>
-                            }
-                        ],
-                        visible: this.props.showOptions && activeTool === "coordinatesSearch",
-                        Element: DropdownToolbarOptions
-                    }, {
                         buttonConfig: {
                             title: <Glyphicon glyph="menu-hamburger"/>,
                             tooltipId: "search.changeSearchInputField",
@@ -371,6 +358,37 @@ class SearchBar extends React.Component {
                         Element: DropdownToolbarOptions
                     }]}
                     />
+                {
+                    this.props.showOptions && activeTool === "coordinatesSearch" ? <Toolbar
+                    btnGroupProps = {{ className: 'btn-group-menu-options-format'}}
+                    transitionProps = {null}
+                    btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
+                    buttons={[
+                        {
+                        buttonConfig: {
+                            title: <Glyphicon glyph="cog"/>,
+                            tooltipId: "search.changeSearchInputField",
+                            tooltipPosition: "bottom",
+                            className: "square-button-md no-border",
+                            pullRight: true
+                        },
+                        menuOptions: [
+                            {
+                                active: this.props.format === "decimal",
+                                onClick: () => { this.props.onChangeFormat("decimal"); },
+                                text: <Message msgId="search.decimal"/>
+                            }, {
+                                active: this.props.format === "aeronautical",
+                                onClick: () => { this.props.onChangeFormat("aeronautical"); },
+                                text: <Message msgId="search.aeronautical"/>
+                            }
+                        ],
+                        visible: this.props.showOptions && activeTool === "coordinatesSearch",
+                        Element: DropdownToolbarOptions
+                    }
+                    ]}
+                    /> : null
+                }
             </span>);
     }
 

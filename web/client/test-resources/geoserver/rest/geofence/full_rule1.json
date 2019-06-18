@@ -1,0 +1,35 @@
+{
+  "access": "ALLOW",
+  "layer": "poi",
+  "workspace": "tiger",
+  "service": "WFS",
+  "request": "DESCRIBEFEATURETYPE",
+  "userName": "admin",
+  "roleName": "ADMIN",
+  "addressRange": "192.168.1.1/8",
+  "layerDetails": {
+    "layerType": "VECTOR",
+    "defaultStyle": "burg",
+    "cqlFilterRead": "INCLUDE",
+    "cqlFilterWrite": "INCLUDE",
+    "allowedArea": "MULTIPOLYGON (((-74.01196092367172 40.70918709039688, -74.01196092367172 40.708114206790924, -74.00962203741074 40.708114206790924, -74.00962203741074 40.70918709039688, -74.01196092367172 40.70918709039688)))",
+    "allowedStyles": [
+      "point",
+      "poi"
+    ],
+    "attributes": [
+      {
+        "name": "the_geom",
+        "accessType": "READONLY"
+      },
+      {
+        "name": "THUMBNAIL",
+        "accessType": "NONE"
+      },
+      {
+        "name": "MAINPAGE",
+        "accessType": "NONE"
+      }
+    ]
+  }
+}

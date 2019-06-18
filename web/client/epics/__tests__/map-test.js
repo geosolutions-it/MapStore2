@@ -6,17 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+const expect = require('expect');
+
+const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions} = require('../map');
+const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
+
+const { MAP_INFO_LOAD_START, configureMap} = require('../../actions/config');
+
 const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 const MapUtils = require('../../utils/MapUtils');
 
 const {
     CHANGE_MAP_VIEW,
     zoomToExtent
- } = require('../../actions/map');
+
+} = require('../../actions/map');
 
 
-const {zoomToExtentEpic} = require('../map');
+const {LOGIN_SUCCESS} = require('../../actions/security');
+
 const LAYOUT_STATE = {
     layout: {
         left: 200,
@@ -35,6 +43,7 @@ const LAYOUT_STATE = {
 };
 const MAP_STATE = {
     projection: "EPSG:4326",
+    mapId: 10112,
     size: { width: 400, height: 400 },
     bbox: {
         bounds: {
@@ -173,5 +182,71 @@ describe('map epics', () => {
             expect(a.type).toBe(TEST_TIMEOUT);
             done();
         }, STATE_NORMAL);
+    });
+    it('checkMapPermissions after login', (done) => {
+        const dispatch = (a) => {
+            expect(a).toExist();
+            expect(a.type).toBe(MAP_INFO_LOAD_START);
+            done();
+        };
+        testEpic(checkMapPermissions, 1, {type: LOGIN_SUCCESS}, ([a0]) => {
+            expect(a0).toExist();
+            expect(a0).toBeA('function');
+            a0(dispatch);
+        }, STATE_NORMAL);
+    });
+    it('checkMapPermissions after login with no mapId', (done) => {
+        testEpic(addTimeoutEpic(checkMapPermissions, 0), 1, {type: LOGIN_SUCCESS}, ([a]) => {
+            expect(a.type).toBe(TEST_TIMEOUT);
+            done();
+        }, {});
+    });
+    it('test the re-configuration of the max extent after the initialization of the map', (done) => {
+        const state = {
+            map: {
+                present: {
+                    projection: "EPSG:3857"
+                }
+            },
+            localConfig: {
+                mapConstraints: {
+                    crs: "EPSG:3857",
+                    restrictedExtent: [1, 1, 1, 1]
+                }
+            }
+        };
+        testEpic(resetLimitsOnInit, 1, configureMap(), ([action]) => {
+            const { restrictedExtent, type } = action;
+            expect(restrictedExtent.length).toBe(4);
+            expect(restrictedExtent).toEqual([1, 1, 1, 1]);
+            expect(type).toBe(CHANGE_MAP_LIMITS);
+            done();
+        }, state);
+    });
+    it('test changeMapCrs causes limits change. ', (done) => {
+        const state = {
+            map: {
+                present: {
+                    projection: "EPSG:1234" // NOTE: this is fake, it should be changed by the reducer after the changeMapCrs action
+                }
+            },
+            localConfig: {
+                mapConstraints: {
+                    crs: "EPSG:3857",
+                    restrictedExtent: [1, 1, 1, 1],
+                    projectionsConstraints: {
+                        "EPSG:1234": { minZoom: 2 }
+                    }
+                }
+            }
+        };
+        testEpic(resetLimitsOnInit, 1, changeMapCrs("EPSG:1234"), ([action]) => {
+            const { restrictedExtent, type, minZoom } = action;
+            expect(restrictedExtent.length).toBe(4);
+            expect(restrictedExtent).toEqual([1, 1, 1, 1]);
+            expect(type).toBe(CHANGE_MAP_LIMITS);
+            expect(minZoom).toBe(2);
+            done();
+        }, state);
     });
 });

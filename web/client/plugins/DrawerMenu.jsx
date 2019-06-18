@@ -32,7 +32,7 @@ const Button = tooltip(ButtonB);
 const menuSelector = createSelector([
     state => state.controls.drawer && state.controls.drawer.enabled,
     state => state.controls.drawer && state.controls.drawer.menu || "1",
-    state => state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || undefined,
+    state => state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || state.controls.drawer.resizedWidth || undefined,
     state => mapLayoutValuesSelector(state, {height: true})
 ], (show, activeKey, dynamicWidth, layout) => ({
     show,
@@ -43,6 +43,7 @@ const menuSelector = createSelector([
 
 const Menu = connect(menuSelector, {
     onToggle: toggleControl.bind(null, 'drawer', null),
+    onResize: setControlProperty.bind(null, 'drawer', 'resizedWidth'),
     onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true),
     changeMapStyle: changeMapStyle
 })(require('./drawer/Menu'));
@@ -83,7 +84,10 @@ const DrawerButton = connect(state => ({
  * @prop {string} cfg.glyph glyph icon to use for the button
  * @prop {object} cfg.menuButtonStyle Css inline style for the button. Display property will be overridden by the hideButton/forceDrawer options.
  * @prop {string} cfg.buttonClassName class for the toggle button
- * @prop {object} cfg.menuOptions options for the drawer menu. They can be `docked`, `width.
+ * @prop {object} cfg.menuOptions options for the drawer menu
+ * @prop {boolean} cfg.menuOptions.docked
+ * @prop {number} cfg.menuOptions.width
+ * @prop {boolean} cfg.menuOptions.resizable enables horizontal resizing
  * @memberof plugins
  * @class
  * @example

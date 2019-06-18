@@ -1,0 +1,6 @@
+/**
+ * Pages that can be configured in MapStore to include plugins and implements parts of the application.
+ * @name pages
+ * @see {@link https://mapstore.readthedocs.io/en/latest/developer-guide/plugins-architecture/}
+ *
+ */

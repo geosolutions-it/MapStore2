@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const ol = require('openlayers');
+const proj4 = require('proj4').default;
 const PropTypes = require('prop-types');
 const React = require('react');
 const assign = require('object-assign');
@@ -15,7 +16,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 const mapUtils = require('../../../utils/MapUtils');
 const projUtils = require('../../../utils/openlayers/projUtils');
 
-const {isEqual, throttle} = require('lodash');
+const { isEqual, throttle } = require('lodash');
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -41,31 +42,37 @@ class OpenlayersMap extends React.Component {
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,
-        bbox: PropTypes.object
+        bbox: PropTypes.object,
+        onWarning: PropTypes.func,
+        maxExtent: PropTypes.array,
+        limits: PropTypes.object
     };
 
     static defaultProps = {
         id: 'map',
-        onMapViewChanges: () => {},
-        onCreationError: () => {},
+        onMapViewChanges: () => { },
+        onCreationError: () => { },
         onClick: null,
-        onMouseMove: () => {},
+        onMouseMove: () => { },
         mapOptions: {},
         projection: 'EPSG:3857',
         projectionDefs: [],
-        onLayerLoading: () => {},
-        onLayerLoad: () => {},
-        onLayerError: () => {},
+        onLayerLoading: () => { },
+        onLayerLoad: () => { },
+        onLayerError: () => { },
         resize: 0,
         registerHooks: true,
         interactive: true
     };
 
     componentDidMount() {
-        var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         this.props.projectionDefs.forEach(p => {
-            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent);
+            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent, p.axisOrientation || proj4.defs(p.code).axis || 'enu');
         });
+        // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
+        // normally it happens ad application level.
+        let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
+        ol.proj.setProj4(proj4);
         let interactionsOptions = assign(this.props.interactive ? {} : {
             doubleClickZoom: false,
             dragPan: false,
@@ -83,12 +90,12 @@ class OpenlayersMap extends React.Component {
         }, interactionsOptions, {}));
         if (interactionsOptions === undefined || interactionsOptions.dragPan === undefined || interactionsOptions.dragPan) {
             interactions.extend([
-                new ol.interaction.DragPan({kinetic: false})
+                new ol.interaction.DragPan({ kinetic: false })
             ]);
         }
         if (interactionsOptions === undefined || interactionsOptions.mouseWheelZoom === undefined || interactionsOptions.mouseWheelZoom) {
             interactions.extend([
-                new ol.interaction.MouseWheelZoom({duration: 0})
+                new ol.interaction.MouseWheelZoom({ duration: 0 })
             ]);
         }
         let controls = ol.control.defaults(assign({
@@ -104,7 +111,7 @@ class OpenlayersMap extends React.Component {
             controls: controls,
             interactions: interactions,
             target: this.props.id,
-            view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
+            view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
 
         this.map = map;
@@ -119,37 +126,64 @@ class OpenlayersMap extends React.Component {
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
+                let view = this.map.getView();
                 let pos = event.coordinate.slice();
-                let coords = ol.proj.toLonLat(pos, this.props.projection);
-                let tLng = CoordinatesUtils.normalizeLng(coords[0]);
-                let layerInfo;
-                map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-                    if (layer && layer.get('handleClickOnLayer')) {
-                        layerInfo = layer.get('msId');
-                        const geom = feature.getGeometry();
-                        // TODO getFirstCoordinate makes sense only for points, maybe centroid is more appropriate
-                        const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
-                        coords = ol.proj.toLonLat(getCoord, this.props.projection);
+                let projectionExtent = view.getProjection().getExtent();
+                if (this.props.projection === 'EPSG:4326') {
+                    pos[0] = CoordinatesUtils.normalizeLng(pos[0]);
+                }
+                if (this.props.projection === 'EPSG:900913' || this.props.projection === 'EPSG:3857') {
+                    pos = ol.proj.toLonLat(pos, this.props.projection);
+                    projectionExtent = CoordinatesUtils.reprojectBbox(projectionExtent, this.props.projection, "EPSG:4326");
+                }
+                // prevent user from clicking outside the projection extent
+                if (pos[0] >= projectionExtent[0] && pos[0] <= projectionExtent[2] &&
+                    pos[1] >= projectionExtent[1] && pos[1] <= projectionExtent[3]) {
+                    let coords;
+                    if (this.props.projection !== 'EPSG:900913' && this.props.projection !== 'EPSG:3857') {
+                        coords = CoordinatesUtils.reproject(pos, this.props.projection, "EPSG:4326");
+                    } else {
+                        coords = { x: pos[0], y: pos[1] };
                     }
-                    tLng = CoordinatesUtils.normalizeLng(coords[0]);
-                });
-                const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
-                this.props.onClick({
-                    pixel: {
-                        x: event.pixel[0],
-                        y: event.pixel[1]
-                    },
-                    latlng: {
-                        lat: coords[1],
-                        lng: tLng,
-                        z: getElevation && getElevation(pos, event.pixel) || undefined
-                    },
-                    modifiers: {
-                        alt: event.originalEvent.altKey,
-                        ctrl: event.originalEvent.ctrlKey,
-                        shift: event.originalEvent.shiftKey
-                    }
-                }, layerInfo);
+
+                    let layerInfo;
+                    this.markerPresent = false;
+                    /*
+                     * Handle special case for vector features with handleClickOnLayer=true
+                     * Modifies the clicked point coordinates to center the marker and sets the layerInfo for
+                     * the clickPoint event (used as flag to show or hide marker)
+                     */
+                    map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
+                        if (layer && layer.get('handleClickOnLayer')) {
+                            const geom = feature.getGeometry();
+                            // TODO: We should find out a better way to identify it then checking geometry type
+                            if (!this.markerPresent && geom.getType() === "Point") {
+                                this.markerPresent = true;
+                                layerInfo = layer.get('msId');
+                                const arr = ol.proj.toLonLat(geom.getFirstCoordinate(), this.props.projection);
+                                coords = { x: arr[0], y: arr[1] };
+                            }
+                        }
+                    });
+                    const tLng = CoordinatesUtils.normalizeLng(coords.x);
+                    const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
+                    this.props.onClick({
+                        pixel: {
+                            x: event.pixel[0],
+                            y: event.pixel[1]
+                        },
+                        latlng: {
+                            lat: coords.y,
+                            lng: tLng,
+                            z: getElevation && getElevation(pos, event.pixel) || undefined
+                        },
+                        modifiers: {
+                            alt: event.originalEvent.altKey,
+                            ctrl: event.originalEvent.ctrlKey,
+                            shift: event.originalEvent.shiftKey
+                        }
+                    }, layerInfo);
+                }
             }
         });
         const mouseMove = throttle(this.mouseMoveEvent, 100);
@@ -189,33 +223,52 @@ class OpenlayersMap extends React.Component {
             }, 0);
         }
 
-        if (this.map && (this.props.projection !== newProps.projection || this.haveResolutionsChanged(newProps))) {
-            const center = CoordinatesUtils.reproject([
-                newProps.center.x,
-                newProps.center.y
-            ], 'EPSG:4326', newProps.projection);
-            this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.limits !== newProps.limits) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits) {
+                let mapProjection = newProps.projection;
+                const center = CoordinatesUtils.reproject([
+                    newProps.center.x,
+                    newProps.center.y
+                ], 'EPSG:4326', mapProjection);
+                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
+            }
             // We have to force ol to drop tile and reload
             this.map.getLayers().forEach((l) => {
                 let source = l.getSource();
                 if (source.getTileLoadFunction) {
                     source.setTileLoadFunction(source.getTileLoadFunction());
                 }
+
             });
+
             this.map.render();
         }
     }
 
     componentWillUnmount() {
         const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container
-        && document.querySelector(this.props.mapOptions.attribution.container);
+            && document.querySelector(this.props.mapOptions.attribution.container);
         if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
             attributionContainer.removeChild(attributionContainer.querySelector('.ol-attribution'));
         }
-        this.map.setTarget(null);
+        if (this.map) {
+            this.map.setTarget(null);
+        }
     }
-
+    /**
+     * Calculates resolutions accordingly with default algorithm in GeoWebCache.
+     * See this: https://github.com/GeoWebCache/geowebcache/blob/5e913193ff50a61ef9dd63a87887189352fa6b21/geowebcache/core/src/main/java/org/geowebcache/grid/GridSetFactory.java#L196
+     * It allows to have the resolutions aligned to the default generated grid sets on server side.
+     * **NOTES**: this solution doesn't support:
+     * - custom grid sets with `alignTopLeft=true` (e.g. GlobalCRS84Pixel). Custom resolutions will need to be configured as `mapOptions.view.resolutions`
+     * - custom grid set with custom extent. You need to customize the projection definition extent to make it work.
+     * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
+     * - custom tile sizes
+     *
+     */
     getResolutions = () => {
+        const tileWidth = 256; // TODO: pass as parameters
+        const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
             return this.props.mapOptions.view.resolutions;
         }
@@ -233,14 +286,52 @@ class OpenlayersMap extends React.Component {
 
         const projection = this.map.getView().getProjection();
         const extent = projection.getExtent();
-        const size = !extent ?
-            // use an extent that can fit the whole world if need be
-            360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
-                ol.proj.METERS_PER_UNIT[projection.getUnits()] :
-            Math.max(ol.extent.getWidth(extent), ol.extent.getHeight(extent));
 
-        const defaultMaxResolution = size / 256 / Math.pow(
-            defaultZoomFactor, 0);
+        const extentWidth = !extent ? 360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
+            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
+            ol.extent.getWidth(extent);
+        const extentHeight = !extent ? 360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
+            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
+            ol.extent.getHeight(extent);
+
+        let resX = extentWidth / tileWidth;
+        let resY = extentHeight / tileHeight;
+        let tilesWide;
+        let tilesHigh;
+        if (resX <= resY) {
+            // use one tile wide by N tiles high
+            tilesWide = 1;
+            tilesHigh = Math.round(resY / resX);
+            // previous resY was assuming 1 tile high, recompute with the actual number of tiles
+            // high
+            resY = resY / tilesHigh;
+        } else {
+            // use one tile high by N tiles wide
+            tilesHigh = 1;
+            tilesWide = Math.round(resX / resY);
+            // previous resX was assuming 1 tile wide, recompute with the actual number of tiles
+            // wide
+            resX = resX / tilesWide;
+        }
+        // the maximum of resX and resY is the one that adjusts better
+        const res = Math.max(resX, resY);
+
+        /*
+            // TODO: this is how GWC creates the bbox adjusted.
+            // We should calculate it to have the correct extent for a grid set
+            const adjustedExtentWidth = tilesWide * tileWidth * res;
+            const adjustedExtentHeight = tilesHigh * tileHeight * res;
+            BoundingBox adjExtent = new BoundingBox(extent);
+            adjExtent.setMaxX(adjExtent.getMinX() + adjustedExtentWidth);
+            // Do we keep the top or the bottom fixed?
+            if (alignTopLeft) {
+                adjExtent.setMinY(adjExtent.getMaxY() - adjustedExtentHeight);
+            } else {
+                adjExtent.setMaxY(adjExtent.getMinY() + adjustedExtentHeight);
+
+         */
+
+        const defaultMaxResolution = res;
 
         const defaultMinResolution = defaultMaxResolution / Math.pow(
             defaultZoomFactor, defaultMaxZoom - 0);
@@ -319,22 +410,28 @@ class OpenlayersMap extends React.Component {
 
     updateMapInfoState = () => {
         let view = this.map.getView();
-        let c = this.normalizeCenter(view.getCenter());
-        let bbox = view.calculateExtent(this.map.getSize());
-        let size = {
-            width: this.map.getSize()[0],
-            height: this.map.getSize()[1]
-        };
-        this.props.onMapViewChanges({x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326'}, view.getZoom(), {
-            bounds: {
-                minx: bbox[0],
-                miny: bbox[1],
-                maxx: bbox[2],
-                maxy: bbox[3]
-            },
-            crs: view.getProjection().getCode(),
-            rotation: view.getRotation()
-        }, size, this.props.id, this.props.projection);
+        let tempCenter = view.getCenter();
+        let projectionExtent = view.getProjection().getExtent();
+        // prevent user from dragging outside the projection extent
+        if (tempCenter && tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
+            tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3]) {
+            let c = this.normalizeCenter(view.getCenter());
+            let bbox = view.calculateExtent(this.map.getSize());
+            let size = {
+                width: this.map.getSize()[0],
+                height: this.map.getSize()[1]
+            };
+            this.props.onMapViewChanges({ x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326' }, view.getZoom(), {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: view.getProjection().getCode(),
+                rotation: view.getRotation()
+            }, size, this.props.id, this.props.projection);
+        }
     };
 
     haveResolutionsChanged = (newProps) => {
@@ -343,12 +440,20 @@ class OpenlayersMap extends React.Component {
         return !isEqual(resolutions, newResolutions);
     };
 
-    createView = (center, zoom, projection, options) => {
+    createView = (center, zoom, projection, options, limits = {}) => {
+        // limit has a crs defined
+        const extent = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, CoordinatesUtils.normalizeSRS(projection));
+        const newOptions = !options || (options && !options.view) ? assign({}, options, { extent }) : assign({}, options);
+        /*
+        * setting the zoom level in the localConfig file is co-related to the projection extent(size)
+        * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
+        */
         const viewOptions = assign({}, {
             projection: CoordinatesUtils.normalizeSRS(projection),
             center: [center.x, center.y],
-            zoom: zoom
-        }, options || {});
+            zoom: zoom,
+            minZoom: limits.minZoom
+        }, newOptions || {});
         return new ol.View(viewOptions);
     };
 
@@ -356,11 +461,11 @@ class OpenlayersMap extends React.Component {
         var view = this.map.getView();
         const currentCenter = this.props.center;
         const centerIsUpdated = newProps.center.y === currentCenter.y &&
-                               newProps.center.x === currentCenter.x;
+            newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdated) {
             // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
-            let center = CoordinatesUtils.reproject({x: newProps.center.x, y: newProps.center.y}, 'EPSG:4326', newProps.projection, true);
+            let center = CoordinatesUtils.reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
         if (Math.round(newProps.zoom) !== this.props.zoom) {
@@ -372,7 +477,7 @@ class OpenlayersMap extends React.Component {
     };
 
     normalizeCenter = (center) => {
-        let c = CoordinatesUtils.reproject({x: center[0], y: center[1]}, this.props.projection, 'EPSG:4326', true);
+        let c = CoordinatesUtils.reproject({ x: center[0], y: center[1] }, this.props.projection, 'EPSG:4326', true);
         return [c.x, c.y];
     };
 
@@ -392,7 +497,7 @@ class OpenlayersMap extends React.Component {
         });
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
-            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view);
+            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits);
             let size = this.map.getSize();
             let bbox = view.calculateExtent(size);
             return {
@@ -415,7 +520,7 @@ class OpenlayersMap extends React.Component {
         mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
             const bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
             this.map.getView().fit(bounds, {
-               padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
+                padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
                 duration
             });

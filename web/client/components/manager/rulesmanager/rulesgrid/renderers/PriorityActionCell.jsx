@@ -14,7 +14,7 @@ class PriorityActionsCell extends React.Component {
 
     render() {
         const {connectDragSource, rowSelection} = this.props;
-        let rowHandleStyle = rowSelection !== null ? {position: 'absolute', marginTop: '5px'} : {};
+        let rowHandleStyle = rowSelection !== null ? {position: 'absolute', marginTop: "-2px", marginLeft: "3px"} : {};
         let isSelected = this.props.value;
         let editorClass = isSelected ? 'rdg-actions-checkbox selected' : 'rdg-actions-checkbox';
 
