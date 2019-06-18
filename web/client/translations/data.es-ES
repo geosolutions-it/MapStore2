@@ -25,6 +25,8 @@
         "errorDefault": "Ocurrió un error",
         "pageInfoShowMore": "Resultados {count} de {total}",
         "showMore": "Mostrar más...",
+        "collapse": "Colapso",
+        "expand": "Expandir",
         "version": {
             "label": "Versión"
         },
@@ -1066,6 +1068,7 @@
             "title": "Exportar datos"
         },
         "catalog": {
+            "notAvailable": "No disponible",
             "title": "Catálogo",
             "autoload": "Buscar en la selección de servicios",
             "clearValueText": "Borrar selección",
@@ -1100,6 +1103,11 @@
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",
             "hideDescription": "Ocultar descripción completa",
+            "templateFormatDescriptionExample": "La descripción de la capa es $\\{ description \\}",
+            "showTemplate": "Mostrar plantilla de metadatos",
+            "showPreview": "Mostrar vista previa",
+            "advancedSettings": "Ajustes avanzados",
+            "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
             "notification": {
                 "warningAddCatalogService": "Introduzca una url y un título válidos",
                 "addCatalogService": "Servicio añadido correctamente",

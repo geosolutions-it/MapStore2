@@ -31,7 +31,7 @@ const serviceNew = {
 const catalog = require('../catalog');
 const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
     FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE,
-    CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE,
+    CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
     changeText} = require('../../actions/catalog');
 const {MAP_CONFIG_LOADED} = require('../../actions/config');
 const sampleRecord = {
@@ -125,10 +125,33 @@ describe('Test the catalog reducer', () => {
         const state = catalog({}, {type: CHANGE_TITLE, title});
         expect(state.newService.title).toBe(title);
     });
-    it('CHANGE_TYPE', () => {
-        let newType = "some type";
+    it('CHANGE_TYPE to wms', () => {
+        let newType = "wms";
         const state = catalog({}, {type: CHANGE_TYPE, newType});
         expect(state.newService.type).toBe(newType);
+    });
+    it('CHANGE_TYPE from csw to wms', () => {
+        const state = catalog({
+            newService: {
+                type: "csw",
+                showTemplate: true,
+                metadataTemplate: "{description}"
+            }
+        }, {type: CHANGE_TYPE, newType: "wms"});
+        expect(state.newService.type).toBe("wms");
+        expect(state.newService.showTemplate).toBe(false);
+        expect(state.newService.metadataTemplate).toBe("");
+    });
+    it('CHANGE_TYPE from to wms to csw', () => {
+        const state = catalog(
+            {
+                newService: {
+                    type: "wms"
+                }
+            }, {type: CHANGE_TYPE, newType: "csw"});
+        expect(state.newService.type).toBe("csw");
+        expect(state.newService.showTemplate).toEqual(undefined);
+        expect(state.newService.metadataTemplate).toEqual(undefined);
     });
     it('CHANGE_TEXT', () => {
         let val = "text";
@@ -189,6 +212,11 @@ describe('Test the catalog reducer', () => {
         expect(state.newService.type).toBe(emptyService.type);
         expect(state.newService.title).toBe(emptyService.title);
         expect(state.newService.url).toBe(emptyService.url);
+        expect(state.newService.showAdvancedSettings).toBe(false);
+        expect(state.newService.showTemplate).toBe(false);
+        expect(state.newService.hideThumbnail).toBe(false);
+        expect(state.newService.metadataTemplate).toBe("<p>${description}</p>");
+
         isNew = false;
         const state2 = catalog({selectedService: "serv", services: {
             "serv": {
@@ -216,5 +244,46 @@ describe('Test the catalog reducer', () => {
             }
         }}, {type: CHANGE_CATALOG_MODE, mode, isNew});
         expect(state2.newService.title).toBe("tit");
+    });
+    it('TOGGLE_THUMBNAIL ', () => {
+        const state = catalog({
+            newService: {}
+        }, {type: TOGGLE_THUMBNAIL});
+        expect(state.newService.hideThumbnail).toBe(true);
+        const state2 = catalog({
+            newService: {hideThumbnail: true}
+        }, {type: TOGGLE_THUMBNAIL});
+        expect(state2.newService.hideThumbnail).toBe(false);
+    });
+    it('TOGGLE_TEMPLATE toggling on the template', () => {
+        const state = catalog({
+            newService: {showTemplate: false}
+        }, {type: TOGGLE_TEMPLATE});
+        expect(state.newService.metadataTemplate).toBe("<p>${description}</p>");
+        expect(state.newService.showTemplate).toBe(true);
+    });
+    it('TOGGLE_TEMPLATE toggling off the template ', () => {
+        const state = catalog({
+            newService: {showTemplate: true, metadataTemplate: "<p>${descriptionTest}</p>"}
+        }, {type: TOGGLE_TEMPLATE});
+        expect(state.newService.showTemplate).toBe(false);
+        expect(state.newService.metadataTemplate).toBe("<p>${descriptionTest}</p>");
+
+    });
+    it('TOGGLE_ADVANCED_SETTINGS ', () => {
+        const state = catalog({
+            newService: {}
+        }, {type: TOGGLE_ADVANCED_SETTINGS});
+        expect(state.newService.showAdvancedSettings).toBe(true);
+        const state2 = catalog({
+            newService: {showAdvancedSettings: true}
+        }, {type: TOGGLE_ADVANCED_SETTINGS});
+        expect(state2.newService.showAdvancedSettings).toBe(false);
+    });
+    it('CHANGE_METADATA_TEMPLATE ', () => {
+        const state = catalog({
+            newService: {}
+        }, {type: CHANGE_METADATA_TEMPLATE, metadataTemplate: ""});
+        expect(state.newService.metadataTemplate).toBe("");
     });
 });

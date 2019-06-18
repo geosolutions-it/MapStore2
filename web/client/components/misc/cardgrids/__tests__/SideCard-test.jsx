@@ -105,4 +105,29 @@ describe('SideCard component', () => {
         ReactTestUtils.Simulate.mouseLeave(card);
         expect(spyMouseLeave).toHaveBeenCalled();
     });
+
+    it('SideCard without preview and title and description, with only caption', () => {
+        ReactDOM.render(<SideCard caption={'caption'} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let body = container.querySelector('.ms-body');
+        let titleClassName = container.querySelector('.mapstore-side-card-title');
+        let descClassName = container.querySelector('.mapstore-side-card-desc');
+        let previewClassName = container.querySelector('.mapstore-side-preview');
+        expect(body).toNotExist();
+        expect(titleClassName).toNotExist();
+        expect(descClassName).toNotExist();
+        expect(previewClassName).toNotExist();
+    });
+    it('SideCard witht preview and title and description, with only caption', () => {
+        ReactDOM.render(<SideCard caption={'caption'} description = "desc" title="title" preview={<img src=""/>} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let body = container.querySelector('.ms-body');
+        let titleClassName = container.querySelector('.mapstore-side-card-title');
+        let descClassName = container.querySelector('.mapstore-side-card-desc');
+        let previewClassName = container.querySelector('.mapstore-side-preview');
+        expect(body).toNotExist();
+        expect(titleClassName).toExist();
+        expect(descClassName).toExist();
+        expect(previewClassName).toExist();
+    });
 });

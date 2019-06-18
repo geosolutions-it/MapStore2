@@ -25,20 +25,20 @@
 .ms-wizard {
     .msSideGrid {
         width: ~"calc(100% - 30px)";
-    }  
+    }
 }
 
 .mapstore-side-card {
     .shadow-soft;
     width: 100%;
-    
+
     margin: 10px 0 0 0;
     display: flex;
     transition: all 0.3s;
     flex-direction: column;
     .ms-head {
         display: flex;
-        height: @square-btn-size * 2; 
+        height: @square-btn-size * 2;
     }
     .mapstore-side-preview {
         display: flex;
@@ -81,6 +81,7 @@
                 overflow: hidden;
                 width: 100%;
             }
+
         }
         .mapstore-side-card-title {
             font-family: @headings-font-family;
@@ -92,7 +93,11 @@
             border-bottom: none;
             font-size: @font-size-small;
             margin-bottom: 10px;
-            border-bottom: 1px solid @ms2-color-shade-lighter; 
+            border-bottom: 1px solid @ms2-color-shade-lighter;
+            span div {
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
         }
         .mapstore-side-card-caption {
             font-style: italic;
@@ -121,7 +126,7 @@
                 color: @ms2-color-text-primary;
             }
         }
- 
+
     }
     &:hover {
         transform: scale(1.05);
@@ -130,7 +135,7 @@
     }
 
     &.ms-sm {
-        
+
         .ms-head {
             height: @square-btn-size;
         }
@@ -143,7 +148,7 @@
                 font-size: @icon-size;
             }
         }
-    
+
         .mapstore-side-card-info {
             padding: 8px 16px 8px 8px;
         }
@@ -175,10 +180,26 @@
     &.ms-over {
         .shadow-soft;
     }
+    &.full-text {
+        .ms-head {
+            height: auto;
+        }
+        .mapstore-side-card-info {
+            overflow: hidden;
+            & > div {
+                span {
+                    text-overflow: ellipsis;
+                    white-space: unset;
+                    overflow: visible;
+                    width: 100%;
+                }
+            }
+        }
+    }
 }
 
 .ms-square-card {
-            
+
     width: 24%;
     margin-top: 8px;
     padding: 4px;

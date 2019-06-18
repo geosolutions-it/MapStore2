@@ -25,6 +25,8 @@
         "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "version": {
             "label": "版本"
         },
@@ -1015,6 +1017,7 @@
             "success": " correctly imported"
         },
         "catalog": {
+            "notAvailable": "Not Available",
             "title": "Catalog",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
@@ -1047,6 +1050,11 @@
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",
+            "templateFormatDescriptionExample": "The description of layer is $\\{ description \\}",
+            "showTemplate": "Show metadata template",
+            "showPreview": "Show preview",
+            "advancedSettings": "Advanced Settings",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",

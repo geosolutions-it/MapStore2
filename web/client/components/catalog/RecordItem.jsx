@@ -5,62 +5,91 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const PropTypes = require('prop-types');
-const SharingLinks = require('./SharingLinks');
-const Message = require('../I18N/Message');
-const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const { isObject } = require('lodash');
+import React from 'react';
+import PropTypes from 'prop-types';
+import {isObject, isArray, trim } from 'lodash';
+import {Image, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
 
-const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const ContainerDimensions = require('react-container-dimensions').default;
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
-
-const tooltip = require('../misc/enhancers/tooltip');
+import {
+    buildSRSMap,
+    extractEsriReferences,
+    extractOGCServicesReferences,
+    esriToLayer,
+    getRecordLinks,
+    recordToLayer
+} from '../../utils/CatalogUtils';
+import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import HtmlRenderer from '../misc/HtmlRenderer';
+import {parseCustomTemplate} from '../../utils/TemplateUtils';
+import LocaleUtils from '../../utils/LocaleUtils';
+import Message from '../I18N/Message';
+import SharingLinks from './SharingLinks';
+import SideCard from '../misc/cardgrids/SideCard';
+import Toolbar from '../misc/toolbar/Toolbar';
+import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
-const defaultThumb = require('./img/default.jpg');
+
+import defaultThumb from './img/default.jpg';
 
 class RecordItem extends React.Component {
     static propTypes = {
         addAuthentication: PropTypes.bool,
+        authkeyParamNames: PropTypes.array,
         buttonSize: PropTypes.string,
+        catalogURL: PropTypes.string,
+        catalogType: PropTypes.string,
         crs: PropTypes.string,
         currentLocale: PropTypes.string,
+        hideThumbnail: PropTypes.bool,
+        hideExpand: PropTypes.bool,
+        hideIdentifier: PropTypes.bool,
+        layerBaseConfig: PropTypes.object,
         onCopy: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
-        authkeyParamNames: PropTypes.array,
         showGetCapLinks: PropTypes.bool,
-        zoomToLayer: PropTypes.bool,
-        catalogURL: PropTypes.string,
-        catalogType: PropTypes.string,
-        hideThumbnail: PropTypes.bool,
-        hideIdentifier: PropTypes.bool,
-        hideExpand: PropTypes.bool,
-        layerBaseConfig: PropTypes.object
+        showTemplate: PropTypes.bool,
+        zoomToLayer: PropTypes.bool
     };
 
     static defaultProps = {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
+        hideThumbnail: false,
+        hideIdentifier: false,
+        hideExpand: false,
+        layerBaseConfig: {},
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
         onZoomToExtent: () => {},
+        showGetCapLinks: true,
+        showTemplate: false,
         style: {},
-        showGetCapLinks: false,
-        zoomToLayer: true,
-        hideThumbnail: false,
-        hideIdentifier: false,
-        hideExpand: true,
-        layerBaseConfig: {}
+        zoomToLayer: true
+    };
+    state = {
+        visibleExpand: false
+    }
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
-    state = {};
-
+    componentDidMount() {
+        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        const record = this.props.record;
+        this.setState({visibleExpand: !this.props.hideExpand &&
+            (
+                this.displayExpand() ||
+                // show expand if the template is not empty
+                !!(this.props.showTemplate && record && record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
+            )
+        });
+    }
     componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
     }
@@ -92,17 +121,17 @@ class RecordItem extends React.Component {
 
         // let's create the buttons
         let buttons = [];
-        // TODO addLayer and addwmtsLayer do almost the same thing and they should be unified
+        // TODO addWmsLayer and addwmtsLayer do almost the same thing and they should be unified
         if (wms) {
             buttons.push(
                 <Button
                     key="wms-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
-                    bsSize={this.props.buttonSize}
                     onClick={() => { this.addWmsLayer(wms); }}
                     key="addlayer">
-                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                        <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -110,12 +139,12 @@ class RecordItem extends React.Component {
             buttons.push(
                 <Button
                     key="wmts-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
-                    bsSize={this.props.buttonSize}
                     onClick={() => { this.addwmtsLayer(wmts); }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                        <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -123,12 +152,12 @@ class RecordItem extends React.Component {
             buttons.push(
                 <Button
                     key="wmts-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
-                    bsSize={this.props.buttonSize}
                     onClick={() => { this.addEsriLayer(); }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                        <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -141,68 +170,72 @@ class RecordItem extends React.Component {
             }
         }
 
-        return (
-            <div className="record-buttons">
-                {buttons}
-            </div>
-        );
+        return buttons;
     };
 
     renderDescription = (record) => {
         if (!record) {
             return null;
         }
-        if (typeof record.description === "string") {
-            return record.description;
-        } else if (Array.isArray(record.description)) {
-            return record.description.join(", ");
-        }
+        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        return this.state.fullText && record.metadataTemplate
+            ? (<div className="catalog-metadata ql-editor">
+                    <HtmlRenderer html={parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`)}/>
+                </div>)
+            : record.metadataTemplate ? '' : (isArray(record.description) ? record.description.join(", ") : record.description);
     };
 
     render() {
         let record = this.props.record;
         const {wms, wmts} = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
-        return (
-            <Panel className="record-item">
-                {!this.props.hideThumbnail && <div className="record-item-thumb">
-                    {this.renderThumb(record && record.thumbnail, record)}
-                </div>}
-                <div className="record-item-content">
-                    <div className="record-item-title">
-                        <h4>{record && this.getTitle(record.title)}</h4>
-                        {!this.props.hideExpand && <ContainerDimensions>
-                            {({width}) => this.displayExpand(width) &&
-                            <Button
-                                tooltipPosition="left"
-                                tooltipId={!this.state.truncateText ? 'catalog.showDescription' : 'catalog.hideDescription'}
-                                className={`square-button-md ${!this.state.truncateText ? '' : ' ms-collapsed'}`} onClick={() => this.setState({truncateText: !this.state.truncateText})}>
-                                <Glyphicon glyph="chevron-left"/>
-                            </Button>}
-                        </ContainerDimensions>}
-                    </div>
-                    <div className={`record-item-info${this.state.truncateText ? '' : ' record-item-truncate-text'}`}>
-                        {!this.props.hideIdentifier && <h4><small>{record && record.identifier}</small></h4>}
-                        <p className="record-item-description">{this.renderDescription(record)}</p>
-                    </div>
-                    {!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
-                    {!this.props.hideExpand && <div
-                    className="ms-ruler"
-                    style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
-                    ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}</div>}
-                    {this.renderButtons(record)}
-                </div>
-            </Panel>
-        );
+        // the preview and toolbar width depends on the values defined in the theme (variable.less)
+        // IMPORTANT: if those values are changed then this defaults needs to change too
+        return record ? (
+                <SideCard
+                    style={{transform: "none"}}
+                    fullText={this.state.fullText}
+                    preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
+                    title={record && this.getTitle(record.title)}
+                    description={<div className ref={sideCardDesc => {
+                        this.sideCardDesc = sideCardDesc;
+                    }}>{this.renderDescription(record)}</div>}
+                    caption={
+                        <div>
+                            {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
+                            <div>{!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                            {!this.props.hideExpand &&
+                                <div
+                                    className="ms-ruler"
+                                    style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
+                                    ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}
+                                </div>
+                            }
+                        </div>
+                    }
+                    tools={
+                        <Toolbar
+                            btnDefaultProps={{
+                                className: 'square-button-md',
+                                bsStyle: 'primary'
+                            }}
+                            btnGroupProps={{
+                                style: {
+                                    margin: 10
+                                }
+                            }}
+                            buttons={[
+                                ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
+                                {
+                                    glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
+                                    visible: this.state.visibleExpand,
+                                    tooltipId: this.state.fullText ? 'collapse' : 'expand',
+                                    onClick: () => this.setState({ fullText: !this.state.fullText })
+                                }
+                            ]}/>
+                    }/>
+        ) : null;
     }
-
-    isLinkCopied = (key) => {
-        return this.state[key];
-    };
-
-    setLinkCopiedStatus = (key, status) => {
-        this.setState({[key]: status});
-    };
 
     addWmsLayer = (wms) => {
         const allowedSRS = buildSRSMap(wms.SRS);
@@ -245,9 +278,16 @@ class RecordItem extends React.Component {
             this.props.onZoomToExtent(extent, crs);
         }
     };
-    displayExpand = width => {
-        const descriptionWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
-        return descriptionWidth > width;
+    /**
+     * it manages visibility of expand button.
+     * it checks if the width of descriptionRuler is higher than the width of the desc-section
+     * @return {boolean} the value of the check
+    */
+    displayExpand = () => {
+
+        const descriptionRulerWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
+        const descriptionWidth = this.sideCardDesc ? this.sideCardDesc.clientWidth : 0;
+        return descriptionRulerWidth > descriptionWidth;
     };
 }
 

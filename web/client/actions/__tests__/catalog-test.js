@@ -19,7 +19,9 @@ const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat
      focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
-    SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT} = require('../catalog');
+    SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
+    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate
+} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
 
@@ -234,5 +236,22 @@ describe('Test correctness of the catalog actions', () => {
 
         expect(action.type).toBe(ADD_LAYER_ERROR);
         expect(action.error).toBe('myerror');
+    });
+    it('test toggleAdvancedSettings action', () => {
+        const action = toggleAdvancedSettings();
+        expect(action.type).toBe(TOGGLE_ADVANCED_SETTINGS);
+    });
+    it('test toggleTemplate action', () => {
+        const action = toggleTemplate();
+        expect(action.type).toBe(TOGGLE_TEMPLATE);
+    });
+    it('test toggleThumbnail action', () => {
+        const action = toggleThumbnail();
+        expect(action.type).toBe(TOGGLE_THUMBNAIL);
+    });
+    it('test changeMetadataTemplate action', () => {
+        const action = changeMetadataTemplate("${title}");
+        expect(action.type).toBe(CHANGE_METADATA_TEMPLATE);
+        expect(action.metadataTemplate).toBe("${title}");
     });
 });

@@ -16,7 +16,8 @@ const ContainerDimensions = require('react-container-dimensions').default;
 
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
-    addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
+    addLayer, addLayerError, resetCatalog, focusServicesList, changeText,
+    changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {currentLocaleSelector} = require("../selectors/locale");
 const {setControlProperty, setControlProperties} = require("../actions/controls");
@@ -31,7 +32,6 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
-
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
@@ -186,11 +186,15 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onChangeUrl: changeUrl,
     onChangeType: changeType,
     onChangeTitle: changeTitle,
+    onChangeMetadataTemplate: changeMetadataTemplate,
     onChangeText: changeText,
     onChangeAutoload: changeAutoload,
     onChangeSelectedService: changeSelectedService,
     onChangeCatalogMode: changeCatalogMode,
     onAddService: addService,
+    onToggleAdvancedSettings: toggleAdvancedSettings,
+    onToggleThumbnail: toggleThumbnail,
+    onToggleTemplate: toggleTemplate,
     onDeleteService: deleteService,
     onError: addLayerError
 })(MetadataExplorerComponent);
