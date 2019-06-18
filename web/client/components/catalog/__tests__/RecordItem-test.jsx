@@ -731,7 +731,7 @@ describe('This test for RecordItem', () => {
         ReactTestUtils.Simulate.click(expand[0]);
         let desc = itemDom.getElementsByClassName('mapstore-side-card-desc');
         expect(desc.length).toBe(1);
-        expect(desc[0].innerText).toBe("sample title and sample abstract");
+        expect(desc[0].innerText.indexOf("sample title and sample abstract") !== -1).toBe(true);
     });
     it('show template description, with missing desc in metadata', () => {
         let item = ReactDOM.render(
@@ -755,6 +755,6 @@ describe('This test for RecordItem', () => {
         ReactTestUtils.Simulate.click(expand[0]);
         let desc = itemDom.getElementsByClassName('mapstore-side-card-desc');
         expect(desc.length).toBe(1);
-        expect(desc[0].innerText).toBe("sample title and description catalog.notAvailable");
+        expect(desc[0].innerText.indexOf("sample title and description catalog.notAvailable") !== -1).toBe(true);
     });
 });
