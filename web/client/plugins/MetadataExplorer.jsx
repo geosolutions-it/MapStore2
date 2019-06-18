@@ -25,7 +25,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector, hideExpandSelector
+    searchTextSelector, groupSelector
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -43,17 +43,15 @@ const catalogSelector = createSelector([
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
-    (state) => currentLocaleSelector(state),
-    (state) => hideExpandSelector(state)
-], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, hideExpand) =>({
+    (state) => currentLocaleSelector(state)
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
     authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
     newService,
     currentLocale,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || [],
-    hideExpand
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || []
 }));
 
 const catalogClose = () => {

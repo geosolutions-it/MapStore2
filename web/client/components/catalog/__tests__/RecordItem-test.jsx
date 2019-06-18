@@ -719,6 +719,7 @@ describe('This test for RecordItem', () => {
                     },
                     metadataTemplate: "<p>${title} and ${description}</p>"
                 }}
+                showTemplate
                 hideExpand={false}
             />, document.getElementById("container"));
         expect(item).toExist();
@@ -742,6 +743,7 @@ describe('This test for RecordItem', () => {
                     },
                     metadataTemplate: "<p>${title} and ${description}</p>"
                 }}
+                showTemplate
                 hideExpand={false}
             />, document.getElementById("container"));
         expect(item).toExist();

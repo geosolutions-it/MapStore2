@@ -194,7 +194,6 @@ function catalog(state = {
         if (newState.newService.showTemplate) {
             newState = set("newService.metadataTemplate", newState.newService.metadataTemplate || "<p>${description}</p>", newState);
         }
-        newState = set("hideExpand", !newState.newService.showTemplate, newState);
         return newState;
     }
     case TOGGLE_ADVANCED_SETTINGS: {

@@ -1089,7 +1089,7 @@
             "missingReference": "Nedostaju referentni OGC metapodaci",
             "showDescription": "Prikaži puni opis",
             "hideDescription": "Sakrij puni opis",
-            "templateFormatDescriptionExample": "The description of layer is ${ description }",
+            "templateFormatDescriptionExample": "The description of layer is $\\{ description \\}",
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",

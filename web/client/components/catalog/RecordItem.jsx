@@ -41,6 +41,7 @@ class RecordItem extends React.Component {
         crs: PropTypes.string,
         currentLocale: PropTypes.string,
         hideThumbnail: PropTypes.bool,
+        hideExpand: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
         layerBaseConfig: PropTypes.object,
         onCopy: PropTypes.func,
@@ -49,6 +50,7 @@ class RecordItem extends React.Component {
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
+        showTemplate: PropTypes.bool,
         zoomToLayer: PropTypes.bool
     };
 
@@ -65,6 +67,7 @@ class RecordItem extends React.Component {
         onLayerAdd: () => {},
         onZoomToExtent: () => {},
         showGetCapLinks: true,
+        showTemplate: false,
         style: {},
         zoomToLayer: true
     };
@@ -79,9 +82,12 @@ class RecordItem extends React.Component {
     componentDidMount() {
         const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
         const record = this.props.record;
-        this.setState({visibleExpand: this.displayExpand() ||
-            // check based on the value of the template
-            !!(record && record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
+        this.setState({visibleExpand: !this.props.hideExpand &&
+            (
+                this.displayExpand() ||
+                // show expand if the template is not empty
+                !!(this.props.showTemplate && record && record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
+            )
         });
     }
     componentWillMount() {

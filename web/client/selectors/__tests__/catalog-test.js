@@ -23,8 +23,7 @@ const {
     activeSelector,
     authkeyParamNameSelector,
     searchTextSelector,
-    groupSelector,
-    hideExpandSelector
+    groupSelector
 } = require("../catalog");
 
 const {set} = require('../../utils/ImmutableUtils');
@@ -204,12 +203,6 @@ describe('Test catalog selectors', () => {
         const authkeyParamNames = authkeyParamNameSelector({});
         expect(authkeyParamNames).toExist();
         expect(authkeyParamNames.length).toBe(0);
-    });
-    it('test hideExpandSelector', () => {
-        let hideExpand = hideExpandSelector({});
-        expect(hideExpand).toBe(false);
-        hideExpand = hideExpandSelector({catalog: {hideExpand: true}});
-        expect(hideExpand).toBe(true);
     });
 
 });

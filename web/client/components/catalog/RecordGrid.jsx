@@ -30,6 +30,7 @@ class RecordGrid extends React.Component {
         hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
         hideExpand: PropTypes.bool,
+        showTemplate: PropTypes.bool,
         layerBaseConfig: PropTypes.object
     };
 
@@ -57,6 +58,7 @@ class RecordGrid extends React.Component {
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}
+                    showTemplate={this.props.showTemplate}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}
                     style={{height: "215px", maxHeight: "215px"}}
