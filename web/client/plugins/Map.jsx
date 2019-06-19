@@ -129,12 +129,16 @@ let plugins;
  *    }
  *  }
  * ```
- * an additional feature is the ability to set the map restricted extent in the localConfig.json file using "mapConstraints" property e.g
- * ```
+ * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
+ *
+ * An additional feature to is limit the area and/or the minimum level of zoom in the localConfig.json file using "mapConstraints" property
+ *
+ *  e.g
+ * ```json
  * "mapConstraints": {
  *  "minZoom": 12, // minimal allowed zoom used by default
- *  "crs":"EPSG:3857",
- *  "restrictedExtent":[
+ *  "crs":"EPSG:3857", // crs of the restrictedExtent
+ *  "restrictedExtent":[ // limits the area accessible to the user to this bounding box
  *    1060334.456371965,5228292.734706056,
  *    1392988.403469052,5503466.036532691
  *   ],
@@ -143,9 +147,12 @@ let plugins;
  *   }
  *  }
  * ```
- * where crs refers to the reference system of the written coordinates, this property is located in the root of localConfig.json.
- *  ```
- * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
+ *
+ * With this setup you can configure a restricted area and/or a minimum zoom level for the whole application.
+ * If you have different reference systems for your maps, for each of them you can even set a minimum zoom
+ * using the entry `projectionsConstraints` as written in the example.
+ *
+ * ```
  *
  * @memberof plugins
  * @class Map

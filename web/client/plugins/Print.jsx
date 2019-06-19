@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,6 +7,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
+
 const {connect} = require('react-redux');
 
 const LocaleUtils = require('../utils/LocaleUtils');
