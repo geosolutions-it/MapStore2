@@ -1103,7 +1103,7 @@
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",
             "hideDescription": "Nascondi descrizione completa",
-            "templateFormatDescriptionExample": "La descrizione del layer è: $\\{ description \\}",
+            "templateFormatDescriptionExample": "La descrizione del layer è",
             "showTemplate": "Mostra il modello dei metadati",
             "showPreview": "Mostra la preview",
             "advancedSettings": "Impostazioni avanzante",

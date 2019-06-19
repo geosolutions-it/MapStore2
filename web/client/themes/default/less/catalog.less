@@ -52,4 +52,8 @@
             text-align: justify;
         }
     }
+    /* needed to avoid an error with Firefox where the width was not properly calculated #3824 */
+    .ms2-border-layout-body.catalog {
+        display: block !important;
+    }
 }

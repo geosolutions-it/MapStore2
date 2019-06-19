@@ -1103,7 +1103,7 @@
             "missingReference": "Les métadonnées des références OGC manquent",
             "showDescription": "Afficher la description complète",
             "hideDescription": "Masquer la description complète",
-            "templateFormatDescriptionExample": "La description de la couche est $\\{ description \\}",
+            "templateFormatDescriptionExample": "La description de la couche est",
             "showTemplate": "Afficher le modèle de métadonnées",
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",

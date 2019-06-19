@@ -1103,7 +1103,7 @@
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",
             "hideDescription": "Ocultar descripción completa",
-            "templateFormatDescriptionExample": "La descripción de la capa es $\\{ description \\}",
+            "templateFormatDescriptionExample": "La descripción de la capa es",
             "showTemplate": "Mostrar plantilla de metadatos",
             "showPreview": "Mostrar vista previa",
             "advancedSettings": "Ajustes avanzados",

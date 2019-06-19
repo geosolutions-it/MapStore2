@@ -1090,7 +1090,7 @@
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",
-            "templateFormatDescriptionExample": "The description of layer is $\\{ description \\}",
+            "templateFormatDescriptionExample": "The description of layer is",
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
