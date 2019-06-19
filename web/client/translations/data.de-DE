@@ -970,7 +970,7 @@
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
             "hideDescription": "Vollständige Beschreibung ausblenden",
-            "templateFormatDescriptionExample": "Die Beschreibung der Schicht lautet $\\{ description \\}",
+            "templateFormatDescriptionExample": "Die Beschreibung der Schicht lautet",
             "showTemplate": "Metadatenvorlage anzeigen",
             "showPreview": "Vorschau zeigen",
             "advancedSettings": "Erweiterte Einstellungen",

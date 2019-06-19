@@ -326,6 +326,7 @@ class Catalog extends React.Component {
             this.isViewMode(this.props.mode) ? (
                 <BorderLayout
                     key="catalog-BorderLayout"
+                    bodyClassName="ms2-border-layout-body catalog"
                     header={(<Form>
                                 <FormGroup controlId="labelService" key="labelService">
                                     <ControlLabel><Message msgId="catalog.service"/></ControlLabel>
@@ -365,6 +366,7 @@ class Catalog extends React.Component {
                         </BorderLayout>
             ) : (
                 <BorderLayout
+                   bodyClassName="ms2-border-layout-body catalog"
                    header={<Form horizontal >
                        <FormGroup>
                            <Col xs={12}>
@@ -453,7 +455,7 @@ class Catalog extends React.Component {
                                                     </OverlayTrigger>
                                                 </p>
                                                 <pre>
-                                                    <Message msgId="catalog.templateFormatDescriptionExample"/>
+                                                    <Message msgId="catalog.templateFormatDescriptionExample"/>{ " ${ description }"}
                                                 </pre>
                                             </span>
                                        </Col>)}
