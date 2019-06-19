@@ -1509,7 +1509,12 @@
             "displayCartesian": {
                 "line": "Masquer la grille",
                 "bar": "Masquer la grille"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Axe X: Angle de rotation de l'étiquette °",
+                "bar": "Axe X: Angle de rotation de l'étiquette °"
+            },
+            "yAxis":{
                 "line": "Masquer l'axe Y",
                 "bar": "Masquer l'axe Y"
             },

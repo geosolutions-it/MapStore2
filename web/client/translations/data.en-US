@@ -1509,6 +1509,10 @@
                 "line": "Hide Grid",
                 "bar": "Hide Grid"
             },
+            "xAxisAngle":{
+                "line": "X Axis: Label rotation angle °",
+                "bar": "X Axis: Label rotation angle °"
+            },
             "yAxis":{
                 "line": "Hide Y axis",
                 "bar": "Hide Y axis"

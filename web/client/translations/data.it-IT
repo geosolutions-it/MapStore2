@@ -1508,7 +1508,12 @@
             "displayCartesian": {
                 "line": "Nascondi griglia",
                 "bar": "Nascondi griglia"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Asse X: Angolo di rotazione °",
+                "bar": "Asse X: Angolo di rotazione °"
+            },
+            "yAxis":{
                 "line": "Nascondi l'asse Y",
                 "bar": "Nascondi l'asse Y"
             },

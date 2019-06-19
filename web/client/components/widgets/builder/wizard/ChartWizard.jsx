@@ -67,6 +67,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         autoColorOptions={data.autoColorOptions}
         options={data.options}
         yAxis={data.yAxis}
+        xAxisAngle={data.xAxisAngle}
         yAxisLabel={data.yAxisLabel}
     />)
     : (<SampleChart

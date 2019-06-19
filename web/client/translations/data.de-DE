@@ -1508,7 +1508,12 @@
             "displayCartesian": {
                 "line": "Raster ausblenden",
                 "bar": "Raster ausblenden"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "X-Achse: Beschriften Sie den Drehwinkel °",
+                "bar": "X-Achse: Beschriften Sie den Drehwinkel °"
+            },
+            "yAxis":{
                 "line": "Y-Achse ausblenden",
                 "bar": "Y-Achse ausblenden"
             },

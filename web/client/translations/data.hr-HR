@@ -1494,6 +1494,10 @@
                 "line": "Sakrij mrežu",
                 "bar": "Sakrij mrežu"
             },
+            "xAxisAngle":{
+                "line": "X Axis: Label rotation angle °",
+                "bar": "X Axis: Label rotation angle °"
+            },
             "yAxis":{
                 "line": "Sakrij Y os",
                 "bar": "Sakrij Y os"
