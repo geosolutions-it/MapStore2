@@ -1702,6 +1702,8 @@
             },
             "hide": "Nascondi timeline",
             "show": "Mostra timeline",
+            "mapSyncOn": "Mostra tutti i tempi, senza filtrare per zona di mappa visibile",
+            "mapSyncOff": "Mostra solo i tempi nella zona di mappa visibile",
             "currentTime": "Istante corrente",
             "rangeStart": "Vai all'intervallo di tempo corrente",
             "rangeEnd": "Vai all'intervallo di tempo corrente",
