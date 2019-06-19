@@ -20,7 +20,7 @@ const {
 const { set, compose } = require('../../utils/ImmutableUtils');
 
 const timeline = require('../../reducers/timeline');
-const { rangeDataLoaded, setMapSync } = require('../../actions/timeline');
+const { rangeDataLoaded } = require('../../actions/timeline');
 const dimension = require('../../reducers/dimension');
 const { updateLayerDimensionData } = require('../../actions/dimension');
 
