@@ -19,7 +19,8 @@ const {
     selectLayer,
     onRangeChanged,
     timeDataLoading,
-    SELECT_LAYER
+    SELECT_LAYER,
+    SET_MAP_SYNC
 } = require('../actions/timeline');
 
 const { changeLayerProperties, REMOVE_NODE } = require('../actions/layers');
@@ -281,7 +282,7 @@ module.exports = {
      */
     playbackCacheNextPreviousTimes: (action$, { getState = () => { } } = {}) =>
         action$
-            .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP)
+            .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC )
                 .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
                 .filter(() => selectedLayerSelector(getState()))
                 .filter( t => !!t )

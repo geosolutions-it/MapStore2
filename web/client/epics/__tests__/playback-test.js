@@ -14,7 +14,7 @@ const DOMAIN_VALUES_RESPONSE = require('raw-loader!../../test-resources/wmts/Dom
 const { removeNode, CHANGE_LAYER_PROPERTIES } = require('../../actions/layers');
 const { STOP, play, stop, FRAMES_LOADING, SET_FRAMES } = require('../../actions/playback');
 const { setCurrentTime, moveTime } = require('../../actions/dimension');
-const { selectLayer, LOADING } = require('../../actions/timeline');
+const { selectLayer, LOADING, setMapSync } = require('../../actions/timeline');
 const axios = require("../../libs/ajax");
 const MockAdapter = require("axios-mock-adapter");
 const ANIMATION_MOCK_STATE = {
@@ -117,6 +117,17 @@ describe('playback Epics', () => {
                 expect(action.type).toBe(UPDATE_METADATA);
                 expect(action.forTime).toBe(time);
             } catch(e) {
+                done(e);
+            }
+            done();
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('playbackCacheNextPreviousTimes with time arg setMapSync() action', done => {
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_VALUES_RESPONSE);
+        testEpic(playbackCacheNextPreviousTimes, 1, setMapSync(true), ([action]) => {
+            try {
+                expect(action.type).toBe(UPDATE_METADATA);
+            } catch (e) {
                 done(e);
             }
             done();
