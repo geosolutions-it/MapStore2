@@ -158,7 +158,7 @@ describe('timeline selector', () => {
         });
         // TODO: test items from static time values inside layer, not fully supported yet.
     });
-    describe.only('multidimOptionsSelectorCreator', () => {
+    describe('multidimOptionsSelectorCreator', () => {
         const STATE_WITH_MAP = {
             ...SAMPLE_STATE_DOMAIN_VALUES,
             map: {
