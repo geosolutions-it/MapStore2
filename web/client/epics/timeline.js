@@ -264,7 +264,9 @@ module.exports = {
             .merge(action$.ofType(UPDATE_LAYER_DIMENSION_DATA).debounceTime(50))
             .switchMap( () => {
                 const timeData = timeDataSelector(getState()) || {};
-                const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain && isTimeDomainInterval(timeData[id].domain));
+                const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain
+                        // when data is already fully downloaded, no need to refresh, except if the mapSync is active
+                        && (isTimeDomainInterval(timeData[id].domain)) || isMapSync(state));
                 // update range data for every layer that need to sync with histogram/domain
                 return Rx.Observable.merge(
                     ...layerIds.map(id =>
