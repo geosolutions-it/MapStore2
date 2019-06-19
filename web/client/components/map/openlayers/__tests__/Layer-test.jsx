@@ -1268,6 +1268,44 @@ describe('Openlayers layer', () => {
                  options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
+    it('changes wms params causes cache drop', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://sample.server/geoserver/wms",
+            "params": {
+                "cql_filter": "INCLUDE"
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        const source = layer.layer.getSource();
+        const spy = expect.spyOn(source, "setTileLoadFunction");
+        const oldGetTileLoadFunction = source.getTileLoadFunction();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+
+        // the cache empty is performed in this version of OL by replacing tile load function
+        // the same is in Map.jsx when change projection. Could not check effective cache clean
+        expect(spy).toHaveBeenCalledWith(oldGetTileLoadFunction);
+    });
     it('test wms security token on SLD param', () => {
         const options = {
             type: "wms",

@@ -192,11 +192,17 @@ Layers.registerType('wms', {
             }
             if (changed) {
                 const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
-                layer.getSource().updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                const source = layer.getSource();
+                source.updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
                     return params[key] ? previous : objectAssign(previous, {
                         [key]: undefined
                     });
                 }, {})));
+                // force tile cache drop
+                if (source.getTileLoadFunction) {
+                    source.setTileLoadFunction(source.getTileLoadFunction());
+                }
+
             }
             if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
                 layer.getSource().setAttributions(toOLAttributions(newOptions.credits));
