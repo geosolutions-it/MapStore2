@@ -57,7 +57,7 @@ const selector = createStructuredSelector({
 });
 // result panel
 
-/**
+/*
  * Enhancer to enable set index only if Component has not header in viewerOptions props
  */
 const identifyIndex = compose(
