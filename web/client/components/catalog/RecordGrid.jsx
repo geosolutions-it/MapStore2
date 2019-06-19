@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,11 +6,10 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const {Grid, Row, Col} = require('react-bootstrap');
 
 const RecordItem = require('./RecordItem');
-
 
 class RecordGrid extends React.Component {
     static propTypes = {
@@ -31,7 +29,9 @@ class RecordGrid extends React.Component {
         currentLocale: PropTypes.string,
         hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
-        hideExpand: PropTypes.bool
+        hideExpand: PropTypes.bool,
+        showTemplate: PropTypes.bool,
+        layerBaseConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -57,6 +57,7 @@ class RecordGrid extends React.Component {
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}
+                    showTemplate={this.props.showTemplate}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}
                     style={{height: "215px", maxHeight: "215px"}}

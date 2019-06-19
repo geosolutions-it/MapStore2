@@ -1,5 +1,4 @@
 div.record-grid {
-    overflow-x: hidden;
     padding-left: 0;
     padding-right: 0;
 }
@@ -35,8 +34,3 @@ we use !important*/
 #mapstore-metadata-explorer{
     margin-bottom: 0
 }
-/*
-
-.catalog-root {
-    z-index: 1
-}*/

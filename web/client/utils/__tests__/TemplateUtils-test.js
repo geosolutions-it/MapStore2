@@ -5,8 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var TemplateUtils = require('../TemplateUtils');
+import expect from 'expect';
+import {
+    generateTemplateString,
+    getCleanTemplate,
+    parseCustomTemplate,
+    validateStringAttribute
+} from '../TemplateUtils';
 
 
 describe('TemplateUtils', () => {
@@ -44,5 +49,47 @@ describe('TemplateUtils', () => {
         expect(templateFunction).toExist();
         let templateResult = templateFunction({test: "TEST"});
         expect(templateResult).toBe("this is a TEST2");
+    });
+
+    it('validateStringAttribute', () => {
+        const testObj = {
+            properties: {
+                name: 'object-name'
+            }
+        };
+        expect(validateStringAttribute(testObj, 'properties.name')).toBe(true);
+        expect(validateStringAttribute(testObj, ' properties.name ')).toBe(true);
+        expect(validateStringAttribute(testObj, '${properties.name}')).toBe(false);
+        expect(validateStringAttribute(testObj, '${properties.name}', 2, 1)).toBe(true);
+        expect(validateStringAttribute(testObj, '${ properties.name }', 2, 1)).toBe(true);
+        expect(validateStringAttribute(testObj, 'properties.desc')).toBe(false);
+    });
+
+    it('getCleanTemplate', () => {
+        const template = '<p>the name is ${ properties.name } and the description ${ properties.desc } and again the name is ${ <strong>properties.name</strong> }</p>';
+        const testObj = {
+            properties: {
+                name: 'object-name'
+            }
+        };
+        expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
+
+    });
+
+    it('parseCustomTemplate with some missing attributes', () => {
+        const retVal = parseCustomTemplate("${desc}, ${desc2}", {desc: "desc value"});
+        expect(retVal).toEqual("desc value, desc2 Not Available");
+    });
+    it('parseCustomTemplate with some no default value for missing attributes', () => {
+        const retVal = parseCustomTemplate("${desc}, ${desc2}", {desc: "desc value"}, () => "");
+        expect(retVal).toEqual("desc value, ");
+    });
+    it('parseCustomTemplate with invalid attribute and some no default value for missing attributes', () => {
+        const retVal = parseCustomTemplate("${<p>desc </p>}, ${desc2}", {desc: "desc value"}, () => "");
+        expect(retVal).toEqual("desc value, ");
+    });
+    it('parseCustomTemplate with invalid attribute and some no default value for missing attributes', () => {
+        const retVal = parseCustomTemplate("${<p>desc </p>}, ${desc2}", {desc: "desc value"});
+        expect(retVal).toEqual("desc value, desc2 Not Available");
     });
 });

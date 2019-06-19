@@ -25,6 +25,8 @@
         "errorDefault": "Ein Fehler ist aufgetreten",
         "pageInfoShowMore": "Ergebnisse {count} von {total}",
         "showMore": "Zeig mehr...",
+        "collapse": "Kollabiert",
+        "expand": "Erweitern",
         "version": {
             "label": "Version"
         },
@@ -933,6 +935,7 @@
             "success": " erfolgreich importiert"
         },
         "catalog": {
+            "notAvailable": "Nicht verfügbar",
             "title": "Katalog",
             "autoload": "Suche nach Serviceauswahl",
             "clearValueText": "Klare Auswahl",
@@ -967,6 +970,11 @@
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
             "hideDescription": "Vollständige Beschreibung ausblenden",
+            "templateFormatDescriptionExample": "Die Beschreibung der Schicht lautet $\\{ description \\}",
+            "showTemplate": "Metadatenvorlage anzeigen",
+            "showPreview": "Vorschau zeigen",
+            "advancedSettings": "Erweiterte Einstellungen",
+            "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
