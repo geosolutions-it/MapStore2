@@ -212,6 +212,7 @@ describe('timeline Epics', () => {
         const MAPSYNC_1_1_STATE = set('dimension.data.time.TEST_LAYER.source.version', "1.1", TIME_MAP_STATE);
         const MAPSYNC_ON_STATE = set('timeline.settings.mapSync', true, MAPSYNC_1_1_STATE);
         const MAPSYNC_OFF_STATE = set('timeline.settings.mapSync', false, MAPSYNC_1_1_STATE);
+
         it('updateRangeDataOnRangeChange', done => {
             testEpic(updateRangeDataOnRangeChange, 4, updateLayerDimensionData(), ([action1, action2, action3, action4]) => {
                 const { type: startType } = action1;
@@ -274,6 +275,36 @@ describe('timeline Epics', () => {
                 expect(action1.type).toBe(TEST_TIMEOUT);
                 done();
             }, MAPSYNC_OFF_STATE);
+        });
+        describe('fixed domain values', () => {
+            const MAPSYNC_ON_DOMAIN_VALUES_STATE = set('dimension.data.time.TEST_LAYER.domain',
+                "2000-03-01T00:00:00.000Z,2000-06-08T00:00:00.000Z"
+                , MAPSYNC_ON_STATE);
+            const MAPSYNC_OFF_DOMAIN_VALUES_STATE = set('timeline.settings.mapSync', false, MAPSYNC_ON_DOMAIN_VALUES_STATE);
+            it('mapSync on downloaded domain values', done => {
+                testEpic(updateRangeDataOnRangeChange, 4, changeMapView(), ([action1, action2, action3, action4]) => {
+                    const { type: startType } = action1;
+                    const { type: range1Type, range } = action2;
+                    const { type: range2Type } = action3;
+                    const { type: endType } = action4;
+                    // first action moves the current timeline view to center the current time
+                    expect(startType).toBe(LOADING);
+                    expect(endType).toBe(LOADING);
+                    // in this case loading fixed file of domain values causes double trigger of range data loaded with domain
+                    // in real world the 2nd response is histogram. TODO: test also histogram
+                    expect(range1Type).toBe(RANGE_DATA_LOADED);
+                    expect(range2Type).toBe(RANGE_DATA_LOADED);
+                    expect(range.start).toBe("2000-01-01T00:00:00.000Z");
+                    expect(range.end).toBe("2001-12-31T00:00:00.000Z");
+                    done();
+                }, MAPSYNC_ON_DOMAIN_VALUES_STATE);
+            });
+            it('mapSync off downloaded domain values', done => {
+                testEpic(addTimeoutEpic(updateRangeDataOnRangeChange, 500), 1, changeMapView(), ([action1]) => {
+                    expect(action1.type).toBe(TEST_TIMEOUT);
+                    done();
+                }, MAPSYNC_OFF_DOMAIN_VALUES_STATE);
+            });
         });
     });
 });

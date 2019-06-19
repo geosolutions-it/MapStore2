@@ -164,8 +164,11 @@ const isVisible = state => !isCollapsed(state) && hasLayers(state);
  * @returns a selector for multidimensional requests options (`bbox`)
  */
 const multidimOptionsSelectorCreator = layerId => state => {
-    const { bbox: viewport } = mapSelector(state);
-    const timeDimensionData = layerDimensionDataSelectorCreator(layerId, "space")(state);
+    const { bbox: viewport } = mapSelector(state) || {};
+    if (!viewport ) {
+        return {};
+    }
+    const timeDimensionData = layerDimensionDataSelectorCreator(layerId, "time")(state);
     const sourceVersion = get(timeDimensionData, 'source.version');
     // clean up possible string values.
     const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
@@ -175,7 +178,8 @@ const multidimOptionsSelectorCreator = layerId => state => {
         return {};
     }
     if (sourceVersion !== "1.1") {
-        const crs = get(timeDimensionData, 'domain.CRS');
+        const spaceDimension = layerDimensionDataSelectorCreator(layerId, "space")(state);
+        const crs = get(spaceDimension, 'domain.CRS');
 
         if (!crs || !bounds || !isMapSync(state)) { // TODO: optional filtering
             return {};
