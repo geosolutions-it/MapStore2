@@ -18,7 +18,6 @@ import {
     getRecordLinks,
     recordToLayer
 } from '../../utils/CatalogUtils';
-import ConfigUtils from '../../utils/ConfigUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
 import {parseCustomTemplate} from '../../utils/TemplateUtils';
@@ -237,7 +236,6 @@ class RecordItem extends React.Component {
                     }/>
         ) : null;
     }
-
 
     addWmsLayer = (wms) => {
         const allowedSRS = buildSRSMap(wms.SRS);
