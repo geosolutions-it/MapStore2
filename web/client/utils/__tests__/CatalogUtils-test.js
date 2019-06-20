@@ -358,6 +358,25 @@ describe('Test the CatalogUtils', () => {
         }, {});
         expect(records.length).toBe(1);
     });
+    it('csw with DC references, no name', () => {
+        /*
+         * Issue that happens with CSW GeoServer plugin, with the following Records.properties
+         * references.value=list(strConcat('${url.wms}?service=WMS&request=GetMap&layers=',prefixedName), Concatenate('https://some-url/geoserver/', "store.workspace.name", '/', "name", '/ows?service=wms&version=1.3.0&request=GetCapabilities'), Concatenate('https://some-url/geoserver/', "store.workspace.name", '/', "name", '/wfs?service=wfs&version=1.3.0&request=GetCapabilities'))
+         */
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    references: [{
+                        scheme: "http-get-capabilities",
+                        value: "http://geoserver"
+                    }]
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe("http://geoserver");
+    });
 
     it('csw with DC references with only OGC:WMS in URI, GeoNetwork', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
