@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const {LineChart, Line} = require('recharts');
-const {castArray, isNil} = require('lodash');
+const {castArray, isNil, maxBy, head} = require('lodash');
 const {renderCartesianTools} = require('./cartesian');
 
 module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, autoColorOptions, isAnimationActive, ...props} = {}) => {
@@ -18,12 +18,17 @@ module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, 
     const yAxisLabel = props.yAxis;
     const xAxisAngle = !isNil(props.xAxisAngle) ? [`angle${props.xAxisAngle}`] : [];
     const key = (COLORS || ["linechart"]).concat(legendLabel, yAxisLabel, xAxisAngle).join("");
+    // style= {{marginTop: 20, marginLeft: 20, marginBottom: 10, marginRight: 30}}
+    // margin: 20px 20px 10px 30px
+    const lengthLongestLabels = maxBy(data, (d) => d[props.xAxis.dataKey].length)[props.xAxis.dataKey].length;
+    const lengthFirstLabel = head(data) && head(data)[props.xAxis.dataKey].length;
     return (
         <LineChart
             key={key}
             width={width}
             height={height}
             data={data}
+            margin={props.xAxisAngle ? {top: 20, right: 30, left: 30 + lengthFirstLabel, bottom: lengthLongestLabels * 5 } : {}}
         >
             {seriesArray.map(({color, ...serie}, i) =>
                 <Line

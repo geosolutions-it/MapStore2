@@ -63,7 +63,7 @@ const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions =
                 {...{legend, tooltip}}
             >
                 {tooltip !== false ? type === "pie" ? <Tooltip content={CustomTooltip}/> : <Tooltip {...tooltip}/> : null}
-                {legend !== false ? <Legend {...legend}/> : null}
+                {legend !== false ? <Legend {...legend} wrapperStyle={{bottom: 0}} /> : null}
             </Component>
     );
 };
