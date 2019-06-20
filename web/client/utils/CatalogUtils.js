@@ -158,7 +158,7 @@ const converters = {
                     metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
                 }
                 if (references && castArray(references).length ) {
-                    metadata = {...metadata, references: ["<ul>" + castArray(references).map(ref => `<li><a target="_blank" href="${ref.url}">${ref.params.name}</a></li>`) + "</ul>"]
+                    metadata = {...metadata, references: ["<ul>" + castArray(references).map(ref => `<li><a target="_blank" href="${ref.url}">${ref.params && ref.params.name || ref.url}</a></li>`) + "</ul>"]
                     };
                 } else {
                     // in order to use a default value
