@@ -257,7 +257,7 @@ const TimelinePlugin = compose(
                             },
                             {
                                 glyph: "map-synch",
-                                tooltip: <Message msgId={!offsetEnabled ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
+                                tooltip: <Message msgId={mapSync ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
                                 bsStyle: mapSync ? 'success' : 'primary',
                                 active: mapSync,
                                 onClick: () => toggleMapSync(!mapSync)
