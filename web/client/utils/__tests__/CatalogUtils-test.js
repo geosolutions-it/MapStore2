@@ -374,6 +374,8 @@ describe('Test the CatalogUtils', () => {
             }]
         }, {});
         expect(records.length).toBe(1);
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe("http://geoserver");
     });
 
     it('csw with DC references with only OGC:WMS in URI, GeoNetwork', () => {
