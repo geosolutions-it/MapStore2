@@ -359,7 +359,7 @@ const CatalogUtils = {
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
      */
-    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url} = {}) => {
+    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url} = {}, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -392,13 +392,14 @@ const CatalogUtils = {
             links: getRecordLinks(record),
             params: params,
             allowedSRS: allowedSRS,
-            catalogURL
+            catalogURL,
+            ...baseConfig
         };
     },
     getCatalogRecords: (format, records, options) => {
         return converters[format] && converters[format](records, options) || null;
     },
-    esriToLayer: (record) => {
+    esriToLayer: (record, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -419,7 +420,8 @@ const CatalogUtils = {
                     maxx: record.boundingBox.extent[2],
                     maxy: record.boundingBox.extent[3]
                 }
-            }
+            },
+            ...baseConfig
         };
 
     }
