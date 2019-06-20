@@ -1710,6 +1710,8 @@
             },
             "hide": "Masquer la timeline",
             "show": "Afficher la timeline",
+            "mapSyncOn": "Afficher toutes les heures, sans filtrage par fenêtre",
+            "mapSyncOff": "Afficher uniquement les heures disponibles dans la fenêtre actuelle",
             "currentTime": "Aller à l'heure actuelle",
             "rangeStart": "Aller à la plage de temps actuelle",
             "rangeEnd": "Aller à la plage de temps actuelle",

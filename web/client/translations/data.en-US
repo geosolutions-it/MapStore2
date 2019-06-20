@@ -1711,6 +1711,8 @@
             },
             "hide": "Hide timeline",
             "show": "Show timeline",
+            "mapSyncOn": "Show all times, without filtering by viewport",
+            "mapSyncOff": "Show only times available in the current viewport",
             "currentTime": "Go to current time",
             "rangeStart":"Go to the current time range",
             "rangeEnd" : "Go to the current time range",

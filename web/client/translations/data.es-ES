@@ -1710,6 +1710,8 @@
             },
             "hide": "Esconder la línea de tiempo",
             "show": "Mostrar la línea de tiempo",
+            "mapSyncOn": "Mostrar todos los tiempos, sin filtrar por viewport",
+            "mapSyncOff": "Mostrar solo los tiempos disponibles en la ventana actual",
             "currentTime": "Ir a la hora actual",
             "rangeStart": "Ir al intervalo de tiempo actual",
             "rangeEnd": "Ir al intervalo de tiempo actual",

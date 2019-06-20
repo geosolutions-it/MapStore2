@@ -803,6 +803,52 @@ describe('OpenlayersMap', () => {
         });
         olMap.dispatchEvent('moveend');
     });
+    it('test ZOOM_TO_EXTENT_HOOK with full extent', (done) => {
+        /*
+         * Converting [-180, -90, 180, 90] in EPSG:3857 caused a bounds array of [0,0,0,0],
+         * and so a zoom to maxZoom in the 0,0 coordinates
+         * To avoid this, zoom to max resolution extent.
+         * TODO: improve this to manage all degenerated bounding boxes.
+         */
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        // fix size
+        document.querySelector('#map').setAttribute('style', "width: 200px; height: 200px");
+        const spy = expect.spyOn(testHandlers, 'onMapViewChanges');
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            onMapViewChanges={testHandlers.onMapViewChanges} />,
+            document.getElementById("map"));
+        const olMap = map.map;
+        olMap.on('moveend', () => {
+            expect(spy.calls[1]).toExist();
+            expect(spy.calls[1].arguments[0].x).toEqual(0);
+            expect(spy.calls[1].arguments[0].y).toEqual(0);
+            expect(spy.calls[1].arguments[0].x).toEqual(0);
+            expect(spy.calls[1].arguments[0].y).toEqual(0);
+            // Bbox should be max.
+            expect(spy.calls[1].arguments[2].bounds.maxx).toBeGreaterThan(15654300);
+            expect(spy.calls[1].arguments[2].bounds.maxy).toBeGreaterThan(7827150);
+            expect(spy.calls[1].arguments[2].bounds.minx).toBeLessThan(-15654300);
+            expect(spy.calls[1].arguments[2].bounds.miny).toBeLessThan(-7827150);
+            done();
+
+        });
+        expect(map).toExist();
+        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toExist();
+        hook([-180, -90, 180, 90], { crs: "EPSG:4326", duration: 0 });
+        olMap.dispatchEvent('moveend');
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0]).toExist(); // first is called by initial render
+    });
 
     it('create attribution with container', () => {
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));

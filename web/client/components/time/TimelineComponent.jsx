@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
+const moment = require('moment');
 
 // const vis = require('vis/index-timeline-graph2d'); // debug version. Doesn't work with uglify plugin, probably because of this issue: https://github.com/almende/vis/issues/3290
 const vis = require('vis/dist/vis-timeline-graph2d.min');
@@ -210,10 +211,16 @@ class Timeline extends React.Component {
             // If animate option is set, we should animate the timeline to any new
             // start/end values instead of jumping straight to them
             timelineOptions = omit(options, 'start', 'end');
-
-            this.$el.setWindow(options.start, options.end, {
-                animation: animate
-            });
+            if (options.start && options.end) {
+                this.$el.setWindow(options.start, options.end, {
+                    animation: animate
+                });
+            // avoid no-range initialization that causes not visible timeline
+            } else {
+                this.$el.setWindow(moment().subtract(1, 'month'), moment().add(1, 'month'), {
+                    animation: animate
+                });
+            }
         }
 
         this.$el.setOptions(timelineOptions);

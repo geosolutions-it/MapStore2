@@ -65,6 +65,8 @@ const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
 
 const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
 const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
+const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
+const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 /**
  * Actions for timeline
  * @module actions.timeline
@@ -83,5 +85,7 @@ module.exports = {
     ENABLE_OFFSET,
     enableOffset,
     SET_COLLAPSED,
-    setCollapsed
+    setCollapsed,
+    SET_MAP_SYNC,
+    setMapSync
 };

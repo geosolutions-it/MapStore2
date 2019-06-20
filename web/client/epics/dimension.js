@@ -7,7 +7,11 @@ const { error } = require('../actions/notifications');
 const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData} = require('../actions/dimension');
 const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 const {describeDomains} = require('../api/MultiDim');
-const { castArray, pick, find, replace, endsWith, get } = require('lodash');
+const {
+    domainsToDimensionsObject
+ } = require('../utils/TimeUtils');
+
+const { pick, find, replace, endsWith, get } = require('lodash');
 /**
  * Tries to get the layer's information form the URL.
  * TODO: find out a better way to do this
@@ -24,17 +28,7 @@ const DESCRIBE_DOMAIN_OPTIONS = {
     expandLimit: 10 // TODO: increase this limit to max client allowed
 };
 
-const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
-    const dimensions = castArray(Domains.DimensionDomain || []);
-    return dimensions.map( ({Identifier: name, Domain: domain} ) => ({
-        source: {
-            type: "multidim-extension",
-            url
-        },
-        name,
-        domain
-    }));
-};
+
 const getTimeMultidimURL = (l = {}) => get(find(l.dimensions || [], d => d && d.source && d.source.type === "multidim-extension"), "source.url");
 module.exports = {
     /**

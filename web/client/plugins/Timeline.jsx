@@ -13,13 +13,13 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector } = require('../selectors/dimension');
-const { currentTimeRangeSelector, isVisible, rangeSelector, timelineLayersSelector } = require('../selectors/timeline');
+const { currentTimeRangeSelector, isVisible, rangeSelector, timelineLayersSelector, isMapSync } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
 const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
 const withResizeSpy = require('../components/misc/enhancers/withResizeSpy');
 
-const { selectTime, enableOffset, onRangeChanged } = require('../actions/timeline');
+const { selectTime, enableOffset, onRangeChanged, setMapSync } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
 const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
@@ -71,6 +71,13 @@ const TimelinePlugin = compose(
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true}),
+    // add mapSync button handler and value
+    connect(
+        createSelector(isMapSync, mapSync => ({mapSync})),
+        {
+            toggleMapSync: setMapSync
+        }
+    ),
     //
     // ** Responsiveness to container.
     // These enhancers allow to properly place the timeline inside the map
@@ -124,6 +131,8 @@ const TimelinePlugin = compose(
         items,
         options,
         setOptions,
+        mapSync,
+        toggleMapSync = () => {},
         currentTime,
         setCurrentTime,
         offsetEnabled,
@@ -245,6 +254,14 @@ const TimelinePlugin = compose(
                                     if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
 
                                 }
+                            },
+                            {
+                                glyph: "map-synch",
+                                tooltip: <Message msgId={mapSync ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
+                                bsStyle: mapSync ? 'success' : 'primary',
+                                active: mapSync,
+                                onClick: () => toggleMapSync(!mapSync)
+
                             }
                         ]} />
                     <Playback
