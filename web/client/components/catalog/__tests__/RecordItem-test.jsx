@@ -1,10 +1,11 @@
- /**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
+
+/**
+* Copyright 2016, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 const React = require('react');
 const ReactDOM = require('react-dom');
 const RecordItem = require('../RecordItem.jsx');
@@ -16,118 +17,118 @@ const TestUtils = require('react-dom/test-utils');
 const SAMPLE_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 const sampleRecord = {
-    identifier: "test-identifier",
-    title: "sample title",
-    tags: ["subject1", "subject2"],
-    description: "sample abstract",
-    thumbnail: SAMPLE_IMAGE,
-    boundingBox: {
-        extent: [10.686,
-            44.931,
-            46.693,
-            12.54],
-        crs: "EPSG:4326"
+identifier: "test-identifier",
+title: "sample title",
+tags: ["subject1", "subject2"],
+description: "sample abstract",
+thumbnail: SAMPLE_IMAGE,
+boundingBox: {
+    extent: [10.686,
+        44.931,
+        46.693,
+        12.54],
+    crs: "EPSG:4326"
 
-    },
-    references: [{
-        type: "OGC:WMS",
-        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
-        SRS: [],
-        params: {name: "workspace:layername"}
-    }]
+},
+references: [{
+    type: "OGC:WMS",
+    url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+    SRS: [],
+    params: {name: "workspace:layername"}
+}]
 };
 
 const sampleRecord2 = {
-    identifier: "test-identifier",
-    title: "sample title",
-    tags: ["subject1", "subject2"],
-    description: "sample abstract",
-    thumbnail: SAMPLE_IMAGE,
-    boundingBox: {
-        extent: [10.686,
-            44.931,
-            46.693,
-            12.54],
-        crs: "EPSG:4326"
+identifier: "test-identifier",
+title: "sample title",
+tags: ["subject1", "subject2"],
+description: "sample abstract",
+thumbnail: SAMPLE_IMAGE,
+boundingBox: {
+    extent: [10.686,
+        44.931,
+        46.693,
+        12.54],
+    crs: "EPSG:4326"
 
-    },
-    references: [{
-        type: "OGC:WMS",
-        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
-        SRS: ['EPSG:4326'],
-        params: {name: "workspace:layername"}
-    }]
+},
+references: [{
+    type: "OGC:WMS",
+    url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+    SRS: ['EPSG:4326'],
+    params: {name: "workspace:layername"}
+}]
 };
 
 const sampleRecord3 = {
-    identifier: "test-identifier",
-    title: "sample title",
-    tags: ["subject1", "subject2"],
-    description: "sample abstract",
-    thumbnail: SAMPLE_IMAGE,
-    boundingBox: {
-        extent: [10.686,
-            44.931,
-            46.693,
-            12.54],
-        crs: "EPSG:4326"
+identifier: "test-identifier",
+title: "sample title",
+tags: ["subject1", "subject2"],
+description: "sample abstract",
+thumbnail: SAMPLE_IMAGE,
+boundingBox: {
+    extent: [10.686,
+        44.931,
+        46.693,
+        12.54],
+    crs: "EPSG:4326"
 
-    },
-    references: [{
-        type: "OGC:WMTS",
-        url: "http://wms.sample.service:80/geoserver/gwc/service/wmts",
-        SRS: ['EPSG:4326', 'EPSG:3857'],
-        params: {name: "workspace:layername"}
-    }]
+},
+references: [{
+    type: "OGC:WMTS",
+    url: "http://wms.sample.service:80/geoserver/gwc/service/wmts",
+    SRS: ['EPSG:4326', 'EPSG:3857'],
+    params: {name: "workspace:layername"}
+}]
 };
 
 const getCapRecord = assign({}, sampleRecord, {references: [{
-    type: "OGC:WMS",
-    url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
-    params: {name: "workspace:layername"}
+type: "OGC:WMS",
+url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+params: {name: "workspace:layername"}
 }, {
-    type: "OGC:WMS-1.3.0-http-get-capabilities",
-    url: "http://wms.sample.service:80/geoserver/workspace/layername/wms?service=wms&version=1.3.0&request=GetCapabilities&"
+type: "OGC:WMS-1.3.0-http-get-capabilities",
+url: "http://wms.sample.service:80/geoserver/workspace/layername/wms?service=wms&version=1.3.0&request=GetCapabilities&"
 }, {
-    type: "OGC:WFS-1.0.0-http-get-capabilities",
-    url: "http://wfs.sample.service:80/geoserver/workspace/layername/wfs?service=wfs&version=1.0.0&request=GetCapabilities"
+type: "OGC:WFS-1.0.0-http-get-capabilities",
+url: "http://wfs.sample.service:80/geoserver/workspace/layername/wfs?service=wfs&version=1.0.0&request=GetCapabilities"
 }
 ]});
 
 const longDescriptioRecord = {
-    identifier: "test-identifier",
-    tags: ["subject1", "subject2"],
-    description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat",
-    thumbnail: SAMPLE_IMAGE,
-    boundingBox: {
-        extent: [10.686, 44.931, 46.693, 12.54],
-        crs: "EPSG:4326"
-    },
-    references: [{
-        type: "OGC:WMS",
-        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
-        SRS: [],
-        params: {name: "workspace:layername"}
-    }]
+identifier: "test-identifier",
+tags: ["subject1", "subject2"],
+description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat",
+thumbnail: SAMPLE_IMAGE,
+boundingBox: {
+    extent: [10.686, 44.931, 46.693, 12.54],
+    crs: "EPSG:4326"
+},
+references: [{
+    type: "OGC:WMS",
+    url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+    SRS: [],
+    params: {name: "workspace:layername"}
+}]
 };
 
 const esriRecord = {
-    title: "Esri Title",
-    description: "Atlantic Hurricanes 2000",
-    identifier: "f4bed551-faa2-4e9c-9820-e623098ba526",
-    tags: "",
-    boundingBox: {
-        extent: [-100.999999999, 10.3000000376, -3.9999999715, 70.7000000118],
-        crs: "EPSG:4326"
-    },
-    references: [{
-        type: "arcgis",
-        url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer",
-        SRS: [],
-        params: {
-            name: "0-Atlantic Hurricanes 2000"}
-        }]
-    };
+title: "Esri Title",
+description: "Atlantic Hurricanes 2000",
+identifier: "f4bed551-faa2-4e9c-9820-e623098ba526",
+tags: "",
+boundingBox: {
+    extent: [-100.999999999, 10.3000000376, -3.9999999715, 70.7000000118],
+    crs: "EPSG:4326"
+},
+references: [{
+    type: "arcgis",
+    url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer",
+    SRS: [],
+    params: {
+        name: "0-Atlantic Hurricanes 2000"}
+    }]
+};
 
 describe('This test for RecordItem', () => {
     beforeEach((done) => {
