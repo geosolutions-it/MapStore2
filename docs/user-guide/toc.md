@@ -81,6 +81,14 @@ A new group called Imagery will be created containing the layer North America sa
 
 <img src="../img/group-imagery-1.jpg" style="max-width:350px;"/>
 
+Instead of creating a new main group (at the same level USA) you can also create or set sub-groups 
+
+* Select for example the **North America sample imagery** layer and click the settings icon in the toolbar
+
+* Under the Group field, use the following syntax for a sub-group: **Imagery/North America**, then Click on Add Imagery/North America and click **Save**
+
+<img src="../img/group-imagery-2.jpg" style="max-width:350px;"/>
+
 Managing Layers
 ---------------
 
