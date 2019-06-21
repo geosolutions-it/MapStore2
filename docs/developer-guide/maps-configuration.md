@@ -143,7 +143,36 @@ You can also configure a WMS layer also as background, like this:
     },
 ```
 
-*special case* - *Elevation layer*
+##### Multiple URLs
+
+This feature is not yet fully supported by all the plugins, but OpenLayers supports it so if you put an array of urls instead of a single string in the layer url.
+Some other feature will break, for example the layer properties will stop working, so it is safe to use only on background layers.
+
+```json
+{
+  "type": "wms",
+  "url": [
+    "https://a.maps.geo-solutions.it/geoserver/wms",
+    "https://b.maps.geo-solutions.it/geoserver/wms",
+    "https://c.maps.geo-solutions.it/geoserver/wms",
+    "https://d.maps.geo-solutions.it/geoserver/wms",
+    "https://e.maps.geo-solutions.it/geoserver/wms",
+    "https://f.maps.geo-solutions.it/geoserver/wms"
+  ],
+  "visibility": true,
+  "opacity": 1,
+  "title": "OSM",
+  "name": "osm:osm",
+  "group": "Meteo",
+  "format": "image/png8",
+  "bbox": {
+    "bounds": {"minx": -180, "miny": -90, "maxx": 180, "maxy": 90},
+    "crs": "EPSG:4326"
+  }
+},
+```
+
+##### special case - The Elevation layer
 
 WMS layers can be configured to be used as a source for elevation related functions.
 
@@ -189,7 +218,8 @@ in `localConfig.json`
 ```
 
 #### WMTS
-WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `tileMatrixSet`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.). 
+
+WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `tileMatrixSet`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.).
 
 A WMTS layer can have a `requestEncoding` that is RESTful or KVP. In case of RESTful the URL is a template where to place the request parameters ( see the example below ), while in the KVP the request parameters are in the query string. See the WMTS standard for more details.
 
