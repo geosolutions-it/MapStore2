@@ -13,13 +13,13 @@ const {renderCartesianTools} = require('./cartesian');
 module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, autoColorOptions, isAnimationActive, ...props} = {}) => {
     const seriesArray = castArray(series);
     const COLORS = colorGenerator(seriesArray.length, autoColorOptions);
-    // WORKAROUND: rechart do not rerender line and bar charts when change colors, y axis and legend label.
     const legendLabel = props.yAxisLabel ? [props.yAxisLabel] : [];
     const yAxisLabel = props.yAxis;
     const xAxisAngle = !isNil(props.xAxisAngle) ? [`angle${props.xAxisAngle}`] : [];
+
+    // WORKAROUND: recharts does not re-render line and bar charts when changing colors, y axis, x axis rotation angle and legend label.
     const key = (COLORS || ["linechart"]).concat(legendLabel, yAxisLabel, xAxisAngle).join("");
-    // style= {{marginTop: 20, marginLeft: 20, marginBottom: 10, marginRight: 30}}
-    // margin: 20px 20px 10px 30px
+
     const lengthLongestLabels = maxBy(data, (d) => d[props.xAxis.dataKey].length)[props.xAxis.dataKey].length;
     const lengthFirstLabel = head(data) && head(data)[props.xAxis.dataKey].length;
     return (
@@ -28,7 +28,7 @@ module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, 
             width={width}
             height={height}
             data={data}
-            margin={props.xAxisAngle ? {top: 20, right: 30, left: 30 + lengthFirstLabel, bottom: lengthLongestLabels * 5 } : {}}
+            margin={props.xAxisAngle ? {top: 20, right: 30, left: 30 + 10 + lengthFirstLabel, bottom: 5 + (lengthLongestLabels * 5) } : {}}
         >
             {seriesArray.map(({color, ...serie}, i) =>
                 <Line

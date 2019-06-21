@@ -7,10 +7,10 @@
   */
 
 
-const React = require('react');
-const { XAxis, YAxis, CartesianGrid} = require('recharts');
+import React from 'react';
+import { XAxis, YAxis, CartesianGrid} from 'recharts';
 
-const CustomizedAxisTick = ({x, y, payload, xAxisAngle = 0}) => {
+export const CustomizedAxisTick = ({x, y, payload, xAxisAngle = 0}) => {
     return (
         <g transform={`translate(${x},${y})`}>
             <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform={`rotate(-${xAxisAngle})`}>{payload.value}</text>
@@ -18,7 +18,7 @@ const CustomizedAxisTick = ({x, y, payload, xAxisAngle = 0}) => {
     );
 };
 
-const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0} = {}) => ([
+export const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0} = {}) => ([
     xAxis && xAxis.show !== false ? <XAxis
         key="xaxis"
         {...xAxis}
@@ -27,4 +27,3 @@ const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0} = {}) =>
         /> : null,
     yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null] );
-module.exports = {renderCartesianTools};

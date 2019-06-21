@@ -199,15 +199,17 @@ module.exports = ({
                                             onClick={(e) => { e.stopPropagation(); }}
                                         >
                                             <Slider
-                                            tooltips={[true]}
                                             key="priority"
-                                            onSlide={(values) => {
-                                                const xAxisAngle = parseInt(values[0], 10);
-                                                onChange("xAxisAngle", xAxisAngle);
+                                            format= {{
+                                                // this is needed to remove the 2 decimals that this comp adds by default
+                                                to: value => parseInt(value, 10),
+                                                from: value => Number(value)
                                             }}
+                                            onSlide={(values) => { onChange("xAxisAngle", parseInt(values[0], 10)); }}
                                             range={{min: 0, max: 90}}
                                             start={[!isNil(data.xAxisAngle) ? data.xAxisAngle : 0]}
-                                            step={5}
+                                            step={15}
+                                            tooltips={[true]}
                                             />
                                         </div>
                                     </Col>
