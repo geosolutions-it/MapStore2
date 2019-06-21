@@ -224,7 +224,6 @@
               }
             }
           }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
-          "FloatingLegend",
             {
                 "name": "Identify",
                 "cfg": {
