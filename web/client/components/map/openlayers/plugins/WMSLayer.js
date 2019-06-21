@@ -175,7 +175,8 @@ Layers.registerType('wms', {
             }
             let oldParams = wmsToOpenlayersOptions(oldOptions);
             let newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
+            const dimensions = (newOptions.dimensions || []).map(({ name } = {}) => name).filter(v => v);
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", ...dimensions].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }
@@ -199,10 +200,9 @@ Layers.registerType('wms', {
                     });
                 }, {})));
                 // force tile cache drop
-                if (source.getTileLoadFunction) {
-                    source.setTileLoadFunction(source.getTileLoadFunction());
+                if (layer.getSource().refresh) {
+                    layer.getSource().refresh();
                 }
-
             }
             if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
                 layer.getSource().setAttributions(toOLAttributions(newOptions.credits));
@@ -213,13 +213,6 @@ Layers.registerType('wms', {
                  // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
                 || oldOptions.credits !== newOptions.credits && !newOptions.credits
                 ) {
-                // this forces cache empty, required when auth permission changed to avoid caching when unauthorized
-                // Moved here to avoid the layer disappearing during animations
-                if (changed) {
-                    if (layer.getSource().refresh) {
-                        layer.getSource().refresh();
-                    }
-                }
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
                 const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
                 urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
