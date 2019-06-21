@@ -10,6 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {Panel, Button, Glyphicon} = require('react-bootstrap');
 const SwitchButton = require('./SwitchButton');
+const SwitchToolbar = require('./SwitchToolbar');
 const Toolbar = require('../toolbar/Toolbar');
 const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
 const LoadingView = require('../LoadingView');
@@ -30,7 +31,8 @@ class SwitchPanel extends React.Component {
         loading: PropTypes.bool,
         error: PropTypes.any,
         errorMsgId: PropTypes.string,
-        transitionProps: PropTypes.object
+        transitionProps: PropTypes.object,
+        useToolbar: PropTypes.object
     };
 
     static defaultProps = {
@@ -38,14 +40,16 @@ class SwitchPanel extends React.Component {
         expanded: false,
         onSwitch: () => {},
         locked: false,
-        buttons: []
+        buttons: [],
+        useToolbar: false
     };
     state = {};
     renderHeader() {
+        const Switch = this.props.useToolbar ? SwitchToolbar : SwitchButton;
         return (<div>
             <div className="pull-left">{this.props.title || this.props.header}</div>
             <div className="pull-right">
-                {!this.props.locked ? <SwitchButton
+                {!this.props.locked ? <Switch
                     checked={this.props.expanded}
                     onClick={(checked) => {
                         this.props.onSwitch(checked);

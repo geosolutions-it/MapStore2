@@ -119,7 +119,7 @@ class AnnotationsPanel extends React.Component {
             overflow: "hidden",
             height: "100%"
         },
-        panelClassName: "catalog-panel",
+        panelClassName: "annotations-panel",
         toggleControl: () => {},
         closeGlyph: "1-close",
 

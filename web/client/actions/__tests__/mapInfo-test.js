@@ -32,7 +32,7 @@ var {
     updateCenterToMarker
 } = require('../mapInfo');
 
-describe('Test correctness of the map actions', () => {
+describe('Test correctness of the map info actions', () => {
 
     it('get feature info data', (done) => {
         /*eslint-disable */

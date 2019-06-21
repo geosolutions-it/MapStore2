@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject} = require('lodash');
+const {head, isArray, isString, castArray, isObject, sortBy, uniq} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
@@ -145,16 +145,36 @@ const converters = {
                     }
                 }
                 // create the references array (now only wms is supported)
-
+                let metadata = {boundingBox: record.boundingBox && record.boundingBox.extent && castArray(record.boundingBox.extent.join(","))};
+                if (dc) {
+                    // parsing all it comes from the csw service
+                    metadata = {...metadata, ...sortBy(Object.keys(dc)).reduce((p, c) => ({...p, [c]: uniq(castArray(dc[c]))}), {})};
+                }
+                // parsing URI
+                if (dc && dc.URI && castArray(dc.URI) && castArray(dc.URI).length) {
+                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(u => `<li><a target="_blank" href="${u.value}">${u.name}</a></li>`).join("") + "</ul>"]};
+                }
+                if (dc && dc.subject && castArray(dc.subject) && castArray(dc.subject).length) {
+                    metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
+                }
+                if (references && castArray(references).length ) {
+                    metadata = {...metadata, references: ["<ul>" + castArray(references).map(ref => `<li><a target="_blank" href="${ref.url}">${ref.params && ref.params.name || ref.url}</a></li>`) + "</ul>"]
+                    };
+                } else {
+                    // in order to use a default value
+                    // we need to not push undefined/empty matadata
+                    delete metadata.references;
+                }
                 // setup the final record object
                 return {
-                    title: dc && isString(dc.title) && dc.title || '',
+                    boundingBox: record.boundingBox,
                     description: dc && isString(dc.abstract) && dc.abstract || '',
                     identifier: dc && isString(dc.identifier) && dc.identifier || '',
+                    references: references,
                     thumbnail: thumbURL,
-                    tags: dc && isString(dc.subject) && dc.subject || '',
-                    boundingBox: record.boundingBox,
-                    references: references
+                    title: dc && isString(dc.title) && dc.title || '',
+                    tags: dc && dc.tags || '',
+                    metadata
                 };
             });
         }
@@ -163,39 +183,40 @@ const converters = {
         if (records && records.records) {
             return records.records.map((record) => {
                 return {
-                title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
-                description: record.Abstract || record.Title || record.Name,
-                identifier: record.Name,
-                tags: "",
-                capabilities: record,
-                service: records.service,
-                boundingBox: WMS.getBBox(record),
-                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                        values: dim._ && dim._.split(',') || []
-                    }, dim.$ || {}))
-                    // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
-                    // TODO: replace with capabilities URL service. something like this:
-                    /*
-                    .map(dim => dim && dim.name !== "time" ? dim : {
-                        ...dim,
-                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
-                        source: { <-- add the source
-                            type: "wms-capabilities",
-                            url: options.url
-                        }
-                    })
-                    */
-                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
-                    .filter(dim => dim && dim.name !== "time"),
+                    capabilities: record,
+                    credits: record.credits,
+                    boundingBox: WMS.getBBox(record),
+                    description: record.Abstract || record.Title || record.Name,
+                    identifier: record.Name,
+                    service: records.service,
+                    tags: "",
+                    title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
+                    dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                            values: dim._ && dim._.split(',') || []
+                        }, dim.$ || {}))
+                        // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
+                        // TODO: replace with capabilities URL service. something like this:
+                        /*
+                        .map(dim => dim && dim.name !== "time" ? dim : {
+                            ...dim,
+                            values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
+                            source: { <-- add the source
+                                type: "wms-capabilities",
+                                url: options.url
+                            }
+                        })
+                        */
+                        // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
+                        .filter(dim => dim && dim.name !== "time"),
 
-                references: [{
-                    type: "OGC:WMS",
-                    url: options && options.url,
-                    SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
-                    params: {
-                        name: record.Name
-                    }
-                }]
+                    references: [{
+                        type: "OGC:WMS",
+                        url: options && options.url,
+                        SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
+                        params: {
+                            name: record.Name
+                        }
+                    }]
                 };
             });
         }
@@ -338,7 +359,7 @@ const CatalogUtils = {
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
      */
-    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url} = {}) => {
+    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url} = {}, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -371,13 +392,14 @@ const CatalogUtils = {
             links: getRecordLinks(record),
             params: params,
             allowedSRS: allowedSRS,
-            catalogURL
+            catalogURL,
+            ...baseConfig
         };
     },
     getCatalogRecords: (format, records, options) => {
         return converters[format] && converters[format](records, options) || null;
     },
-    esriToLayer: (record) => {
+    esriToLayer: (record, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -398,7 +420,8 @@ const CatalogUtils = {
                     maxx: record.boundingBox.extent[2],
                     maxy: record.boundingBox.extent[3]
                 }
-            }
+            },
+            ...baseConfig
         };
 
     }

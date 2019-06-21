@@ -217,6 +217,93 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
     });
 
+    it('csw with various DC attributes', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                boundingBox: {
+                    extent: [ 43.718, 11.348, 43.84, 11.145 ],
+                    crs: 'EPSG:3003'
+                },
+                dc: {
+                    references: [],
+                    identifier: 'c_d612:sha-identifier',
+                    title: 'title',
+                    type: 'dataset',
+                    subject: [
+                        'web',
+                        'world',
+                        'sport',
+                        'transportation'
+                    ],
+                    format: [
+                        'ESRI Shapefile',
+                        'KML'
+                    ],
+                    contributor: 'contributor',
+                    rights: [
+                        'otherRestrictions',
+                        'otherRestrictions'
+                    ],
+                    source: 'source',
+                    relation: {
+                        TYPE_NAME: 'DC_1_1.SimpleLiteral'
+                    },
+                    URI: [{
+                        TYPE_NAME: 'DC_1_1.URI',
+                        protocol: '',
+                        name: 'Beda - Shapefile',
+                        description: '',
+                        value: 'http://www.beda.it/Beda.zip'
+                    },
+                    {
+                        TYPE_NAME: 'DC_1_1.URI',
+                        protocol: '',
+                        name: 'Beda - KML',
+                        description: '',
+                        value: 'http://www.beda.it/Beda.kmz'
+                    }]
+                }
+            }]
+        }, {});
+        expect(records.length).toEqual(1);
+        expect(records[0].boundingBox).toEqual({ extent: [ 43.718, 11.348, 43.84, 11.145 ], crs: 'EPSG:3003' });
+        expect(records[0].description).toEqual("");
+        expect(records[0].identifier).toEqual("c_d612:sha-identifier");
+        expect(records[0].references).toEqual([]);
+        expect(records[0].thumbnail).toEqual(null);
+        expect(records[0].title).toEqual('title');
+        expect(records[0].tags).toEqual('');
+        expect(records[0].metadata.boundingBox).toEqual([ '43.718,11.348,43.84,11.145' ]);
+        expect(records[0].metadata.URI).toEqual([{
+            TYPE_NAME: 'DC_1_1.URI', protocol: '', name: 'Beda - Shapefile', description: '', value: 'http://www.beda.it/Beda.zip'
+            }, {
+            TYPE_NAME: 'DC_1_1.URI', protocol: '', name: 'Beda - KML', description: '', value: 'http://www.beda.it/Beda.kmz'
+        }]);
+        expect(records[0].metadata.contributor).toEqual([ 'contributor' ]);
+        expect(records[0].metadata.format).toEqual([ 'ESRI Shapefile', 'KML' ]);
+        expect(records[0].metadata.identifier).toEqual([ 'c_d612:sha-identifier' ]);
+        expect(records[0].metadata.relation).toEqual([ { TYPE_NAME: 'DC_1_1.SimpleLiteral' } ]);
+        expect(records[0].metadata.rights).toEqual([ 'otherRestrictions' ]);
+        expect(records[0].metadata.references).toEqual(undefined);
+        expect(records[0].metadata.source).toEqual(['source']);
+        expect(records[0].metadata.subject).toEqual(["<ul><li>web</li><li>world</li><li>sport</li><li>transportation</li></ul>"]);
+        expect(records[0].metadata.title).toEqual(['title']);
+        expect(records[0].metadata.type).toEqual([ 'dataset' ]);
+        expect(records[0].metadata.uri).toEqual(['<ul><li><a target="_blank" href="http://www.beda.it/Beda.zip">Beda - Shapefile</a></li><li><a target="_blank" href="http://www.beda.it/Beda.kmz">Beda - KML</a></li></ul>']);
+    });
+
+    it('csw with DC uri empty', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                        URI: []
+                    }
+                }
+            ]
+        }, {});
+        expect(records.length).toEqual(1);
+        expect(records[0].metadata.uri).toEqual(undefined);
+    });
     it('csw with DC URI', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{
@@ -270,6 +357,25 @@ describe('Test the CatalogUtils', () => {
             }]
         }, {});
         expect(records.length).toBe(1);
+    });
+    it('csw with DC references, no name', () => {
+        /*
+         * Issue that happens with CSW GeoServer plugin, with the following Records.properties
+         * references.value=list(strConcat('${url.wms}?service=WMS&request=GetMap&layers=',prefixedName), Concatenate('https://some-url/geoserver/', "store.workspace.name", '/', "name", '/ows?service=wms&version=1.3.0&request=GetCapabilities'), Concatenate('https://some-url/geoserver/', "store.workspace.name", '/', "name", '/wfs?service=wfs&version=1.3.0&request=GetCapabilities'))
+         */
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    references: [{
+                        scheme: "http-get-capabilities",
+                        value: "http://geoserver"
+                    }]
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe("http://geoserver");
     });
 
     it('csw with DC references with only OGC:WMS in URI, GeoNetwork', () => {

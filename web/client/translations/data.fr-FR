@@ -1,4 +1,3 @@
-
 {
     "locale": "fr-FR",
     "messages": {
@@ -26,6 +25,8 @@
         "errorDefault": "Une erreur est survenue",
         "pageInfoShowMore": "Résultats {count} de {total}",
         "showMore": "Montrer plus...",
+        "collapse": "réduire",
+        "expand": "étendre",
         "version": {
             "label": "Version"
         },
@@ -934,6 +935,7 @@
             "success": " Import correct"
         },
         "catalog": {
+            "notAvailable": "Indisponible",
             "title": "Catalogue",
             "autoload": "Recherche sur la sélection du service",
             "clearValueText": "Effacer la sélection",
@@ -968,6 +970,11 @@
             "missingReference": "Les métadonnées des références OGC manquent",
             "showDescription": "Afficher la description complète",
             "hideDescription": "Masquer la description complète",
+            "templateFormatDescriptionExample": "La description de la couche est",
+            "showTemplate": "Afficher le modèle de métadonnées",
+            "showPreview": "Afficher l'aperçu",
+            "advancedSettings": "Réglages avancés",
+            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
