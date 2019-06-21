@@ -413,7 +413,7 @@ class OpenlayersMap extends React.Component {
         let tempCenter = view.getCenter();
         let projectionExtent = view.getProjection().getExtent();
         const crs = view.getProjection().getCode();
-        // some projections are reapeated on the y axis
+        // some projections are repeated on the y axis
         // and they need to be updated also if the center is outside of the projection extent
         const wrappedProjections = [ 'EPSG:3857', 'EPSG:900913', 'EPSG:4326' ];
         // prevent user from dragging outside the projection extent
