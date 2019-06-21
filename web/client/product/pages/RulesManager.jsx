@@ -19,7 +19,8 @@ const Message = require("../../components/I18N/Message");
 const {loadMapConfig} = require('../../actions/config');
 const {resetControls} = require('../../actions/controls');
 
-const HolyGrail = require('../../containers/HolyGrail');
+const Page = require('../../containers/Page');
+const BorderLayout = require('../../components/layout/BorderLayout');
 /**
   * @name RulesManager
   * @memberof pages
@@ -126,37 +127,23 @@ const HolyGrail = require('../../containers/HolyGrail');
 
 class RulesManagerPage extends React.Component {
     static propTypes = {
-        name: PropTypes.string,
         mode: PropTypes.string,
         match: PropTypes.object,
-        loadMaps: PropTypes.func,
-        reset: PropTypes.func,
         plugins: PropTypes.object
     };
 
     static defaultProps = {
-        name: "rulesmanager",
-        mode: 'desktop',
-        loadMaps: () => {},
-        reset: () => {}
+        mode: 'desktop'
     };
 
     render() {
-        let plugins = ConfigUtils.getConfigProp("plugins") || {};
-        let pagePlugins = {
-            "desktop": [], // TODO mesh page plugins with other plugins
-            "mobile": []
-        };
-        let pluginsConfig = {
-            "desktop": plugins[this.props.name] || [], // TODO mesh page plugins with other plugins
-            "mobile": plugins[this.props.name] || []
-        };
-
-        return pluginsConfig.desktop.length > 0 && (<HolyGrail
+        const plugins = ConfigUtils.getConfigProp("plugins") || {};
+        const pluginsConfig = plugins.rulesmanager || [];
+        return pluginsConfig.length > 0 && (<Page
             className="rules-manager"
-            id="rules-manager-view-container"
-            pagePluginsConfig={pagePlugins}
-            pluginsConfig={pluginsConfig}
+            id="rulesmanager"
+            includeCommon={false}
+            component={BorderLayout}
             plugins={this.props.plugins}
             params={this.props.match.params}
             />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label><Message msgId="rulesmanager.missingconfig"/></label></div>;
