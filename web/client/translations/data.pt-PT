@@ -1039,7 +1039,7 @@
             "success": " correctly imported"
         },
         "mapImport": {
-            "title": "Import Data",
+            "title": "Import",
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
@@ -1052,7 +1052,7 @@
             }
         },
         "mapExport": {
-            "title": "Export Data"
+            "title": "Export"
         },
         "catalog": {
             "notAvailable": "Not Available",
