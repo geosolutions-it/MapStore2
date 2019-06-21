@@ -14,7 +14,6 @@ const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = r
 const { getDescribeLayer } = require('../actions/layerCapabilities');
 const { getLayerCapabilities } = require('../observables/wms');
 const { setControlProperty } = require('../actions/controls');
-const url = require('url');
 const { findGeoServerName, formatCapabitiliesOptions } = require('../utils/LayersUtils');
 
 const {
@@ -56,7 +55,6 @@ const {
 
 const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
-const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 /*
  * Observable to get code of a style, it works only in edit status
@@ -200,10 +198,11 @@ module.exports = {
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();
 
-                const normalizedUrl = normalizeUrl(layer.url);
-                const parsedUrl = url.parse(normalizedUrl);
                 const geoserverName = findGeoServerName(layer);
-                const baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}${geoserverName}`;
+                if (!geoserverName) return Rx.Observable.empty();
+
+                const layerUrl = layer.url.split(geoserverName);
+                const baseUrl = `${layerUrl[0]}${geoserverName}`;
                 const lastStyleService = styleServiceSelector(state);
 
                 return Rx.Observable
