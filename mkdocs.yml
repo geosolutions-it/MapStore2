@@ -73,6 +73,10 @@ pages:
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
     - Configuration: 'developer-guide/configuration-files.md'
+    - Integrations:
+      - users:
+        - GeoServer: 'developer-guide/integrations/users/geoserver.md'
+        - LDAP: 'developer-guide/integrations/users/ldap.md'
     - Migration: 'developer-guide/mapstore-migration-guide.md'
     - How to Release: 'developer-guide/release.md'
     - Projects:
