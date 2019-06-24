@@ -194,15 +194,19 @@ Layers.registerType('wms', {
             if (changed) {
                 const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
                 const source = layer.getSource();
+                // forces tile cache drop
+                // this prevents old cached tiles at lower zoom levels to be
+                // rendered during new params load, but causes a blink glitch.
+                // TODO: find out a way to refresh only once to clear lower zoom level cache.
+                if (layer.getSource().refresh ) {
+                    layer.getSource().refresh();
+                }
                 source.updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
                     return params[key] ? previous : objectAssign(previous, {
                         [key]: undefined
                     });
                 }, {})));
-                // force tile cache drop
-                if (layer.getSource().refresh) {
-                    layer.getSource().refresh();
-                }
+
             }
             if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
                 layer.getSource().setAttributions(toOLAttributions(newOptions.credits));
