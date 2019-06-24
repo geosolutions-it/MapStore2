@@ -9,7 +9,7 @@ const React = require('react');
 const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/openlayers/Layers');
 const ol = require('openlayers');
-const {isNil} = require('lodash');
+const {isNil, union} = require('lodash');
 const objectAssign = require('object-assign');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
@@ -164,19 +164,21 @@ Layers.registerType('wms', {
         if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
             let changed = false;
             if (oldOptions.params && newOptions.params) {
-                changed = Object.keys(oldOptions.params).reduce((found, param) => {
-                    if (newOptions.params[param] !== oldOptions.params[param]) {
-                        return true;
-                    }
-                    return found;
-                }, false);
+                changed = union(
+                        Object.keys(oldOptions.params),
+                        Object.keys(newOptions.params)
+                    ).reduce((found, param) => {
+                        if (newOptions.params[param] !== oldOptions.params[param]) {
+                            return true;
+                        }
+                        return found;
+                    }, false);
             } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
                 changed = true;
             }
             let oldParams = wmsToOpenlayersOptions(oldOptions);
             let newParams = wmsToOpenlayersOptions(newOptions);
-            const dimensions = (newOptions.dimensions || []).map(({ name } = {}) => name).filter(v => v);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", ...dimensions].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }

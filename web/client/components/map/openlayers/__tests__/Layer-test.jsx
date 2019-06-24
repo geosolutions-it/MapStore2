@@ -1301,7 +1301,7 @@ describe('Openlayers layer', () => {
                 options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
 
-        // this prevents old cache to be rendered
+        // this prevents old cache to be rendered while loading
         expect(spy).toHaveBeenCalled();
     });
     it('dimensions triggers params change', () => {
@@ -1313,10 +1313,6 @@ describe('Openlayers layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            dimensions: [{
-                name: "time",
-                source: {}
-            }],
             "url": "http://sample.server/geoserver/wms",
             "params": {
                 "cql_filter": "INCLUDE"
@@ -1341,8 +1337,6 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
 
-        // the cache empty is performed in this version of OL by replacing tile load function
-        // the same is in Map.jsx when change projection. Could not check effective cache clean
         expect(spyRefresh).toHaveBeenCalled();
         expect(layer.layer.getSource().getParams().time).toBe("2019-01-01T00:00:00Z");
     });
