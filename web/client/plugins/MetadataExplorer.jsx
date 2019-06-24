@@ -19,7 +19,7 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     addLayer, addLayerError, resetCatalog, focusServicesList, changeText,
     changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {currentLocaleSelector} = require("../selectors/locale");
+const {currentLocaleSelector, currentMessagesSelector} = require("../selectors/locale");
 const {setControlProperty, setControlProperties} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
@@ -43,15 +43,16 @@ const catalogSelector = createSelector([
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
-    (state) => currentLocaleSelector(state)
-], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    (state) => currentLocaleSelector(state),
+    (state) => currentMessagesSelector(state)
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales) =>({
     authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
     newService,
     currentLocale,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || []
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
 const catalogClose = () => {

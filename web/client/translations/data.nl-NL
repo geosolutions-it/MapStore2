@@ -1001,6 +1001,8 @@
             "success": " Import geslaagd"
         },
         "catalog": {
+            "start": "Start date ",
+            "end": "End date ",
             "notAvailable": "Not Available",
             "title": "Catalogus",
             "tooltip": "De catalogus doorlopen",
@@ -1027,7 +1029,7 @@
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
-            "templateMetadataAvailable": "Metadata available from Dublin Core format: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}"
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri"
         },
         "uploader": {
             "filename": "File Name",
