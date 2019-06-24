@@ -45,7 +45,7 @@ entry: assign({
 MapStore uses a `themeEntries` function to automatically create the entries for default themes that can be found uder the `web/client/themes` directory.
 Default themes in [`web/client/themes`](https://github.com/geosolutions-it/MapStore2/tree/ directory are useful to have an overview of the structure described above.
 
-Note: we suggest to place the theme folder inside the assets directory for MapStore project
+Note: we suggest to place the theme folder inside a `themes` directory for MapStore project
 
 ### variables.less
 MapStore uses basic less variables to change theme colors, buttons sizes and fonts.
@@ -76,9 +76,9 @@ common.less file can be used for generic styles.
 
 ### inline styles
 
-Inline styles should be apply only for values that change dynamically during the lifecicle of the application, all others style should be moved to the related .less file.
+Inline styles should be applied only for values that change dynamically during the lifecicle of the application, all others style should be moved to the related .less file.
 
-Main reason of this choice is to allow an easer overrides of styles in custom projects.
+Main reason of this choice is to allow easier overrides of styles in custom projects.
 
 ## Add New Theme
 
@@ -105,16 +105,16 @@ initialState: {
 
 ## Override Styles in a Project
 
-Styles can be overrided declaring same classes in a less module placed in a new project.
+Styles can be overridden declaring the same rules in a less module placed in a new project.
 
 Below steps to configure a custom theme and override styles:
 
-- add the following files to the assets folder of the project:
+- add the following files to the themes folder of the project:
 
 ```
 .
-+-- assets/
-|   +-- themes/
++-- themes/
+|   +-- default/
 |       +-- less/
 |           +-- my-custom-module.less
 |       +-- theme.less
@@ -124,11 +124,11 @@ Below steps to configure a custom theme and override styles:
 - import in theme.less all the needed less module
 
 ```less
-@import "../../../MapStore2/web/client/themes/default/base.less";
-@import "../../../MapStore2/web/client/themes/default/icons.less";
-@import "../../../MapStore2/web/client/themes/default/bootstrap-theme.less";
-@import "../../../MapStore2/web/client/themes/default/ms2-theme.less";
-@import "../../../MapStore2/web/client/themes/default/variables.less";
+@import "../../MapStore2/web/client/themes/default/base.less";
+@import "../../MapStore2/web/client/themes/default/icons.less";
+@import "../../MapStore2/web/client/themes/default/bootstrap-theme.less";
+@import "../../MapStore2/web/client/themes/default/ms2-theme.less";
+@import "../../MapStore2/web/client/themes/default/variables.less";
 @import "variables.less";
 @import "./less/my-custom-module.less";
 ```
@@ -144,7 +144,7 @@ module.exports = require('./MapStore2/buildConfig')(
     },
 -   themeEntries,
 +   {
-+       "themes/default": path.join(__dirname, "assets", "themes", "default", "theme.less")
++       "themes/default": path.join(__dirname, "themes", "default", "theme.less")
 +   },
     ...
 ```
