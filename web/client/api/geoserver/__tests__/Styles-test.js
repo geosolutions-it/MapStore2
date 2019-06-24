@@ -8,6 +8,7 @@
 
 import expect from 'expect';
 import API from '../Styles';
+import { clearCache } from '../About';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../libs/ajax';
 
@@ -172,5 +173,65 @@ describe('Test styles rest API, Content Type of SLD', () => {
             styleName: 'style_name',
             languageVersion: { version: '1.0.0' }
         });
+    });
+
+    it('test getStyleService', (done) => {
+        clearCache();
+        const baseUrl = '/host-style/geoserver/';
+
+        mockAxios.onGet(/\/manifest/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/manifest`);
+            return [ 200, { about: { resource: [{ '@name': 'module' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/version`);
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        API.getStyleService({ baseUrl })
+            .then((styleService) => {
+                try {
+                    expect(styleService).toEqual({
+                        baseUrl,
+                        version: '2.16',
+                        formats: [ 'sld' ],
+                        availableUrls: []
+                    });
+                } catch(e) {
+                    done(e);
+                }
+                done();
+            });
+    });
+
+    it('test getStyleService with GeoCSS', (done) => {
+        clearCache();
+        const baseUrl = '/host-style/geoserver/';
+
+        mockAxios.onGet(/\/manifest/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/manifest`);
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/version`);
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        API.getStyleService({ baseUrl })
+            .then((styleService) => {
+                try {
+                    expect(styleService).toEqual({
+                        baseUrl,
+                        version: '2.16',
+                        formats: [ 'css', 'sld' ],
+                        availableUrls: []
+                    });
+                } catch(e) {
+                    done(e);
+                }
+                done();
+            });
     });
 });

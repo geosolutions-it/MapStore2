@@ -11,9 +11,10 @@ const { get, head, isArray, template } = require('lodash');
 const { success, error } = require('../actions/notifications');
 const { UPDATE_NODE, updateNode, updateSettingsParams } = require('../actions/layers');
 const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = require('../actions/additionallayers');
-const { getDescribeLayer, getLayerCapabilities } = require('../actions/layerCapabilities');
+const { getDescribeLayer } = require('../actions/layerCapabilities');
+const { getLayerCapabilities } = require('../observables/wms');
 const { setControlProperty } = require('../actions/controls');
-const url = require('url');
+const { findGeoServerName, formatCapabitiliesOptions } = require('../utils/LayersUtils');
 
 const {
     SELECT_STYLE_TEMPLATE,
@@ -32,7 +33,8 @@ const {
     EDIT_STYLE_CODE,
     DELETE_STYLE,
     setEditPermissionStyleEditor,
-    SET_DEFAULT_STYLE
+    SET_DEFAULT_STYLE,
+    initStyleService
 } = require('../actions/styleeditor');
 
 const StylesAPI = require('../api/geoserver/Styles');
@@ -53,7 +55,6 @@ const {
 
 const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
-const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 /*
  * Observable to get code of a style, it works only in edit status
@@ -197,34 +198,47 @@ module.exports = {
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();
 
-                const normalizedUrl = normalizeUrl(layer.url);
-                const parsedUrl = url.parse(normalizedUrl);
+                const geoserverName = findGeoServerName(layer);
+                if (!geoserverName) return Rx.Observable.empty();
 
-                return updateLayerSettingsObservable(action$, store,
-                    updatedLayer => updatedLayer && updatedLayer.capabilities,
-                    [getLayerCapabilities(layer)],
-                    (updatedLayer) => {
+                const layerUrl = layer.url.split(geoserverName);
+                const baseUrl = `${layerUrl[0]}${geoserverName}`;
+                const lastStyleService = styleServiceSelector(state);
 
-                        if (!updatedLayer.availableStyles) {
-                            return Rx.Observable.of(errorStyle('availableStyles', { status: 401 }));
-                        }
-
-                        const setAdditionalLayers = (availableStyles = []) => Rx.Observable.of(
-                            updateAdditionalLayer(updatedLayer.id, STYLE_OWNER_NAME, 'override', {}),
-                            updateSettingsParams({ availableStyles }),
-                            loadedStyle()
-                        );
-                        return Rx.Observable.defer(() =>
-                            StylesAPI.getStylesInfo({
-                                baseUrl: `${parsedUrl.protocol}//${parsedUrl.host}/geoserver/`,
-                                styles: updatedLayer && updatedLayer.availableStyles || []
+                return Rx.Observable
+                    .defer(() => lastStyleService.isStatic
+                        ? new Promise((resolve) => resolve(null))
+                        : StylesAPI.getStyleService({ baseUrl }))
+                    .switchMap((styleService) => {
+                        const initialAction = lastStyleService.isStatic ? [ ] : [ initStyleService(styleService) ];
+                        return getLayerCapabilities(layer)
+                            .switchMap((capabilities) => {
+                                const layerCapabilities = formatCapabitiliesOptions(capabilities);
+                                if (!layerCapabilities.availableStyles) {
+                                    return Rx.Observable.of(
+                                        errorStyle('availableStyles', { status: 401 }),
+                                        loadedStyle()
+                                    );
+                                }
+                                const setAdditionalLayers = (availableStyles = []) =>
+                                    Rx.Observable.of(
+                                        updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
+                                        updateSettingsParams({ availableStyles }),
+                                        updateNode(layer.id, 'layer', {...layerCapabilities, availableStyles}),
+                                        loadedStyle()
+                                    );
+                                return Rx.Observable.defer(() =>
+                                        StylesAPI.getStylesInfo({
+                                            baseUrl,
+                                            styles: layerCapabilities && layerCapabilities.availableStyles || []
+                                        })
+                                    )
+                                    .switchMap(availableStyles => setAdditionalLayers(availableStyles));
                             })
-                        )
-                        .switchMap(availableStyles => {
-                            return setAdditionalLayers(availableStyles);
-                        });
-                    }
-                );
+                            .startWith(...initialAction)
+                            .catch((err) => Rx.Observable.of(errorStyle('global', err), loadedStyle()));
+                    })
+                    .startWith(loadingStyle('global'));
             }),
     /**
      * Gets every `UPDATE_STATUS` event.
