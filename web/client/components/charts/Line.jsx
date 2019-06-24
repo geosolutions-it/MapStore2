@@ -18,6 +18,7 @@ class LineChartWrapper extends React.Component {
         data: PropTypes.array,
         isAnimationActive: PropTypes.bool,
         height: PropTypes.number,
+        margin: PropTypes.object,
         series: PropTypes.array,
         width: PropTypes.number
     }
@@ -36,7 +37,7 @@ class LineChartWrapper extends React.Component {
         }
     }*/
     render() {
-        const {autoColorOptions, colorGenerator, data, isAnimationActive, height, series, width, ...props} = this.props;
+        const {autoColorOptions, colorGenerator, data, isAnimationActive, height, margin, series, width, ...props} = this.props;
         const seriesArray = castArray(series);
         const COLORS = colorGenerator(seriesArray.length, autoColorOptions);
         const legendLabel = props.yAxisLabel ? [props.yAxisLabel] : [];
@@ -63,7 +64,12 @@ class LineChartWrapper extends React.Component {
                 width={width}
                 height={height}
                 data={data}
-                margin={props.xAxisAngle ? {top: 20, right: 30, left: marginLeft, bottom: marginBottom } : {}}
+                margin={props.xAxisAngle ? {
+                    top: 20,
+                    right: 30,
+                    left: marginLeft + 10, // 10 is for balancing the translate left of the oblique label
+                    bottom: marginBottom
+                } : margin }
             >
                 {seriesArray.map(({color, ...serie}, i) =>
                     <Line

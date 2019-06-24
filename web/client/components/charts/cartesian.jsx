@@ -17,7 +17,7 @@ export const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, o
         key="xaxis"
         {...xAxis}
         interval={xAxisAngle > 0 ? 0 : undefined}
-        tick={<ObliqueLabel angle={xAxisAngle} onUpdateLabelLength={onUpdateLabelLength}/>}
+        tick={xAxisAngle > 0 ? <ObliqueLabel angle={xAxisAngle} onUpdateLabelLength={onUpdateLabelLength}/> : undefined}
         /> : null,
     yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null] );
