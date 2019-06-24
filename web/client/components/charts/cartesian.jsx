@@ -10,20 +10,14 @@
 import React from 'react';
 import { XAxis, YAxis, CartesianGrid} from 'recharts';
 
-export const CustomizedAxisTick = ({x, y, payload, xAxisAngle = 0}) => {
-    return (
-        <g transform={`translate(${x},${y})`}>
-            <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform={`rotate(-${xAxisAngle})`}>{payload.value}</text>
-        </g>
-    );
-};
+import ObliqueLabel from './ObliqueLabel';
 
-export const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0} = {}) => ([
+export const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, onUpdateLabelLength = () => {}} = {}) => ([
     xAxis && xAxis.show !== false ? <XAxis
         key="xaxis"
         {...xAxis}
         interval={xAxisAngle > 0 ? 0 : undefined}
-        tick={<CustomizedAxisTick xAxisAngle={xAxisAngle}/>}
+        tick={<ObliqueLabel angle={xAxisAngle} onUpdateLabelLength={onUpdateLabelLength}/>}
         /> : null,
     yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null] );
