@@ -9,7 +9,7 @@ const React = require('react');
 const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/openlayers/Layers');
 const ol = require('openlayers');
-const {isNil} = require('lodash');
+const {isNil, union} = require('lodash');
 const objectAssign = require('object-assign');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
@@ -164,12 +164,15 @@ Layers.registerType('wms', {
         if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
             let changed = false;
             if (oldOptions.params && newOptions.params) {
-                changed = Object.keys(oldOptions.params).reduce((found, param) => {
-                    if (newOptions.params[param] !== oldOptions.params[param]) {
-                        return true;
-                    }
-                    return found;
-                }, false);
+                changed = union(
+                        Object.keys(oldOptions.params),
+                        Object.keys(newOptions.params)
+                    ).reduce((found, param) => {
+                        if (newOptions.params[param] !== oldOptions.params[param]) {
+                            return true;
+                        }
+                        return found;
+                    }, false);
             } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
                 changed = true;
             }
@@ -193,15 +196,18 @@ Layers.registerType('wms', {
             if (changed) {
                 const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
                 const source = layer.getSource();
+                // forces tile cache drop
+                // this prevents old cached tiles at lower zoom levels to be
+                // rendered during new params load, but causes a blink glitch.
+                // TODO: find out a way to refresh only once to clear lower zoom level cache.
+                if (layer.getSource().refresh ) {
+                    layer.getSource().refresh();
+                }
                 source.updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
                     return params[key] ? previous : objectAssign(previous, {
                         [key]: undefined
                     });
                 }, {})));
-                // force tile cache drop
-                if (source.getTileLoadFunction) {
-                    source.setTileLoadFunction(source.getTileLoadFunction());
-                }
 
             }
             if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
@@ -213,13 +219,6 @@ Layers.registerType('wms', {
                  // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
                 || oldOptions.credits !== newOptions.credits && !newOptions.credits
                 ) {
-                // this forces cache empty, required when auth permission changed to avoid caching when unauthorized
-                // Moved here to avoid the layer disappearing during animations
-                if (changed) {
-                    if (layer.getSource().refresh) {
-                        layer.getSource().refresh();
-                    }
-                }
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
                 const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
                 urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));

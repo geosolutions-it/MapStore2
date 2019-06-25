@@ -1288,8 +1288,7 @@ describe('Openlayers layer', () => {
 
         expect(layer).toExist();
         const source = layer.layer.getSource();
-        const spy = expect.spyOn(source, "setTileLoadFunction");
-        const oldGetTileLoadFunction = source.getTileLoadFunction();
+        const spy = expect.spyOn(source, "refresh");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -1302,9 +1301,44 @@ describe('Openlayers layer', () => {
                 options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
 
-        // the cache empty is performed in this version of OL by replacing tile load function
-        // the same is in Map.jsx when change projection. Could not check effective cache clean
-        expect(spy).toHaveBeenCalledWith(oldGetTileLoadFunction);
+        // this prevents old cache to be rendered while loading
+        expect(spy).toHaveBeenCalled();
+    });
+    it('dimensions triggers params change', () => {
+        // this tests if dimension parameter changes, this triggers updateParams
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://sample.server/geoserver/wms",
+            "params": {
+                "cql_filter": "INCLUDE"
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        const source = layer.layer.getSource();
+        const spyRefresh = expect.spyOn(source, "refresh");
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
+
+        expect(spyRefresh).toHaveBeenCalled();
+        expect(layer.layer.getSource().getParams().time).toBe("2019-01-01T00:00:00Z");
     });
     it('test wms security token on SLD param', () => {
         const options = {
