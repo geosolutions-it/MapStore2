@@ -8,8 +8,8 @@
 const axios = require('../../../libs/ajax');
 
 // apply filters to results
-const filterRoles = (f = "") => (role = "") => role.indexOf(f.replace('%', '')) >= 0;
-const filterUsers = (f = "") => ({ userName = "" }) => userName.indexOf(f.replace('%', '')) >= 0;
+const filterRoles = (f = "") => (role = "") => role.toUpperCase().indexOf(f.toUpperCase().replace('%', '')) >= 0;
+const filterUsers = (f = "") => ({ userName = "" }) => userName.toUpperCase().indexOf(f.toUpperCase().replace('%', '')) >= 0;
 
 
 // simulate pagination.
@@ -19,7 +19,7 @@ const virtualPagingFilter = (page, size) => (r, i) => i >= page * size && i < (p
  * Implementation of GeoFence API of UserService that uses GeoServer REST API
  * This implementation interacts with the GeoServer integrated version of GeoFence.
  */
-module.exports = ({ addBaseUrlGS }) => {
+module.exports = ({ addBaseUrlGS, getUserService = () => {} }) => {
     // retrieves roles from rest API
     // TODO: cache
     const getRoles = () => axios.get(`/rest/security/roles.json`, addBaseUrlGS({
@@ -29,7 +29,7 @@ module.exports = ({ addBaseUrlGS }) => {
     })).then(response => response && response.data && response.data.roles || []);
 
     // retrieves users from rest API
-    const getUsers = () => axios.get(`/rest/security/usergroup/users.json`, addBaseUrlGS({
+    const getUsers = (service) => axios.get(`/rest/security/usergroup/${service ? `service/${service}/` : ''}users.json`, addBaseUrlGS({
             'headers': {
                 'Accept': 'application/json'
             }
@@ -37,7 +37,7 @@ module.exports = ({ addBaseUrlGS }) => {
 
 
     return {
-        getRolesCount: (filter = " ") => {
+        getRolesCount: (filter = "") => {
             return getRoles()
                 .then((roles = []) => roles.filter(filterRoles(filter)).length);
         },
@@ -54,13 +54,13 @@ module.exports = ({ addBaseUrlGS }) => {
                         .map(name => ({enabled: true, name}))
                 }));
         },
-        getUsersCount: (filter = " ") => {
-            return getUsers()
+        getUsersCount: (filter = "") => {
+            return getUsers(getUserService())
                 .then((users = []) => users.filter(filterUsers(filter)).length);
         },
 
         getUsers: (filter, page, size = 10) => {
-            return getUsers()
+            return getUsers(getUserService())
                 // filter by `filter` parameter
                 .then((users = []) => users.filter(filterUsers(filter)))
                 // paginate
