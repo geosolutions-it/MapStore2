@@ -935,6 +935,8 @@
             "success": " erfolgreich importiert"
         },
         "catalog": {
+            "start": "Startdatum ",
+            "end": "Enddatum ",
             "notAvailable": "Nicht verfügbar",
             "title": "Katalog",
             "autoload": "Suche nach Serviceauswahl",
@@ -974,7 +976,7 @@
             "showTemplate": "Metadatenvorlage anzeigen",
             "showPreview": "Vorschau zeigen",
             "advancedSettings": "Erweiterte Einstellungen",
-            "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
+            "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
