@@ -185,19 +185,7 @@ const converters = {
                                 const value = e.substr(equalIndex + 1, e.length - 1);
                                 const isOnlyDateFormat = e.length - equalIndex - 1 <= 10;
                                 if (includes(["start", "end"], prop) && scheme === "W3C-DTF" && !isOnlyDateFormat) {
-                                    const dateValue = new Date(value);
-                                    const date = new Date(
-                                        Date.UTC(
-                                            dateValue.getUTCFullYear(),
-                                            dateValue.getUTCMonth(),
-                                            dateValue.getUTCDate(),
-                                            dateValue.getUTCHours(),
-                                            dateValue.getUTCMinutes(),
-                                            dateValue.getUTCSeconds(),
-                                            dateValue.getUTCMilliseconds()
-                                        )
-                                    );
-                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + date.toLocaleString();
+                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
                                 }
                                 if (includes(["start", "end"], prop)) {
                                     return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + value;
