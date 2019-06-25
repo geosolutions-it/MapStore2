@@ -38,15 +38,15 @@ class ObliqueLabel extends React.Component {
     render() {
         const {x, y, payload, angle } = this.props;
         return (
-            <g transform={`translate(${x},${y + 5})`}>
+            <g transform={`translate(${x - (angle >= 75 ? 10 : 0)},${y + 5})`}>
                 <text
                     ref={(t) => {this.label = t; }}
                     x={0}
                     y={0}
-                    dy={18}
+                    dy={16}
                     textAnchor="end"
                     fill="#666"
-                    transform={`translate(-50%, -50%); rotate(-${angle}); translate(50%, 50%);`}
+                    transform={`rotate(-${angle})`}
   >
                     {payload.value}
                 </text>

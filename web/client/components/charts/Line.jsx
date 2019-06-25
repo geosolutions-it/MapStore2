@@ -31,11 +31,11 @@ class LineChartWrapper extends React.Component {
         marginLeft: 0,
         marginBottom: 0
     }
-    /*componentWillReceiveProps(newProps) {
+    componentWillReceiveProps(newProps) {
         if (!isEqual(newProps, this.props)) {
             this.setState({marginLeft: 0, marginBottom: 0});
         }
-    }*/
+    }
     render() {
         const {autoColorOptions, colorGenerator, data, isAnimationActive, height, margin, series, width, ...props} = this.props;
         const seriesArray = castArray(series);
@@ -47,8 +47,6 @@ class LineChartWrapper extends React.Component {
         // WORKAROUND: recharts does not re-render line and bar charts when changing colors, y axis, x axis rotation angle and legend label.
         const key = (COLORS || ["linechart"]).concat(legendLabel, yAxisLabel, xAxisAngle).join("");
 
-        // const lengthLongestLabels = maxBy(data, (d) => d[props.xAxis.dataKey].length)[props.xAxis.dataKey].length;
-        // const lengthFirstLabel = head(data) && head(data)[props.xAxis.dataKey].length;
         const onUpdateLabelLength = ({marginLeft, marginBottom}) => {
             this.setState((state) => ({
                 marginBottom: (state.marginBottom < marginBottom) ? marginBottom : state.marginBottom,
@@ -68,7 +66,7 @@ class LineChartWrapper extends React.Component {
                     top: 20,
                     right: 30,
                     left: marginLeft + 10, // 10 is for balancing the translate left of the oblique label
-                    bottom: marginBottom
+                    bottom: marginBottom + 20
                 } : margin }
             >
                 {seriesArray.map(({color, ...serie}, i) =>
