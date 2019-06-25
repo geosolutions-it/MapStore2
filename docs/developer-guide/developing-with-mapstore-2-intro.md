@@ -9,7 +9,6 @@ This section is about developing your own application using the MapStore framewo
  * [How-to](../dev-how-to)
  * [Code Conventions](../code-conventions)
  * [Developers FAQ](../dev-faq)
- * [How to customize the Theme](../customize-theme)
  * [internationalization](../internationalization)
 
 ## Developing using plugins
