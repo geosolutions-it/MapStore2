@@ -80,8 +80,8 @@ module.exports = {
         username,
         rolename,
         limits,
-        ipaddress,
-        constraints = {}
+        ipaddress
+        // constraints = {}
 
     }) => ({
         id,
@@ -94,7 +94,8 @@ module.exports = {
         userName: username,
         roleName: rolename,
         limits, // TODO: parse and manage
-        addressRange: ipaddress,
+        addressRange: ipaddress
+        /* LAYER DETAILS NOT SUPPORTED YET
         layerDetails: constraints && layer && {
             layerType: constraints.type,
             defaultStyle: constraints.defaultStyle,
@@ -109,5 +110,6 @@ module.exports = {
                         accessType: access
                     }))
         }
+        */
     })
 };
