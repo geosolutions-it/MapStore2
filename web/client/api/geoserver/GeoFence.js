@@ -139,7 +139,7 @@ var Api = {
     /**
      * Get the API to use as user service (to retrieve users and roles)
      */
-    getUserService: () => USER_SERVICES[Api.getUserServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS }),
+    getUserService: () => USER_SERVICES[Api.getUserServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getUserService: Api.getUserServiceName }),
     getRuleService: () => RULE_SERVICES[Api.getRuleServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance}),
     getLayerService: () => LAYER_SERVICES[Api.getLayerServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance }),
     /**
@@ -152,7 +152,10 @@ var Api = {
     * @returns {string} one of `geofence`. TODO: add other service types (geostore, geoserver)
     */
     getRuleServiceType: () => ConfigUtils.getDefaults().geoFenceServiceType || 'geofence',
+    // autocomplete service type for layers. Can be "rest" or "csw"
     getLayerServiceType: () => ConfigUtils.getDefaults().geoFenceLayerServiceType || 'csw',
+    // returns the user service name (for GeoServer user name autocomplete that points to specific servic (i.e. geostore))
+    getUserServiceName: () => ConfigUtils.getDefaults().geoserverUserServiceName,
 
     addBaseUrl: function(options = {}) {
         return assign(options, {

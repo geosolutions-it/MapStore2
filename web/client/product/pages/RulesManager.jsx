@@ -87,6 +87,7 @@ const BorderLayout = require('../../components/layout/BorderLayout');
   * "geoFencePath": "rest/geofence",
   * "geoFenceServiceType": "geoserver",
   * "geoFenceLayerServiceType": "rest",
+  * "geoserverUserServiceName": "geostore" // optional, if you want to use a specific user service for autocomplete, instead of GeoServer's default one
   * "geoFenceGeoServerInstance": {
   *   "url": "/geoserver/",
   *   "id": 1
