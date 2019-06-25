@@ -7,11 +7,12 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, sortBy, uniq} = require('lodash');
+const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
 const LayersUtils = require('./LayersUtils');
+const LocaleUtils = require('./LocaleUtils');
 const WMTSUtils = require('./WMTSUtils');
 
 const WMS = require('../api/WMS');
@@ -49,7 +50,7 @@ const getThumb = (dc) => {
 };
 
 const converters = {
-    csw: (records, options) => {
+    csw: (records, options, locales = {}) => {
         let result = records;
         // let searchOptions = catalog.searchOptions;
         if (result && result.records) {
@@ -164,6 +165,35 @@ const converters = {
                     // in order to use a default value
                     // we need to not push undefined/empty matadata
                     delete metadata.references;
+                }
+
+                if (dc && dc.temporal) {
+                    let elements = dc.temporal.split("; ");
+                    if (elements.length) {
+                        // finding scheme or using default
+                        let scheme = elements.filter(e => e.indexOf("scheme=") !== -1).map(e => {
+                            const equalIndex = e.indexOf("=");
+                            const value = e.substr(equalIndex + 1, e.length - 1);
+                            return value;
+                        });
+                        scheme = scheme.length ? scheme[0] : "W3C-DTF";
+                        let temporal = elements
+                            .filter(e => e.indexOf("start=") !== -1 || e.indexOf("end=") !== -1)
+                            .map(e => {
+                                const equalIndex = e.indexOf("=");
+                                const prop = e.substr(0, equalIndex);
+                                const value = e.substr(equalIndex + 1, e.length - 1);
+                                const isOnlyDateFormat = e.length - equalIndex - 1 <= 10;
+                                if (includes(["start", "end"], prop) && scheme === "W3C-DTF" && !isOnlyDateFormat) {
+                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
+                                }
+                                if (includes(["start", "end"], prop)) {
+                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + value;
+                                }
+                                return "";
+                            });
+                        metadata = {...metadata, temporal: ["<ul>" + temporal.map(date => `<li>${date}</li>`) + "</ul>"]};
+                    }
                 }
                 // setup the final record object
                 return {
@@ -430,8 +460,8 @@ const CatalogUtils = {
             ...baseConfig
         };
     },
-    getCatalogRecords: (format, records, options) => {
-        return converters[format] && converters[format](records, options) || null;
+    getCatalogRecords: (format, records, options, locales) => {
+        return converters[format] && converters[format](records, options, locales) || null;
     },
     esriToLayer: (record, baseConfig = {}) => {
         if (!record || !record.references) {

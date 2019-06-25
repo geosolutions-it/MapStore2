@@ -1068,6 +1068,8 @@
             "title": "Exporter"
         },
         "catalog": {
+            "start": "Date de début ",
+            "end": "Date de fin ",
             "notAvailable": "Indisponible",
             "title": "Catalogue",
             "autoload": "Recherche sur la sélection du service",
@@ -1107,7 +1109,7 @@
             "showTemplate": "Afficher le modèle de métadonnées",
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
-            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
+            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",

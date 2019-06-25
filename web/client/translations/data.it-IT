@@ -1068,6 +1068,8 @@
             "title": "Esporta"
         },
         "catalog": {
+            "start": "Data d'inizio ",
+            "end": "Data di fine ",
             "notAvailable": "Non disponibile",
             "title": "Catalogo",
             "autoload": "Ricerca alla selezione del servizio",
@@ -1107,7 +1109,7 @@
             "showTemplate": "Mostra il modello dei metadati",
             "showPreview": "Mostra la preview",
             "advancedSettings": "Impostazioni avanzante",
-            "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
+            "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
