@@ -20,6 +20,7 @@ class LineChartWrapper extends React.Component {
         height: PropTypes.number,
         margin: PropTypes.object,
         series: PropTypes.array,
+        xAxisAngle: PropTypes.number,
         width: PropTypes.number
     }
     static defaultProps = {
@@ -32,7 +33,7 @@ class LineChartWrapper extends React.Component {
         marginBottom: 0
     }
     componentWillReceiveProps(newProps) {
-        if (!isEqual(newProps, this.props)) {
+        if (!isEqual(newProps.xAxisAngle, this.props.xAxisAngle)) {
             this.setState({marginLeft: 0, marginBottom: 0});
         }
     }
