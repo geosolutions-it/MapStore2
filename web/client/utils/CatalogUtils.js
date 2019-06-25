@@ -159,7 +159,7 @@ const converters = {
                     metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
                 }
                 if (references && castArray(references).length ) {
-                    metadata = {...metadata, references: ["<ul>" + castArray(references).map(ref => `<li><a target="_blank" href="${ref.url}">${ref.params && ref.params.name || ref.url}</a></li>`) + "</ul>"]
+                    metadata = {...metadata, references: ["<ul>" + castArray(references).map(ref => `<li><a target="_blank" href="${ref.url}">${ref.params && ref.params.name || ref.url}</a></li>`).join("") + "</ul>"]
                     };
                 } else {
                     // in order to use a default value
@@ -192,7 +192,7 @@ const converters = {
                                 }
                                 return "";
                             });
-                        metadata = {...metadata, temporal: ["<ul>" + temporal.map(date => `<li>${date}</li>`) + "</ul>"]};
+                        metadata = {...metadata, temporal: ["<ul>" + temporal.map(date => `<li>${date}</li>`).join("") + "</ul>"]};
                     }
                 }
                 // setup the final record object
