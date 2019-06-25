@@ -57,6 +57,10 @@ describe('SimpleChart component', () => {
         const el = container.querySelector('div');
         expect(el).toExist();
     });
+    it('test bar chart with oblique labels', () => {
+        const bar = ReactDOM.render(<SimpleChart data={data} type="bar" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
+        expect(bar).toExist();
+    });
     it('test gauge chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="gauge" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');

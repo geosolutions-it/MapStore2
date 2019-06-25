@@ -12,7 +12,7 @@ import { XAxis, YAxis, CartesianGrid} from 'recharts';
 
 import ObliqueLabel from './ObliqueLabel';
 
-export const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, onUpdateLabelLength = () => {}} = {}) => ([
+const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, onUpdateLabelLength = () => {}} = {}) => ([
     xAxis && xAxis.show !== false ? <XAxis
         key="xaxis"
         {...xAxis}
@@ -21,3 +21,5 @@ export const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, o
         /> : null,
     yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null] );
+
+export default renderCartesianTools;

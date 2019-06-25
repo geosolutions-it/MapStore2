@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {LineChart, Line} = require('recharts');
 
-const {renderCartesianTools} = require('./cartesian');
+const renderCartesianTools = require('./cartesian').default;
 
 class LineChartWrapper extends React.Component {
     static propTypes = {

@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {BarChart, Bar} = require('recharts');
 
-const {renderCartesianTools} = require('./cartesian');
+const renderCartesianTools = require('./cartesian').default;
 
 class BarChartWrapper extends React.Component {
     static propTypes = {
@@ -40,7 +40,7 @@ class BarChartWrapper extends React.Component {
     }
     render() {
         const {autoColorOptions, colorGenerator, data, isAnimationActive, height, margin, series, width, ...props} = this.props;
-        const seriesArray = (Array.isArray(series) ? series : [series]);
+        const seriesArray = castArray(series);
         const COLORS = colorGenerator(seriesArray.length);
         // WORKAROUND: recharts does not re-render line and bar charts when changing colors, y axis, x axis rotation angle and legend label.
         const xAxisAngle = !isNil(props.xAxisAngle) ? [`angle${props.xAxisAngle}`] : [];
