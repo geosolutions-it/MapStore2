@@ -4,11 +4,12 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-const React = require('react');
-const {LineChart, Line} = require('recharts');
+*/
 const {castArray, isNil, isEqual} = require('lodash');
 const PropTypes = require('prop-types');
+const React = require('react');
+const {LineChart, Line} = require('recharts');
+
 const {renderCartesianTools} = require('./cartesian');
 
 class LineChartWrapper extends React.Component {
