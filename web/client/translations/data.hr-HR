@@ -932,6 +932,8 @@
             "success": " ispravno uvezeno"
         },
         "catalog": {
+            "start": "Start date ",
+            "end": "End date ",
             "notAvailable": "Not Available",
             "title": "Katalog",
             "autoload": "Traži prilikom odabira servisa",
@@ -971,7 +973,7 @@
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
-            "templateMetadataAvailable": "Metadata available from Dublin Core format: ${abstract}, ${boundingBox}, ${contributor}, ${description}, ${format}, ${identifier}, ${rights}, ${source}, ${title}, ${type}, ${uri}",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
