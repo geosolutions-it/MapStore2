@@ -18,14 +18,17 @@ describe('RuleServiceUtils', () => {
         Object.keys(converted).map(k => {
             expect(converted[k]).toEqual(GS_RULE1[k]);
         });
-        // check layerDetails exists only if layer is present
-        expect(convertRuleGF2GS({ ...GF_RULE1 }).layerDetails).toExist();
+        // check layerDetails not supported
+        expect(convertRuleGF2GS({ ...GF_RULE1 }).layerDetails).toNotExist();
         expect(convertRuleGF2GS({ ...GF_RULE1, layer: undefined }).layerDetails).toNotExist();
     });
     it('convertRuleGS2GF', () => {
         const converted = convertRuleGS2GF(GS_RULE1);
         Object.keys(converted).map(k => {
-            expect(converted[k]).toEqual(GF_RULE1[k]);
+            if (k !== "constraints") { // NOT SUPPORTED
+                expect(converted[k]).toEqual(GF_RULE1[k]);
+            }
+
         });
     });
 
