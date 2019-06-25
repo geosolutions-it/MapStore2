@@ -302,7 +302,7 @@ describe('Test the CatalogUtils', () => {
         }, {}, {});
         expect(records.length).toEqual(1);
         let temporal = records[0].metadata.temporal;
-        expect(temporal).toEqual(["<ul><li>catalog.start2019-02-03</li>,<li>catalog.end2019-03-03</li></ul>"]);
+        expect(temporal).toEqual(["<ul><li>catalog.start2019-02-03</li><li>catalog.end2019-03-03</li></ul>"]);
     });
     it('csw dct:temporal metadata YYYY-MM', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
@@ -314,7 +314,7 @@ describe('Test the CatalogUtils', () => {
         }, {}, {});
         expect(records.length).toEqual(1);
         let temporal = records[0].metadata.temporal;
-        expect(temporal).toEqual(["<ul><li>catalog.start2019-02</li>,<li>catalog.end2019-03</li></ul>"]);
+        expect(temporal).toEqual(["<ul><li>catalog.start2019-02</li><li>catalog.end2019-03</li></ul>"]);
     });
     it('csw dct:temporal metadata YYYY', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
@@ -326,7 +326,7 @@ describe('Test the CatalogUtils', () => {
         }, {}, {});
         expect(records.length).toEqual(1);
         let temporal = records[0].metadata.temporal;
-        expect(temporal).toEqual(["<ul><li>catalog.start2019</li>,<li>catalog.end2019</li></ul>"]);
+        expect(temporal).toEqual(["<ul><li>catalog.start2019</li><li>catalog.end2019</li></ul>"]);
     });
     it('csw dct:temporal metadata YYYY-MM-DDThh:mm:ssZ', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
@@ -338,7 +338,7 @@ describe('Test the CatalogUtils', () => {
         }, {}, {});
         expect(records.length).toEqual(1);
         let temporal = records[0].metadata.temporal;
-        expect(temporal).toEqual([`<ul><li>catalog.start${new Date("2019-03-05T02:02:00Z").toLocaleString()}</li>,<li>catalog.end${new Date("2019-03-05T02:52:00Z").toLocaleString()}</li></ul>`]);
+        expect(temporal).toEqual([`<ul><li>catalog.start${new Date("2019-03-05T02:02:00Z").toLocaleString()}</li><li>catalog.end${new Date("2019-03-05T02:52:00Z").toLocaleString()}</li></ul>`]);
     });
     it('csw dct:temporal metadata YYYY-MM-DDThh:mm:ssTZD', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
@@ -350,7 +350,7 @@ describe('Test the CatalogUtils', () => {
         }, {}, {});
         expect(records.length).toEqual(1);
         let temporal = records[0].metadata.temporal;
-        expect(temporal).toEqual([`<ul><li>catalog.start${new Date("2019-03-05T02:02:00+05:00").toLocaleString()}</li>,<li>catalog.end${new Date("2019-03-05T02:52:00+05:00").toLocaleString()}</li></ul>`]);
+        expect(temporal).toEqual([`<ul><li>catalog.start${new Date("2019-03-05T02:02:00+05:00").toLocaleString()}</li><li>catalog.end${new Date("2019-03-05T02:52:00+05:00").toLocaleString()}</li></ul>`]);
     });
     it('csw dct:temporal metadata YYYY-MM-DDThh:mm:ssTZD scheme="W3C-DTF"', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
@@ -362,7 +362,7 @@ describe('Test the CatalogUtils', () => {
         }, {}, {});
         expect(records.length).toEqual(1);
         let temporal = records[0].metadata.temporal;
-        expect(temporal).toEqual([`<ul><li>catalog.start${new Date("2019-03-05T02:02:00+05:00").toLocaleString()}</li>,<li>catalog.end${new Date("2019-03-05T02:52:00+05:00").toLocaleString()}</li></ul>`]);
+        expect(temporal).toEqual([`<ul><li>catalog.start${new Date("2019-03-05T02:02:00+05:00").toLocaleString()}</li><li>catalog.end${new Date("2019-03-05T02:52:00+05:00").toLocaleString()}</li></ul>`]);
     });
     it('csw dct:temporal metadata YYYY-MM-DDThh:mm:ssTZD scheme="Geological timescale"', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
