@@ -8,6 +8,7 @@
 
 module.exports = {
     plugins: {
+        // framework plugins
         BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
         FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
@@ -25,6 +26,7 @@ module.exports = {
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
+
         SwipeHeader: require('../components/data/identify/SwipeHeader')
     }
 };
