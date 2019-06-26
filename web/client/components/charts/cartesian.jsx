@@ -9,17 +9,27 @@
 
 import React from 'react';
 import { XAxis, YAxis, CartesianGrid} from 'recharts';
-
 import ObliqueLabel from './ObliqueLabel';
+import YAxisLabel from './YAxisLabel';
 
 const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, onUpdateLabelLength = () => {}} = {}) => ([
     xAxis && xAxis.show !== false ? <XAxis
         key="xaxis"
         {...xAxis}
         interval={xAxisAngle > 0 ? 0 : undefined}
-        tick={xAxisAngle > 0 ? <ObliqueLabel angle={xAxisAngle} onUpdateLabelLength={onUpdateLabelLength}/> : undefined}
-        /> : null,
-    yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
+        tick={xAxisAngle > 0 ?
+            <ObliqueLabel
+                angle={xAxisAngle}
+                onUpdateLabelLength={onUpdateLabelLength}/>
+            : undefined
+        }
+    /> : null,
+    yAxis ? <YAxis
+        key="yaxis"
+        tick={<YAxisLabel/>}
+        domain={[0, 'auto']}
+        {...yAxis}
+    /> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null] );
 
 export default renderCartesianTools;
