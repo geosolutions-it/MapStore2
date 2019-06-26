@@ -7,11 +7,19 @@
   */
 
 
-const React = require('react');
-const { XAxis, YAxis, CartesianGrid} = require('recharts');
+import React from 'react';
+import { XAxis, YAxis, CartesianGrid} from 'recharts';
 
-const renderCartesianTools = ({xAxis, yAxis, cartesian}) => ([
-    xAxis && xAxis.show !== false ? <XAxis key="xaxis" {...xAxis}/> : null,
+import ObliqueLabel from './ObliqueLabel';
+
+const renderCartesianTools = ({xAxis, yAxis, cartesian, xAxisAngle = 0, onUpdateLabelLength = () => {}} = {}) => ([
+    xAxis && xAxis.show !== false ? <XAxis
+        key="xaxis"
+        {...xAxis}
+        interval={xAxisAngle > 0 ? 0 : undefined}
+        tick={xAxisAngle > 0 ? <ObliqueLabel angle={xAxisAngle} onUpdateLabelLength={onUpdateLabelLength}/> : undefined}
+        /> : null,
     yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
-    cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null]);
-module.exports = {renderCartesianTools};
+    cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null] );
+
+export default renderCartesianTools;

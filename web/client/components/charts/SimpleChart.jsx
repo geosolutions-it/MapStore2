@@ -55,12 +55,17 @@ const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions =
         return null;
     };
 
-    return (<Component margin={{top: 5, right: 30, left: 20, bottom: 5}} colorGenerator={colorGenerator || defaultColorGenerator} autoColorOptions={autoColorOptions} {...props} {...{legend, tooltip}}>
-      {tooltip !== false ? type === "pie" ? <Tooltip content={CustomTooltip}/> : <Tooltip {...tooltip}/> : null}
-      {legend !== false ? <Legend {...legend}/> : null}
-     </Component>
-   );
+    return (<Component
+                margin={{top: 5, right: 30, left: 20, bottom: 5}}
+                colorGenerator={colorGenerator || defaultColorGenerator}
+                autoColorOptions={autoColorOptions}
+                {...props}
+                {...{legend, tooltip}}
+            >
+                {tooltip !== false ? type === "pie" ? <Tooltip content={CustomTooltip}/> : <Tooltip {...tooltip}/> : null}
+                {legend !== false ? <Legend {...legend} wrapperStyle={{bottom: 0}} /> : null}
+            </Component>
+    );
 };
 
 module.exports = SimpleChart;
-

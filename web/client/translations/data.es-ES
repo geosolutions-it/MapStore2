@@ -1518,7 +1518,12 @@
             "displayCartesian": {
                 "line": "Ocultar cuadrícula",
                 "bar": "Ocultar cuadrícula"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Eye X: Ángulo de rotación de la etiqueta °",
+                "bar": "Eye X: Ángulo de rotación de la etiqueta °"
+            },
+            "yAxis":{
                 "line": "Ocultar el eje Y",
                 "bar": "Ocultar el eje Y"
             },
