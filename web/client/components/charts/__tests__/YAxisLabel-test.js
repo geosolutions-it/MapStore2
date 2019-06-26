@@ -46,10 +46,10 @@ describe('YAxisLabel component', () => {
     });
 
     it('YAxisLabel rendering with a string as label', () => {
-        ReactDOM.render(<YAxisLabel payload={{value: 123456789}}/>, document.getElementById("container"));
+        ReactDOM.render(<YAxisLabel payload={{value: "123456789"}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const text = container.querySelector('text');
         expect(text).toExist();
-        expect(text.innerText).toBe("123.5 M");
+        expect(text.innerText).toBe("123456789");
     });
 });
