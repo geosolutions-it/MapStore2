@@ -8,20 +8,20 @@
 
 module.exports = {
     plugins: {
-        IdentifyPlugin: require('../plugins/Identify'),
-        TOCPlugin: require('../plugins/TOC'),
         BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
-        MapPlugin: require('../plugins/Map'),
-        ToolbarPlugin: require('../plugins/Toolbar'),
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
-        SearchPlugin: require('../plugins/Search'),
-        LocatePlugin: require('../plugins/Locate'),
-        ZoomAllPlugin: require('../plugins/ZoomAll'),
-        MapLoadingPlugin: require('../plugins/MapLoading'),
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
         GoFullPlugin: require('../plugins/GoFull'),
-        OmniBarPlugin: require('../plugins/OmniBar'),
+        IdentifyPlugin: require('../plugins/Identify'),
+        LocatePlugin: require('../plugins/Locate'),
         MapFooterPlugin: require('../plugins/MapFooter'),
-        FeedbackMaskPlugin: require('../plugins/FeedbackMask')
+        MapLoadingPlugin: require('../plugins/MapLoading'),
+        MapPlugin: require('../plugins/Map'),
+        OmniBarPlugin: require('../plugins/OmniBar'),
+        SearchPlugin: require('../plugins/Search'),
+        TOCPlugin: require('../plugins/TOC'),
+        ToolbarPlugin: require('../plugins/Toolbar'),
+        ZoomAllPlugin: require('../plugins/ZoomAll')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
