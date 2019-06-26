@@ -68,7 +68,7 @@ class BarChartWrapper extends React.Component {
                 margin={props.xAxisAngle ? {
                     top: 20,
                     right: 30,
-                    left: marginLeft + 10, // 10 is for balancing the translate left of the oblique label
+                    left: marginLeft,
                     bottom: marginBottom + 20
                 } : margin }>
                 {
