@@ -72,6 +72,7 @@ pages:
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
+      - Styling and theming: 'developer-guide/customize-theme.md'
     - Configuration: 'developer-guide/configuration-files.md'
     - Integrations:
       - users:

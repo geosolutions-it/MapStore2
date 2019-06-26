@@ -7,5 +7,5 @@ This guide wants to provide general information and suggestions about how to wri
  * [Writing actions and reducers](../writing-actions-reducers)
  * [Writing epics](../writing-epics) - IN PROGRESS (@offtherailz)
  * Writing enhancers - TODO (@baloola)
- * Styling and theming - TODO (@allyoucanmap)
+ * [Styling and theming](../customize-theme)
  * Using JS API - TODO (@kappu72)
