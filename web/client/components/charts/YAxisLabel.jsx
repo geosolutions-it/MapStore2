@@ -10,8 +10,8 @@ import React from 'react';
 
 import {shortenLabel} from '../../utils/WidgetsUtils';
 
-const YAxisLabel = ({x = 0, y, payload = {}}) => (
-    <g>
+const YAxisLabel = ({x = 0, y = 0, payload = {}}) => (
+    <g transform={`translate(0,${y - 1})`}>
         <text
         style={{fill: '#666'}}
         x={x - 5}
