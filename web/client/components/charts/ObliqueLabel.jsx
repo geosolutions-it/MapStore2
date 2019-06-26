@@ -37,6 +37,16 @@ class ObliqueLabel extends React.Component {
 
     render() {
         const {x, y, payload, angle } = this.props;
+
+        /* the tranform on g tag is used to place labels on x axis, in particular:
+         * - when angle is over 75° the label needs to be translated left to be
+         * aligned with the tick on the x axis
+         * - it is also moved down a bit to avoid to collide with the tick
+
+         * rotate on the text is needed to create an oblique label in particular,
+         * y = 0 allows all labels to be aligned on the same line
+         * textAnchor
+        */
         return (
             <g transform={`translate(${x - (angle >= 75 ? 10 : 0)},${y + 5})`}>
                 <text
