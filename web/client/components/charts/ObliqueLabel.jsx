@@ -45,7 +45,6 @@ class ObliqueLabel extends React.Component {
 
          * rotate on the text is needed to create an oblique label in particular,
          * y = 0 allows all labels to be aligned on the same line
-         * textAnchor
         */
         return (
             <g transform={`translate(${x - (angle >= 75 ? 10 : 0)},${y + 5})`}>
@@ -57,7 +56,7 @@ class ObliqueLabel extends React.Component {
                     textAnchor="end"
                     fill="#666"
                     transform={`rotate(-${angle})`}
-  >
+                >
                     {payload.value}
                 </text>
             </g>
