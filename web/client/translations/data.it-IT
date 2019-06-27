@@ -1760,7 +1760,7 @@
                 "ip": "###.###.###.###/##",
                 "priority": "Seleziona Priorità"
             },
-            "menutitle": "Configura GeoFence Rules",
+            "menutitle": "Configura Regole di Accesso",
             "tooltip": {
                 "addT": "Crea regola",
                 "editT": "Modifica regola selezionata",

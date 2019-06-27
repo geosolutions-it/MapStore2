@@ -1760,7 +1760,7 @@
                 "priority": "Select Priority",
                 "filter": "Filter styles..."
             },
-            "menutitle": "Manage GeoFence Rules",
+            "menutitle": "Manage Access Rules",
             "tooltip": {
                 "addT": "Add a rule",
                 "editT": "Edit selected rule",
@@ -1779,7 +1779,7 @@
             },
             "rule": "Rule",
             "cachetitle": "Clear Cache",
-            "cachemsg": "Are you sure to clear the GeoFence cache?",
+            "cachemsg": "Are you sure to clear the rules cache?",
             "deltitle": "Delete Rule",
             "delmsg": "Do you really want to delete this rule?",
             "invalidForm": "The form is invalid check fields values",
@@ -1805,7 +1805,7 @@
             "cacheCleaned": "Cache successfully cleaned",
             "errorTitle": "Geofence",
             "errorCQL": "Geometry not valid!",
-            "errorCleaningCache": "Error cleaning geofence cache.",
+            "errorCleaningCache": "Error cleaning rules cache.",
             "errorLoadingRoles": "Error loading roles.",
             "errorLoadingUsers": "Error loading users.",
             "errorLoadingWorkspaces": "Error loading workspaces.",
