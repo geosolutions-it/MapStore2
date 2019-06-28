@@ -36,6 +36,8 @@ docs_dir: 'docs'
 markdown_extensions:
   - admonition
   - markdown.extensions.attr_list
+  - codehilite:
+      linenums: true
 pages:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
@@ -65,6 +67,7 @@ pages:
     - Exploring Dashboards: 'user-guide/exploring-dashboards.md'
   - Developer Guide:
     - Dev Setup and Run: 'developer-guide/index.md'
+    - Database Setup: 'developer-guide/database-setup.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore: 'developer-guide/developing-with-mapstore-2-intro.md'
     - How to:
