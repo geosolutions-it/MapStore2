@@ -47,7 +47,9 @@ Build the deployable war:
 
 Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application.
 
-Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
+Deploy the generated `mapstore.war` file (in web/target) to your favourite J2EE container (e.g. Tomcat).
+
+[Here](database-setup) you can find how to setup the database.
 
 ## Developers Documentation
  * [Infrastructure](infrastructure-and-general-architecture)
