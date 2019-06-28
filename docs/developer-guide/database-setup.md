@@ -6,13 +6,13 @@ MapStore can use 3 types of database:
 - [PostgreSQL](https://www.postgresql.org/)
 - [Oracle](https://www.oracle.com/database)
 
-By default MapStore uses the H2 (embedded, on disk, inside the webapp folder) but this configuration is not suggested for production environments, will delete the database as well as you update the web application (if you don't back-up and restore the DB file) and can not be used for the [integration with GeoServer](../integrations/users/geoserver).
+MapStore uses an H2 in-memory DB as default DBMS for persist the data. This configuration is usefull for develop, test and evaluate the project but it is obviously NOT RECOMMENDED for production usage; moreover the H2 DB cannot be used for the [integration with GeoServer](../integrations/users/geoserver).
 
 In the following guide you will learn how to configure MapStore to use an external database.
 
 ## Externalize properties files
 
-MapStore has a file called `geostore-datasource-ovr.properties`. This file is on the repository the folder `web/src/main/resources` and in the final mapstore.war package it will be copied into `WEB-INF/classes` path. It contains the set-up for database connection. Anyway if you edit the file in `WEB-INF/classes` this file will be overridden on the next re-deploy. To preserve your configuration on every deploy you can user a environment variable, `geostore-ovr`, to configure the path to an override file in a different, external directory. In this file the user can re-define the default configuration and so set-up the database configuration.
+MapStore has a file called `geostore-datasource-ovr.properties`. This file is on the repository in the folder `web/src/main/resources`, in the final mapstore.war package it will be copied into `WEB-INF/classes` path. It contains the set-up for the database connection. Anyway if you edit the file in `WEB-INF/classes` this file will be overridden on the next re-deploy. To preserve your configuration on every deploy you can user a environment variable, `geostore-ovr`, to configure the path to an override file in a different, external directory. In this file the user can re-define the default configuration and so set-up the database configuration.
 
 For instance using tomcat on linux you will have to do something like this to add the environment variable to the JAVA_OPTS
 > where to add your JAVA_OPTS depends on your operating system. For instance the file could be `/etc/default/tomcat8`, or similar, in linux debian
@@ -25,11 +25,11 @@ GEOSTORE_OVR_FILE=file:///var/lib/tomcat/conf/geostore-ovr.properties
 JAVA_OPTS="-Dgeostore-ovr=$GEOSTORE_OVR_FILE [other opts]"
 ```
 
-So your file,`/var/lib/tomcat/conf/geostore-ovr.properties`, will contain the overrides to the database set-up.
+So your file `/var/lib/tomcat/conf/geostore-ovr.properties` will contain the overrides to the database set-up.
 
 ## Database creation Mode
 
-By default MapStore automatically populate the database on it's own. If you want to disable this functionality (e.g. if you do not want to allow the database user to have permission to create tables) then you have to set-up this property in the ovr file to 'validate'
+By default MapStore automatically populates the database on it's own. If you want to disable this functionality (e.g. if you don't want to allow the database user to have permission to create tables) then you have to set-up the following property in the ovr file to 'validate'
 
 ```properties
 geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=validate
@@ -42,7 +42,7 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=validate
 > - `create`: creates the schema, destroying previous data.
 > - `create-drop`: drop the schema when the SessionFactory is closed explicitly, typically when the > application is stopped.
 
-In this case you have to manually create the required tables you can use the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc) for the needed DBMS.
+In this case it is necessary to manually create the required tables using the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc) for the needed DBMS.
 
 ## H2
 
@@ -53,11 +53,11 @@ geostoreDataSource.url=jdbc:h2:./webapps/mapstore/geostore
 geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=update
 ```
 
-This configuration creates a file called `geostore` in the webapp folder. You can change the `geostoreDataSource.url` to set the path to the database you want to use. Make you sure that the user of the project that executes tomcat have write permission on the folder where you want to create the database.
+This configuration creates a file called `geostore` in the webapp folder. You can change the `geostoreDataSource.url` to set the path to the database you want to use. Make you sure that the user of the project that executes Tomcat has write permissions on the folder where you want to create the database.
 
 ## PostgreSQL
 
-All the following configuration will use `geostore` as password of the user `geostore`. Of course you can change it accordingly to your needings.
+All the following configurations will use `geostore` as password of the user `geostore`. Of course you can change it according to your needings.
 
 ### Database Creation and Setup
 
@@ -96,7 +96,7 @@ At the end, **make you sure that the user** `geostore` **has access to the datab
 
 ### Connection to the Database
 
-To configure MapStore to connect to the new created database you have to edit your override file this this way (change connection parameters accordingly):
+To configure MapStore to connect it to the new created database you have to edit your override file like below (change the connection parameters accordingly):
 
 ```properties
 # Setup driver and dialect for PostgreSQL database
@@ -127,7 +127,7 @@ Use [this SQL script](https://github.com/geosolutions-it/geostore/blob/master/do
 
 ### Connection to the Database
 
-To configure MapStore to connect to the new created database you have to edit your override file this way:
+To configure MapStore to connect to the new created database you have to edit your override file like reported below:
 
 ```properties
 # Setup driver and dialect for Oracle Database
