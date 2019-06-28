@@ -2,11 +2,11 @@
 
 MapStore can use 3 types of database:
 
-- H2
-- PostgreSQL
-- Oracle
+- [H2](https://www.h2database.com/html/main.html)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Oracle](https://www.oracle.com/database)
 
-By default MapStore uses the H2 (embedded, on disk, inside the webapp folder) but this configuration is not suggested for production environments, will delete the database as well as you update the web application (if you don't back-up and restore the DB file) and can not be used for the integration with GeoServer.
+By default MapStore uses the H2 (embedded, on disk, inside the webapp folder) but this configuration is not suggested for production environments, will delete the database as well as you update the web application (if you don't back-up and restore the DB file) and can not be used for the [integration with GeoServer](../integrations/users/geoserver).
 
 In the following guide you will learn how to configure MapStore to use an external database.
 
