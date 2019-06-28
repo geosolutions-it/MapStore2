@@ -10,7 +10,7 @@ const expect = require('expect');
 
 const { toggleControl, setControlProperty, setControlProperties } = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
-const {closeIdentify, purgeMapInfoResults} = require('../../actions/mapInfo');
+const {closeIdentify, purgeMapInfoResults, noQueryableLayers} = require('../../actions/mapInfo');
 
 const {updateMapLayoutEpic} = require('../maplayout');
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
@@ -133,5 +133,20 @@ describe('map layout epics', () => {
         };
         const state = { controls: { metadataexplorer: { enabled: true, group: "parent" } } };
         testEpic(updateMapLayoutEpic, 1, setControlProperties("metadataexplorer", "enabled", true, "group", "parent"), epicResult, state);
+    });
+
+    it('tests layout updated on noQueryableLayers', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(updateMapLayoutEpic, 1, noQueryableLayers(), epicResult, {});
     });
 });
