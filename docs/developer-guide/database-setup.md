@@ -42,7 +42,9 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=validate
 > - `create`: creates the schema, destroying previous data.
 > - `create-drop`: drop the schema when the SessionFactory is closed explicitly, typically when the > application is stopped.
 
-In this case it is necessary to manually create the required tables using the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc) for the needed DBMS.
+In this case it is necessary to manually create the required tables using the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc) for the needed DBMS. 
+
+The `update` mode is usually discouraged in production. On production servers you should always use `validate` mode and apply SQL scripts and/or patches manually. Anyway before every update a database backup is strongly suggested. 
 
 ## H2
 
@@ -91,6 +93,8 @@ GRANT ALL ON SCHEMA geostore TO geostore ;
 
 alter user geostore set search_path to geostore , public;
 ```
+
+If you need to create the database schema manually (validate mode), you have also [this script](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/002_create_schema_postgres.sql). 
 
 At the end, **make you sure that the user** `geostore` **has access to the database** from the address of MapStore application. You can give permission by editing [pg_hba.conf](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html)
 
