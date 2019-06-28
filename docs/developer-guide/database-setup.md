@@ -6,7 +6,7 @@ MapStore can use 3 types of database:
 - PostgreSQL
 - Oracle
 
-MapStore uses an H2 in-memory DB as default DBMS for persist the data. This configuration is usefull for develop, test and evaluate the project but it is obviously NOT RECOMMENDED for production usage.
+MapStore uses an H2 in-memory DB as default DBMS for persist the data. This configuration is usefull for develop, test and evaluate the project but it is obviously NOT RECOMMENDED for production usage; moreover the H2 DB cannot be used for the integration with GeoServer.
 
 In the following guide you will learn how to configure MapStore to use an external database.
 
