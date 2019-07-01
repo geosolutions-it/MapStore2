@@ -1065,7 +1065,7 @@
                 }
             },
         "mapExport": {
-            "title": "Karte exportieren"
+            "title": "Exportieren Sie die Karte"
         },
         "catalog": {
             "start": "Startdatum ",
