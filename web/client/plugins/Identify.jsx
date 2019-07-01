@@ -133,14 +133,18 @@ const identifyDefaultProps = defaultProps({
 });
 
 /**
- * Identify plugin. This plugin allows to perform get feature info.
- * It can be configured to have a mobile or a desktop flavor.
- * It's enabled by default. The bubbling of an on_click_map action to GFI is stopped
- * if Annotations or FeatureGrid plugins are editing, draw or measurement supports are
- * active, the query panel is active or the identify plugin is disabled.
- * To restore old behavior, in mapInfo state, set disabledAlwaysOn to true and
- * manage the plugin using toggleControl action with 'info' as control name.
- * It's possible also possible disable the plugin by changeMapInfoState or toggleMapInfoState actions
+ * This plugin allows get informations about clicked point. It can be configured to have a mobile or a desktop flavor.
+ *
+ * You can configure some of the features of this plugin by setting up the initial mapInfo state t you need to update the "initialState.defaultState", or by the plugin configuration
+ * ```
+ * "mapInfo": {
+ *   "enabled": true, // enabled by default
+ *   "disabledAlwaysOn": false, // if true, disable always on setup
+ *   "configuration": {
+ *     "showEmptyMessageGFI": false // allow or deny the visiibility of message when you have no results from identify request
+ *   }
+ * }
+ * ```
  *
  * @class Identify
  * @memberof plugins
@@ -149,10 +153,9 @@ const identifyDefaultProps = defaultProps({
  * @prop showIn {string[]} List of the plugins where to show the plugin
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.draggable {boolean} draggable info window, when modal
- * @prop cfg.viewerOptions {object}
  * @prop cfg.showHighlightFeatureButton {boolean} show the highlight feature button if the interrogation returned valid features (openlayers only)
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
- * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
+ * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
  *
@@ -170,17 +173,6 @@ const identifyDefaultProps = defaultProps({
  *    }
  * }
  *
- * If you want ot configure the showEmptyMessageGFI you need to update the "initialState.defaultState"
- * @example
- * ```
- * "mapInfo": {
- *   "enabled": true,
- *   "configuration": {
- *     "showEmptyMessageGFI": false
- *   }
- * }
- * ```
-
  */
 
 const IdentifyPlugin = compose(

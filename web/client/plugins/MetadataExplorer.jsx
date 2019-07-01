@@ -206,7 +206,7 @@ const API = {
     wmts: require('../api/WMTS')
 };
 /**
- * MetadataExplorer plugin. Shows the catalogs results (CSW, WMS and WMTS).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS and WMTS).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *

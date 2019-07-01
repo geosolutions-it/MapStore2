@@ -38,6 +38,12 @@ const Playback = compose(
     )
 )(require('./playback/Playback'));
 
+/**
+  * Playback Plugin. Shows the playback controls for @see {@link api/plugins#plugins.Timeline}
+  * @class  Playback
+  * @memberof plugins
+  * @static
+  */
 class PlaybackPlugin extends React.Component {
     render() {
         return (
