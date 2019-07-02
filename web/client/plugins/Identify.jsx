@@ -135,7 +135,7 @@ const identifyDefaultProps = defaultProps({
 /**
  * This plugin allows get informations about clicked point. It can be configured to have a mobile or a desktop flavor.
  *
- * You can configure some of the features of this plugin by setting up the initial mapInfo state t you need to update the "initialState.defaultState", or by the plugin configuration
+ * You can configure some of the features of this plugin by setting up the initial mapInfo state, then you need to update the "initialState.defaultState", or by the plugin configuration
  * ```
  * "mapInfo": {
  *   "enabled": true, // enabled by default
