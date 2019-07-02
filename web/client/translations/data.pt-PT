@@ -1052,7 +1052,7 @@
             }
         },
         "mapExport": {
-            "title": "Export"
+            "title": "Export Map"
         },
         "catalog": {
             "start": "Start date ",

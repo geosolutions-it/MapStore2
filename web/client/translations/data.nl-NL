@@ -1000,6 +1000,22 @@
             "cancel": "Annuleer",
             "success": " Import geslaagd"
         },
+        "mapImport": {
+            "title": "Import",
+            "dropZone": {
+                "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Select Files...",
+                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "File not supported",
+                "unknownError": "there was an unknown error during import"
+            }
+        },
+        "mapExport": {
+            "title": "Export Map"
+        },
         "catalog": {
             "start": "Start date ",
             "end": "End date ",

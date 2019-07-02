@@ -1065,7 +1065,7 @@
             }
         },
         "mapExport": {
-            "title": "Esporta"
+            "title": "Esporta mappa"
         },
         "catalog": {
             "start": "Data d'inizio ",
