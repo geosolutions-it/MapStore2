@@ -36,7 +36,9 @@ const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 
 /**
-  * Timeline Plugin. Shows the timeline tool on the map
+  * Timeline Plugin. Shows the timeline tool on the map.
+  * To use with Playback plugin. {@link api/plugins#plugins.Playback}
+  * For configuration, see related reducer's documentation {@link api/framework#reducers.timeline}
   * @class  Timeline
   * @memberof plugins
   * @static

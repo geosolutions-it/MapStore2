@@ -13,7 +13,7 @@ const {versionSelector} = require('../selectors/version');
 const Message = require('../components/I18N/Message');
 
 /**
-  * Version Plugin. Shows current MapStore2 version
+  * Version Plugin. Shows current MapStore2 version in settings panel
   * @class  Version
   * @memberof plugins
   * @static
