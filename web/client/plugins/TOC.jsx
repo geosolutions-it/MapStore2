@@ -592,7 +592,9 @@ const TOCPlugin = connect(tocSelector, {
 })(LayerTree);
 
 const API = {
-    csw: require('../api/CSW')
+    csw: require('../api/CSW'),
+    wms: require('../api/WMS'),
+    wmts: require('../api/WMTS')
 };
 
 module.exports = {
