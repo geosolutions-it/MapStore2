@@ -398,6 +398,7 @@
             "toolTrashLayerTooltip": "Entferne die ausgewählte Ebene",
             "toolTrashLayersTooltip": "Entferne ausgewählte Ebenen",
             "toolFeaturesGridTooltip": "Öffnen Sie die Attributtabelle",
+            "layerFilterTooltip": "Öffnen Sie den Abfrage-Generator",
             "toolDownloadTooltip": "Layerdaten exportieren",
             "noFilteredResults": "Keine Ergebnisse",
             "filterPlaceholder": "Ebenen filtern",
@@ -423,6 +424,8 @@
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration von dem Server(s)",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
             "epsgNotSupported": "CRS {epsg} wird für das Zoomen auf Layer nicht unterstützt",
+            "filterIconEnabled": "Ebenenfilter deaktivieren",
+            "filterIconDisabled": "Ebenenfilter aktivieren",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -759,6 +762,8 @@
             "title": "Erweiterte Suche",
             "query": "Suche",
             "reset": "Zurücksetzen",
+            "save": "Aktuellen Filter speichern",
+            "discard": "Zuletzt gespeicherten Filter wiederherstellen",
             "query_request_exception": "Abfrage Fehler",
             "config": {
                 "load_config_exception": "Fehler beim Laden der Konfiguration"
@@ -845,7 +850,13 @@
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering ist für die ausgewählte Ebene nicht verfügbar"
                 }
-            }
+            },
+            "changedFilter": "Filter geändert",
+            "discardbtn": "Verwerfen",
+            "changedFilterAlert": "Aktuellen Filter speichern oder verwerfen?",
+            "resetFilter": "Filter entfernen",
+            "resetFilterAlert": "Es ist nicht möglich, eine Filterrücksetzaktion rückgängig zu machen. Bestätigen Sie?",
+            "confirmReset": "Bestätigen"
         },
         "annotations": {
             "errorLoadingSymbols": "Beim Laden der Symbolliste ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator, um die Konfigurationsoptionen zu überprüfen",

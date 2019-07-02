@@ -398,6 +398,7 @@
             "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
             "toolTrashLayersTooltip": "Eliminar las capas seleccionadas",
             "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
+            "layerFilterTooltip": "Abrir el generador de consultas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
             "filterPlaceholder": "Filtrar capas",
@@ -423,6 +424,8 @@
             "refreshMessage": "Recargue la configuración de las capas WMS a partir del servidor(es)",
             "refreshError": "Error actualizando las capas: ",
             "epsgNotSupported": "CRS {epsg} no es compatible con el zoom a la capa",
+            "filterIconEnabled": "Deshabilitar filtro de capa",
+            "filterIconDisabled": "Habilitar filtro de capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -759,6 +762,8 @@
             "title": "Búsqueda avanzada",
             "query": "Búsqueda",
             "reset": "Eliminar filtros",
+            "save": "Guardar filtro actual",
+            "discard": "Restaurar el último filtro guardado",
             "query_request_exception": "Error en la búsqueda",
             "config": {
                 "load_config_exception": "Error cargando configuración"
@@ -845,7 +850,13 @@
                 "errors": {
                     "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
                 }
-            }
+            },
+            "changedFilter": "Filtro cambiado",
+            "discardbtn": "Descarte",
+            "changedFilterAlert": "¿Guardar o desechar el filtro de cuentas?",
+            "resetFilter": "Quitar filtro",
+            "resetFilterAlert": "No es posible deshacer una acción de restablecimiento del filtro. ¿Confirmas?",
+            "confirmReset": "Confirmar"
         },
         "annotations": {
             "errorLoadingSymbols": "Hubo un problema al cargar la lista de símbolos. Por favor, contacte al administrador para verificar las opciones de configuración.",

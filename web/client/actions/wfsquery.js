@@ -20,6 +20,7 @@ const RESET_QUERY = 'RESET_QUERY';
 const QUERY = 'QUERY';
 const INIT_QUERY_PANEL = 'INIT_QUERY_PANEL';
 const TOGGLE_SYNC_WMS = 'QUERY:TOGGLE_SYNC_WMS';
+const TOGGLE_LAYER_FILTER = 'QUERY:TOGGLE_LAYER_FILTER';
 
 function toggleSyncWms() {
     return {
@@ -27,6 +28,11 @@ function toggleSyncWms() {
     };
 }
 
+function toggleLayerFilter() {
+    return {
+        type: TOGGLE_LAYER_FILTER
+    };
+}
 const axios = require('../libs/ajax');
 
 function layerSelectedForSearch(id) {
@@ -164,5 +170,6 @@ module.exports = {
     FEATURE_LOADED, featureLoaded,
     INIT_QUERY_PANEL, initQueryPanel,
     loadFeature,
-    TOGGLE_SYNC_WMS, toggleSyncWms
+    TOGGLE_SYNC_WMS, toggleSyncWms,
+    TOGGLE_LAYER_FILTER, toggleLayerFilter
 };

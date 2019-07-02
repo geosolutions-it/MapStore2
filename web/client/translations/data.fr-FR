@@ -399,6 +399,7 @@
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "layerFilterTooltip": "Ouvrir le générateur de requêtes",
             "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Pas de résultats",
             "filterPlaceholder": "Filtrer les couches",
@@ -424,6 +425,8 @@
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(s) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches: ",
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
+            "filterIconEnabled": "Désactiver le filtre de calque",
+            "filterIconDisabled": "Activer le filtre de calque",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -760,6 +763,8 @@
             "title": "Recherche Avancée",
             "query": "Recherche",
             "reset": "Recommencer",
+            "save": "Enregistrer le filtre actuel",
+            "discard": "Restaurer le dernier filtre enregistré",
             "query_request_exception": "Erreur de requête",
             "config": {
                 "load_config_exception": "Erreur lors du chargement de la configuration"
@@ -846,7 +851,13 @@
                 "errors": {
                     "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
                 }
-            }
+            },
+            "changedFilter": "Filtre modifié",
+            "discardbtn": "Jeter",
+            "changedFilterAlert": "Sauvegarder ou jeter le filtre actuel?",
+            "resetFilter": "Supprimer le filtre",
+            "resetFilterAlert": "Il n'est pas possible d'annuler une action de réinitialisation de filtre. Confirmez-vous?",
+            "confirmReset": "Confirmer"
         },
         "annotations": {
             "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",

@@ -195,6 +195,7 @@ module.exports = {
                 explicitArray: false,
                 mergeAttrs: true
             }, callback))(response.data)
-        )
+        ),
+    
 
 };
