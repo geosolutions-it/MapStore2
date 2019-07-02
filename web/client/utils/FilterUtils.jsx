@@ -966,7 +966,7 @@ const FilterUtils = {
         };
     },
     /**
-     @return a filterObject ready to be stringified in a cql filter (Cql filter needs spatial filter in layer nativeCrs). If the filter has a spatialFilter this will be reprojected 
+     @return a filterObject ready to be stringified in a cql filter (Cql filter needs spatial filter in layer nativeCrs). If the filter has a spatialFilter this will be reprojected
              in native otherwise it will be stripped.
     */
     normalizeFilterCQL: (filter, nativeCrs) => {

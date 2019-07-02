@@ -25,7 +25,7 @@ describe('Test the filterHistory reducer', () => {
     });
     it('restore saved filter', () => {
         const filterA = { id: 1};
-        const filterB = {id: 2}
+        const filterB = {id: 2};
         const state = filterHistory({persisted: filterA, applied: filterB}, {
             type: RESTORE_CURRENT_SAVED_FILTER
         });
@@ -50,7 +50,7 @@ describe('Test the filterHistory reducer', () => {
     });
     it('save current applied filter', () => {
         const filterA = { id: 1};
-        const filterB = {id: 2}
+        const filterB = {id: 2};
         const state = filterHistory({persisted: filterA, applied: filterB}, {
             type: STORE_CURRENT_APPLIED_FILTER
         });
@@ -62,7 +62,7 @@ describe('Test the filterHistory reducer', () => {
     });
     it('clean state on query_form_reset', () => {
         const filterA = { id: 1};
-        const filterB = {id: 2}
+        const filterB = {id: 2};
         const state = filterHistory({persisted: filterA, applied: filterB}, {
             type: QUERY_FORM_RESET
         });

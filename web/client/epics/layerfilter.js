@@ -14,7 +14,7 @@ const {get, head} = require("lodash");
 const { LOCATION_CHANGE} = require('react-router-redux');
 
 const {TOGGLE_CONTROL, setControlProperty} = require('../actions/controls');
-const {QUERY_FORM_SEARCH, loadFilter, reset, search, QUERY_FORM_RESET} = require('../actions/queryform');
+const {QUERY_FORM_SEARCH, loadFilter, reset, search} = require('../actions/queryform');
 const {changeLayerProperties} = require('../actions/layers');
 
 
@@ -51,7 +51,7 @@ module.exports = {
     handleLayerFilterPanel: (action$, {getState}) =>
         action$.ofType(OPEN_QUERY_BUILDER).switchMap(() => {
             const layer = getSelectedLayer(getState());
-            const {url, name, layerFilter} = layer;
+            const {url, name, layerFilter} = layer || {};
             return Rx.Observable.of(
                 featureTypeSelected(url, name),
                 // Load the filter from the layer if it exist
