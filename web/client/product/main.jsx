@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
+module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
     const React = require('react');
     const ReactDOM = require('react-dom');
     const {connect} = require('react-redux');
@@ -22,9 +22,9 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
 
         const {
             appEpics = {},
-            baseEpics = {},
+            baseEpics,
             appReducers = {},
-            baseReducers = {},
+            baseReducers,
             initialState,
             pages,
             printingEnabled = true,
@@ -63,9 +63,9 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
                 ...appReducers
             },
             baseEpics || {
-                readQueryParamsOnMapEpic,
-                setSupportedLocales,
                 updateMapLayoutEpic,
+                setSupportedLocales,
+                readQueryParamsOnMapEpic,
                 ...appEpics
             }
         );
