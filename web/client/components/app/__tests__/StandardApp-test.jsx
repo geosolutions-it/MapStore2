@@ -9,7 +9,6 @@ const expect = require('expect');
 const PropTypes = require('prop-types');
 const React = require('react');
 const ReactDOM = require('react-dom');
-
 const StandardApp = require('../StandardApp');
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
@@ -53,10 +52,11 @@ describe('StandardApp', () => {
         expect(app).toExist();
     });
 
-    it('creates a default app with onInit', () => {
+    it('creates a default app with onInit', (done) => {
         const init = {
             onInit: (cfg) => {
                 expect(cfg).toExist();
+                done();
             }
         };
         let app = ReactDOM.render(<StandardApp onInit={init.onInit}/>, document.getElementById("container"));
