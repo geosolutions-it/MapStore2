@@ -316,6 +316,29 @@ describe('Featuregrid toolbar component', () => {
         zoomAllButton = document.getElementById("fg-zoom-all");
         expect(el.children[2].disabled).toBe(false);
     });
+    describe('time sync button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar show mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-timeSync-button"))).toBe(false);
+            ReactDOM.render(<Toolbar showTimeSyncButton show mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-timeSync-button"))).toBe(true);
+        });
+        it('handler', () => {
+            const events = {
+                setTimeSync: () => { }
+            };
+            spyOn(events, "setTimeSync");
+            ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+            expect(el).toExist();
+            let zoomAllButton = document.getElementById("fg-zoom-all");
+            expect(isVisibleButton(zoomAllButton)).toBe(true);
+            expect(el.children[2].disabled).toBe(true);
+            ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false} />, document.getElementById("container"));
+            zoomAllButton = document.getElementById("fg-zoom-all");
+            expect(el.children[2].disabled).toBe(false);
+        });
+    });
     it('check chart button', () => {
         const events = {
             chart: () => {}

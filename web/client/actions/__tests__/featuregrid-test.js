@@ -40,7 +40,8 @@ const {
     sizeChange, SIZE_CHANGE,
     START_SYNC_WMS, startSyncWMS,
     storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
-    setShowCurrentFilter, SET_SHOW_CURRENT_FILTER,
+    setUp, SET_UP,
+    setTimeSync, SET_TIME_SYNC,
     fatureGridQueryResult, GRID_QUERY_RESULT,
     moreFeatures, LOAD_MORE_FEATURES,
     hideSyncPopover, HIDE_SYNC_POPOVER,
@@ -296,11 +297,15 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval.pages).toBe(pages);
     });
 
-    it('Test setShowCurrentFilter', () => {
+    it('Test setUp', () => {
         const showFilteredObject = true;
-        const retval = setShowCurrentFilter(showFilteredObject);
-        expect(retval).toExist();
-        expect(retval.type).toBe(SET_SHOW_CURRENT_FILTER);
-        expect(retval.showFilteredObject).toBe(showFilteredObject);
+        expect(setUp({ showFilteredObject })).toEqual({ type: SET_UP, options: { showFilteredObject }});
+        expect(setUp({ showFilteredObject, timeSync: true })).toEqual({ type: SET_UP, options: { showFilteredObject, timeSync: true } });
+
+    });
+    it('setTimeSync', () => {
+        expect(setTimeSync(true)).toEqual({ type: SET_TIME_SYNC, value: true });
+        expect(setTimeSync(false)).toEqual({ type: SET_TIME_SYNC, value: false });
+
     });
 });

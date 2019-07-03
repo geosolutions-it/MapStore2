@@ -92,6 +92,7 @@ const layerDimensionRangeSelector = (state, layerId) => {
 
 module.exports = {
     layerDimensionRangeSelector,
+    layerDimensionSelectorCreator,
     layerDimensionDataSelectorCreator,
     layerTimeSequenceSelectorCreator,
     timeSequenceSelector,
