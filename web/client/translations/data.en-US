@@ -169,7 +169,9 @@
             "colors": {
                 "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
                 "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
-                "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
+                "green": "{number, plural, =0 {Green} =1 {Green} other {Greens}}",
+                "gray": "{number, plural, =0 {Gray} =1 {Gray} other {Grays}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
                 "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
                 "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
