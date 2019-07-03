@@ -49,7 +49,7 @@ const addNativeCrsLayer = (layer, nativeCrs = "") => {
 
 module.exports = {
 /**
- * It manages the initialization of the query builder used to build layer filter object
+ * It manages the initialization of the query builder used to build the layerFilter
  * and the update of layerFilter in layer state
  */
     handleLayerFilterPanel: (action$, {getState}) =>
@@ -88,6 +88,9 @@ module.exports = {
             ).let(endLayerFilterEpic(action$)).concat(Rx.Observable.from([toggleLayerFilter(), reset(), changeDrawingStatus("clean", "", "queryform", [], {})]))
             ;
         }),
+/**
+ * It throws the correct actions to discard the current applied filter and reload the last saved if present
+ */
     restoreSavedFilter: (action$, {getState}) =>
         action$.ofType(DISCARD_CURRENT_FILTER)
         .switchMap(() => {
@@ -100,6 +103,9 @@ module.exports = {
             initQueryPanel());
 
         }),
+/**
+ * It Persists the current applied filter
+ */
     onApplyFilter: (action$, {getState}) =>
         action$.ofType(APPLY_FILTER)
         .map(() => {

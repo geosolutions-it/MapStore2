@@ -130,9 +130,9 @@ class QueryToolbar extends React.Component {
             && this.props.filterFields.filter((field) => field.value).length === 0
             && !this.props.spatialField.geometry
             && !(this.props.crossLayerFilter && this.props.crossLayerFilter.attribute && this.props.crossLayerFilter.operation);
-
+        const queryBtnMsgId = this.props.advancedToolbar ? "queryform.apply" : this.props.queryBtnMsgId;
         let buttons = [ {
-            tooltipId: showTooltip ? "queryform.emptyfilter" : this.props.queryBtnMsgId,
+            tooltipId: showTooltip ? "queryform.emptyfilter" : queryBtnMsgId,
             disabled: queryDisabled || (this.props.advancedToolbar && !this.appliedFilterChanged()),
             glyph: this.props.queryBtnGlyph,
             className: showTooltip ? "square-button-md showWarning" : "square-button-md",
