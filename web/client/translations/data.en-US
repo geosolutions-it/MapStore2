@@ -398,7 +398,7 @@
             "toolTrashLayerTooltip": "Remove selected layer",
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolFeaturesGridTooltip": "Open Attribute Table",
-            "layerFilterTooltip": "Open Query Builder",
+            "layerFilterTooltip": "Filter Layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
             "filterPlaceholder": "Filter layers",
@@ -761,6 +761,7 @@
         "queryform": {
             "title": "Advanced Search",
             "query": "Search",
+            "apply": "Apply filter",
             "reset": "Reset",
             "save": "Save current filter",
             "discard": "Restore last saved filter", 

@@ -20,8 +20,8 @@ const queryFormUiStateSelector = createSelector(attributePanelExpandedSelector, 
         spatialPanelExpanded,
         crossLayerExpanded
 }));
-const storedFilterSelector = state => get(state, "filterHistory.persisted");
-const appliedFilterSelector = state => get(state, "filterHistory.applied");
+const storedFilterSelector = state => get(state, "filterPersistence.persisted");
+const appliedFilterSelector = state => get(state, "filterPersistence.applied");
 
 module.exports = {
     spatialFieldSelector,

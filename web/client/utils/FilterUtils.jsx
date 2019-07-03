@@ -957,10 +957,10 @@ const FilterUtils = {
             ...filter,
             spatialField: {
                 ...filter.spatialField,
-                projection: nativeCrs,
                 geometry: {
                     ...filter.spatialField.geometry,
-                    coordinates: newCoords
+                    coordinates: newCoords,
+                    projection: nativeCrs
                 }
             }
         };

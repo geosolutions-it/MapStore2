@@ -67,7 +67,8 @@ class QueryBuilder extends React.Component {
         toolsOptions: PropTypes.object,
         appliedFilter: PropTypes.object,
         storedFilter: PropTypes.object,
-        advancedToolbar: PropTypes.bool
+        advancedToolbar: PropTypes.bool,
+        loadingError: PropTypes.bool
     };
 
     static defaultProps = {
@@ -100,6 +101,7 @@ class QueryBuilder extends React.Component {
         autocompleteEnabled: true,
         emptyFilterWarning: false,
         advancedToolbar: false,
+        loadingError: false,
         attributeFilterActions: {
             onAddGroupField: () => {},
             onAddFilterField: () => {},
@@ -170,6 +172,7 @@ class QueryBuilder extends React.Component {
                 appliedFilter={this.props.appliedFilter}
                 storedFilter={this.props.storedFilter}
                 advancedToolbar={this.props.advancedToolbar}
+                loadingError={this.props.loadingError}
             /></div>);
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">

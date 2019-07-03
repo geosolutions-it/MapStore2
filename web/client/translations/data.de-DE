@@ -398,7 +398,7 @@
             "toolTrashLayerTooltip": "Entferne die ausgewählte Ebene",
             "toolTrashLayersTooltip": "Entferne ausgewählte Ebenen",
             "toolFeaturesGridTooltip": "Öffnen Sie die Attributtabelle",
-            "layerFilterTooltip": "Öffnen Sie den Abfrage-Generator",
+            "layerFilterTooltip": "Filterschicht",
             "toolDownloadTooltip": "Layerdaten exportieren",
             "noFilteredResults": "Keine Ergebnisse",
             "filterPlaceholder": "Ebenen filtern",
@@ -761,6 +761,7 @@
         "queryform": {
             "title": "Erweiterte Suche",
             "query": "Suche",
+            "apply": "Filter anwenden",
             "reset": "Zurücksetzen",
             "save": "Aktuellen Filter speichern",
             "discard": "Zuletzt gespeicherten Filter wiederherstellen",

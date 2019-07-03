@@ -46,7 +46,8 @@ class QueryToolbar extends React.Component {
         emptyFilterWarning: PropTypes.bool,
         appliedFilter: PropTypes.object,
         storedFilter: PropTypes.object,
-        advancedToolbar: PropTypes.bool
+        advancedToolbar: PropTypes.bool,
+        loadingError: PropTypes.bool
     };
 
     static defaultProps = {
@@ -74,6 +75,7 @@ class QueryToolbar extends React.Component {
         allowEmptyFilter: false,
         emptyFilterWarning: false,
         advancedToolbar: false,
+        loadingError: false,
         actions: {
             onQuery: () => {},
             onReset: () => {},
@@ -114,13 +116,14 @@ class QueryToolbar extends React.Component {
     render() {
         let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
         // let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
-        let fieldsWithValues = this.props.filterFields.filter((field) => field.value).length > 0 || (this.props.allowEmptyFilter && !this.props.advancedToolbar);
+        let fieldsWithValues = this.props.filterFields.filter((field) => field.value || field.value === 0).length > 0 || (this.props.allowEmptyFilter && !this.props.advancedToolbar);
 
         let queryDisabled =
             // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
             !fieldsWithValues && !this.props.spatialField.geometry;
+
         const isFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
 
         const showTooltip = this.props.emptyFilterWarning
@@ -137,7 +140,7 @@ class QueryToolbar extends React.Component {
             onClick: this.search
         }];
         if (this.props.advancedToolbar) {
-            const disableSave = !isFilterChanged || !this.props.toolbarEnabled;
+            const disableSave = !isFilterChanged || !this.props.toolbarEnabled || this.props.loadingError;
             const disableRestore = !isFilterChanged || !this.props.storedFilter || !this.props.toolbarEnabled;
             const disableReset = !this.props.appliedFilter || !this.props.toolbarEnabled;
             buttons = buttons.concat([

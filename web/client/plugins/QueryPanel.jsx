@@ -18,13 +18,13 @@ const Message = require('./locale/Message');
 
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 
-const {storeCurrentFilter, restoreCurrentSavedFilter, applyFilter} = require('../actions/filterHistory');
+const {storeCurrentFilter, discardCurrentFilter, applyFilter} = require('../actions/filterPersistence');
 
 
 const {zoomToExtent} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 
-const {groupsSelector} = require('../selectors/layers');
+const {groupsSelector, selectedLayerLoadingErrorSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
 const {
     crossLayerFilterSelector,
@@ -156,7 +156,7 @@ const SmartQueryForm = connect((state) => {
             onQuery: search,
             onReset,
             onSaveFilter: storeCurrentFilter,
-            onRestoreFilter: restoreCurrentSavedFilter,
+            onRestoreFilter: discardCurrentFilter,
             storeAppliedFilter: applyFilter,
             onChangeDrawingStatus: changeDrawingStatus
 
@@ -181,8 +181,9 @@ const tocSelector = createSelector(
         state => mapLayoutValuesSelector(state, {height: true}),
         appliedFilterSelector,
         storedFilterSelector,
-        (state) => state && state.query && state.query.isLayerFilter
-    ], (enabled, groups, settings, querypanelEnabled, layout, appliedFilter, storedFilter, advancedToolbar) => ({
+        (state) => state && state.query && state.query.isLayerFilter,
+        selectedLayerLoadingErrorSelector
+    ], (enabled, groups, settings, querypanelEnabled, layout, appliedFilter, storedFilter, advancedToolbar, loadingError) => ({
         enabled,
         groups,
         settings,
@@ -190,7 +191,8 @@ const tocSelector = createSelector(
         layout,
         appliedFilter,
         storedFilter,
-        advancedToolbar
+        advancedToolbar,
+        loadingError
     })
 );
 
@@ -318,14 +320,15 @@ class QueryPanel extends React.Component {
     renderQueryPanel = () => {
         return (<div className="mapstore-query-builder">
             <SmartQueryForm
-                header={<QueryPanelHeader onToggleQuery={this.onToggle} />}
+                header={<QueryPanelHeader loadingError={this.props.loadingError} onToggleQuery={this.onToggle} />}
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}
                 toolsOptions={this.props.toolsOptions}
                 featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}
                 appliedFilter={this.props.appliedFilter}
                 storedFilter={this.props.storedFilter}
-                advancedToolbar={this.props.advancedToolbar}/>
+                advancedToolbar={this.props.advancedToolbar}
+                loadingError={this.props.loadingError}/>
             <Portal>
                 <ResizableModal
                     fade
@@ -341,6 +344,7 @@ class QueryPanel extends React.Component {
                         },
                         {
                             bsStyle: 'primary',
+                            disabled: this.props.loadingError,
                             text: <Message msgId="save"/>,
                             onClick: this.storeAndClose
                         }
@@ -440,7 +444,7 @@ const QueryPanelPlugin = connect(tocSelector, {
     updateNode,
     removeNode,
     onSaveFilter: storeCurrentFilter,
-    onRestoreFilter: restoreCurrentSavedFilter
+    onRestoreFilter: discardCurrentFilter
 })(QueryPanel);
 
 
@@ -449,7 +453,7 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query'),
-        filterHistory: require('../reducers/filterHistory')
+        filterPersistence: require('../reducers/filterPersistence')
     },
     epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
 };

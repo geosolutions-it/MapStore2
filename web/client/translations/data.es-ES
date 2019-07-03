@@ -398,7 +398,7 @@
             "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
             "toolTrashLayersTooltip": "Eliminar las capas seleccionadas",
             "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
-            "layerFilterTooltip": "Abrir el generador de consultas",
+            "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
             "filterPlaceholder": "Filtrar capas",
@@ -761,6 +761,7 @@
         "queryform": {
             "title": "Búsqueda avanzada",
             "query": "Búsqueda",
+            "apply": "Aplicar filtro",
             "reset": "Eliminar filtros",
             "save": "Guardar filtro actual",
             "discard": "Restaurar el último filtro guardado",

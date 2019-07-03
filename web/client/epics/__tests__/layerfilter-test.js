@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-const {openQueryBuilder, restoreCurrentSavedFilter, applyFilter} = require('../../actions/filterHistory');
+const {openQueryBuilder, discardCurrentFilter, applyFilter} = require('../../actions/filterPersistence');
 const {QUERY_FORM_SEARCH} = require('../../actions/queryform');
 const {testEpic} = require('./epicTestUtils');
 
@@ -25,7 +25,7 @@ describe('layerFilter Epics', () => {
         testEpic(handleLayerFilterPanel, 6, action, (actions) => {
             expect(actions[0].type).toBe("FEATURE_TYPE_SELECTED");
             expect(actions[1].type).toBe("QUERYFORM:LOAD_FILTER");
-            expect(actions[2].type).toBe("FILTER_HISTORY:INIT_FILTER_HISTORY");
+            expect(actions[2].type).toBe("FILTER_PERSISTENCE:INIT_FILTER_PERSISTENCE");
             expect(actions[3].type).toBe("SET_CONTROL_PROPERTY");
             expect(actions[4].type).toBe("QUERY:TOGGLE_LAYER_FILTER");
             expect(actions[5].type).toBe("CHANGE_LAYER_PROPERTIES");
@@ -34,7 +34,7 @@ describe('layerFilter Epics', () => {
         }, state);
     });
     it("restoreSavedFilter throws correct action", (done) => {
-        let action = restoreCurrentSavedFilter();
+        let action = discardCurrentFilter();
 
         // State need a selected layers
         testEpic(restoreSavedFilter, 4, action, (actions) => {
@@ -51,7 +51,7 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         testEpic(onApplyFilter, 1, action, (actions) => {
-            expect(actions[0].type).toBe("FILTER_HISTORY:APPLIED_FILTER");
+            expect(actions[0].type).toBe("FILTER_PERSISTENCE:APPLIED_FILTER");
             done();
 
         });

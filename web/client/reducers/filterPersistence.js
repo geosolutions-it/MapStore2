@@ -7,16 +7,16 @@
 */
 
 
-const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_FILTER_HISTORY, RESTORE_CURRENT_SAVED_FILTER} = require("../actions/filterHistory");
+const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_FILTER_PERSISTENCE, DISCARD_CURRENT_FILTER} = require("../actions/filterPersistence");
 const { QUERY_FORM_RESET} = require('../actions/queryform');
 const initialState = {};
 
-function filterHistory(state = initialState, action) {
+function filterPersistence(state = initialState, action) {
     switch (action.type) {
-        case INIT_FILTER_HISTORY: {
+        case INIT_FILTER_PERSISTENCE: {
             return { ...initialState, persisted: action.filter, applied: action.filter};
         }
-        case RESTORE_CURRENT_SAVED_FILTER: {
+        case DISCARD_CURRENT_FILTER: {
             return {...state, applied: state.persisted};
         }
         case APPLIED_FILTER: {
@@ -33,4 +33,4 @@ function filterHistory(state = initialState, action) {
     }
 }
 
-module.exports = filterHistory;
+module.exports = filterPersistence;

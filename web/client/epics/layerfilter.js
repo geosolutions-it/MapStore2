@@ -19,7 +19,7 @@ const {changeLayerProperties} = require('../actions/layers');
 
 
 const { warning} = require('../actions/notifications');
-const {OPEN_QUERY_BUILDER, initFilterHistory, RESTORE_CURRENT_SAVED_FILTER, APPLY_FILTER, storeAppliedFilter} = require('../actions/filterHistory');
+const {OPEN_QUERY_BUILDER, initFilterPersistence, DISCARD_CURRENT_FILTER, APPLY_FILTER, storeAppliedFilter} = require('../actions/filterPersistence');
 const {featureTypeSelected, toggleLayerFilter, initQueryPanel} = require("../actions/wfsquery");
 const {getSelectedLayer} = require("../selectors/layers");
 
@@ -48,6 +48,10 @@ const addNativeCrsLayer = (layer, nativeCrs = "") => {
 
 
 module.exports = {
+/**
+ * It manages the initialization of the query builder used to build layer filter object
+ * and the update of layerFilter in layer state
+ */
     handleLayerFilterPanel: (action$, {getState}) =>
         action$.ofType(OPEN_QUERY_BUILDER).switchMap(() => {
             const layer = getSelectedLayer(getState());
@@ -56,7 +60,7 @@ module.exports = {
                 featureTypeSelected(url, name),
                 // Load the filter from the layer if it exist
                 loadFilter(layerFilter),
-                initFilterHistory(layerFilter),
+                initFilterPersistence(layerFilter),
                 setControlProperty('queryPanel', "enabled", true)
             )
             .merge(
@@ -76,7 +80,8 @@ module.exports = {
                     .switchMap( ({filterObj}) => {
                         let newFilter = isNotEmptyFilter(filterObj) ? {...get(getState(), "queryform", {})} : undefined;
                         if (newFilter) {
-                            newFilter = FilterUtils.normalizeFilterCQL(newFilter, layer.nativeCrs);
+                            const {nativeCrs} = getSelectedLayer(getState());
+                            newFilter = FilterUtils.normalizeFilterCQL(newFilter, nativeCrs);
                         }
                         return Rx.Observable.of(addFilterToLayer(layer.id, newFilter));
                     })
@@ -84,11 +89,11 @@ module.exports = {
             ;
         }),
     restoreSavedFilter: (action$, {getState}) =>
-        action$.ofType(RESTORE_CURRENT_SAVED_FILTER)
+        action$.ofType(DISCARD_CURRENT_FILTER)
         .switchMap(() => {
             const params = {typeName: get(getState(), "state.query.typeName")};
             const searchUrl = get(getState(), "state.query.url");
-            const filter = get(getState(), "filterHistory.persisted");
+            const filter = get(getState(), "filterPersistence.persisted");
             return Rx.Observable.of(changeDrawingStatus('clean', '', "queryform", []),
             loadFilter(filter),
             search(searchUrl, filter, params),

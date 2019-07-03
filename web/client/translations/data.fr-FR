@@ -399,7 +399,7 @@
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
-            "layerFilterTooltip": "Ouvrir le générateur de requêtes",
+            "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Pas de résultats",
             "filterPlaceholder": "Filtrer les couches",
@@ -762,6 +762,7 @@
         "queryform": {
             "title": "Recherche Avancée",
             "query": "Recherche",
+            "apply": "Appliquer le filtre",
             "reset": "Recommencer",
             "save": "Enregistrer le filtre actuel",
             "discard": "Restaurer le dernier filtre enregistré",

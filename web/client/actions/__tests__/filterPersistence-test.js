@@ -10,20 +10,20 @@ var expect = require('expect');
 const {
     OPEN_QUERY_BUILDER,
     openQueryBuilder,
-    INIT_FILTER_HISTORY,
-    initFilterHistory,
+    INIT_FILTER_PERSISTENCE,
+    initFilterPersistence,
     APPLIED_FILTER,
     storeAppliedFilter,
     STORE_CURRENT_APPLIED_FILTER,
     storeCurrentFilter,
-    RESTORE_CURRENT_SAVED_FILTER,
-    restoreCurrentSavedFilter,
+    DISCARD_CURRENT_FILTER,
+    discardCurrentFilter,
     applyFilter,
     APPLY_FILTER
-} = require('../filterHistory');
+} = require('../filterPersistence');
 
 
-describe('Test correctness of the filterHistory actions', () => {
+describe('Test correctness of the filterPersistence actions', () => {
 
     it('openQueryBuilder', () => {
         var retval = openQueryBuilder();
@@ -31,10 +31,10 @@ describe('Test correctness of the filterHistory actions', () => {
         expect(retval.type).toBe(OPEN_QUERY_BUILDER);
     });
 
-    it('initFilterHistory', () => {
-        var retval = initFilterHistory();
+    it('initFilterPersistence', () => {
+        var retval = initFilterPersistence();
         expect(retval).toExist();
-        expect(retval.type).toBe(INIT_FILTER_HISTORY);
+        expect(retval.type).toBe(INIT_FILTER_PERSISTENCE);
     });
 
     it('storeAppliedFilter', () => {
@@ -51,10 +51,10 @@ describe('Test correctness of the filterHistory actions', () => {
         expect(retval.type).toBe(STORE_CURRENT_APPLIED_FILTER);
     });
 
-    it('restoreCurrentSavedFilter', () => {
-        var retval = restoreCurrentSavedFilter();
+    it('discardCurrentFilter', () => {
+        var retval = discardCurrentFilter();
         expect(retval).toExist();
-        expect(retval.type).toBe(RESTORE_CURRENT_SAVED_FILTER);
+        expect(retval.type).toBe(DISCARD_CURRENT_FILTER);
     });
 
     it('applyFilter', () => {

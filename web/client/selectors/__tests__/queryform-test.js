@@ -77,7 +77,7 @@ const initialState = {
             }
         }
     },
-    filterHistory: {
+    filterPersistence: {
       persisted: {id: 1},
       applied: {id: 2}
     }

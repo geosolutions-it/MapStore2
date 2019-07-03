@@ -398,7 +398,7 @@
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
-            "layerFilterTooltip": "Apri il generatore di query",
+            "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
             "filterPlaceholder": "Filtra layers",
@@ -761,6 +761,7 @@
         "queryform": {
             "title": "Ricerca Avanzata",
             "query": "Ricerca",
+            "apply": "Applica filtro",
             "reset": "Reimposta",
             "save": "Salva il filtro attuale",
             "discard": "Ripristina ultimo filtro salvato",
