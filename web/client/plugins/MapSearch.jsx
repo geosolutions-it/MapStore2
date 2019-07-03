@@ -14,12 +14,16 @@ const ConfigUtils = require('../utils/ConfigUtils');
 * @name MapSearch
 * @memberof plugins
 * @class
-* @prop {boolean} splitTools used to to separate search and remove buttons in toolbar
-* @prop {boolean} showOptions shows the burger menu in the input field, default true
-* @prop {string} activeSearchTool default search tool. Values are "addressSearch", "coordinatesSearch"
-* @prop {boolean} showCoordinatesSearchOption shows the menu item to switch to the coordinate editor, default true
-* @prop {boolean} showAddressSearchOption  shows the menu item to switch to the address editor, default true
-* @prop {boolean} enabledSearchServicesConfig shows the menu item to open the custom search services config, default false
+* @param {boolean} [splitTools=true] used to separate search and remove buttons in toolbar,
+<br>if true and without text => you see only search
+<br>if true and with text => search is substituted with remove
+<br>if false and without text => you see only search
+<br>if false and with text => you see both (search and remove)
+* @param {boolean} [showOptions=true] shows the burger menu in the input field
+* @param {string} [activeSearchTool=addressSearch] default search tool. Values are "addressSearch", "coordinatesSearch"
+* @param {boolean} [showCoordinatesSearchOption=true] shows the menu item to switch to the coordinate editor
+* @param {boolean} [showAddressSearchOption=true]  shows the menu item to switch to the address editor
+* @param {boolean} [enabledSearchServicesConfig=false] shows the menu item to open the custom search services config
 * @example
 * {
 *   "name": "MapSearch",
