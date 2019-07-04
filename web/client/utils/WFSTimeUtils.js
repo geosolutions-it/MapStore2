@@ -18,6 +18,9 @@ import { layerDimensionSelectorCreator } from '../selectors/dimension';
  * To add it as options in WFS request body instead of making it as a KVP
  */
 export const addTimeParameter = (url, options, state) => {
+    // TODO: Options are included for two purposes
+    // - could be parsed to replace selectors with time value from options
+    // - should be modified to add time
     const id = selectedLayerIdSelector(state);
     const hasTimeDim = layerDimensionSelectorCreator({id}, "time")(state);
     const layer = getLayerFromId(state, id) || {};

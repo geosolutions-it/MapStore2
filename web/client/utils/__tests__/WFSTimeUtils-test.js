@@ -12,7 +12,7 @@ import {addTimeParameter} from '../WFSTimeUtils';
 import featuregrid from '../../reducers/featuregrid';
 import layers from '../../reducers/layers';
 
-import { setLayer } from '../../actions/featuregrid';
+import { setLayer, setTimeSync } from '../../actions/featuregrid';
 import dimension from '../../reducers/dimension';
 import { addLayer, changeLayerParams } from '../../actions/layers';
 import { updateLayerDimensionData } from '../../actions/dimension';
@@ -50,14 +50,20 @@ const TIME_STATE = mockState({ featuregrid, dimension, layers}, BASE_STATE)(
         time: T1
     })
 );
+const TIME_ENABLED_STATE = mockState({ featuregrid, dimension, layers }, TIME_STATE)(
+    setTimeSync(true)
+);
 
 describe.only('WFSTimeUtils', () => {
     describe('addTimeParameter', () => {
         it('do nothing with no time set', () => {
             expect(addTimeParameter(TEST_URL_OPTIONS.url, TEST_URL_OPTIONS.options, BASE_STATE)).toEqual(TEST_URL_OPTIONS);
         });
-        it('change URL with time set', () => {
-            expect(addTimeParameter(TEST_URL_OPTIONS.url, TEST_URL_OPTIONS.options, TIME_STATE)).toEqual({
+        it('do nothing with time set but sync disabled', () => {
+            expect(addTimeParameter(TEST_URL_OPTIONS.url, TEST_URL_OPTIONS.options, TIME_STATE)).toEqual(TEST_URL_OPTIONS);
+        });
+        it('change URL with time set and sync active', () => {
+            expect(addTimeParameter(TEST_URL_OPTIONS.url, TEST_URL_OPTIONS.options, TIME_ENABLED_STATE)).toEqual({
                 ...TEST_URL_OPTIONS,
                 url: `${TEST_URL_OPTIONS.url}?time=${encodeURIComponent(T1)}`
             });
