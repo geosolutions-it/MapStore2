@@ -168,7 +168,7 @@ module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize
         <TButton
             id="timeSync-button"
             keyProp="fg-timeSync-button"
-            tooltipId="featuregrid.toolbar.timeSync"
+            tooltipId={timeSync ? "featuregrid.toolbar.disableTimeSync" : "featuregrid.toolbar.enableTimeSync"}
             visible={showTimeSyncButton}
             active={timeSync}
             onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}

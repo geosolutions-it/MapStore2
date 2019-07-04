@@ -1314,6 +1314,8 @@
                 "hideShowColumns": "Spalten ausblenden / anzeigen",
                 "zoomAll": "Zoom zur Erweterung der Seite",
                 "syncOnMap": "Karte mit Filter synchronisieren",
+                "enableTimeSync": "Mit der ausgewählten Zeit oder dem ausgewählten Zeitintervall synchronisieren",
+                "disableTimeSync": "Nicht mit der ausgewählten Zeit oder dem ausgewählten Intervall synchronisieren",
                 "createNewChart": "Erstellen Sie ein Diagramm für die ausgewählte Ebene"
             }
         },

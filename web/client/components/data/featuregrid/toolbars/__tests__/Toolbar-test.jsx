@@ -318,25 +318,28 @@ describe('Featuregrid toolbar component', () => {
     });
     describe('time sync button', () => {
         it('visibility', () => {
-            ReactDOM.render(<Toolbar show mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
             expect(isVisibleButton(document.getElementById("fg-timeSync-button"))).toBe(false);
             ReactDOM.render(<Toolbar showTimeSyncButton show mode="VIEW" disableZoomAll />, document.getElementById("container"));
             expect(isVisibleButton(document.getElementById("fg-timeSync-button"))).toBe(true);
+        });
+        it('enabled/disabled state', () => {
+            ReactDOM.render(<Toolbar showTimeSyncButton timeSync mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar showTimeSyncButton mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toNotInclude('btn-success');
         });
         it('handler', () => {
             const events = {
                 setTimeSync: () => { }
             };
-            spyOn(events, "setTimeSync");
-            ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
-            const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-            expect(el).toExist();
-            let zoomAllButton = document.getElementById("fg-zoom-all");
-            expect(isVisibleButton(zoomAllButton)).toBe(true);
-            expect(el.children[2].disabled).toBe(true);
-            ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false} />, document.getElementById("container"));
-            zoomAllButton = document.getElementById("fg-zoom-all");
-            expect(el.children[2].disabled).toBe(false);
+            const spy = spyOn(events, "setTimeSync");
+            ReactDOM.render(<Toolbar showTimeSyncButton timeSync events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-timeSync-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar showTimeSyncButton events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-timeSync-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
     it('check chart button', () => {
