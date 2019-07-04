@@ -764,7 +764,7 @@
             "apply": "Filter anwenden",
             "reset": "Zurücksetzen",
             "save": "Aktuellen Filter speichern",
-            "discard": "Zuletzt gespeicherten Filter wiederherstellen",
+            "discard": "Filterwechsel verwerfen",
             "query_request_exception": "Abfrage Fehler",
             "config": {
                 "load_config_exception": "Fehler beim Laden der Konfiguration"
@@ -857,7 +857,9 @@
             "changedFilterAlert": "Aktuellen Filter speichern oder verwerfen?",
             "resetFilter": "Filter entfernen",
             "resetFilterAlert": "Es ist nicht möglich, eine Filterrücksetzaktion rückgängig zu machen. Bestätigen Sie?",
-            "confirmReset": "Bestätigen"
+            "confirmReset": "Bestätigen",
+            "loadingError": "Das WMS-Rendering ist aufgrund der Filterkonfiguration fehlgeschlagen. Versuchen Sie, es zu entfernen oder zu beheben",
+            "changedFilterWithErrorAlert": "Der Filter verursacht einen WMS-Renderfehler. Versuchen Sie, ihn zu beheben oder zu verwerfen"
         },
         "annotations": {
             "errorLoadingSymbols": "Beim Laden der Symbolliste ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator, um die Konfigurationsoptionen zu überprüfen",

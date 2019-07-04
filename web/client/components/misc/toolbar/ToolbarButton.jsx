@@ -12,7 +12,7 @@ const { omit } = require('lodash');
 
 const {Button, Glyphicon} = require('react-bootstrap');
 const Loader = require('../Loader');
-const tooltip = require('../enhancers/tooltip');
+const tooltip = require('../enhancers/buttonTooltip');
 const popover = require('../enhancers/popover');
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text

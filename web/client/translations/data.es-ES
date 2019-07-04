@@ -764,7 +764,7 @@
             "apply": "Aplicar filtro",
             "reset": "Eliminar filtros",
             "save": "Guardar filtro actual",
-            "discard": "Restaurar el último filtro guardado",
+            "discard": "Desechar cambios de filtro",
             "query_request_exception": "Error en la búsqueda",
             "config": {
                 "load_config_exception": "Error cargando configuración"
@@ -857,7 +857,9 @@
             "changedFilterAlert": "¿Guardar o desechar el filtro de cuentas?",
             "resetFilter": "Quitar filtro",
             "resetFilterAlert": "No es posible deshacer una acción de restablecimiento del filtro. ¿Confirmas?",
-            "confirmReset": "Confirmar"
+            "confirmReset": "Confirmar",
+            "loadingError": "La representación de WMS falló debido a la configuración del filtro, intente eliminarlo o arreglarlo.",
+            "changedFilterWithErrorAlert": "El filtro está causando un error de procesamiento WMS, intente arreglarlo o descartarlo"
         },
         "annotations": {
             "errorLoadingSymbols": "Hubo un problema al cargar la lista de símbolos. Por favor, contacte al administrador para verificar las opciones de configuración.",

@@ -13,9 +13,6 @@ const {isEqual} = require('lodash');
 const Modal = require('../../misc/Modal');
 const {checkOperatorValidity, setupCrossLayerFilterDefaults} = require('../../../utils/FilterUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const ResizableModal = require('../../misc/ResizableModal');
-const Portal = require('../../misc/Portal');
-const Message = require('../../I18N/Message');
 
 class QueryToolbar extends React.Component {
     static propTypes = {
@@ -134,7 +131,8 @@ class QueryToolbar extends React.Component {
         let buttons = [ {
             tooltipId: showTooltip ? "queryform.emptyfilter" : queryBtnMsgId,
             disabled: queryDisabled || (this.props.advancedToolbar && !this.appliedFilterChanged()),
-            glyph: this.props.queryBtnGlyph,
+            noTooltipWhenDisabled: true,
+            glyph: this.props.advancedToolbar && "ok" || this.props.queryBtnGlyph,
             className: showTooltip ? "square-button-md showWarning" : "square-button-md",
             id: "query-toolbar-query",
             onClick: this.search
@@ -145,30 +143,34 @@ class QueryToolbar extends React.Component {
             const disableReset = !this.props.appliedFilter || !this.props.toolbarEnabled;
             buttons = buttons.concat([
                 {
-                tooltipId: !disableSave && "queryform.save",
+                tooltipId: "queryform.save",
                 disabled: disableSave,
+                noTooltipWhenDisabled: true,
                 glyph: "floppy-disk",
                 id: "query-toolbar-save",
                 onClick: this.props.actions.onSaveFilter
             },
             {
-                tooltipId: !disableRestore && "queryform.discard",
+                tooltipId: "queryform.discard",
                 disabled: disableRestore,
+                noTooltipWhenDisabled: true,
                 glyph: "chevron-left",
                 id: "query-toolbar-discard",
                 onClick: this.restorePersistedFilter
             },
             {
-                tooltipId: !disableReset && "queryform.reset",
+                tooltipId: "queryform.reset",
                 glyph: "clear-filter",
+                noTooltipWhenDisabled: true,
                 id: "reset",
                 disabled: disableReset,
-                onClick: this.showModal
+                onClick: this.reset
             }]);
         }else {
             buttons = [{
                 tooltipId: "queryform.reset",
                 glyph: "clear-filter",
+                noTooltipWhenDisabled: true,
                 id: "reset",
                 disabled: !this.props.toolbarEnabled,
                 onClick: this.reset
@@ -188,32 +190,6 @@ class QueryToolbar extends React.Component {
                         <Button style={{"float": "right"}} onClick={() => this.props.actions.onQuery(null, null)}>Close</Button>
                     </Modal.Footer>
                 </Modal>
-                <Portal>
-                <ResizableModal
-                    fade
-                    show={this.state.showModal}
-                    title={<Message msgId="queryform.resetFilter"/>}
-                    size="xs"
-                    onClose={() => this.setState(() => ({showModal: false}))}
-                    buttons={[
-                        {
-                            bsStyle: 'primary',
-                            text: <Message msgId="cancel"/>,
-                            onClick: () => this.setState(() => ({showModal: false}))
-                        },
-                        {
-                            bsStyle: 'primary',
-                            text: <Message msgId="queryform.confirmReset"/>,
-                            onClick: this.reset
-                        }
-                    ]}>
-                    <div className="ms-alert">
-                        <div className="ms-alert-center">
-                            <Message msgId="queryform.resetFilterAlert"/>
-                        </div>
-                    </div>
-                </ResizableModal>
-            </Portal>
             </div>
         );
     }

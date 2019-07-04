@@ -6,21 +6,21 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const INIT_FILTER_PERSISTENCE = 'FILTER_PERSISTENCE:INIT_FILTER_PERSISTENCE';
+const INIT_LAYER_FILTER = 'LAYER_FILTER:INIT_LAYER_FILTER';
 /**
  * It saves current applied filter in the state
  */
-const APPLIED_FILTER = 'FILTER_PERSISTENCE:APPLIED_FILTER';
+const APPLIED_FILTER = 'LAYER_FILTER:APPLIED_FILTER';
 /**
  * It saves the current applied filter
  */
-const STORE_CURRENT_APPLIED_FILTER = 'FILTER_PERSISTENCE:STORE_CURRENT_APPLIED_FILTER';
+const STORE_CURRENT_APPLIED_FILTER = 'LAYER_FILTER:STORE_CURRENT_APPLIED_FILTER';
 /**
  * It discard current applied filter restoring the last saved one
  */
-const DISCARD_CURRENT_FILTER = 'FILTER_PERSISTENCE:DISCARD_CURRENT_FILTER';
+const DISCARD_CURRENT_FILTER = 'LAYER_FILTER:DISCARD_CURRENT_FILTER';
 
-const APPLY_FILTER = 'FILTER_PERSISTENCE:APPLY_FILTER';
+const APPLY_FILTER = 'LAYER_FILTER:APPLY_FILTER';
 /**
  * It opens the queary panel to be used as layer filter query builder
  */
@@ -55,17 +55,17 @@ function applyFilter() {
     };
 }
 
-function initFilterPersistence(filter) {
+function initLayerFilter(filter) {
     return {
-        type: INIT_FILTER_PERSISTENCE,
+        type: INIT_LAYER_FILTER,
         filter
     };
 }
 module.exports = {
     OPEN_QUERY_BUILDER,
     openQueryBuilder,
-    INIT_FILTER_PERSISTENCE,
-    initFilterPersistence,
+    INIT_LAYER_FILTER,
+    initLayerFilter,
     APPLIED_FILTER,
     storeAppliedFilter,
     STORE_CURRENT_APPLIED_FILTER,

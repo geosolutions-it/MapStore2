@@ -7,15 +7,15 @@
  */
 const expect = require('expect');
 
-const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_FILTER_PERSISTENCE, DISCARD_CURRENT_FILTER} = require("../../actions/filterPersistence");
+const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_LAYER_FILTER, DISCARD_CURRENT_FILTER} = require("../../actions/layerFilter");
 const { QUERY_FORM_RESET} = require('../../actions/queryform');
-const filterPersistence = require('../filterPersistence');
+const layerFilter = require('../layerFilter');
 
-describe('Test the filterPersistence reducer', () => {
+describe('Test the layerFilter reducer', () => {
     it('init filter history', () => {
         const filter = {};
-        const state = filterPersistence(undefined, {
-            type: INIT_FILTER_PERSISTENCE,
+        const state = layerFilter(undefined, {
+            type: INIT_LAYER_FILTER,
             filter
         });
         expect(state.persisted).toExist();
@@ -26,7 +26,7 @@ describe('Test the filterPersistence reducer', () => {
     it('restore saved filter', () => {
         const filterA = { id: 1};
         const filterB = {id: 2};
-        const state = filterPersistence({persisted: filterA, applied: filterB}, {
+        const state = layerFilter({persisted: filterA, applied: filterB}, {
             type: DISCARD_CURRENT_FILTER
         });
         expect(state.persisted).toExist();
@@ -38,7 +38,7 @@ describe('Test the filterPersistence reducer', () => {
     it('applied filter', () => {
         const filterA = { id: 1};
         const filter = {id: 2};
-        const state = filterPersistence({persisted: filterA, applied: filterA}, {
+        const state = layerFilter({persisted: filterA, applied: filterA}, {
             type: APPLIED_FILTER,
             filter
         });
@@ -51,7 +51,7 @@ describe('Test the filterPersistence reducer', () => {
     it('save current applied filter', () => {
         const filterA = { id: 1};
         const filterB = {id: 2};
-        const state = filterPersistence({persisted: filterA, applied: filterB}, {
+        const state = layerFilter({persisted: filterA, applied: filterB}, {
             type: STORE_CURRENT_APPLIED_FILTER
         });
         expect(state.persisted).toExist();
@@ -63,10 +63,10 @@ describe('Test the filterPersistence reducer', () => {
     it('clean state on query_form_reset', () => {
         const filterA = { id: 1};
         const filterB = {id: 2};
-        const state = filterPersistence({persisted: filterA, applied: filterB}, {
+        const state = layerFilter({persisted: filterA, applied: filterB}, {
             type: QUERY_FORM_RESET
         });
-        expect(state.persisted).toNotExist();
+        expect(state.persisted).toExist();
         expect(state.applied).toNotExist();
     });
 });

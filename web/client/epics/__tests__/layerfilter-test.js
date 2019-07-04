@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-const {openQueryBuilder, discardCurrentFilter, applyFilter} = require('../../actions/filterPersistence');
+const {openQueryBuilder, discardCurrentFilter, applyFilter} = require('../../actions/layerFilter');
 const {QUERY_FORM_SEARCH} = require('../../actions/queryform');
 const {testEpic} = require('./epicTestUtils');
 
@@ -25,7 +25,7 @@ describe('layerFilter Epics', () => {
         testEpic(handleLayerFilterPanel, 6, action, (actions) => {
             expect(actions[0].type).toBe("FEATURE_TYPE_SELECTED");
             expect(actions[1].type).toBe("QUERYFORM:LOAD_FILTER");
-            expect(actions[2].type).toBe("FILTER_PERSISTENCE:INIT_FILTER_PERSISTENCE");
+            expect(actions[2].type).toBe("LAYER_FILTER:INIT_LAYER_FILTER");
             expect(actions[3].type).toBe("SET_CONTROL_PROPERTY");
             expect(actions[4].type).toBe("QUERY:TOGGLE_LAYER_FILTER");
             expect(actions[5].type).toBe("CHANGE_LAYER_PROPERTIES");
@@ -51,7 +51,7 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         testEpic(onApplyFilter, 1, action, (actions) => {
-            expect(actions[0].type).toBe("FILTER_PERSISTENCE:APPLIED_FILTER");
+            expect(actions[0].type).toBe("LAYER_FILTER:APPLIED_FILTER");
             done();
 
         });

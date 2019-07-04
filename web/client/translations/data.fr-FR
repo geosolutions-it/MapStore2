@@ -765,7 +765,7 @@
             "apply": "Appliquer le filtre",
             "reset": "Recommencer",
             "save": "Enregistrer le filtre actuel",
-            "discard": "Restaurer le dernier filtre enregistré",
+            "discard": "Supprimer les modifications du filtre",
             "query_request_exception": "Erreur de requête",
             "config": {
                 "load_config_exception": "Erreur lors du chargement de la configuration"
@@ -858,7 +858,9 @@
             "changedFilterAlert": "Sauvegarder ou jeter le filtre actuel?",
             "resetFilter": "Supprimer le filtre",
             "resetFilterAlert": "Il n'est pas possible d'annuler une action de réinitialisation de filtre. Confirmez-vous?",
-            "confirmReset": "Confirmer"
+            "confirmReset": "Confirmer",
+            "loadingError": "Le rendu WMS a échoué en raison de la configuration du filtre, essayez de le supprimer ou de le réparer",
+            "changedFilterWithErrorAlert": "Le filtre est à l'origine de l'échec du rendu WMS, essayez de le réparer ou de le supprimer"
         },
         "annotations": {
             "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",

@@ -15,7 +15,7 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
        browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
-const {openQueryBuilder} = require("../actions/filterPersistence");
+const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');

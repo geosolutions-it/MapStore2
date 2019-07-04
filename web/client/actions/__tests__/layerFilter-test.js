@@ -10,8 +10,8 @@ var expect = require('expect');
 const {
     OPEN_QUERY_BUILDER,
     openQueryBuilder,
-    INIT_FILTER_PERSISTENCE,
-    initFilterPersistence,
+    INIT_LAYER_FILTER,
+    initLayerFilter,
     APPLIED_FILTER,
     storeAppliedFilter,
     STORE_CURRENT_APPLIED_FILTER,
@@ -20,10 +20,10 @@ const {
     discardCurrentFilter,
     applyFilter,
     APPLY_FILTER
-} = require('../filterPersistence');
+} = require('../layerFilter');
 
 
-describe('Test correctness of the filterPersistence actions', () => {
+describe('Test correctness of the layerFilter actions', () => {
 
     it('openQueryBuilder', () => {
         var retval = openQueryBuilder();
@@ -31,10 +31,10 @@ describe('Test correctness of the filterPersistence actions', () => {
         expect(retval.type).toBe(OPEN_QUERY_BUILDER);
     });
 
-    it('initFilterPersistence', () => {
-        var retval = initFilterPersistence();
+    it('initLayerFilter', () => {
+        var retval = initLayerFilter();
         expect(retval).toExist();
-        expect(retval.type).toBe(INIT_FILTER_PERSISTENCE);
+        expect(retval.type).toBe(INIT_LAYER_FILTER);
     });
 
     it('storeAppliedFilter', () => {

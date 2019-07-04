@@ -77,7 +77,7 @@ const initialState = {
             }
         }
     },
-    filterPersistence: {
+    layerFilter: {
       persisted: {id: 1},
       applied: {id: 2}
     }

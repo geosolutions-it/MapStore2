@@ -19,7 +19,7 @@ const {changeLayerProperties} = require('../actions/layers');
 
 
 const { warning} = require('../actions/notifications');
-const {OPEN_QUERY_BUILDER, initFilterPersistence, DISCARD_CURRENT_FILTER, APPLY_FILTER, storeAppliedFilter} = require('../actions/filterPersistence');
+const {OPEN_QUERY_BUILDER, initLayerFilter, DISCARD_CURRENT_FILTER, APPLY_FILTER, storeAppliedFilter} = require('../actions/layerFilter');
 const {featureTypeSelected, toggleLayerFilter, initQueryPanel} = require("../actions/wfsquery");
 const {getSelectedLayer} = require("../selectors/layers");
 
@@ -51,6 +51,11 @@ module.exports = {
 /**
  * It manages the initialization of the query builder used to build the layerFilter
  * and the update of layerFilter in layer state
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `OPEN_QUERY_BUILDER` and `QUERY_FORM_SEARCH`
+ * @return {external:Observable} `FEATURE_TYPE_SELECTED` `QUERYFORM:LOAD_FILTER` `LAYER_FILTER:INIT_LAYER_FILTER` `SET_CONTROL_PROPERTY` (open queryPanel)
+ * `CHANGE_LAYERPROPERTIS` with nativeCrs if needed and on `QUERY_FORM_SEARCH` `CHANGE_LAYERPROPERTIS` adding layerFilter to selected layer
+ * terminate on `LOCATION_CHANGE` `TOGGLE_CONTROL` with queryPanel enabled === false
  */
     handleLayerFilterPanel: (action$, {getState}) =>
         action$.ofType(OPEN_QUERY_BUILDER).switchMap(() => {
@@ -60,7 +65,7 @@ module.exports = {
                 featureTypeSelected(url, name),
                 // Load the filter from the layer if it exist
                 loadFilter(layerFilter),
-                initFilterPersistence(layerFilter),
+                initLayerFilter(layerFilter),
                 setControlProperty('queryPanel', "enabled", true)
             )
             .merge(
@@ -90,13 +95,16 @@ module.exports = {
         }),
 /**
  * It throws the correct actions to discard the current applied filter and reload the last saved if present
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `DISCARD_CURRENT_FILTER`
+ * @return {external:Observable} `QUERYFORM:LOAD_FILTER` `QUERY_FORM_SEARCH` `INIT_QUERY_PANEL`
  */
     restoreSavedFilter: (action$, {getState}) =>
         action$.ofType(DISCARD_CURRENT_FILTER)
         .switchMap(() => {
             const params = {typeName: get(getState(), "state.query.typeName")};
             const searchUrl = get(getState(), "state.query.url");
-            const filter = get(getState(), "filterPersistence.persisted");
+            const filter = get(getState(), "layerFilter.persisted");
             return Rx.Observable.of(changeDrawingStatus('clean', '', "queryform", []),
             loadFilter(filter),
             search(searchUrl, filter, params),
@@ -105,6 +113,9 @@ module.exports = {
         }),
 /**
  * It Persists the current applied filter
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `APPLY_FILTER`
+ * @return {external:Observable} `APPLIED_FILTER`
  */
     onApplyFilter: (action$, {getState}) =>
         action$.ofType(APPLY_FILTER)

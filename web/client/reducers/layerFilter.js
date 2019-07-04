@@ -7,13 +7,13 @@
 */
 
 
-const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_FILTER_PERSISTENCE, DISCARD_CURRENT_FILTER} = require("../actions/filterPersistence");
+const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_LAYER_FILTER, DISCARD_CURRENT_FILTER} = require("../actions/layerFilter");
 const { QUERY_FORM_RESET} = require('../actions/queryform');
 const initialState = {};
 
-function filterPersistence(state = initialState, action) {
+function layerFilter(state = initialState, action) {
     switch (action.type) {
-        case INIT_FILTER_PERSISTENCE: {
+        case INIT_LAYER_FILTER: {
             return { ...initialState, persisted: action.filter, applied: action.filter};
         }
         case DISCARD_CURRENT_FILTER: {
@@ -26,11 +26,11 @@ function filterPersistence(state = initialState, action) {
             return {...state, persisted: state.applied};
         }
         case QUERY_FORM_RESET: {
-            return initialState;
+            return {...state, applied: undefined};
         }
         default:
             return state;
     }
 }
 
-module.exports = filterPersistence;
+module.exports = layerFilter;

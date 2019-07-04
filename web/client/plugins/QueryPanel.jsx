@@ -18,7 +18,7 @@ const Message = require('./locale/Message');
 
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 
-const {storeCurrentFilter, discardCurrentFilter, applyFilter} = require('../actions/filterPersistence');
+const {storeCurrentFilter, discardCurrentFilter, applyFilter} = require('../actions/layerFilter');
 
 
 const {zoomToExtent} = require('../actions/map');
@@ -351,7 +351,7 @@ class QueryPanel extends React.Component {
                     ]}>
                     <div className="ms-alert">
                         <div className="ms-alert-center">
-                            <Message msgId="queryform.changedFilterAlert"/>
+                            <Message msgId={this.props.loadingError && "queryform.changedFilterWithErrorAlert" || "queryform.changedFilterAlert"}/>
                         </div>
                     </div>
                 </ResizableModal>
@@ -453,7 +453,7 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query'),
-        filterPersistence: require('../reducers/filterPersistence')
+        layerFilter: require('../reducers/layerFilter')
     },
     epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
 };
