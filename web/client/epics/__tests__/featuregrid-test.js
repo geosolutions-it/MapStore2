@@ -1831,7 +1831,7 @@ describe('featuregrid Epics', () => {
             }
         }));
     });
-    describe.only('replayOnTimeDimensionChange', () => {
+    describe('replayOnTimeDimensionChange', () => {
         const SEARCH_URL = '/test-url';
         const FILTER_OBJECT = { "dummy": "object" };
         const TEST_STATE_OPEN_BASE = {
