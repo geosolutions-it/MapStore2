@@ -74,8 +74,6 @@ class DecimalCoordinateEditor extends React.Component {
     * @param event keydown event
     */
     verifyOnKeyDownEvent = (event) => {
-        // avoid the 'e' and 'E' chars used for exponential numbers
-        // see https://github.com/geosolutions-it/MapStore2/issues/3523#issuecomment-502660391
         if (event.keyCode === 69) {
             event.preventDefault();
         }
