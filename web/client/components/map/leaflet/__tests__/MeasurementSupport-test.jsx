@@ -35,16 +35,14 @@ describe('Leaflet MeasurementSupport', () => {
         return Object.keys(map._layers).length;
     }
 
-    beforeEach((done) => {
+    beforeEach(() => {
         document.body.innerHTML = '<div id="map" style="heigth: 100px; width: 100px"></div><div id="ms"></div>';
         msNode = document.getElementById('ms');
-        setTimeout(done);
     });
-    afterEach((done) => {
+    afterEach(() => {
         ReactDOM.unmountComponentAtNode(msNode);
         document.body.innerHTML = '';
         msNode = undefined;
-        setTimeout(done);
     });
 
     it('test creation', () => {
