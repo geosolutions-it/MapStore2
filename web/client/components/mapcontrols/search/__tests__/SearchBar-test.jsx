@@ -283,10 +283,6 @@ describe("test the SearchBar", () => {
         TestUtils.Simulate.keyDown(elements[0], {
             keyCode: 13
         });
-        /* setTimeout(() => {
-            expect(spyOnZoomToPoint).toHaveBeenCalled();
-        }, 50);*/
-
     });
     it('Test SearchBar with not allowed e char for keyDown event', (done) => {
         const tb = ReactDOM.render(
