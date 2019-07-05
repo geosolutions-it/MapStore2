@@ -1316,6 +1316,8 @@
                 "hideShowColumns": "Nascondi/mostra colonne",
                 "zoomAll": "Zoom all'estensione della pagina",
                 "syncOnMap": "Sincronizza la mappa con i filtri",
+                "enableTimeSync": "Sincronizza con l'istante o l'intervallo temporale selezionato",
+                "disableTimeSync": "Non sincronizzare con l'istante o l'intervallo temporale selezionato",
                 "createNewChart": "crea un grafico per il livello selezionato"
             }
         },

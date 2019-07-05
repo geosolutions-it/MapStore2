@@ -17,6 +17,9 @@ const {mapSelector} = require('../selectors/map');
 const {authkeyParamNameSelector} = require('../selectors/catalog');
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const { addTimeParameter } = require('../utils/WFSTimeUtils');
+
+
 const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
@@ -109,10 +112,10 @@ const wfsQueryEpic = (action$, store) =>
         .switchMap(action => {
             const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
-            const queryOptions = action.queryOptions || {};
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
+            const { url: queryUrl, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             return Rx.Observable.merge(
-                    getJSONFeatureWA(searchUrl, action.filterObj, {
+                    getJSONFeatureWA(queryUrl, action.filterObj, {
                         totalFeatures,
                         sortOptions,
                         ...queryOptions

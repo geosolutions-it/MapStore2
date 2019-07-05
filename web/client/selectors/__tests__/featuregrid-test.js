@@ -32,7 +32,9 @@ const {
     hasSupportedGeometry,
     getDockSize,
     selectedLayerNameSelector,
-    queryOptionsSelector
+    queryOptionsSelector,
+    showTimeSync,
+    timeSyncActive
 } = require('../featuregrid');
 
 const idFt1 = "idFt1";
@@ -60,6 +62,11 @@ let feature2 = {
         someProp: "someValue"
     }
 };
+const featuregrid = require('../../reducers/featuregrid');
+const { setUp, setTimeSync } = require('../../actions/featuregrid');
+
+const dimension = require('../../reducers/dimension');
+const { updateLayerDimensionData } = require('../../actions/dimension');
 
 let initialState = {
         query: {
@@ -476,6 +483,29 @@ describe('Test featuregrid selectors', () => {
         expect(getDockSize({})).toBe(undefined);
     });
 
+    it('showTimeSync', () => {
+        expect(showTimeSync({featuregrid: initialState.featuregrid})).toBeFalsy();
+        const state = {
+            ...initialState,
+            featuregrid: featuregrid(initialState.featuregrid, setUp({ showTimeSync: true })),
+            dimension: dimension({}, updateLayerDimensionData('TEST_LAYER', 'time', {
+                source: { // describes the source of dimension
+                    type: 'multidim-extension',
+                    url: 'http://domain.com:80/geoserver/wms'
+                },
+                name: 'time',
+                domain: '2016-09-01T00:00:00.000Z--2017-04-11T00:00:00.000Z'
+            }))
+        };
+        expect(showTimeSync(state)).toBeTruthy();
+    });
+    it('syncTimeActive', () => {
+        expect(timeSyncActive({ featuregrid: initialState.featuregrid })).toBeFalsy();
+        const state = {
+            featuregrid: featuregrid(initialState.featureGrid, setTimeSync(true))
+        };
+        expect(timeSyncActive(state)).toBe(true);
+    });
     it('test selectedLayerNameSelector', () => {
         const state = {...initialState, layers: {
             flat: [{

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const {get, head, isEmpty, find} = require('lodash');
+const { get, head, isEmpty, find, castArray, includes} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
@@ -22,11 +22,11 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
-const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
+const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
-const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
+const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
 const { closeIdentify } = require('../actions/mapInfo');
 const {getCapabilities, parseLayerCapabilities} = require('../api/WMS');
 
@@ -36,17 +36,18 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES } = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC } = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty} = require('../actions/controls');
 const {queryPanelSelector, showCoordinateEditorSelector} = require('../selectors/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, hasSupportedGeometry, queryOptionsSelector } = require('../selectors/featuregrid');
+    isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector } = require('../selectors/featuregrid');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
 const {getLayerFromId} = require('../selectors/layers');
+
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
 const {queryFormUiStateSelector} = require('../selectors/queryform');
@@ -772,5 +773,37 @@ module.exports = {
                     .take(1)
                     .takeUntil(action$.ofType(QUERY_ERROR))
                 );
-        })
+        }),
+    /**
+     * Implements synchronization with time dimension for the feature grid.
+     * Performs again createQuery when time changes or if timeSync is toggled
+     */
+    replayOnTimeDimensionChange: (action$, { getState = () => { } } = {}) =>
+        action$
+            // when time is updated...
+            .ofType(CHANGE_LAYER_PARAMS) // UPDATE_LAYERS_DIMENSION triggers, CHANGE_LAYER_PARAMS, that is the effective event
+            .filter(({layer = [], params = {}}) =>
+                // if the parameter change is for the time of the feature grid selected layer...
+                includes(castArray(layer), selectedLayerIdSelector(getState()))
+                && includes(Object.keys(params), "time")
+                && timeSyncActive(getState()) // ... and the sync is active ...
+            )
+            // or when time sync is enabled/disabled
+            .merge(
+                action$.ofType(SET_TIME_SYNC) // note: this triggers reload on toggle time sync on/off
+
+            ).filter(() =>
+                isFeatureGridOpen(getState()) // ... if the feature grid is open ...
+            )
+            // ...then take the last query action performed, ...
+            .withLatestFrom(
+                action$.ofType(QUERY),
+                (_, a) => a
+            )
+            // ... and emit createQuery with same parameters
+            .switchMap(action =>
+                Rx.Observable.of(
+                    createQuery(action.searchUrl, action.filterObj)
+                )
+            )
 };
