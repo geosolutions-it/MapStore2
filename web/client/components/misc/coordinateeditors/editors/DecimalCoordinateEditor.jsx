@@ -22,7 +22,8 @@ class DecimalCoordinateEditor extends React.Component {
         constraints: PropTypes.object,
         format: PropTypes.string,
         coordinate: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        onKeyDown: PropTypes.func
     };
     static defaultProps = {
         format: "decimal",
@@ -38,7 +39,8 @@ class DecimalCoordinateEditor extends React.Component {
                     max: 180
                 }
             }
-        }
+        },
+        onKeyDown: () => {}
     }
 
 
@@ -61,7 +63,10 @@ class DecimalCoordinateEditor extends React.Component {
                             onChange(e.target.value);
                         }
                     }}
-                    onKeyDown={this.verifyOnKeyDownEvent}
+                    onKeyDown={(event) => {
+                        this.verifyOnKeyDownEvent(event);
+                        this.props.onKeyDown(event);
+                    }}
                     step={1}
                     type="number"/>
             </FormGroup>

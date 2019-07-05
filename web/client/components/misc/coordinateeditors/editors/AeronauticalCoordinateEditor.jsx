@@ -32,7 +32,8 @@ class AeronauticalCoordinateEditor extends React.Component {
         direction: PropTypes.string,
         aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        onKeyDown: PropTypes.func
     };
     static defaultProps = {
         coordinate: "lat",
@@ -43,7 +44,8 @@ class AeronauticalCoordinateEditor extends React.Component {
                 decimals: 4,
                 step: 0.0001
             }
-        }
+        },
+        onKeyDown: () => {}
     }
 
     onChange = (part, newValue) => {
@@ -135,7 +137,10 @@ class AeronauticalCoordinateEditor extends React.Component {
                         step={1}
                         max={this.props.maxDegrees}
                         min={-1}
-                        onKeyDown={this.verifyOnKeyDownEvent}
+                        onKeyDown={(event) => {
+                            this.verifyOnKeyDownEvent(event);
+                            this.props.onKeyDown(event);
+                        }}
                         style={{ width: '100%', ...inputStyle, ...degreesInvalidStyle }}
                         type="number"
                     />
@@ -149,7 +154,10 @@ class AeronauticalCoordinateEditor extends React.Component {
                         onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
                         max={60}
                         min={-1}
-                        onKeyDown={this.verifyOnKeyDownEvent}
+                        onKeyDown={(event) => {
+                            this.verifyOnKeyDownEvent(event);
+                            this.props.onKeyDown(event);
+                        }}
                         style={{ width: '100%', ...inputStyle, ...minutesInvalidStyle}}
                         step={1}
                         type="number"
@@ -164,7 +172,10 @@ class AeronauticalCoordinateEditor extends React.Component {
                         onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
                         step={stepSeconds}
                         max={60}
-                        onKeyDown={this.verifyOnKeyDownEvent}
+                        onKeyDown={(event) => {
+                            this.verifyOnKeyDownEvent(event);
+                            this.props.onKeyDown(event);
+                        }}
                         min={-1}
                         style={{ width: '100%', ...inputStyle, ...secondsInvalidStyle}}
                         type="number"
