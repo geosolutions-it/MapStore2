@@ -1854,6 +1854,8 @@ describe('featuregrid Epics', () => {
                 changes: []
             }
         };
+        const TEST_STATE_CLOSED = set('featuregrid.open', false, TEST_STATE_OPEN_BASE);
+        const TEST_STATE_SYNC_ACTIVE = set('featuregrid.timeSync', true, TEST_STATE_OPEN_BASE);
         const isSameQuery = a => {
             expect(a.type).toBe(QUERY_CREATE);
             expect(a.searchUrl).toBe(SEARCH_URL);
@@ -1865,14 +1867,12 @@ describe('featuregrid Epics', () => {
                 done();
             }, TEST_STATE_OPEN_BASE);
         });
-        const TEST_STATE_CLOSED = set('featuregrid.open', false, TEST_STATE_OPEN_BASE);
         it('do not toggle if FG is closed', done => {
             testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), setTimeSync(true)], ([a]) => {
                 expect(a.type).toBe(TEST_TIMEOUT);
                 done();
             }, TEST_STATE_CLOSED);
         });
-        const TEST_STATE_SYNC_ACTIVE = set('featuregrid.timeSync', true, TEST_STATE_OPEN_BASE);
         it('toggle with time change', done => {
             testEpic(replayOnTimeDimensionChange, 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
                 isSameQuery(a);
@@ -1897,8 +1897,8 @@ describe('featuregrid Epics', () => {
                 done();
             }, TEST_STATE_SYNC_ACTIVE);
         });
-        const TEST_STATE_TIME_ACTIVE_CLOSED = set('featuregrid.timeSync', true, TEST_STATE_CLOSED);
         it('do not toggle with time change if feature grid is closed', done => {
+            const TEST_STATE_TIME_ACTIVE_CLOSED = set('featuregrid.timeSync', true, TEST_STATE_CLOSED);
             testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
                 expect(a.type).toBe(TEST_TIMEOUT);
                 done();
