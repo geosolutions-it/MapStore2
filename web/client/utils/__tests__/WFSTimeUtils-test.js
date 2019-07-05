@@ -54,7 +54,7 @@ const TIME_ENABLED_STATE = mockState({ featuregrid, dimension, layers }, TIME_ST
     setTimeSync(true)
 );
 
-describe.only('WFSTimeUtils', () => {
+describe('WFSTimeUtils', () => {
     describe('addTimeParameter', () => {
         it('do nothing with no time set', () => {
             expect(addTimeParameter(TEST_URL_OPTIONS.url, TEST_URL_OPTIONS.options, BASE_STATE)).toEqual(TEST_URL_OPTIONS);
