@@ -51,7 +51,7 @@ const initialState = {
     data: {},
     result: null,
     resultError: null,
-    syncWmsFilter: false,
+    syncWmsFilter: true,
     isLayerFilter: false
 };
 
