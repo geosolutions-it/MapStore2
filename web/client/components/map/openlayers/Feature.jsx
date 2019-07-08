@@ -5,17 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-var ol = require('openlayers');
-const axios = require('axios');
-const { isEqual, find, castArray } = require('lodash');
-const { parseStyles } = require('./VectorStyle');
-const { transformPolygonToCircle } = require('../../../utils/DrawSupportUtils');
-const { createStylesAsync } = require('../../../utils/VectorStyleUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
 
+import axios from 'axios';
+import isEqual from 'lodash/isEqual';
+import find from 'lodash/find';
+import castArray from 'lodash/castArray';
 
-class Feature extends React.Component {
+import { parseStyles } from './VectorStyle';
+import { transformPolygonToCircle } from '../../../utils/openlayers/DrawSupportUtils';
+import { createStylesAsync } from '../../../utils/VectorStyleUtils';
+import GeoJSON from 'ol/format/GeoJSON';
+
+export default class Feature extends React.Component {
     static propTypes = {
         type: PropTypes.string,
         layerStyle: PropTypes.object,
@@ -59,7 +62,7 @@ class Feature extends React.Component {
     }
 
     addFeatures = (props) => {
-        const format = new ol.format.GeoJSON();
+        const format = new GeoJSON();
         let ftGeometry = null;
         let canRender = false;
 
@@ -137,4 +140,3 @@ class Feature extends React.Component {
     };
 }
 
-module.exports = Feature;

@@ -1,6 +1,6 @@
-const PropTypes = require('prop-types');
-const React = require('react');
-const OlLocate = require('../../../utils/openlayers/OlLocate');
+import PropTypes from 'prop-types';
+import React from 'react';
+import OlLocate from '../../../utils/openlayers/OlLocate';
 
 const defaultOpt = {
     follow: true, // follow with zoom and pan the user's location
@@ -16,7 +16,7 @@ const defaultOpt = {
     }
 };
 
-class Locate extends React.Component {
+export default class Locate extends React.Component {
     static displayName = 'Locate';
 
     static propTypes = {
@@ -80,4 +80,3 @@ class Locate extends React.Component {
     };
 }
 
-module.exports = Locate;

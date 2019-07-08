@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/openlayers/Layers');
-var ol = require('openlayers');
-var eventListener = require('eventlistener');
+import Layers from '../../../../utils/openlayers/Layers';
+import eventListener from 'eventlistener';
+import Overlay from 'ol/Overlay';
 
 const removeIds = (items) => {
     if (items.length !== 0) {
@@ -50,7 +50,7 @@ Layers.registerType('overlay', {
         const original = document.getElementById(options.id);
         const cloned = cloneOriginalOverlay(original, options);
         document.body.appendChild(cloned);
-        const overlay = new ol.Overlay({
+        const overlay = new Overlay({
             id: options.id,
             element: cloned,
             autoPan: options.autoPan || false,

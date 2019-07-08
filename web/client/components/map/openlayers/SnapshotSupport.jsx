@@ -6,7 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = {
-    GrabMap: require('./snapshot/GrabMap.jsx'),
-    Preview: require('./snapshot/Preview.jsx')
+import GrabMap from './snapshot/GrabMap.jsx';
+import Preview from './snapshot/Preview.jsx';
+
+export default {
+    GrabMap,
+    Preview
 };

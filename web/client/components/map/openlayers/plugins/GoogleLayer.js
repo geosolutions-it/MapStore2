@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/openlayers/Layers');
-var ol = require('openlayers');
-var React = require('react');
+import Layers from '../../../../utils/openlayers/Layers';
+import React from 'react';
+import {transform} from 'ol/proj';
 
-var layersMap;
-var rendererItem;
-var gmaps = {};
-var isTouchSupported = 'ontouchstart' in window;
-var startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
-var moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
-var endEvent = isTouchSupported ? 'touchend' : 'mouseup';
+let layersMap;
+let rendererItem;
+let gmaps = {};
+let isTouchSupported = 'ontouchstart' in window;
+let startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
+let moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
+let endEvent = isTouchSupported ? 'touchend' : 'mouseup';
 
 Layers.registerType('google', {
     create: (options, map, mapId) => {
@@ -44,7 +44,7 @@ Layers.registerType('google', {
             let mapContainer = document.getElementById(mapId + 'gmaps');
             let setCenter = function() {
                 if (mapContainer.style.visibility !== 'hidden') {
-                    const center = ol.proj.transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
+                    const center = transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
                     gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
                 }
             };
@@ -193,7 +193,7 @@ Layers.registerType('google', {
         let google = window.google;
         if (!oldOptions.visibility && newOptions.visibility) {
             let view = map.getView();
-            const center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
+            const center = transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
             gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
             gmaps[mapId].setZoom(view.getZoom());
         }

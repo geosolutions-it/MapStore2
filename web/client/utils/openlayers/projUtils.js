@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const projUtils = {
+
+import {addProjection, Projection} from 'ol/proj';
+export default {
 
     /**
     * function needed in openlayer for adding new projection
     */
-    addProjections: function(ol, code, extent, worldExtent, axisOrientation) {
-        ol.proj.addProjection(new ol.proj.Projection({
+    addProjections: function(code, extent, worldExtent, axisOrientation) {
+        addProjection(new Projection({
                 code,
                 extent,
                 worldExtent,
@@ -20,5 +22,3 @@ const projUtils = {
         );
     }
 };
-
-module.exports = projUtils;

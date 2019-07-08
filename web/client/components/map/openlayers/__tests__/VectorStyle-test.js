@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
-const {
+import expect from 'expect';
+import {
     getCircleStyle,
     getMarkerStyle,
     getStrokeStyle,
@@ -14,22 +14,36 @@ const {
     getTextStyle,
     getGeometryTrasformation,
     getFilter,
-    parseStyles
-} = require('../VectorStyle');
-const ol = require('openlayers');
-const {isArray} = require('lodash');
-const baseImageUrl = require('../../../mapcontrols/annotations/img/markers_default.png');
-const shadowImageUrl = require('../../../mapcontrols/annotations/img/markers_shadow.png');
-const MarkerUtils = require('../../../../utils/MarkerUtils');
-const {colorToRgbaStr} = require('../../../../utils/ColorUtils');
+    parseStyles,
+    getStyle
+} from '../VectorStyle';
+
+import isArray from 'lodash/isArray';
+import baseImageUrl from '../../../mapcontrols/annotations/img/markers_default.png';
+import shadowImageUrl from '../../../mapcontrols/annotations/img/markers_shadow.png';
+import MarkerUtils from '../../../../utils/MarkerUtils';
+import {colorToRgbaStr} from '../../../../utils/ColorUtils';
+
+import {Stroke, Fill} from 'ol/style';
+
+import Feature from 'ol/Feature';
+import {Point, MultiPoint, Polygon} from 'ol/geom';
+
+import axios from "../../../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
+
+let mockAxios;
+
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
 
 describe('Test VectorStyle', () => {
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         setTimeout(done);
     });
     afterEach((done) => {
+        mockAxios.restore();
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -57,11 +71,11 @@ describe('Test VectorStyle', () => {
         const strokeStyle = {
             color: "#223366"
         };
-        const stroke = new ol.style.Stroke(strokeStyle);
+        const stroke = new Stroke(strokeStyle);
         const fillStyle = {
             color: "#998877"
         };
-        const fill = new ol.style.Fill(fillStyle);
+        const fill = new Fill(fillStyle);
         const olStyle = getCircleStyle({
                 radius: 800
             },
@@ -306,7 +320,7 @@ describe('Test VectorStyle', () => {
         Options are:
         - remove it
         - test it more, on ol they say that some defaults are applied, but it is not the case
-        (https://openlayers.org/en/v4.6.5/apidoc/ol.style.Stroke.html)
+        (https://openlayers.org/en/v4.6.5/apidoc/Stroke.html)
         */
         const strokeStyle = {
             color: "#ffffff",
@@ -450,9 +464,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Point([1, 2]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new Point([1, 2]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("Point");
@@ -466,9 +480,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("Point");
@@ -480,9 +494,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.MultiPoint([[1, 2], [2, 2], [3, 2], [1, 2]]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new MultiPoint([[1, 2], [2, 2], [3, 2], [1, 2]]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("LineString");
@@ -494,9 +508,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("Polygon");
@@ -554,5 +568,77 @@ describe('Test VectorStyle', () => {
         const olStyles = parseStyles({style: [polygonStyle, markerStyle]});
         expect(isArray(olStyles)).toBe(true);
         expect(olStyles.length).toBe(3);
+    });
+    it('getStyle is compatible with legacy get style', () => {
+        const style = getStyle({
+            style: {
+                type: 'Point',
+                "Point": {
+                    iconGlyph: "comment"
+                }
+            }
+        }, true);
+        expect(style).toExist();
+        expect(style.getImage()).toExist();
+        // TODO: add  more tests from LegacyVectorStyle here
+    });
+    it('getStyle can return a promise', (done) => {
+        const stylePromise = getStyle({
+            asPromise: true,
+            style: {
+                type: 'Point',
+                "Point": {
+                    iconGlyph: "comment"
+                }
+            }
+        }, true);
+        stylePromise.then(style => {
+            expect(style).toExist();
+            expect(style.getImage()).toExist();
+            done();
+        });
+    });
+    it('getStyle supports remote styles', (done) => {
+        const SLD = `<?xml version="1.0" encoding="ISO-8859-1"?>
+            <StyledLayerDescriptor version="1.0.0"
+                xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"
+                xmlns="http://www.opengis.net/sld"
+                xmlns:ogc="http://www.opengis.net/ogc"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <NamedLayer>
+                <Name>Simple Point</Name>
+                <UserStyle>
+                <Title>SLD Cook Book: Simple Point</Title>
+                <FeatureTypeStyle>
+                    <Rule>
+                    <PointSymbolizer>
+                        <Graphic>
+                        <Mark>
+                            <WellKnownName>circle</WellKnownName>
+                            <Fill>
+                            <CssParameter name="fill">#FF0000</CssParameter>
+                            </Fill>
+                        </Mark>
+                        <Size>6</Size>
+                        </Graphic>
+                    </PointSymbolizer>
+                    </Rule>
+                </FeatureTypeStyle>
+                </UserStyle>
+            </NamedLayer>
+            </StyledLayerDescriptor>`;
+        mockAxios.onGet().reply(200, SLD);
+        const stylePromise = getStyle({
+            style: {
+                url: "http://styleurl",
+                format: "sld"
+            }
+        }, true);
+        stylePromise.then(style => {
+            expect(style).toExist();
+            expect(style.getImage()).toExist();
+            done();
+        });
     });
 });

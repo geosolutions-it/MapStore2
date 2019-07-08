@@ -6,11 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-let ol = require('openlayers');
-const HighlightFeatureSupport = require('../HighlightFeatureSupport');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+
+import HighlightFeatureSupport from '../HighlightFeatureSupport';
+
+import GeoJSON from 'ol/format/GeoJSON';
+
+import { Map, View } from 'ol';
+
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
 
 let createVectorLayer = function(options) {
     let features;
@@ -19,14 +26,14 @@ let createVectorLayer = function(options) {
         if (Array.isArray(options.features)) {
             featureCollection = { "type": "FeatureCollection", features: featureCollection};
         }
-        features = (new ol.format.GeoJSON()).readFeatures(featureCollection);
+        features = (new GeoJSON()).readFeatures(featureCollection);
         features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs || 'EPSG:3857'));
     }
-    const source = new ol.source.Vector({
+    const source = new VectorSource({
         features: features
     });
 
-    return new ol.layer.Vector({
+    return new VectorLayer({
         msId: options.id,
         source: source,
         zIndex: options.zIndex
@@ -72,9 +79,9 @@ describe('HighlightFeatureSupport Ol', () => {
             center: [0, 0],
             zoom: 5
         };
-        var map = new ol.Map({
+        var map = new Map({
             target: "map",
-            view: new ol.View(viewOptions)
+            view: new View(viewOptions)
         });
         let vector = createVectorLayer(layer);
         map.addLayer(vector);
