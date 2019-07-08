@@ -10,9 +10,12 @@
  * Utils used in DrawSupport for leaflet and openlayers
 */
 
-const ol = require('openlayers');
-const {isArray} = require('lodash');
-const {reproject} = require('./CoordinatesUtils');
+import isArray from 'lodash/isArray';
+import {reproject} from './CoordinatesUtils';
+
+// TODO: remove dependency from openlayers
+import {getCenter} from 'ol/extent';
+import {Circle} from 'ol/geom';
 
 /**
  * Transforms a leaflet bounds object into an array.
@@ -63,10 +66,10 @@ const transformPolygonToCircle = (feature, mapCrs) => {
             center = reproject(feature.getProperties().center, "EPSG:4326", mapCrs);
             center = [center.x, center.y];
         } else {
-            center = ol.extent.getCenter(extent);
+            center = getCenter(extent);
         }
         const radius = feature.getProperties().radius || calculateRadius(center, feature.getGeometry().getCoordinates());
-        feature.setGeometry(new ol.geom.Circle(center, radius));
+        feature.setGeometry(new Circle(center, radius));
         return feature;
     }
     return feature;

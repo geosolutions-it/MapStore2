@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var assign = require('object-assign');
-var Layers = require('../../../../utils/openlayers/Layers');
-var ol = require('openlayers');
-var TileProvider = require('../../../../utils/TileConfigProvider');
-var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-const { getUrls, template } = require('../../../../utils/TileProviderUtils');
+import assign from 'object-assign';
+import Layers from '../../../../utils/openlayers/Layers';
+import TileProvider from '../../../../utils/TileConfigProvider';
+import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import { getUrls, template } from '../../../../utils/TileProviderUtils';
+import XYZ from 'ol/source/XYZ';
+import TileLayer from 'ol/layer/Tile';
 
 /*eslint-disable */
 function lBoundsToOlExtent(bounds, destPrj){
@@ -22,11 +23,11 @@ function tileXYZToOpenlayersOptions(options) {
     let urls = options.url.match(/(\{s\})/) ? getUrls(options) : [template(options.url, options)];
     let sourceOpt = assign({}, {
         urls: urls,
-        attributions: options.attribution ? [new ol.Attribution({ html: options.attribution})] : [],
+        attributions: options.attribution ? [options.attribution] : [],
         maxZoom: options.maxZoom ? options.maxZoom : 18,
         minZoom: options.minZoom ? options.minZoom : 0 // dosen't affect ol layer rendering UNSUPPORTED
     });
-    let source = new ol.source.XYZ(sourceOpt);
+    let source = new XYZ(sourceOpt);
     let olOpt = assign({}, {
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
@@ -40,6 +41,6 @@ Layers.registerType('tileprovider', {
     create: (options) => {
         let [url, opt] = TileProvider.getLayerConfig(options.provider, options);
         opt.url = url;
-        return new ol.layer.Tile(tileXYZToOpenlayersOptions(opt));
+        return new TileLayer(tileXYZToOpenlayersOptions(opt));
     }
 });

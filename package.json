@@ -137,7 +137,7 @@
     "node-geo-distance": "1.2.0",
     "object-assign": "4.1.1",
     "ogc-schemas": "2.6.1",
-    "openlayers": "4.6.4",
+    "ol": "5.3.0",
     "pdfviewer": "0.3.2",
     "proj4": "https://github.com/geosolutions-it/proj4js/tarball/mapstore2_fixes",
     "prop-types": "15.6.0",

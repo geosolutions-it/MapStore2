@@ -5,21 +5,32 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../../../components/I18N/Message');
-const Layers = require('../../../../utils/openlayers/Layers');
-const ol = require('openlayers');
-const {isNil, union} = require('lodash');
-const objectAssign = require('object-assign');
-const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-const ProxyUtils = require('../../../../utils/ProxyUtils');
-const { isArray, castArray } = require('lodash');
-const {optionsToVendorParams} = require('../../../../utils/VendorParamsUtils');
-const SecurityUtils = require('../../../../utils/SecurityUtils');
-const { creditsToAttribution } = require('../../../../utils/LayersUtils');
+import React from 'react';
+import Message from '../../../../components/I18N/Message';
+import Layers from '../../../../utils/openlayers/Layers';
+import isNil from 'lodash/isNil';
+import union from 'lodash/union';
+import isArray from 'lodash/isArray';
+import castArray from 'lodash/castArray';
+import assign from 'object-assign';
 
-const mapUtils = require('../../../../utils/MapUtils');
-const ElevationUtils = require('../../../../utils/ElevationUtils');
+import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import ProxyUtils from '../../../../utils/ProxyUtils';
+
+import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
+import SecurityUtils from '../../../../utils/SecurityUtils';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
+
+import MapUtils from '../../../../utils/MapUtils';
+import ElevationUtils from '../../../../utils/ElevationUtils';
+
+import ImageLayer from 'ol/layer/Image';
+import ImageWMS from 'ol/source/ImageWMS';
+import {get} from 'ol/proj';
+import TileGrid from 'ol/tilegrid/TileGrid';
+import TileLayer from 'ol/layer/Tile';
+import TileWMS from 'ol/source/TileWMS';
+
 /**
     @param {object} options of the layer
     @return the Openlayers options from the layers ones and/or default.
@@ -28,7 +39,7 @@ const ElevationUtils = require('../../../../utils/ElevationUtils');
 function wmsToOpenlayersOptions(options) {
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
-    const result = objectAssign({}, options.baseParams, {
+    const result = assign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
@@ -37,7 +48,7 @@ function wmsToOpenlayersOptions(options) {
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: !isNil(options.tiled) ? options.tiled : true,
         VERSION: options.version || "1.3.0"
-    }, objectAssign(
+    }, assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
         (params || {})
@@ -76,11 +87,11 @@ function elevationLoadFunction(forceProxy, imageTile, src) {
 
 function addTileLoadFunction(sourceOptions, options) {
     if (options.useForElevation) {
-        return objectAssign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
-        // return objectAssign({}, sourceOptions, { tileLoadFunction: (imageTile, src) => { imageTile.getImage().src = src; } });
+        return assign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
+        // return assign({}, sourceOptions, { tileLoadFunction: (imageTile, src) => { imageTile.getImage().src = src; } });
     }
     if (options.forceProxy) {
-        return objectAssign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
+        return assign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
     }
     return sourceOptions;
 }
@@ -122,11 +133,11 @@ Layers.registerType('wms', {
         const queryParameters = wmsToOpenlayersOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.singleTile) {
-            return new ol.layer.Image({
+            return new ImageLayer({
                 opacity: options.opacity !== undefined ? options.opacity : 1,
                 visible: options.visibility !== false,
                 zIndex: options.zIndex,
-                source: new ol.source.ImageWMS({
+                source: new ImageWMS({
                     url: urls[0],
                     attributions: toOLAttributions(options.credits),
                     params: queryParameters,
@@ -135,23 +146,23 @@ Layers.registerType('wms', {
             });
         }
         const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-        const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
+        const extent = get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
         const sourceOptions = addTileLoadFunction({
             attributions: toOLAttributions(options.credits),
             urls: urls,
             params: queryParameters,
-            tileGrid: new ol.tilegrid.TileGrid({
+            tileGrid: new TileGrid({
                 extent: extent,
-                resolutions: mapUtils.getResolutions(),
+                resolutions: MapUtils.getResolutions(),
                 tileSize: options.tileSize ? options.tileSize : 256,
                 origin: options.origin ? options.origin : [extent[0], extent[1]]
             })
         }, options);
-        const layer = new ol.layer.Tile({
+        const layer = new TileLayer({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
-            source: new ol.source.TileWMS(sourceOptions)
+            source: new TileWMS(sourceOptions)
         });
         layer.set('map', map);
         if (options.useForElevation) {
@@ -185,16 +196,16 @@ Layers.registerType('wms', {
                 return found;
             }, false);
             if (oldOptions.srs !== newOptions.srs) {
-                const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
-                layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
+                const extent = get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
+                layer.getSource().tileGrid = new TileGrid({
                     extent: extent,
-                    resolutions: mapUtils.getResolutions(),
+                    resolutions: MapUtils.getResolutions(),
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                     origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
                 });
             }
             if (changed) {
-                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+                const params = assign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
                 const source = layer.getSource();
                 // forces tile cache drop
                 // this prevents old cached tiles at lower zoom levels to be
@@ -203,8 +214,8 @@ Layers.registerType('wms', {
                 if (layer.getSource().refresh ) {
                     layer.getSource().refresh();
                 }
-                source.updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
-                    return params[key] ? previous : objectAssign(previous, {
+                source.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                    return params[key] ? previous : assign(previous, {
                         [key]: undefined
                     });
                 }, {})));
@@ -225,11 +236,11 @@ Layers.registerType('wms', {
                 let newLayer;
                 if (newOptions.singleTile) {
                     // return the Image Layer with the related source
-                    newLayer = new ol.layer.Image({
+                    newLayer = new ImageLayer({
                         opacity: newOptions.opacity !== undefined ? newOptions.opacity : 1,
                         visible: newOptions.visibility !== false,
                         zIndex: newOptions.zIndex,
-                        source: new ol.source.ImageWMS({
+                        source: new ImageWMS({
                             attributions: toOLAttributions(newOptions.credits),
                             url: urls[0],
                             params: queryParameters,
@@ -239,20 +250,20 @@ Layers.registerType('wms', {
                 } else {
                     // return the Tile Layer with the related source
                     const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-                    const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs || mapSrs, newOptions.allowedSRS)).getExtent();
-                    newLayer = new ol.layer.Tile({
+                    const extent = get(CoordinatesUtils.normalizeSRS(newOptions.srs || mapSrs, newOptions.allowedSRS)).getExtent();
+                    newLayer = new TileLayer({
                         opacity: newOptions.opacity !== undefined ? newOptions.opacity : 1,
                         visible: newOptions.visibility !== false,
                         zIndex: newOptions.zIndex,
-                        source: new ol.source.TileWMS(objectAssign({
+                        source: new TileWMS(assign({
                             attributions: toOLAttributions(newOptions.credits),
                             urls: urls,
                             params: queryParameters,
-                            tileGrid: new ol.tilegrid.TileGrid({
+                            tileGrid: new TileGrid({
                                 // TODO: custom grid sets extents
                                 extent: extent,
                                 // TODO: custom grid sets resolutions and tile size (needed to generate resolutions)
-                                resolutions: mapUtils.getResolutions(),
+                                resolutions: MapUtils.getResolutions(),
                                 tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                                 // TODO: GWC grid sets with `alignTopLeft=true` may require `extent[0], extent[3]`
                                 origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]

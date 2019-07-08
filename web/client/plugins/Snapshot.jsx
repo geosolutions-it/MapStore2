@@ -14,6 +14,7 @@ const {onCreateSnapshot, changeSnapshotState, saveImage, onRemoveSnapshot, onSna
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
+const {mapTypeSelector} = require('../selectors/maptype');
 
 const {toggleControl} = require('../actions/controls');
 
@@ -23,12 +24,14 @@ const {Glyphicon} = require('react-bootstrap');
 
 const snapshotSelector = createSelector([
     mapSelector,
+    mapTypeSelector,
     layersSelector,
     (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === "snapshot" || state.controls.snapshot && state.controls.snapshot.enabled,
     (state) => state.browser,
     (state) => state.snapshot || {queue: []}
-], (map, layers, active, browser, snapshot) => ({
+], (map, mapType, layers, active, browser, snapshot) => ({
     map,
+    mapType,
     layers,
     active,
     browser,

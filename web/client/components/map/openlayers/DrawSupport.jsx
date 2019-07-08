@@ -6,22 +6,49 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const ol = require('openlayers');
-const {concat, head, find, slice, omit, isArray, last, filter, isNil, castArray} = require('lodash');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const uuid = require('uuid');
-const axios = require('axios');
-const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {reprojectGeoJson, calculateDistance, reproject} = require('../../../utils/CoordinatesUtils');
-const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
-const wgs84Sphere = new ol.Sphere(6378137);
-const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
-const {isCompletePolygon} = require('../../../utils/AnnotationsUtils');
-const VectorStyle = require('./VectorStyle');
-const {parseStyles} = require('./VectorStyle');
-const geojsonFormat = new ol.format.GeoJSON();
+import React from 'react';
+import concat from 'lodash/concat';
+import head from 'lodash/head';
+import find from 'lodash/find';
+import slice from 'lodash/slice';
+import omit from 'lodash/omit';
+import isArray from 'lodash/isArray';
+import last from 'lodash/last';
+import filter from 'lodash/filter';
+import isNil from 'lodash/isNil';
+import castArray from 'lodash/castArray';
+
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import uuid from 'uuid';
+import axios from 'axios';
+import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
+import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
+import {createStylesAsync} from '../../../utils/VectorStyleUtils';
+import {transformPolygonToCircle} from '../../../utils/DrawSupportUtils';
+import {isCompletePolygon} from '../../../utils/AnnotationsUtils';
+import { parseStyles, getStyle, defaultStyles, getMarkerStyle, getMarkerStyleLegacy } from './VectorStyle';
+
+import {GeoJSON} from 'ol/format';
+import Feature from 'ol/Feature';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import Draw from 'ol/interaction/Draw';
+import { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import {Style, Stroke, Fill, Text} from 'ol/style';
+import CircleStyle from 'ol/style/Circle';
+import Collection from 'ol/Collection';
+import {always, primaryAction, altKeyOnly} from 'ol/events/condition';
+import DoubleClickZoom from 'ol/interaction/DoubleClickZoom';
+import Translate from 'ol/interaction/Translate';
+import Modify from 'ol/interaction/Modify';
+import Select from 'ol/interaction/Select';
+import {unByKey} from 'ol/Observable';
+import {getCenter} from 'ol/extent';
+import {fromCircle, circular} from 'ol/geom/Polygon';
+
+const geojsonFormat = new GeoJSON();
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -44,7 +71,7 @@ const geojsonFormat = new ol.format.GeoJSON();
 */
 
 // TODO FIX doc
-class DrawSupport extends React.Component {
+export default class DrawSupport extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         drawOwner: PropTypes.string,
@@ -114,7 +141,7 @@ class DrawSupport extends React.Component {
 
     }
     getNewFeature = (newDrawMethod, coordinates, radius, center) => {
-        return new ol.Feature({
+        return new Feature({
             geometry: this.createOLGeometry({type: newDrawMethod, coordinates, radius, center})
         });
     }
@@ -131,7 +158,7 @@ class DrawSupport extends React.Component {
                 if (f.style) {
                     let olFeature = this.toOlFeature(f);
                     if (olFeature) {
-                        olFeature.setStyle(f.style ? VectorStyle.getStyle(f) : this.toOlStyle(f.style, f.selected));
+                        olFeature.setStyle(f.style ? getStyle(f) : this.toOlStyle(f.style, f.selected));
                     }
                 }
             });
@@ -162,8 +189,8 @@ class DrawSupport extends React.Component {
         /**
             This is a style function that applies array of styles to the features.
             It takes the style from the features in the props being drawn because
-            the style array from the geojson feature model is not passed to ol.feature
-            @param {object} ftOl it is an ol.Feature object
+            the style array from the geojson feature model is not passed to Feature
+            @param {object} ftOl it is an Feature object
         */
         layerStyle = (ftOl) => {
             let originalFeature = head(newProps.features) && find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id) || null;
@@ -174,12 +201,12 @@ class DrawSupport extends React.Component {
                 });
             } else {
                 // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+                return parseStyles({style: defaultStyles[styleType]});
             }
         };
-        this.geojson = new ol.format.GeoJSON();
-        this.drawSource = new ol.source.Vector();
-        this.drawLayer = new ol.layer.Vector({
+        this.geojson = new GeoJSON();
+        this.drawSource = new VectorSource();
+        this.drawLayer = new VectorLayer({
             source: this.drawSource,
             zIndex: 100000000,
             style: layerStyle
@@ -205,9 +232,9 @@ class DrawSupport extends React.Component {
         let feature;
         features.forEach((f) => {
             if (f.type === "FeatureCollection") {
-                let featuresOL = (new ol.format.GeoJSON()).readFeatures(f);
+                let featuresOL = (new GeoJSON()).readFeatures(f);
                 featuresOL = featuresOL.map(ft => transformPolygonToCircle(ft, mapCrs));
-                this.drawSource = new ol.source.Vector({
+                this.drawSource = new VectorSource({
                     features: featuresOL
                 });
                 this.drawLayer.setSource(this.drawSource);
@@ -221,11 +248,11 @@ class DrawSupport extends React.Component {
                     if (drawMethod === "Circle" && geometry && (geometry.properties && geometry.properties.center || geometry.center)) {
                         center = geometry.properties && geometry.properties.center ? reproject(geometry.properties.center, "EPSG:4326", mapCrs) : geometry.center;
                         center = [center.x, center.y];
-                        feature = new ol.Feature({
+                        feature = new Feature({
                             geometry: this.createOLGeometry({type: "Circle", center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius})
                         });
                     } else {
-                        feature = new ol.Feature({
+                        feature = new Feature({
                             geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : {...geometry, ...geometry.properties, center })
                         });
                     }
@@ -238,15 +265,15 @@ class DrawSupport extends React.Component {
         // TODO CHECK THIS WITH FeatureCollection
         if (features.length === 0 && (options.editEnabled || options.drawEnabled)) {
             if (options.transformToFeatureCollection) {
-                this.drawSource = new ol.source.Vector({
-                    features: (new ol.format.GeoJSON()).readFeatures(
+                this.drawSource = new VectorSource({
+                    features: (new GeoJSON()).readFeatures(
                         {
                             type: "FeatureCollection", features: []
                         })
                 });
                 this.drawLayer.setSource(this.drawSource);
             } else {
-                feature = new ol.Feature({
+                feature = new Feature({
                     geometry: this.createOLGeometry({type: drawMethod, coordinates: null})
                 });
                 this.drawSource.addFeature(feature);
@@ -254,8 +281,8 @@ class DrawSupport extends React.Component {
         } else {
             if (features[0] && features[0].type === "GeometryCollection" ) {
                 // HERE IT ENTERS WITH EDIT
-                this.drawSource = new ol.source.Vector({
-                    features: (new ol.format.GeoJSON()).readFeatures(features[0])
+                this.drawSource = new VectorSource({
+                    features: (new GeoJSON()).readFeatures(features[0])
                 });
 
                 let geoms = this.replacePolygonsWithCircles(this.drawSource.getFeatures()[0]);
@@ -265,8 +292,8 @@ class DrawSupport extends React.Component {
             if (features[0] && features[0].geometry && features[0].geometry.type === "GeometryCollection" ) {
                 // HERE IT ENTERS WITH REPLACE
                 feature = reprojectGeoJson(features[0], options.featureProjection, mapCrs).geometry;
-                this.drawSource = new ol.source.Vector({
-                    features: (new ol.format.GeoJSON()).readFeatures(feature)
+                this.drawSource = new VectorSource({
+                    features: (new GeoJSON()).readFeatures(feature)
                 });
                 // TODO remove this props
                 this.drawSource.getFeatures()[0].set("textGeometriesIndexes", features[0].properties && features[0].properties.textGeometriesIndexes);
@@ -297,7 +324,7 @@ class DrawSupport extends React.Component {
                     } else {
                         const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
                         // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                        return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+                        return parseStyles({style: defaultStyles[styleType]});
                     }
                 });
             }
@@ -322,16 +349,16 @@ class DrawSupport extends React.Component {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, newProps));
+        this.drawInteraction = new Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, newProps));
         this.props.map.disableEventListener('singleclick');
-        this.drawInteraction.on('drawstart', function(evt) {
+        this.drawInteraction.on('drawstart', (evt) => {
             this.sketchFeature = evt.feature;
             if (this.selectInteraction) {
                 this.selectInteraction.getFeatures().clear();
                 this.selectInteraction.setActive(false);
             }
-        }, this);
-        this.drawInteraction.on('drawend', function(evt) {
+        });
+        this.drawInteraction.on('drawend', (evt) => {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
             let feature;
@@ -351,7 +378,7 @@ class DrawSupport extends React.Component {
                 this.addSelectInteraction();
                 this.selectInteraction.setActive(true);
             }
-        }, this);
+        });
 
         this.props.map.addInteraction(this.drawInteraction);
         this.setDoubleClickZoomEnabled(false);
@@ -359,7 +386,7 @@ class DrawSupport extends React.Component {
 
     toMulti = (geometry) => {
         if (geometry.getType() === 'Point') {
-            return new ol.geom.MultiPoint([geometry.getCoordinates()]);
+            return new MultiPoint([geometry.getCoordinates()]);
         }
         return geometry;
     };
@@ -367,17 +394,17 @@ class DrawSupport extends React.Component {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null, newProps ));
+        this.drawInteraction = new Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null, newProps ));
         this.props.map.disableEventListener('singleclick');
-        this.drawInteraction.on('drawstart', function(evt) {
+        this.drawInteraction.on('drawstart', (evt) => {
             this.sketchFeature = evt.feature;
             if (this.selectInteraction) {
                 this.selectInteraction.getFeatures().clear();
                 this.selectInteraction.setActive(false);
             }
-        }, this);
+        });
 
-        this.drawInteraction.on('drawend', function(evt) {
+        this.drawInteraction.on('drawend', (evt) => {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
             let drawnGeom = this.sketchFeature.getGeometry();
@@ -412,7 +439,7 @@ class DrawSupport extends React.Component {
                         newFeature.setProperties({isText: true, valueText: "."});
                     }
                 }
-                // drawnFeatures is array of ol.Feature
+                // drawnFeatures is array of Feature
                 const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
                 if (!newFeature.getProperties().id) {
                     newFeature.setProperties({id: uuid.v1()});
@@ -420,8 +447,8 @@ class DrawSupport extends React.Component {
                 const newFeatures = [...previousFeatures, newFeature];
                 // create FeatureCollection externalize as function
                 let newFeatureColl = geojsonFormat.writeFeaturesObject(newFeatures);
-                const vectorSource = new ol.source.Vector({
-                    features: (new ol.format.GeoJSON()).readFeatures(newFeatureColl)
+                const vectorSource = new VectorSource({
+                    features: (new GeoJSON()).readFeatures(newFeatureColl)
                   });
                 this.drawLayer.setSource(vectorSource);
                 let feature = reprojectGeoJson(newFeatureColl, this.getMapCrs(), "EPSG:4326");
@@ -438,15 +465,15 @@ class DrawSupport extends React.Component {
                     const newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates}));
                     if (features.length === 1 && features[0] && !features[0].geometry) {
                         previousGeometries = [];
-                        geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+                        geomCollection = new GeometryCollection([newMultiGeom]);
                     } else {
                         previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
                         if (previousGeometries.getGeometries) {
                             // transform also previous circles into polygon
                             const geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
-                            geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
+                            geomCollection = new GeometryCollection([...geoms, newMultiGeom]);
                         } else {
-                            geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                            geomCollection = new GeometryCollection([previousGeometries, newMultiGeom]);
                         }
                     }
                     this.sketchFeature.setGeometry(geomCollection);
@@ -457,14 +484,14 @@ class DrawSupport extends React.Component {
                     let newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates: [coordinates]}));
                     if (features.length === 1 && !features[0].geometry) {
                         previousGeometries = [];
-                        geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+                        geomCollection = new GeometryCollection([newMultiGeom]);
                     } else {
                         previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
                         if (previousGeometries.getGeometries) {
                             let geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
-                            geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
+                            geomCollection = new GeometryCollection([...geoms, newMultiGeom]);
                         } else {
-                            geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                            geomCollection = new GeometryCollection([previousGeometries, newMultiGeom]);
                         }
                     }
                     this.sketchFeature.setGeometry(geomCollection);
@@ -502,15 +529,15 @@ class DrawSupport extends React.Component {
                             let newGeoms = geoms.map(gg => {
                                 return gg.getType() === geomAlreadyPresent.getType() ? geomAlreadyPresent : gg;
                             });
-                            geomCollection = new ol.geom.GeometryCollection(newGeoms);
+                            geomCollection = new GeometryCollection(newGeoms);
                         } else {
                             if (previousGeometries.getType() === "GeometryCollection") {
-                                geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
+                                geomCollection = new GeometryCollection([...geoms, newMultiGeom]);
                             } else {
                                 if (drawMethod === "Text") {
-                                    geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+                                    geomCollection = new GeometryCollection([newMultiGeom]);
                                 } else {
-                                    geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                                    geomCollection = new GeometryCollection([previousGeometries, newMultiGeom]);
                                 }
                             }
                         }
@@ -532,8 +559,8 @@ class DrawSupport extends React.Component {
                         });
                 }
                 let feature = this.fromOLFeature(this.sketchFeature, startingPoint, properties);
-                const vectorSource = new ol.source.Vector({
-                    features: (new ol.format.GeoJSON()).readFeatures(feature)
+                const vectorSource = new VectorSource({
+                    features: (new GeoJSON()).readFeatures(feature)
                   });
                 this.drawLayer.setSource(vectorSource);
 
@@ -563,7 +590,7 @@ class DrawSupport extends React.Component {
                 }
             }
 
-        }, this);
+        });
 
         this.props.map.addInteraction(this.drawInteraction);
         this.setDoubleClickZoomEnabled(false);
@@ -573,27 +600,27 @@ class DrawSupport extends React.Component {
         let drawBaseProps = {
             source: this.drawSource || source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: geometryType === "Marker" ? VectorStyle.getMarkerStyle(newProps.style) : new ol.style.Style({
-                fill: new ol.style.Fill({
+            style: geometryType === "Marker" ? getMarkerStyle(newProps.style) : new Style({
+                fill: new Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
                 }),
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: 'rgba(0, 0, 0, 0.5)',
                     lineDash: [10, 10],
                     width: 2
                 }),
-                image: new ol.style.Circle({
+                image: new CircleStyle({
                     radius: 5,
-                    stroke: new ol.style.Stroke({
+                    stroke: new Stroke({
                         color: 'rgba(0, 0, 0, 0.7)'
                     }),
-                    fill: new ol.style.Fill({
+                    fill: new Fill({
                         color: 'rgba(255, 255, 255, 0.2)'
                     })
                 })
             }),
-            features: new ol.Collection(),
-            condition: ol.events.condition.always
+            features: new Collection(),
+            condition: always
         };
         let roiProps = {};
         switch (geometryType) {
@@ -603,7 +630,7 @@ class DrawSupport extends React.Component {
                 roiProps.geometryFunction = function(coordinates, geometry) {
                     let geom = geometry;
                     if (!geom) {
-                        geom = new ol.geom.Polygon(null);
+                        geom = new Polygon(null);
                     }
                     let start = coordinates[0];
                     let end = coordinates[1];
@@ -627,7 +654,7 @@ class DrawSupport extends React.Component {
                     roiProps.geometryFunction = (coordinates, geometry) => {
                         let geom = geometry;
                         if (!geom) {
-                            geom = new ol.geom.Polygon(null);
+                            geom = new Polygon(null);
                             geom.setProperties({geodesicCenter: [...coordinates[0]]}, true);
                         }
                         let projection = this.props.map.getView().getProjection().getCode();
@@ -635,7 +662,7 @@ class DrawSupport extends React.Component {
                             return this.reprojectCoordinatesToWGS84(coordinate, projection);
                         });
                         let radius = calculateDistance(wgs84Coordinates, 'haversine');
-                        let coords = ol.geom.Polygon.circular(wgs84Sphere, wgs84Coordinates[0], radius, roiProps.maxPoints).clone().transform('EPSG:4326', projection).getCoordinates();
+                        let coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
                         geom.setCoordinates(coords);
                         return geom;
                     };
@@ -669,7 +696,7 @@ class DrawSupport extends React.Component {
         let interactions = this.props.map.getInteractions();
         for (let i = 0; i < interactions.getLength(); i++) {
             let interaction = interactions.item(i);
-            if (interaction instanceof ol.interaction.DoubleClickZoom) {
+            if (interaction instanceof DoubleClickZoom) {
                 interaction.setActive(enabled);
                 break;
             }
@@ -704,7 +731,7 @@ class DrawSupport extends React.Component {
                 this.props.map.removeInteraction(this.translateInteraction);
             }
 
-            this.translateInteraction = new ol.interaction.Translate({
+            this.translateInteraction = new Translate({
                 features: this.selectInteraction.getFeatures()
             });
             this.translateInteraction.setActive(false);
@@ -717,10 +744,10 @@ class DrawSupport extends React.Component {
                 this.props.map.removeInteraction(this.modifyInteraction);
             }
 
-            this.modifyInteraction = new ol.interaction.Modify({
+            this.modifyInteraction = new Modify({
                 features: this.selectInteraction.getFeatures(),
                 condition: (e) => {
-                    return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
+                    return primaryAction(e) && !altKeyOnly(e);
                 }
             });
 
@@ -739,7 +766,7 @@ class DrawSupport extends React.Component {
 
     addDrawOrEditInteractions = (newProps) => {
         if (this.state && this.state.keySingleClickCallback) {
-            ol.Observable.unByKey(this.state.keySingleClickCallback);
+            unByKey(this.state.keySingleClickCallback);
         }
         const singleClickCallback = (event) => {
             if (this.drawSource && newProps.options) {
@@ -827,7 +854,7 @@ class DrawSupport extends React.Component {
 
                 olFt = transformPolygonToCircle(olFt, this.getMapCrs());
                 previousFeatures[previousFtIndex] = olFt;
-                this.drawSource = new ol.source.Vector({
+                this.drawSource = new VectorSource({
                     features: previousFeatures
                 });
                 this.drawLayer.setSource(this.drawSource);
@@ -889,13 +916,13 @@ class DrawSupport extends React.Component {
                 this.selectFeature(olFt);
             }
         }
-        this.selectInteraction = new ol.interaction.Select({
+        this.selectInteraction = new Select({
             layers: [this.drawLayer],
-            features: new ol.Collection(selectedFeature && olFt ? [olFt] : null)
+            features: new Collection(selectedFeature && olFt ? [olFt] : null)
         });
         if (olFt) {
             const styleType = this.convertGeometryTypeToStyleType(props.drawMethod);
-            olFt.setStyle(VectorStyle.getStyle({ ...props, style: {...props.style, type: styleType, highlight: true, useSelectedStyle: props.options.useSelectedStyle }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ));
+            olFt.setStyle(getStyle({ ...props, style: {...props.style, type: styleType, highlight: true, useSelectedStyle: props.options.useSelectedStyle }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ));
         }
         this.selectInteraction.on('select', (evt) => {
 
@@ -999,7 +1026,7 @@ class DrawSupport extends React.Component {
         let geometryProperties = geometry.getProperties();
         // retrieve geodesic center from properties
         // it's different from extent center
-        let center = geometryProperties && geometryProperties.geodesicCenter || ol.extent.getCenter(extent);
+        let center = geometryProperties && geometryProperties.geodesicCenter || getCenter(extent);
         let coordinates;
         let projection = this.props.map.getView().getProjection().getCode();
         let radius;
@@ -1034,7 +1061,7 @@ class DrawSupport extends React.Component {
         }
         let geometries = geometry.getGeometries().map((g, i) => {
             extent = g.getExtent();
-            center = ol.extent.getCenter(extent);
+            center = getCenter(extent);
             coordinates = g.getCoordinates();
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
@@ -1114,32 +1141,32 @@ class DrawSupport extends React.Component {
             strokeColor = '#4a90e2';
         }
         strokeColor = this.hexToRgb(strokeColor).concat([style && style.opacity || 1]);
-        let newStyle = new ol.style.Style({
-            fill: new ol.style.Fill({
+        let newStyle = new Style({
+            fill: new Fill({
                 color: fillColor
             }),
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: strokeColor,
                 width: style && (style.strokeWidth || style.weight) ? style.strokeWidth || style.weight : 2
             }),
-            text: new ol.style.Text({
+            text: new Text({
                 text: style && style.text ? style.text : '',
-                fill: new ol.style.Fill({ color: style && (style.strokeColor || style.color) ? style.strokeColor || style.color : '#000' }),
-                stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
+                fill: new Fill({ color: style && (style.strokeColor || style.color) ? style.strokeColor || style.color : '#000' }),
+                stroke: new Stroke({ color: '#fff', width: 2 }),
                 font: style && style.fontSize ? style.fontSize + 'px helvetica' : ''
             })
         });
 
 
         if (type === "GeometryCollection") {
-            return [...VectorStyle.getMarkerStyleLegacy({
+            return [...getMarkerStyleLegacy({
                     style: { iconGlyph: 'comment',
                         iconShape: 'square',
                         iconColor: 'blue' }
                 }), newStyle];
         }
         if (style && (style.iconUrl || style.iconGlyph)) {
-            return VectorStyle.getMarkerStyleLegacy({
+            return getMarkerStyleLegacy({
                 style
             });
         }
@@ -1175,13 +1202,13 @@ class DrawSupport extends React.Component {
             filter features to be edited
         */
         const editFilter = props && props.options && props.options.editFilter;
-        this.modifyFeatureColl = new ol.Collection(filter(this.drawLayer.getSource().getFeatures(), editFilter));
+        this.modifyFeatureColl = new Collection(filter(this.drawLayer.getSource().getFeatures(), editFilter));
 
 
-        this.modifyInteraction = new ol.interaction.Modify({
+        this.modifyInteraction = new Modify({
             features: this.modifyFeatureColl,
             condition: (e) => {
-                return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
+                return primaryAction(e) && !altKeyOnly(e);
             }
         });
 
@@ -1216,8 +1243,8 @@ class DrawSupport extends React.Component {
         if (this.translateInteraction) {
             this.props.map.removeInteraction(this.translateInteraction);
         }
-        this.translateInteraction = new ol.interaction.Translate({
-                features: new ol.Collection(this.drawLayer.getSource().getFeatures())
+        this.translateInteraction = new Translate({
+                features: new Collection(this.drawLayer.getSource().getFeatures())
             });
         this.translateInteraction.setActive(false);
         this.translateInteraction.on('translateend', (e) => {
@@ -1250,7 +1277,7 @@ class DrawSupport extends React.Component {
 
     createOLGeometry = ({type, coordinates, radius, center, geometries, projection, options = {}}) => {
         if (type === "GeometryCollection") {
-            return geometries && geometries.length ? new ol.geom.GeometryCollection(geometries.map(g => this.olGeomFromType({type: g.type}))) : new ol.geom.GeometryCollection([]);
+            return geometries && geometries.length ? new GeometryCollection(geometries.map(g => this.olGeomFromType({type: g.type}))) : new GeometryCollection([]);
         }
         return this.olGeomFromType({type, coordinates, radius, center, projection, options});
     };
@@ -1259,11 +1286,11 @@ class DrawSupport extends React.Component {
 
         let geometry;
         switch (type) {
-            case "Point": case "Marker": case "Text": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
-            case "LineString": { geometry = new ol.geom.LineString(coordinates ? coordinates : []); break; }
-            case "MultiPoint": /*case "Text":*/ { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
-            case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
-            case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
+            case "Point": case "Marker": case "Text": { geometry = new Point(coordinates ? coordinates : []); break; }
+            case "LineString": { geometry = new LineString(coordinates ? coordinates : []); break; }
+            case "MultiPoint": /*case "Text":*/ { geometry = new MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
+            case "MultiLineString": { geometry = new MultiLineString(coordinates ? coordinates : []); break; }
+            case "MultiPolygon": { geometry = new MultiPolygon(coordinates ? coordinates : []); break; }
             // default is Polygon
             default: {
                 let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
@@ -1278,9 +1305,9 @@ class DrawSupport extends React.Component {
                     // TODO simplify, too much use of elvis operator
                 geometry = isCircle ?
                     options.geodesic ?
-                    ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
-                    : ol.geom.Polygon.fromCircle(new ol.geom.Circle([correctCenter.x, correctCenter.y], radius), 100)
-                        : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
+                    circular(this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
+                    : fromCircle(new Circle([correctCenter.x, correctCenter.y], radius), 100)
+                        : new Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
 
                     // store geodesic center
                 if (geometry && isCircle && options.geodesic) {
@@ -1317,10 +1344,10 @@ class DrawSupport extends React.Component {
      * @param {number[]} center in 3857 [lon, lat]
      * @param {number} radius in meters
      * @param {number} npoints number of sides
-     * @return {ol.geom.Polygon} the polygon which approximate the circle
+     * @return {Polygon} the polygon which approximate the circle
     */
     polygonFromCircle = (center, radius, npoints = 100) => {
-        return ol.geom.Polygon.fromCircle(new ol.geom.Circle(center, radius), npoints);
+        return fromCircle(new Circle(center, radius), npoints);
     }
 
     polygonCoordsFromCircle = (center, radius, npoints = 100) => {
@@ -1329,8 +1356,8 @@ class DrawSupport extends React.Component {
 
     /**
      * replace circles with polygons in feature collection
-     * @param {ol.Feature[]} features to transform
-     * @return {ol.Feature[]} features transformed
+     * @param {Feature[]} features to transform
+     * @return {Feature[]} features transformed
     */
     replaceCirclesWithPolygonsInFeatureColl = (features) => {
         return features.map(f => {
@@ -1342,8 +1369,8 @@ class DrawSupport extends React.Component {
     }
     /**
      * tranform circle to polygon
-     * @param {ol.Feature} feature to check if needs to be transformed
-     * @return {ol.Feature} feature transformed in polygon
+     * @param {Feature} feature to check if needs to be transformed
+     * @return {Feature} feature transformed in polygon
     */
     replaceCircleWithPolygon = (feature) => {
         if (feature.getProperties().isCircle && feature.getGeometry().getType() === "Circle") {
@@ -1356,7 +1383,7 @@ class DrawSupport extends React.Component {
     }
     /**
      * replace circles with polygons
-     * @param {ol.Feature} feature must contain a geometry collection
+     * @param {Feature} feature must contain a geometry collection
      * @return {ol.geom.SimpleGeometry[]} geometries
     */
     replaceCirclesWithPolygons = (feature) => {
@@ -1378,7 +1405,7 @@ class DrawSupport extends React.Component {
     }
     /**
      * replace polygons with circles
-     * @param {ol.Feature} feature must contain a geometry collection and property "circles"
+     * @param {Feature} feature must contain a geometry collection and property "circles"
      * @return {ol.geom.SimpleGeometry[]} geometries
      */
     replacePolygonsWithCircles = (feature) => {
@@ -1389,9 +1416,9 @@ class DrawSupport extends React.Component {
             }
             if (feature.getProperties() && feature.getProperties().circles && feature.getProperties().circles.indexOf(i) !== -1) {
                 const extent = g.getExtent();
-                const center = ol.extent.getCenter(extent);
+                const center = getCenter(extent);
                 const radius = this.calculateRadius(center, g.getCoordinates());
-                return new ol.geom.Circle(center, radius);
+                return new Circle(center, radius);
             }
             return g;
         });
@@ -1411,4 +1438,4 @@ class DrawSupport extends React.Component {
         });
     }
 }
-module.exports = DrawSupport;
+
