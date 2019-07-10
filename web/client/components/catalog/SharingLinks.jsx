@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,8 +6,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
+
 const SharingLink = require('./SharingLink');
 const Message = require('../I18N/Message');
+
 const {Popover, Button, Glyphicon} = require('react-bootstrap');
 
 const OverlayTrigger = require('../misc/OverlayTrigger');
@@ -30,11 +32,14 @@ class SharingLinks extends React.Component {
         }
         const {links, buttonSize, ...other} = this.props;
         const sharingLinks = links.map((link, index) => <SharingLink key={index} url={link.url} labelId={link.labelId} {...other}/>);
-        const popover = <Popover className="links-popover" id="links-popover">{sharingLinks}</Popover>;
+        const popover = (<Popover className="links-popover" id="links-popover">
+            <h5><Message msgId="catalog.share"/></h5>
+            {sharingLinks}
+        </Popover>);
         return (
             <OverlayTrigger container={this.props.popoverContainer} positionLeft={150} placement="top" trigger="click" overlay={popover}>
-                <Button bsSize={buttonSize} bsStyle="primary">
-                    <Glyphicon glyph="link"/>&nbsp;<Message msgId="catalog.share"/>
+                <Button bsSize={buttonSize} className="square-button-md" bsStyle="primary">
+                    <Glyphicon glyph="link"/>
                 </Button>
             </OverlayTrigger>
         );

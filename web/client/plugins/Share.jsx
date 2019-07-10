@@ -25,6 +25,7 @@ import controls from '../reducers/controls';
 
 /**
  * Get wider and valid extent in viewport
+ * @private
  * @param bbox {object} viewport bbox
  * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
  * @param bbox.crs {string} bbox crs

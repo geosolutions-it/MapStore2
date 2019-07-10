@@ -85,7 +85,13 @@ class SideBarComponent extends React.Component {
 
     }
 }
-
+/**
+ * Editor for map widgets
+ * @memberof plugins
+ * @name WidgetsBuilder
+ * @class
+ *
+ */
 const Plugin = connect(
     createSelector(
         widgetBuilderSelector,

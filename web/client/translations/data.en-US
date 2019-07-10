@@ -25,6 +25,8 @@
         "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "version": {
             "label": "Version"
         },
@@ -167,7 +169,9 @@
             "colors": {
                 "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
                 "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
-                "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
+                "green": "{number, plural, =0 {Green} =1 {Green} other {Greens}}",
+                "gray": "{number, plural, =0 {Gray} =1 {Gray} other {Grays}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
                 "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
                 "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
@@ -1065,7 +1069,7 @@
             "success": " correctly imported"
         },
         "mapImport": {
-            "title": "Import Data",
+            "title": "Import",
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
@@ -1078,9 +1082,12 @@
             }
         },
         "mapExport": {
-            "title": "Export Data"
+            "title": "Export Map"
         },
         "catalog": {
+            "start": "Start date ",
+            "end": "End date ",
+            "notAvailable": "Not Available",
             "title": "Catalog",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
@@ -1115,6 +1122,11 @@
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",
+            "templateFormatDescriptionExample": "The description of layer is",
+            "showTemplate": "Show metadata template",
+            "showPreview": "Show preview",
+            "advancedSettings": "Advanced settings",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1319,6 +1331,8 @@
                 "hideShowColumns": "Hide/show columns",
                 "zoomAll": "Zoom to page extent",
                 "syncOnMap": "Sync map with filter",
+                "enableTimeSync": "Synchronize with the selected time or time interval",
+                "disableTimeSync": "Do not synchronize with the selected time or interval",
                 "createNewChart": "Create a chart for the selected layer"
             }
         },
@@ -1524,6 +1538,10 @@
                 "line": "Hide Grid",
                 "bar": "Hide Grid"
             },
+            "xAxisAngle":{
+                "line": "X Axis: Label rotation angle °",
+                "bar": "X Axis: Label rotation angle °"
+            },
             "yAxis":{
                 "line": "Hide Y axis",
                 "bar": "Hide Y axis"
@@ -1718,6 +1736,8 @@
             },
             "hide": "Hide timeline",
             "show": "Show timeline",
+            "mapSyncOn": "Show all times, without filtering by viewport",
+            "mapSyncOff": "Show only times available in the current viewport",
             "currentTime": "Go to current time",
             "rangeStart":"Go to the current time range",
             "rangeEnd" : "Go to the current time range",
@@ -1759,7 +1779,7 @@
                 "priority": "Select Priority",
                 "filter": "Filter styles..."
             },
-            "menutitle": "Manage GeoFence Rules",
+            "menutitle": "Manage Access Rules",
             "tooltip": {
                 "addT": "Add a rule",
                 "editT": "Edit selected rule",
@@ -1778,7 +1798,7 @@
             },
             "rule": "Rule",
             "cachetitle": "Clear Cache",
-            "cachemsg": "Are you sure to clear the GeoFence cache?",
+            "cachemsg": "Are you sure to clear the rules cache?",
             "deltitle": "Delete Rule",
             "delmsg": "Do you really want to delete this rule?",
             "invalidForm": "The form is invalid check fields values",
@@ -1804,7 +1824,7 @@
             "cacheCleaned": "Cache successfully cleaned",
             "errorTitle": "Geofence",
             "errorCQL": "Geometry not valid!",
-            "errorCleaningCache": "Error cleaning geofence cache.",
+            "errorCleaningCache": "Error cleaning rules cache.",
             "errorLoadingRoles": "Error loading roles.",
             "errorLoadingUsers": "Error loading users.",
             "errorLoadingWorkspaces": "Error loading workspaces.",

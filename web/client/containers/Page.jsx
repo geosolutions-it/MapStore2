@@ -23,36 +23,47 @@ const PluginsContainer = connect((state) => ({
 class Page extends React.Component {
     static propTypes = {
         id: PropTypes.string,
+        className: PropTypes.string,
         pagePluginsConfig: PropTypes.object,
         pluginsConfig: PropTypes.object,
         params: PropTypes.object,
         onMount: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        includeCommon: PropTypes.bool
     };
 
     static defaultProps = {
         mode: 'desktop',
-        pagePluginsConfig: {
-            desktop: [],
-            mobile: []
-        },
-        pluginsConfig: {
-            desktop: [],
-            mobile: []
-        },
-        onMount: () => {}
+        onMount: () => {},
+        className: '',
+        includeCommon: true
     };
 
     componentWillMount() {
         this.props.onMount();
     }
 
-    render() {
-        let pluginsConfig = {
-            desktop: [...this.props.pagePluginsConfig.desktop, ...this.props.pluginsConfig.desktop],
-            mobile: [...this.props.pagePluginsConfig.mobile, ...this.props.pluginsConfig.mobile]
+    getDefaultPluginsConfig = (name) => {
+        const plugins = ConfigUtils.getConfigProp("plugins") || {};
+        return {
+            "desktop": plugins[name] || [],
+            "mobile": plugins[name] || []
         };
-        return (<PluginsContainer key={this.props.id} id={"page-" + this.props.id} className={"page page-" + this.props.id}
+    };
+
+    render() {
+        const specificPluginsConfig = this.props.pluginsConfig || this.getDefaultPluginsConfig(this.props.id);
+        const commonPluginsConfig = this.props.includeCommon ? (this.props.pagePluginsConfig || this.getDefaultPluginsConfig('common')) : {
+            desktop: [],
+            mobile: []
+        };
+
+        const pluginsConfig = {
+            desktop: [...commonPluginsConfig.desktop, ...specificPluginsConfig.desktop],
+            mobile: [...commonPluginsConfig.mobile, ...specificPluginsConfig.mobile]
+        };
+        return (<PluginsContainer key={this.props.id} id={"page-" + this.props.id} component={this.props.component} className={"page page-" + this.props.id + " " + this.props.className}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.params}

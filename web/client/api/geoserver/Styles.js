@@ -5,9 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../libs/ajax');
-const assign = require('object-assign');
-const { getNameParts, stringifyNameParts } = require('../../utils/StyleEditorUtils');
+import axios from '../../libs/ajax';
+import assign from 'object-assign';
+import { getVersion } from './About';
+import { head } from 'lodash';
+import { getNameParts, stringifyNameParts } from '../../utils/StyleEditorUtils';
+
+const STYLE_MODULES = [
+    { regex: /gt-css/, format: 'css' }
+];
 
 const contentTypes = {
     css: 'application/vnd.geoserver.geocss+css',
@@ -64,6 +70,32 @@ const Api = {
         let opts = assign({}, options);
         opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
         return axios.put(url, body, opts);
+    },
+    /**
+    * Get style service configuration based on url
+    * @memberof api.geoserver
+    * @param {object} params {baseUrl, style, options, format, styleName}
+    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+    * @return {promise} it returns a valid styleService object or null
+    */
+    getStyleService: function({ baseUrl }) {
+        return getVersion({ baseUrl })
+            .then(({ version, manifest }) => {
+                if (!version) return null;
+                const formats = (manifest || [])
+                    .map(({ name }) =>
+                        head(STYLE_MODULES
+                            .filter(({ regex }) => name.match(regex))
+                            .map(({ format }) => format))
+                    ).filter(format => format);
+                const geoserver = head(version.filter(({ name = ''}) => name.toLowerCase() === 'geoserver')) || {};
+                return {
+                    baseUrl,
+                    version: geoserver.version,
+                    formats: [...formats, 'sld'],
+                    availableUrls: []
+                };
+            });
     },
     /**
     * Get style object

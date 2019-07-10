@@ -4,19 +4,25 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require('../I18N/Message');
-const LocaleUtils = require('../../utils/LocaleUtils');
-const assign = require('object-assign');
-const BorderLayout = require('../layout/BorderLayout');
-const Select = require('react-select');
+*/
+const {isNil} = require("lodash");
+const assign = require("object-assign");
+const PropTypes = require("prop-types");
+const React = require("react");
+const {FormControl, FormGroup, Alert, Pagination, Checkbox, Button, Panel, Form, Col, InputGroup, ControlLabel, Glyphicon, Tooltip} = require("react-bootstrap");
+const ReactQuill = require("react-quill");
+const Select = require("react-select");
+const Spinner = require("react-spinkit");
 
-const {FormControl, FormGroup, Alert, Pagination, Checkbox, Button, Panel, Form, Col, InputGroup, ControlLabel, Glyphicon} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
+const BorderLayout = require("../layout/BorderLayout");
+const LocaleUtils = require("../../utils/LocaleUtils");
+const Message = require("../I18N/Message");
+const OverlayTrigger = require('../misc/OverlayTrigger');
+const RecordGrid = require("./RecordGrid");
+const SwitchPanel = require("../misc/switch/SwitchPanel");
 
-const RecordGrid = require('./RecordGrid');
+require('react-select/dist/react-select.css');
+require('react-quill/dist/quill.snow.css');
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -38,12 +44,16 @@ class Catalog extends React.Component {
         onChangeAutoload: PropTypes.func,
         onChangeCatalogMode: PropTypes.func,
         onChangeFormat: PropTypes.func,
+        onChangeMetadataTemplate: PropTypes.func,
         onChangeTitle: PropTypes.func,
         onChangeText: PropTypes.func,
         onChangeType: PropTypes.func,
         onChangeUrl: PropTypes.func,
         onChangeSelectedService: PropTypes.func,
         onDeleteService: PropTypes.func,
+        onToggleTemplate: PropTypes.func,
+        onToggleAdvancedSettings: PropTypes.func,
+        onToggleThumbnail: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
         onReset: PropTypes.func,
@@ -61,7 +71,6 @@ class Catalog extends React.Component {
         showGetCapLinks: PropTypes.bool,
         wrapOptions: PropTypes.bool,
         zoomToLayer: PropTypes.bool,
-        hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
         hideExpand: PropTypes.bool,
         layerBaseConfig: PropTypes.object
@@ -77,9 +86,9 @@ class Catalog extends React.Component {
             marginBottom: "10px",
             marginRight: "5px"
         },
-        currentLocale: 'en-US',
-        formats: [{name: 'csw', label: 'CSW'}],
-        format: 'csw',
+        currentLocale: "en-US",
+        formats: [{name: "csw", label: "CSW"}],
+        format: "csw",
         includeSearchButton: true,
         includeResetButton: false,
         mode: "view",
@@ -92,11 +101,15 @@ class Catalog extends React.Component {
         onChangeAutoload: () => {},
         onChangeCatalogMode: () => {},
         onChangeFormat: () => {},
+        onChangeMetadataTemplate: () => {},
         onChangeTitle: () => {},
         onChangeText: () => {},
         onChangeType: () => {},
         onChangeUrl: () => {},
         onChangeSelectedService: () => {},
+        onToggleTemplate: () => {},
+        onToggleAdvancedSettings: () => {},
+        onToggleThumbnail: () => {},
         onDeleteService: () => {},
         onError: () => {},
         onLayerAdd: () => {},
@@ -171,7 +184,7 @@ class Catalog extends React.Component {
 
     renderError = (error) => {
         return (<Alert bsStyle="danger">
-            <Message msgId={error || 'catalog.error'} />
+            <Message msgId={error || "catalog.error"} />
           </Alert>);
     };
 
@@ -208,25 +221,50 @@ class Catalog extends React.Component {
     };
 
     renderRecords = () => {
+        // defaults for recordItem elements
+        let metadataTemplate = "";
+        let showTemplate = false;
+        let hideThumbnail = false;
+
+        if (this.props.services && this.props.services[this.props.selectedService]) {
+            const selectedService = this.props.services[this.props.selectedService];
+            // check for configured metadata
+            if (!isNil(selectedService.metadataTemplate) &&
+            !isNil(selectedService.showTemplate)) {
+                showTemplate = selectedService.showTemplate;
+                metadataTemplate = selectedService.metadataTemplate;
+            }
+            // check for configured thumbnail
+            if (!isNil(selectedService.hideThumbnail)) {
+                hideThumbnail = selectedService.hideThumbnail;
+            }
+        }
+
         return (<div className="catalog-results">
-                <RecordGrid {...this.props.gridOptions} key="records"
-                    records={this.props.records}
-                    authkeyParamNames={this.props.authkeyParamNames}
-                    catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
-                    catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
-                    onLayerAdd={this.props.onLayerAdd}
-                    onZoomToExtent={this.props.onZoomToExtent}
-                    zoomToLayer={this.props.zoomToLayer}
-                    onError={this.props.onError}
-                    showGetCapLinks={this.props.showGetCapLinks}
-                    addAuthentication={this.props.addAuthentication}
-                    currentLocale={this.props.currentLocale}
-                    recordItem={this.props.recordItem}
-                    hideThumbnail={this.props.hideThumbnail}
-                    hideIdentifier={this.props.hideIdentifier}
-                    hideExpand={this.props.hideExpand}
-                    layerBaseConfig={this.props.layerBaseConfig}
-                />
+            <RecordGrid
+                {...this.props.gridOptions}
+                key="records"
+                hideThumbnail={hideThumbnail}
+                records={this.props.records.map(
+                    (record) => showTemplate && metadataTemplate
+                        ? { ...record, metadataTemplate}
+                        : record)}
+                authkeyParamNames={this.props.authkeyParamNames}
+                catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
+                catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
+                showTemplate={this.props.services[this.props.selectedService].showTemplate}
+                onLayerAdd={this.props.onLayerAdd}
+                onZoomToExtent={this.props.onZoomToExtent}
+                zoomToLayer={this.props.zoomToLayer}
+                onError={this.props.onError}
+                showGetCapLinks={this.props.showGetCapLinks}
+                addAuthentication={this.props.addAuthentication}
+                currentLocale={this.props.currentLocale}
+                recordItem={this.props.recordItem}
+                hideIdentifier={this.props.hideIdentifier}
+                hideExpand={this.props.hideExpand}
+                layerBaseConfig={this.props.layerBaseConfig}
+            />
         </div>);
     };
 
@@ -285,10 +323,12 @@ class Catalog extends React.Component {
         });
     };
     render() {
+        const showTemplate = !isNil(this.props.newService.showTemplate) ? this.props.newService.showTemplate : false;
         return (
             this.isViewMode(this.props.mode) ? (
                 <BorderLayout
                     key="catalog-BorderLayout"
+                    bodyClassName="ms2-border-layout-body catalog"
                     header={(<Form>
                                 <FormGroup controlId="labelService" key="labelService">
                                     <ControlLabel><Message msgId="catalog.service"/></ControlLabel>
@@ -327,57 +367,131 @@ class Catalog extends React.Component {
                             </div>
                         </BorderLayout>
             ) : (
-                <Form horizontal >
-                    <FormGroup>
-                        <Col xs={12}>
-                            <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
-                            <FormControl
-                                ref="url"
-                                type="text"
-                                style={{
-                                    textOverflow: "ellipsis"
-                                }}
-                                placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.urlPlaceholder")}
-                                value={this.props.newService && this.props.newService.url}
-                                onChange={(e) => this.props.onChangeUrl(e.target.value)}/>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup controlId="title" key="title">
-                        <Col xs={12} sm={3} md={3}>
-                            <ControlLabel><Message msgId="catalog.type"/></ControlLabel>
-                            <FormControl
-                                onChange={(e) => this.props.onChangeType(e.target.value)}
-                                value={this.props.newService && this.props.newService.type}
-                                componentClass="select">
-                                {this.renderFormats()}
-                            </FormControl>
-                        </Col>
-                        <Col xs={12} sm={9} md={9}>
-                            <ControlLabel><Message msgId="catalog.serviceTitle"/></ControlLabel>
-                            <FormControl
-                                ref="title"
-                                type="text"
-                                style={{
-                                    textOverflow: "ellipsis"
-                                }}
-                                placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.serviceTitlePlaceholder")}
-                                value={this.props.newService && this.props.newService.title}
-                                onChange={(e) => this.props.onChangeTitle(e.target.value)}/>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup controlId="autoload" key="autoload">
-                        <Col xs={12}>
-                            <Checkbox value="autoload" onChange={(e) => this.props.onChangeAutoload(e.target.checked)} checked={this.props.newService.autoload}>
-                              <Message msgId="catalog.autoload"/>
-                            </Checkbox>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup controlId="buttons" key="butStons">
-                        <Col xs={12}>
-                            {this.renderButtons()}
-                        </Col>
-                    </FormGroup>
-                </Form>)
+                <BorderLayout
+                   bodyClassName="ms2-border-layout-body catalog"
+                   header={<Form horizontal >
+                       <FormGroup>
+                           <Col xs={12}>
+                               <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
+                               <FormControl
+                                   ref="url"
+                                   type="text"
+                                   style={{
+                                       textOverflow: "ellipsis"
+                                   }}
+                                   placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.urlPlaceholder")}
+                                   value={this.props.newService && this.props.newService.url}
+                                   onChange={(e) => this.props.onChangeUrl(e.target.value)}/>
+                           </Col>
+                       </FormGroup>
+                       <FormGroup controlId="title" key="title">
+                           <Col xs={12} sm={3} md={3}>
+                               <ControlLabel><Message msgId="catalog.type"/></ControlLabel>
+                               <FormControl
+                                   onChange={(e) => this.props.onChangeType(e.target.value)}
+                                   value={this.props.newService && this.props.newService.type}
+                                   componentClass="select">
+                                   {this.renderFormats()}
+                               </FormControl>
+                           </Col>
+                           <Col xs={12} sm={9} md={9}>
+                               <ControlLabel><Message msgId="catalog.serviceTitle"/></ControlLabel>
+                               <FormControl
+                                   ref="title"
+                                   type="text"
+                                   style={{
+                                       textOverflow: "ellipsis"
+                                   }}
+                                   placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.serviceTitlePlaceholder")}
+                                   value={this.props.newService && this.props.newService.title}
+                                   onChange={(e) => this.props.onChangeTitle(e.target.value)}/>
+                           </Col>
+                       </FormGroup>
+                   </Form>}>
+                   <Form >
+                       <SwitchPanel
+                            useToolbar
+                            title={<Message msgId="catalog.advancedSettings"/>}
+                            expanded={!isNil(this.props.newService.showAdvancedSettings) ? this.props.newService.showAdvancedSettings : false}
+                            onSwitch={this.props.onToggleAdvancedSettings}>
+                            <div>
+                                <FormGroup controlId="autoload" key="autoload">
+                                    <Col xs={12}>
+                                        <Checkbox value="autoload" onChange={(e) => this.props.onChangeAutoload(e.target.checked)}
+                                            checked={!isNil(this.props.newService.autoload) ? this.props.newService.autoload : false}>
+                                            <Message msgId="catalog.autoload"/>
+                                        </Checkbox>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup controlId="thumbnail" key="thumbnail">
+                                    <Col xs={12}>
+                                        <Checkbox
+                                            onChange={() => this.props.onToggleThumbnail()}
+                                            checked={!isNil(this.props.newService.hideThumbnail) ? !this.props.newService.hideThumbnail : true}>
+                                            <Message msgId="catalog.showPreview"/>
+                                        </Checkbox>
+                                    </Col>
+                                </FormGroup>
+                                {(!isNil(this.props.newService.type) ? this.props.newService.type === "csw" : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
+                                    <Col xs={12}>
+                                        <Checkbox
+                                            onChange={() => this.props.onToggleTemplate()}
+                                        checked={showTemplate}>
+                                                <Message msgId="catalog.showTemplate"/>
+                                        </Checkbox>
+                                        <br/>
+                                        </Col>
+                                    {showTemplate &&
+                                        (<Col xs={12}>
+                                            <span>
+                                                <p>
+                                                    <Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: "{ }"}}/>
+                                                    &nbsp;&nbsp;
+                                                    <OverlayTrigger
+                                                        placement="top"
+                                                        key={"overlay-trigger." + this.props.id}
+                                                        overlay={<Tooltip id="metadata-tooltip">
+                                                            <Message msgId="catalog.templateMetadataAvailable"/>
+                                                        </Tooltip>}>
+                                                            <Glyphicon glyph="question-sign"/>
+                                                    </OverlayTrigger>
+                                                </p>
+                                                <pre>
+                                                    <Message msgId="catalog.templateFormatDescriptionExample"/>{ " ${ description }"}
+                                                </pre>
+                                            </span>
+                                       </Col>)}
+                                       <Col xs={12}>
+                                            {showTemplate && <ReactQuill
+                                                modules={{
+                                                    toolbar: [
+                                                        [{ "size": ["small", false, "large", "huge"] }, "bold", "italic", "underline", "blockquote"],
+                                                        [{ "list": "bullet" }, { "align": [] }],
+                                                        [{ "color": [] }, { "background": [] }, "clean"], ["link"]
+                                                    ]
+                                                }}
+                                                value={this.props.newService.metadataTemplate || ""}
+                                                onChange={(metadataTemplate) => {
+                                                    if (metadataTemplate && metadataTemplate !== "<p><br></p>") {
+                                                        this.props.onChangeMetadataTemplate(metadataTemplate);
+                                                    } else {
+                                                        // TODO think about this
+                                                        this.props.onChangeMetadataTemplate("");
+                                                    }
+                                                }}/>
+                                            }
+                                    </Col>
+                                </FormGroup>)}
+                            </div>
+                        </SwitchPanel>
+                        <FormGroup controlId="buttons" key="butStons">
+                            <Col xs={12}>
+                                {this.renderButtons()}
+                            </Col>
+                        </FormGroup>
+                    </Form>
+                </BorderLayout>
+            )
         );
     }
 
@@ -399,10 +513,10 @@ class Catalog extends React.Component {
 
     reset = () => {
         if (this.refs.catalogURL) {
-            this.refs.catalogURL.refs.input.value = '';
+            this.refs.catalogURL.refs.input.value = "";
         }
         if (this.refs.searchText) {
-            this.refs.searchText.refs.input.value = '';
+            this.refs.searchText.refs.input.value = "";
         }
         this.props.onReset();
     };

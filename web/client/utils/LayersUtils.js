@@ -602,6 +602,20 @@ const LayersUtils = {
         // TODO: check if format is valid for an img (svg, for instance, may not work)
         const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
         return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
+    },
+    /**
+     * Return capabilities valid for the layer object
+     */
+    formatCapabitiliesOptions: function(capabilities) {
+        return isObject(capabilities)
+            ? {
+                capabilities,
+                capabilitiesLoading: null,
+                description: capabilities._abstract,
+                boundingBox: capabilities.latLonBoundingBox,
+                availableStyles: capabilities.style && (Array.isArray(capabilities.style) ? capabilities.style : [capabilities.style])
+            }
+            : {};
     }
 };
 

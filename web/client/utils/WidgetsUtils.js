@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { get, find } = require('lodash');
+const { get, find, isNumber, round} = require('lodash');
 const {WIDGETS_REGEX} = require('../actions/widgets');
 const { findGroups } = require('./GraphUtils');
 const { sameToneRangeColors } = require('./ColorUtils');
@@ -46,7 +46,49 @@ const getConnectionList = (widgets = []) => {
     }, []);
 };
 
+/**
+ * it checks if a number is higher of 10k and it returns a shortened version of it
+ * @param {number} label to parse
+ * @param {number} threshold threshold to check if it needs to be rounded
+ * @param {number} decimals number of decimal to use when rounding
+ * @return the shortened number plus a suffix or the label is a string is passed
+*/
+const shortenLabel = (label, threshold = 10000, decimals = 1)=> {
+    if (!isNumber(label) || isNumber(label) && label.toString().length < 7) {
+        return label;
+    }
+    let unit;
+    let number = round(label);
+    let add = number.toString().length % 3;
+    if (number >= threshold) {
+        let trimedDigits = number.toString().length - ( add === 0 ? add + 3 : add );
+        let zeroNumber = (trimedDigits) / 3;
+        let trimedNumber = number / Math.pow(10, trimedDigits);
+        switch (zeroNumber) {
+            case 1 :
+                unit = ' K';
+                break;
+            case 2 :
+                unit = ' M';
+                break;
+            case 3 :
+                unit = ' B';
+                break;
+            case 4 :
+                unit = ' T';
+                break;
+            default:
+                unit = '';
+        }
+        number = round(trimedNumber, decimals) + unit;
+    } else {
+        number = round(label, Math.abs(4 - number.toString().length));
+    }
+    return number;
+};
+
 module.exports = {
+    shortenLabel,
     getWidgetDependency,
     getConnectionList,
     getWidgetsGroups: (widgets = []) => {

@@ -25,6 +25,8 @@
         "errorDefault": "Došlo je do greške",
         "pageInfoShowMore": "{count} od {total} rezultata",
         "showMore": "Prikaži više...",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "version": {
             "label": "Verzija"
         },
@@ -168,6 +170,8 @@
                 "red": "{number, plural, =0 {Crveno} =1 {Crveno} other {Crvene}}",
                 "blue": "{number, plural, =0 {Plavo} =1 {Plavo} other {Plave}}",
                 "green": "{number, plural, =0 {Zeleno} =1 {Zeleno} other {Zelene}}",
+                "gray": "{number, plural, =0 {Gray} =1 {Gray} other {Grays}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Smeđe} =1 {Smeđe} other {Smeđe}}",
                 "purple": "{number, plural, =0 {Ljubičasto} =1 {Ljubičasto} other {Ljubičaste}}",
                 "random": "{number, plural, =0 {Nasumično} =1 {Nasumično} other {Nasumične}}"
@@ -1036,7 +1040,7 @@
             "success": " ispravno uvezeno"
         },
         "mapImport": {
-            "title": "Import Data",
+            "title": "Import",
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
@@ -1049,9 +1053,12 @@
             }
         },
         "mapExport": {
-            "title": "Export Data"
+            "title": "Export Map"
         },
         "catalog": {
+            "start": "Start date ",
+            "end": "End date ",
+            "notAvailable": "Not Available",
             "title": "Katalog",
             "autoload": "Traži prilikom odabira servisa",
             "clearValueText": "Očisti odabir",
@@ -1086,6 +1093,11 @@
             "missingReference": "Nedostaju referentni OGC metapodaci",
             "showDescription": "Prikaži puni opis",
             "hideDescription": "Sakrij puni opis",
+            "templateFormatDescriptionExample": "The description of layer is",
+            "showTemplate": "Show metadata template",
+            "showPreview": "Show preview",
+            "advancedSettings": "Advanced Settings",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
@@ -1493,6 +1505,10 @@
             "displayCartesian": {
                 "line": "Sakrij mrežu",
                 "bar": "Sakrij mrežu"
+            },
+            "xAxisAngle":{
+                "line": "X Axis: Label rotation angle °",
+                "bar": "X Axis: Label rotation angle °"
             },
             "yAxis":{
                 "line": "Sakrij Y os",

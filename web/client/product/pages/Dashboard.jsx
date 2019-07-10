@@ -12,15 +12,13 @@ const { get, isNil } = require('lodash');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
-const ConfigUtils = require('../../utils/ConfigUtils');
-
 const { loadDashboard, resetDashboard } = require('../../actions/dashboard');
 
-const HolyGrail = require('../../containers/HolyGrail');
+const Page = require('../../containers/Page');
+const BorderLayout = require('../../components/layout/BorderLayout');
 
 class DashboardPage extends React.Component {
     static propTypes = {
-        name: PropTypes.string,
         mode: PropTypes.string,
         match: PropTypes.object,
         loadResource: PropTypes.func,
@@ -31,7 +29,6 @@ class DashboardPage extends React.Component {
     static defaultProps = {
         name: "dashboard",
         mode: 'desktop',
-        loadMaps: () => {},
         reset: () => {}
     };
 
@@ -58,20 +55,10 @@ class DashboardPage extends React.Component {
         this.props.reset();
     }
     render() {
-        let plugins = ConfigUtils.getConfigProp("plugins") || {};
-        let pagePlugins = {
-            "desktop": [],
-            "mobile": []
-        };
-        let pluginsConfig = {
-            "desktop": plugins[this.props.name] || [],
-            "mobile": plugins[this.props.name] || []
-        };
-
-        return (<HolyGrail
-            id="dashboard-view-container"
-            pagePluginsConfig={pagePlugins}
-            pluginsConfig={pluginsConfig}
+        return (<Page
+            id="dashboard"
+            component={BorderLayout}
+            includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
             />);

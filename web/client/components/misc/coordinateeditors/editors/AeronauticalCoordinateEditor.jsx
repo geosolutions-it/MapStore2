@@ -1,3 +1,11 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const {compose} = require('recompose');
@@ -31,13 +39,13 @@ class AeronauticalCoordinateEditor extends React.Component {
         coordinate: "lat",
         maxDegrees: 90,
         directions: ["N", "S"],
-        onKeyDown: () => {},
         aeronauticalOptions: {
             seconds: {
                 decimals: 4,
                 step: 0.0001
             }
-        }
+        },
+        onKeyDown: () => {}
     }
 
     onChange = (part, newValue) => {
@@ -129,26 +137,32 @@ class AeronauticalCoordinateEditor extends React.Component {
                         step={1}
                         max={this.props.maxDegrees}
                         min={-1}
-                        onKeyDown={this.props.onKeyDown}
+                        onKeyDown={(event) => {
+                            this.verifyOnKeyDownEvent(event);
+                            this.props.onKeyDown(event);
+                        }}
                         style={{ width: '100%', ...inputStyle, ...degreesInvalidStyle }}
                         type="number"
                     />
                     <span style={labelStyle}>&deg;</span>
                 </div>
                 <div style={{width: 50, display: 'flex' }}>
-                <FormControl
-                    key={this.props.coordinate + "minutes"}
-                    placeholder={"m"}
-                    value={this.props.minutes}
-                    onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
-                    max={60}
-                    min={-1}
-                    onKeyDown={this.props.onKeyDown}
-                    style={{ width: '100%', ...inputStyle, ...minutesInvalidStyle}}
-                    step={1}
-                    type="number"
-                />
-                <span style={labelStyle}>&prime;</span>
+                    <FormControl
+                        key={this.props.coordinate + "minutes"}
+                        placeholder={"m"}
+                        value={this.props.minutes}
+                        onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
+                        max={60}
+                        min={-1}
+                        onKeyDown={(event) => {
+                            this.verifyOnKeyDownEvent(event);
+                            this.props.onKeyDown(event);
+                        }}
+                        style={{ width: '100%', ...inputStyle, ...minutesInvalidStyle}}
+                        step={1}
+                        type="number"
+                    />
+                    <span style={labelStyle}>&prime;</span>
                 </div>
                 <div style={{flex: 1, display: 'flex'}}>
                     <FormControl
@@ -158,7 +172,10 @@ class AeronauticalCoordinateEditor extends React.Component {
                         onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
                         step={stepSeconds}
                         max={60}
-                        onKeyDown={this.props.onKeyDown}
+                        onKeyDown={(event) => {
+                            this.verifyOnKeyDownEvent(event);
+                            this.props.onKeyDown(event);
+                        }}
                         min={-1}
                         style={{ width: '100%', ...inputStyle, ...secondsInvalidStyle}}
                         type="number"
@@ -177,6 +194,17 @@ class AeronauticalCoordinateEditor extends React.Component {
                 </div>
             </FormGroup>
         );
+    }
+    /**
+    * checking and blocking the keydown event to avoid
+    * the only letters matched by input type number 'e' or 'E'
+    * see https://github.com/geosolutions-it/MapStore2/issues/3523#issuecomment-502660391
+    * @param event keydown event
+    */
+    verifyOnKeyDownEvent = (event) => {
+        if (event.keyCode === 69) {
+            event.preventDefault();
+        }
     }
 
     roundToNextSexagesimalStep = val => {

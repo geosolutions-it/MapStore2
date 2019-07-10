@@ -1,3 +1,11 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const {FormGroup, FormControl} = require('react-bootstrap');
@@ -17,10 +25,9 @@ class DecimalCoordinateEditor extends React.Component {
         onChange: PropTypes.func,
         onKeyDown: PropTypes.func
     };
-    defaultProps = {
+    static defaultProps = {
         format: "decimal",
         coordinate: "lat",
-        onKeyDown: () => {},
         constraints: {
             decimal: {
                 lat: {
@@ -32,7 +39,8 @@ class DecimalCoordinateEditor extends React.Component {
                     max: 180
                 }
             }
-        }
+        },
+        onKeyDown: () => {}
     }
 
 
@@ -47,6 +55,7 @@ class DecimalCoordinateEditor extends React.Component {
                     value={value}
                     placeholder={coordinate}
                     onChange={e => {
+                        // when inserting 4eee5 as number here it comes "" that makes the re-render fail
                         if (e.target.value === "") {
                             onChange("");
                         }
@@ -54,11 +63,25 @@ class DecimalCoordinateEditor extends React.Component {
                             onChange(e.target.value);
                         }
                     }}
-                    onKeyDown={this.props.onKeyDown}
+                    onKeyDown={(event) => {
+                        this.verifyOnKeyDownEvent(event);
+                        this.props.onKeyDown(event);
+                    }}
                     step={1}
                     type="number"/>
             </FormGroup>
         );
+    }
+    /**
+    * checking and blocking the keydown event to avoid
+    * the only letters matched by input type number 'e' or 'E'
+    * see https://github.com/geosolutions-it/MapStore2/issues/3523#issuecomment-502660391
+    * @param event keydown event
+    */
+    verifyOnKeyDownEvent = (event) => {
+        if (event.keyCode === 69) {
+            event.preventDefault();
+        }
     }
 
     validateDecimalLon = (longitude) => {

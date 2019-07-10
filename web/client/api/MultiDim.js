@@ -95,6 +95,7 @@ const getDomainValues = (url, layer, domain, {
     limit = 20
 } = {}, {
     bbox,
+    tileMatrixSet = "EPSG:4326",
     service = "WMTS",
     version = "1.0.0"// ,
     // tileMatrixSet = "EPSG:4326" // this is required because this is an option of WMTS,
@@ -104,7 +105,7 @@ const getDomainValues = (url, layer, domain, {
             service,
             version,
             request: "GetDomainValues",
-            // tileMatrixSet,
+            tileMatrixSet,
             bbox,
             layer,
             domain,

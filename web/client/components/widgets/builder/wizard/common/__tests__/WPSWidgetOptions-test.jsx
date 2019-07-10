@@ -102,4 +102,27 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[2].arguments[0]).toBe("options.seriesOptions.[0].uom");
         expect(spyonChange.calls[2].arguments[1]).toBe("test");
     });
+
+    it('Test WPSWidgetOptions with rotation slider ', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        ReactDOM.render(<WPSWidgetOptions
+            formOptions={{
+                showColorRamp: false,
+                showUom: true,
+                showGroupBy: false,
+                showLegend: false,
+                advancedOptions: true
+            }}
+            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
+            onChange={actions.onChange}
+            dependencies={{ viewport: {} }}
+            data={{type: "line", xAxisAngle: 45}}/>, document.getElementById("container"));
+        const slider = document.getElementsByClassName('mapstore-slider');
+        expect(slider).toExist();
+        const tooltip = document.getElementsByClassName('noUi-tooltip')[0];
+        expect(tooltip.innerText).toBe("45");
+
+    });
 });

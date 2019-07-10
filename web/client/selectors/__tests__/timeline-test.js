@@ -14,8 +14,10 @@ const {
     isAutoSelectEnabled,
     currentTimeRangeSelector,
     itemsSelector,
-    rangeDataSelector
+    rangeDataSelector,
+    multidimOptionsSelectorCreator
 } = require('../timeline');
+const { set, compose } = require('../../utils/ImmutableUtils');
 
 const timeline = require('../../reducers/timeline');
 const { rangeDataLoaded } = require('../../actions/timeline');
@@ -156,4 +158,53 @@ describe('timeline selector', () => {
         });
         // TODO: test items from static time values inside layer, not fully supported yet.
     });
+    describe('multidimOptionsSelectorCreator', () => {
+        const STATE_WITH_MAP = {
+            ...SAMPLE_STATE_DOMAIN_VALUES,
+            map: {
+
+                present: {
+                    projection: "EPSG:4326",
+                    bbox: {
+                        bounds: {
+                            minx: -20,
+                            miny: -20,
+                            maxx: 20,
+                            maxy: 20
+                        },
+                        crs: "EPSG:4326"
+                    }
+                }
+            }
+        };
+
+        it('mapSync on, v 1.0 - no space dimension', () => {
+            const opts = multidimOptionsSelectorCreator(TEST_LAYER_ID)(set(
+                'timeline.settings.mapSync', true
+            )(STATE_WITH_MAP));
+            expect(opts).toEqual({});
+        });
+        it('mapSync on v 1.0 - with space dimension', () => {
+            const opts = multidimOptionsSelectorCreator(TEST_LAYER_ID)(
+                compose(
+                    set('timeline.settings.mapSync', true),
+                    set(`dimension.data.space.${TEST_LAYER_ID}.domain.CRS`, "EPSG:4326")
+                )(STATE_WITH_MAP));
+            // CRS may be ignored, bbox referred to tileMatrixSet
+            expect(opts).toEqual({ bbox: '-20,-20,20,20', crs: 'EPSG:4326' });
+        });
+        it('mapSync on v 1.1', () => {
+            const opts = multidimOptionsSelectorCreator(TEST_LAYER_ID)(
+                compose(
+                    set('timeline.settings.mapSync', true),
+                    set(`dimension.data.time.${TEST_LAYER_ID}.source.version`, "1.1")
+                )(STATE_WITH_MAP));
+            expect(opts).toEqual({ bbox: '-20,-20,20,20,EPSG:4326' });
+        });
+        it('mapSync off', () => {
+            const opts = multidimOptionsSelectorCreator(TEST_LAYER_ID)(STATE_WITH_MAP);
+            expect(opts).toEqual({});
+        });
+    });
+
 });

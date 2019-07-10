@@ -11,7 +11,7 @@ const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 const SwitchPanel = require('../SwitchPanel');
-describe('SwitchPanel() component', () => {
+describe('SwitchPanel component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -51,5 +51,10 @@ describe('SwitchPanel() component', () => {
         ReactDOM.render(<SwitchPanel onSwitch={actions.onSwitch} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector('.m-slider'));
         expect(spyonSwitch).toHaveBeenCalled();
+    });
+    it('Test SwitchPanel with toolbar', () => {
+        ReactDOM.render(<SwitchPanel useToolbar />, document.getElementById("container"));
+        const input = document.getElementsByTagName('button')[0];
+        expect(input).toExist();
     });
 });

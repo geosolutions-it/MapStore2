@@ -25,6 +25,8 @@
         "errorDefault": "Ein Fehler ist aufgetreten",
         "pageInfoShowMore": "Ergebnisse {count} von {total}",
         "showMore": "Zeig mehr...",
+        "collapse": "Kollabiert",
+        "expand": "Erweitern",
         "version": {
             "label": "Version"
         },
@@ -168,6 +170,8 @@
                 "red": "{number, plural, =0 {Rot} =1 {Rot} other {Rottöne}}",
                 "blue": "{number, plural, =0 {Blau} =1 {Blau} other {Blau}}",
                 "green": "{number, plural, =0 {Grün} =1 {Grün} other {Grüns}}",
+                "gray": "{number, plural, =0 {Grau} =1 {Grau} other {Grau}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Braun} =1 {Braun} other {Braun}}",
                 "purple": "{number, plural, =0 {Lila} =1 {Lila} other {Purpur}}",
                 "random": "{number, plural, =0 {Zufällig} =1 {Zufällig} other {Zufällig}}"
@@ -1064,7 +1068,7 @@
             "success": " erfolgreich importiert"
         },
         "mapImport": {
-                "title": "Daten importieren",
+                "title": "Einführen",
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Konfigurations- oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
@@ -1077,9 +1081,12 @@
                 }
             },
         "mapExport": {
-            "title": "Daten exportieren"
+            "title": "Exportieren Sie die Karte"
         },
         "catalog": {
+            "start": "Startdatum ",
+            "end": "Enddatum ",
+            "notAvailable": "Nicht verfügbar",
             "title": "Katalog",
             "autoload": "Suche nach Serviceauswahl",
             "clearValueText": "Klare Auswahl",
@@ -1114,6 +1121,11 @@
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
             "hideDescription": "Vollständige Beschreibung ausblenden",
+            "templateFormatDescriptionExample": "Die Beschreibung der Schicht lautet",
+            "showTemplate": "Metadatenvorlage anzeigen",
+            "showPreview": "Vorschau zeigen",
+            "advancedSettings": "Erweiterte Einstellungen",
+            "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
@@ -1318,6 +1330,8 @@
                 "hideShowColumns": "Spalten ausblenden / anzeigen",
                 "zoomAll": "Zoom zur Erweterung der Seite",
                 "syncOnMap": "Karte mit Filter synchronisieren",
+                "enableTimeSync": "Mit der ausgewählten Zeit oder dem ausgewählten Zeitintervall synchronisieren",
+                "disableTimeSync": "Nicht mit der ausgewählten Zeit oder dem ausgewählten Intervall synchronisieren",
                 "createNewChart": "Erstellen Sie ein Diagramm für die ausgewählte Ebene"
             }
         },
@@ -1522,7 +1536,12 @@
             "displayCartesian": {
                 "line": "Raster ausblenden",
                 "bar": "Raster ausblenden"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "X-Achse: Beschriften Sie den Drehwinkel °",
+                "bar": "X-Achse: Beschriften Sie den Drehwinkel °"
+            },
+            "yAxis":{
                 "line": "Y-Achse ausblenden",
                 "bar": "Y-Achse ausblenden"
             },
@@ -1716,6 +1735,8 @@
             },
             "hide": "Timeline ausblenden",
             "show": "Timeline anzeigen",
+            "mapSyncOn": "Alle Zeiten anzeigen, ohne nach Ansichtsfenster zu filtern",
+            "mapSyncOff": "Nur Zeiten anzeigen, die im aktuellen Ansichtsfenster verfügbar sind",
             "currentTime": "Gehe zur aktuellen Uhrzeit",
             "rangeStart": "Gehe zum aktuellen Zeitbereich",
             "rangeEnd": "Gehe zum aktuellen Zeitbereich",

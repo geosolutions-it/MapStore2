@@ -13,7 +13,7 @@ class ColorRampItem extends React.Component {
                 {ramp.map(cell => <div className="color-cell" key={this.props.item && this.props.item.name + "-" + cell} style={{backgroundColor: cell}}/>)}
                 <div className="colorname-cell">
                     {this.props.item && this.props.item.name
-                        ? <Message msgId={this.props.item.name} msgParams={{number: ramp.length}} />
+                        ? <Message msgId={`global.colors.${this.props.item.name}`} msgParams={{number: ramp.length}} />
                     : this.props.item && this.props.item.name}
                 </div>
                 </div>);

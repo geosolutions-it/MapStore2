@@ -91,37 +91,42 @@ module.exports = playbackEnhancer(({
             buttons={[
                 {
                     glyph: "step-backward",
+                    key: 'back',
                     onClick: backward,
                     disabled: !hasPrevious,
                     tooltip: <Message msgId={"playback.backwardStep"} />
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
+                    key: 'play',
                     active: status === statusMap.PLAY || status === statusMap.PAUSE,
                     disabled: !hasNext,
                     bsStyle: status === statusMap.PLAY || status === statusMap.PAUSE ? "success" : "primary",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
-                    tooltipId: status === statusMap.PLAY
+                    tooltipId: hasNext && (status === statusMap.PLAY
                         ? "playback.pause"
                         : status === statusMap.PAUSE
                                 ? "playback.paused"
-                                : "playback.play"
+                                : "playback.play")
                 }, {
                     glyph: "stop",
+                    key: 'stop',
                     disabled: status !== statusMap.PLAY && status !== statusMap.PAUSE,
                     onClick: stop,
-                    tooltip: <Message msgId={"playback.stop"} />
+                    tooltip: !(status !== statusMap.PLAY && status !== statusMap.PAUSE) && <Message msgId={"playback.stop"} />
                 }, {
                     glyph: "step-forward",
+                    key: 'forward',
                     onClick: forward,
                     disabled: !hasNext,
-                    tooltip: <Message msgId={"playback.forwardStep"} />
+                    tooltip: hasNext && <Message msgId={"playback.forwardStep"} />
                 }, {
                     glyph: "cog",
+                    key: 'settings',
                     bsStyle: (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings ? 'success' : 'primary',
                     active: (status !== statusMap.PLAY || status !== statusMap.PAUSE) && !!showSettings,
                     disabled: (status === statusMap.PLAY || status === statusMap.PAUSE),
                     onClick: () => status !== statusMap.PLAY && onShowSettings(!showSettings),
-                    tooltip: <Message msgId={"playback.settings.tooltip"} />
+                    tooltip: !(status === statusMap.PLAY || status === statusMap.PAUSE) && <Message msgId={"playback.settings.tooltip"} />
                 }
             ]}/>
     </div>

@@ -1,137 +1,59 @@
-.catalog-close {
-    float: right
-}
-
-.catalog-panel .panel-heading {
-    background-color: @ms2-color-primary;
-    color: @ms2-color-text-primary;
-}
-
-.catalog-panel div div div.ms2-border-layout-body {
-    background-color: @ms2-color-background;
-}
-
-.catalog-panel .panel-body {
-    height: ~'calc(100% - 31px)'
-}
-.catalog-pagination{
-    text-align: center
-}
-.compat-catalog {
-    .catalog-footer {
-        .res-info {
-            margin: 5px;
-            float: right;
-        }
-        height: 30px;
-    }
-}
-
 .catalog-panel {
-    .ms2-border-layout-body {
-        position: relative;
-        & > main {
-            width: 100%;
-            position: absolute;
-            .record-item {
-                margin-bottom: 15px;
-                overflow-x: hidden;
-                position: relative;
-                width: 100%;
-                .panel-body {
-                    display: flex;
-                    padding: 8px;
-                    .record-item-thumb {
-                        width: 128px;
-                        height: 128px;
-                        overflow: hidden;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        img {
-                            width: auto;
-                            height: 128px;
-                        }
-                    }
-                    .record-item-content {
-                        flex: 1;
-                        display: flex;
-                        flex-direction: column;
-                        position: relative;
-                        overflow: hidden;
-
-                        .record-item-title {
-                            display: flex;
-                            align-items: center;
-                            min-height: 32px;
-                            h4 {
-                                white-space: nowrap;
-                                overflow: hidden;
-                                min-height: 20px;
-                                text-overflow: ellipsis;
-                                flex: 1;
-                                margin: 0;
-                            }
-                            .square-button-md {
-                                border: none;
-                                .box-shadow(none);
-                                background-color: @ms2-color-background;
-                                .glyphicon {
-                                    transition: all 0.3s;
-                                    display: block;
-                                }
-                                &.ms-collapsed {
-                                    .glyphicon {
-                                        transform: rotateZ(-90deg);
-                                    }
-                                }
-                            }
-                        }
-                        .record-item-info {
-                            h4, p {
-                                margin-top: 0;
-                                line-height: unset;
-                                min-height: 20px;
-                            }
-                            &.record-item-truncate-text {
-                                h4, p {
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                }
-                            }
-                        }
-                        .record-buttons {
-                            background-color: @ms2-color-background;
-                            flex: 1;
-                            display: flex;
-                            min-height: 30px;
-                            button {
-                                margin-bottom: 0;
-                                margin-top: auto;
-                            }
-                        }
-                    }
-                    .record-item-thumb + .record-item-content {
-                        padding-left: 16px;
-                    }
-                }
-            }
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .panel-body {
+        padding: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        > div > form, > form {
+            padding: 0 16px;
         }
     }
-    .record-buttons .links-popover {
-        margin: 0px;
-        padding: 0px;
+    .row {
+        margin: 0;
+        overflow-x: hidden;
+        padding-bottom: 16px;
     }
-    .links-popover .form-group {
-        margin: 5px;
-        padding: 0px;
+    .catalog-pagination {
+        text-align: center;
+        padding-bottom: 16px;
     }
-    .links-popover .popover-content {
-        margin: 0px;
-        padding: 0px;
+    .catalog-metadata {
+        padding: 16px 0;
     }
-    .link-button {
-        min-width: 70px;
+    .metadata-template-editor {
+        .ql-editor {
+            height: 200px;
+        }
+    }
+    .mapstore-side-card:hover {
+        transform: scale(1.05);
+        cursor: auto;
+        webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    }
+    .mapstore-switch-panel {
+        .shadow-soft;
+        padding: 0 16px;
+        margin: 16px;
+        .panel-body {
+            position: static;
+            padding-bottom: 16px;
+        }
+    }
+    .catalog-results {
+        > .record-grid > .row {
+            overflow: hidden;
+        }
+        .mapstore-side-card-desc, .mapstore-side-card-title{
+            text-align: justify;
+        }
+    }
+    /* needed to avoid an error with Firefox where the width was not properly calculated #3824 */
+    .ms2-border-layout-body.catalog {
+        display: block !important;
     }
 }

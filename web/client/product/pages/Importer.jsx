@@ -12,11 +12,8 @@ const {connect} = require('react-redux');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
-const ConfigUtils = require('../../utils/ConfigUtils');
-
-const {resetControls} = require('../../actions/controls');
-
-const HolyGrail = require('../../containers/HolyGrail');
+const Page = require('../../containers/Page');
+const BorderLayout = require('../../components/layout/BorderLayout');
 /**
   * @name Importer
   * @memberof pages
@@ -55,44 +52,28 @@ const HolyGrail = require('../../containers/HolyGrail');
 
 class ImporterPage extends React.Component {
     static propTypes = {
-        name: PropTypes.string,
         mode: PropTypes.string,
         match: PropTypes.object,
-        reset: PropTypes.func,
         plugins: PropTypes.object
     };
 
     static defaultProps = {
         name: "importer",
-        mode: 'desktop',
-        reset: () => {}
+        mode: 'desktop'
     };
 
     render() {
-        let plugins = ConfigUtils.getConfigProp("plugins") || {};
-        let pagePlugins = {
-            "desktop": [], // TODO mesh page plugins with other plugins
-            "mobile": []
-        };
-        let pluginsConfig = {
-            "desktop": plugins[this.props.name] || [], // TODO mesh page plugins with other plugins
-            "mobile": plugins[this.props.name] || []
-        };
-
-        return pluginsConfig.desktop.length > 0 && (<HolyGrail
+        return (<Page
+            component={BorderLayout}
             className="importer-page"
-            id="importer-view-container"
-            pagePluginsConfig={pagePlugins}
-            pluginsConfig={pluginsConfig}
+            id="importer"
+            includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />);
+        />);
     }
 }
 
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
-}),
-    {
-        reset: resetControls
-    })(ImporterPage);
+}))(ImporterPage);

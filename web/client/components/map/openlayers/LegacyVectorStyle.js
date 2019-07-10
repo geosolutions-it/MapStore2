@@ -156,7 +156,14 @@ const STYLE_POLYGON = {
         fill: 1
     }
 };
+const STYLE_MARKER = {
+    iconColor: "orange",
+    iconShape: "circle",
+    iconGlyph: "comment"
+};
+
 const defaultStyles = {
+    "Marker": STYLE_MARKER,
     "Text": STYLE_TEXT,
     "Circle": STYLE_CIRCLE,
     "Point": STYLE_POINT,

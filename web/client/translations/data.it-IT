@@ -25,6 +25,8 @@
         "errorDefault": "Si è verificato un errore",
         "pageInfoShowMore": "Elementi {count} di {total}",
         "showMore": "Mostra altri...",
+        "collapse": "Collassa",
+        "expand": "Espandi",
         "version": {
             "label": "Versione"
         },
@@ -168,6 +170,8 @@
                 "red": "{number, plural, =0 {Rosso} =1 {Rosso} other {Rossi}}",
                 "blue": "{number, plural, =0 {Blu} =1 {Blu} other {Blu}}",
                 "green": "{number, plural, =0 {Verde} =1 {Verde} other {Verdi}}",
+                "gray": "{number, plural, =0 {Grigio} =1 {Grigio} other {Grigi}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Marrone} =1 {Marrone} other {Marroni}}",
                 "purple": "{number, plural, =0 {Porpora} =1 {Porpora} other {Porpora}}",
                 "random": "{number, plural, =0 {Casuale} =1 {Casuale} other {Casuale}}"
@@ -1064,7 +1068,7 @@
             "success": " correttamente importato"
         },
         "mapImport": {
-            "title": "Importa dati",
+            "title": "Importa",
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui la configurazione o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
@@ -1077,9 +1081,12 @@
             }
         },
         "mapExport": {
-            "title": "Esporta dati"
+            "title": "Esporta mappa"
         },
         "catalog": {
+            "start": "Data d'inizio ",
+            "end": "Data di fine ",
+            "notAvailable": "Non disponibile",
             "title": "Catalogo",
             "autoload": "Ricerca alla selezione del servizio",
             "clearValueText": "Cancella selezione",
@@ -1114,6 +1121,11 @@
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",
             "hideDescription": "Nascondi descrizione completa",
+            "templateFormatDescriptionExample": "La descrizione del layer è",
+            "showTemplate": "Mostra il modello dei metadati",
+            "showPreview": "Mostra la preview",
+            "advancedSettings": "Impostazioni avanzante",
+            "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
@@ -1318,6 +1330,8 @@
                 "hideShowColumns": "Nascondi/mostra colonne",
                 "zoomAll": "Zoom all'estensione della pagina",
                 "syncOnMap": "Sincronizza la mappa con i filtri",
+                "enableTimeSync": "Sincronizza con l'istante o l'intervallo temporale selezionato",
+                "disableTimeSync": "Non sincronizzare con l'istante o l'intervallo temporale selezionato",
                 "createNewChart": "crea un grafico per il livello selezionato"
             }
         },
@@ -1522,7 +1536,12 @@
             "displayCartesian": {
                 "line": "Nascondi griglia",
                 "bar": "Nascondi griglia"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Asse X: Angolo di rotazione °",
+                "bar": "Asse X: Angolo di rotazione °"
+            },
+            "yAxis":{
                 "line": "Nascondi l'asse Y",
                 "bar": "Nascondi l'asse Y"
             },
@@ -1716,6 +1735,8 @@
             },
             "hide": "Nascondi timeline",
             "show": "Mostra timeline",
+            "mapSyncOn": "Mostra tutti i tempi, senza filtrare per zona di mappa visibile",
+            "mapSyncOff": "Mostra solo i tempi nella zona di mappa visibile",
             "currentTime": "Istante corrente",
             "rangeStart": "Vai all'intervallo di tempo corrente",
             "rangeEnd": "Vai all'intervallo di tempo corrente",
@@ -1757,7 +1778,7 @@
                 "ip": "###.###.###.###/##",
                 "priority": "Seleziona Priorità"
             },
-            "menutitle": "Configura GeoFence Rules",
+            "menutitle": "Configura Regole di Accesso",
             "tooltip": {
                 "addT": "Crea regola",
                 "editT": "Modifica regola selezionata",

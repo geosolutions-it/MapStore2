@@ -1,0 +1,59 @@
+{
+  "users": [
+    {
+      "userName": "test_user1",
+      "password": null,
+      "enabled": true
+    },
+    {
+      "userName": "test_user2",
+      "password": null,
+      "enabled": true
+    },
+    {
+      "userName": "test_user3",
+      "password": null,
+      "enabled": false
+    },
+    {
+      "userName": "test_user4",
+      "password": null,
+      "enabled": true
+    },
+    {
+      "userName": "test_user5",
+      "password": null,
+      "enabled": true
+    },
+    {
+      "userName": "test_user6",
+      "password": null,
+      "enabled": true
+    },
+    {
+      "userName": "test_user7",
+      "password": null,
+      "enabled": false
+    },
+    {
+      "userName": "test_user8",
+      "password": null,
+      "enabled": false
+    },
+    {
+      "userName": "test_user9",
+      "password": null,
+      "enabled": false
+    },
+    {
+      "userName": "test_user10",
+      "password": null,
+      "enabled": false
+    },
+    {
+      "userName": "test_user11",
+      "password": null,
+      "enabled": true
+    }
+  ]
+}

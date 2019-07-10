@@ -25,6 +25,8 @@
         "errorDefault": "Ocorreu um erro",
         "pageInfoShowMore": "Registos {count} de {total}",
         "showMore": "Mostrar mais...",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "version": {
             "label": "Versão"
         },
@@ -169,6 +171,8 @@
                 "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
                 "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
                 "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
+                "gray": "{number, plural, =0 {Gray} =1 {Gray} other {Grays}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
                 "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
                 "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
@@ -1037,7 +1041,7 @@
             "success": " correctly imported"
         },
         "mapImport": {
-            "title": "Import Data",
+            "title": "Import",
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
@@ -1050,9 +1054,12 @@
             }
         },
         "mapExport": {
-            "title": "Export Data"
+            "title": "Export Map"
         },
         "catalog": {
+            "start": "Start date ",
+            "end": "End date ",
+            "notAvailable": "Not Available",
             "title": "Catalog",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
@@ -1087,6 +1094,11 @@
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",
+            "templateFormatDescriptionExample": "The description of layer is",
+            "showTemplate": "Show metadata template",
+            "showPreview": "Show preview",
+            "advancedSettings": "Advanced Settings",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1494,6 +1506,10 @@
             "displayCartesian": {
                 "line": "Hide Grid",
                 "bar": "Hide Grid"
+            },
+            "xAxisAngle":{
+                "line": "X Axis: Label rotation angle °",
+                "bar": "X Axis: Label rotation angle °"
             },
             "yAxis":{
                 "line": "Hide Y axis",

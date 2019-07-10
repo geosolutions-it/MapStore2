@@ -573,7 +573,7 @@ class DrawSupport extends React.Component {
         let drawBaseProps = {
             source: this.drawSource || source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: geometryType === "Marker" ? VectorStyle.getMarkerStyle({style: newProps.style}) : new ol.style.Style({
+            style: geometryType === "Marker" ? VectorStyle.getMarkerStyle(newProps.style) : new ol.style.Style({
                 fill: new ol.style.Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
                 }),

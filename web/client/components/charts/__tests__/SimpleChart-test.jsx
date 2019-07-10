@@ -45,6 +45,15 @@ describe('SimpleChart component', () => {
         const el = container.querySelector('div');
         expect(el).toExist();
     });
+    it('test line chart with oblique labels', () => {
+        ReactDOM.render(<SimpleChart data={data} type="line" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const text = container.querySelector('text');
+        expect(text.attributes.transform.value).toBe("rotate(-45)");
+
+    });
     it('test pie chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="pie" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -56,6 +65,15 @@ describe('SimpleChart component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('div');
         expect(el).toExist();
+    });
+    it('test bar chart with oblique labels', () => {
+        ReactDOM.render(<SimpleChart data={data} type="bar" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const text = container.querySelector('text');
+        expect(text.attributes.transform.value).toBe("rotate(-45)");
+
     });
     it('test gauge chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="gauge" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));

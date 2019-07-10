@@ -25,6 +25,8 @@
         "errorDefault": "Ocurrió un error",
         "pageInfoShowMore": "Resultados {count} de {total}",
         "showMore": "Mostrar más...",
+        "collapse": "Colapso",
+        "expand": "Expandir",
         "version": {
             "label": "Versión"
         },
@@ -168,6 +170,8 @@
                 "red": "{number, plural, =0 {Rojo} =1 {Rojo} other {rojos}}",
                 "blue": "{number, plural, =0 {Azul} =1 {Azul} other {Azul}}",
                 "green": "{number, plural, =0 {Verde} =1 {Verde} other {Verdes}}",
+                "gray": "{number, plural, =0 {Gris} =1 {Gris} other {Gris}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Marrón} =1 {Marrón} other {Marrónes}}",
                 "purple": "{number, plural, =0 {Púrpura} =1 {Púrpura} other {Púrpura}}",
                 "random": "{number, plural, =0 {Aleatorio} =1 {Aleatorio} other {Aleatorio}}"
@@ -1064,7 +1068,7 @@
             "success": " Importación correcta"
         },
         "mapImport": {
-            "title": "Datos de importacion",
+            "title": "Importar",
             "dropZone": {
                 "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
@@ -1077,9 +1081,12 @@
             }
         },
         "mapExport": {
-            "title": "Exportar datos"
+            "title": "Exportar el mapa"
         },
         "catalog": {
+            "start": "Fecha de inicio ",
+            "end": "Fecha de finalización ",
+            "notAvailable": "No disponible",
             "title": "Catálogo",
             "autoload": "Buscar en la selección de servicios",
             "clearValueText": "Borrar selección",
@@ -1114,6 +1121,11 @@
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",
             "hideDescription": "Ocultar descripción completa",
+            "templateFormatDescriptionExample": "La descripción de la capa es",
+            "showTemplate": "Mostrar plantilla de metadatos",
+            "showPreview": "Mostrar vista previa",
+            "advancedSettings": "Ajustes avanzados",
+            "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Introduzca una url y un título válidos",
                 "addCatalogService": "Servicio añadido correctamente",
@@ -1318,6 +1330,8 @@
                 "hideShowColumns": "Ocultar / mostrar columnas",
                 "zoomAll": "Zoom a la extensión de la página",
                 "syncOnMap": "Sincronizar mapa con filtro",
+                "enableTimeSync": "Sincronizar con el tiempo o el intervalo de tiempo seleccionado",
+                "disableTimeSync": "No sincronizar con el tiempo o el intervalo de tiempo seleccionado",
                 "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
@@ -1522,7 +1536,12 @@
             "displayCartesian": {
                 "line": "Ocultar cuadrícula",
                 "bar": "Ocultar cuadrícula"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Eye X: Ángulo de rotación de la etiqueta °",
+                "bar": "Eye X: Ángulo de rotación de la etiqueta °"
+            },
+            "yAxis":{
                 "line": "Ocultar el eje Y",
                 "bar": "Ocultar el eje Y"
             },
@@ -1716,6 +1735,8 @@
             },
             "hide": "Esconder la línea de tiempo",
             "show": "Mostrar la línea de tiempo",
+            "mapSyncOn": "Mostrar todos los tiempos, sin filtrar por viewport",
+            "mapSyncOff": "Mostrar solo los tiempos disponibles en la ventana actual",
             "currentTime": "Ir a la hora actual",
             "rangeStart": "Ir al intervalo de tiempo actual",
             "rangeEnd": "Ir al intervalo de tiempo actual",

@@ -16,9 +16,10 @@ const ContainerDimensions = require('react-container-dimensions').default;
 
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
-    addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
+    addLayer, addLayerError, resetCatalog, focusServicesList, changeText,
+    changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {currentLocaleSelector} = require("../selectors/locale");
+const {currentLocaleSelector, currentMessagesSelector} = require("../selectors/locale");
 const {setControlProperty, setControlProperties} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
@@ -31,7 +32,6 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
-
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
@@ -43,15 +43,16 @@ const catalogSelector = createSelector([
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
-    (state) => currentLocaleSelector(state)
-], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    (state) => currentLocaleSelector(state),
+    (state) => currentMessagesSelector(state)
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales) =>({
     authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
     newService,
     currentLocale,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options) || []
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
 const catalogClose = () => {
@@ -186,11 +187,15 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onChangeUrl: changeUrl,
     onChangeType: changeType,
     onChangeTitle: changeTitle,
+    onChangeMetadataTemplate: changeMetadataTemplate,
     onChangeText: changeText,
     onChangeAutoload: changeAutoload,
     onChangeSelectedService: changeSelectedService,
     onChangeCatalogMode: changeCatalogMode,
     onAddService: addService,
+    onToggleAdvancedSettings: toggleAdvancedSettings,
+    onToggleThumbnail: toggleThumbnail,
+    onToggleTemplate: toggleTemplate,
     onDeleteService: deleteService,
     onError: addLayerError
 })(MetadataExplorerComponent);
@@ -201,7 +206,7 @@ const API = {
     wmts: require('../api/WMTS')
 };
 /**
- * MetadataExplorer plugin. Shows the catalogs results (CSW, WMS and WMTS).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS and WMTS).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
+module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
     const React = require('react');
     const ReactDOM = require('react-dom');
     const {connect} = require('react-redux');
@@ -20,11 +20,23 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
         const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
-        const {pages, initialState, storeOpts, appEpics = {}, themeCfg, printingEnabled = true} = config;
+        const {
+            appEpics = {},
+            baseEpics,
+            appReducers = {},
+            baseReducers,
+            initialState,
+            pages,
+            printingEnabled = true,
+            storeOpts,
+            themeCfg = {},
+            mode
+        } = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
             pages,
+            themeCfg,
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
         }))(require('../components/app/StandardRouter'));
@@ -33,15 +45,36 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
         const {setSupportedLocales} = require('../epics/localconfig');
         const {readQueryParamsOnMapEpic} = require('../epics/share');
 
-        const appStore = require('../stores/StandardStore').bind(null, initialState, {
-            maptype: require('../reducers/maptype'),
-            maps: require('../reducers/maps'),
-            maplayout: require('../reducers/maplayout'),
-            version: require('../reducers/version')
-        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales, readQueryParamsOnMapEpic});
+        /**
+         * appStore data needed to create the store
+         * @param {object} baseReducers is used to override all the appReducers
+         * @param {object} appReducers is used to extend the appReducers
+         * @param {object} baseEpics is used to override all the appEpics
+         * @param {object} appEpics is used to extend the appEpics
+         * @param {object} initialState is used to initialize the state of the application
+        */
+        const appStore = require('../stores/StandardStore').bind(null,
+            initialState,
+            baseReducers || {
+                maptype: require('../reducers/maptype'),
+                maps: require('../reducers/maps'),
+                maplayout: require('../reducers/maplayout'),
+                version: require('../reducers/version'),
+                ...appReducers
+            },
+            baseEpics || {
+                updateMapLayoutEpic,
+                setSupportedLocales,
+                readQueryParamsOnMapEpic,
+                ...appEpics
+            }
+        );
 
         const initialActions = [
-            () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),
+            () => loadMaps(
+                ConfigUtils.getDefaults().geoStoreUrl,
+                ConfigUtils.getDefaults().initialMapFilter || "*"
+            ),
             loadVersion
         ];
 
@@ -53,7 +86,8 @@ module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
             initialActions,
             appComponent: StandardRouter,
             printingEnabled,
-            themeCfg
+            themeCfg,
+            mode
         });
 
         ReactDOM.render(

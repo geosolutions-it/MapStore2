@@ -5,7 +5,7 @@ const { set } = require('../utils/ImmutableUtils');
 module.exports = (state = { status: STATUS.STOP, currentFrame: -1, settings: {
     timeStep: 1,
     stepUnit: "days",
-    frameDuration: 5,
+    frameDuration: 2,
     following: true
 }}, action) => {
     switch (action.type) {

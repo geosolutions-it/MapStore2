@@ -803,6 +803,52 @@ describe('OpenlayersMap', () => {
         });
         olMap.dispatchEvent('moveend');
     });
+    it('test ZOOM_TO_EXTENT_HOOK with full extent', (done) => {
+        /*
+         * Converting [-180, -90, 180, 90] in EPSG:3857 caused a bounds array of [0,0,0,0],
+         * and so a zoom to maxZoom in the 0,0 coordinates
+         * To avoid this, zoom to max resolution extent.
+         * TODO: improve this to manage all degenerated bounding boxes.
+         */
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        // fix size
+        document.querySelector('#map').setAttribute('style', "width: 200px; height: 200px");
+        const spy = expect.spyOn(testHandlers, 'onMapViewChanges');
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            onMapViewChanges={testHandlers.onMapViewChanges} />,
+            document.getElementById("map"));
+        const olMap = map.map;
+        olMap.on('moveend', () => {
+            expect(spy.calls[1]).toExist();
+            expect(spy.calls[1].arguments[0].x).toEqual(0);
+            expect(spy.calls[1].arguments[0].y).toEqual(0);
+            expect(spy.calls[1].arguments[0].x).toEqual(0);
+            expect(spy.calls[1].arguments[0].y).toEqual(0);
+            // Bbox should be max.
+            expect(spy.calls[1].arguments[2].bounds.maxx).toBeGreaterThan(15654300);
+            expect(spy.calls[1].arguments[2].bounds.maxy).toBeGreaterThan(7827150);
+            expect(spy.calls[1].arguments[2].bounds.minx).toBeLessThan(-15654300);
+            expect(spy.calls[1].arguments[2].bounds.miny).toBeLessThan(-7827150);
+            done();
+
+        });
+        expect(map).toExist();
+        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toExist();
+        hook([-180, -90, 180, 90], { crs: "EPSG:4326", duration: 0 });
+        olMap.dispatchEvent('moveend');
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0]).toExist(); // first is called by initial render
+    });
 
     it('create attribution with container', () => {
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
@@ -891,4 +937,120 @@ describe('OpenlayersMap', () => {
         attributions = document.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(2);
     });
+
+    it('test updateMapInfoState with custom projection 3003 (not listed in wrappedProjections)', () => {
+
+        const CENTER_OUTSIDE_OF_MAX_EXTENT = {
+            x: 50,
+            y: 70,
+            crs: 'EPSG:4326'
+        };
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        const spyOnMapViewChanges = expect.spyOn(testHandlers, 'onMapViewChanges');
+        const projectionDefs = [
+            {
+                "code": "EPSG:3003",
+                "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
+                "extent": [
+                    1241482.0019432348,
+                    972767.2605398067,
+                    1847542.2626266503,
+                    5215189.085323715
+                ],
+                "worldExtent": [
+                    6.6500,
+                    8.8000,
+                    12.0000,
+                    47.0500
+                ]
+            }
+        ];
+        proj.defs(projectionDefs[0].code, projectionDefs[0].def);
+        ReactDOM.render(<OpenlayersMap
+            id="ol-map"
+            center={CENTER_OUTSIDE_OF_MAX_EXTENT}
+            projectionDefs={projectionDefs}
+            onMapViewChanges={testHandlers.onMapViewChanges}
+            zoom={11}
+            mapOptions={{ attribution: { container: 'body' } }}
+            projection={projectionDefs[0].code}
+            />, document.getElementById("map"));
+
+        expect(spyOnMapViewChanges.calls.length).toBe(0);
+    });
+
+    it('test updateMapInfoState projection 3857', () => {
+
+        const CENTER_OUTSIDE_OF_MAX_EXTENT = {
+            x: -200,
+            y: -100,
+            crs: 'EPSG:4326'
+        };
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        const spyOnMapViewChanges = expect.spyOn(testHandlers, 'onMapViewChanges');
+
+        ReactDOM.render(<OpenlayersMap
+            id="ol-map"
+            center={CENTER_OUTSIDE_OF_MAX_EXTENT}
+            onMapViewChanges={testHandlers.onMapViewChanges}
+            zoom={11}
+            mapOptions={{ attribution: { container: 'body' } }}
+            projection={'EPSG:3857'}
+            />, document.getElementById("map"));
+
+        expect(spyOnMapViewChanges.calls.length).toBe(1);
+    });
+
+    it('test updateMapInfoState projection 4326', () => {
+
+        const CENTER_OUTSIDE_OF_MAX_EXTENT = {
+            x: 200,
+            y: 100,
+            crs: 'EPSG:4326'
+        };
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        const spyOnMapViewChanges = expect.spyOn(testHandlers, 'onMapViewChanges');
+
+        ReactDOM.render(<OpenlayersMap
+            id="ol-map"
+            center={CENTER_OUTSIDE_OF_MAX_EXTENT}
+            onMapViewChanges={testHandlers.onMapViewChanges}
+            zoom={11}
+            mapOptions={{ attribution: { container: 'body' } }}
+            projection={'EPSG:4326'}
+            />, document.getElementById("map"));
+
+        expect(spyOnMapViewChanges.calls.length).toBe(1);
+    });
+
+    it('test updateMapInfoState projection 900913', () => {
+
+        const CENTER_OUTSIDE_OF_MAX_EXTENT = {
+            x: 200,
+            y: -100,
+            crs: 'EPSG:4326'
+        };
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        const spyOnMapViewChanges = expect.spyOn(testHandlers, 'onMapViewChanges');
+
+        ReactDOM.render(<OpenlayersMap
+            id="ol-map"
+            center={CENTER_OUTSIDE_OF_MAX_EXTENT}
+            onMapViewChanges={testHandlers.onMapViewChanges}
+            zoom={11}
+            mapOptions={{ attribution: { container: 'body' } }}
+            projection={'EPSG:900913'}
+            />, document.getElementById("map"));
+
+        expect(spyOnMapViewChanges.calls.length).toBe(1);
+    });
+
 });

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isString, has, trim} = require('lodash');
+import {isString, has, trim, template} from 'lodash';
 
 const TemplateUtils = {
     /**
@@ -17,14 +17,14 @@ const TemplateUtils = {
     generateTemplateString: (function() {
         var cache = {};
 
-        function generateTemplate(template, escapeFn) {
+        function generateTemplate(chosenTemplate, escapeFn) {
 
-            var fn = cache[template];
+            var fn = cache[chosenTemplate];
             // if escapeFn is defined, no cache is used
             if (!fn || escapeFn) {
                 fn = (map) => {
 
-                    let sanitized = template
+                    let sanitized = chosenTemplate
                     .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
                         const escapeFunction = escapeFn || (a => a);
                         return escapeFunction(match.trim().split(".").reduce((a, b) => {
@@ -35,7 +35,7 @@ const TemplateUtils = {
                     return isString(sanitized) && sanitized || '';
                 };
                 if (!escapeFn) {
-                    cache[template] = fn;
+                    cache[chosenTemplate] = fn;
                 }
 
 
@@ -48,9 +48,9 @@ const TemplateUtils = {
     parseTemplate: function(temp, callback) {
         require.ensure(['babel-standalone'], function() {
             const Babel = require('babel-standalone');
-            let template = typeof temp === 'function' ? temp() : temp;
+            let chosenTemplate = typeof temp === 'function' ? temp() : temp;
             try {
-                const comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
+                const comp = Babel.transform(chosenTemplate, { presets: ['es2015', 'react', 'stage-0'] }).code;
                 callback(comp);
             } catch (e) {
                 callback(null, e);
@@ -71,17 +71,33 @@ const TemplateUtils = {
     },
     /**
      * returns a valid template
-     * @param template {string} text with attribute to validate
+     * @param chosenTemplate {string} text with attribute to validate
      * @param feature {object} object to match attributes
      * @param regex {regex}
      * @param start {array} substring start
      * @param end {array} substring end
-     * @return {string} templete without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id }
+     * @return {string} template without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id }
      */
-    getCleanTemplate: (template, feature, regex, start = 0, end = 0) => {
-        const matchVariables = isString(template) && template.match(regex);
-        const replacedTag = matchVariables && matchVariables.map(temp => ({ previous: temp, next: TemplateUtils.validateStringAttribute(feature, temp.replace(/(<([^>]+)>)/ig, ''), start, end) && temp.replace(/(<([^>]+)>)/ig, '') || ''})) || null;
-        return replacedTag && replacedTag.reduce((temp, variable) => temp.replace(variable.previous, variable.next), template) || template || '';
+    getCleanTemplate: (chosenTemplate, feature, regex, start = 0, end = 0, getDefaultMissingProperty = () => "") => {
+        const matchVariables = isString(chosenTemplate) && chosenTemplate.match(regex);
+        const replacedTag = matchVariables && matchVariables.map(temp => {
+            const varReplaced = temp.replace(/(<([^>]+)>)/ig, '');
+            return {
+                previous: temp,
+                next: TemplateUtils.validateStringAttribute(feature, varReplaced, start, end) ? varReplaced : getDefaultMissingProperty(temp)
+            };
+        }) || null;
+        return replacedTag && replacedTag.reduce((temp, variable) => temp.replace(variable.previous, variable.next), chosenTemplate) || chosenTemplate || '';
+    },
+    /**
+     * parses a template with attributes defined in ${ ... } and applied to the metadata object
+     * @param metadataTemplate {string} text with attribute to validate
+     * @param getDefaultMissingProperty {function} if defined it returns a default value for undefined attributes
+     * @param metadata {object} metadata object to match attributes
+     * @return {string} template without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id } and a default value for undefined attributes
+     */
+    parseCustomTemplate: (metadataTemplate = "", metadata = {}, getDefaultMissingProperty = (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} Not Available`) => {
+        return template(TemplateUtils.getCleanTemplate(metadataTemplate || '', metadata, /\$\{.*?\}/g, 2, 1, getDefaultMissingProperty))(metadata);
     }
 };
 

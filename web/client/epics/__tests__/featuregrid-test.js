@@ -9,6 +9,8 @@
 const expect = require('expect');
 const assign = require('object-assign');
 const Proj4js = require('proj4').default;
+const { set } = require('../../utils/ImmutableUtils');
+
 const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
@@ -41,7 +43,8 @@ const {
     moreFeatures,
     GRID_QUERY_RESULT,
     changePage,
-    sort
+    sort,
+    setTimeSync
 } = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
@@ -49,8 +52,8 @@ const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {toggleSyncWms, QUERY, querySearchResponse} = require('../../actions/wfsquery');
-const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
+const {toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE} = require('../../actions/wfsquery');
+const {CHANGE_LAYER_PROPERTIES, changeLayerParams} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
@@ -84,7 +87,8 @@ const {
     removeWmsFilterOnGridClose,
     autoReopenFeatureGridOnFeatureInfoClose,
     featureGridChangePage,
-    featureGridSort
+    featureGridSort,
+    replayOnTimeDimensionChange
 }
     = require('../featuregrid');
 
@@ -1827,5 +1831,79 @@ describe('featuregrid Epics', () => {
             }
         }));
     });
+    describe('replayOnTimeDimensionChange', () => {
+        const SEARCH_URL = '/test-url';
+        const FILTER_OBJECT = { "dummy": "object" };
+        const TEST_STATE_OPEN_BASE = {
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        viewParams: "a:b"
+                    }
+                }]
+            },
+            featuregrid: {
+                pagination: {
+                    size: 10
+                },
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                changes: []
+            }
+        };
+        const TEST_STATE_CLOSED = set('featuregrid.open', false, TEST_STATE_OPEN_BASE);
+        const TEST_STATE_SYNC_ACTIVE = set('featuregrid.timeSync', true, TEST_STATE_OPEN_BASE);
+        const isSameQuery = a => {
+            expect(a.type).toBe(QUERY_CREATE);
+            expect(a.searchUrl).toBe(SEARCH_URL);
+            expect(a.filterObj).toBe(FILTER_OBJECT);
+        };
+        it('toggle on setTimeSync if FG is open', done => {
+            testEpic(replayOnTimeDimensionChange, 1, [query(SEARCH_URL, FILTER_OBJECT), setTimeSync(false)], ([a]) => {
+                isSameQuery(a);
+                done();
+            }, TEST_STATE_OPEN_BASE);
+        });
+        it('do not toggle if FG is closed', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), setTimeSync(true)], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_CLOSED);
+        });
+        it('toggle with time change', done => {
+            testEpic(replayOnTimeDimensionChange, 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
+                isSameQuery(a);
+                done();
+            }, TEST_STATE_SYNC_ACTIVE);
+        });
+        it('do not toggle with time change, sync disabled', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_OPEN_BASE);
+        });
+        it('do not toggle with time change if layer do not change time', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("OTHER_LAYER", { time: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_SYNC_ACTIVE);
+        });
+        it('do not toggle with time change if param changed is not the time', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { elevation: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_SYNC_ACTIVE);
+        });
+        it('do not toggle with time change if feature grid is closed', done => {
+            const TEST_STATE_TIME_ACTIVE_CLOSED = set('featuregrid.timeSync', true, TEST_STATE_CLOSED);
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_TIME_ACTIVE_CLOSED);
+        });
 
+    });
 });

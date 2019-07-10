@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const SET_SHOW_CURRENT_FILTER = 'SET_SHOW_CURRENT_FILTER';
+const SET_UP = 'FEATUREGRID:SET_UP';
 const SELECT_FEATURES = 'FEATUREGRID:SELECT_FEATURES';
 const DESELECT_FEATURES = 'FEATUREGRID:DESELECT_FEATURES';
 const CLEAR_SELECTION = 'FEATUREGRID:CLEAR_SELECTION';
@@ -58,6 +58,7 @@ const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
 const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
 const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
 const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
+const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
 
 function toggleShowAgain() {
     return {
@@ -107,10 +108,15 @@ function selectFeatures(features, append) {
         append
     };
 }
-function setShowCurrentFilter(showFilteredObject) {
+
+/**
+ * Configures some options for the feature grid
+ * @param {object} options options to set up
+ */
+function setUp(options) {
     return {
-        type: SET_SHOW_CURRENT_FILTER,
-        showFilteredObject
+        type: SET_UP,
+        options
     };
 }
 function geometryChanged(features) {
@@ -336,6 +342,16 @@ const moreFeatures = (pages) => {
         pages
     };
 };
+
+/**
+ * Enables/Disables time sync for feature grid.
+ * @param {boolean} value time sync to set
+ */
+const setTimeSync = value => ({
+    type: SET_TIME_SYNC,
+    value
+});
+
 module.exports = {
     SELECT_FEATURES,
     DESELECT_FEATURES,
@@ -371,7 +387,7 @@ module.exports = {
     OPEN_FEATURE_GRID, openFeatureGrid,
     CLOSE_FEATURE_GRID_CONFIRM, closeFeatureGridConfirm,
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
-    SET_SHOW_CURRENT_FILTER, setShowCurrentFilter,
+    SET_UP, setUp,
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
     ZOOM_ALL, zoomAll,
@@ -407,5 +423,6 @@ module.exports = {
     STOP_SYNC_WMS,
     storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
     moreFeatures, LOAD_MORE_FEATURES,
-    fatureGridQueryResult, GRID_QUERY_RESULT
+    fatureGridQueryResult, GRID_QUERY_RESULT,
+    setTimeSync, SET_TIME_SYNC
 };

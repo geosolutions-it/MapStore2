@@ -7,9 +7,10 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-const ReactItem = require('../RecordItem.jsx');
+const RecordItem = require('../RecordItem.jsx');
 const expect = require('expect');
 const assign = require('object-assign');
+const ReactTestUtils = require('react-dom/test-utils');
 
 const TestUtils = require('react-dom/test-utils');
 const SAMPLE_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -142,22 +143,21 @@ describe('This test for RecordItem', () => {
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const item = ReactDOM.render(<ReactItem />, document.getElementById("container"));
+        const item = ReactDOM.render(<RecordItem />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toNotExist();
 
-        expect(itemDom.className).toBe('record-item panel panel-default');
     });
     // test data
     it('creates the component with data', () => {
-        const item = ReactDOM.render(<ReactItem record={sampleRecord}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<RecordItem record={sampleRecord}/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
     });
     it('check WMTS resource', () => {
         let actions = {
@@ -170,7 +170,7 @@ describe('This test for RecordItem', () => {
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord3}
             onLayerAdd={actions.onLayerAdd}
             onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
@@ -178,7 +178,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -195,14 +195,14 @@ describe('This test for RecordItem', () => {
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
 
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={esriRecord}
             onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -224,7 +224,7 @@ describe('This test for RecordItem', () => {
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
@@ -232,7 +232,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
            item, 'button'
         );
@@ -249,7 +249,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
@@ -259,7 +259,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -277,7 +277,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
@@ -287,7 +287,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -325,7 +325,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             authkeyParamNames={["ms2-authkey"]}
             record={recordToClean}
             onLayerAdd={actions.onLayerAdd}
@@ -336,7 +336,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -377,7 +377,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             authkeyParamNames={["ms2-authkey"]}
             record={recordToClean}
             onLayerAdd={actions.onLayerAdd}
@@ -388,7 +388,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -409,7 +409,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
@@ -422,7 +422,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -440,7 +440,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
@@ -453,7 +453,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -466,7 +466,7 @@ describe('This test for RecordItem', () => {
 
     it('test create record item with no get capabilities links', () => {
         // instanciating a record item component
-        const component = ReactDOM.render(<ReactItem record={sampleRecord} showGetCapLinks/>,
+        const component = ReactDOM.render(<RecordItem record={sampleRecord} showGetCapLinks/>,
             document.getElementById("container"));
         // check that the component was intanciated
         expect(component).toExist();
@@ -479,7 +479,7 @@ describe('This test for RecordItem', () => {
 
     it('test create record item with get capabilities links', () => {
         // instanciating a record item component
-        const component = ReactDOM.render(<ReactItem record={getCapRecord} showGetCapLinks/>,
+        const component = ReactDOM.render(<RecordItem record={getCapRecord} showGetCapLinks/>,
             document.getElementById("container"));
         // check that the component was intanciated
         expect(component).toExist();
@@ -492,7 +492,7 @@ describe('This test for RecordItem', () => {
 
     it('test create record item with get capabilities links but show get capabilities links disable', () => {
         // instanciating a record item component
-        const component = ReactDOM.render(<ReactItem showGetCapLinks={false} record={getCapRecord} showGetCapLinks={false}/>,
+        const component = ReactDOM.render(<RecordItem showGetCapLinks={false} record={getCapRecord}/>,
             document.getElementById("container"));
         // check that the component was intanciated
         expect(component).toExist();
@@ -510,7 +510,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onError");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord2}
             onError={actions.onError}
             crs="EPSG:3857"/>, document.getElementById("container"));
@@ -533,7 +533,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render(<ReactItem
+        const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             />, document.getElementById("container"));
@@ -541,7 +541,7 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('record-item panel panel-default');
+        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
            item, 'button'
         );
@@ -578,41 +578,45 @@ describe('This test for RecordItem', () => {
                 "en-US": "english"
             }
         });
-
     it('uses the correct localization', () => {
         // Default localization is en-US
-        const item = ReactDOM.render(<ReactItem record={localizedRecord}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<RecordItem record={localizedRecord}/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        const titleAndIdentifier = itemDom.getElementsByTagName('h4');
-        expect(titleAndIdentifier.length).toBe(2);
-        expect(titleAndIdentifier.item(0).innerText).toBe('english');
+        const identifiers = itemDom.getElementsByClassName('identifier');
+        expect(identifiers.length).toBe(1);
+        const titles = itemDom.getElementsByClassName('mapstore-side-card-title');
+        expect(titles.length).toBe(1);
+        expect(titles.item(0).innerText).toBe('english');
     });
 
     it('uses the default localization', () => {
         // Default localization is en-US
-        const item = ReactDOM.render(<ReactItem record={localizedRecord} currentLocale="it-IT"/>, document.getElementById("container"));
+        const item = ReactDOM.render(<RecordItem record={localizedRecord} currentLocale="it-IT"/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        const titleAndIdentifier = itemDom.getElementsByTagName('h4');
-        expect(titleAndIdentifier.length).toBe(2);
-        expect(titleAndIdentifier.item(0).innerText).toBe('deftitle');
+        const identifiers = itemDom.getElementsByClassName('identifier');
+        expect(identifiers.length).toBe(1);
+        const titles = itemDom.getElementsByClassName('mapstore-side-card-title');
+        expect(titles.length).toBe(1);
+        expect(titles.item(0).innerText).toBe('deftitle');
     });
 
     it('has not title', () => {
         // Default localization is en-US
-        const item = ReactDOM.render(<ReactItem record={noTitleRecord} currentLocale="it-IT"/>, document.getElementById("container"));
+        const item = ReactDOM.render(<RecordItem record={noTitleRecord} currentLocale="it-IT"/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        const titleAndIdentifier = itemDom.getElementsByTagName('h4');
-        expect(titleAndIdentifier.length).toBe(2);
-        expect(titleAndIdentifier.item(0).innerText).toBe('');
+        const identifiers = itemDom.getElementsByClassName('identifier');
+        expect(identifiers.length).toBe(1);
+        const titles = itemDom.getElementsByClassName('mapstore-side-card-title');
+        expect(titles.length).toBe(0);
     });
 
     it('record without references', () => {
@@ -632,7 +636,7 @@ describe('This test for RecordItem', () => {
             references: []
         };
 
-        const item = ReactDOM.render(<ReactItem record={recordWithoutRef}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<RecordItem record={recordWithoutRef}/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -643,7 +647,7 @@ describe('This test for RecordItem', () => {
 
     it('hide/show thumbnail', () => {
 
-        let item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideThumbnail/>, document.getElementById("container"));
+        let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideThumbnail/>, document.getElementById("container"));
         expect(item).toExist();
 
         let itemDom = ReactDOM.findDOMNode(item);
@@ -651,8 +655,7 @@ describe('This test for RecordItem', () => {
         let image = itemDom.getElementsByTagName('img');
         expect(image.length).toBe(0);
 
-
-        item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideThumbnail={false}/>, document.getElementById("container"));
+        item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideThumbnail={false}/>, document.getElementById("container"));
         expect(item).toExist();
 
         itemDom = ReactDOM.findDOMNode(item);
@@ -664,51 +667,94 @@ describe('This test for RecordItem', () => {
 
     it('hide/show identifier', () => {
 
-        let item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideIdentifier/>, document.getElementById("container"));
+        let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideIdentifier/>, document.getElementById("container"));
         expect(item).toExist();
 
         let itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        let identifier = itemDom.getElementsByTagName('h4');
+        let identifier = itemDom.getElementsByClassName('identifier');
+        expect(identifier.length).toBe(0);
+
+
+        item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideIdentifier={false}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        identifier = itemDom.getElementsByClassName('identifier');
         expect(identifier.length).toBe(1);
 
+    });
 
-        item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideIdentifier={false}/>, document.getElementById("container"));
+    it('show Expand button', () => {
+        let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideExpand={false}/>, document.getElementById("container"));
         expect(item).toExist();
+
+        item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideExpand={false}/>, document.getElementById("container"));
+        let itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
+        expect(expand.length).toBe(1);
+
+    });
+    it('hide Expand button', () => {
+        let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideExpand/>, document.getElementById("container"));
+        expect(item).toExist();
+        let itemDom = ReactDOM.findDOMNode(item);
 
         itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        identifier = itemDom.getElementsByTagName('h4');
-        expect(identifier.length).toBe(2);
-
+        let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
+        expect(expand.length).toBe(0);
     });
 
-    it('hide/show description button', () => {
-        let item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideExpand={false}/>, document.getElementById("container"));
+    it('show template description', () => {
+        let item = ReactDOM.render(
+            <RecordItem
+                record={{
+                    ...sampleRecord,
+                    metadata: {
+                        title: "sample title",
+                        description: "sample abstract"
+                    },
+                    metadataTemplate: "<p>${title} and ${description}</p>"
+                }}
+                showTemplate
+                hideExpand={false}
+            />, document.getElementById("container"));
         expect(item).toExist();
 
         let itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        let title = itemDom.getElementsByClassName('record-item-title');
-        expect(title[0].children.length).toBe(2);
-
-        item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideExpand/>, document.getElementById("container"));
-        expect(item).toExist();
-
-        itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
-        title = itemDom.getElementsByClassName('record-item-title');
-        expect(title[0].children.length).toBe(1);
-
+        let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
+        expect(expand.length).toBe(1);
+        ReactTestUtils.Simulate.click(expand[0]);
+        let desc = itemDom.getElementsByClassName('mapstore-side-card-desc');
+        expect(desc.length).toBe(1);
+        expect(desc[0].innerText.indexOf("sample title and sample abstract") !== -1).toBe(true);
     });
-
-    it('show description button but short description', () => {
-        let item = ReactDOM.render(<ReactItem record={sampleRecord} hideExpand={false}/>, document.getElementById("container"));
+    it('show template description, with missing desc in metadata', () => {
+        let item = ReactDOM.render(
+            <RecordItem
+                record={{
+                    ...sampleRecord,
+                    metadata: {
+                        title: "sample title"
+                    },
+                    metadataTemplate: "<p>${title} and ${description}</p>"
+                }}
+                showTemplate
+                hideExpand={false}
+            />, document.getElementById("container"));
         expect(item).toExist();
 
         let itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        let title = itemDom.getElementsByClassName('record-item-title');
-        expect(title[0].children.length).toBe(1);
+        let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
+        expect(expand.length).toBe(1);
+        ReactTestUtils.Simulate.click(expand[0]);
+        let desc = itemDom.getElementsByClassName('mapstore-side-card-desc');
+        expect(desc.length).toBe(1);
+        expect(desc[0].innerText.indexOf("sample title and description catalog.notAvailable") !== -1).toBe(true);
     });
 });

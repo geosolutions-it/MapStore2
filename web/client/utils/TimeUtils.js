@@ -1,4 +1,4 @@
-const {isString, isDate} = require('lodash');
+const {isString, isDate, get, castArray} = require('lodash');
 const moment = require('moment');
 const LocaleUtils = require('./LocaleUtils');
 
@@ -212,9 +212,51 @@ const getDateTimeFormat = (locale, type) => {
             return dateFormat + " " + timeFormat;
     }
 };
+
+/**
+ * Converts the Multidim Extensions GetDomain Response into an array of
+ * dimensions object to add to the layer/dimension internal representation.
+ * The resulting objects has a shape like this:
+ * ```javascript
+ * domains = [{
+ *     name: "time",
+ *     domain: {},
+ *     source: {
+ *         type: "multidim-extension",
+ *         version: ""
+ *
+ *     }
+ *
+ * }]
+ * ```
+ * @param {object} domains the domains object (JSON version of the XML)
+ * @param {string} url of the service
+ */
+const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
+    let dimensions = castArray(Domains.DimensionDomain || []).concat();
+    let version = Domains['@version'];
+    const bbox = get(Domains, 'SpaceDomain.BoundingBox');
+    if (bbox) {
+        dimensions.push({
+            Identifier: "space",
+            Domain: bbox
+        });
+    }
+    return dimensions.map(({ Identifier: name, Domain: domain }) => ({
+        source: {
+            type: "multidim-extension",
+            version,
+            url
+        },
+        name,
+        domain
+    }));
+};
+
 module.exports = {
     getDateTimeFormat,
     getTimezoneOffsetMillis,
+    domainsToDimensionsObject,
     getUTCTimePart,
     getUTCDatePart,
     timeIntervalNumber,

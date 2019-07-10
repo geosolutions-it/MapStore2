@@ -40,7 +40,8 @@ import {
     updateStyleCode,
     deleteStyle,
     UPDATE_STATUS,
-    setDefaultStyle
+    setDefaultStyle,
+    INIT_STYLE_SERVICE
 } from '../../actions/styleeditor';
 
 import {
@@ -1250,6 +1251,71 @@ describe('Test styleeditor epics, with mock axios', () => {
             selectStyleTemplate({ }),
             results,
         state);
+    });
+
+    it('toggleStyleEditorEpic: test dynamic style service', (done) => {
+
+        mockAxios.onGet(/\/manifest/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        mockAxios.onGet(/\/layerWorkspace/).reply(() => {
+            return [ 200, ''];
+        });
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerWorkspace:layerName',
+                        url: 'protocol://style-editor/geoserver/'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 2;
+
+        const results = (actions) => {
+            try {
+                const [
+                    loadingStyleAction,
+                    initStyleServiceAction
+                ] = actions;
+
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(initStyleServiceAction.type).toBe(INIT_STYLE_SERVICE);
+                expect(initStyleServiceAction.service).toEqual({
+                    baseUrl: 'protocol://style-editor/geoserver/',
+                    version: '2.16',
+                    formats: [ 'css', 'sld' ],
+                    availableUrls: []
+                });
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+        state);
+
     });
 
 });
