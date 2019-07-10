@@ -7,16 +7,15 @@
 */
 const React = require('react');
 const {branch} = require('recompose');
-const { Tooltip } = require('react-bootstrap');
-const OverlayTrigger = require('../OverlayTrigger');
-const Message = require('../../I18N/Message');
 const {omit} = require('lodash');
+
+const tooltip = require('./tooltip');
 /**
  * Button Tooltip enhancer. Enhances an object adding a tooltip (with i18n support).
  * It is applied only if props contains `tooltip` or `tooltipId` and if noTooltipWhenDisabled === true
  * the tooltip not applied if the button is disabled. It have to be applied to a React (functional) component
  * @type {function}
- * @name tooltip
+ * @name buttonTooltip
  * @memberof components.misc.enhancers
  * @prop {string|node} [tooltip] if present will add the tooltip. This is the full tooltip content
  * @prop {string} [tooltipId] if present will show a localized tooltip using the tooltipId as msgId
@@ -26,18 +25,12 @@ const {omit} = require('lodash');
  * @example
  * render() {
  *   const Cmp = tooltip((props) =><El {...props}></El>); // or simply tooltip(El);
- *   return <Cmp tooltipId="Hello" tooltipPosition="left" /> // => render the component with tooltip
+ *   return <Cmp tooltipId="Hello" tooltipPosition="left" noTooltipWhenDisabled={true} /> // => render the component with tooltip
  * }
  *
  */
 module.exports = branch(
-    ({tooltip, tooltipId, disabled, noTooltipWhenDisabled = false} = {}) => (tooltip || tooltipId) && !(noTooltipWhenDisabled && disabled),
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, ...props} = {}) => (<OverlayTrigger
-        trigger={tooltipTrigger}
-        id={idDropDown}
-        key={keyProp}
-        placement={tooltipPosition}
-        overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
-    // avoid to pass non needed props
+    ({disabled, noTooltipWhenDisabled = false} = {}) => !(noTooltipWhenDisabled && disabled),
+    tooltip,
     (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip", "noTooltipWhenDisabled"]))}>{props.children}</Wrapped>
 );
