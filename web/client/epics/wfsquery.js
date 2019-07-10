@@ -27,6 +27,8 @@ const {getJSONFeatureWA, getLayerJSONFeature} = require('../observables/wfs');
 const {describeFeatureTypeToAttributes} = require('../utils/FeatureTypeUtils');
 const notifications = require('../actions/notifications');
 
+const {find} = require("lodash");
+
 const FilterUtils = require('../utils/FilterUtils');
 const filterBuilder = require('../utils/ogc/Filter/FilterBuilder');
 const fromObject = require('../utils/ogc/Filter/fromObject');

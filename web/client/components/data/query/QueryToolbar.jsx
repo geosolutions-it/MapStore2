@@ -11,7 +11,7 @@ const React = require('react');
 const {Button} = require('react-bootstrap');
 const {isEqual} = require('lodash');
 const Modal = require('../../misc/Modal');
-const {checkOperatorValidity, setupCrossLayerFilterDefaults} = require('../../../utils/FilterUtils');
+const {checkOperatorValidity, setupCrossLayerFilterDefaults, isCrossLayerFilterValid} = require('../../../utils/FilterUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 
 class QueryToolbar extends React.Component {
@@ -119,10 +119,10 @@ class QueryToolbar extends React.Component {
             // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
-            !fieldsWithValues && !this.props.spatialField.geometry;
+            !fieldsWithValues && !this.props.spatialField.geometry && !isCrossLayerFilterValid(this.props.crossLayerFilter); 
 
         const isFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
-
+        console.log(isFilterChanged, this.appliedFilterChanged());
         const showTooltip = this.props.emptyFilterWarning
             && this.props.filterFields.filter((field) => field.value).length === 0
             && !this.props.spatialField.geometry
@@ -138,7 +138,7 @@ class QueryToolbar extends React.Component {
             onClick: this.search
         }];
         if (this.props.advancedToolbar) {
-            const disableSave = !isFilterChanged || !this.props.toolbarEnabled || this.props.loadingError;
+            const disableSave = !isFilterChanged || !this.props.toolbarEnabled || this.props.loadingError || this.appliedFilterChanged();
             const disableRestore = !isFilterChanged || !this.props.storedFilter || !this.props.toolbarEnabled;
             const disableReset = !this.props.appliedFilter || !this.props.toolbarEnabled;
             buttons = buttons.concat([
@@ -154,7 +154,7 @@ class QueryToolbar extends React.Component {
                 tooltipId: "queryform.discard",
                 disabled: disableRestore,
                 noTooltipWhenDisabled: true,
-                glyph: "chevron-left",
+                glyph: "undo",
                 id: "query-toolbar-discard",
                 onClick: this.restorePersistedFilter
             },
@@ -194,6 +194,8 @@ class QueryToolbar extends React.Component {
         );
     }
     appliedFilterChanged = () => {
+
+
         const currentFilter = this.getCurrentFilter();
         const current = {
             groupFields: currentFilter.groupFields,
@@ -204,10 +206,13 @@ class QueryToolbar extends React.Component {
         const appliedFilter = this.props.appliedFilter || {};
         const applied = {
             groupFields: appliedFilter.groupFields,
-            filterFields: appliedFilter.filterFields,
-            spatialField: appliedFilter.spatialField,
-            crossLayerFilter: appliedFilter.crossLayerFilter && appliedFilter.crossLayerFilter.operation ? appliedFilter.crossLayerFilter : null
+            filterFields: appliedFilter.attributePanelExpanded && appliedFilter.filterFields || [],
+            spatialField: appliedFilter.spatialPanelExpanded && appliedFilter.spatialField || {
+                attribute: this.props.spatialField && this.props.spatialField.attribute
+            },
+            crossLayerFilter: appliedFilter.crossLayerExpanded && appliedFilter.crossLayerFilter && appliedFilter.crossLayerFilter.operation ? setupCrossLayerFilterDefaults(appliedFilter.crossLayerFilter) : null
         };
+        console.log(current, applied);
         return !isEqual(current, applied);
     }
     search = () => {

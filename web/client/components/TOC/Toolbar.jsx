@@ -244,7 +244,7 @@ class Toolbar extends React.Component {
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-layerFilter">{this.props.text.layerFilterTooltip}</Tooltip>}>
                         <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onQueryBuilder}>
-                            <Glyphicon glyph="filter" />
+                            <Glyphicon glyph="filter-layer" />
                         </Button>
                     </OverlayTrigger>
                 : null}

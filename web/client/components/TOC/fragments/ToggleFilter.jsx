@@ -31,7 +31,7 @@ class ToggleFilter extends React.Component {
             <OverlayTrigger
                 placement="bottom"
                 overlay={<Tooltip id="toc-filter-icon">{<Message msgId={!disabled ? 'toc.filterIconEnabled' : 'toc.filterIconDisabled'} />}</Tooltip>}>
-                <Glyphicon onClick={this.onClick} className={`toc-filter-icon ${!!disabled ? "disabled" : ""}`} glyph="filter" />
+                <Glyphicon onClick={this.onClick} className={`toc-filter-icon ${!!disabled ? "disabled" : ""}`} glyph="filter-layer" />
             </OverlayTrigger>
         );
     }

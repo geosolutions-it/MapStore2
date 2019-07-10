@@ -85,6 +85,9 @@ module.exports = {
                     .switchMap( ({filterObj}) => {
                         let newFilter = isNotEmptyFilter(filterObj) ? {...get(getState(), "queryform", {})} : undefined;
                         if (newFilter) {
+                            newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
+                            newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;
+                            newFilter.crossLayerFilter = newFilter.crossLayerExpanded && FilterUtils.setupCrossLayerFilterDefaults(newFilter.crossLayerFilter) || null;
                             const {nativeCrs} = getSelectedLayer(getState());
                             newFilter = FilterUtils.normalizeFilterCQL(newFilter, nativeCrs);
                         }

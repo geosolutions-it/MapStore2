@@ -26,6 +26,15 @@ const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : 
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
 };
+/**
+ * Test if crossLayer filter is valid.
+ * @param {object} crossLayerFilter
+ * @return {boolean}
+ */
+const isCrossLayerFilterValid = (crossLayerFilter) =>
+        get(crossLayerFilter, 'operation', false) &&
+        get(crossLayerFilter, 'collectGeometries.queryCollection.typeName', false) &&
+        get(crossLayerFilter, 'collectGeometries.queryCollection.geometryName', false);
 const wrapAttributeWithDoubleQuotes = a => "\"" + a + "\"";
 
 const setupCrossLayerFilterDefaults = (crossLayerFilter) => {
@@ -977,7 +986,8 @@ const FilterUtils = {
             return FilterUtils.reprojectFilterInNativeCrs(filter, nativeCrs);
         }
         return filter;
-    }
+    },
+    isCrossLayerFilterValid
 };
 
 module.exports = FilterUtils;
