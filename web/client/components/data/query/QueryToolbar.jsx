@@ -119,10 +119,9 @@ class QueryToolbar extends React.Component {
             // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
-            !fieldsWithValues && !this.props.spatialField.geometry && !isCrossLayerFilterValid(this.props.crossLayerFilter); 
+            !fieldsWithValues && !this.props.spatialField.geometry && !isCrossLayerFilterValid(this.props.crossLayerFilter);
 
         const isFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
-        console.log(isFilterChanged, this.appliedFilterChanged());
         const showTooltip = this.props.emptyFilterWarning
             && this.props.filterFields.filter((field) => field.value).length === 0
             && !this.props.spatialField.geometry
@@ -212,7 +211,6 @@ class QueryToolbar extends React.Component {
             },
             crossLayerFilter: appliedFilter.crossLayerExpanded && appliedFilter.crossLayerFilter && appliedFilter.crossLayerFilter.operation ? setupCrossLayerFilterDefaults(appliedFilter.crossLayerFilter) : null
         };
-        console.log(current, applied);
         return !isEqual(current, applied);
     }
     search = () => {
