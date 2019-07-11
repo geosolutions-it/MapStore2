@@ -20,6 +20,8 @@ const queryFormUiStateSelector = createSelector(attributePanelExpandedSelector, 
         spatialPanelExpanded,
         crossLayerExpanded
 }));
+const storedFilterSelector = state => get(state, "layerFilter.persisted");
+const appliedFilterSelector = state => get(state, "layerFilter.applied");
 
 module.exports = {
     spatialFieldSelector,
@@ -31,5 +33,7 @@ module.exports = {
     spatialFieldGeomCoordSelector: state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).coordinates || [],
     crossLayerFilterSelector,
     availableCrossLayerFilterLayersSelector,
-    queryFormUiStateSelector
+    queryFormUiStateSelector,
+    storedFilterSelector,
+    appliedFilterSelector
 };

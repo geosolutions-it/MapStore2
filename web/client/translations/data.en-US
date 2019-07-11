@@ -402,6 +402,7 @@
             "toolTrashLayerTooltip": "Remove selected layer",
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolFeaturesGridTooltip": "Open Attribute Table",
+            "layerFilterTooltip": "Filter Layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
             "filterPlaceholder": "Filter layers",
@@ -427,6 +428,8 @@
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+            "filterIconEnabled": "Disable layer filter",
+            "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -762,7 +765,10 @@
         "queryform": {
             "title": "Advanced Search",
             "query": "Search",
+            "apply": "Apply filter",
             "reset": "Reset",
+            "save": "Save current filter",
+            "discard": "Discard filter changes", 
             "query_request_exception": "Request Error",
             "config": {
                 "load_config_exception": "Error Loading Configuration"
@@ -849,7 +855,16 @@
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
                 }
-            }
+            },
+            "changedFilter": "Filter Changed",
+            "discardbtn": "Discard",
+            "changedFilterAlert": "Save or discard actual filter?",
+            "resetFilter": "Remove filter",
+            "resetFilterAlert": "It is not possible to undo a filter reset action. Do you confirm?",
+            "confirmReset": "Confirm",
+            "loadingError": "WMS rendering failed due to filter configuration, try to remove or fix it.",
+            "changedFilterWithErrorAlert": "Filter is causing WMS render failure, try to fix or discard it"
+
         },
         "annotations": {
             "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",

@@ -15,6 +15,7 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
        browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
+const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
@@ -149,6 +150,7 @@ class LayerTree extends React.Component {
         onToggleLayer: PropTypes.func,
         onContextMenu: PropTypes.func,
         onBrowseData: PropTypes.func,
+        onQueryBuilder: PropTypes.func,
         onDownload: PropTypes.func,
         onSelectNode: PropTypes.func,
         selectedNodes: PropTypes.array,
@@ -202,6 +204,7 @@ class LayerTree extends React.Component {
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
         activateAddGroupButton: PropTypes.bool,
+        activateLayerFilterTool: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool
@@ -239,9 +242,10 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateMetedataTool: true,
         activateRemoveLayer: true,
-        activateQueryTool: false,
+        activateQueryTool: true,
         activateDownloadTool: false,
         activateWidgetTool: false,
+        activateLayerFilterTool: true,
         maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -364,7 +368,8 @@ class LayerTree extends React.Component {
                                 activateAddGroup: this.props.activateAddGroupButton,
                                 includeDeleteButtonInSettings: false,
                                 activateMetedataTool: this.props.activateMetedataTool,
-                                activateWidgetTool: this.props.activateWidgetTool
+                                activateWidgetTool: this.props.activateWidgetTool,
+                                activateLayerFilterTool: this.props.activateLayerFilterTool
                             }}
                             options={{
                                 modalOptions: {},
@@ -407,12 +412,15 @@ class LayerTree extends React.Component {
                                     LAYERS: <Message msgId="toc.toolReloadLayersTooltip"/>
                                 },
                                 layerMetadataTooltip: <Message msgId="toc.layerMetadata.toolLayerMetadataTooltip"/>,
-                                layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>
+                                layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>,
+                                layerFilterTooltip: <Message msgId="toc.layerFilterTooltip"/>
+
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
                                 onNewWidget: this.props.onNewWidget,
                                 onBrowseData: this.props.onBrowseData,
+                                onQueryBuilder: this.props.onQueryBuilder,
                                 onDownload: this.props.onDownload,
                                 onUpdate: this.props.updateNode,
                                 onRemove: this.props.removeNode,
@@ -573,6 +581,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
     onBrowseData: browseData,
+    onQueryBuilder: openQueryBuilder,
     onDownload: download,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,

@@ -13,22 +13,29 @@ module.exports = {
      * Check layer options to manipulate and manage vendor params in case of GeoServer usage.
      * If you have a filterObj in options, this should be converted into a CQL_FILTER and joined with the existing cql filter, if any.
      * (filterObj is the temp filter applied to the layer when you apply, for instance, sync with feature grid)
+     * layerFilter
      * @memberof Utils.VendorParamsUtils
      * @param {object} options layer options
      * @returns params for the layer's request, properly manipulated
      */
     optionsToVendorParams: (options = {}) => {
-        const cqlFilterFromObject = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
-        const { CQL_FILTER: cqlFilterFromParams, ...params } = options && options.params || {};
+        const layerFilter = FilterUtils.normalizeFilterCQL(options.layerFilter, options.nativeCrs);
+        const featureGridFilter = FilterUtils.normalizeFilterCQL(options.filterObj, options.nativeCrs);
+        let cqlFilters = [
+            FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled && FilterUtils.toCQLFilter(layerFilter),
+            FilterUtils.isFilterValid(featureGridFilter) && FilterUtils.toCQLFilter(featureGridFilter),
+            options && options.params && options.params.CQL_FILTER];
         let CQL_FILTER;
-        if (cqlFilterFromObject && cqlFilterFromParams) {
-            CQL_FILTER = `(${cqlFilterFromObject}) AND (${cqlFilterFromParams})`;
-        } else {
-            CQL_FILTER = cqlFilterFromObject || cqlFilterFromParams;
+
+        cqlFilters = cqlFilters.filter( f => !!f);
+        if (cqlFilters.length > 1) {
+            CQL_FILTER = cqlFilters.map(f => (`(${f})`)).join(" AND ");
+        }else {
+            CQL_FILTER = cqlFilters.pop();
         }
         return CQL_FILTER ? {
-            CQL_FILTER,
-            ...params
+            ...options.params,
+            CQL_FILTER
         } : options.params;
     }
 };

@@ -402,6 +402,7 @@
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
+            "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
             "filterPlaceholder": "Filtra layers",
@@ -427,6 +428,8 @@
             "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
             "refreshError": "Errore di aggiornamento sui layer: ",
             "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
+            "filterIconEnabled": "Disattiva il filtro",
+            "filterIconDisabled": "Attiva il filtro",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -762,7 +765,10 @@
         "queryform": {
             "title": "Ricerca Avanzata",
             "query": "Ricerca",
+            "apply": "Applica filtro",
             "reset": "Reimposta",
+            "save": "Salva il filtro attuale",
+            "discard": "Elimina le modifiche del filtro",
             "query_request_exception": "Errore nella richiesta",
             "config": {
                 "load_config_exception": "Errore Caricamento Configurazione"
@@ -849,7 +855,15 @@
                 "errors": {
                     "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
                 }
-            }
+            },
+            "changedFilter": "Filtero modificato",
+            "discardbtn": "Elimina",
+            "changedFilterAlert": "Salva o elimina il filtro corrente?",
+            "resetFilter": "Cancella filtri",
+            "resetFilterAlert": "Eliminazione dei filtri è un'azione non reversibile. Confermi eliminazione?",
+            "confirmReset": "Conferma",
+            "loadingError": "Il rendering WMS è fallito a causa della configurazione del filtro, provare a rimuoverlo o ripararlo",
+            "changedFilterWithErrorAlert": "Filter is causing WMS render failure, try to fix or discard it"
         },
         "annotations": {
             "errorLoadingSymbols": "Si è verificato un problema durante il caricamento dell'elenco dei simboli. Per favore, contatta l'amministratore per verificare le opzioni di configurazione",

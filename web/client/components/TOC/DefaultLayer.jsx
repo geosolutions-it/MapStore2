@@ -17,6 +17,7 @@ const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
 const OpacitySlider = require('./fragments/OpacitySlider');
+const ToggleFilter = require('./fragments/ToggleFilter');
 const withTooltip = require('../data/featuregrid/enhancers/withTooltip');
 const localizedProps = require('../misc/enhancers/localizedProps');
 
@@ -149,6 +150,7 @@ class DefaultLayer extends React.Component {
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
+                    <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                     <Title
                         tooltipOptions={this.props.tooltipOptions}
                         tooltip={this.props.titleTooltip}
@@ -158,6 +160,7 @@ class DefaultLayer extends React.Component {
                         onClick={this.props.onSelect}
                         onContextMenu={this.props.onContextMenu}
                     />
+
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                     {this.props.indicators ? this.renderIndicators() : null}
                 </div>

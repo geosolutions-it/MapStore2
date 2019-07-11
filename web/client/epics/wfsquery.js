@@ -15,6 +15,7 @@ const {FEATURE_TYPE_SELECTED, QUERY, UPDATE_QUERY, featureLoading, featureTypeLo
 const {paginationInfo, isDescribeLoaded, layerDescribeSelector} = require('../selectors/query');
 const {mapSelector} = require('../selectors/map');
 const {authkeyParamNameSelector} = require('../selectors/catalog');
+const {getSelectedLayer} = require('../selectors/layers');
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const { addTimeParameter } = require('../utils/WFSTimeUtils');
@@ -25,9 +26,20 @@ const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
-const {getJSONFeatureWA} = require('../observables/wfs');
+const {getJSONFeatureWA, getLayerJSONFeature} = require('../observables/wfs');
 const {describeFeatureTypeToAttributes} = require('../utils/FeatureTypeUtils');
 const notifications = require('../actions/notifications');
+
+const {find} = require("lodash");
+
+const FilterUtils = require('../utils/FilterUtils');
+const filterBuilder = require('../utils/ogc/Filter/FilterBuilder');
+const fromObject = require('../utils/ogc/Filter/fromObject');
+const { read } = require('../utils/ogc/Filter/CQL/parser');
+
+const fb = filterBuilder({ gmlVersion: "3.1.1" });
+const toFilter = fromObject(fb);
+const {filter, and} = fb;
 
 const extractInfo = (data) => {
     return {
@@ -101,7 +113,7 @@ const featureTypeSelectedEpic = (action$, store) =>
         });
 
 /**
- * Sends a WFS query, returns a response or handles request error
+ * Sends a WFS query composing filters from action, layerFilter and cql_filter, returns a response or handles request error
  * in particular the NoApplicableCode WFS error with a forced sort option on the first attribute
  * @memberof epics.wfsquery
  * @param {external:Observable} action$ manages `QUERY`
@@ -113,13 +125,28 @@ const wfsQueryEpic = (action$, store) =>
             const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
+            // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
+            const layer = getSelectedLayer(store.getState()) || {};
+            const {layerFilter, params} = layer;
+            const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
+            const cqlFilterRules = cqlFilter
+                ? [toFilter(read(cqlFilter))]
+                : [];
+
+            const filterObj = (cqlFilterRules.length > 0 || (FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled)) && filter(and(
+                ...cqlFilterRules,
+                ...(FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                ...(FilterUtils.isFilterValid(action.filterObj) ? FilterUtils.toOGCFilterParts(action.filterObj, "1.1.0", "ogc") : [])))
+                || action.filterObj;
             const { url: queryUrl, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
+            const options = {
+                ...action.filterObj.pagination,
+                totalFeatures,
+                sortOptions,
+                ...queryOptions
+            };
             return Rx.Observable.merge(
-                    getJSONFeatureWA(queryUrl, action.filterObj, {
-                        totalFeatures,
-                        sortOptions,
-                        ...queryOptions
-                    })
+                    (typeof filterObj === 'object' && getJSONFeatureWA(queryUrl, filterObj, options) || getLayerJSONFeature(layer, filterObj, options))
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))

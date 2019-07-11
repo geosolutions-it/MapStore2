@@ -19,7 +19,9 @@ var {
     QUERY_CREATE,
     QUERY,
     RESET_QUERY,
-    INIT_QUERY_PANEL, initQueryPanel,
+    INIT_QUERY_PANEL,
+    TOGGLE_LAYER_FILTER,
+    initQueryPanel,
     layerSelectedForSearch,
     featureTypeSelected,
     featureTypeError,
@@ -30,7 +32,8 @@ var {
     queryError,
     createQuery,
     query,
-    resetQuery
+    resetQuery,
+    toggleLayerFilter
 } = require('../wfsquery');
 
 describe('wfsquery actions', () => {
@@ -106,5 +109,9 @@ describe('wfsquery actions', () => {
     it('resetQuery', () => {
         let {type} = resetQuery();
         expect(type).toBe(RESET_QUERY);
+    });
+    it('toggleLayerFilter', () => {
+        let {type} = toggleLayerFilter();
+        expect(type).toBe(TOGGLE_LAYER_FILTER);
     });
 });

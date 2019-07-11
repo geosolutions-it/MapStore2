@@ -12,6 +12,7 @@ const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = requi
 const { read } = require('./ogc/Filter/CQL/parser');
 const fromObject = require('./ogc/Filter/fromObject');
 const filterBuilder = require('./ogc/Filter/FilterBuilder');
+const CoordinatesUtils = require('./CoordinatesUtils');
 
 const cqlToOgc = (cqlFilter, fOpts) => {
     const fb = filterBuilder(fOpts);
@@ -25,6 +26,15 @@ const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : 
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
 };
+/**
+ * Test if crossLayer filter is valid.
+ * @param {object} crossLayerFilter
+ * @return {boolean}
+ */
+const isCrossLayerFilterValid = (crossLayerFilter) =>
+        get(crossLayerFilter, 'operation', false) &&
+        get(crossLayerFilter, 'collectGeometries.queryCollection.typeName', false) &&
+        get(crossLayerFilter, 'collectGeometries.queryCollection.geometryName', false);
 const wrapAttributeWithDoubleQuotes = a => "\"" + a + "\"";
 
 const setupCrossLayerFilterDefaults = (crossLayerFilter) => {
@@ -934,7 +944,50 @@ const FilterUtils = {
             && f.crossLayerFilter.collectGeometries
             && f.crossLayerFilter.collectGeometries.queryCollection
             && f.crossLayerFilter.collectGeometries.queryCollection.geometryName
-            && f.crossLayerFilter.collectGeometries.queryCollection.typeName)
+            && f.crossLayerFilter.collectGeometries.queryCollection.typeName),
+    composeAttributeFilters: (filters, logic = "AND") => {
+        const rootGroup = {
+            id: new Date().getTime(),
+            index: 0,
+            logic
+        };
+        return filters.reduce((filter, {filterFields = [], groupFields = []} = {}, idx) => {
+            return ({
+                groupFields: filter.groupFields.concat(filterFields.length > 0 && groupFields.map(g => ({groupId: g.index === 0 && rootGroup.id || `${g.groupId}_${idx}`, logic: g.logic, id: `${g.id}_${idx}`, index: 1 + g.index })) || []),
+                filterFields: filter.filterFields.concat(filterFields.map(f => ({...f, groupId: `${f.groupId}_${idx}`})))});
+        }, {groupFields: [rootGroup], filterFields: []});
+    },
+    /**
+     @return a spatial filter with coordinates reprojected to nativeCrs
+    */
+    reprojectFilterInNativeCrs: (filter, nativeCrs) => {
+        let newCoords = CoordinatesUtils.reprojectGeoJson(filter.spatialField.geometry, filter.spatialField.geometry.projection || "EPSG:3857", nativeCrs).coordinates;
+        return {
+            ...filter,
+            spatialField: {
+                ...filter.spatialField,
+                geometry: {
+                    ...filter.spatialField.geometry,
+                    coordinates: newCoords,
+                    projection: nativeCrs
+                }
+            }
+        };
+    },
+    /**
+     @return a filterObject ready to be stringified in a cql filter (Cql filter needs spatial filter in layer nativeCrs). If the filter has a spatialFilter this will be reprojected
+             in native otherwise it will be stripped.
+    */
+    normalizeFilterCQL: (filter, nativeCrs) => {
+        if (filter && filter.spatialField && filter.spatialField.geometry && filter.spatialField.geometry.coordinates && filter.spatialField.geometry.coordinates[0] && (filter.spatialField.projection || "EPSG:3857") !== nativeCrs) {
+            if (!nativeCrs) {
+                return {...filter, spatialField: undefined};
+            }
+            return FilterUtils.reprojectFilterInNativeCrs(filter, nativeCrs);
+        }
+        return filter;
+    },
+    isCrossLayerFilterValid
 };
 
 module.exports = FilterUtils;

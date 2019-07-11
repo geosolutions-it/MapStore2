@@ -44,6 +44,7 @@ class Toolbar extends React.Component {
             onZoom: () => {},
             onNewWidget: () => {},
             onBrowseData: () => {},
+            onQueryBuilder: () => {},
             onUpdate: () => {},
             onRemove: () => {},
             onClear: () => {},
@@ -93,7 +94,9 @@ class Toolbar extends React.Component {
                 LAYERS: ''
             },
             layerMetadataTooltip: '',
-            layerMetadataPanelTitle: ''
+            layerMetadataPanelTitle: '',
+            layerFilter: ''
+
         },
         activateTool: {
             activateToolsContainer: true,
@@ -105,7 +108,8 @@ class Toolbar extends React.Component {
             activateAddLayer: true,
             activateAddGroup: true,
             includeDeleteButtonInSettings: false,
-            activateMetedataTool: true
+            activateMetedataTool: true,
+            activateLayerFilterTool: true
         },
         options: {
             modalOptions: {},
@@ -231,6 +235,16 @@ class Toolbar extends React.Component {
                         overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status === 'LAYER_LOAD_ERROR' ? 'LAYER' : status]}</Tooltip>}>
                         <Button active={this.props.settings.expanded} bsStyle={this.props.settings.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => { this.showSettings(status); }}>
                             <Glyphicon glyph="wrench"/>
+                        </Button>
+                    </OverlayTrigger>
+                : null}
+                {this.props.activateTool.activateLayerFilterTool && (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    <OverlayTrigger
+                        key="queryPanel"
+                        placement="top"
+                        overlay={<Tooltip id="toc-tooltip-layerFilter">{this.props.text.layerFilterTooltip}</Tooltip>}>
+                        <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onQueryBuilder}>
+                            <Glyphicon glyph="filter-layer" />
                         </Button>
                     </OverlayTrigger>
                 : null}
