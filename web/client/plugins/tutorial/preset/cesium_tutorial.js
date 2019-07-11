@@ -48,7 +48,7 @@ module.exports = [
     },
     {
         translation: 'identifyButton',
-        selector: '#identifyBar-container',
+        selector: '#navigationBar-container > .btn:last-child',
         position: 'top'
     }
 ];
