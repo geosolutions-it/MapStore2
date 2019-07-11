@@ -831,9 +831,8 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1]).toExist();
             expect(spy.calls[1].arguments[0].x).toEqual(0);
             expect(spy.calls[1].arguments[0].y).toEqual(0);
-            expect(spy.calls[1].arguments[0].x).toEqual(0);
-            expect(spy.calls[1].arguments[0].y).toEqual(0);
             // Bbox should be max.
+            expect(spy.calls[1].arguments[1]).toEqual(0);
             expect(spy.calls[1].arguments[2].bounds.maxx).toBeGreaterThan(15654300);
             expect(spy.calls[1].arguments[2].bounds.maxy).toBeGreaterThan(7827150);
             expect(spy.calls[1].arguments[2].bounds.minx).toBeLessThan(-15654300);
@@ -845,6 +844,54 @@ describe('OpenlayersMap', () => {
         const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
         expect(hook).toExist();
         hook([-180, -90, 180, 90], { crs: "EPSG:4326", duration: 0 });
+        olMap.dispatchEvent('moveend');
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0]).toExist(); // first is called by initial render
+    });
+
+    it('test ZOOM_TO_EXTENT_HOOK with full extent', (done) => {
+        /*
+         * Converting [-180, -90, 180, 90] in EPSG:3857 caused a bounds array of [0,0,0,0],
+         * and so a zoom to maxZoom in the 0,0 coordinates
+         * To avoid this, zoom to max resolution extent.
+         * TODO: improve this to manage all degenerated bounding boxes.
+         */
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const testHandlers = {
+            onMapViewChanges: () => { }
+        };
+        // fix size
+        document.querySelector('#map').setAttribute('style', "width: 200px; height: 200px");
+        const spy = expect.spyOn(testHandlers, 'onMapViewChanges');
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            onMapViewChanges={testHandlers.onMapViewChanges} />,
+            document.getElementById("map"));
+        const olMap = map.map;
+        olMap.on('moveend', () => {
+            expect(spy.calls[1]).toExist();
+            expect(spy.calls[1].arguments[0].x).toBeGreaterThan(0);
+            expect(spy.calls[1].arguments[0].y).toBeGreaterThan(0);
+            expect(spy.calls[1].arguments[0].x).toBeLessThan(2);
+            expect(spy.calls[1].arguments[0].y).toBeLessThan(2);
+            // Bbox should not be max.
+            expect(spy.calls[1].arguments[1]).toBe(20);
+            expect(spy.calls[1].arguments[2].bounds.maxx).toBeGreaterThan(111319);
+            expect(spy.calls[1].arguments[2].bounds.maxy).toBeGreaterThan(111325);
+            expect(spy.calls[1].arguments[2].bounds.minx).toBeLessThan(111320);
+            expect(spy.calls[1].arguments[2].bounds.miny).toBeLessThan(111326);
+            done();
+
+        });
+        expect(map).toExist();
+        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toExist();
+        hook([1, 1, 1, 1], { crs: "EPSG:4326", duration: 0 });
         olMap.dispatchEvent('moveend');
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[0]).toExist(); // first is called by initial render
