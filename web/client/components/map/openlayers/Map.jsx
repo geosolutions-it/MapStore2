@@ -16,7 +16,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 const mapUtils = require('../../../utils/MapUtils');
 const projUtils = require('../../../utils/openlayers/projUtils');
 
-const { isEqual, throttle } = require('lodash');
+const { isEqual, throttle, isArray, isNil } = require('lodash');
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -522,12 +522,17 @@ class OpenlayersMap extends React.Component {
         mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration } = {}) => {
             let bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
-            // if EPSG:4326 with max extent (-90. 180, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
+            // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3]) {
+            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
+                crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
                 bounds = this.map.getView().getProjection().getExtent();
+            }
+            let maxZoom = zoomLevel;
+            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
+                maxZoom = 21; // TODO: allow to this maxZoom to be customizable
             }
             this.map.getView().fit(bounds, {
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
