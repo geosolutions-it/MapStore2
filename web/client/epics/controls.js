@@ -7,6 +7,8 @@
  */
 
 const Rx = require('rxjs');
+const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
+const { purgeMapInfoResults, hideMapinfoMarker } = require('../actions/mapInfo');
 
 module.exports = {
     onEpic: (action$, store) =>
@@ -16,5 +18,13 @@ module.exports = {
                 return Rx.Observable.of(action.action);
             }
             return Rx.Observable.of(action.elseAction.call());
-        })
+        }),
+
+    setControlPropertiesEpic: (action$) =>
+        action$
+            .ofType(SET_CONTROL_PROPERTIES)
+            .filter((action) => action.control === "metadataexplorer" && action.properties && action.properties.enabled)
+            .switchMap(() => {
+                return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
+            })
 };
