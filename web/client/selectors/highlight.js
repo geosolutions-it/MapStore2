@@ -27,7 +27,8 @@ const filteredFeatures = createSelector(
                         coordinates: geometryCoordinates
                     },
                     style: {
-                        fillColor: 'rgba(255, 255, 255, 0.2)',
+                        fillColor: '#FFFFFF',
+                        fillOpacity: '0.2',
                         color: '#ffcc33'
                     },
                     id: geometryId

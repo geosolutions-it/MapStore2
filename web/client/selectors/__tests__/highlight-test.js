@@ -45,7 +45,8 @@ let feature3 = [{
         coordinates: [ [ 0.000008983152841195214, 0.000017966305681987637 ] ]
     },
     style: {
-        fillColor: 'rgba(255, 255, 255, 0.2)',
+        fillColor: '#FFFFFF',
+        fillOpacity: '0.2',
         color: '#ffcc33'
     },
     id: 'spatial_object'

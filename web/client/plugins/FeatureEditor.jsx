@@ -144,6 +144,7 @@ const FeatureDock = (props = {
             {getDialogs(props.tools)}
             <Grid
                 onMount={props.onMount}
+                showFilteredObject={props.showFilteredObject}
                 editingAllowedRoles={props.editingAllowedRoles}
                 initPlugin={props.initPlugin}
                 customEditorsOptions={props.customEditorsOptions}
