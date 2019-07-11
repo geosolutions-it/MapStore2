@@ -527,13 +527,12 @@ class OpenlayersMap extends React.Component {
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
             if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
-                // the following is needed to avoid to use projection extent when extent is generated from a point
                 crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
                 bounds = this.map.getView().getProjection().getExtent();
             }
             let maxZoom = zoomLevel;
             if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
-                maxZoom = 20; // is enough for points
+                maxZoom = 21; // TODO: allow to this maxZoom to be customizable
             }
             this.map.getView().fit(bounds, {
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],

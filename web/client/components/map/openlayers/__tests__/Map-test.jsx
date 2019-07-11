@@ -880,7 +880,7 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[0].x).toBeLessThan(2);
             expect(spy.calls[1].arguments[0].y).toBeLessThan(2);
             // Bbox should not be max.
-            expect(spy.calls[1].arguments[1]).toBe(20);
+            expect(spy.calls[1].arguments[1]).toBe(21);
             expect(spy.calls[1].arguments[2].bounds.maxx).toBeGreaterThan(111319);
             expect(spy.calls[1].arguments[2].bounds.maxy).toBeGreaterThan(111325);
             expect(spy.calls[1].arguments[2].bounds.minx).toBeLessThan(111320);
