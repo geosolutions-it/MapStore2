@@ -12,8 +12,12 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const {
     searchDashboardsOnMapSearch,
-    searchDashboards: searchDashboardsEpic
+    searchDashboards: searchDashboardsEpic,
+    reloadOnDashboards
 } = require('../dashboards');
+
+const { dashboardSaved } = require('../../actions/dashboard');
+
 
 const {
     SEARCH_DASHBOARDS,
@@ -76,6 +80,28 @@ describe('dashboards epics', () => {
             expect(actions[2].value).toBe(false);
             done();
         }, {});
+    });
+    describe('reloadOnDashboards', () => {
+        it('reload on dashboardSaved', (done) => {
+            const startActions = [dashboardSaved("Search Text")];
+            testEpic(reloadOnDashboards, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_DASHBOARDS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                    dashboards: {
+                        searchText: "test",
+                        options: {
+                            params: {
+                                start: 0,
+                                limit: 12
+                            }
+                        }
+                    }
+                });
+        });
     });
     it('searchDashboards error', (done) => {
         const baseUrl = "base/web/client/test-resources/geostore/extjs/search/NODATA#";
