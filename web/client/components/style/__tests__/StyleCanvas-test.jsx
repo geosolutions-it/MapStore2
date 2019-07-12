@@ -69,4 +69,11 @@ describe("Test the StyleCanvas style component", () => {
         const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
+    it('test component drawing text', () => {
+        let style = {...{width: 100, height: 100}};
+        ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Text"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const canvas = container.querySelector('canvas');
+        expect(canvas).toExist();
+    });
 });
