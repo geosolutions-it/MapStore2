@@ -59,7 +59,7 @@ const emptyResultsState = {
     filters: {},
     editingAllowedRoles: ["ADMIN"],
     enableColumnFilters: true,
-    showFilteredObject: true,
+    showFilteredObject: false,
     timeSync: false,
     showTimeSync: false,
     open: false,
