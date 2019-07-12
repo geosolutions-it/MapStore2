@@ -7,6 +7,7 @@
  */
 
 import {defaults, DragPan, MouseWheelZoom} from 'ol/interaction';
+import {defaults as defaultControls} from 'ol/control';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import {toLonLat} from 'ol/proj';
@@ -114,7 +115,7 @@ export default class OpenlayersMap extends React.Component {
                 new MouseWheelZoom({ duration: 0 })
             ]);
         }
-        let controls = defaults(assign({
+        let controls = defaultControls(assign({
             zoom: this.props.zoomControl,
             attributionOptions: assign({
                 collapsible: false
