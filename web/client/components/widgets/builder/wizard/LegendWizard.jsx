@@ -51,7 +51,7 @@ module.exports = ({
                     <LegendPreview
                         valid={valid}
                         dependencies={dependencies}
-                        dependenciesMap={data.dependenciesMap}
+                        dependenciesMap={data.dependenciesMap.layers}
                         key="widget-options"
                         onChange={onChange}
                     />
