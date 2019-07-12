@@ -23,23 +23,31 @@ describe("Test the ColorRampItem", () => {
         setTimeout(done);
     });
 
-    it('creates colorramp with defaults', () => {
+    it('creates colorRamp with defaults', () => {
         ReactDOM.render(<ColorRampItem />, document.getElementById("container"));
         const container = document.getElementById('container');
         const colorRamp = container.querySelector('.color-ramp-item');
         expect(colorRamp).toExist();
     });
-    it('colorrampitem with string item equal to blue', () => {
+    it('ColorRampItem with string item equal to blue', () => {
         ReactDOM.render(<ColorRampItem item="blue" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const colorRamp = container.querySelector('.colorname-cell');
         expect(colorRamp.innerHTML).toEqual('blue');
     });
-    it('colorrampitem with object item contain name', () => {
+    it('ColorRampItem with object item contain name', () => {
         const color = 'global.colors.blue';
         ReactDOM.render(<ColorRampItem item={{name: color}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const colorRamp = container.querySelector('span');
         expect(colorRamp.innerHTML).toEqual(color);
+    });
+    it('ColorRampItem with object item contain label', () => {
+        const name = 'blue';
+        const label = 'global.colors.blue';
+        ReactDOM.render(<ColorRampItem item={{name, label}} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const colorRamp = container.querySelector('span');
+        expect(colorRamp.innerHTML).toEqual(label);
     });
 });
