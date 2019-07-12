@@ -35,18 +35,11 @@ describe("Test the ColorRampItem", () => {
         const colorRamp = container.querySelector('.colorname-cell');
         expect(colorRamp.innerHTML).toEqual('blue');
     });
-    it('colorrampitem with object item contain name equal to full INTL path', () => {
+    it('colorrampitem with object item contain name', () => {
         const color = 'global.colors.blue';
         ReactDOM.render(<ColorRampItem item={{name: color}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const colorRamp = container.querySelector('span');
         expect(colorRamp.innerHTML).toEqual(color);
-    });
-    it('colorrampitem with object item contain name without full INTL path', () => {
-        const color = 'blue';
-        ReactDOM.render(<ColorRampItem item={{name: color}} />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const colorRamp = container.querySelector('span');
-        expect(colorRamp.innerHTML).toEqual(`global.colors.${color}`);
     });
 });

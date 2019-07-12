@@ -22,7 +22,7 @@ const ColorRampItem = ({ item }) => {
             {ramp.map(cell => <div className="color-cell" key={item && item.name + "-" + cell} style={{ backgroundColor: cell }} />)}
             <div className="colorname-cell">
                 {item && item.name
-                    ? <Message msgId={item.name.includes('global.colors') ? item.name : `global.colors.${item.name}`} msgParams={{ number: ramp.length }} />
+                    ? <Message msgId={item.name} msgParams={{ number: ramp.length }} />
                     : item}
             </div>
         </div>
