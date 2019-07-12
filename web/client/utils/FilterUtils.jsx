@@ -936,6 +936,10 @@ const FilterUtils = {
         return data;
     },
     isLikeOrIlike: (operator) => operator === "ilike" || operator === "like",
+    isFilterEmpty: ({ filterFields = [], spatialField = {}, crossLayerFilter = {} } = {}) =>
+        !(filterFields.filter((field) => field.value || field.value === 0).length > 0)
+        && !spatialField.geometry
+        && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation),
     isFilterValid: (f = {}) =>
         (f.filterFields && f.filterFields.length > 0)
         || (f.simpleFilterFields && f.simpleFilterFields.length > 0)

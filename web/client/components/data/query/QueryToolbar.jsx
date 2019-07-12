@@ -11,7 +11,7 @@ const React = require('react');
 const {Button} = require('react-bootstrap');
 const {isEqual} = require('lodash');
 const Modal = require('../../misc/Modal');
-const {checkOperatorValidity, setupCrossLayerFilterDefaults, isCrossLayerFilterValid} = require('../../../utils/FilterUtils');
+const { checkOperatorValidity, setupCrossLayerFilterDefaults, isCrossLayerFilterValid, isFilterEmpty} = require('../../../utils/FilterUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 
 class QueryToolbar extends React.Component {
@@ -84,7 +84,6 @@ class QueryToolbar extends React.Component {
     };
     constructor(props) {
         super(props);
-        this.state = {showModal: false};
     }
     getCurrentFilter = () => {
         return {
@@ -111,25 +110,36 @@ class QueryToolbar extends React.Component {
         };
     }
     render() {
+        // TODO: we should separate advancedToolbar and standardToolbar into 2 different component or enhancers
         let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
-        // let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
-        let fieldsWithValues = this.props.filterFields.filter((field) => field.value || field.value === 0).length > 0 || (this.props.allowEmptyFilter && !this.props.advancedToolbar);
+        // option allowEmptyFilter available only for the base toolbar, not advanced TODO: externalize this behaviour
+        const allowEmpty = (this.props.allowEmptyFilter && !this.props.advancedToolbar);
 
-        let queryDisabled =
-            // fieldsWithoutValues ||
-            fieldsExceptions ||
-            !this.props.toolbarEnabled ||
-            !fieldsWithValues && !this.props.spatialField.geometry && !isCrossLayerFilterValid(this.props.crossLayerFilter);
+        // this flag checks if there is any valid attribute fields (with value)
+        let hasValidAttributeFields = this.props.filterFields.filter((field) => field.value || field.value === 0).length > 0;
 
-        const isFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
-        const showTooltip = this.props.emptyFilterWarning
-            && this.props.filterFields.filter((field) => field.value).length === 0
-            && !this.props.spatialField.geometry
-            && !(this.props.crossLayerFilter && this.props.crossLayerFilter.attribute && this.props.crossLayerFilter.operation);
+        const isCurrentFilterEmpty = isFilterEmpty(this.props);
+        const isAppliedFilterEmpty = isFilterEmpty(this.props.appliedFilter);
+        const isCurrentFilterChanged = this.isCurrentFilterChanged();
+        // TODO: use isFilterValid
+        const isCurrentFilterValid = hasValidAttributeFields
+            || this.props.spatialField.geometry
+            || isCrossLayerFilterValid(this.props.crossLayerFilter);
+        const isAppliedFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
+        // submit for empty filter is allowed when
+        // - it is forced to be allowed by outside
+        // - there is already an applied filter
+        const canSubmitEmptyFilter = (allowEmpty || isCurrentFilterEmpty && this.props.appliedFilter && !isAppliedFilterEmpty );
+        let queryDisabled = fieldsExceptions
+            || !this.props.toolbarEnabled // disabled generally
+            || isCurrentFilterEmpty && !canSubmitEmptyFilter // disabled because is empty on startup
+            || !isCurrentFilterEmpty && (!isCurrentFilterValid || !isCurrentFilterChanged); // disabled because of invalid or not changed filter
+        const showTooltip = this.props.emptyFilterWarning && isCurrentFilterEmpty && isCurrentFilterChanged;
+
         const queryBtnMsgId = this.props.advancedToolbar ? "queryform.apply" : this.props.queryBtnMsgId;
         let buttons = [ {
             tooltipId: showTooltip ? "queryform.emptyfilter" : queryBtnMsgId,
-            disabled: queryDisabled || (this.props.advancedToolbar && !this.appliedFilterChanged()),
+            disabled: queryDisabled,
             noTooltipWhenDisabled: true,
             glyph: this.props.advancedToolbar && "ok" || this.props.queryBtnGlyph,
             className: showTooltip ? "square-button-md showWarning" : "square-button-md",
@@ -137,9 +147,15 @@ class QueryToolbar extends React.Component {
             onClick: this.search
         }];
         if (this.props.advancedToolbar) {
-            const disableSave = !isFilterChanged || !this.props.toolbarEnabled || this.props.loadingError || this.appliedFilterChanged();
-            const disableRestore = !isFilterChanged || !this.props.storedFilter || !this.props.toolbarEnabled;
-            const disableReset = !this.props.appliedFilter || !this.props.toolbarEnabled;
+            const disableSave = !isAppliedFilterChanged
+                || this.props.loadingError
+                || isCurrentFilterChanged;
+            const disableRestore = !isAppliedFilterChanged
+                || !this.props.storedFilter
+                || !this.props.toolbarEnabled;
+            const disableReset = !this.props.appliedFilter
+                || this.props.appliedFilter && isAppliedFilterEmpty
+                || !this.props.toolbarEnabled;
             buttons = buttons.concat([
                 {
                 tooltipId: "queryform.save",
@@ -192,7 +208,7 @@ class QueryToolbar extends React.Component {
             </div>
         );
     }
-    appliedFilterChanged = () => {
+    isCurrentFilterChanged = () => {
 
 
         const currentFilter = this.getCurrentFilter();
@@ -211,6 +227,7 @@ class QueryToolbar extends React.Component {
             },
             crossLayerFilter: appliedFilter.crossLayerExpanded && appliedFilter.crossLayerFilter && appliedFilter.crossLayerFilter.operation ? setupCrossLayerFilterDefaults(appliedFilter.crossLayerFilter) : null
         };
+
         return !isEqual(current, applied);
     }
     search = () => {
@@ -220,9 +237,6 @@ class QueryToolbar extends React.Component {
             this.props.actions.storeAppliedFilter();
         }
     };
-    showModal = () => {
-        this.setState(({showModal: true}));
-    }
     reset = () => {
 
         this.props.actions.onChangeDrawingStatus('clean', '', "queryform", []);
@@ -244,7 +258,9 @@ class QueryToolbar extends React.Component {
                 hits: this.props.hits
             };
             this.props.actions.onQuery(this.props.searchUrl, filterObj, this.props.params);
-            this.setState(({showModal: false}));
+            if (this.props.advancedToolbar) {
+                this.props.actions.storeAppliedFilter();
+            }
         }
     };
 

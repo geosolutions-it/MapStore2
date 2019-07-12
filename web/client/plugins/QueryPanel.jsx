@@ -339,14 +339,13 @@ class QueryPanel extends React.Component {
                     buttons={[
                         {
                             bsStyle: 'primary',
-                            text: <Message msgId="queryform.discardbtn"/>,
-                            onClick: this.restoreAndClose
+                            text: <Message msgId="yes"/>,
+                            onClick: this.storeAndClose
                         },
                         {
                             bsStyle: 'primary',
-                            disabled: this.props.loadingError,
-                            text: <Message msgId="save"/>,
-                            onClick: this.storeAndClose
+                            text: <Message msgId="no" />,
+                            onClick: this.restoreAndClose
                         }
                     ]}>
                     <div className="ms-alert">

@@ -765,10 +765,10 @@
         "queryform": {
             "title": "Advanced Search",
             "query": "Search",
-            "apply": "Apply filter",
+            "apply": "Apply",
             "reset": "Reset",
-            "save": "Save current filter",
-            "discard": "Discard filter changes", 
+            "save": "Save",
+            "discard": "Undo",
             "query_request_exception": "Request Error",
             "config": {
                 "load_config_exception": "Error Loading Configuration"
@@ -857,13 +857,11 @@
                 }
             },
             "changedFilter": "Filter Changed",
-            "discardbtn": "Discard",
-            "changedFilterAlert": "Save or discard actual filter?",
+            "changedFilterAlert": "There are unsaved changes. Do you want to save them?",
             "resetFilter": "Remove filter",
-            "resetFilterAlert": "It is not possible to undo a filter reset action. Do you confirm?",
             "confirmReset": "Confirm",
-            "loadingError": "WMS rendering failed due to filter configuration, try to remove or fix it.",
-            "changedFilterWithErrorAlert": "Filter is causing WMS render failure, try to fix or discard it"
+            "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
+            "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway ?"
 
         },
         "annotations": {

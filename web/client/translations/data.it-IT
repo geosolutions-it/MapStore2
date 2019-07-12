@@ -765,10 +765,10 @@
         "queryform": {
             "title": "Ricerca Avanzata",
             "query": "Ricerca",
-            "apply": "Applica filtro",
+            "apply": "Applica",
             "reset": "Reimposta",
-            "save": "Salva il filtro attuale",
-            "discard": "Elimina le modifiche del filtro",
+            "save": "Salva",
+            "discard": "Ripristina",
             "query_request_exception": "Errore nella richiesta",
             "config": {
                 "load_config_exception": "Errore Caricamento Configurazione"
@@ -857,13 +857,11 @@
                 }
             },
             "changedFilter": "Filtero modificato",
-            "discardbtn": "Elimina",
-            "changedFilterAlert": "Salva o elimina il filtro corrente?",
-            "resetFilter": "Cancella filtri",
-            "resetFilterAlert": "Eliminazione dei filtri è un'azione non reversibile. Confermi eliminazione?",
+            "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
+            "resetFilter": "Reset",
             "confirmReset": "Conferma",
-            "loadingError": "Il rendering WMS è fallito a causa della configurazione del filtro, provare a rimuoverlo o ripararlo",
-            "changedFilterWithErrorAlert": "Filter is causing WMS render failure, try to fix or discard it"
+            "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+            "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
         },
         "annotations": {
             "errorLoadingSymbols": "Si è verificato un problema durante il caricamento dell'elenco dei simboli. Per favore, contatta l'amministratore per verificare le opzioni di configurazione",

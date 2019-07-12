@@ -765,10 +765,10 @@
         "queryform": {
             "title": "Búsqueda avanzada",
             "query": "Búsqueda",
-            "apply": "Aplicar filtro",
-            "reset": "Eliminar filtros",
-            "save": "Guardar filtro actual",
-            "discard": "Desechar cambios de filtro",
+            "apply": "Aplicar",
+            "reset": "Eliminar",
+            "save": "Guardar",
+            "discard": "Desechar",
             "query_request_exception": "Error en la búsqueda",
             "config": {
                 "load_config_exception": "Error cargando configuración"
@@ -857,13 +857,11 @@
                 }
             },
             "changedFilter": "Filtro cambiado",
-            "discardbtn": "Descarte",
-            "changedFilterAlert": "¿Guardar o desechar el filtro de cuentas?",
+            "changedFilterAlert": "Hay cambios no guardados. ¿Quieres salvarlos?",
             "resetFilter": "Quitar filtro",
-            "resetFilterAlert": "No es posible deshacer una acción de restablecimiento del filtro. ¿Confirmas?",
             "confirmReset": "Confirmar",
-            "loadingError": "La representación de WMS falló debido a la configuración del filtro, intente eliminarlo o arreglarlo.",
-            "changedFilterWithErrorAlert": "El filtro está causando un error de procesamiento WMS, intente arreglarlo o descartarlo"
+            "loadingError": "El filtro actual causó un problema de representación para la capa en el mapa. Compruebe la configuración de capa en el servidor o arregle el filtro",
+            "changedFilterWithErrorAlert": "El filtro está causando un error de representación de la capa, ¿quieres guardarlo de todos modos?"
         },
         "annotations": {
             "errorLoadingSymbols": "Hubo un problema al cargar la lista de símbolos. Por favor, contacte al administrador para verificar las opciones de configuración.",

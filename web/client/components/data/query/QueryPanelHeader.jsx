@@ -1,8 +1,8 @@
 const React = require('react');
-
+const Message = require('../../I18N/Message');
 const {Button, Glyphicon} = require('react-bootstrap');
-const buttonTooltip = require('../../misc/enhancers/buttonTooltip');
-const AlertIcon = buttonTooltip((props) => (<div className="square-button pull-right no-border" style={{display: 'flex'}} {...props}><Glyphicon glyph="exclamation-mark" className="text-primary"/></div>));
+const popoverTooltip = require('../../misc/enhancers/popover');
+const AlertIcon = popoverTooltip((props) => (<div className="square-button pull-right no-border" style={{display: 'flex'}} {...props}><Glyphicon glyph="exclamation-mark" className="text-danger"/></div>));
 
 module.exports = ({loadingError, onToggleQuery = () => {}} = {}) => (<div className="mapstore-block-width">
     <Button
@@ -12,6 +12,6 @@ module.exports = ({loadingError, onToggleQuery = () => {}} = {}) => (<div classN
         onClick={() => onToggleQuery()}>
             <Glyphicon glyph="arrow-left"/>
     </Button>
-    {loadingError && (<AlertIcon tooltipId="queryform.loadingError" tooltipPosition="bottom"/>) || (
+    {loadingError && (<AlertIcon popover={{text: (<Message msgId="queryform.loadingError"/>)}}/>) || (
     <div className="square-button pull-right no-border" style={{display: 'flex'}}><Glyphicon glyph="filter" className="text-primary"/></div>)}
 </div>);
