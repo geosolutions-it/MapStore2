@@ -10,11 +10,7 @@ const expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const { testEpic, addTimeoutEpic } = require('./epicTestUtils');
-const { setControlProperties } = require('../../actions/controls');
-const { HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS } = require('../../actions/mapInfo');
-
-const {onEpic, setControlPropertiesEpic} = require('../controls');
+const {onEpic} = require('../controls');
 const rootEpic = combineEpics(onEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -70,37 +66,5 @@ describe('controls Epics', () => {
         });
 
         store.dispatch(action);
-    });
-
-    it('enable metadataexplorer control is enabled', (done) => {
-        const state = {controls: {}};
-        const NUMBER_OF_ACTIONS = 2;
-        const callback = actions => {
-            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-            expect(actions[0].type).toEqual(PURGE_MAPINFO_RESULTS);
-            expect(actions[1].type).toEqual(HIDE_MAPINFO_MARKER);
-            done();
-        };
-        testEpic(
-            setControlPropertiesEpic,
-            NUMBER_OF_ACTIONS,
-            setControlProperties('metadataexplorer', "enabled", true),
-            callback,
-            state);
-    });
-
-    it('disable metadataexplorer should not affect mapinfo', (done) => {
-        const state = {controls: {}};
-        const NUMBER_OF_ACTIONS = 1;
-        const callback = actions => {
-            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-            done();
-        };
-        testEpic(
-            addTimeoutEpic(setControlPropertiesEpic),
-            NUMBER_OF_ACTIONS,
-            setControlProperties('metadataexplorer', "enabled", false),
-            callback,
-            state);
     });
 });
