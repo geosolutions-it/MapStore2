@@ -217,7 +217,11 @@ class ThematicLayer extends React.Component {
     };
 
     getColors = () => {
-        return this.props.getColors(this.props.colors, this.props.layer, this.props.colorSamples);
+        return this.props.getColors(this.props.colors, this.props.layer, this.props.colorSamples).map(({name, ...c}) => ({
+            label: `global.colors.${name}`,
+            name,
+            ...c
+        }));
     };
 
     renderError = (error, type) => {
