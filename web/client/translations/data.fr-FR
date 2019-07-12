@@ -765,9 +765,9 @@
         "queryform": {
             "title": "Recherche Avancée",
             "query": "Recherche",
-            "apply": "Appliquer le filtre",
-            "reset": "Recommencer",
-            "save": "Enregistrer le filtre actuel",
+            "apply": "Appliquer",
+            "reset": "Annuler",
+            "save": "Enregistrer",
             "discard": "Supprimer les modifications du filtre",
             "query_request_exception": "Erreur de requête",
             "config": {
@@ -857,13 +857,11 @@
                 }
             },
             "changedFilter": "Filtre modifié",
-            "discardbtn": "Jeter",
-            "changedFilterAlert": "Sauvegarder ou jeter le filtre actuel?",
+            "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver?",
             "resetFilter": "Supprimer le filtre",
-            "resetFilterAlert": "Il n'est pas possible d'annuler une action de réinitialisation de filtre. Confirmez-vous?",
             "confirmReset": "Confirmer",
-            "loadingError": "Le rendu WMS a échoué en raison de la configuration du filtre, essayez de le supprimer ou de le réparer",
-            "changedFilterWithErrorAlert": "Le filtre est à l'origine de l'échec du rendu WMS, essayez de le réparer ou de le supprimer"
+            "loadingError": "Le filtre actuel a posé un problème de rendu pour la couche sur la carte. Vérifiez la configuration de la couche sur le serveur ou corrigez le filtre.",
+            "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer?"
         },
         "annotations": {
             "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",
