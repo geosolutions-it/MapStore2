@@ -40,7 +40,7 @@ module.exports = [
     },
     {
         translation: 'identifyButton',
-        selector: '#identifyBar-container',
+        selector: '#navigationBar-container .glyphicon.glyphicon-option-horizontal',
         position: 'top'
     }
 ];
