@@ -126,7 +126,9 @@ class QueryToolbar extends React.Component {
             || this.props.spatialField.geometry
             || isCrossLayerFilterValid(this.props.crossLayerFilter);
         const isAppliedFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
-        // submit for empty filter is allowed if it is forced allowed by outside or there is an applied filter
+        // submit for empty filter is allowed when
+        // - it is forced to be allowed by outside
+        // - there is already an applied filter
         const canSubmitEmptyFilter = (allowEmpty || isCurrentFilterEmpty && this.props.appliedFilter && !isAppliedFilterEmpty );
         let queryDisabled = fieldsExceptions
             || !this.props.toolbarEnabled // disabled generally
