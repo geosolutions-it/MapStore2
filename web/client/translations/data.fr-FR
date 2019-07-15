@@ -1874,7 +1874,7 @@
             },
             "burgerMenu": {
                 "title": "Menu Options",
-                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de BruGIS se trouvent ici"
+                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de MapStore se trouvent ici"
             },
             "zoomInButton": {
                 "title": "Zoom In",
