@@ -1630,7 +1630,7 @@
             "noPermission": "Korisnik ne može mijenjati stilove",
             "deletedStyleSuccessTitle": "Izbriši stil",
             "deletedStyleSuccessMessage": "Stil je uspješno izbrisan",
-            "deletedStyleErrorTitle": "Greška prilikom brisanja stila,
+            "deletedStyleErrorTitle": "Greška prilikom brisanja stila",
             "deletedStyleErrorMessage": "Nije bilo moguće izbrisati trenutni stil",
             "savedStyleTitle": "Stil je spremljen",
             "savedStyleMessage": "Stil je uspješno spremljen",
@@ -1677,7 +1677,7 @@
                     "second": "{number, plural, =0 {Sekunda} =1 {Sekunda} other {Sekundi}}"
                 },
                 "mode": {
-                    "title": Način",
+                    "title": "Način",
                     "following": "Prati animaciju",
                     "followingDescription": "Kada je animacija aktivna, prati pokazivač miša"
                 }
