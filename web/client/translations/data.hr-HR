@@ -382,11 +382,19 @@
             "showLegend": "Prikaži legendu",
             "hideLegend": "Sakrij legendu"
         },
+        "addgroup": {
+            "addbtn": "Dodaj",
+            "groupName": "Naziv grupe"
+        },
         "toc": {
             "toggleLayerVisibility": "Izmijeni vidljivost sloja",
+            "toggleGroupVisibility": "Izmijeni vidljivost grupe",
             "displayLegendAndTools": "Prikaži kazalo i alate",
             "zoomToLayerExtent": "Prikaži puni opseg sloja",
             "addLayer": "Dodaj sloj",
+            "addLayerToGroup": "Dodaj sloj odabranoj grupi",
+            "addGroup": "Dodaj grupu",
+            "addSubGroup": "Dodaj podgrupu odabranoj grupi",
             "toolZoomToLayerTooltip": "Prikaži puni opseg odabranoga sloja",
             "toolZoomToLayersTooltip": "Prikaži puni opseg odabranih slojeva",
             "toolLayerSettingsTooltip": "Svojstva odabranoga sloja",
@@ -394,6 +402,7 @@
             "toolTrashLayerTooltip": "Ukloni odabrani sloj",
             "toolTrashLayersTooltip": "Ukloni odabrane slojeve",
             "toolFeaturesGridTooltip": "Otvori atributnu tabelu",
+            "layerFilterTooltip": "Filtriraj sloj",
             "toolDownloadTooltip": "Izvezi podatke sloja",
             "noFilteredResults": "Nema rezultata",
             "filterPlaceholder": "Filtriraj slojeve",
@@ -419,6 +428,8 @@
             "refreshMessage": "Ponovno učitaj konfiguraciju WMS slojeva sa servera",
             "refreshError": "Greška prilikom ažuriranja slojeva: ",
             "epsgNotSupported": "CRS {epsg} nije podržan za približavanje na sloj",
+            "filterIconEnabled": "Onemogući filter sloja",
+            "filterIconDisabled": "Omogući filter sloja",
             "refreshOptions": {
                 "bbox": "Ažuriraj granični okvir",
                 "search": "Ažuriraj postavke pretraživanja",
@@ -515,6 +526,9 @@
         "identifyTitle": "Informacije o objektu",
         "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
         "identifyRevGeocodeHeader": "Koordinate",
+        "identifyZoomToFeature": "Približi na objekt",
+        "identifyStopHighlightingFeatures": "Bez naglašavanja objekata",
+        "identifyHighlightFeatures": "Naglašavanje objekata",
         "identifyShowCoordinateEditor": "Prikaži unos koordinata",
         "identifyHideCoordinateEditor": "Sakrij unos koordinata",
         "identifyRevGeocodeModalTitle": "Adresa",
@@ -547,7 +561,7 @@
             "title": "Mjerenje",
             "lengthButtonText": "Linija",
             "areaButtonText": "Površina",
-            "resetButtonText": "Poništi",
+            "resetButtonText": "Resetiraj",
             "lengthLabel": "Duljina",
             "areaLabel": "Površina",
             "bearingLabel": "Azimut",
@@ -587,7 +601,9 @@
             "s_wfs_opt_props_label" : "Dodatna svojstva",
             "s_result_props_label": "Svojstva prikaza rezultata",
             "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
-            "serviceslistempty": "Nije definiran niti jedan servis"
+            "serviceslistempty": "Nije definiran niti jedan servis",
+            "service_missing": "{serviceType} servis nije konfiguriran",
+            "generic_error": "Došlo je do greške prilikom pretrage. Detalji greške: {message}"
         },
         "draw": {
             "fill": "Ispuna",
@@ -749,7 +765,10 @@
         "queryform": {
             "title": "Napredna pretraga",
             "query": "Pretraži",
-            "reset": "Poništi",
+            "apply": "Primijeni",
+            "reset": "Resetiraj",
+            "save": "Spremi",
+            "discard": "Poništi",
             "query_request_exception": "Greška upita",
             "config": {
                 "load_config_exception": "Greška učitavanja postavki"
@@ -804,7 +823,7 @@
                     "details_header": "Detalji odabira",
                     "details_bbox_label": "Uredi koordinate za izmjenu područja",
                     "details_circle_label": "Uredi numeričko polje za prilagodbu promjera i središta kružnice",
-                    "reset_bbox": "Poništi",
+                    "reset_bbox": "Resetiraj",
                     "save_bbox": "Spremi izmjenu graničnog okvira",
                     "save_radius": "Spremi izmjenu promjera/središta",
                     "radius": "Promjer"
@@ -832,40 +851,18 @@
                 "targetLayer": "Ciljani sloj",
                 "clear": "Izbriši filter",
                 "operation": "Operacija",
+                "placeholder": "Odaberi sloj",
                 "errors": {
                     "noCrossLayerAvailable": "Unakrsni filter više slojeva nije omogućen za odabrani sloj"
                 }
-            }
-        },
-        "user":{
-            "login": "Prijava",
-            "logout": "Odjava",
-            "info": " Informacije o računu",
-            "details": " Detalji korisnika",
-            "noAttributesMessage": "Nema podataka vezanih uz vaš račun",
-            "changePwd": "Promijeni zaporku",
-            "newPwd": "Nova zaporka",
-            "retypePwd": "Ponovno upiši zaporku",
-            "passwordMinlenght": "Vaša zaporka mora imati najmanje {minSize} znakova",
-            "passwordCheckFail": "Zaporke se ne podudaraju!",
-            "passwordInvalid": "Neispravna zaporka",
-            "username": "Korisničko ime",
-            "password": "Zaporka",
-            "passwordMessage": "Zaporka mora sadržavati barem 6 znakova",
-            "passwordChanged": "Zaporka je promijenjena",
-            "passwordError": "Greška prilikom izmjene zaporke",
-            "signIn": "Prijava",
-            "loginFail": "Pogreška prilikom prijave",
-            "loginFailedStatusMessages": {
-                "usernamePwdInsert": "Molimo unesite korisničko ime i zaporku",
-                "usernamePwdIncorrect": "Korisničko ime ili zaporka nisu ispravni"
             },
-            "detailsName": "Ime",
-            "detailsRole": "Rola",
-            "detailsGroups": "Grupe",
-            "detailsEmail": "E-mail",
-            "detailsCompany": "Tvrtka",
-            "detailsNotes": "Bilješke"
+            "changedFilter": "Filter prominjenjen",
+            "changedFilterAlert": "Postoje nespremljene promjene. Želite li ih spremiti?",
+            "resetFilter": "Ukloni filter",
+            "confirmReset": "Potvrdi",
+            "loadingError": "Trenutni filter je uzrokovao problem u prikazu sloja na karti. Molimo, pregledajte postavke sloja na poslužitelji ili ispravite filter",
+            "changedFilterWithErrorAlert": "Filter uzrokuje grešku u prikazu sloja, želite li ga svejedno spremiti ?"
+
         },
         "annotations": {
             "errorLoadingSymbols": "Došlo je do problema prilikom učitavanja popisa simbola. Molimo kontaktirajte administratora za provjeru konfiguracije",
@@ -940,6 +937,36 @@
                 "notValidText": "Unesi tekstualnu vrijednost i ispravne koordinate (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Unesi vrijednost radijusa i ispravne koordinate (+|- 90° lat, +|-180° lon)"
             }
+        },
+        "user":{
+            "login": "Prijava",
+            "logout": "Odjava",
+            "info": " Informacije o računu",
+            "details": " Detalji korisnika",
+            "noAttributesMessage": "Nema podataka vezanih uz vaš račun",
+            "changePwd": "Promijeni zaporku",
+            "newPwd": "Nova zaporka",
+            "retypePwd": "Ponovno upiši zaporku",
+            "passwordMinlenght": "Vaša zaporka mora imati najmanje {minSize} znakova",
+            "passwordCheckFail": "Zaporke se ne podudaraju!",
+            "passwordInvalid": "Neispravna zaporka",
+            "username": "Korisničko ime",
+            "password": "Zaporka",
+            "passwordMessage": "Zaporka mora sadržavati barem 6 znakova",
+            "passwordChanged": "Zaporka je promijenjena",
+            "passwordError": "Greška prilikom izmjene zaporke",
+            "signIn": "Prijava",
+            "loginFail": "Pogreška prilikom prijave",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Molimo unesite korisničko ime i zaporku",
+                "usernamePwdIncorrect": "Korisničko ime ili zaporka nisu ispravni"
+            },
+            "detailsName": "Ime",
+            "detailsRole": "Rola",
+            "detailsGroups": "Grupe",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Tvrtka",
+            "detailsNotes": "Bilješke"
         },
         "users": {
             "title": "Upravljaj korisničkim računima",
@@ -1277,7 +1304,8 @@
                     "editMode": "Brza pretraga nije dostupna dok je aktivno editiranje",
                     "default": "Traži...",
                     "string": "Unesi tekst za filter...",
-                    "number": "Unesi vrijednost ili izraz. Primjeri: 10, > 2, < 10"
+                    "number": "Unesi vrijednost ili izraz. Primjeri: 10, > 2, < 10",
+                    "date": "Unesi datum ili izraz. Koristi {format} za datum."
                 }
             },
             "toolbar": {
@@ -1301,6 +1329,8 @@
                 "hideShowColumns": "Sakrij/prikaži kolone",
                 "zoomAll": "Prikaz na opseg stranice",
                 "syncOnMap": "Uskladi kartu sa aktivnim filtrom",
+                "enableTimeSync": "Sinkroniziraj sa odabranim vremenom ili vremenskim rasponom",
+                "disableTimeSync": "isključi sinkronizaciju sa odabranim vremenom ili vremenskim rasponom",
                 "createNewChart": "Kreiraj grafikon za odabrani sloj"
             }
         },
@@ -1527,7 +1557,14 @@
                 "expandTray": "Proširi traku s widgetima",
                 "collapseTray": "Sažmi traku s widgetima",
                 "expandAll": "Proširi sve widgete",
-                "collapseAll": "Sažmi sve widgete"
+                "collapseAll": "Sažmi sve widgete",
+                "notifications" : {
+                    "collapsed": {
+                        "message": "Vremenska crta i widgeti ne mogu biti prikazani u isto vrijeme. Koristi traku s widgetima za prebacivanje između vremenske crte i widgeta",
+                        "timelineTitle": "Vremenska crta je sažeta",
+                        "widgetsTitle": "Widgeti su sažeti"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1695,6 +1732,10 @@
                 "snapToGuideLayer": "Zalijepi na referentni sloj",
                 "snapToGuideLayerTooltip": "Čini da se pokazivač vremena prilagodi podacima odabranoga sloja. Onemogućite ovu opciju ukoliko želite otključati pokazivač vremena i omogućiti prilagodbu koraka animacije"
             },
+            "hide": "Sakrij vremensku crtu",
+            "show": "Prikaži vremensku crtu",
+            "mapSyncOn": "Prikaži sva vremena, bez filtra na trnutni raspon karte",
+            "mapSyncOff": "Prikaži samo vremena dostupna na trenutnom raspnu karte",
             "currentTime": "Idi na trenutno vrijeme",
             "rangeStart": "Idi na trenutni vremenski raspon",
             "rangeEnd" : "Idi na trenutni vremenski raspon",
@@ -1706,6 +1747,10 @@
             "disablePlayBack": "Onemogući kontrole reprodukcije",
             "expand" : "Proširi vremenski klizač",
             "collapse" : "Sažmi vremenski klizač",
+            "collapsed": {
+                "title": "Vremenska crta je sažeta",
+                "tooltip": "Klikni ovdje za ponovno proširivanje"
+            },
             "errors": {
                 "multidim_error_title": "Pozadinski servis nije dostupan",
                 "multidim_error_message": "Servisi potrebni za multidimenzionalnu podršku nisu dostupni. Molimo, pokušajte ponovno ili kontaktirajte administratora."
