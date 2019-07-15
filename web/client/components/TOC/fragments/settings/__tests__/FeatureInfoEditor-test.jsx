@@ -30,35 +30,67 @@ describe("test FeatureInfoEditor", () => {
     });
 
     it('test rendering close x', () => {
+        const template = '<p>html</p>';
 
         const testHandlers = {
-            onShowEditor: () => {}
+            onShowEditor: () => {},
+            onChange: () => {}
         };
         const spyOnShowEditor = expect.spyOn(testHandlers, 'onShowEditor');
+        const spyOnChange = expect.spyOn(testHandlers, 'onChange');
 
-        ReactDOM.render(<FeatureInfoEditor onShowEditor={testHandlers.onShowEditor} showEditor/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<FeatureInfoEditor
+            onChange={testHandlers.onChange}
+            onShowEditor={testHandlers.onShowEditor}
+            showEditor/>, document.getElementById("container"));
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(1);
+
+        // edit template
+        const editor = cmp.quill.getEditor();
+        editor.clipboard.dangerouslyPasteHTML(template);
+        expect(spyOnChange).toNotHaveBeenCalled();
+        spyOnChange.reset();
+
         const btns = document.getElementsByClassName('ms-header-btn');
         expect(btns.length).toBe(2);
         TestUtils.Simulate.click(btns[1]);
         expect(spyOnShowEditor).toHaveBeenCalled();
+
+        expect(spyOnShowEditor).toHaveBeenCalled();
+        expect(spyOnChange.calls[0].arguments).toEqual([ 'featureInfo', { template } ]);
     });
 
     it('test rendering close button', () => {
 
-        const testHandlers = {
-            onShowEditor: () => {}
-        };
-        const spyOnShowEditor = expect.spyOn(testHandlers, 'onShowEditor');
+        const template = '<p>html</p>';
 
-        ReactDOM.render(<FeatureInfoEditor onShowEditor={testHandlers.onShowEditor} showEditor/>, document.getElementById("container"));
+        const testHandlers = {
+            onShowEditor: () => {},
+            onChange: () => {}
+        };
+
+        const spyOnShowEditor = expect.spyOn(testHandlers, 'onShowEditor');
+        const spyOnChange = expect.spyOn(testHandlers, 'onChange');
+
+        const cmp = ReactDOM.render(<FeatureInfoEditor
+            onChange={testHandlers.onChange}
+            onShowEditor={testHandlers.onShowEditor}
+            showEditor/>, document.getElementById("container"));
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(1);
+
+        // edit template
+        const editor = cmp.quill.getEditor();
+        editor.clipboard.dangerouslyPasteHTML(template);
+        expect(spyOnChange).toNotHaveBeenCalled();
+        spyOnChange.reset();
+
         const btns = document.getElementsByClassName('btn');
         expect(btns.length).toBe(1);
         TestUtils.Simulate.click(btns[0]);
         expect(spyOnShowEditor).toHaveBeenCalled();
+        expect(spyOnChange.calls[0].arguments).toEqual([ 'featureInfo', { template } ]);
     });
 
 });
