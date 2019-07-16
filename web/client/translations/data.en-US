@@ -17,7 +17,7 @@
         "about_a0": "this",
         "about_p5-1": "page.",
         "about_h21": "Credits",
-        "about_p6": "MapStore2 is made by:",
+        "about_p6": "MapStore is made by:",
         "enable": "Enable",
         "layers": "Layers",
         "warning": "Warning",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Build your own application</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Use APIs to include a MapStore2 map in your application</p>"
+                    "html":"<h3>API</h3><p>Use APIs to include a MapStore map in your application</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
@@ -1071,7 +1071,7 @@
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
-                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "infoSupported": "<p><small>Supported configuration files: MapStore legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
             },
             "errors": {
@@ -1854,7 +1854,7 @@
             "checkbox": "don't show this message again",
             "error": "Error: target not found",
             "intro": {
-                "title": "Welcome on MapStore2",
+                "title": "Welcome on MapStore",
                 "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
             },
             "drawerMenu": {
@@ -1899,11 +1899,11 @@
             },
             "mapsGrid": {
                 "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "text": "Here some examples of MapStore. Click on an image to try the demo."
             },
             "examples": {
                 "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "text": "You can use components and plugins of MapStore to build custom applications"
             },
             "introCesium": {
                 "title": "3D map instructions",
@@ -1942,7 +1942,7 @@
             },
             "dashboardContainer": {
                 "title": "Dashboard",
-                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+                "text": "<p>A Dashboard in MapStore provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
             },
             "dashboardAddWidget": {
                 "title": "Add Widget",

@@ -17,7 +17,7 @@
         "about_a0": "diese",
         "about_p5-1": "Seite.",
         "about_h21": "Quellen",
-        "about_p6": "MapStore2 ist entwickelt von:",
+        "about_p6": "MapStore ist entwickelt von:",
         "enable": "Aktiviere",
         "layers": "Ebenen",
         "warning": "Warnung",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Erstelle deine eigene Anwendung</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Verwenden Sie APIs, um eine MapStore2-Karte in Ihre Anwendung aufzunehmen</p>"
+                    "html":"<h3>API</h3><p>Verwenden Sie APIs, um eine MapStore-Karte in Ihre Anwendung aufzunehmen</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Style deine Rasterebene</p>"
@@ -1070,7 +1070,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Konfigurations- oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Konfigurationsdateien: MapStore2 Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
+                    "infoSupported": "<p> <small> Unterstützte Konfigurationsdateien: MapStore Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei Konfigurationsdateien überschrieben </i> </small> </p>"
                 },
                 "errors": {
@@ -1853,7 +1853,7 @@
             "checkbox": "Zeige diese Nachricht nicht mehr an",
             "error": "Fehler: Ziel wurde nicht gefunden",
             "intro": {
-                "title": "Willkommen bei MapStore2",
+                "title": "Willkommen bei MapStore",
                 "text": "Framework zum Erstellen von Web Mapping-Anwendungen mit Standard-Mapping-Bibliotheken wie OpenLayers 3 und Leaflet."
             },
             "drawerMenu": {
@@ -1898,11 +1898,11 @@
             },
             "mapsGrid": {
                 "title": "Karten",
-                "text": "Hier einige Beispiele von MapStore2. Klicken Sie auf ein Bild, um die Demo zu testen."
+                "text": "Hier einige Beispiele von MapStore. Klicken Sie auf ein Bild, um die Demo zu testen."
             },
             "examples": {
                 "title": "benutzerdefinierte Anwendung",
-                "text": "Sie können Komponenten und Plugins von MapStore2 verwenden, um benutzerdefinierte Anwendungen zu erstellen"
+                "text": "Sie können Komponenten und Plugins von MapStore verwenden, um benutzerdefinierte Anwendungen zu erstellen"
             },
             "introCesium": {
                 "title": "3D Kartenanweisungen",
@@ -1941,7 +1941,7 @@
             },
             "dashboardContainer": {
                 "title": "Instrumententafel",
-                "text": "<p> Ein Dashboard in MapStore2 bietet eine Reihe von Informationen, die passend gesammelt werden, um aggregierte Daten in der One-Shot-Ansicht anzuzeigen. Geodaten, die in einer Karte angezeigt werden, können Seite an Seite mit verwandten Attributtabellen, Diagrammen und anderen platziert werden, mit dem Ziel, verschiedene Arten von Informationen zu verbinden, statistische Details und textuelle Beschreibungen zu einem bestimmten Kontext anzuzeigen. </p> <p> Alle Benutzer können veröffentlichte Dashboards visualisieren und mit ihnen interagieren, aber nur Benutzer, die sie bearbeiten dürfen, können alle Widgets in einem Dashboard hinzufügen, anordnen, ihre Größe ändern oder löschen </ p>"
+                "text": "<p> Ein Dashboard in MapStore bietet eine Reihe von Informationen, die passend gesammelt werden, um aggregierte Daten in der One-Shot-Ansicht anzuzeigen. Geodaten, die in einer Karte angezeigt werden, können Seite an Seite mit verwandten Attributtabellen, Diagrammen und anderen platziert werden, mit dem Ziel, verschiedene Arten von Informationen zu verbinden, statistische Details und textuelle Beschreibungen zu einem bestimmten Kontext anzuzeigen. </p> <p> Alle Benutzer können veröffentlichte Dashboards visualisieren und mit ihnen interagieren, aber nur Benutzer, die sie bearbeiten dürfen, können alle Widgets in einem Dashboard hinzufügen, anordnen, ihre Größe ändern oder löschen </ p>"
             },
             "dashboardAddWidget": {
                 "title": "Widget hinzufügen",
