@@ -50,7 +50,9 @@ class FeatureInfoEditor extends React.Component {
         onShowEditor: () => {}
     };
 
-    state = { };
+    state = {
+        template: ' '
+    };
 
     componentWillMount() {
         this.setState({
