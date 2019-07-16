@@ -50,9 +50,9 @@ const addFilteredAttributesGroups = (nodes, filters) => {
             node = assign({}, node, {nodes: addFilteredAttributesGroups(node.nodes, filters)});
         }
         filters.forEach(filter => {
-            if (node.nodes && filter.func(node)) {
+            if (filter.func(node)) {
                 node = assign({}, node, filter.options);
-            } else if (node.nodes) {
+            } else {
                 node = assign({}, node);
             }
         });
@@ -110,15 +110,19 @@ const tocSelector = createSelector(
             },
             {
                 options: {loadingError: true},
-                func: (node) => head(node.nodes.filter(n => n.loadingError && n.loadingError !== 'Warning'))
+                func: (node) => head((node.nodes || []).filter(n => n.loadingError && n.loadingError !== 'Warning'))
             },
             {
                 options: {expanded: true, showComponent: true},
-                func: (node) => filterText && head(node.nodes.filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
+                func: (node) => filterText && head((node.nodes || []).filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
             },
             {
                 options: { showComponent: false },
-                func: (node) => head(node.nodes.filter(l => l.hidden || l.id === "annotations" && isCesiumActive))
+                func: (node) => head((node.nodes || []).filter(l => l.hidden || l.id === "annotations" && isCesiumActive)) && node.nodes.length === 1
+            },
+            {
+                options: { showComponent: false },
+                func: (node) => node.id === "annotations" && isCesiumActive
             }
         ]),
         catalogActive,
