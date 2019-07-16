@@ -1123,7 +1123,7 @@
             "showTemplate": "Mostra il modello dei metadati",
             "showPreview": "Mostra la preview",
             "advancedSettings": "Impostazioni avanzante",
-            "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
+            "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri, creator, references, subject",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
