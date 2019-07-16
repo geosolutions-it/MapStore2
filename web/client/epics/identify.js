@@ -16,6 +16,8 @@ const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLI
 
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
+const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
+
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
@@ -202,5 +204,15 @@ module.exports = {
                 const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                 return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));
             })
-        )
+        ),
+    /**
+     * Close Feature Info when catalog is enabled
+     */
+    closeFeatureInfoOnCatalogOpenEpic: (action$) =>
+        action$
+            .ofType(SET_CONTROL_PROPERTIES)
+            .filter((action) => action.control === "metadataexplorer" && action.properties && action.properties.enabled)
+            .switchMap(() => {
+                return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
+            })
 };

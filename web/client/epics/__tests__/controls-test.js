@@ -10,7 +10,6 @@ const expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
-
 const {onEpic} = require('../controls');
 const rootEpic = combineEpics(onEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
