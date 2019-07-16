@@ -48,13 +48,13 @@ require('./print/print.css');
  * @prop {boolean} cfg.useFixedScales if true the printing scale is constrained to the nearest scale of the ones configured
  * in the config.yml file, if false the current scale is used
  * @prop {object} cfg.overrideOptions overrides print options, this will override options created from current state of map
- * @prop {bool} cfg.overrideOptions.geodetic prints in geodetic mode: in geodetic mode scale calculation is more precise on
+ * @prop {boolean} cfg.overrideOptions.geodetic prints in geodetic mode: in geodetic mode scale calculation is more precise on
  * printed maps, but the preview is not accurate
  * @prop {string} cfg.overrideOptions.outputFilename name of output file
  * @prop {object} cfg.mapPreviewOptions options for the map preview tool
- * @prop {bool} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
+ * @prop {boolean} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
  * this is particularly useful if useFixedScales is also true, to show the real printing scales
- * @prop {bool} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
+ * @prop {boolean} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
  *
  * @example
  * // printing in geodetic mode
