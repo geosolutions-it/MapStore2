@@ -16,7 +16,7 @@ Windows: `mapstore2_startup.bat`
 
 Linux: `./mapstore2_startup.sh`
 
-Point your browser to: [http://localhost:8800/mapstore](http://localhost:8800/mapstore)
+Point your browser to: [http://localhost:8082/mapstore](http://localhost:8082/mapstore)
 
 To stop MapStore simply do:
 
