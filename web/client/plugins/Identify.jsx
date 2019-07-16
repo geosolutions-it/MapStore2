@@ -142,7 +142,7 @@ const identifyDefaultProps = defaultProps({
  *   "disabledAlwaysOn": false, // if true, disable always on setup
  *   "configuration": {
  *     "showEmptyMessageGFI": false // allow or deny the visiibility of message when you have no results from identify request
- *     "infoFormat": "text/html" // changes the default infoformat value, other values are "text/plain" for text only or "application/json" for properties
+ *     "infoFormat": "text/plain" // default infoformat value, other values are "text/html" for text only or "application/json" for properties
  *   }
  * }
  * ```
