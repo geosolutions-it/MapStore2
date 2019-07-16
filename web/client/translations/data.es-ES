@@ -17,7 +17,7 @@
         "about_a0": "esta",
         "about_p5-1": "página.",
         "about_h21": "Créditos",
-        "about_p6": "MapStore2 está hecho por:",
+        "about_p6": "MapStore está hecho por:",
         "enable": "Activar",
         "layers": "Capas",
         "warning": "Atención",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Construya su propia aplicación</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Use las API para  incluir un mapa de MapStore2 en su  aplicación</p>"
+                    "html":"<h3>API</h3><p>Use las API para  incluir un mapa de MapStore en su  aplicación</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Estilos ráster</h3><p>Estilo ráster</p>"
@@ -1070,7 +1070,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
-                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore2<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se anulará en el caso de los archivos de configuración </i> </small> </p>"
             },
             "errors": {
@@ -1853,7 +1853,7 @@
             "checkbox": "No volver a mostrar este mensaje",
             "error": "Error: destino no encontrado",
             "intro": {
-                "title": "Bienvenido a MapStore2",
+                "title": "Bienvenido a MapStore",
                 "text": "Marco de trabajo para  construir aplicaciones de mapas usando librerías estándar, como OpenLayers3 y Leaflet."
             },
             "drawerMenu": {
@@ -1902,7 +1902,7 @@
             },
             "examples": {
                 "title": "Aplicaciones personalizadas",
-                "text": "Pueden usar los componentes y plugins de Mapstore2 para construir  aplicaciones personalizadas"
+                "text": "Pueden usar los componentes y plugins de MapStore para construir  aplicaciones personalizadas"
             },
             "introCesium": {
                 "title": "Instrucciones mapa 3D",
@@ -1941,7 +1941,7 @@
             },
             "dashboardContainer": {
                 "title": "Panel de control",
-                "text": "<p> Un panel de control en MapStore2 proporciona un conjunto de información recopilada adecuadamente para mostrar datos agregados en una vista de un solo disparo. Los datos geoespaciales mostrados en un mapa se pueden colocar uno al lado del otro en tablas de atributos relacionados, cuadros y otros, con el objetivo de conectar diferentes tipos de información, mostrar detalles estadísticos y descripciones textuales relacionadas con un contexto específico. </p> <p> Todos los usuarios pueden visualizar e interactuar con los paneles publicados, pero solo los usuarios a los que se les permite editar pueden agregar, organizar, cambiar el tamaño o eliminar todos los widgets dentro de un panel </p>"
+                "text": "<p> Un panel de control en MapStore proporciona un conjunto de información recopilada adecuadamente para mostrar datos agregados en una vista de un solo disparo. Los datos geoespaciales mostrados en un mapa se pueden colocar uno al lado del otro en tablas de atributos relacionados, cuadros y otros, con el objetivo de conectar diferentes tipos de información, mostrar detalles estadísticos y descripciones textuales relacionadas con un contexto específico. </p> <p> Todos los usuarios pueden visualizar e interactuar con los paneles publicados, pero solo los usuarios a los que se les permite editar pueden agregar, organizar, cambiar el tamaño o eliminar todos los widgets dentro de un panel </p>"
             },
             "dashboardAddWidget": {
                 "title": "Agregar Widget",

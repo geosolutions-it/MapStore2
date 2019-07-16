@@ -17,7 +17,7 @@
         "about_a0": "deze",
         "about_p5-1": "bladzijde.",
         "about_h21": "Credits",
-        "about_p6": "MapStore2 ontwikkeld door:",
+        "about_p6": "MapStore ontwikkeld door:",
         "enable": "Activeren",
         "layers": "Lagen",
         "warning": "Opgepast",
@@ -226,7 +226,7 @@
                     "html":"<h3>Plugins</h3><p>Uw eigen applicatie opbouwen</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Gebruik API's om een MapStore2-kaart in uw applicatie op te nemen</p>"
+                    "html":"<h3>API</h3><p>Gebruik API's om een MapStore-kaart in uw applicatie op te nemen</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Beeldweergave</h3><p>Uw beeldlaag weergeven</p>"
@@ -1007,7 +1007,7 @@
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
-                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "infoSupported": "<p><small>Supported configuration files: MapStore legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
             },
             "errors": {
@@ -1603,7 +1603,7 @@
             "checkbox": "laat dit bericht niet meer zien",
             "error": "Fout: doel niet gevonden",
             "intro": {
-                "title": "Welkom bij MapStore2",
+                "title": "Welkom bij MapStore",
                 "text": "framework om web mapping-applicaties te bouwen met behulp van standaard mapping-bibliotheken, zoals OpenLayers 3 en Leaflet."
             },
             "drawerMenu": {
@@ -1648,11 +1648,11 @@
             },
             "mapsGrid": {
                 "title": "Kaarten",
-                "text": "Hier enkele voorbeelden van MapStore2. Klik op een afbeelding om de demo te proberen."
+                "text": "Hier enkele voorbeelden van MapStore. Klik op een afbeelding om de demo te proberen."
             },
             "examples": {
                 "title": "Aangepaste applicatie",
-                "text": "U kunt componenten en plug-ins van MapStore2 gebruiken om aangepaste applicaties te bouwen"
+                "text": "U kunt componenten en plug-ins van MapStore gebruiken om aangepaste applicaties te bouwen"
             },
             "introCesium": {
                 "title": "3D-kaartinstructies",
@@ -1691,7 +1691,7 @@
             },
             "dashboardContainer": {
                 "title": "Dashboard",
-                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+                "text": "<p>A Dashboard in MapStore provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
             },
             "dashboardAddWidget": {
                 "title": "Add Widget",

@@ -17,7 +17,7 @@
         "about_a0": "ceci",
         "about_p5-1": "page.",
         "about_h21": "Crédits",
-        "about_p6": "MapStore2 est développé par:",
+        "about_p6": "MapStore est développé par:",
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Contruire sa propre application</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore2 dans votre application</p>"
+                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore dans votre application</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
@@ -1070,7 +1070,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez les fichiers...",
-                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
             },
             "errors": {
@@ -1853,7 +1853,7 @@
             "checkbox": "Ne plus me montrer ce message",
             "error": "Erreur: ressource non trouvée",
             "intro": {
-                "title": "Bienvenue dans MapStore2",
+                "title": "Bienvenue dans MapStore",
                 "text": "Environnement de développement d'applications cartographiques en ligne utilisant des librairies cartographiques standards, telles qu'OpenLayers 3 et Leaflet."
             },
             "drawerMenu": {
@@ -1898,11 +1898,11 @@
             },
             "mapsGrid": {
                 "title": "Cartes",
-                "text": "Quelques exemples de MapStore2. Cliquez sur une image pour lancer la démo."
+                "text": "Quelques exemples de MapStore. Cliquez sur une image pour lancer la démo."
             },
             "examples": {
                 "title": "Application sur mesure",
-                "text": "Utilisez les composants et outils de MapStore2 pour construire votre application personnalisée"
+                "text": "Utilisez les composants et outils de MapStore pour construire votre application personnalisée"
             },
             "introCesium": {
                 "title": "Instructions carte 3D",
@@ -1941,7 +1941,7 @@
             },
             "dashboardContainer": {
                 "title": "Tableau de bord",
-                "text": "<p> Un tableau de bord dans MapStore2 fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
+                "text": "<p> Un tableau de bord dans MapStore fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
             },
             "dashboardAddWidget": {
                 "title": "Ajouter un widget",

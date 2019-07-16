@@ -17,7 +17,7 @@
         "about_a0": "ovu",
         "about_p5-1": "stranicu.",
         "about_h21": "Zasluge",
-        "about_p6": "MapStore2 je razvijan od:",
+        "about_p6": "MapStore je razvijan od:",
         "enable": "Omogući",
         "layers": "Slojevi",
         "warning": "Upozorenje",
@@ -227,7 +227,7 @@
                     "html":"<h3>Pluginovi</h3><p>Izgradi vlastitu aplikaciju</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Korist API kako bi uključio MapStore2 kartu u svojoj aplikaciji</p>"
+                    "html":"<h3>API</h3><p>Korist API kako bi uključio MapStore kartu u svojoj aplikaciji</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Uređivač stila rastera</h3><p>Stiliziraj svoje rastere</p>"
@@ -1071,7 +1071,7 @@
             "dropZone": {
                 "heading": "<p><h4>Dovucite vašu konfiguraciju ili vektorske datoteke ovdje</h4><small>or</small></p>",
                 "selectFiles": "Odaberi datoteke...",
-                "infoSupported": "<p><small>Podržane konfiguracijske datoteke: MapStore2 format<br />Podržane datoteke vektorskih slojeva: shapefile (mora biti komprimiran u zip arhiv), KML/KMZ, GeoJSON ili GPX</small></p>",
+                "infoSupported": "<p><small>Podržane konfiguracijske datoteke: MapStore format<br />Podržane datoteke vektorskih slojeva: shapefile (mora biti komprimiran u zip arhiv), KML/KMZ, GeoJSON ili GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: trenutna karta će biti zamijenjena u slučaju učitavanja konfiguracijskih datoteka</i></small></p>"
             },
             "errors": {
@@ -1854,7 +1854,7 @@
             "checkbox": "nemoj više prikazivati ovu poruku",
             "error": "Greška: cilj nije pronađen",
             "intro": {
-                "title": "Dobrodošli u MapStore2",
+                "title": "Dobrodošli u MapStore",
                 "text": "framework za izradu web mapping aplikacija koristeći standardne biblioteke kao što su OpenLayers 3 i Leaflet."
             },
             "drawerMenu": {
@@ -1903,7 +1903,7 @@
             },
             "examples": {
                 "title": "Prilagođena aplikacija",
-                "text": "Možete koristiti Mapstore2 komponente i pluginove kako bi izgradili vlastite aplikacije"
+                "text": "Možete koristiti MapStore komponente i pluginove kako bi izgradili vlastite aplikacije"
             },
             "introCesium": {
                 "title": "Upute za 3D prikaz",
@@ -1942,7 +1942,7 @@
             },
             "dashboardContainer": {
                 "title": "Kontrolna ploča",
-                "text": "<p>Kontrolna ploča u Mapstore2 daje skup podataka prikladno prikupljenih za prikaz zbirnih podataka u jedinstvenom prikazu. Geografski podaci prikazani na karti mogu se postaviti paralelno s povezanim atributnim tabelama, grafikonima i drugim, s ciljem povezivanja različitih vrsta informacija, s ciljem prikaza statističkih pojedinosti i tekstualnih opisa povezanih s određenim kontekstom.</p><p> Svi korisnici mogu vizualizirati i interaktivno raditi s objavljenim kontrolnim pločama, ali samo korisnici koji imaju dopuštenje za uređivanje mogu dodavati, organizirati, promijeniti veličinu ili brisati widgete unutar nadzorne ploče</p>"
+                "text": "<p>Kontrolna ploča u MapStore daje skup podataka prikladno prikupljenih za prikaz zbirnih podataka u jedinstvenom prikazu. Geografski podaci prikazani na karti mogu se postaviti paralelno s povezanim atributnim tabelama, grafikonima i drugim, s ciljem povezivanja različitih vrsta informacija, s ciljem prikaza statističkih pojedinosti i tekstualnih opisa povezanih s određenim kontekstom.</p><p> Svi korisnici mogu vizualizirati i interaktivno raditi s objavljenim kontrolnim pločama, ali samo korisnici koji imaju dopuštenje za uređivanje mogu dodavati, organizirati, promijeniti veličinu ili brisati widgete unutar nadzorne ploče</p>"
             },
             "dashboardAddWidget": {
                 "title": "Dodaj widget",

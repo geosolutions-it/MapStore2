@@ -17,7 +17,7 @@
         "about_a0": "questa",
         "about_p5-1": "pagina.",
         "about_h21": "Crediti",
-        "about_p6": "MapStore2 è sviluppato da:",
+        "about_p6": "MapStore è sviluppato da:",
         "enable": "Abilita",
         "layers": "Livelli",
         "warning": "Attenzione",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore2 nella tua applicazione</p>"
+                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore nella tua applicazione</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
@@ -1070,7 +1070,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui la configurazione o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
-                "infoSupported": "<p> <small> File di configurazione supportati: formato legacy di MapStore2<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> File di configurazione supportati: formato legacy di MapStore<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di file di configurazione </i> </small> </p>"
             },
             "errors": {
@@ -1853,7 +1853,7 @@
                 "checkbox": "non mostrare più questo messaggio",
                 "error": "Errore: oggetto non trovato",
                 "intro": {
-                    "title": "Benvenuto su MapStore2",
+                    "title": "Benvenuto su MapStore",
                     "text": "framework per costruire applicazioni di web mapping usando librerie standard di mappatura, come OpenLayers 3 e Leaflet."
                 },
                 "drawerMenu": {
@@ -1898,11 +1898,11 @@
                 },
                 "mapsGrid": {
                     "title": "Mappe",
-                    "text": "Qui alcuni esempi di MapStore2. Fai click su un'immagine per provare la demo"
+                    "text": "Qui alcuni esempi di MapStore. Fai click su un'immagine per provare la demo"
                 },
                 "examples": {
                     "title": "Applicazioni personalizzate",
-                    "text": "Puoi utilizzare componenti e plugins di MapStore2 per costruire applicazioni personalizzate"
+                    "text": "Puoi utilizzare componenti e plugins di MapStore per costruire applicazioni personalizzate"
                 },
                 "introCesium": {
                     "title": "Istruzioni della mappa 3D",
@@ -1941,7 +1941,7 @@
                 },
                 "dashboardContainer": {
                     "title": "Cruscotto",
-                    "text": "<p> Una Dashboard in MapStore2 fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
+                    "text": "<p> Una Dashboard in MapStore fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
                 },
                 "dashboardAddWidget": {
                     "title": "Aggiungi widget",
