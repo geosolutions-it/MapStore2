@@ -133,10 +133,22 @@ class StyleCanvas extends React.Component {
 
     }
     paintText = (ctx) => {
-        ctx.font = this.props.shapeStyle.font || '14px Arial';
-        ctx.textAlign = this.props.shapeStyle.textAlign || 'center';
-        ctx.strokeText(this.props.shapeStyle.label || "New", this.props.width / 2, this.props.height / 2);
-        ctx.fillText(this.props.shapeStyle.label || "New", this.props.width / 2, this.props.height / 2);
+        const {width, height} = this.props;
+        const {textAlign = 'center', label, font = '14px Arial'} = this.props.shapeStyle;
+        ctx.textAlign = textAlign;
+        ctx.font = font;
+        if (textAlign === 'start') {
+            ctx.strokeText(label || "New", width / 2.5, height / 2);
+            ctx.fillText(label || "New", width / 2.5, height / 2);
+            return;
+        }
+        if (textAlign === 'end') {
+            ctx.strokeText(label || "New", width / 1.5, height / 2);
+            ctx.fillText(label || "New", width / 1.5, height / 2);
+            return;
+        }
+        ctx.strokeText(label || "New", width / 2, height / 2);
+        ctx.fillText(label || "New", width / 2, height / 2);
     };
     paintPolygon = (ctx) => {
         ctx.transform(1, 0, 0, 1, -27.5, 0);
