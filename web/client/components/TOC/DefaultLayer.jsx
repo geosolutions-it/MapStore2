@@ -145,7 +145,7 @@ class DefaultLayer extends React.Component {
     renderNode = (grab, hide, selected, error, warning, other) => {
         const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
         || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
-        return (
+        return this.props.node.showComponent !== false ? (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
                     {grab}
@@ -167,7 +167,7 @@ class DefaultLayer extends React.Component {
                 {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
-        );
+        ) : null;
     }
 
     render() {
