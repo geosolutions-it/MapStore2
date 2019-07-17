@@ -52,14 +52,16 @@ const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE} = require('../../actions/wfsquery');
-const {CHANGE_LAYER_PROPERTIES, changeLayerParams} = require('../../actions/layers');
+const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
-const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-const {LOAD_FILTER} = require('../../actions/queryform');
+const {
+toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
+        layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
+const { LOAD_FILTER, QUERY_FORM_RESET} = require('../../actions/queryform');
 
 const {
+    featureGridBrowseData,
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
     featureGridLayerSelectionInitialization,
@@ -89,8 +91,7 @@ const {
     featureGridChangePage,
     featureGridSort,
     replayOnTimeDimensionChange
-}
-    = require('../featuregrid');
+} = require('../featuregrid');
 
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
@@ -582,7 +583,33 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
-
+    describe('featureGridBrowseData', () => {
+        it('browseData action triggers featuregrid setup', done => {
+            const LAYER = state.layers.flat[0];
+            testEpic(featureGridBrowseData, 5, browseData(LAYER), ([
+                a1,
+                a2,
+                a3,
+                a4,
+                a5
+            ]) => {
+                // disable draw
+                expect(a1.type).toBe(SET_CONTROL_PROPERTY);
+                expect(a1.control).toBe('drawer');
+                expect(a1.property).toBe('enabled');
+                expect(a1.value).toBe(false);
+                // set feature grid layer
+                expect(a2.type).toBe(SET_LAYER);
+                expect(a2.id).toBe(LAYER.id);
+                // open feature grid
+                expect(a3.type).toBe(OPEN_FEATURE_GRID);
+                // sets the feature type selected for search
+                expect(a4.type).toBe(FEATURE_TYPE_SELECTED);
+                expect(a5.type).toBe(QUERY_FORM_RESET);
+                done();
+            }, state);
+        });
+    });
     it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
