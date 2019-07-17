@@ -1124,7 +1124,7 @@
             "showTemplate": "Prikaži predložak metapodataka",
             "showPreview": "Prikaži pretpregled",
             "advancedSettings": "Napredne mogućnosti",
-            "templateMetadataAvailable": "Metapodaci distupni iz Dublin Core formata: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
+            "templateMetadataAvailable": "Metapodaci distupni iz Dublin Core formata: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
