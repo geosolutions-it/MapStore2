@@ -586,13 +586,7 @@ describe('featuregrid Epics', () => {
     describe('featureGridBrowseData', () => {
         it('browseData action triggers featuregrid setup', done => {
             const LAYER = state.layers.flat[0];
-            testEpic(featureGridBrowseData, 5, browseData(LAYER), ([
-                a1,
-                a2,
-                a3,
-                a4,
-                a5
-            ]) => {
+            testEpic(featureGridBrowseData, 5, browseData(LAYER), ([ a1, a2, a3, a4, a5 ]) => {
                 // disable draw
                 expect(a1.type).toBe(SET_CONTROL_PROPERTY);
                 expect(a1.control).toBe('drawer');
