@@ -248,7 +248,7 @@ describe('search Epics', () => {
 
         });
     });
-    it('produces the search epic with onse service with more results than default limit', (done) => {
+    it('check the search result resorting is conservative and the number of results limited to maxResults', (done) => {
         const maxResults = 5;
         let action = {
             ...textSearch("TEST"),
