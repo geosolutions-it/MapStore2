@@ -763,4 +763,24 @@ describe('Test the AnnotationsUtils', () => {
         expect(getDashArrayFromStyle("3 4 5")).toEqual("3 4 5");
         expect(getDashArrayFromStyle(["3", "4", "5"])).toEqual("3 4 5");
     });
+    it('test annotationsToPrint strokeDashstyle defaults to solid', () => {
+        const f = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+                },
+                style: [{
+                    color: "#FF0000"
+                }].concat(getStartEndPointsForLinestring())
+            }]
+        };
+        let fts = annotationsToPrint([f]);
+        expect(fts).toExist();
+        expect(fts.length).toBe(1);
+        expect(fts[0].properties.ms_style).toExist();
+        expect(fts[0].properties.ms_style.strokeDashstyle).toBe('solid');
+    });
 });
