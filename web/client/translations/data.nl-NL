@@ -1047,7 +1047,7 @@
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
-            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri, creator, references, subject"
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri"
         },
         "uploader": {
             "filename": "File Name",

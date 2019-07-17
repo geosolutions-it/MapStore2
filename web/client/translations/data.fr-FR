@@ -1123,7 +1123,7 @@
             "showTemplate": "Afficher le modèle de métadonnées",
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
-            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri, creator, references, subject",
+            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
