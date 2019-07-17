@@ -279,6 +279,36 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(spyCancel.calls.length).toEqual(1);
     });
 
+    it('test click cancel trigger UnsavedChangesModal', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const testHandlers = {
+            onToggleUnsavedChangesModal: (id) => { return id; }
+        };
+
+        const spyUnsavedModal = expect.spyOn(testHandlers, 'onToggleUnsavedChangesModal');
+
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
+            properties: feature,
+            geometry: {}
+        }}
+        onToggleUnsavedChangesModal={testHandlers.onToggleUnsavedChangesModal}
+        unsavedChanges
+        />, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[0]);
+
+        expect(cancelButton).toExist();
+        TestUtils.Simulate.click(cancelButton);
+
+        expect(spyUnsavedModal.calls.length).toEqual(1);
+    });
+
     it('test click save validate title error', () => {
         const feature = {
             id: "1",
