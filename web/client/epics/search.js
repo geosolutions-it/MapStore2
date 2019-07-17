@@ -78,7 +78,7 @@ const searchEpic = (action$) =>
         // merge all results from the streams
         .mergeAll()
         .scan( (oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
-         // it slices all results (even if only one service is used)
+         // limit the number of results returned from all services to maxResults
         .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
         .startWith(searchTextLoading(true))
         .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
