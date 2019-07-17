@@ -7,7 +7,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+const expect = require('expect');
+const {head, last} = require('lodash');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
@@ -34,7 +35,7 @@ const SEARCH_NESTED = 'SEARCH NESTED';
 const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
 
-const {testEpic} = require('./epicTestUtils');
+const {testEpic, addTimeoutEpic} = require('./epicTestUtils');
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER
@@ -98,6 +99,7 @@ describe('search Epics', () => {
             }
         });
     });
+
     it('produces the selectSearchItem epic', () => {
         let action = selectSearchItem({
             "type": "Feature",
@@ -245,5 +247,82 @@ describe('search Epics', () => {
             done();
 
         });
+    });
+    it('check the search result resorting is conservative and the number of results limited to maxResults', (done) => {
+        const maxResults = 5;
+        let action = {
+            ...textSearch("TEST"),
+            services: [{
+                type: 'wfs',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/Wyoming_18_results.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME],
+                    returnFullData: false
+                }
+            }],
+            maxResults
+        };
+
+        const NUMBER_OF_ACTIONS = 4;
+        testEpic(
+            addTimeoutEpic(searchEpic, 100),
+            NUMBER_OF_ACTIONS,
+            [action],
+            actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                expect(actions[1].type).toBe(TEXT_SEARCH_LOADING);
+                expect(actions[2].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
+                expect(actions[2].results.length).toBe(maxResults);
+                expect(head(actions[2].results).id).toBe("states.1");
+                expect(last(actions[2].results).id).toBe("states.5");
+                expect(actions[3].type).toBe(TEXT_SEARCH_LOADING);
+                done();
+            }, {});
+    });
+    it('produces the search epic with two services with more results than default limit', (done) => {
+        const maxResults = 5;
+        let action = {
+            ...textSearch("TEST"),
+            services: [{
+                type: 'wfs',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/Wyoming_18_results.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME],
+                    returnFullData: false
+                }
+            },
+            {
+                type: 'wfs',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME],
+                    returnFullData: false
+                }
+            }],
+            maxResults
+        };
+
+        const NUMBER_OF_ACTIONS = 5;
+        testEpic(
+            addTimeoutEpic(searchEpic, 100),
+            NUMBER_OF_ACTIONS,
+            [action],
+            actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                expect(actions[1].type).toBe(TEXT_SEARCH_LOADING);
+                expect(actions[2].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
+                expect(actions[2].results.length).toBe(maxResults);
+                expect(head(actions[2].results).id).toBe("states.1");
+                expect(last(actions[2].results).id).toBe("states.5");
+                expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
+                expect(actions[3].results.length).toBe(maxResults);
+                expect(head(actions[3].results).id).toBe("states.1");
+                expect(last(actions[3].results).id).toBe("states.5");
+                expect(actions[4].type).toBe(TEXT_SEARCH_LOADING);
+                done();
+            }, {});
     });
 });

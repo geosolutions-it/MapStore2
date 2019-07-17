@@ -37,7 +37,7 @@ const toBbox = require('turf-bbox');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 const assign = require('object-assign');
 
-const {get} = require('lodash');
+const {sortBy} = require('lodash');
 
 /**
  * Gets every `TEXT_SEARCH_STARTED` event.
@@ -47,7 +47,7 @@ const {get} = require('lodash');
  * @memberof epics.search
  * @return {external:Observable}
  */
-const searchEpic = action$ =>
+const searchEpic = (action$) =>
   action$.ofType(TEXT_SEARCH_STARTED)
     .debounceTime(250)
     .switchMap( action =>
@@ -77,8 +77,9 @@ const searchEpic = action$ =>
         )// from
         // merge all results from the streams
         .mergeAll()
-        .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(b, "__PRIORITY__") - get(a, "__PRIORITY__") ) .slice(0, 15))
-        .map((results) => searchResultLoaded(results, false))
+        .scan( (oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
+         // limit the number of results returned from all services to maxResults
+        .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
         .startWith(searchTextLoading(true))
         .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
         .concat([searchTextLoading(false)])

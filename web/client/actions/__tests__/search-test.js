@@ -33,8 +33,10 @@ var {
 describe('Test correctness of the search actions', () => {
 
     it('text search started', () => {
-        const action = textSearch(true);
+        const action = textSearch("via Milano", {}, 25);
         expect(action.type).toBe(TEXT_SEARCH_STARTED);
+        expect(action.searchText).toBe("via Milano");
+        expect(action.maxResults).toBe(25);
     });
     it('text search loading', () => {
         const action = searchTextLoading(true);
