@@ -125,6 +125,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
+ * @prop {object} cfg.maxResults number of max items present in the result list
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.

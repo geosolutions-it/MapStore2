@@ -148,13 +148,15 @@ function addMarker(itemPosition, itemText) {
  * perform a text search
  * @memberof actions.search
  * @param {string} searchText the text to search
- * @param {object} options [{}] the search options. Contain the services
+ * @param {object} [options={}] - the search options. Contain the services
+ * @param {number} [maxResults=15] - the max results obtained from all the services
  */
-function textSearch(searchText, {services = null} = {}) {
+function textSearch(searchText, {services = null} = {}, maxResults = 15) {
     return {
         type: TEXT_SEARCH_STARTED,
         searchText,
-        services
+        services,
+        maxResults
     };
 }
 

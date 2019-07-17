@@ -160,7 +160,18 @@ describe("test the SearchBar", () => {
         let searchOptions = {displaycrs: "EPSG:3857"};
 
         const renderSearchBar = (testHandlers, text) => {
-            return ReactDOM.render(<SearchBar searchOptions={searchOptions} searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+            return ReactDOM.render(
+                <SearchBar
+                    searchOptions={searchOptions}
+                    searchText={text}
+                    delay={0}
+                    maxResults={23}
+                    typeAhead={false}
+                    onSearch={testHandlers.onSearchHandler}
+                    onSearchReset={testHandlers.onSearchResetHandler}
+                    onSearchTextChange={testHandlers.onSearchTextChangeHandler}
+                />, document.getElementById("container")
+            );
         };
 
         const testHandlers = {
@@ -177,7 +188,7 @@ describe("test the SearchBar", () => {
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
         expect(spy.calls.length).toEqual(1);
-        expect(spy).toHaveBeenCalledWith('test', searchOptions);
+        expect(spy).toHaveBeenCalledWith('test', searchOptions, 23);
     });
     it('test error and loading status', () => {
         const tb = ReactDOM.render(<SearchBar loading error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));

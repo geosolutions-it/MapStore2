@@ -74,47 +74,48 @@ require('./searchbar.css');
  */
 class SearchBar extends React.Component {
     static propTypes = {
-        className: PropTypes.string,
-        onSearch: PropTypes.func,
-        onSearchReset: PropTypes.func,
-        onPurgeResults: PropTypes.func,
-        onSearchTextChange: PropTypes.func,
-        onCancelSelectedItem: PropTypes.func,
-        placeholder: PropTypes.string,
-        placeholderMsgId: PropTypes.string,
-        delay: PropTypes.number,
-        hideOnBlur: PropTypes.bool,
-        blurResetDelay: PropTypes.number,
-        typeAhead: PropTypes.bool,
-        searchText: PropTypes.string,
-        removeIcon: PropTypes.string,
-        optionsIcon: PropTypes.string,
-        searchIcon: PropTypes.string,
-        selectedItems: PropTypes.array,
         autoFocusOnSelect: PropTypes.bool,
-        splitTools: PropTypes.bool,
+        blurResetDelay: PropTypes.number,
+        className: PropTypes.string,
+        delay: PropTypes.number,
+        error: PropTypes.object,
+        hideOnBlur: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
         loading: PropTypes.bool,
-        error: PropTypes.object,
-        style: PropTypes.object,
+        maxResults: PropTypes.number,
+        onCancelSelectedItem: PropTypes.func,
+        onPurgeResults: PropTypes.func,
+        onSearch: PropTypes.func,
+        onSearchReset: PropTypes.func,
+        onSearchTextChange: PropTypes.func,
+        optionsIcon: PropTypes.string,
+        placeholder: PropTypes.string,
+        placeholderMsgId: PropTypes.string,
+        removeIcon: PropTypes.string,
+        searchIcon: PropTypes.string,
         searchOptions: PropTypes.object,
+        searchText: PropTypes.string,
+        selectedItems: PropTypes.array,
+        splitTools: PropTypes.bool,
+        style: PropTypes.object,
+        typeAhead: PropTypes.bool,
         // menuOptions
+        activeSearchTool: PropTypes.string,
+        aeronauticalOptions: PropTypes.object,
+        constraintsCoordEditor: PropTypes.object,
+        coordinate: PropTypes.object,
+        defaultZoomLevel: PropTypes.number,
+        enabledSearchServicesConfig: PropTypes.bool,
+        format: PropTypes.string,
         onChangeActiveSearchTool: PropTypes.func,
-        onChangeFormat: PropTypes.func,
         onChangeCoord: PropTypes.func,
+        onChangeFormat: PropTypes.func,
         onClearCoordinatesSearch: PropTypes.func,
         onToggleControl: PropTypes.func,
         onZoomToPoint: PropTypes.func,
-        format: PropTypes.string,
-        activeSearchTool: PropTypes.string,
-        defaultZoomLevel: PropTypes.number,
-        showOptions: PropTypes.bool,
         showAddressSearchOption: PropTypes.bool,
         showCoordinatesSearchOption: PropTypes.bool,
-        enabledSearchServicesConfig: PropTypes.bool,
-        aeronauticalOptions: PropTypes.object,
-        constraintsCoordEditor: PropTypes.object,
-        coordinate: PropTypes.object
+        showOptions: PropTypes.bool
     };
 
     static contextTypes = {
@@ -137,6 +138,7 @@ class SearchBar extends React.Component {
         autoFocusOnSelect: true,
         splitTools: true,
         isSearchClickable: true,
+        maxResults: 15,
         typeAhead: true,
         searchText: "",
         hideOnBlur: true,
@@ -491,7 +493,7 @@ class SearchBar extends React.Component {
         if ((text === undefined || text === "") && (!this.props.selectedItems || this.props.selectedItems.length === 0)) {
             this.props.onSearchReset();
         } else if (text !== undefined && text !== "") {
-            this.props.onSearch(text, this.props.searchOptions);
+            this.props.onSearch(text, this.props.searchOptions, this.props.maxResults);
         }
     };
     zoomToPoint = () => {
