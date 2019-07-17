@@ -4,7 +4,7 @@
   "features":[
     {
       "type":"Feature",
-      "id":"states.1",
+      "id":"states-ari.1",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -32,7 +32,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming1",
+        "STATE_NAME":"Arizona1",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -64,7 +64,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.2",
+      "id":"states-ari.2",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -92,7 +92,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming2",
+        "STATE_NAME":"Arizona2",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -124,7 +124,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.3",
+      "id":"states-ari.3",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -152,7 +152,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming3",
+        "STATE_NAME":"Arizona3",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -184,7 +184,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.4",
+      "id":"states-ari.4",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -212,7 +212,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming4",
+        "STATE_NAME":"Arizona4",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -244,7 +244,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.5",
+      "id":"states-ari.5",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -272,7 +272,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming5",
+        "STATE_NAME":"Arizona5",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -304,7 +304,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.6",
+      "id":"states-ari.6",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -332,7 +332,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming6",
+        "STATE_NAME":"Arizona6",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -364,7 +364,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.7",
+      "id":"states-ari.7",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -392,7 +392,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming7",
+        "STATE_NAME":"Arizona7",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -424,7 +424,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.8",
+      "id":"states-ari.8",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -452,7 +452,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming8",
+        "STATE_NAME":"Arizona8",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -484,7 +484,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.9",
+      "id":"states-ari.9",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -512,7 +512,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming9",
+        "STATE_NAME":"Arizona9",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -544,7 +544,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.10",
+      "id":"states-ari.10",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -572,7 +572,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming10",
+        "STATE_NAME":"Arizona10",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -604,7 +604,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.11",
+      "id":"states-ari.11",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -632,7 +632,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming11",
+        "STATE_NAME":"Arizona11",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -664,7 +664,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.12",
+      "id":"states-ari.12",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -692,7 +692,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming12",
+        "STATE_NAME":"Arizona12",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -724,7 +724,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.13",
+      "id":"states-ari.13",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -752,7 +752,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming13",
+        "STATE_NAME":"Arizona13",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -784,7 +784,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.14",
+      "id":"states-ari.14",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -812,7 +812,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming14",
+        "STATE_NAME":"Arizona14",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -844,7 +844,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.15",
+      "id":"states-ari.15",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -872,7 +872,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming15",
+        "STATE_NAME":"Arizona15",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -904,7 +904,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.16",
+      "id":"states-ari.16",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -932,7 +932,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming16",
+        "STATE_NAME":"Arizona16",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -964,7 +964,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.17",
+      "id":"states-ari.17",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -992,7 +992,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming17",
+        "STATE_NAME":"Arizona17",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
@@ -1024,7 +1024,7 @@
     },
     {
       "type":"Feature",
-      "id":"states.18",
+      "id":"states-ari.18",
       "geometry":{
         "type":"MultiPolygon",
         "coordinates":[
@@ -1052,7 +1052,7 @@
       },
       "geometry_name":"the_geom",
       "properties":{
-        "STATE_NAME":"Wyoming18",
+        "STATE_NAME":"Arizona18",
         "STATE_FIPS":"56",
         "SUB_REGION":"Mtn",
         "STATE_ABBR":"WY",
