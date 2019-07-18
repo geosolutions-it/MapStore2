@@ -23,6 +23,7 @@ const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
 const ZOOM_ADD_POINT = 'SEARCH:ZOOM_ADD_POINT';
 const CHANGE_FORMAT = 'SEARCH:CHANGE_FORMAT';
 const CHANGE_COORD = 'SEARCH:CHANGE_COORD';
+const SEARCH_WITH_FILTER = 'SEARCH:SEARCH_WITH_FILTER';
 
 /**
  * change the formato for coordinate editor tool
@@ -242,6 +243,18 @@ function changeCoord(coord, val) {
 }
 
 /**
+ * Search with cql filter, used to trigger GetFeature and then GetFeatureInfo
+ * @memberof actions.search
+ * @param {object} filter
+ */
+function searchWithFilter(options) {
+    return {
+        type: SEARCH_WITH_FILTER,
+        options
+    };
+}
+
+/**
  * Actions for search
  * @name actions.search
  */
@@ -262,6 +275,7 @@ module.exports = {
     UPDATE_RESULTS_STYLE,
     zoomAndAddPoint, ZOOM_ADD_POINT,
     changeActiveSearchTool, CHANGE_SEARCH_TOOL,
+    searchWithFilter, SEARCH_WITH_FILTER,
     changeFormat, CHANGE_FORMAT,
     changeCoord, CHANGE_COORD,
     searchTextLoading,

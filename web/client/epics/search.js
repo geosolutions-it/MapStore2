@@ -10,6 +10,7 @@ const {TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
+    SEARCH_WITH_FILTER,
     ZOOM_ADD_POINT,
     searchTextLoading,
     searchResultLoaded,
@@ -32,6 +33,7 @@ const mapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const Rx = require('rxjs');
 const {API} = require('../api/searchText');
+const {getFeatureSimple} = require('../api/WFS');
 const {changeMapView} = require('../actions/map');
 const toBbox = require('turf-bbox');
 const {generateTemplateString} = require('../utils/TemplateUtils');
@@ -196,12 +198,40 @@ const zoomAndAddPointEpic = (action$, store) =>
                 zoomToPoint(action.pos, action.zoom, action.crs)
             ]);
         });
+/**
+ * Gets every `SEARCH_WITH_FILTER` event.
+ * Triggers a GetFeature with a subsequent getFeatureInfo with a point taken from geometry of first feature retrieved
+ *
+*/
+const searchWithFilterEpic = (action$, store) =>
+    action$.ofType(SEARCH_WITH_FILTER)
+        .switchMap(({options}) => {
+            return Rx.Observable.defer(() =>
+                getFeatureSimple("/geoserver/", {
+                    maxFeatures: 1,
+                    typeName: options.layer,
+                    outputFormat: "application/json",
+                    // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
+                    cql_filter: options.cql_filter
+                })
+                .then( (response = []) => response)
+            )
+            .switchMap((res) => {
+                console.log(res);
+                return Rx.Observable.empty();
+            }).catch(e => {
+                console.log(e);
+            });
+        }).catch(e => {
+            console.log(e);
+        });
     /**
      * Actions for search
      * @name epics.search
      */
 module.exports = {
     zoomAndAddPointEpic,
+    searchWithFilterEpic,
     searchEpic,
     searchItemSelected
 };
