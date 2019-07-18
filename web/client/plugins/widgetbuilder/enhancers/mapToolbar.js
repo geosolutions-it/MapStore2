@@ -26,8 +26,9 @@ module.exports = compose(
     manageLayers,
     handleNodeEditing,
     withHandlers({
-        onRemoveSelected: ({selectedLayers = [], removeLayersById = () => { } }) => () => {
+        onRemoveSelected: ({selectedLayers = [], removeLayersById = () => { }, onNodeSelect = () => {} }) => () => {
             removeLayersById(selectedLayers);
+            selectedLayers.forEach(layer => onNodeSelect(layer, 'layer', false));
         }
     }),
     branch(
