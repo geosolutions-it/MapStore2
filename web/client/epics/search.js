@@ -258,12 +258,9 @@ export const searchOnStartEpic = (action$/*, store*/) =>
                         return Rx.Observable.of(featureInfoClick({latlng}, typeName));
                     }
                     return Rx.Observable.empty();
-                }).catch(e => {
-                    debugger;
+                }).catch(() => {
                     return Rx.Observable.empty();
                 });
             }
-        }).catch(e => {
-            debugger;
             return Rx.Observable.empty();
         });
