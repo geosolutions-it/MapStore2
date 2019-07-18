@@ -4,42 +4,45 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
-const {TEXT_SEARCH_STARTED,
+import Url from 'url';
+import * as Rx from 'rxjs';
+import toBbox from 'turf-bbox';
+import assign from 'object-assign';
+import {get, head} from 'lodash';
+
+import { updateAdditionalLayer } from '../actions/additionallayers';
+import { featureInfoClick } from '../actions/mapInfo';
+import { INIT_MAP, changeMapView, zoomToPoint } from '../actions/map';
+import {
+    TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
-    SEARCH_WITH_FILTER,
     ZOOM_ADD_POINT,
+    addMarker,
+    resultsPurge,
     searchTextLoading,
     searchResultLoaded,
     searchResultError,
-    addMarker,
     selectNestedService,
-    searchTextChanged,
-    resultsPurge
-} = require('../actions/search');
-const {defaultIconStyle} = require('../utils/SearchUtils');
+    searchTextChanged
+} from '../actions/search';
 
-const {
-    updateAdditionalLayer
-} = require('../actions/additionallayers');
-const {
-    zoomToPoint
-} = require('../actions/map');
+import CoordinatesUtils from '../utils/CoordinatesUtils';
+import mapUtils from '../utils/MapUtils';
+import {defaultIconStyle} from '../utils/SearchUtils';
+import {generateTemplateString} from '../utils/TemplateUtils';
 
-const mapUtils = require('../utils/MapUtils');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const Rx = require('rxjs');
-const {API} = require('../api/searchText');
-const {getFeatureSimple} = require('../api/WFS');
-const {changeMapView} = require('../actions/map');
-const toBbox = require('turf-bbox');
-const {generateTemplateString} = require('../utils/TemplateUtils');
-const assign = require('object-assign');
+import {API} from '../api/searchText';
+import {getFeatureSimple} from '../api/WFS';
 
-const {get} = require('lodash');
+/**
+ * Actions for search
+ * @name epics.search
+ */
+
 
 /**
  * Gets every `TEXT_SEARCH_STARTED` event.
@@ -49,7 +52,7 @@ const {get} = require('lodash');
  * @memberof epics.search
  * @return {external:Observable}
  */
-const searchEpic = action$ =>
+export const searchEpic = action$ =>
   action$.ofType(TEXT_SEARCH_STARTED)
     .debounceTime(250)
     .switchMap( action =>
@@ -103,7 +106,7 @@ const searchEpic = action$ =>
  * @return {Observable}
  */
 
-const searchItemSelected = action$ =>
+export const searchItemSelected = action$ =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
     .switchMap(action => {
         // itemSelectionStream --> emits actions for zoom and marker add
@@ -174,7 +177,7 @@ const searchItemSelected = action$ =>
  * it creates/updates an additional layer for showing a marker for a given point
  *
 */
-const zoomAndAddPointEpic = (action$, store) =>
+export const zoomAndAddPointEpic = (action$, store) =>
         action$.ofType(ZOOM_ADD_POINT)
         .switchMap(action => {
             const feature = {
@@ -198,40 +201,69 @@ const zoomAndAddPointEpic = (action$, store) =>
                 zoomToPoint(action.pos, action.zoom, action.crs)
             ]);
         });
+
+/**
+ * parse url by taking the query params arrived to the viewer page
+ * @param {object} [location] location data realted to the
+ * @return {object} query object
+*/
+export const getGFIFilter = (location) => {
+    let search = location.search;
+    if (search) {
+        // after # the Url.parse does not catch query params, so we use this workaround
+        let query = Url.parse("http://localhost:8081/" + location.search, true).query;
+        if (query.layer && query.cql_filter) {
+            return query;
+        }
+    }
+    return null;
+};
+
+export const getFirstCoord = (geometry = {}) => {
+    switch (geometry && geometry.type) {
+        case "Point": return geometry.coordinates;
+        case "LineString": case "MultiPoint": return head(geometry.coordinates);
+        case "Polygon": case "MultiLineString": return head(head(geometry.coordinates));
+        case "MultiPolygon": return head(head(head(geometry.coordinates)));
+        default: return null;
+    }
+};
+
 /**
  * Gets every `SEARCH_WITH_FILTER` event.
  * Triggers a GetFeature with a subsequent getFeatureInfo with a point taken from geometry of first feature retrieved
- *
 */
-const searchWithFilterEpic = (action$, store) =>
-    action$.ofType(SEARCH_WITH_FILTER)
-        .switchMap(({options}) => {
-            return Rx.Observable.defer(() =>
-                getFeatureSimple("/geoserver/", {
-                    maxFeatures: 1,
-                    typeName: options.layer,
-                    outputFormat: "application/json",
-                    // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
-                    cql_filter: options.cql_filter
-                })
-                .then( (response = []) => response)
-            )
-            .switchMap((res) => {
-                console.log(res);
-                return Rx.Observable.empty();
-            }).catch(e => {
-                console.log(e);
-            });
+export const searchOnStartEpic = (action$/*, store*/) =>
+    action$.ofType(INIT_MAP)
+        .switchMap(({location}) => {
+            const queryParams = getGFIFilter(location);
+            if (queryParams) {
+                return Rx.Observable.defer(() =>
+                // TRY to externalize the geoserver base url as configurable param
+                    getFeatureSimple("geoserver-test/ows", {
+                        maxFeatures: 1,
+                        typeName: queryParams.layer,
+                        srsName: "EPSG:4326",
+                        outputFormat: "application/json",
+                        // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
+                        cql_filter: queryParams.cql_filter
+                    })
+                    .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: queryParams.layer})
+                )
+                .switchMap(({geometry, typeName}) => {
+                    let coord = getFirstCoord(geometry);
+                    const latlng = {lng: coord[0], lat: coord[1] };
+                    if (coord) {
+                        // trigger get feature info
+                        return Rx.Observable.of(featureInfoClick({latlng}, typeName));
+                    }
+                    return Rx.Observable.empty();
+                }).catch(e => {
+                    debugger;
+                    return Rx.Observable.empty();
+                });
+            }
         }).catch(e => {
-            console.log(e);
+            debugger;
+            return Rx.Observable.empty();
         });
-    /**
-     * Actions for search
-     * @name epics.search
-     */
-module.exports = {
-    zoomAndAddPointEpic,
-    searchWithFilterEpic,
-    searchEpic,
-    searchItemSelected
-};

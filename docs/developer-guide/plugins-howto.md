@@ -260,7 +260,7 @@ export default function(state = { text: 'Initial Text' }, action) {
 
 ### js/epics/sample.js
 ```javascript
-import Rx from 'rxjs';
+import * as Rx from 'rxjs';
 import axios from 'axios';
 
 import { LOAD_DATA, loadedData, loadError } from '../actions/sample';
@@ -660,7 +660,7 @@ We can change this using showIn or hideFrom in localConfig.json:
     ...
 }
 
-or 
+or
 
 {
     ...,

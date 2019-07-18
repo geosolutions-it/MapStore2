@@ -186,7 +186,11 @@ function updateCenterToMarker(status) {
         status
     };
 }
-
+/**
+ * Carries data needed for Get Feature Info request
+ * @param {object} point point clicked in this shape {latlng: {lat:1, lng:2}, pixel:{x:33 y:33}, modifiers:{} }
+ * @param {layer} string the name of the layer without workspace
+ */
 function featureInfoClick(point, layer) {
     return {
         type: FEATURE_INFO_CLICK,

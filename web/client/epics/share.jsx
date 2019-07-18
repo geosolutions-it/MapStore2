@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Rx from 'rxjs';
+import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { get, head, isNaN } from 'lodash';
 import url from 'url';

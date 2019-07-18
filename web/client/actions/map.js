@@ -143,9 +143,10 @@ function updateVersion(version) {
     };
 }
 
-function initMap() {
+function initMap(location) {
     return {
-        type: INIT_MAP
+        type: INIT_MAP,
+        location
     };
 }
 

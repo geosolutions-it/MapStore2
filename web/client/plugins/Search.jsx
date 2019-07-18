@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 const {get, isArray} = require('lodash');
-const {searchEpic, searchWithFilterEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
+const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 
 const {
@@ -292,7 +292,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: {searchEpic, searchWithFilterEpic, searchItemSelected, zoomAndAddPointEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic},
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')
