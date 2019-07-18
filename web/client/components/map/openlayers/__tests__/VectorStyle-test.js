@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
-const {
+import expect from 'expect';
+import {
     getCircleStyle,
     getMarkerStyle,
     getStrokeStyle,
@@ -15,13 +15,19 @@ const {
     getGeometryTrasformation,
     getFilter,
     parseStyles
-} = require('../VectorStyle');
-const ol = require('openlayers');
-const {isArray} = require('lodash');
-const baseImageUrl = require('../../../mapcontrols/annotations/img/markers_default.png');
-const shadowImageUrl = require('../../../mapcontrols/annotations/img/markers_shadow.png');
-const MarkerUtils = require('../../../../utils/MarkerUtils');
-const {colorToRgbaStr} = require('../../../../utils/ColorUtils');
+} from '../VectorStyle';
+
+import isArray from 'lodash/isArray';
+import baseImageUrl from '../../../mapcontrols/annotations/img/markers_default.png';
+import shadowImageUrl from '../../../mapcontrols/annotations/img/markers_shadow.png';
+import MarkerUtils from '../../../../utils/MarkerUtils';
+import {colorToRgbaStr} from '../../../../utils/ColorUtils';
+
+import {Stroke, Fill} from 'ol/style';
+
+import Feature from 'ol/Feature';
+import {Point, MultiPoint, Polygon} from 'ol/geom';
+
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
 
 describe('Test VectorStyle', () => {
@@ -57,11 +63,11 @@ describe('Test VectorStyle', () => {
         const strokeStyle = {
             color: "#223366"
         };
-        const stroke = new ol.style.Stroke(strokeStyle);
+        const stroke = new Stroke(strokeStyle);
         const fillStyle = {
             color: "#998877"
         };
-        const fill = new ol.style.Fill(fillStyle);
+        const fill = new Fill(fillStyle);
         const olStyle = getCircleStyle({
                 radius: 800
             },
@@ -306,7 +312,7 @@ describe('Test VectorStyle', () => {
         Options are:
         - remove it
         - test it more, on ol they say that some defaults are applied, but it is not the case
-        (https://openlayers.org/en/v4.6.5/apidoc/ol.style.Stroke.html)
+        (https://openlayers.org/en/v4.6.5/apidoc/Stroke.html)
         */
         const strokeStyle = {
             color: "#ffffff",
@@ -450,9 +456,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Point([1, 2]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new Point([1, 2]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("Point");
@@ -466,9 +472,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("Point");
@@ -480,9 +486,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.MultiPoint([[1, 2], [2, 2], [3, 2], [1, 2]]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new MultiPoint([[1, 2], [2, 2], [3, 2], [1, 2]]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("LineString");
@@ -494,9 +500,9 @@ describe('Test VectorStyle', () => {
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
         expect(geomFunc).toNotBe(null);
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
-            labelPoint: new ol.geom.Point([1, 1]),
+        const feature = new Feature({
+            geometry: new Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
+            labelPoint: new Point([1, 1]),
             name: 'My Polygon'
         });
         expect(geomFunc(feature).getType()).toBe("Polygon");

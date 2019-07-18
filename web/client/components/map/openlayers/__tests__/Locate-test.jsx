@@ -5,28 +5,29 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ol = require('openlayers');
-var Locate = require('../Locate');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
 
+import Locate from '../Locate';
+
+import { Map, View } from 'ol';
 
 describe('Openlayers Locate component', () => {
     let map;
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
-        map = new ol.Map({
+        map = new Map({
             layers: [
             ],
-            controls: ol.control.defaults({
-                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
+            /*controls: ol.control.defaults({
+                attributionOptions: {
                     collapsible: false
                 }
-            }),
+            }),*/
             target: 'map',
-            view: new ol.View({
+            view: new View({
                 center: [0, 0],
                 zoom: 5
             })

@@ -5,11 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const LegacyVectorStyle = require('../LegacyVectorStyle');
-const ol = require('openlayers');
-const {geomCollFeature} = require('../../../../test-resources/drawsupport/features');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
+import expect from 'expect';
+import { getStyle, styleFunction, firstPointOfPolylineStyle, lastPointOfPolylineStyle, startEndPolylineStyle } from '../LegacyVectorStyle';
+
+import {geomCollFeature} from '../../../../test-resources/drawsupport/features';
+import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+
+import Feature from 'ol/Feature';
+import {Point, LineString, MultiLineString, Polygon, MultiPolygon} from 'ol/geom';
+import GeometryCollection from 'ol/geom/GeometryCollection';
 
 describe('Test LegacyVectorStyle', () => {
     beforeEach((done) => {
@@ -23,7 +27,7 @@ describe('Test LegacyVectorStyle', () => {
     });
 
     it('simple point style', () => {
-        const style = LegacyVectorStyle.getStyle({
+        const style = getStyle({
             style: {
                 type: 'Point',
                 "Point": {
@@ -36,7 +40,7 @@ describe('Test LegacyVectorStyle', () => {
     });
 
     it('style name', () => {
-        const style = LegacyVectorStyle.getStyle({
+        const style = getStyle({
             type: 'Point',
             iconUrl: 'myurl'
         });
@@ -51,7 +55,7 @@ describe('Test LegacyVectorStyle', () => {
               },
               name: 'My Point'
         };
-        const style = LegacyVectorStyle.getStyle({
+        const style = getStyle({
             features: [feature],
             style: {
                 radius: 10,
@@ -65,13 +69,13 @@ describe('Test LegacyVectorStyle', () => {
 
     it('test styleFunction with LineString', () => {
 
-        const lineString = new ol.Feature({
-            geometry: new ol.geom.LineString([
+        const lineString = new Feature({
+            geometry: new LineString([
                 [100.0, 0.0], [101.0, 1.0]
             ])
         });
 
-        let olStyle = LegacyVectorStyle.styleFunction(lineString);
+        let olStyle = styleFunction(lineString);
         let olStroke = olStyle[0].getStroke();
 
         expect(olStroke.getColor()).toBe('blue');
@@ -84,7 +88,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(lineString, options);
+        olStyle = styleFunction(lineString, options);
         olStroke = olStyle[0].getStroke();
 
         expect(olStroke.getColor()).toBe('#3388ff');
@@ -101,7 +105,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(lineString, optionsWithFeatureType);
+        olStyle = styleFunction(lineString, optionsWithFeatureType);
         olStroke = olStyle[0].getStroke();
 
         expect(olStroke.getColor()).toBe('#ffaa33');
@@ -111,14 +115,14 @@ describe('Test LegacyVectorStyle', () => {
 
     it('test styleFunction with MultiLineString', () => {
 
-        const multiLineString = new ol.Feature({
-            geometry: new ol.geom.MultiLineString([
+        const multiLineString = new Feature({
+            geometry: new MultiLineString([
                 [ [100.0, 0.0], [101.0, 1.0] ],
                 [ [102.0, 2.0], [103.0, 3.0] ]
             ])
         });
 
-        let olStyle = LegacyVectorStyle.styleFunction(multiLineString);
+        let olStyle = styleFunction(multiLineString);
         let olStroke = olStyle[0].getStroke();
 
         expect(olStroke.getColor()).toBe('blue');
@@ -131,7 +135,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(multiLineString, options);
+        olStyle = styleFunction(multiLineString, options);
         olStroke = olStyle[0].getStroke();
 
         expect(olStroke.getColor()).toBe('#3388ff');
@@ -148,7 +152,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(multiLineString, optionsWithFeatureType);
+        olStyle = styleFunction(multiLineString, optionsWithFeatureType);
         olStroke = olStyle[0].getStroke();
 
         expect(olStroke.getColor()).toBe('#ffaa33');
@@ -158,13 +162,13 @@ describe('Test LegacyVectorStyle', () => {
 
     it('test styleFunction with Polygon', () => {
 
-        const polygon = new ol.Feature({
-            geometry: new ol.geom.Polygon([
+        const polygon = new Feature({
+            geometry: new Polygon([
                 [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ]
             ])
         });
 
-        let olStyle = LegacyVectorStyle.styleFunction(polygon);
+        let olStyle = styleFunction(polygon);
         let olFill = olStyle[0].getFill();
         let olStroke = olStyle[0].getStroke();
 
@@ -183,7 +187,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(polygon, options);
+        olStyle = styleFunction(polygon, options);
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
@@ -208,7 +212,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(polygon, optionsWithFeatureType);
+        olStyle = styleFunction(polygon, optionsWithFeatureType);
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
@@ -221,8 +225,8 @@ describe('Test LegacyVectorStyle', () => {
 
     it('test styleFunction with MultiPolygon', () => {
 
-        const multiPolygon = new ol.Feature({
-            geometry: new ol.geom.MultiPolygon([
+        const multiPolygon = new Feature({
+            geometry: new MultiPolygon([
                 [
                     [ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]
                 ],
@@ -233,7 +237,7 @@ describe('Test LegacyVectorStyle', () => {
             ])
         });
 
-        let olStyle = LegacyVectorStyle.styleFunction(multiPolygon);
+        let olStyle = styleFunction(multiPolygon);
         let olFill = olStyle[0].getFill();
         let olStroke = olStyle[0].getStroke();
 
@@ -252,7 +256,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(multiPolygon, options);
+        olStyle = styleFunction(multiPolygon, options);
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
@@ -277,7 +281,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(multiPolygon, optionsWithFeatureType);
+        olStyle = styleFunction(multiPolygon, optionsWithFeatureType);
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
@@ -289,31 +293,31 @@ describe('Test LegacyVectorStyle', () => {
     });
 
     it('test firstPointOfPolylineStyle defaults', () => {
-        let olStyle = LegacyVectorStyle.firstPointOfPolylineStyle();
+        let olStyle = firstPointOfPolylineStyle();
         expect(olStyle.getImage().getRadius()).toBe(5);
         expect(olStyle.getImage().getFill().getColor()).toBe("green");
     });
 
     it('test lastPointOfPolylineStyle defaults', () => {
-        let olStyle = LegacyVectorStyle.lastPointOfPolylineStyle();
+        let olStyle = lastPointOfPolylineStyle();
         expect(olStyle.getImage().getRadius()).toBe(5);
         expect(olStyle.getImage().getFill().getColor()).toBe("red");
     });
 
     it('test firstPointOfPolylineStyle {radius: 4}', () => {
-        let olStyle = LegacyVectorStyle.firstPointOfPolylineStyle({radius: 4});
+        let olStyle = firstPointOfPolylineStyle({radius: 4});
         expect(olStyle.getImage().getRadius()).toBe(4);
         expect(olStyle.getImage().getFill().getColor()).toBe("green");
     });
 
     it('test lastPointOfPolylineStyle {radius: 4}', () => {
-        let olStyle = LegacyVectorStyle.lastPointOfPolylineStyle({radius: 4});
+        let olStyle = lastPointOfPolylineStyle({radius: 4});
         expect(olStyle.getImage().getRadius()).toBe(4);
         expect(olStyle.getImage().getFill().getColor()).toBe("red");
     });
 
     it('test startEndPolylineStyle defaults', () => {
-        let styles = LegacyVectorStyle.startEndPolylineStyle();
+        let styles = startEndPolylineStyle();
         expect(styles[0].getImage().getRadius()).toBe(5);
         expect(styles[0].getImage().getFill().getColor()).toBe("green");
         expect(styles[1].getImage().getRadius()).toBe(5);
@@ -322,7 +326,7 @@ describe('Test LegacyVectorStyle', () => {
 
     it('test styleFunction with GeometryCollection', () => {
 
-        const multiPolygon = new ol.geom.MultiPolygon([
+        const multiPolygon = new MultiPolygon([
             [
                 [ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]
             ],
@@ -332,11 +336,11 @@ describe('Test LegacyVectorStyle', () => {
             ]
         ]);
 
-        const geometryCollection = new ol.Feature({
-            geometry: new ol.geom.GeometryCollection([multiPolygon])
+        const geometryCollection = new Feature({
+            geometry: new GeometryCollection([multiPolygon])
         });
 
-        let olStyle = LegacyVectorStyle.styleFunction(geometryCollection);
+        let olStyle = styleFunction(geometryCollection);
 
         let olFill = olStyle[0].getFill();
         let olStroke = olStyle[0].getStroke();
@@ -356,7 +360,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(geometryCollection, options);
+        olStyle = styleFunction(geometryCollection, options);
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
@@ -381,7 +385,7 @@ describe('Test LegacyVectorStyle', () => {
             }
         };
 
-        olStyle = LegacyVectorStyle.styleFunction(geometryCollection, optionsWithFeatureType);
+        olStyle = styleFunction(geometryCollection, optionsWithFeatureType);
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
@@ -392,7 +396,7 @@ describe('Test LegacyVectorStyle', () => {
     });
 
     it('test getStyle with GeometryCollection', () => {
-        const styleFunc = LegacyVectorStyle.getStyle({
+        const styleFunc = getStyle({
             features: [geomCollFeature],
             style: {
                 color: "ff0000",
@@ -402,11 +406,11 @@ describe('Test LegacyVectorStyle', () => {
         }, false, ["textValue"]);
         expect(styleFunc).toExist();
 
-        const styleGenerated = styleFunc(new ol.Feature({
-            geometry: new ol.geom.GeometryCollection([
-                new ol.geom.LineString([[1, 2], [1, 3]]),
-                new ol.geom.Polygon([[1, 2], [1, 3], [1, 1], [1, 2]]),
-                new ol.geom.Point([1, 20])
+        const styleGenerated = styleFunc(new Feature({
+            geometry: new GeometryCollection([
+                new LineString([[1, 2], [1, 3]]),
+                new Polygon([[1, 2], [1, 3], [1, 1], [1, 2]]),
+                new Point([1, 20])
             ])
         }));
         expect(styleGenerated).toExist();

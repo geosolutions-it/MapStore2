@@ -351,23 +351,21 @@ export default class DrawSupport extends React.Component {
         }
         this.drawInteraction = new Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, newProps));
         this.props.map.disableEventListener('singleclick');
-        this.drawInteraction.on('drawstart', (evt) => {
-            this.sketchFeature = evt.feature;
+        this.drawInteraction.on('drawstart', () => {
             if (this.selectInteraction) {
                 this.selectInteraction.getFeatures().clear();
                 this.selectInteraction.setActive(false);
             }
         });
         this.drawInteraction.on('drawend', (evt) => {
-            this.sketchFeature = evt.feature;
-            this.sketchFeature.set('id', uuid.v1());
-            let feature;
-            if (this.props.drawMethod === "Circle" && this.sketchFeature.getGeometry().getType() === "Circle") {
-                const radius = this.sketchFeature.getGeometry().getRadius();
-                const center = this.sketchFeature.getGeometry().getCenter();
-                this.sketchFeature.setGeometry(this.polygonFromCircle(center, radius));
+            const sketchFeature = evt.feature.clone();
+            sketchFeature.set('id', uuid.v1());
+            if (this.props.drawMethod === "Circle" && sketchFeature.getGeometry().getType() === "Circle") {
+                const radius = sketchFeature.getGeometry().getRadius();
+                const center = sketchFeature.getGeometry().getCenter();
+                sketchFeature.setGeometry(this.polygonFromCircle(center, radius));
             }
-            feature = this.fromOLFeature(this.sketchFeature, startingPoint);
+            const feature = this.fromOLFeature(sketchFeature, startingPoint);
 
             this.props.onEndDrawing(feature, this.props.drawOwner);
             if (this.props.options.stopAfterDrawing) {
@@ -396,8 +394,7 @@ export default class DrawSupport extends React.Component {
         }
         this.drawInteraction = new Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null, newProps ));
         this.props.map.disableEventListener('singleclick');
-        this.drawInteraction.on('drawstart', (evt) => {
-            this.sketchFeature = evt.feature;
+        this.drawInteraction.on('drawstart', () => {
             if (this.selectInteraction) {
                 this.selectInteraction.getFeatures().clear();
                 this.selectInteraction.setActive(false);
@@ -405,9 +402,10 @@ export default class DrawSupport extends React.Component {
         });
 
         this.drawInteraction.on('drawend', (evt) => {
-            this.sketchFeature = evt.feature;
-            this.sketchFeature.set('id', uuid.v1());
-            let drawnGeom = this.sketchFeature.getGeometry();
+            const sketchFeature = evt.feature.clone();
+            const id = uuid.v1();
+            sketchFeature.set('id', id);
+            let drawnGeom = sketchFeature.getGeometry();
             let drawnFeatures = this.drawLayer.getSource().getFeatures();
             let previousGeometries;
             let features = this.props.features;
@@ -423,8 +421,7 @@ export default class DrawSupport extends React.Component {
                     newFeature = this.getNewFeature(newDrawMethod, coordinates);
                     // TODO verify center is projected in 4326 and is an array
                     center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
-                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || this.sketchFeature.get("id");
-                    // this.sketchFeature.set('id', originalId);
+                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || id;
                     newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y], id: originalId});
                 } else if (drawMethod === "Polygon") {
                     newDrawMethod = this.props.drawMethod;
@@ -476,7 +473,7 @@ export default class DrawSupport extends React.Component {
                             geomCollection = new GeometryCollection([previousGeometries, newMultiGeom]);
                         }
                     }
-                    this.sketchFeature.setGeometry(geomCollection);
+                    sketchFeature.setGeometry(geomCollection);
 
                 } else if (drawMethod === "Text" || drawMethod === "MultiPoint") {
                     let coordinates = drawnGeom.getCoordinates();
@@ -494,7 +491,7 @@ export default class DrawSupport extends React.Component {
                             geomCollection = new GeometryCollection([previousGeometries, newMultiGeom]);
                         }
                     }
-                    this.sketchFeature.setGeometry(geomCollection);
+                    sketchFeature.setGeometry(geomCollection);
                 } else if (!isSimpleGeomType(drawMethod)) {
                     let newMultiGeom;
                     geomCollection = null;
@@ -541,30 +538,30 @@ export default class DrawSupport extends React.Component {
                                 }
                             }
                         }
-                        this.sketchFeature.setGeometry(geomCollection);
+                        sketchFeature.setGeometry(geomCollection);
                     } else {
-                        this.sketchFeature.setGeometry(geomAlreadyPresent);
+                        sketchFeature.setGeometry(geomAlreadyPresent);
                     }
                 }
                 let properties = this.props.features[0].properties;
                 if (drawMethod === "Text") {
                     properties = assign({}, this.props.features[0].properties, {
                             textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
-                            textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
+                            textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
                         });
                 }
                 if (drawMethod === "Circle") {
                     properties = assign({}, properties, {
-                            circles: (this.props.features[0].properties.circles || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
+                            circles: (this.props.features[0].properties.circles || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
                         });
                 }
-                let feature = this.fromOLFeature(this.sketchFeature, startingPoint, properties);
+                let feature = this.fromOLFeature(sketchFeature, startingPoint, properties);
                 const vectorSource = new VectorSource({
                     features: (new GeoJSON()).readFeatures(feature)
                   });
                 this.drawLayer.setSource(vectorSource);
 
-                let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.getMapCrs(), "EPSG:4326");
+                let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(sketchFeature.clone()), this.getMapCrs(), "EPSG:4326");
                 if (newFeature.geometry.type === "Polygon") {
                     newFeature.geometry.coordinates[0].push(newFeature.geometry.coordinates[0][0]);
                 }
@@ -979,7 +976,6 @@ export default class DrawSupport extends React.Component {
         if (this.drawInteraction) {
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
-            this.sketchFeature = null;
             /** Map Singleclick event is dealyed by 250 ms see here
               * https://openlayers.org/en/latest/apidoc/ol.MapBrowserEvent.html#event:singleclick
               * This timeout prevents ol map to throw mapClick event that has alredy been managed
@@ -1021,22 +1017,22 @@ export default class DrawSupport extends React.Component {
     };
 
     fromOLFeature = (feature, startingPoint, properties) => {
-        let geometry = feature.getGeometry();
-        let extent = geometry.getExtent();
-        let geometryProperties = geometry.getProperties();
+        const geometry = feature.getGeometry();
         // retrieve geodesic center from properties
         // it's different from extent center
-        let center = geometryProperties && geometryProperties.geodesicCenter || getCenter(extent);
-        let coordinates;
-        let projection = this.props.map.getView().getProjection().getCode();
-        let radius;
-        let type = geometry.getType();
+        const projection = this.props.map.getView().getProjection().getCode();
+        const type = geometry.getType();
+        // LineString, Polygon, MultiLineString, MultiPolygon
         if (geometry.getCoordinates) {
-            coordinates = geometry.getCoordinates();
+            const extent = geometry.getExtent();
+            const geometryProperties = geometry.getProperties();
+            const center = geometryProperties && geometryProperties.geodesicCenter || getCenter(extent);
+            let coordinates = geometry.getCoordinates();
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
                 geometry.setCoordinates(coordinates);
             }
+            let radius;
             if (this.props.drawMethod === "Circle") {
                 if (this.props.options.geodesic) {
                     const wgs84Coordinates = [[...center], [...coordinates[0][0]]].map((coordinate) => {
@@ -1060,13 +1056,14 @@ export default class DrawSupport extends React.Component {
 
         }
         let geometries = geometry.getGeometries().map((g, i) => {
-            extent = g.getExtent();
-            center = getCenter(extent);
-            coordinates = g.getCoordinates();
+            const extent = g.getExtent();
+            const center = getCenter(extent);
+            let coordinates = g.getCoordinates();
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
                 g.setCoordinates(coordinates);
             }
+            let radius;
             if (properties.circles && properties.circles.indexOf(i) !== -1) {
                 if (this.props.options.geodesic) {
                     const wgs84Coordinates = [[...center], [...coordinates[0][0]]].map((coordinate) => {
@@ -1090,13 +1087,12 @@ export default class DrawSupport extends React.Component {
                 projection: this.getMapCrs()
             });
         });
-        type = "GeometryCollection";
         return assign({}, {
             type: "Feature",
             id: feature.get('id'),
             style: this.fromOlStyle(feature.getStyle()),
             geometry: {
-                type,
+                type: "GeometryCollection",
                 geometries
             },
             projection
@@ -1289,7 +1285,7 @@ export default class DrawSupport extends React.Component {
             case "Point": case "Marker": case "Text": { geometry = new Point(coordinates ? coordinates : []); break; }
             case "LineString": { geometry = new LineString(coordinates ? coordinates : []); break; }
             case "MultiPoint": /*case "Text":*/ { geometry = new MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
-            case "MultiLineString": { geometry = new MultiLineString(coordinates ? coordinates : []); break; }
+            case "MultiLineString": { geometry = new MultiLineString(coordinates ? [coordinates] : []); break; }
             case "MultiPolygon": { geometry = new MultiPolygon(coordinates ? coordinates : []); break; }
             // default is Polygon
             default: {

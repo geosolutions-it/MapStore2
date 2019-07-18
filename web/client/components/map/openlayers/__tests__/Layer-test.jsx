@@ -5,25 +5,28 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ol = require('openlayers');
-var OpenlayersLayer = require('../Layer.jsx');
-var expect = require('expect');
-var assign = require('object-assign');
-require('../../../../utils/openlayers/Layers');
-require('../plugins/OSMLayer');
-require('../plugins/WMSLayer');
-require('../plugins/WMTSLayer');
-require('../plugins/GoogleLayer');
-require('../plugins/BingLayer');
-require('../plugins/MapQuest');
-require('../plugins/VectorLayer');
-require('../plugins/GraticuleLayer');
-require('../plugins/OverlayLayer');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import OpenlayersLayer from '../Layer';
 
-const SecurityUtils = require('../../../../utils/SecurityUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+import assign from 'object-assign';
+import '../../../../utils/openlayers/Layers';
+import '../plugins/OSMLayer';
+import '../plugins/WMSLayer';
+import '../plugins/WMTSLayer';
+import '../plugins/GoogleLayer';
+import '../plugins/BingLayer';
+import '../plugins/MapQuest';
+import '../plugins/VectorLayer';
+import '../plugins/GraticuleLayer';
+import '../plugins/OverlayLayer';
+
+import SecurityUtils from '../../../../utils/SecurityUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+
+import { Map, View } from 'ol';
+import { defaults as defaultControls } from 'ol/control';
 
 const sampleTileMatrixConfig900913 = {
     "matrixIds": {
@@ -151,16 +154,16 @@ describe('Openlayers layer', () => {
 
     beforeEach(() => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
-        map = new ol.Map({
+        map = new Map({
             layers: [
             ],
-            controls: ol.control.defaults({
-                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
+            controls: defaultControls({
+                attributionOptions: {
                     collapsible: false
                 }
             }),
             target: 'map',
-            view: new ol.View({
+            view: new View({
                 center: [0, 0],
                 zoom: 5
             })
@@ -294,13 +297,12 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-
         expect(layer).toExist();
         // check creation
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT1);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT1);
         // check remove
         ReactDOM.render(
             <OpenlayersLayer type="wms"
@@ -311,19 +313,19 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={{ ...options, credits: {title: TEXT2} }} map={map} />, document.getElementById("container"));
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT2);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT2);
         // check content update
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT1);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT1);
         // check complex contents
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={{...options, credits: CREDITS1}} map={map} />, document.getElementById("container"));
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe('<img src="test.jpg" title="test">');
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe('<img src="test.jpg" title="test">');
     });
 
     it('creates a wms elevation layer for openlayers map', () => {

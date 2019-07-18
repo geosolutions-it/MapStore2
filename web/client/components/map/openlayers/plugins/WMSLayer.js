@@ -125,7 +125,7 @@ function getElevation(pos) {
         return <Message msgId="elevationLoadingError" />;
     }
 }
-const toOLAttributions = credits => credits && creditsToAttribution(credits) ? castArray(creditsToAttribution(credits)) : undefined;
+const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
 
 Layers.registerType('wms', {
     create: (options, map) => {

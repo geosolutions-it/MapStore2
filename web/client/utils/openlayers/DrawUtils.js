@@ -7,6 +7,7 @@
 */
 
 import {Point, LineString, MultiPoint, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
+import {fromCircle} from 'ol/geom/Polygon';
 
 export const createOLGeometry = ({ type, coordinates, radius, center } = {}) => {
     let geometry;
@@ -19,7 +20,7 @@ export const createOLGeometry = ({ type, coordinates, radius, center } = {}) => 
         // defaults is Polygon / Circle
         default: {
             geometry = radius && center ?
-                Polygon.fromCircle(new Circle([center.x, center.y], radius), 100) : new Polygon(coordinates ? coordinates : []);
+                fromCircle(new Circle([center.x, center.y], radius), 100) : new Polygon(coordinates ? coordinates : []);
         }
     }
     return geometry;

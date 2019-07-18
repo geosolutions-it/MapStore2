@@ -5,14 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ol = require('openlayers');
-const Feature = require('../Feature.jsx');
-const expect = require('expect');
-require('../../../../utils/openlayers/Layers');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
-require('../plugins/VectorLayer');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import Feature from '../Feature';
+import '../../../../utils/openlayers/Layers';
+import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+import '../plugins/VectorLayer';
+
+import { Map, View } from 'ol';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
 
 describe('Test Feature', () => {
     document.body.innerHTML = '<div id="map"></div>';
@@ -20,16 +23,16 @@ describe('Test Feature', () => {
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
-        map = new ol.Map({
+        map = new Map({
             layers: [
             ],
-            controls: ol.control.defaults({
-                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
+            /*controls: ol.control.defaults({
+                attributionOptions:  {
                     collapsible: false
                 }
-            }),
+            }),*/
             target: 'map',
-            view: new ol.View({
+            view: new View({
                 center: [0, 0],
                 zoom: 5
             })
@@ -73,11 +76,11 @@ describe('Test Feature', () => {
                 ]
             }
         };
-        const source = new ol.source.Vector({
+        const source = new VectorSource({
             features: []
         });
         const msId = "some value";
-        let container = new ol.layer.Vector({
+        let container = new VectorLayer({
             msId,
             source: source,
             visible: true,
@@ -126,11 +129,11 @@ describe('Test Feature', () => {
                 ]
             }
         };
-        const source = new ol.source.Vector({
+        const source = new VectorSource({
             features: []
         });
         const msId = "some value";
-        let container = new ol.layer.Vector({
+        let container = new VectorLayer({
             msId,
             source: source,
             visible: true,
@@ -189,11 +192,11 @@ describe('Test Feature', () => {
                 ]
             }
         };
-        const source = new ol.source.Vector({
+        const source = new VectorSource({
             features: []
         });
         const msId = "some value";
-        let container = new ol.layer.Vector({
+        let container = new VectorLayer({
             msId,
             source: source,
             visible: true,
@@ -290,10 +293,10 @@ describe('Test Feature', () => {
                 ]
             }
         };
-        const source = new ol.source.Vector({
+        const source = new VectorSource({
             features: []
         });
-        let container = new ol.layer.Vector({
+        let container = new VectorLayer({
             source: source,
             visible: true,
             zIndex: 1
@@ -402,11 +405,11 @@ describe('Test Feature', () => {
                 ]
             }
         };
-        const source = new ol.source.Vector({
+        const source = new VectorSource({
             features: []
         });
         const msId = "some value";
-        let container = new ol.layer.Vector({
+        let container = new VectorLayer({
             msId,
             source: source,
             visible: true,

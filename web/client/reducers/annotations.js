@@ -7,8 +7,11 @@
  */
 
 const assign = require('object-assign');
-const ol = require('openlayers');
 const {reproject, reprojectGeoJson, transformLineToArcs} = require('../utils/CoordinatesUtils');
+
+const {Circle} = require('ol/geom');
+
+const {fromCircle} = require('ol/geom/Polygon');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -89,7 +92,7 @@ function annotations(state = { validationErrors: {} }, action) {
                 // polygonGeom setting
                 if (validateCoordsArray(selected.properties.center)) {
                     centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
-                    c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
+                    c = fromCircle(new Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
                 } else {
                     selected = set("properties.center", [], selected);
                 }
@@ -239,7 +242,7 @@ function annotations(state = { validationErrors: {} }, action) {
 
             // need to change the polygon coords after radius changes
             // but this implementation is ugly. is using openlayers to do that and maybe we need to refactor this
-            let coordinates = ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], action.radius), 100).getCoordinates();
+            let coordinates = fromCircle(new Circle([center.x, center.y], action.radius), 100).getCoordinates();
             let feature = {
                 type: "Feature",
                 geometry: {
