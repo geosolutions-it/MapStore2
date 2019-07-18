@@ -171,7 +171,7 @@ class Manager extends React.Component {
 
     render() {
         const styles = castArray(this.props.style);
-        return (<span>{styles.map((style, i) => this.renderPanelStyle(
+        return (<div className="ms-style-manager">{styles.map((style, i) => this.renderPanelStyle(
             {...style, id: style.id || uuidv1()},
             {
                 expanded: this.state.expanded[i],
@@ -185,7 +185,7 @@ class Manager extends React.Component {
                     this.props.onChangeStyle(newStyles);
                 },
                 title: style.title || getStylerTitle(style) + " Style"},
-             i))}</span>);
+             i))}</div>);
     }
     change = (id, values) => {
         const styles = castArray(this.props.style);
