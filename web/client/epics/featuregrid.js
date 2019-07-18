@@ -190,28 +190,30 @@ module.exports = {
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
             const isActive = isSyncWmsActive(store.getState());
-            const objLayer = getSelectedLayer(store.getState());
+            const objLayer = getLayerFromId(store.getState(), layer.id);
             return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
                 ).merge(
                     Rx.Observable.of(isActive)
+                        // if sync is active on startup
+                        // but nativeCRS is missing, it should be
                         .switchMap( active => {
-                            if (!active || objLayer.nativeCrs) {
+                            if (!active || (objLayer && objLayer.nativeCrs)) {
                                 return Rx.Observable.empty();
                             }
                             return getNativeCrs(objLayer)
-                            .map((nativeCrs) => addNativeCrsLayer(objLayer.id, nativeCrs))
-                            .catch(() => {
-                                return Rx.Observable.of(
-                                    warning({
-                                        title: "notification.warning",
-                                        message: "featuregrid.errorProjFetch",
-                                        position: "tc",
-                                        autoDismiss: 5
-                                    }));
-                            });
+                                .map((nativeCrs) => addNativeCrsLayer(objLayer.id, nativeCrs));
+                        }).catch(e => {
+                            console.log(e);
+                            return Rx.Observable.of(
+                                warning({
+                                    title: "notification.warning",
+                                    message: "featuregrid.errorProjFetch",
+                                    position: "tc",
+                                    autoDismiss: 5
+                                }));
                         }),
                         createInitialQueryFlow(action$, store, layer)
                 )
