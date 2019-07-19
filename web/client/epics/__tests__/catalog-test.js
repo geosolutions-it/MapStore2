@@ -12,10 +12,10 @@ const API = {
     csw
 };
 import catalog from '../catalog';
-const {getMetadataRecordById, autoSearchEpic} = catalog(API);
+const {getMetadataRecordById} = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
-import {testEpic, TEST_TIMEOUT, addTimeoutEpic} from './epicTestUtils';
-import {getMetadataRecordById as initAction, changeText, SET_LOADING} from '../../actions/catalog';
+import {testEpic} from './epicTestUtils';
+import {getMetadataRecordById as initAction} from '../../actions/catalog';
 
 describe('catalog Epics', () => {
     it('getMetadataRecordById', (done) => {
@@ -36,38 +36,5 @@ describe('catalog Epics', () => {
         });
 
     });
-    it('autoSearchEpic', (done) => {
-        const NUM_ACTIONS = 3;
-        testEpic(addTimeoutEpic(autoSearchEpic, 100), NUM_ACTIONS, changeText("value"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((action) => {
-                switch (action.type) {
-                    case SET_LOADING: {
-                        expect(action.loading).toBe(true);
-                        break;
-                    }
-                    // here actions[2] is a thunk
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
-                }
-            });
-            done();
-        }, {
-            catalog: {
-                selectedService: 'gs_stable_csw',
-                services: {
-                    gs_stable_csw: {
-                        url: 'https://gs-stable.geo-solutions.it/geoserver/csw',
-                        type: 'csw',
-                        title: 'GeoSolutions GeoServer CSW',
-                        autoload: true
-                    }
-                }
-            }
-        });
 
-    });
 });

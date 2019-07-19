@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const {
     ADD_SERVICE, GET_METADATA_RECORD_BY_ID, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService,
-    CHANGE_TEXT, textSearch, setLoading
+    CHANGE_TEXT, textSearch
 } = require('../actions/catalog');
 const {showLayerMetadata} = require('../actions/layers');
 const {error, success} = require('../actions/notifications');
@@ -184,7 +184,6 @@ module.exports = (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const {type, url} = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch(type, url, 1, pageSize, text))
-                    .startWith(setLoading(true));
+                return Rx.Observable.of(textSearch(type, url, 1, pageSize, text));
             })
 });
