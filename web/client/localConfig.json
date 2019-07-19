@@ -571,6 +571,28 @@
                 "containerPosition": "header"
             }
         }],
+        "geostory": [
+          {
+            "name": "OmniBar",
+            "cfg": {
+              "containerPosition": "header",
+              "className": "navbar shadow navbar-home"
+            }
+          },
+          "Login",
+          "Language",
+          "NavMenu",
+          "Attribution",
+          "Home",
+          "GeoStory",
+          "Notifications",
+          {
+            "name": "FeedbackMask",
+            "cfg": {
+              "containerPosition": "header"
+            }
+          }
+        ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

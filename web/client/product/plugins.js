@@ -45,6 +45,7 @@ module.exports = {
         FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         FullScreenPlugin: require('../plugins/FullScreen'),
+        GeoStoryPlugin: require('../plugins/GeoStory'),
         GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher'),
         GoFull: require('../plugins/GoFull'),
         GridContainerPlugin: require('../plugins/GridContainer'),
