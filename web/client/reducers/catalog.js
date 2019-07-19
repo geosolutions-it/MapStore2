@@ -55,6 +55,7 @@ function catalog(state = {
         newService: {}
     },
     delayAutoSearch: 1000,
+    loading: false,
     pageSize: 4,
     services: {},
     selectedService: "",
