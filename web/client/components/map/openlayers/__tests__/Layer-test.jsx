@@ -28,6 +28,11 @@ import ConfigUtils from '../../../../utils/ConfigUtils';
 import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
 
+import axios from "../../../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
+
+let mockAxios;
+
 const sampleTileMatrixConfig900913 = {
     "matrixIds": {
         'EPSG:900913': [
@@ -153,6 +158,7 @@ describe('Openlayers layer', () => {
     let map;
 
     beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = new Map({
             layers: [
@@ -171,6 +177,7 @@ describe('Openlayers layer', () => {
     });
 
     afterEach(() => {
+        mockAxios.restore();
         map.setTarget(null);
         document.body.innerHTML = '';
     });
@@ -271,6 +278,151 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
         expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+    });
+
+    it('test wms vector formats', () => {
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/vnd.mapbox-vector-tile'
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=topojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
+    });
+
+    it('test wms vector formats styles are applied', (done) => {
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://sample.server/geoserver/wms",
+            "vectorStyle": {
+                "color": "#ff0000",
+                "fillColor": "#ffff00",
+                "fillOpacity": 0.5
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+        setTimeout(() => {
+            const style = layer.layer.getStyle();
+            expect(style).toExist();
+            expect(style.getStroke().getColor()).toBe('rgb(255, 0, 0)');
+            expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
+            done();
+        }, 0);
+    });
+
+    it('test wms vector formats remote styles are applied', (done) => {
+        const SLD = `<?xml version="1.0" encoding="ISO-8859-1"?>
+            <StyledLayerDescriptor version="1.0.0"
+                xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"
+                xmlns="http://www.opengis.net/sld"
+                xmlns:ogc="http://www.opengis.net/ogc"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <NamedLayer>
+                <Name>Simple Polygon</Name>
+                <UserStyle>
+                <Title>Simple Polygon</Title>
+                <FeatureTypeStyle>
+                    <Rule>
+                    <PolygonSymbolizer>
+                        <Stroke>
+                            <CssParameter name="stroke">#FF0000</CssParameter>
+                            <CssParameter name="stroke-width">2</CssParameter>
+                        </Stroke>
+                        <Fill>
+                            <CssParameter name="fill">#FFFF00</CssParameter>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                        </Fill>
+                    </PolygonSymbolizer>
+                    </Rule>
+                </FeatureTypeStyle>
+                </UserStyle>
+            </NamedLayer>
+            </StyledLayerDescriptor>`;
+        mockAxios.onGet().reply(200, SLD);
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://sample.server/geoserver/wms",
+            "vectorStyle": {
+                "url": "http://mystyle",
+                "format": "sld"
+            }
+        };
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+        setTimeout(() => {
+            const style = layer.layer.getStyle();
+            expect(style).toExist();
+            expect(style.getStroke().getColor()).toBe('#FF0000');
+            expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
+            done();
+        }, 0);
     });
 
     it('wms layer attribution with credits - create and update layer', () => {
