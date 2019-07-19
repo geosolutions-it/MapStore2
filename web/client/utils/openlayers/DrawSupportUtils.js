@@ -1,59 +1,22 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
 
-/**
- * Utils used in DrawSupport for leaflet and openlayers
-*/
-
 import isArray from 'lodash/isArray';
-import {reproject} from './CoordinatesUtils';
+import { reproject } from '../CoordinatesUtils';
 
-// TODO: remove dependency from openlayers
-import {getCenter} from 'ol/extent';
-import {Circle} from 'ol/geom';
+import { getCenter } from 'ol/extent';
+import { Circle } from 'ol/geom';
 
-/**
- * Transforms a leaflet bounds object into an array.
- * @prop {object} the bounds
- * @return the array [minx, miny, maxx, maxy]
-*/
-const boundsToOLExtent = (bounds) => {
-    return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
-};
-
-/**
- * @return a feature extracted from leaflet layer used in queryform
-*/
-const fromLeafletFeatureToQueryform = (layer) => {
-    let geoJesonFt = layer.toGeoJSON();
-    let bounds = layer.getBounds();
-    let extent = boundsToOLExtent(bounds);
-    let center = bounds.getCenter();
-    let radius = layer.getRadius ? layer.getRadius() : 0;
-    let coordinates = geoJesonFt.features[0].geometry.coordinates;
-    let projection = "EPSG:4326";
-    let type = geoJesonFt.features[0].geometry.type;
-
-    // Geometry respect query form panel needs
-    return {
-        type,
-        extent,
-        center,
-        coordinates,
-        radius,
-        projection
-    };
-};
 const calculateRadius = (center, coordinates) => {
     return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
 };
 
-const transformPolygonToCircle = (feature, mapCrs) => {
+export const transformPolygonToCircle = (feature, mapCrs) => {
 
     if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
         return feature;
@@ -73,10 +36,4 @@ const transformPolygonToCircle = (feature, mapCrs) => {
         return feature;
     }
     return feature;
-};
-
-module.exports = {
-    transformPolygonToCircle,
-    boundsToOLExtent,
-    fromLeafletFeatureToQueryform
 };

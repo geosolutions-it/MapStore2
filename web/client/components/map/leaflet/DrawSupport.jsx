@@ -28,7 +28,7 @@ L.Draw.Polygon.prototype._calculateFinishDistance = function(t) {
 };
 
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
+const {boundsToOLExtent} = require('../../../utils/leaflet/DrawSupportUtils');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');

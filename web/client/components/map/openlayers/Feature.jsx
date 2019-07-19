@@ -14,7 +14,7 @@ import find from 'lodash/find';
 import castArray from 'lodash/castArray';
 
 import { parseStyles } from './VectorStyle';
-import { transformPolygonToCircle } from '../../../utils/DrawSupportUtils';
+import { transformPolygonToCircle } from '../../../utils/openlayers/DrawSupportUtils';
 import { createStylesAsync } from '../../../utils/VectorStyleUtils';
 import GeoJSON from 'ol/format/GeoJSON';
 
