@@ -1704,4 +1704,67 @@ describe('Openlayers layer', () => {
 
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
     });
+
+
+    it('test wmts vector formats', () => {
+
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'osm:vector_tile',
+            group: 'Vector',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+
+        const GeoJSON = 'application/json;type=geojson';
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: GeoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+
+
+        const MVT = 'application/vnd.mapbox-vector-tile';
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: MVT
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
+
+        const TopoJSON = 'application/json;type=topojson';
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: TopoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
+
+    });
 });

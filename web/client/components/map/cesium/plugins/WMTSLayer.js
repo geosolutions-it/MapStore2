@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Layers = require('../../../../utils/cesium/Layers');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
-const ProxyUtils = require('../../../../utils/ProxyUtils');
-const WMTSUtils = require('../../../../utils/WMTSUtils');
-const Cesium = require('../../../../libs/cesium');
-const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
-const assign = require('object-assign');
-const { isObject, isArray, slice, get, head} = require('lodash');
-const urlParser = require('url');
+import Layers from '../../../../utils/cesium/Layers';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import ProxyUtils from '../../../../utils/ProxyUtils';
+import WMTSUtils from '../../../../utils/WMTSUtils';
+import Cesium from '../../../../libs/cesium';
+import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
+import assign from 'object-assign';
+import { isObject, isArray, slice, get, head} from 'lodash';
+import urlParser from 'url';
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -112,7 +113,8 @@ function wmtsToCesiumOptions(options) {
     return assign({
         // TODO: multi-domain support, if use {s} switches to RESTFul mode
         url: head(getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString)),
-        format: options.format || 'image/png',
+        // set image format to png if vector to avoid errors while switching between map type
+        format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         isValid,
         // tileDiscardPolicy: {
         //    isReady: () => true,
@@ -148,7 +150,8 @@ const createLayer = options => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
-    if (newOptions.securityToken !== oldOptions.securityToken) {
+    if (newOptions.securityToken !== oldOptions.securityToken
+    || oldOptions.format !== newOptions.format) {
         return createLayer(newOptions);
     }
     return null;
