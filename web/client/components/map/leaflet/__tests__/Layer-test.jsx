@@ -924,4 +924,88 @@ describe('Leaflet layer', () => {
         expect(lcount).toBe(1);
         expect(layer.layer.wmsParams.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
     });
+
+    it('test wmts vector formats must change to default image format (image/png)', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'osm:vector_tile',
+            group: 'Vector',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+
+        const GeoJSON = 'application/json;type=geojson';
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: GeoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe('image/png');
+
+        const MVT = 'application/vnd.mapbox-vector-tile';
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: MVT
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe('image/png');
+
+
+        const TopoJSON = 'application/json;type=topojson';
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: TopoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe('image/png');
+
+        // check if it switches to jpeg
+        const JPEG = 'image/jpeg';
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: JPEG
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe(JPEG);
+
+    });
 });

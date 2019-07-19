@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Layers = require('../../../../utils/leaflet/Layers');
-const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-const L = require('leaflet');
-const assign = require('object-assign');
-const SecurityUtils = require('../../../../utils/SecurityUtils');
-const WMTSUtils = require('../../../../utils/WMTSUtils');
-const WMTS = require('../../../../utils/leaflet/WMTS');
-const {isArray, isObject, head} = require('lodash');
+import Layers from '../../../../utils/leaflet/Layers';
+import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import L from 'leaflet';
+import assign from 'object-assign';
+import SecurityUtils from '../../../../utils/SecurityUtils';
+import WMTSUtils from '../../../../utils/WMTSUtils';
+import WMTS from '../../../../utils/leaflet/WMTS';
+import { isArray, isObject, head } from 'lodash';
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 L.tileLayer.wmts = function(urls, options, matrixOptions) {
     return new WMTS(urls, options, matrixOptions);
@@ -26,7 +27,8 @@ function wmtsToLeafletOptions(options) {
         requestEncoding: options.requestEncoding,
         layer: options.name,
         style: options.style || "",
-        format: options.format || 'image/png',
+        // set image format to png if vector to avoid errors while switching between map type
+        format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         tileMatrixSet: tileMatrixSet,
         version: options.version || "1.0.0",
         tileSize: options.tileSize || 256,
@@ -60,7 +62,8 @@ const createLayer = options => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
-    if (oldOptions.securityToken !== newOptions.securityToken) {
+    if (oldOptions.securityToken !== newOptions.securityToken
+    || oldOptions.format !== newOptions.format) {
         return createLayer(newOptions);
     }
     return null;
