@@ -6,22 +6,26 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import Url from 'url';
 import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
 import assign from 'object-assign';
-import {get, head} from 'lodash';
+import {get, head, includes} from 'lodash';
+
+import { queryableLayersSelector } from '../selectors/layers';
 
 import { updateAdditionalLayer } from '../actions/additionallayers';
-import { featureInfoClick } from '../actions/mapInfo';
-import { INIT_MAP, changeMapView, zoomToPoint } from '../actions/map';
+import { showMapinfoMarker } from '../actions/mapInfo';
+import { changeMapView, zoomToPoint, clickOnMap} from '../actions/map';
 import {
+    SEARCH_LAYER_WITH_FILTER,
     TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
     ZOOM_ADD_POINT,
     addMarker,
+    nonQueriableLayerError,
+    serverError,
     resultsPurge,
     searchTextLoading,
     searchResultLoaded,
@@ -202,22 +206,6 @@ export const zoomAndAddPointEpic = (action$, store) =>
             ]);
         });
 
-/**
- * parse url by taking the query params arrived to the viewer page
- * @param {object} [location] location data realted to the
- * @return {object} query object
-*/
-export const getGFIFilter = (location) => {
-    let search = location.search;
-    if (search) {
-        // after # the Url.parse does not catch query params, so we use this workaround
-        let query = Url.parse("http://localhost:8081/" + location.search, true).query;
-        if (query.layer && query.cql_filter) {
-            return query;
-        }
-    }
-    return null;
-};
 
 export const getFirstCoord = (geometry = {}) => {
     switch (geometry && geometry.type) {
@@ -233,33 +221,38 @@ export const getFirstCoord = (geometry = {}) => {
  * Gets every `SEARCH_WITH_FILTER` event.
  * Triggers a GetFeature with a subsequent getFeatureInfo with a point taken from geometry of first feature retrieved
 */
-export const searchOnStartEpic = (action$/*, store*/) =>
-    action$.ofType(INIT_MAP)
-        .switchMap(({location}) => {
-            const queryParams = getGFIFilter(location);
-            if (queryParams) {
+export const searchOnStartEpic = (action$, store) =>
+    action$.ofType(SEARCH_LAYER_WITH_FILTER)
+        .switchMap(({layer, "cql_filter": cqlFilter}) => {
+            const state = store.getState();
+            if (!includes(queryableLayersSelector(state).map(l => l.name))) {
+                return Rx.Observable.of(nonQueriableLayerError());
+            }
+
+            if (layer && cqlFilter) {
                 return Rx.Observable.defer(() =>
                 // TRY to externalize the geoserver base url as configurable param
                     getFeatureSimple("geoserver-test/ows", {
                         maxFeatures: 1,
-                        typeName: queryParams.layer,
+                        typeName: layer,
                         srsName: "EPSG:4326",
                         outputFormat: "application/json",
                         // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
-                        cql_filter: queryParams.cql_filter
+                        cql_filter: cqlFilter
                     })
-                    .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: queryParams.layer})
+                    .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: layer})
                 )
                 .switchMap(({geometry, typeName}) => {
                     let coord = getFirstCoord(geometry);
                     const latlng = {lng: coord[0], lat: coord[1] };
+
                     if (coord) {
                         // trigger get feature info
-                        return Rx.Observable.of(featureInfoClick({latlng}, typeName));
+                        return Rx.Observable.of(clickOnMap({latlng}, typeName), showMapinfoMarker());
                     }
                     return Rx.Observable.empty();
                 }).catch(() => {
-                    return Rx.Observable.empty();
+                    return Rx.Observable.of(serverError());
                 });
             }
             return Rx.Observable.empty();

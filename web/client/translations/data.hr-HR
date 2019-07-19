@@ -603,7 +603,11 @@
             "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
             "serviceslistempty": "Nije definiran niti jedan servis",
             "service_missing": "{serviceType} servis nije konfiguriran",
-            "generic_error": "Došlo je do greške prilikom pretrage. Detalji greške: {message}"
+            "generic_error": "Došlo je do greške prilikom pretrage. Detalji greške: {message}",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            }
         },
         "draw": {
             "fill": "Ispuna",

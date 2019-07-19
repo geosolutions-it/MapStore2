@@ -4,15 +4,19 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { get, head, isNaN } from 'lodash';
+import { get, head, isNaN, isString, includes } from 'lodash';
 import url from 'url';
-import { CHANGE_MAP_VIEW, zoomToExtent } from '../actions/map';
-import { isValidExtent } from '../utils/CoordinatesUtils';
+
+import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT } from '../actions/map';
+import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
 import { warning } from '../actions/notifications';
+
+import { isValidExtent } from '../utils/CoordinatesUtils';
+
 /*
 it maps params key to function.
 functions must return an array of actions or and empty array
@@ -37,6 +41,16 @@ const paramActions = {
                 position: "tc"
             })
         ];
+    },
+    actions: ({value = ''}) => {
+        const whiteList = [
+            SEARCH_LAYER_WITH_FILTER,
+            ZOOM_TO_EXTENT
+        ];
+        if (isString(value)) {
+            const actions = JSON.parse(value);
+            return actions.filter(a => includes(whiteList, a.type));
+        }
     }
 };
 /**
