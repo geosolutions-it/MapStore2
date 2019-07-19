@@ -32,7 +32,7 @@ const catalog = require('../catalog');
 const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
     FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE,
     CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
-    changeText} = require('../../actions/catalog');
+    changeText, setLoading} = require('../../actions/catalog');
 const {MAP_CONFIG_LOADED} = require('../../actions/config');
 const sampleRecord = {
     boundingBox: {
@@ -67,8 +67,17 @@ describe('Test the catalog reducer', () => {
         const state = catalog({}, {type: RECORD_LIST_LOADED, result: {records: [sampleRecord], searchOptions: {catalogURL: "test"}}});
         expect(state.hasOwnProperty('result')).toBe(true);
         expect(state.hasOwnProperty('searchOptions')).toBe(true);
+        expect(state.loading).toBe(false);
     });
-
+    it('changes the loading status of catalog', () => {
+        let state = catalog({}, setLoading(true));
+        expect(state.loading).toBe(true);
+        state = catalog({}, setLoading(false));
+        expect(state.loading).toBe(false);
+        // default
+        state = catalog({}, setLoading());
+        expect(state.loading).toBe(false);
+    });
     it('handles layers error', () => {
         const state = catalog({}, {type: ADD_LAYER_ERROR, error: 'myerror'});
         expect(state.layerError).toBe('myerror');
@@ -114,6 +123,7 @@ describe('Test the catalog reducer', () => {
         const state = catalog({}, {type: RECORD_LIST_LOAD_ERROR, error});
         expect(state.result).toBe(null);
         expect(state.loadingError).toBe(error);
+        expect(state.loading).toBe(false);
         expect(state.searchOptions).toBe(null);
     });
     it('FOCUS_SERVICES_LIST', () => {

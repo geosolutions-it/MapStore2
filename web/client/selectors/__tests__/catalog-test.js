@@ -8,22 +8,25 @@
 
 const expect = require('expect');
 const {
-    resultSelector,
-    serviceListOpenSelector,
-    newServiceSelector,
-    servicesSelector,
-    newServiceTypeSelector,
-    selectedServiceTypeSelector,
-    searchOptionsSelector,
-    formatsSelector,
-    loadingErrorSelector,
-    selectedServiceSelector,
-    modeSelector,
-    layerErrorSelector,
     activeSelector,
     authkeyParamNameSelector,
+    delayAutoSearchSelector,
+    formatsSelector,
+    groupSelector,
+    layerErrorSelector,
+    loadingErrorSelector,
+    loadingSelector,
+    modeSelector,
+    newServiceSelector,
+    newServiceTypeSelector,
+    pageSizeSelector,
+    resultSelector,
     searchTextSelector,
-    groupSelector
+    searchOptionsSelector,
+    selectedServiceTypeSelector,
+    selectedServiceSelector,
+    servicesSelector,
+    serviceListOpenSelector
 } = require("../catalog");
 
 const {set} = require('../../utils/ImmutableUtils');
@@ -203,6 +206,32 @@ describe('Test catalog selectors', () => {
         const authkeyParamNames = authkeyParamNameSelector({});
         expect(authkeyParamNames).toExist();
         expect(authkeyParamNames.length).toBe(0);
+    });
+    it('test loadingSelector', () => {
+        let loading = loadingSelector({});
+        expect(loading).toBe(false);
+
+        loading = loadingSelector({catalog: {loading: true}});
+        expect(loading).toExist();
+        expect(loading).toBe(true);
+    });
+    it('test pageSizeSelector', () => {
+        let pageSize = pageSizeSelector({});
+        expect(pageSize).toExist();
+        expect(pageSize).toBe(4);
+
+        pageSize = pageSizeSelector({catalog: {pageSize: 5}});
+        expect(pageSize).toExist();
+        expect(pageSize).toBe(5);
+    });
+    it('test delayAutoSearchSelector', () => {
+        let delay = delayAutoSearchSelector({});
+        expect(delay).toExist();
+        expect(delay).toBe(1000);
+
+        delay = delayAutoSearchSelector({catalog: {delayAutoSearch: 1234}});
+        expect(delay).toExist();
+        expect(delay).toBe(1234);
     });
 
 });
