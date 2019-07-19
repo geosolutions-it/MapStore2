@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {reproject, reprojectGeoJson, transformLineToArcs} = require('../utils/CoordinatesUtils');
+const {transformLineToArcs} = require('../utils/CoordinatesUtils');
 
 const circle = require('@turf/circle').default;
 

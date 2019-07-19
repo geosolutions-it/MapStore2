@@ -11,7 +11,6 @@ import Layers from '../../../../utils/openlayers/Layers';
 import isNil from 'lodash/isNil';
 import union from 'lodash/union';
 import isArray from 'lodash/isArray';
-import castArray from 'lodash/castArray';
 import assign from 'object-assign';
 
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
