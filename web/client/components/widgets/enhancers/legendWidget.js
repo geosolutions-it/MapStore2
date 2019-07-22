@@ -18,7 +18,7 @@ const {getScales} = require('../../../utils/MapUtils');
  * Add also base tools and menu to the widget
  */
 module.exports = compose(
-    withProps(({ dependencies = {}, dependenciesMap = [] }) => ({
+    withProps(({ dependencies = {}, dependenciesMap = {} }) => ({
         layers: dependencies[dependenciesMap.layers] || dependencies.layers || [],
         scales: getScales(
             // TODO: this is a fallback that checks the viewport if projection is not defined. We should use only projection
