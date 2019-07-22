@@ -27,7 +27,7 @@ The Catalog page will open showing a list of services, a search box to search th
 
 <p align = "center" ><img src="../img/catalog-search.jpg" style="max-width:500px;" /></p>
 
-* **Add** the layer to the map clicking on <img src="../img/add-to-map.jpg" style="max-width:80px;" />.
+* **Add** the layer to the map clicking on <img src="../img/add_to_map_button.png" style="max-width:30px;" />.
 
 Adding and Editing a Service
 ----------------------------
