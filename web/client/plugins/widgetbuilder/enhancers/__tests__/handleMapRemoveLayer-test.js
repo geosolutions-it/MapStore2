@@ -28,7 +28,7 @@ describe('handleMapRemoveLayer enhancer', function() {
         setTimeout(done);
     });
 
-    it('should trigger onNodeSelect on remove layer', () => {
+    it('layer remove must also unselect the layers by triggering onNodeSelect', () => {
         const lib = {
             onNodeSelect() { }
         };
