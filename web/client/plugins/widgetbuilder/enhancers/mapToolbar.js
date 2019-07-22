@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, branch, withProps, withHandlers} = require('recompose');
+const { compose, branch, withProps } = require('recompose');
 const {connect} = require('react-redux');
 const { insertWidget, setPage, onEditorChange} = require('../../../actions/widgets');
 const manageLayers = require('./manageLayers');
 const handleNodeEditing = require('./handleNodeEditing');
+const handleRemoveLayer = require('./handleMapRemoveLayer');
 const { wizardSelector, wizardStateToProps } = require('../commons');
 
 const mapBuilderConnect = require('./connection/mapBuilderConnect');
@@ -25,12 +26,7 @@ module.exports = compose(
     ),
     manageLayers,
     handleNodeEditing,
-    withHandlers({
-        onRemoveSelected: ({selectedLayers = [], removeLayersById = () => { }, onNodeSelect = () => {} }) => () => {
-            removeLayersById(selectedLayers);
-            selectedLayers.forEach(layer => onNodeSelect(layer, 'layer', false));
-        }
-    }),
+    handleRemoveLayer,
     branch(
         ({editNode}) => !!editNode,
         withProps(({ selectedNodes = [], setEditNode = () => { } }) => ({
