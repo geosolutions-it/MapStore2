@@ -198,7 +198,7 @@ module.exports = {
                 ).merge(
                     Rx.Observable.of(isActive)
                         // if sync is active on startup
-                        // but nativeCRS is missing, it should be
+                        // but nativeCRS is missing, it should be get from the server
                         .switchMap( active => {
                             if (!active || (objLayer && objLayer.nativeCrs)) {
                                 return Rx.Observable.empty();
