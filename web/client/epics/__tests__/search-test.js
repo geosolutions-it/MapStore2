@@ -21,12 +21,15 @@ const {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_TEXT_CHANGE,
     TEXT_SEARCH_ERROR,
-    zoomAndAddPoint, ZOOM_ADD_POINT
+    zoomAndAddPoint, ZOOM_ADD_POINT,
+    searchLayerWithFilter
 } = require('../../actions/search');
+const {SHOW_NOTIFICATION} = require('../../actions/notifications');
+const {FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER} = require('../../actions/mapInfo');
 const {CHANGE_MAP_VIEW, ZOOM_TO_POINT} = require('../../actions/map');
 const {UPDATE_ADDITIONAL_LAYER} = require('../../actions/additionallayers');
-const {searchEpic, searchItemSelected, zoomAndAddPointEpic } = require('../search');
-const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic);
+const {searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, getFirstCoord } = require('../search');
+const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -34,7 +37,7 @@ const SEARCH_NESTED = 'SEARCH NESTED';
 const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
 
-const {testEpic} = require('./epicTestUtils');
+const {testEpic, addTimeoutEpic} = require('./epicTestUtils');
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER
@@ -245,5 +248,58 @@ describe('search Epics', () => {
             done();
 
         });
+    });
+    it('searchOnStartEpic, return error for non queriable layers, with empty state', (done) => {
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
+        const NUM_ACTIONS = 1;
+        testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
+            expect(actions).toExist();
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].message).toBe("search.errors.nonQueriableLayers");
+            done();
+        });
+    });
+    it('searchOnStartEpic, return error for non queryable layers, with non queryable layer', (done) => {
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
+        const NUM_ACTIONS = 1;
+        testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
+            expect(actions).toExist();
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].message).toBe("search.errors.nonQueriableLayers");
+            done();
+        }, {layers: {flat: [{name: "layerName", url: "clearlyNotAUrl", visibility: true, queryable: false, type: "wms"}]}});
+    });
+    it('searchOnStartEpic, return error for wrong url in layer', (done) => {
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
+        const NUM_ACTIONS = 1;
+        testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
+            expect(actions).toExist();
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].message).toBe("search.errors.serverError");
+            done();
+        }, {layers: {flat: [{name: "layerName", url: "clearlyNotAUrl", visibility: true, queryable: true, type: "wms"}]}});
+    });
+    it('searchOnStartEpic, that sends a Getfeature and a GFI requests', (done) => {
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(searchOnStartEpic, 100), NUM_ACTIONS, action, (actions) => {
+            expect(actions).toExist();
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+            expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
+            done();
+        }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, queryable: true, type: "wms"}]}});
+    });
+    it('testing getFirstCoord', () => {
+        expect(getFirstCoord()).toBe(null);
+        expect(getFirstCoord({type: "Point", coordinates: [2, 2]})).toEqual([2, 2]);
+        expect(getFirstCoord({type: "LineString", coordinates: [[2, 2], [3, 3]]})).toEqual([2, 2]);
+        expect(getFirstCoord({type: "Polygon", coordinates: [[[2, 2], [3, 3], [5, 5], [2, 2]]]})).toEqual([2, 2]);
+        expect(getFirstCoord({type: "MultiPoint", coordinates: [[1, 2], [3, 3]]})).toEqual([1, 2]);
+        expect(getFirstCoord({type: "MultiLineString", coordinates: [[[2, 2], [3, 3]], [[5, 5], [2, 2]]]})).toEqual([2, 2]);
+        expect(getFirstCoord({type: "MultiPolygon", coordinates: [[[[2, 2], [3, 3], [5, 5], [2, 2]], [[2, 2], [3, 3], [5, 5], [2, 2]]]]})).toEqual([2, 2]);
     });
 });

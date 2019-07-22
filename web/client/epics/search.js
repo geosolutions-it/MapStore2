@@ -9,13 +9,13 @@
 import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
 import assign from 'object-assign';
-import {get, head, includes} from 'lodash';
+import {get, head} from 'lodash';
 
-import { queryableLayersSelector } from '../selectors/layers';
+import { queryableLayersSelector, getLayerFromName } from '../selectors/layers';
 
 import { updateAdditionalLayer } from '../actions/additionallayers';
-import { showMapinfoMarker } from '../actions/mapInfo';
-import { changeMapView, zoomToPoint, clickOnMap} from '../actions/map';
+import { showMapinfoMarker, featureInfoClick} from '../actions/mapInfo';
+import { changeMapView, zoomToPoint} from '../actions/map';
 import {
     SEARCH_LAYER_WITH_FILTER,
     TEXT_SEARCH_STARTED,
@@ -223,32 +223,32 @@ export const getFirstCoord = (geometry = {}) => {
 */
 export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
-        .switchMap(({layer, "cql_filter": cqlFilter}) => {
+        .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
             const state = store.getState();
-            if (!includes(queryableLayersSelector(state).map(l => l.name))) {
+            // if layer is NOT queriable and visible then show error notification
+            if (queryableLayersSelector(state).filter(l => l.name === name ).length === 0) {
                 return Rx.Observable.of(nonQueriableLayerError());
             }
-
+            const layer = getLayerFromName(state, name);
             if (layer && cqlFilter) {
                 return Rx.Observable.defer(() =>
-                // TRY to externalize the geoserver base url as configurable param
-                    getFeatureSimple("geoserver-test/ows", {
+                // take geoserver url from layer
+                    getFeatureSimple(layer.url, {
                         maxFeatures: 1,
-                        typeName: layer,
+                        typeName: name,
                         srsName: "EPSG:4326",
                         outputFormat: "application/json",
                         // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
                         cql_filter: cqlFilter
                     })
-                    .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: layer})
+                    .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
                 .switchMap(({geometry, typeName}) => {
                     let coord = getFirstCoord(geometry);
                     const latlng = {lng: coord[0], lat: coord[1] };
 
-                    if (coord) {
-                        // trigger get feature info
-                        return Rx.Observable.of(clickOnMap({latlng}, typeName), showMapinfoMarker());
+                    if (coord) { // trigger get feature info
+                        return Rx.Observable.of(featureInfoClick({latlng}, typeName, [typeName], {[typeName]: {cql_filter: cqlFilter}}), showMapinfoMarker());
                     }
                     return Rx.Observable.empty();
                 }).catch(() => {

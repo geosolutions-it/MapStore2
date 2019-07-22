@@ -267,7 +267,7 @@ export function nonQueriableLayerError() {
     return error({
         title: "Error",
         position: "tc",
-        message: "searcherrorsqueriableLayer",
+        message: "search.errors.nonQueriableLayers",
         autoDismiss: 10
     });
 }
@@ -278,7 +278,7 @@ export function serverError() {
     return error({
         title: "Error",
         position: "tc",
-        message: "searcherrorsserver",
+        message: "search.errors.serverError",
         autoDismiss: 10
     });
 }

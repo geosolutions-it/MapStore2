@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { readQueryParamsOnMapEpic } from '../queryparam';
+import { readQueryParamsOnMapEpic } from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT } from '../../actions/map';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
