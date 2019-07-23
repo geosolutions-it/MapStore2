@@ -26,7 +26,8 @@ export const CHANGE_FORMAT = 'SEARCH:CHANGE_FORMAT';
 export const CHANGE_COORD = 'SEARCH:CHANGE_COORD';
 
 /**
- * change the formato for coordinate editor tool
+ * change the format for coordinate editor tool
+ * @memberof actions.search
  * @param {string} format (decimal or aeronautical)
 */
 export function changeFormat(format) {
@@ -37,7 +38,10 @@ export function changeFormat(format) {
 }
 /**
  * used to trigger two wfs requests GetFeature and then GetFeatureInfo
- * @param {object} options {layer, cql_filter}
+ * @memberof actions.search
+ * @prop {object} options {layer, cql_filter}
+ * @prop {string} options.cql_filter optional filter to apply for both requests
+ * @prop {string} options.layer name of the layer with workspace
 */
 export function searchLayerWithFilter({layer, cql_filter} = {}) {
     return {
@@ -48,6 +52,7 @@ export function searchLayerWithFilter({layer, cql_filter} = {}) {
 }
 /**
  * zoom to a specific point
+ * @memberof actions.search
  * @param {object} pos as array [x, y] or object {x: ..., y:...}
  * @param {number} zoom level to zoom to
  * @param {string} crs of the point

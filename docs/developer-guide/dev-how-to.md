@@ -1,6 +1,6 @@
 # Developer Generic Guidelines
 
-This guide wants to provide general information and suggestions about how to write code for MapStore2.
+This guide wants to provide general information and suggestions about how to write code for MapStore.
 
  * [Writing plugins](../plugins-howto)
  * Writing components - TODO TBD
