@@ -35,8 +35,7 @@ import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { getStyle } from '../VectorStyle';
-import { OL_VECTOR_FORMATS } from '../../../../utils/openlayers/VectorTileUtils';
+import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 /**
     @param {object} options of the layer
@@ -132,14 +131,6 @@ function getElevation(pos) {
     }
 }
 const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
-
-const applyStyle = (vectorStyle, layer) => {
-    getStyle({ asPromise: true, style: vectorStyle }).then((style) => {
-        layer.setStyle(style);
-    }).catch(() => {
-        // TODO: error notifications
-    });
-};
 
 const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);

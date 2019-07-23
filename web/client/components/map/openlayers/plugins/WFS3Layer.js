@@ -22,16 +22,7 @@ import VectorTile from 'ol/source/VectorTile';
 import MVT from 'ol/format/MVT';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { getStyle } from '../VectorStyle';
-import { OL_VECTOR_FORMATS } from '../../../../utils/openlayers/VectorTileUtils';
-
-const applyStyle = (vectorStyle, layer) => {
-    getStyle({ asPromise: true, style: vectorStyle }).then((style) => {
-        layer.setStyle(style);
-    }).catch(() => {
-        // TODO: error notifications
-    });
-};
+import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 const createLayer = (options) => {
 
