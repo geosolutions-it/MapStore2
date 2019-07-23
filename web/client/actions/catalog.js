@@ -41,6 +41,7 @@ export const DELETE_SERVICE = 'CATALOG:DELETE_SERVICE';
 export const SAVING_SERVICE = 'CATALOG:SAVING_SERVICE';
 export const CATALOG_INITED = 'CATALOG:INIT';
 export const GET_METADATA_RECORD_BY_ID = 'CATALOG:GET_METADATA_RECORD_BY_ID';
+export const SET_LOADING = 'CATALOG:SET_LOADING';
 export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
@@ -62,6 +63,12 @@ export function savingService(status) {
     return {
         type: SAVING_SERVICE,
         status
+    };
+}
+export function setLoading(loading = false) {
+    return {
+        type: SET_LOADING,
+        loading
     };
 }
 export function changeSelectedService(service) {
@@ -167,6 +174,7 @@ export function initCatalog(apis = API) {
 export function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
+        dispatch(setLoading(true));
         API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
             if (result.error) {
                 dispatch(recordsLoadError(result));
@@ -186,6 +194,7 @@ export function getRecords(format, url, startPosition = 1, maxRecords, filter, o
 export function textSearch(format, url, startPosition, maxRecords, text, options) {
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
+        dispatch(setLoading(true));
         API[format].textSearch(url, startPosition, maxRecords, text, options).then((result) => {
             if (result.error) {
                 dispatch(recordsLoadError(result));

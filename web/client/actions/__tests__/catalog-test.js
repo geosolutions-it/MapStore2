@@ -20,7 +20,7 @@ const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
     SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
-    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate
+    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING
 } = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
@@ -146,10 +146,14 @@ describe('Test correctness of the catalog actions', () => {
     it('getRecords ISO Metadata Profile', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {
             try {
-                let result = actionResult && actionResult.result;
-                expect(result).toExist();
-                expect(result.records).toExist();
-                expect(result.records.length).toBe(1);
+                if (actionResult.type === SET_LOADING) {
+                    expect(actionResult.loading).toBe(true);
+                } else {
+                    let result = actionResult && actionResult.result;
+                    expect(result).toExist();
+                    expect(result.records).toExist();
+                    expect(result.records.length).toBe(1);
+                }
                 done();
             } catch (ex) {
                 done(ex);
@@ -159,8 +163,12 @@ describe('Test correctness of the catalog actions', () => {
     it('getRecords Error', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseException.xml', 1, 1)((result) => {
             try {
-                expect(result).toExist();
-                expect(result.error).toExist();
+                if (result.type === SET_LOADING) {
+                    expect(result.loading).toBe(true);
+                } else {
+                    expect(result).toExist();
+                    expect(result.error).toExist();
+                }
                 done();
             } catch (ex) {
                 done(ex);
@@ -171,17 +179,21 @@ describe('Test correctness of the catalog actions', () => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
             try {
                 let result = actionResult && actionResult.result;
-                expect(result).toExist();
-                expect(result.records).toExist();
-                expect(result.records.length).toBe(2);
-                let rec0 = result.records[0];
-                expect(rec0.dc).toExist();
-                expect(rec0.dc.URI).toExist();
-                expect(rec0.dc.URI[0]);
-                let uri = rec0.dc.URI[0];
-                expect(uri.name).toExist();
-                expect(uri.value).toExist();
-                expect(uri.description).toExist();
+                if (actionResult.type === SET_LOADING) {
+                    expect(actionResult.loading).toBe(true);
+                } else {
+                    expect(result).toExist();
+                    expect(result.records).toExist();
+                    expect(result.records.length).toBe(2);
+                    let rec0 = result.records[0];
+                    expect(rec0.dc).toExist();
+                    expect(rec0.dc.URI).toExist();
+                    expect(rec0.dc.URI[0]);
+                    let uri = rec0.dc.URI[0];
+                    expect(uri.name).toExist();
+                    expect(uri.value).toExist();
+                    expect(uri.description).toExist();
+                }
                 done();
             } catch (ex) {
                 done(ex);

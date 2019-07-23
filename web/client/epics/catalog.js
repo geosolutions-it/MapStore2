@@ -7,13 +7,23 @@
 */
 
 const Rx = require('rxjs');
-const {ADD_SERVICE, GET_METADATA_RECORD_BY_ID, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService} = require('../actions/catalog');
+const {
+    ADD_SERVICE, GET_METADATA_RECORD_BY_ID, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService,
+    CHANGE_TEXT, textSearch
+} = require('../actions/catalog');
 const {showLayerMetadata} = require('../actions/layers');
 const {error, success} = require('../actions/notifications');
 const {SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {purgeMapInfoResults, hideMapinfoMarker} = require('../actions/mapInfo');
-const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
+const {
+    delayAutoSearchSelector,
+    newServiceSelector,
+    pageSizeSelector,
+    selectedServiceSelector,
+    servicesSelector,
+    selectedCatalogSelector
+} = require('../selectors/catalog');
 const {getSelectedLayer} = require('../selectors/layers');
 const axios = require('../libs/ajax');
 
@@ -162,5 +172,18 @@ module.exports = (API) => ({
                             position: "tc"
                         }), showLayerMetadata({}, false));
                 });
+            }),
+        autoSearchEpic: (action$, {getState = () => {}} = {}) =>
+            action$.ofType(CHANGE_TEXT)
+            .debounce(() => {
+                const state = getState();
+                const delay = delayAutoSearchSelector(state);
+                return Rx.Observable.timer(delay);
+            })
+            .switchMap(({text}) => {
+                const state = getState();
+                const pageSize = pageSizeSelector(state);
+                const {type, url} = selectedCatalogSelector(state);
+                return Rx.Observable.of(textSearch(type, url, 1, pageSize, text));
             })
 });
