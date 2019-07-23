@@ -186,12 +186,20 @@ function updateCenterToMarker(status) {
         status
     };
 }
-
-function featureInfoClick(point, layer) {
+/**
+ * Carries data needed for Get Feature Info request
+ * @param {object} point point clicked in this shape {latlng: {lat:1, lng:2}, pixel:{x:33 y:33}, modifiers:{} }
+ * @param {string} layer the name of the layer without workspace
+ * @param {object[]} [filterNameList=[]] list of layers to perform the GFI request
+ * @param {object} [overrideParams={}] a map based on name as key and objec as value for overriding request params
+ */
+function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}) {
     return {
         type: FEATURE_INFO_CLICK,
         point,
-        layer
+        layer,
+        filterNameList,
+        overrideParams
     };
 }
 

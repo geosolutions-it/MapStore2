@@ -20,6 +20,7 @@ class MapViewerComponent extends React.Component {
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
+        searchWithFilter: PropTypes.func,
         wrappedContainer: PropTypes.object,
         location: PropTypes.object
     };
@@ -39,10 +40,16 @@ class MapViewerComponent extends React.Component {
     componentDidUpdate(oldProps) {
         const id = this.props.match.params.mapId || '0';
         const oldId = oldProps.match.params.mapId || '0';
-        if (id !== oldId ) {
+        if (id !== oldId) {
             this.updateMap(id);
         }
+        const search = this.props.location.search || '';
+        const oldSearch = oldProps.location.search || '';
+        if (oldSearch !== search) {
+            this.props.onInit(this.props.location);
+        }
     }
+
     render() {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer
@@ -68,7 +75,7 @@ class MapViewerComponent extends React.Component {
             let config = urlQuery && urlQuery.config || null;
             const { configUrl } = ConfigUtils.getConfigUrl({ mapId, config });
             mapId = mapId === 'new' ? null : mapId;
-            this.props.onInit();
+            this.props.onInit(this.props.location);
             this.props.loadMapConfig(configUrl, mapId);
         }
     }

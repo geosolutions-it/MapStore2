@@ -10,6 +10,7 @@ This section is about developing your own application using the MapStore framewo
  * [Code Conventions](../code-conventions)
  * [Developers FAQ](../dev-faq)
  * [internationalization](../internationalization)
+ * [API](../API)
 
 ## Developing using plugins
 

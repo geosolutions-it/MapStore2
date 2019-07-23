@@ -603,7 +603,11 @@
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Los resultados Nominatim tienen prioridad = 5",
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
-            "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}"
+            "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
+            "errors": {
+                "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",
+                "serverError": "El servidor ha devuelto un error al realizar la solicitud GetFeatureInfo. Compruebe si los parámetros son correctos"
+            }
         },
         "draw": {
             "fill": "Relleno",

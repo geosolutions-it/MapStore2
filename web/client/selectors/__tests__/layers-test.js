@@ -8,13 +8,27 @@
 
 const expect = require('expect');
 const {
-    layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
+    getLayerFromName, getLayerFromId, layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
     layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector,
     getLayersWithDimension, elementSelector
 } = require('../layers');
 
 describe('Test layers selectors', () => {
+    it('test getLayerFromName', () => {
+        let layer = getLayerFromName({}, "ws:layer_1");
+        expect(layer).toNotExist();
+        layer = getLayerFromName({layers: {flat: [{name: "ws:layer_1"}]}}, "ws:layer_1");
+        expect(layer).toExist();
+        expect(layer).toEqual({name: "ws:layer_1"});
+    });
+    it('test getLayerFromId', () => {
+        let layer = getLayerFromId({}, "layer_1");
+        expect(layer).toNotExist();
+        layer = getLayerFromId({layers: {flat: [{id: "layer_1"}]}}, "layer_1");
+        expect(layer).toExist();
+        expect(layer).toEqual({id: "layer_1"});
+    });
     it('test layersSelector from config', () => {
         const props = layersSelector({config: {layers: [{type: "osm"}]}});
 

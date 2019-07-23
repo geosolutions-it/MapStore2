@@ -17,6 +17,7 @@ var {
     GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
+    FEATURE_INFO_CLICK, featureInfoClick,
     TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
     changeMapInfoState,
     newMapInfoRequest,
@@ -89,6 +90,20 @@ describe('Test correctness of the map actions', () => {
         });
     });
 
+    it('reset reverse geocode data', () => {
+        const point = {latlng: {lat: 1, lng: 3}};
+        const layer = {id: "layer.1"};
+        const filterNameList = [];
+        const overrideParams = {cql_filter: "ID_ORIG=1234"};
+
+        const action = featureInfoClick(point, layer, filterNameList, overrideParams);
+        expect(action).toExist();
+        expect(action.type).toBe(FEATURE_INFO_CLICK);
+        expect(action.point).toBe(point);
+        expect(action.layer).toBe(layer);
+        expect(action.filterNameList).toBe(filterNameList);
+        expect(action.overrideParams).toBe(overrideParams);
+    });
     it('reset reverse geocode data', () => {
         const e = hideMapinfoRevGeocode();
         expect(e).toExist();

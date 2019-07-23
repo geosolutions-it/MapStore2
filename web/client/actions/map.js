@@ -37,6 +37,7 @@ function errorLoadingFont(err = {family: ""}) {
 
 /**
  * zoom to a specific point
+ * @memberof actions.map
  * @param {object} pos as array [x, y] or object {x: ..., y:...}
  * @param {number} zoom level to zoom to
  * @param {string} crs of the point
@@ -103,6 +104,7 @@ function changeZoomLevel(zoomLvl, mapStateSource) {
 
 /**
  * pan to a specific point
+ * @memberof actions.map
  * @param {object} center as {x, y, crs}
 */
 function panTo(center) {
@@ -112,6 +114,13 @@ function panTo(center) {
     };
 }
 
+/**
+ * zoom to the specified extent
+ * @memberof actions.map
+ * @param {number[]} extent in the form of [minx, miny, maxx, maxy]
+ * @param {string} crs related the extent
+ * @param {number} maxZoom the max zoom limit
+*/
 function zoomToExtent(extent, crs, maxZoom) {
     return {
         type: ZOOM_TO_EXTENT,
@@ -143,9 +152,10 @@ function updateVersion(version) {
     };
 }
 
-function initMap() {
+function initMap(location) {
     return {
-        type: INIT_MAP
+        type: INIT_MAP,
+        location
     };
 }
 
@@ -163,6 +173,10 @@ function changeMapLimits({restrictedExtent, crs, minZoom}) {
     };
 }
 
+/**
+ * Actions for map
+ * @name actions.map
+ */
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,

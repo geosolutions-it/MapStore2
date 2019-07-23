@@ -91,7 +91,8 @@ module.exports = {
      * Triggers data load on FEATURE_INFO_CLICK events
      */
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
-        action$.ofType(FEATURE_INFO_CLICK).switchMap(({ point }) => {
+        action$.ofType(FEATURE_INFO_CLICK)
+        .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
             const queryableLayers = queryableLayersSelector(getState());
             if (queryableLayers.length === 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
@@ -104,9 +105,16 @@ module.exports = {
                 "filter",
                 "propertyName"
             ];
-            const out$ = Rx.Observable.from((queryableLayers))
+            const out$ = Rx.Observable.from((queryableLayers.filter(l => {
+                // filtering a subset of layers
+                return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
+            })))
                 .mergeMap(layer => {
-                    const { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                    let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                    // request override
+                    if (overrideParams[layer.name]) {
+                        request = {...request, ...overrideParams[layer.name]};
+                    }
                     if (url) {
                         return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()) );
                     }

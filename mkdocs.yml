@@ -89,4 +89,6 @@ pages:
     - Plugins:
       - Plugins Architecture: 'developer-guide/plugins-architecture.md'
       - Configuring Plugins: 'developer-guide/plugins-documentation.md'
+    - API:
+      - Map query paramaters: 'developer-guide/map-query-parameters.md'
   - Quick Start: 'quick-start.md'
