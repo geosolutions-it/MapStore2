@@ -186,6 +186,78 @@ describe('Leaflet layer', () => {
         expect(urls.length).toBe(1);
     });
 
+    it('test wms vector formats must change to default image format (image/png)', () => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'osm:vector_tile',
+            group: 'Vector',
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/png');
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/vnd.mapbox-vector-tile'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/png');
+
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=topojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/png');
+
+        // check if it switches to jpeg
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'image/jpeg'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/jpeg');
+
+    });
+
     it('creates a wms elevation layer for leaflet map', () => {
         var options = {
             "type": "wms",

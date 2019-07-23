@@ -162,6 +162,63 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
     });
+
+    it('test wms vector formats must change to default image format (image/png)', () => {
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+
+        let layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fpng') !== -1).toBe(true);
+
+        layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/vnd.mapbox-vector-tile'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fpng') !== -1).toBe(true);
+
+        layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=topojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fpng') !== -1).toBe(true);
+
+        // check if it switches to jpeg
+        layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'image/jpeg'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fjpeg') !== -1).toBe(true);
+    });
+
     it('wms layer with credits', () => {
         var options = {
             "type": "wms",
