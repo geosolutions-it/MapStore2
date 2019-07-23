@@ -9,45 +9,55 @@ It contains also a *Search bar* and a *Burger menu* that will be treated in deta
 
 Search Bar
 ----------
-The *Search Bar* of the portal allows you to find point of interests (POIs), streets or locations by name or by coordinates.
 
-* In the *Search Bar*, for example, **Type** the text "rome" then **Select** the first record. The map will automatically re-center on that area delimiting it by a polygon in the case of an area, by a line in the case of a linear shape (e.g. streets, streams) and by a marker in the case of a point.
+The *Search Bar* of the portal allows you to find point of interests (POIs), streets or locations by name (default) or by coordinates.
 
-    <img src="../img/rome.jpg" style="max-width:650px;" />
+In the *Search Bar*, for example, **Type** the text "rome" then **Select** the first record. The map will automatically re-center on that area delimiting it by a polygon in the case of an area, by a line in the case of a linear shape (e.g. streets, streams) and by a marker in the case of a point.
 
-Burger Menu
------------
-The *Burger Menu* is the core of the *Menu Bar* and it will be later addressed in details. It contains several options to add data from different sources to the map, to perform measurments and to save, print and share the created map.
+<img src="../img/rome.jpg" style="max-width:650px;" />
 
-<img src="../img/menu-options.jpg" style="max-height:500px;" />
+### Searching by coordinates
 
-<br>
+Through the *Search Bar* you have the possibility to zoom to a specific point and place a marker in its position. The map will be centered in that point.  
+The point can be specified typing its coordinates both in `decimal` and `aeronautical` formats.
 
-Click on the following links to learn more about the main options:
+!!! warning
+    This functionality is available in **desktop** mode only, on mobile it is disabled.
 
-* [PRINT](print.md): allows you to print a created map;
-* [ADD LOCAL VECTOR FILES](local-files.md): allows to import from your machine vector files to be added to  the map;
-* [CATALOG](catalog.md): allows you to import data from several remote services;
-* [MEASURE](measure.md): tools to perform measurments on the map;
-* [ANNOTATIONS](annotations.md): allows you to create customized annotations and add them to the map;
-* [SHARE](share.md): allows you to share your map.
+To experience this, follow these steps:
 
-Custom WFS Searches
--------------------
+* click on the **Burger Icon** of the *Search Bar* to open the *Options Panel*
 
-When you search a place, you might want to extend the default OSM results through additional *WFS Search Services*. The **Configure search services** option of [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to do that.
-<br>
-The following example shows the steps required to set up a custom service.
-<br>
+    <img src="../img/search_by_coordinates_option.png" style="max-width:400px;"/>
+
+* click on **Search By Coordinates** to activate the coordinates input fields (*Decimal* format by default)
+
+    <img src="../img/decimal_coordinates_editor.png" style="max-width:500px;"/>
+
+* type **Latitude** and **Longitude** and click on the magnifying glass icon <img src="../img/magnifying_glass_icon.png" style="max-width:30px;"/> to perform the search
+
+    <img src="../img/search_by_decimal_coordinates.gif" />
+
+By default [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/gear_icon.png" style="max-width:30px;"> of the coordinate editor, select *Aeronautical* and click on it to switch to this coordinate format.
+
+<img src="../img/search_by_aeronautical_coordinates.gif" />
+
+As you can see, the coordinate editor can be cleaned using the button <img src="../img/clear_editor_icon.png" style="max-width:30px;">.
+
+### Custom WFS Searches
+
+When you search a place, you might want to extend the default OSM results through additional *WFS Search Services*.
+The **Configure Search Services** option of the *Search Bar* allows you to do that.
+
 To better understand how it works, create an empty map and try to search somethings, for example **'`grand`'**, and see the result provided by the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/):
 
 <img src="../img/default-osm-search.jpg" />
 
-Let's customize it!
+The following example shows the steps required to set up a custom service:
 
-* Open the **Settings** <img src="../img/settings-icon.jpg" style="width:25px" /> panel from the *Burger Menu*
+* Click on the **Burger Icon** of the *Search Bar*, the options panel will open
 
-    <img src="../img/settings-panel.jpg" style="max-height:500px;" />
+    <img src="../img/search_tool.png" style="max-width:400px;" />
 
 * Click on the **Configure search services** button to open the **Create/edit search service** panel
 
@@ -104,3 +114,20 @@ The **Override default services** option of the **Create/edit search service** p
 Since the option is enabled no results from the default service are shown:
 
 <img src="../img/override-default-service-results.jpg" style="max-height:500px;" />
+
+Burger Menu
+-----------
+The *Burger Menu* is the core of the *Menu Bar* and it will be later addressed in details. It contains several options to add data from different sources to the map, to perform measurments and to save, print and share the created map.
+
+<img src="../img/menu-options.jpg" style="max-height:500px;" />
+
+<br>
+
+Click on the following links to learn more about the main options:
+
+* [PRINT](print.md): allows you to print a created map;
+* [ADD LOCAL VECTOR FILES](local-files.md): allows to import from your machine vector files to be added to  the map;
+* [CATALOG](catalog.md): allows you to import data from several remote services;
+* [MEASURE](measure.md): tools to perform measurments on the map;
+* [ANNOTATIONS](annotations.md): allows you to create customized annotations and add them to the map;
+* [SHARE](share.md): allows you to share your map.
