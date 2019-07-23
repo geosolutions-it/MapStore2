@@ -205,7 +205,7 @@ module.exports = {
                             }
                             return getNativeCrs(objLayer)
                                 .map((nativeCrs) => addNativeCrsLayer(objLayer.id, nativeCrs));
-                        }).catch(e => {
+                        }).catch(() => {
                             return Rx.Observable.of(
                                 warning({
                                     title: "notification.warning",
