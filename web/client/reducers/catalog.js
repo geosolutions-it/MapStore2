@@ -23,8 +23,9 @@ const {
     ADD_CATALOG_SERVICE,
     DELETE_CATALOG_SERVICE,
     SAVING_SERVICE,
-    TOGGLE_THUMBNAIL,
     CHANGE_METADATA_TEMPLATE,
+    SET_LOADING,
+    TOGGLE_THUMBNAIL,
     TOGGLE_TEMPLATE,
     TOGGLE_ADVANCED_SETTINGS
 } = require('../actions/catalog');
@@ -53,21 +54,26 @@ function catalog(state = {
         selectedService: "",
         newService: {}
     },
+    delayAutoSearch: 1000,
+    loading: false,
+    pageSize: 4,
     services: {},
     selectedService: "",
     newService: {}
 }, action) {
     switch (action.type) {
     case SAVING_SERVICE:
-        return assign({}, state, {
+        return {
+            ...state,
             saving: action.status
-        });
+        };
     case RECORD_LIST_LOADED:
         return assign({}, state, {
             result: action.result,
             searchOptions: action.searchOptions,
             loadingError: null,
-            layerError: null
+            layerError: null,
+            loading: false
         });
     case RESET_CATALOG:
         return assign({}, state, {
@@ -85,6 +91,7 @@ function catalog(state = {
             result: null,
             searchOptions: null,
             loadingError: action.error,
+            loading: false,
             layerError: null
         });
     case CHANGE_CATALOG_FORMAT:
@@ -185,6 +192,9 @@ function catalog(state = {
     }
     case TOGGLE_THUMBNAIL: {
         return set("newService.hideThumbnail", !state.newService.hideThumbnail, state);
+    }
+    case SET_LOADING: {
+        return set("loading", action.loading, state);
     }
     case CHANGE_METADATA_TEMPLATE: {
         return set("newService.metadataTemplate", action.metadataTemplate, state);

@@ -13,6 +13,7 @@ module.exports = {
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
     formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),
+    loadingSelector: (state) => get(state, "catalog.loading", false),
     selectedServiceSelector: (state) => get(state, "catalog.selectedService"),
     modeSelector: (state) => get(state, "catalog.mode", "view"),
     layerErrorSelector: (state) => get(state, "catalog.layerError"),
@@ -20,5 +21,7 @@ module.exports = {
     activeSelector: (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled"),
     authkeyParamNameSelector: (state) => {
         return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
-    }
+    },
+    pageSizeSelector: (state) => get(state, "catalog.pageSize", 4),
+    delayAutoSearchSelector: (state) => get(state, "catalog.delayAutoSearch", 1000)
 };

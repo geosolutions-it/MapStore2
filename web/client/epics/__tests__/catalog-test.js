@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-
+import expect from 'expect';
+import csw from '../../api/CSW';
 const API = {
-    csw: require('../../api/CSW')
+    csw
 };
-const {getMetadataRecordById} = require('../catalog')(API);
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {testEpic} = require('./epicTestUtils');
-const {getMetadataRecordById: initAction} = require('../../actions/catalog');
+import catalog from '../catalog';
+const {getMetadataRecordById} = catalog(API);
+import {SHOW_NOTIFICATION} from '../../actions/notifications';
+import {testEpic} from './epicTestUtils';
+import {getMetadataRecordById as initAction} from '../../actions/catalog';
 
 describe('catalog Epics', () => {
     it('getMetadataRecordById', (done) => {
@@ -35,4 +36,5 @@ describe('catalog Epics', () => {
         });
 
     });
+
 });
