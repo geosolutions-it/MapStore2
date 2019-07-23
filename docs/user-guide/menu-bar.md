@@ -38,11 +38,11 @@ To experience this, follow these steps:
 
     <img src="../img/search_by_decimal_coordinates.gif" />
 
-By default [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/gear_icon.png" style="max-width:30px;"> of the coordinate editor, select *Aeronautical* and click on it to switch to this coordinate format.
+By default [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/gear_icon.png" style="max-width:30px;"> of the coordinates editor, select *Aeronautical* and click on it to switch to this coordinate format.
 
 <img src="../img/search_by_aeronautical_coordinates.gif" />
 
-As you can see, the coordinate editor can be cleaned using the button <img src="../img/clear_editor_icon.png" style="max-width:30px;">.
+As you can see, the coordinates editor can be cleaned using the button <img src="../img/clear_editor_icon.png" style="max-width:30px;">.
 
 ### Custom WFS Searches
 
