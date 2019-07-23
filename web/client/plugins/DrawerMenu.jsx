@@ -32,7 +32,7 @@ const Button = tooltip(ButtonB);
 const menuSelector = createSelector([
     state => state.controls.drawer && state.controls.drawer.enabled,
     state => state.controls.drawer && state.controls.drawer.menu || "1",
-    state => state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || state.controls.drawer.resizedWidth || undefined,
+    state => state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || state.controls.drawer && state.controls.drawer.resizedWidth || undefined,
     state => mapLayoutValuesSelector(state, {height: true})
 ], (show, activeKey, dynamicWidth, layout) => ({
     show,
