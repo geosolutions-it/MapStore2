@@ -15,6 +15,7 @@ module.exports = {
     OverlayLayer: require('./OverlayLayer').default,
     TileProviderLayer: require('./TileProviderLayer').default,
     VectorLayer: require('./VectorLayer').default,
+    WFS3Layer: require('./WFS3Layer').default,
     WMSLayer: require('./WMSLayer').default,
     WMTSLayer: require('./WMTSLayer').default
 };

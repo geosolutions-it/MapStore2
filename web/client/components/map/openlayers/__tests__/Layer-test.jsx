@@ -1919,4 +1919,77 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
 
     });
+
+    it('test render a wfs3 layer', () => {
+
+        const options = {
+            id: 'layer_id',
+            name: 'layer_name',
+            title: 'Layer Title',
+            type: 'wfs3',
+            visibility: true,
+            url: '/geoserver/wfs3/collections/layer_name/tiles/{tilingSchemeId}/{level}/{row}/{col}',
+            format: 'application/vnd.mapbox-vector-tile',
+            tilingScheme: '/geoserver/wfs3/collections/layer_name/tiles/{tilingSchemeId}',
+            tilingSchemes: {
+                url: '/geoserver/wfs3/collections/layer_name/tiles',
+                schemes: [
+                    {
+                        type: 'TileMatrixSet',
+                        identifier: 'GoogleMapsCompatible',
+                        title: 'GoogleMapsCompatible',
+                        supportedCRS: 'EPSG:3857',
+                        tileMatrix: [{
+                            matrixHeight: 1,
+                            matrixWidth: 1,
+                            tileHeight: 256,
+                            tileWidth: 256,
+                            identifier: '0',
+                            scaleDenominator: 559082263.9508929,
+                            topLeftCorner: [
+                                -20037508.34,
+                                20037508
+                            ],
+                            type: 'TileMatrix'
+                        }],
+                        boundingBox: {
+                            crs: 'http://www.opengis.net/def/crs/EPSG/0/3857',
+                            lowerCorner: [
+                              -20037508.34,
+                              -20037508.34
+                            ],
+                            upperCorner: [
+                              20037508.34,
+                              20037508.34
+                            ],
+                            type: 'BoundingBox'
+                        },
+                        wellKnownScaleSet: 'http://www.opengis.net/def/wkss/OGC/1.0/GoogleMapsCompatible'
+                    }
+                ]
+            },
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -156.2575,
+                    miny: -90,
+                    maxx: 123.33333333333333,
+                    maxy: 46.5475
+                }
+            },
+            allowedSRS: {
+                'EPSG:3857': true
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs3"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
+    });
 });
