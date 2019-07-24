@@ -46,6 +46,7 @@ module.exports = {
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         FullScreenPlugin: require('../plugins/FullScreen'),
         GeoStoryPlugin: require('../plugins/GeoStory'),
+        GeoStoryEditorPlugin: require('../plugins/GeoStoryEditor'),
         GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher'),
         GoFull: require('../plugins/GoFull'),
         GridContainerPlugin: require('../plugins/GridContainer'),

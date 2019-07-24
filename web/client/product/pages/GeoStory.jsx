@@ -1,79 +1,72 @@
-/*
- * Copyright 2019, GeoSolutions Sas.
+/**
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
-
+const { get, isNil } = require('lodash');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const Page = require('../../containers/Page');
+const BorderLayout = require('../../components/layout/BorderLayout');
 
-const { loadMapConfig } = require('../../actions/config');
-const { resetControls, setControlProperty } = require('../../actions/controls');
-const { mapSelector } = require('../../selectors/map');
-const HolyGrail = require('../../containers/HolyGrail');
-
-class GeoStory extends React.Component {
+class GeoStoryPage extends React.Component {
     static propTypes = {
-        name: PropTypes.string,
         mode: PropTypes.string,
         match: PropTypes.object,
-        map: PropTypes.object,
-        loadMapConfig: PropTypes.func,
+        loadResource: PropTypes.func,
         reset: PropTypes.func,
-        plugins: PropTypes.object,
-        onPermalink: PropTypes.func,
-        setLayout: PropTypes.func,
-        setReadOnly: PropTypes.func
+        plugins: PropTypes.object
     };
 
     static defaultProps = {
-        name: 'geostory',
+        name: "geostory",
         mode: 'desktop',
-        loadMapConfig: () => { },
-        reset: () => { },
-        map: {},
-        onPermalink: () => {},
-        setLayout: () => {},
-        setReadOnly: () => {}
+        reset: () => { }
     };
 
+    componentWillMount() {
+        const id = get(this.props, "match.params.did");
+        if (id) {
+            this.props.reset();
+            this.props.loadResource(id);
+        } else {
+            this.props.reset();
+        }
+    }
+    componentDidUpdate(oldProps) {
+        const id = get(this.props, "match.params.did");
+        if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did")) {
+            if (isNil(id)) {
+                this.props.reset();
+            } else {
+                this.props.loadResource(id);
+            }
+        }
+    }
+    componentWillUnmount() {
+        this.props.reset();
+    }
     render() {
-        const plugins = ConfigUtils.getConfigProp('plugins') || {};
-        const pagePlugins = {
-            desktop: [],
-            mobile: []
-        };
-        const pluginsConfig = {
-            desktop: plugins[this.props.name] || [],
-            mobile: plugins[this.props.name] || []
-        };
-        return (
-            <HolyGrail
-                id="map-viewer-container"
-                pagePluginsConfig={pagePlugins}
-                pluginsConfig={pluginsConfig}
-                plugins={this.props.plugins}
-                params={this.props.match.params}/>
-        );
+        return (<Page
+            id="geostory"
+            component={BorderLayout}
+            includeCommon={false}
+            plugins={this.props.plugins}
+            params={this.props.match.params}
+        />);
     }
 }
 
 module.exports = connect((state) => ({
-        mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop',
-        map: mapSelector(state)
-    }),
+    mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
+}),
     {
-        loadMapConfig,
-        reset: resetControls,
-        setLayout: setControlProperty.bind(null, 'geostory', 'layout'),
-        setReadOnly: setControlProperty.bind(null, 'geostory', 'readOnly', true)
-    }
-)(GeoStory);
+        // loadResource: loadDashboard,
+        // reset: resetDashboard
+    })(GeoStoryPage);

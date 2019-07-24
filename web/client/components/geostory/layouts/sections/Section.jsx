@@ -7,14 +7,25 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import AddSection from '../../common/AddSection';
-import Content from '../contents/Content';
+import { lists, Modes, StoryTypes, SectionTypes} from '../../../../utils/GeoStoryUtils';
+import Paragraph from './Paragraph';
 
+const types = {
+    [SectionTypes.PARAGRAPH]: Paragraph,
+    UNKNOWN: ({type}) => <div className="unknown-session-type">WARNING: unknown session of type {type}</div>
+};
+
+/**
+ * Generic Container for a Story Section
+ * Adds the AddSection button on button, then render the specific
+ * section by type.
+ */
 class Section extends React.Component {
     static propTypes = {
         id: PropTypes.string,
-        type: PropTypes.string,
-        mode: PropTypes.oneOf(['edit', 'view']),
+        type: PropTypes.oneOf(lists.SectionTypes),
+        storyType: PropTypes.oneOf(lists.StoryTypes),
+        mode: PropTypes.oneOf(lists.Modes),
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
         viewWidth: PropTypes.number,
@@ -22,16 +33,15 @@ class Section extends React.Component {
         needsUpdate: PropTypes.number,
         onAdd: PropTypes.func,
         onEdit: PropTypes.func,
-        onUpdate: PropTypes.func,
-        props: PropTypes.oneOf('view', 'edit')
+        onUpdate: PropTypes.func
     };
 
     static defaultProps = {
         id: '',
+        storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
-        mode: 'view',
-        excludeClassName: 'ms-cascade-section-exclude',
+        mode: Modes.VIEW,
         needsUpdate: -1,
         onUpdate: () => { },
         onEdit: () => {},
@@ -43,42 +53,16 @@ class Section extends React.Component {
     };
 
     render() {
+        const SectionType = types[this.props.type] || types.UNKNOWN;
         return (
             <div
-                className={`ms-cascade-section${this.props.type ? ` ms-${this.props.type}` : ''}`}
+                className={`ms-${this.props.storyType}-section${this.props.type ? ` ms-${this.props.type}` : ''}`}
                 style={{
                     position: 'relative',
-                    height: this.state.height,
                     transform: 'translate3d(0px, 0px, 0px)'
                 }}>
-                {
-                    this.props.contents.map(({ id: contentId, type, foreground }) => (
-                        <Content
-                            type={type}
-                            {...foreground}
-                            id={contentId}
-                            height={this.props.viewHeight}
-                            width={this.props.viewWidth}
-                            mode={this.props.mode}
-                            onChange={(key, value) => this.props.onEdit({ sectionId: this.props.id, contentId, key, value })}
-                        />)
-                    )
-                }
-                {!this.props.mode === 'view' && <div
-                    className={`${this.props.excludeClassName || ''} ms-cascade-edit-tools text-center`}
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        backgroundColor: '#ffffff',
-                        width: '100%',
-                        zIndex: 2,
-                        pointerEvents: 'auto'
-                    }}>
-                    <AddSection
-                        id={this.props.id}
-                        type={this.props.type}
-                        onAdd={this.props.onAdd} />
-                </div>}
+                <SectionType {...this.props}/>
+                {/* TODO: add add section Tool */}
             </div>
         );
     }

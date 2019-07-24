@@ -1,5 +1,6 @@
+
 /*
- * Copyright 2019, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -51,4 +52,4 @@ class ToolbarPopover extends React.Component {
     }
 }
 
-module.exports = ToolbarPopover;
+export default ToolbarPopover;

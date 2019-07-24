@@ -6,24 +6,37 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import ContainerDimensions from 'react-container-dimensions';
+import ContainerDimensionsBase from 'react-container-dimensions';
+import emptyState from '../../misc/enhancers/emptyState';
+
+const ContainerDimensions = emptyState(
+    ({ sections = [] }) => sections.length === 0,
+    () => ({
+        style: { height: "100%" },
+        mainViewStyle: {
+            position: "absolute",
+            top: "50%",
+            width: "100%",
+            transform: "translateY(-50%)"
+        },
+        // TODO: localize
+        title: "NO CONTENT"
+    })
+)(ContainerDimensionsBase);
 import BorderLayout from '../../layout/BorderLayout';
 import Section from './sections/Section';
-const Parallax = ({children, ...props}) => <div {...props}>{children}</div>;
+const {Modes} = require('../../../utils/GeoStoryUtils');
+
 export default ({
-    mode = 'view',
+    mode = Modes.VIEW,
     sections = [],
     onUpdate = () => {},
     onEdit = () => {},
     onAdd = () => {}
 }) => (<BorderLayout className="ms-cascade-story">
-    <ContainerDimensions>
+    <ContainerDimensions sections={sections}>
         {({ width, height }) =>
-            <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
-                <Parallax
-                    id="ms-parallax-container"
-                    className="ms-parallax-container"
-                    >
+            <div style={{ position: 'absolute', width: '100%', height: '100%', overflowY: 'auto'}}>
                     {
                         sections.map(({ contents = [], id: sectionId, type: sectionType }) => {
                             return (
@@ -40,8 +53,8 @@ export default ({
                                     contents={contents}
                                 />
                             );
-                    })}
-                    </Parallax>
+                        })
+                    }
             </div>}
     </ContainerDimensions>
 </BorderLayout>);

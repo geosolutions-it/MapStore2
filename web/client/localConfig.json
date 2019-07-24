@@ -585,6 +585,12 @@
           "Attribution",
           "Home",
           "GeoStory",
+          {
+            "name": "GeoStoryEditor",
+            "cfg": {
+              "containerPosition": "columns"
+            }
+          },
           "Notifications",
           {
             "name": "FeedbackMask",
