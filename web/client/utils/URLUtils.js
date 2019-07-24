@@ -46,7 +46,7 @@ export const isSameUrl = (originalUrl, otherUrl) => {
     const isSamePort = originalUrlParts.port === otherUrlParts.port;
 
     const isSamePathname = urlParsed.pathname === otherUrlParsed.pathname;
-    const ignoreSearchPath = ((urlParsed.search || "").length <= 4 ) === (otherUrlParsed.search || "").length <= 4;
+    const ignoreSearchPath = ((urlParsed.search || "").length < 4 ) === (otherUrlParsed.search || "").length < 4;
     /* ignoreSearchPath is needed to ignore url where path are dirty like /wfs? and /wfs?&
     * the minimum valid search path is 4 char length => ?p=v
     */
