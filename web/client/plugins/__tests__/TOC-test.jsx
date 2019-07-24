@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
 
-describe('TOCPlugin Plugin', () => {
+describe.only('TOCPlugin Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -49,6 +49,7 @@ describe('TOCPlugin Plugin', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.querySelector('.toc-title').textContent).toBe('Annotations');
         expect(document.querySelector('.toc-group-title').textContent).toBe('Default');
+        expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(1);
     });
 
     it('TOCPlugin hides annotations layer and empty group in cesium mapType', () => {
@@ -79,5 +80,31 @@ describe('TOCPlugin Plugin', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.querySelectorAll('.toc-title').length).toBe(1);
         expect(document.querySelectorAll('.toc-group-title').length).toBe(1);
+    });
+    it('TOCPlugin hides filter layer if no groups and no layers are present', () => {
+        const { Plugin } = getPluginForTest(TOCPlugin, {
+            layers: {
+                groups: [{ id: 'default', title: 'Default', nodes: [] }],
+                flat: []
+            },
+            maptype: {
+                mapType: 'openlayers'
+            }
+        });
+        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
+    });
+    it('TOCPlugin hides filter layer if a group with no layers are present', () => {
+        const { Plugin } = getPluginForTest(TOCPlugin, {
+            layers: {
+                groups: [],
+                flat: []
+            },
+            maptype: {
+                mapType: 'openlayers'
+            }
+        });
+        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
     });
 });
