@@ -589,7 +589,7 @@ const FilterUtils = {
              `<ogc:Function name="queryCollection">` +
                `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.typeName}</ogc:Literal>` +
                `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.geometryName}</ogc:Literal>` +
-               `<ogc:Literal>${cqlFilter}</ogc:Literal>` +
+               `<ogc:Literal><![CDATA[${cqlFilter}]]></ogc:Literal>` +
              `</ogc:Function>` +
          `</ogc:Function>`;
         }
