@@ -19,7 +19,7 @@ const urlPartsResult1 = {
     rootPath: "/geoserver/wfs",
     applicationRootPath: 'geoserver'
 };
-describe('URLUtils', () => {
+describe.only('URLUtils', () => {
     it('test urlParts', () => {
         const data = urlParts(url1);
         expect(data).toEqual(urlPartsResult1);
@@ -35,6 +35,34 @@ describe('URLUtils', () => {
     it('test isSameUrl with relative url', () => {
         const data = isSameUrl(url3, url4);
         expect(data).toBeTruthy();
+    });
+    it('test isSameUrl with clean and dirty relative url', () => {
+        expect(isSameUrl(
+            "/geoserver/wfs",
+            "/geoserver/wfs?&")).toBe(true);
+        expect(isSameUrl(
+            "/geoserver/wfs",
+            "/geoserver/wfs?")).toBe(true);
+        expect(isSameUrl(
+            "/geoserver/wfs?&",
+            "/geoserver/wfs?param1=true&param2=false")).toBe(false);
+        expect(isSameUrl(
+            "/path/geoserver/wfs?",
+            "/geoserver/wfs?")).toBe(false);
+    });
+    it('test isSameUrl with clean and dirty absolute url', () => {
+        expect(isSameUrl(
+            "https://demo.geo-solutions.it:443/geoserver/wfs",
+            "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(true);
+        expect(isSameUrl(
+            "https://demo.geo-solutions.it:443/geoserver/wfs",
+            "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(true);
+        expect(isSameUrl(
+            "https://demo.geo-solutions.it/geoserver/wfs?",
+            "https://demo.geo-solutions.it/geoserver/wfs?param1=true&param2=false")).toBe(false);
+        expect(isSameUrl(
+            "https://demo.geo-solutions.it/path/geoserver/wfs?",
+            "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(false);
     });
 
 });
