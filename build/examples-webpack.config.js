@@ -1,6 +1,18 @@
-var webpackConfig = require('./webpack.config.js');
-var assign = require('object-assign');
+const themeEntries = require('./themes.js').themeEntries;
+const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 
-assign(webpackConfig.entry, require('./examples.js'));
+const path = require("path");
 
-module.exports = webpackConfig;
+module.exports = require('./buildConfig')(
+    require('./examples.js'),
+    themeEntries,
+    {
+        base: path.join(__dirname, ".."),
+        dist: path.join(__dirname, "..", "web", "client", "dist"),
+        framework: path.join(__dirname, "..", "web", "client"),
+        code: path.join(__dirname, "..", "web", "client")
+    },
+    extractThemesPlugin,
+    false,
+    "/dist/"
+);

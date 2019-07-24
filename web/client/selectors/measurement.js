@@ -34,7 +34,7 @@ const showAddAsAnnotationSelector = (state) => state && state.measurement && sta
  * return empty coordinates
 */
 const getValidFeatureSelector = (state) => {
-    let feature = state.measurement.feature;
+    let feature = state.measurement.feature || {};
     if (feature.geometry) {
         feature = set("geometry.coordinates", validateFeatureCoordinates(feature.geometry || {}), feature);
     }

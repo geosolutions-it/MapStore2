@@ -37,7 +37,7 @@ class Login extends React.Component {
                     <div style={{textAlign: "right"}}><LoginPlugin /></div>
                     <Jumbotron style={{position: "absolute", bottom: 0, left: 0, right: 0, top: "35px"}}>
                     <h1>Hello, {this.props.security && this.props.security.user && this.props.security.user.name || "Guest user. Please login"}</h1>
-                    <p>This is a sample of the login functionality. In the future you will able to login to MapStore to create maps or admin a server.</p>
+                    <p>This is a sample of the login functionality.</p>
                     <p>{this.renderGroups()}</p>
                   </Jumbotron>
                 <Debug/>
@@ -48,7 +48,7 @@ class Login extends React.Component {
 
 module.exports = connect((state) => {
     return {
-        locale: state.locale && state.locale.locale,
+        locale: state.locale && state.locale.current,
         messages: state.locale && state.locale.messages || {},
         security: state.security
     };
