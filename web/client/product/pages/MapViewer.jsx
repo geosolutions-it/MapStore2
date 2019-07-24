@@ -12,7 +12,6 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const MapViewerCmp = require('../components/viewer/MapViewerCmp');
 const {loadMapConfig} = require('../../actions/config');
-const {searchWithFilter} = require('../../actions/search');
 const {initMap} = require('../../actions/map');
 const MapViewerContainer = require('../../containers/MapViewer');
 
@@ -23,7 +22,6 @@ class MapViewerPage extends React.Component {
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
-        searchWithFilter: PropTypes.func,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
@@ -47,6 +45,5 @@ module.exports = connect((state) => ({
 }),
     {
         loadMapConfig,
-        searchWithFilter,
         onInit: initMap
     })(MapViewerPage);

@@ -27,6 +27,8 @@ This is the main structure:
   // API keys for bing and mapquest services
   "bingApiKey",
   "mapquestApiKey",
+  // list of actions that are available to be launched dynamically from query param (#3817)
+  "initialActionsWhiteList": [{"type":"ZOOM_TO_EXTENT", "extent":[minx,minx,maxx,maxy]}],
   // path to the translation files directory (if different from default)
   "translationsPath",
   // if true, every ajax and mapping request will be authenticated with the configurations if match a rule (default: true)

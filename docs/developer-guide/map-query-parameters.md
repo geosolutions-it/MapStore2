@@ -1,19 +1,20 @@
-# Map query parameters
+# MapViewer query parameters
 
-In this section we will describe the available map query parameters
+In this section we will describe the available MapViewer query parameters
 that can be used when the map is loaded.
 
 ## Retro-compatibility
-In the past it has been introduced a **bbox** query param with value that corresponds to extent in the viewport.
+In the past a **bbox** query param has been introduced whose value corresponds to extent in the viewport.
 
 for example:
 `?bbox=-177.84667968750014,-1.8234225930143395,-9.096679687500114,61.700290838326204`
 
 For more details on it see [sharing a map](../user-guide/share).
 
-## New way to dispatch actions in MapStore
+## Dynamically dispatching initial actions in MapStore
 
-**actions** is the new query param and it will be used to dispatch actions (in the map viewer) that are limited to a whitelist.
+To dispatch additional actions when the map viewer is started, the **actions** query param can be used.
+Only actions from a configured whitelist can be dispatched in this way.
 
 The value of this paramater is a JSON string containing an array with an object per action.
 
@@ -58,20 +59,3 @@ Example:
 ?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]
 ```
 For more details check out the [searchLayerWithFilter](https://mapstore2.geo-solutions.it/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
-
-#### Add Layers (not implemented yet)
-
-This action allows to add layers from catalog present in the map
-
-Requirements:
-- the number of values must be even
-- catalog name must be present in the map
-
-Example:
-```
-{
-    "type": "CATALOG:ADD_LAYERS_FROM_MAP_URL",
-    "layers": ["layer1", "catalog1", "layer2", "catalog2"]
-}
-?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_MAP_URL","layers":["layer1","catalog1","layer2","catalog2"]}]
-```

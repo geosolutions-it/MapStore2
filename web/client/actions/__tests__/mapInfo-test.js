@@ -90,7 +90,7 @@ describe('Test correctness of the map actions', () => {
         });
     });
 
-    it('reset reverse geocode data', () => {
+    it('test featureInfoClick with filterNameList and overrideParams', () => {
         const point = {latlng: {lat: 1, lng: 3}};
         const layer = {id: "layer.1"};
         const filterNameList = [];

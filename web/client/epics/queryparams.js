@@ -16,6 +16,7 @@ import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
 import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
+import { getConfigProp } from '../utils/ConfigUtils';
 
 /*
 it maps params key to function.
@@ -43,10 +44,10 @@ const paramActions = {
         ];
     },
     actions: ({value = ''}) => {
-        const whiteList = [
+        const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
             ZOOM_TO_EXTENT
-        ];
+        ]);
         if (isString(value)) {
             const actions = JSON.parse(value);
             return actions.filter(a => includes(whiteList, a.type));
