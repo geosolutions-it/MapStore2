@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
 
-describe.only('TOCPlugin Plugin', () => {
+describe('TOCPlugin Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
