@@ -603,7 +603,11 @@
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
-            "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}"
+            "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
+            "errors": {
+                "nonQueriableLayers": "Der in der URL angegebene Layer ist nicht abfragbar oder in der Karte nicht sichtbar.",
+                "serverError": "Der Server hat beim Ausführen der GetFeatureInfo-Anforderung einen Fehler zurückgegeben. Überprüfen Sie, ob die Parameter korrekt sind"
+            }
         },
         "draw": {
             "fill": "Füllung",
