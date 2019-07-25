@@ -75,6 +75,11 @@ describe('URLUtils', () => {
         expect(isSameUrl(
             "https://demo.geo-solutions.it/path/geoserver/wfs?",
             "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(false);
+        // check avoid parsing exceptions
+        expect(isSameUrl(
+            "https://demo.geo-solutions.it/path/geoserver/wfs?",
+            1
+        )).toBe(false);
     });
     it('test sameQueryParams', () => {
         expect(sameQueryParams("", "")).toBe(true);
@@ -84,6 +89,7 @@ describe('URLUtils', () => {
         expect(sameQueryParams("a=b", "a=b")).toBe(true);
         expect(sameQueryParams("a=C", "a=b")).toBe(false);
         expect(sameQueryParams("a=b", "&a=b")).toBe(true);
+        expect(sameQueryParams("&a=b", "a=b")).toBe(true);
         expect(sameQueryParams("a=b", "&a=b&c=d")).toBe(false);
         expect(sameQueryParams("a=b&c=d", "&a=b&c=d")).toBe(true);
     });

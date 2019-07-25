@@ -35,7 +35,7 @@ export const sameQueryParams = ( q1 = "", q2 = "") => {
     if (!q1 && !q2) {
         return true;
     }
-    const params1 = q1 ? q1.split('&') : [];
+    const params1 = q1 ? q1.split('&').filter(v => !!v) : [];
     const params2 = q2 ? q2.split('&').filter(v => !!v) : [];
     return isEqual(sortBy(params1), sortBy(params2));
 };
@@ -56,7 +56,7 @@ export const isSameUrl = (u1, u2) => {
     if (originalUrl === otherUrl) return true;
     if (!originalUrl || !otherUrl) return false; // if one is undefined they are not the same
     // check type before parsing to avoid parse exceptions
-    if (!isString(originalUrl || !isString(otherUrl))) return false;
+    if (!isString(originalUrl) || !isString(otherUrl)) return false;
     const urlParsed = Url.parse(originalUrl);
     const otherUrlParsed = Url.parse(otherUrl);
 
