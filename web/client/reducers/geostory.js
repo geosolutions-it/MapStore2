@@ -5,15 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-/*
-SAMPLE DATA STRUCTURE:
-```
-{
-
-}
-```
- */
 import { set } from '../utils/ImmutableUtils';
 
 import {
@@ -28,7 +19,7 @@ let INITIAL_STATE = {
     }
 };
 
-// TEST STUFF
+// TEST STUFF: uncomment to use test data. TODO: delete when build system is active
 const createSampleSection = (id) => ({
     type: 'paragraph',
     id: id,
@@ -55,8 +46,6 @@ INITIAL_STATE = {
         sections: Array.from(Array(10).keys()).map(v => createSampleSection(`${v}`))
     }
 };
-
-
 
 /**
  * Reducer that manage state for geostory plugins. Example:

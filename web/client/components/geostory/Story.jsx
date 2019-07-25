@@ -6,4 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Cascade from './layouts/Cascade';
+// FOR NOW THIS IS ONLY A WRAPPER FOR CASCADE (NO DIFFERENT STORY TYPES YET)
 export default Cascade;

@@ -10,9 +10,9 @@ import React from 'react';
 
 const Text = (props) => {
     return (
-            <div style={{margin: 20}} onClick={() => {
+        <div className="geostory-content-text" style={{margin: 20}} onClick={() => {
                 // TODO: enable editing
-            }} dangerouslySetInnerHTML={{ __html: props.html }} />
+        }} dangerouslySetInnerHTML={{ __html: props.html }} />
     );
 };
 export default Text;

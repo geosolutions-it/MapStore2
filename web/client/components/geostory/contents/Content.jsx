@@ -8,7 +8,7 @@
 import React from 'react';
 import Text from './Text';
 
-const DummyComponent = ({type}) => <div>{`warning: unknown content type "${type}"` }</div>;
+const DummyComponent = ({type}) => <div className="geostory-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 /**
  * Returns the Component to use for the given type
  * @param {string} type the type of the Content
