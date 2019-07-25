@@ -343,7 +343,7 @@ class LayerTree extends React.Component {
                 <Header
                     title={this.props.mapName}
                     showTitle={this.props.activateMapTitle}
-                    showFilter={this.props.activateFilterLayer}
+                    showFilter={this.props.activateFilterLayer && (this.props.groups.filter(g => (g.nodes || []).length) || []).length}
                     showTools={this.props.activateToolsContainer}
                     onClear={() => { this.props.onSelectNode(); }}
                     onFilter={this.props.onFilter}
