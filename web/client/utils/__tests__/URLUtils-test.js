@@ -82,16 +82,24 @@ describe('URLUtils', () => {
         )).toBe(false);
     });
     it('test sameQueryParams', () => {
+        // empty cases
         expect(sameQueryParams("", "")).toBe(true);
         expect(sameQueryParams("", undefined)).toBe(true);
         expect(sameQueryParams("", false)).toBe(true);
         expect(sameQueryParams("", "&a=b")).toBe(false);
+        // single parameter
         expect(sameQueryParams("a=b", "a=b")).toBe(true);
         expect(sameQueryParams("a=C", "a=b")).toBe(false);
+        // dirty
         expect(sameQueryParams("a=b", "&a=b")).toBe(true);
         expect(sameQueryParams("&a=b", "a=b")).toBe(true);
+        // multiple params
         expect(sameQueryParams("a=b", "&a=b&c=d")).toBe(false);
         expect(sameQueryParams("a=b&c=d", "&a=b&c=d")).toBe(true);
+        // different sorting
+        expect(sameQueryParams("a=b&c=d", "&c=d&a=b")).toBe(true);
+        // dirty, different sorting
+        expect(sameQueryParams("a=b&c=d&", "&c=d&a=b")).toBe(true);
     });
 
 });
