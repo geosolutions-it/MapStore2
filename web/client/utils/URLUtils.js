@@ -6,7 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const urlParts = (url) => {
+import Url from "url";
+
+export const urlParts = (url) => {
     if (!url) return {};
     let isRelativeUrl = !(url.indexOf("http") === 0);
     let urlPartsArray = isRelativeUrl ? [] : url.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
@@ -32,19 +34,21 @@ const urlParts = (url) => {
  * @param  {string} otherUrl url to compare to
  * @return {boolean} true when urls are the same else false
  */
-const isSameUrl = (originalUrl, otherUrl) => {
+export const isSameUrl = (originalUrl, otherUrl) => {
     if (originalUrl === otherUrl) return true;
+    const urlParsed = Url.parse(originalUrl);
+    const otherUrlParsed = Url.parse(otherUrl);
     const originalUrlParts = urlParts(originalUrl);
     const otherUrlParts = urlParts(otherUrl);
     const isSameProtocol = originalUrlParts.protocol === otherUrlParts.protocol;
     const isSameDomain = originalUrlParts.domain === otherUrlParts.domain;
     const isSameRootPath = originalUrlParts.rootPath === otherUrlParts.rootPath;
     const isSamePort = originalUrlParts.port === otherUrlParts.port;
-    return isSameProtocol && isSamePort && isSameDomain && isSameRootPath;
-};
 
-
-module.exports = {
-    isSameUrl,
-    urlParts
+    const isSamePathname = urlParsed.pathname === otherUrlParsed.pathname;
+    const ignoreSearchPath = ((urlParsed.search || "").length < 4 ) === (otherUrlParsed.search || "").length < 4;
+    /* ignoreSearchPath is needed to ignore url where path are dirty like /wfs? and /wfs?&
+    * the minimum valid search path is 4 char length => ?p=v
+    */
+    return isSameProtocol && isSamePort && isSameDomain && (ignoreSearchPath && isSamePathname ? true : isSameRootPath);
 };
