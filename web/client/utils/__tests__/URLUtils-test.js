@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {urlParts, isSameUrl} = require('../URLUtils');
+const { urlParts, isSameUrl, sameQueryParams} = require('../URLUtils');
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
@@ -36,10 +36,21 @@ describe('URLUtils', () => {
         const data = isSameUrl(url3, url4);
         expect(data).toBeTruthy();
     });
+    it('test isSameUrl with array', () => {
+        expect(isSameUrl(url3, [url4])).toBeTruthy();
+        expect(isSameUrl(url3, [url2])).toBeFalsy();
+    });
+    it('test isSameUrl with one null', () => {
+        const data = isSameUrl(url3);
+        expect(data).toBeFalsy();
+    });
     it('test isSameUrl with clean and dirty relative url', () => {
         expect(isSameUrl(
             "/geoserver/wfs",
             "/geoserver/wfs?&")).toBe(true);
+        expect(isSameUrl(
+            "/geoserver/wfs",
+            "/geoserver/wfs?&&&&")).toBe(true);
         expect(isSameUrl(
             "/geoserver/wfs",
             "/geoserver/wfs?")).toBe(true);
@@ -49,6 +60,7 @@ describe('URLUtils', () => {
         expect(isSameUrl(
             "/path/geoserver/wfs?",
             "/geoserver/wfs?")).toBe(false);
+
     });
     it('test isSameUrl with clean and dirty absolute url', () => {
         expect(isSameUrl(
@@ -63,6 +75,31 @@ describe('URLUtils', () => {
         expect(isSameUrl(
             "https://demo.geo-solutions.it/path/geoserver/wfs?",
             "https://demo.geo-solutions.it/geoserver/wfs?")).toBe(false);
+        // check avoid parsing exceptions
+        expect(isSameUrl(
+            "https://demo.geo-solutions.it/path/geoserver/wfs?",
+            1
+        )).toBe(false);
+    });
+    it('test sameQueryParams', () => {
+        // empty cases
+        expect(sameQueryParams("", "")).toBe(true);
+        expect(sameQueryParams("", undefined)).toBe(true);
+        expect(sameQueryParams("", false)).toBe(true);
+        expect(sameQueryParams("", "&a=b")).toBe(false);
+        // single parameter
+        expect(sameQueryParams("a=b", "a=b")).toBe(true);
+        expect(sameQueryParams("a=C", "a=b")).toBe(false);
+        // dirty
+        expect(sameQueryParams("a=b", "&a=b")).toBe(true);
+        expect(sameQueryParams("&a=b", "a=b")).toBe(true);
+        // multiple params
+        expect(sameQueryParams("a=b", "&a=b&c=d")).toBe(false);
+        expect(sameQueryParams("a=b&c=d", "&a=b&c=d")).toBe(true);
+        // different sorting
+        expect(sameQueryParams("a=b&c=d", "&c=d&a=b")).toBe(true);
+        // dirty, different sorting
+        expect(sameQueryParams("a=b&c=d&", "&c=d&a=b")).toBe(true);
     });
 
 });
