@@ -7,6 +7,7 @@
 */
 
 import Url from "url";
+import { isArray, isString, isEqual, sortBy } from 'lodash';
 
 export const urlParts = (url) => {
     if (!url) return {};
@@ -26,29 +27,46 @@ export const urlParts = (url) => {
     return {protocol, domain, port, rootPath, applicationRootPath};
 };
 
+export const sameQueryParams = ( q1 = "", q2 = "") => {
+    if (q1 === q2) {
+        return true;
+    }
+    // if both "", false or undefined, means they are both empty query strings
+    if (!q1 && !q2) {
+        return true;
+    }
+    const params1 = q1 ? q1.split('&').filter(v => !!v) : [];
+    const params2 = q2 ? q2.split('&').filter(v => !!v) : [];
+    return isEqual(sortBy(params1), sortBy(params2));
+};
+
 /**
- * Compares two url to check if are the same
+ * Compares two url to check if are the same. In case of multi-URL (array of URLs)
+ * passed as parameter, the function will compare the first element of the array with the other URL.
  * @function
  * @memberof utils.URLUtils
- * @param  {string} originalUrl the original url
- * @param  {string} otherUrl url to compare to
+ * @param  {string|string[]} u1 the first URL to compare (or an array of URLs)
+ * @param  {string!string[]} u2 the second URL to compare with (or an array of URLs)
  * @return {boolean} true when urls are the same else false
  */
-export const isSameUrl = (originalUrl, otherUrl) => {
+export const isSameUrl = (u1, u2) => {
+    // if array takes the first
+    const originalUrl = isArray(u1) ? u1[0] : u1;
+    const otherUrl = isArray(u2) ? u2[0] : u2;
     if (originalUrl === otherUrl) return true;
+    if (!originalUrl || !otherUrl) return false; // if one is undefined they are not the same
+    // check type before parsing to avoid parse exceptions
+    if (!isString(originalUrl) || !isString(otherUrl)) return false;
     const urlParsed = Url.parse(originalUrl);
     const otherUrlParsed = Url.parse(otherUrl);
+
     const originalUrlParts = urlParts(originalUrl);
     const otherUrlParts = urlParts(otherUrl);
+
     const isSameProtocol = originalUrlParts.protocol === otherUrlParts.protocol;
     const isSameDomain = originalUrlParts.domain === otherUrlParts.domain;
-    const isSameRootPath = originalUrlParts.rootPath === otherUrlParts.rootPath;
     const isSamePort = originalUrlParts.port === otherUrlParts.port;
-
     const isSamePathname = urlParsed.pathname === otherUrlParsed.pathname;
-    const ignoreSearchPath = ((urlParsed.search || "").length < 4 ) === (otherUrlParsed.search || "").length < 4;
-    /* ignoreSearchPath is needed to ignore url where path are dirty like /wfs? and /wfs?&
-    * the minimum valid search path is 4 char length => ?p=v
-    */
-    return isSameProtocol && isSamePort && isSameDomain && (ignoreSearchPath && isSamePathname ? true : isSameRootPath);
+    const isSameQueryParams = sameQueryParams(urlParsed.query, otherUrlParsed.query);
+    return isSameProtocol && isSamePort && isSameDomain && isSamePathname && isSameQueryParams;
 };
