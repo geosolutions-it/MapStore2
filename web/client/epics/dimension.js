@@ -1,3 +1,10 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
 
 const { Observable } = require('rxjs');
 const { updateLayerDimension, changeLayerProperties, ADD_LAYER} = require('../actions/layers');
@@ -59,7 +66,7 @@ module.exports = {
             .flatMap(({ layer = {}, multidimURL } = {}) =>
                 describeDomains(multidimURL, layer.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
                     .switchMap( domains => {
-                        const dimensions = domainsToDimensionsObject(domains, multidimURL);
+                        const dimensions = domainsToDimensionsObject(domains, multidimURL) || [];
                         if (dimensions && dimensions.length > 0) {
                             /**
                              * updating the time object in state.layers (from describeDomains),

@@ -9,6 +9,7 @@
 const CoordinatesUtils = require('./CoordinatesUtils');
 const SecurityUtils = require('./SecurityUtils');
 const MapUtils = require('./MapUtils');
+const {optionsToVendorParams} = require('./VendorParamsUtils');
 const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 
@@ -202,8 +203,14 @@ const PrintUtils = {
                     "TILED": true,
                     "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                     "scaleMethod": "accurate"
-                }, layer.baseParams || {}, layer.params || {}))
-            }),
+                }, layer.baseParams || {}, layer.params || {}, {
+                    ...optionsToVendorParams({
+                        nativeCrs: layer.nativeCrs,
+                        layerFilter: layer.layerFilter,
+                        filterObj: layer.filterObj
+                    })
+                }
+            ))}),
             legend: (layer, spec) => ({
                 "name": layer.title || layer.name,
                 "classes": [

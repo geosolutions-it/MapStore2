@@ -567,7 +567,13 @@
             "s_wfs_opt_props_label" : "可选属性",
             "s_result_props_label": "结果显示属性",
             "s_priority_info": "用于对搜索结果进行排序，先将较高的值排序 Nominatim结果优先权= 5",
-            "serviceslistempty": "没有定义定制的服务"
+            "serviceslistempty": "没有定义定制的服务",
+            "service_missing": "{serviceType} service is not configured",
+            "generic_error": "An error occurred during search. Error details: {message}",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            }
         },
         "draw": {
             "fill": "Fill",

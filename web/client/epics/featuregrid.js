@@ -179,6 +179,7 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
 
+
 /**
  * Epìcs for feature grid
  * @memberof epics
@@ -188,12 +189,32 @@ module.exports = {
     featureGridBrowseData: (action$, store) =>
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
+            const isActive = isSyncWmsActive(store.getState());
+            const objLayer = getLayerFromId(store.getState(), layer.id);
             return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
                 ).merge(
-                    createInitialQueryFlow(action$, store, layer)
+                    Rx.Observable.of(isActive)
+                        // if sync is active on startup
+                        // but nativeCRS is missing, it should be get from the server
+                        .switchMap( active => {
+                            if (!active || (objLayer && objLayer.nativeCrs)) {
+                                return Rx.Observable.empty();
+                            }
+                            return getNativeCrs(objLayer)
+                                .map((nativeCrs) => addNativeCrsLayer(objLayer.id, nativeCrs));
+                        }).catch(() => {
+                            return Rx.Observable.of(
+                                warning({
+                                    title: "notification.warning",
+                                    message: "featuregrid.errorProjFetch",
+                                    position: "tc",
+                                    autoDismiss: 5
+                                }));
+                        }),
+                        createInitialQueryFlow(action$, store, layer)
                 )
                 .merge(
                     Rx.Observable.of(reset())

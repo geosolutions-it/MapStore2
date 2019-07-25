@@ -52,14 +52,16 @@ const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE} = require('../../actions/wfsquery');
-const {CHANGE_LAYER_PROPERTIES, changeLayerParams} = require('../../actions/layers');
+const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
-const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-const {LOAD_FILTER} = require('../../actions/queryform');
+const {
+toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
+        layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
+const { LOAD_FILTER, QUERY_FORM_RESET} = require('../../actions/queryform');
 
 const {
+    featureGridBrowseData,
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
     featureGridLayerSelectionInitialization,
@@ -89,8 +91,7 @@ const {
     featureGridChangePage,
     featureGridSort,
     replayOnTimeDimensionChange
-}
-    = require('../featuregrid');
+} = require('../featuregrid');
 
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
@@ -582,7 +583,83 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
+    describe('featureGridBrowseData epic', () => {
+        const LAYER = state.layers.flat[0];
+        const LAYER_NO_NATIVE_CRS =
+                {
+                    id: "TEST_LAYER",
+                    name: "V_TEST",
+                    title: "V_TEST",
+                    filterObj,
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                    // NO native CRS, to force fetch
+            };
+        const checkInitActions = ([a1, a2, a3]) => {
+            // close TOC
+            expect(a1.type).toBe(SET_CONTROL_PROPERTY);
+            expect(a1.control).toBe('drawer');
+            expect(a1.property).toBe('enabled');
+            expect(a1.value).toBe(false);
+            // set feature grid layer
+            expect(a2.type).toBe(SET_LAYER);
+            expect(a2.id).toBe(LAYER.id);
+            // open feature grid
+            expect(a3.type).toBe(OPEN_FEATURE_GRID);
+        };
+        it('browseData action initializes featuregrid', done => {
+            testEpic(featureGridBrowseData, 5, browseData(LAYER), ([ a1, a2, a3, a4, a5 ]) => {
+                checkInitActions([a1, a2, a3]);
+                // sets the feature type selected for search
+                expect(a4.type).toBe(FEATURE_TYPE_SELECTED);
+                expect(a5.type).toBe(QUERY_FORM_RESET);
+                done();
+            }, state);
+        });
+        it('browseData action triggers nativeCrs fetch', done => {
+            const TEST_CRS = "EPSG:3044";
+            const oldDEF = proj4.defs(TEST_CRS);
+            proj4.defs(TEST_CRS, "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
 
+            testEpic(featureGridBrowseData, 6, browseData(LAYER_NO_NATIVE_CRS), (actions) => {
+                proj4.defs(TEST_CRS, oldDEF); // reset old definition, if any
+                expect(actions.filter(({type}) => type === CHANGE_LAYER_PROPERTIES).length).toBe(1);
+                actions.filter(({ type }) => type === CHANGE_LAYER_PROPERTIES).map(a => {
+                    expect(a.layer).toBe(LAYER_NO_NATIVE_CRS.id);
+                    expect(a.newProperties.nativeCrs).toBe(TEST_CRS);
+                });
+                done();
+            }, {
+                ...state,
+                query: { ...state.query, syncWmsFilter: true },
+                layers: {
+                    selected: [LAYER.id], // the layer is selected
+                    flat: [LAYER_NO_NATIVE_CRS]
+                }
+            });
+        });
+        it('browseData action trigger error notification if can not get nativeCrs', done => {
+            const LAYER_NO_NATIVE_CRS_ERROR = {
+                    ...LAYER_NO_NATIVE_CRS,
+                    url: "FAKE_URL_NOT_FOUND"
+                };
+            testEpic(featureGridBrowseData, 6, browseData(LAYER_NO_NATIVE_CRS_ERROR), (actions) => {
+                checkInitActions(actions);
+                // sets the feature type selected for search
+                actions.filter(a => a.type === SHOW_NOTIFICATION).map( a => {
+                    expect(a.message).toExist();
+                    done();
+                });
+
+            }, {
+                ...state,
+                query: { ...state.query, syncWmsFilter: true },
+                layers: {
+                    selected: [LAYER.id], // the layer is selected
+                    flat: [LAYER_NO_NATIVE_CRS_ERROR]
+                }
+            });
+        });
+    });
     it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
         const stateFeaturegrid = {
             featuregrid: {

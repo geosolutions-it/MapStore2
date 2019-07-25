@@ -936,7 +936,7 @@ describe('FilterUtils', () => {
          + '<ogc:Function name="queryCollection">'
          + '<ogc:Literal>TEST</ogc:Literal>'
          + '<ogc:Literal>GEOMETRY</ogc:Literal>'
-         + '<ogc:Literal>INCLUDE</ogc:Literal>'
+         + '<ogc:Literal><![CDATA[INCLUDE]]></ogc:Literal>'
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
         let expected =
@@ -1010,7 +1010,7 @@ describe('FilterUtils', () => {
          + '<ogc:Function name="queryCollection">'
          + '<ogc:Literal>regions</ogc:Literal>'
          + '<ogc:Literal>regions_geom</ogc:Literal>'
-         + '<ogc:Literal>area > 10</ogc:Literal>'
+         + '<ogc:Literal><![CDATA[area > 10]]></ogc:Literal>'
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
 

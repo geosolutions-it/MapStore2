@@ -100,6 +100,7 @@ module.exports = mapBuilder(({
             selectedNodes={selectedNodes}
             selectedLayers={selectedLayers}
             selectedGroups={selectedGroups}
+            onNodeSelect={onNodeSelect}
             toggleLayerSelector={toggleLayerSelector}/></BuilderHeader>)}
         >
         {enabled ? <Builder

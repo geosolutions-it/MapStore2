@@ -43,7 +43,7 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
         const {setSupportedLocales} = require('../epics/localconfig');
-        const {readQueryParamsOnMapEpic} = require('../epics/share');
+        const {readQueryParamsOnMapEpic} = require('../epics/queryparams');
 
         /**
          * appStore data needed to create the store

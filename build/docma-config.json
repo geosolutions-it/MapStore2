@@ -144,6 +144,7 @@
             "web/client/actions/globeswitcher.js",
             "web/client/actions/floatinglegend.js",
             "web/client/actions/maplayout.js",
+            "web/client/actions/map.js",
             "web/client/actions/maps.js",
             "web/client/actions/maptype.js",
             "web/client/actions/notifications.js",
