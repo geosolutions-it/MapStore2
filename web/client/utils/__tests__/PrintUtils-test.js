@@ -15,6 +15,71 @@ const layer = {
     type: "wms",
     params: {myparam: "myvalue"}
 };
+
+const layerSottoPasso = {
+    id: 'DBT:SOTTOPASSO__6',
+    type: 'wms',
+    url: 'http://localhost:8081/geoserver-test/wms',
+    nativeCrs: 'EPSG:3003'
+};
+
+const layerFilterSottoPasso = {
+    groupFields: [
+      {
+        id: 1,
+        logic: 'OR',
+        index: 0
+      }
+    ],
+    filterFields: [
+      {
+        rowId: 1563970241851,
+        groupId: 1,
+        attribute: 'TIPO',
+        operator: '=',
+        value: 2,
+        type: 'number',
+        fieldOptions: {
+          valuesCount: 0,
+          currentPage: 1
+        },
+        exception: null
+      }
+    ],
+    spatialField: {
+      method: null,
+      operation: 'INTERSECTS',
+      geometry: null,
+      attribute: 'GEOMETRY'
+    }
+};
+const filterObjSottoPasso = {
+    featureTypeName: 'DBT:SOTTOPASSO',
+    filterType: 'OGC',
+    ogcVersion: '1.1.0',
+    pagination: {
+      startIndex: 0,
+      maxFeatures: 20
+    },
+    groupFields: [
+      {
+        id: 1,
+        logic: 'AND',
+        index: 0
+      }
+    ],
+    filterFields: [
+      {
+        attribute: 'ID_OGGETTO',
+        rowId: 1563970257711,
+        type: 'number',
+        groupId: 1,
+        operator: '<',
+        value: 44
+      }
+    ]
+};
+
 const featurePoint = {
     "type": "Feature",
     "geometry": {
@@ -207,6 +272,37 @@ describe('PrintUtils', () => {
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.authkey).toExist();
         expect(specs[0].customParams.authkey).toBe("mykey");
+    });
+    it('custom params include layerFilter and filterObj', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([{
+            ...layerSottoPasso,
+            layerFilter: layerFilterSottoPasso,
+            filterObj: filterObjSottoPasso
+        }], {}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].customParams.CQL_FILTER).toExist();
+        expect(specs[0].customParams.CQL_FILTER).toBe(`(("TIPO" = '2')) AND (("ID_OGGETTO" < '44'))`);
+    });
+    it('custom params include cql_filter', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([{
+            ...layerSottoPasso,
+            filterObj: filterObjSottoPasso
+        }], {}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].customParams.CQL_FILTER).toExist();
+        expect(specs[0].customParams.CQL_FILTER).toBe(`("ID_OGGETTO" < '44')`);
+    });
+    it('custom params include layerFilter', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([{
+            ...layerSottoPasso,
+            layerFilter: layerFilterSottoPasso
+        }], {}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].customParams.CQL_FILTER).toExist();
+        expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
     });
     it('wms layer generation for legend includes scale', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], testSpec, 'legend');
