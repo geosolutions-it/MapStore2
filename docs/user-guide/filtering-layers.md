@@ -47,26 +47,32 @@ The following steps show you how to filter that layer:
 
 * **Click** on *Save* <img src="../img/save_button.png" style="max-width:30px;"/> button to make it persistent. It means the filter will take effect whenever using the layer even if the *Query Builder* is closed.
 
-    !!! note
-        Once you click on the *Save* icon, the filter becomes **persistent**.
-
-        If you try to retrieve the features information through a click on the map, the filter you have created is applied to the content you get:
-
-        <img src="../img/get_filtered_features_info.gif" />
-
-        The layer [Attributes Table](attributes-table.md) also takes the filter into account:
-
-        <img src="../img/filtered_features_grid.png" />
-
-        Any additional filter you define using the [Advanced Filtering](attributes-table.md#advanced-filtering) tool or the *Quick Filter* will go in **`AND`** with the layer filter:
-
-        <img src="../img/filtered_advanced_filtering.gif" />
-
-        <img src="../img/filtered_quick_filter.gif" />
-
 A filter icon <img src="../img/filter-layer.png" style="max-width:30px;"/> is shown in the [TOC](toc.md) right next to the layer title to notify that the layer is filtered. The *Filter Icon* is toggleable to temporarily disable the filter anytime.
 
 <img src="../img/enable_layer_filter.gif" />
+
+### Layer Filter Persistence
+
+Once the filter has been saved the filter becomes **persistent** along with the other layer options and inside the map object on map save.
+
+If you try to retrieve the features information through a click on the map, the filter you have created is applied to the content you get:
+
+<img src="../img/get_filtered_features_info.gif" />
+
+The layer [Attributes Table](attributes-table.md) also takes the filter into account:
+
+<img src="../img/filtered_features_grid.png" />
+
+Any additional filter you define using the [Advanced Filtering](attributes-table.md#advanced-filtering) tool or the *Quick Filter* will overlap the layer filter.  
+*Layer Filter* will go in *`AND`* with *Advanced Filtering*:
+
+<img src="../img/filtered_advanced_filtering.gif" />
+
+*Layer Filter* will go in *`AND`* with *Quick Filter*:
+
+<img src="../img/filtered_quick_filter.gif" />
+
+When saving a map the *Layer Filter* is saved along with it, so if you reload the map the filter will still be active.
 
 Modifying a Layer Filter
 ------------------------
