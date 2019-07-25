@@ -29,11 +29,7 @@ class Section extends React.Component {
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
         viewWidth: PropTypes.number,
-        excludeClassName: PropTypes.string,
-        needsUpdate: PropTypes.number,
-        onAdd: PropTypes.func,
-        onEdit: PropTypes.func,
-        onUpdate: PropTypes.func
+        excludeClassName: PropTypes.string
     };
 
     static defaultProps = {
@@ -41,11 +37,7 @@ class Section extends React.Component {
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
-        mode: Modes.VIEW,
-        needsUpdate: -1,
-        onUpdate: () => { },
-        onEdit: () => {},
-        onAdd: () => { }
+        mode: Modes.VIEW
     };
 
     state = {

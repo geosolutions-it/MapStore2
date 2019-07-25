@@ -18,7 +18,7 @@ let INITIAL_STATE = {
 
     }
 };
-
+/*
 // TEST STUFF: uncomment to use test data. TODO: delete when build system is active
 const createSampleSection = (id) => ({
     type: 'paragraph',
@@ -46,6 +46,7 @@ INITIAL_STATE = {
         sections: Array.from(Array(10).keys()).map(v => createSampleSection(`${v}`))
     }
 };
+*/
 
 /**
  * Reducer that manage state for geostory plugins. Example:
@@ -81,27 +82,14 @@ INITIAL_STATE = {
  *             "id": "col1",
  *             "type": "column",
  *             "background": {},
- *             "contents": [
- *               {
- *                 "type": "text"
- *               },
- *               {
- *                 "type": "media"
- *               }
+ *             "contents": [{"type": "text"}, {"type": "media" }]
  *             ]
  *           },
  *           {
  *             "id": "col2",
  *             "type": "column",
  *             "background": {},
- *             "contents": [
- *               {
- *                 "type": "text"
- *               },
- *               {
- *                 "type": "media"
- *               }
- *             ]
+ *             "contents": [{"type": "text"}, {"type": "media" }]
  *           }
  *         ]
  *       }
@@ -116,7 +104,7 @@ export default (state = INITIAL_STATE, action) => {
             return set('mode', action.mode, state);
         }
         case SET_CURRENT_STORY: {
-            return set('currentStory', action.story);
+            return set('currentStory', action.story, state);
         }
         default:
             return state;

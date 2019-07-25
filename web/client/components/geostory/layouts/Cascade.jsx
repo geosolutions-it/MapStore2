@@ -9,6 +9,7 @@ import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
 import emptyState from '../../misc/enhancers/emptyState';
 
+// Apply Empty Icon for empty state - TODO: improve look and feel
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
     () => ({
@@ -29,10 +30,7 @@ const {Modes} = require('../../../utils/GeoStoryUtils');
 
 export default ({
     mode = Modes.VIEW,
-    sections = [],
-    onUpdate = () => {},
-    onEdit = () => {},
-    onAdd = () => {}
+    sections = []
 }) => (<BorderLayout className="ms-cascade-story">
     <ContainerDimensions sections={sections}>
         {({ width, height }) =>
@@ -47,9 +45,6 @@ export default ({
                                     viewWidth={width}
                                     type={sectionType}
                                     mode={mode}
-                                    onAdd={onAdd}
-                                    onEdit={onEdit}
-                                    onUpdate={onUpdate}
                                     contents={contents}
                                 />
                             );

@@ -1,5 +1,6 @@
 {
-  "description": "Sample stoty with 1 paragraph and 1 immersive section, two columns",
+  "description": "Sample story with 1 paragraph and 1 immersive section, two columns",
+  "type": "cascade",
   "sections": [
     {
       "type": "paragraph",

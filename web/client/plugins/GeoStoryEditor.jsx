@@ -9,6 +9,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { createPlugin } from '../utils/PluginsUtils';
+
 import {
     currentStorySelector,
     modeSelector
@@ -24,7 +26,7 @@ const GeoStoryEditor = ({
     story = {}
 }) => (<div
     key="left-column"
-    className="ms-geostory-left-panel"
+    className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
         story={story}
@@ -33,16 +35,21 @@ const GeoStoryEditor = ({
         />
 </div>
 );
-export const GeoStoryEditorPlugin = connect(
-    createStructuredSelector({
-        mode: modeSelector,
-        story: currentStorySelector
-    }), {
-        setEditingMode: setEditing
-
+/**
+ * Plugin for GeoStory side panel editor
+ * @name GeoStoryEditor
+ * @memberof plugins
+ */
+export default createPlugin('GeoStoryEditor', {
+    component: connect(
+        createStructuredSelector({
+            mode: modeSelector,
+            story: currentStorySelector
+        }), {
+            setEditingMode: setEditing
+        }
+    )(GeoStoryEditor),
+    reducers: {
+        geostory
     }
-)(GeoStoryEditor);
-
-export const reducers = {
-    geostory
-};
+});
