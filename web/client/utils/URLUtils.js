@@ -41,11 +41,12 @@ export const sameQueryParams = ( q1 = "", q2 = "") => {
 };
 
 /**
- * Compares two url to check if are the same
+ * Compares two url to check if are the same. In case of multi-URL (array of URLs)
+ * passed as parameter, the function will compare the first element of the array with the other URL.
  * @function
  * @memberof utils.URLUtils
- * @param  {string} u1 the first URL to compare
- * @param  {string} u2 the second URL to compare with
+ * @param  {string|string[]} u1 the first URL to compare (or an array of URLs)
+ * @param  {string!string[]} u2 the second URL to compare with (or an array of URLs)
  * @return {boolean} true when urls are the same else false
  */
 export const isSameUrl = (u1, u2) => {
