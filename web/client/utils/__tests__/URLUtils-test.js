@@ -38,7 +38,7 @@ describe('URLUtils', () => {
     });
     it('test isSameUrl with array', () => {
         expect(isSameUrl(url3, [url4])).toBeTruthy();
-        expect(isSameUrl(url3, [url4])).toBeTruthy();
+        expect(isSameUrl(url3, [url2])).toBeFalsy();
     });
     it('test isSameUrl with one null', () => {
         const data = isSameUrl(url3);

@@ -31,7 +31,7 @@ export const sameQueryParams = ( q1 = "", q2 = "") => {
     if (q1 === q2) {
         return true;
     }
-    // if both empty string, false or undefined, means it's empty
+    // if both "", false or undefined, means they are both empty query strings
     if (!q1 && !q2) {
         return true;
     }
