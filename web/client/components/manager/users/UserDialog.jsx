@@ -114,6 +114,7 @@ class UserDialog extends React.Component {
                     helpText="Password must contain at least 6 characters"/>
                   </ControlLabel>
                   <FormControl ref="newPassword"
+                   inputRef={node => this.newPasswordField = node}
                    key="newPassword"
                    type="password"
                    name="newPassword"
@@ -124,6 +125,7 @@ class UserDialog extends React.Component {
               <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") }>
                   <ControlLabel><Message msgId="user.retypePwd"/>{' '}<span style={{ fontWeight: 'bold' }}>*</span></ControlLabel>
                   <FormControl ref="confirmPassword"
+                      inputRef={node => this.confirmPasswordField = node}
                       key="confirmPassword"
                       name="confirmPassword"
                       type="password"
@@ -204,7 +206,7 @@ class UserDialog extends React.Component {
               onClick={() => this.props.onSave(this.props.user)}
               disabled={!this.isValid() || this.isSaving()}>
               {this.renderSaveButtonContent()}</Button>,
-          <Button key="close" bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button>
+          <Button key="close" bsSize={this.props.buttonSize} bsSize="small" onClick={this.close}><Message msgId="close"/></Button>
         ];
     };
 
@@ -247,6 +249,12 @@ class UserDialog extends React.Component {
               {this.renderButtons()}
           </div>
       </Dialog>);
+    }
+
+    close = () => {
+        this.props.onClose();
+        this.newPasswordField.value = '';
+        this.confirmPasswordField.value = '';
     }
 
     isMainPasswordValid = (password) => {
