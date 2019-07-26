@@ -4,21 +4,26 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
+import csw from '../api/CSW';
+import wms from '../api/WMS';
+import wmts from '../api/WMTS';
 var API = {
-    csw: require('../api/CSW'),
-    wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
+    csw,
+    wms,
+    wmts
 };
 
-const {addLayer: addNewLayer, changeLayerProperties} = require('./layers');
+import {addLayer as addNewLayer, changeLayerProperties} from './layers';
 
-const LayersUtils = require('../utils/LayersUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
-const {find} = require('lodash');
-const {authkeyParamNameSelector} = require('../selectors/catalog');
+import * as LayersUtils from '../utils/LayersUtils';
+import * as ConfigUtils from '../utils/ConfigUtils';
+import {find} from 'lodash';
+import {authkeyParamNameSelector} from '../selectors/catalog';
 
+export const ADD_LAYERS_MAPVIEWER_URL = 'CATALOG:ADD_LAYERS_MAPVIEWER_URL';
+export const LAYER_SEARCH = 'CATALOG:LAYER_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
 export const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
@@ -46,6 +51,24 @@ export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
 
+export function addLayersMapViewerUrl(layers = [], sources = []) {
+    return {
+        type: ADD_LAYERS_MAPVIEWER_URL,
+        layers,
+        sources
+    };
+}
+export function layerSearch({format, url, startPosition, maxRecords, text, options} = {}) {
+    return {
+        type: LAYER_SEARCH,
+        format,
+        url,
+        startPosition,
+        maxRecords,
+        text,
+        options
+    };
+}
 export function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
