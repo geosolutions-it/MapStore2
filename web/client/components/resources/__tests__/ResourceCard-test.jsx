@@ -78,8 +78,8 @@ describe('This test for ResourceCard', () => {
         expect(spyonEdit.calls.length).toEqual(1);
         // wait for confirm
         expect(spyonDelete.calls.length).toEqual(0);
-        expect(document.querySelector('.modal-details-sheet-confirm')).toExist();
-        const confirmBtn = document.querySelectorAll('.modal-footer .btn-default')[1];
+        expect(document.querySelector('.modal-dialog')).toExist();
+        const confirmBtn = document.querySelectorAll('.modal-footer .btn-primary')[0];
         expect(confirmBtn).toExist();
         TestUtils.Simulate.click(confirmBtn);
         expect(spyonDelete.calls.length).toEqual(1);

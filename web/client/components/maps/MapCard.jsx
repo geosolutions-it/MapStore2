@@ -154,7 +154,16 @@ class MapCard extends React.Component {
                         left: 0 }} >
                         <FitIcon glyph={this.props.map.icon} />
                     </div> : null}
-               <ConfirmModal ref="deleteMapModal" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
+               <ConfirmModal
+               ref="deleteMapModal"
+               show={this.state ? this.state.displayDeleteDialog : false}
+               onHide={this.close}
+               onClose={this.close}
+               onConfirm={this.onConfirmDelete}
+               titleText={this.props.map.title || this.props.map.name || <Message msgId="resources.deleteConfirmTitle" />}
+               confirmText={<Message msgId="yes" />}
+               cancelText={<Message msgId="no" />}
+               body={<Message msgId="resources.deleteConfirmMessage" />} />
            </GridCard>
         );
     }

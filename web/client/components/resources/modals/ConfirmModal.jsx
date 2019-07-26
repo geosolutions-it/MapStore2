@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Portal = require('../../misc/Portal');
-const ResizableModal = require('../../misc/ResizableModal');
+const Modal = require('../../misc/Modal');
 const Message = require('../../I18N/Message');
+const { Button } = require('react-bootstrap');
 
 module.exports = ({
     title = <Message msgId="warning" />,
@@ -17,31 +17,38 @@ module.exports = ({
     onClose = () => {},
     onConfirm = () => {},
     show,
-    children
-
+    children,
+    className = '',
+    buttonSize,
+    running = false
 }) => {
-    return (<Portal>
-        <ResizableModal
-            size="xs"
-            clickOutEnabled={false}
-            showClose={false}
-            title={title}
-            bodyClassName="modal-details-sheet-confirm"
-            show={show}
-            buttons={[{
-                text: cancelText,
-                onClick: () => onClose()
-            }, {
-                text: confirmText,
-                onClick: () => {
-                    onConfirm();
-                }
-            }]}>
-            <div className="ms-alert">
-                <span className="ms-alert-center">
-                    {children}
-                </span>
-            </div>
-        </ResizableModal>
-    </Portal>);
+    const footer = (<span role="footer"><div style={{"float": "left"}}></div>
+    <Button
+        disabled={running}
+        className={className}
+        key="confirmButton"
+        bsStyle="primary"
+        bsSize={buttonSize}
+        onClick={() => {
+            onConfirm();
+        }}>{confirmText}</Button>
+    {<Button
+        key="cancelButton"
+        bsSize={buttonSize}
+        disabled={running}
+        onClick={onClose}>{cancelText}</Button>}
+    </span>);
+    return (
+        <Modal show={show} onHide={onClose}>
+            <Modal.Header key="dialogHeader" closeButton>
+              <Modal.Title>{title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {children}
+            </Modal.Body>
+            <Modal.Footer>
+                  {footer}
+            </Modal.Footer>
+        </Modal>);
+
 };
