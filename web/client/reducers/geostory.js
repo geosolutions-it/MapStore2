@@ -40,25 +40,29 @@ const createSampleSection = (id) => ({
         }
     ]
 });
+*/
 INITIAL_STATE = {
     currentStory: {
         type: 'cascade',
         sections: Array.from(Array(10).keys()).map(v => createSampleSection(`${v}`))
     }
 };
-*/
 
 /**
  * Reducer that manage state for geostory plugins. Example:
  * @memberof reducers
  * @function
  * @name geostory
+ * @param state the application state
+ * @param {string} state.mode the mode ('view' or 'edit')
+ * @param {object} state.currentStory the current story.
+ *
  * @example
  * {
  *     "mode": "edit", // 'edit' or 'view',
  *     "currentStory": {
- *     // sessions
- *     "sessions": [
+ *     // sections
+ *     "sections": [
  *       {
  *         "type": "paragraph", // each session has a type
  *         "id": "SomeID",

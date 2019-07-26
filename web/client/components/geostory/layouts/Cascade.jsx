@@ -34,7 +34,7 @@ export default ({
 }) => (<BorderLayout className="ms-cascade-story">
     <ContainerDimensions sections={sections}>
         {({ width, height }) =>
-            <div style={{ position: 'absolute', width: '100%', height: '100%', overflowY: 'auto'}}>
+            <div className="sections-container">
                     {
                         sections.map(({ contents = [], id: sectionId, type: sectionType }) => {
                             return (

@@ -48,11 +48,7 @@ class Section extends React.Component {
         const SectionType = types[this.props.type] || types.UNKNOWN;
         return (
             <div
-                className={`ms-${this.props.storyType}-section${this.props.type ? ` ms-${this.props.type}` : ''}`}
-                style={{
-                    position: 'relative',
-                    transform: 'translate3d(0px, 0px, 0px)'
-                }}>
+                className={`ms-${this.props.storyType}-section${this.props.type ? ` ms-${this.props.type}` : ''}`}>
                 <SectionType {...this.props}/>
                 {/* TODO: add add section Tool */}
             </div>

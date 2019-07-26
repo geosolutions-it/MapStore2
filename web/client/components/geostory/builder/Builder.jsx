@@ -56,11 +56,8 @@ class Builder extends React.Component {
                 className="ms-geostory-builder"
                 header={
                     <div
-                        className="text-center"
-                        style={{
-                            padding: '8px 16px',
-                            borderBottom: '1px solid #ddd'
-                        }}>
+                        className="text-center ms-geostory-builder-header"
+                        >
                         <Toolbar
                             btnDefaultProps={{
                                 className: 'square-button-md',

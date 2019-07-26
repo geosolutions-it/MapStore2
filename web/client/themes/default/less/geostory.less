@@ -11,6 +11,10 @@
 
 .ms-geostory-builder {
     width: 400px;
+    .ms-geostory-builder-header {
+        padding: 8px 16px;
+        border-bottom: 1px solid #ddd;
+    }
     > .ms2-border-layout-body > .ms2-border-layout-content {
         position: relative;
     }
@@ -32,6 +36,15 @@
     .empty-state-container {
         margin: auto;
     }
+    .section-preview {
+        .section-preview-icon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #dddddd;
+            display: flex;
+        }
+    }
 }
 .msSideGrid {
     margin: 8px 16px;
@@ -52,6 +65,11 @@
     > .ms2-border-layout-body > .ms2-border-layout-content {
         position: relative;
         overflow: hidden;
+    }
+    .sections-container {
+        position: absolute;
+        width: 100%;
+        height: 100%; overflow-y: auto;
     }
 }
 
