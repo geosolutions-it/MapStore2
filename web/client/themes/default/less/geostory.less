@@ -1,0 +1,112 @@
+#page-geostory{
+    position: absolute;
+    #home-button {
+        float: right;
+    }
+    #mapstore-navbar-container {
+        margin-bottom: 0;
+        z-index: 100;
+    }
+}
+
+.ms-geostory-builder {
+    width: 400px;
+    .ms-geostory-builder-header {
+        padding: 8px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+    > .ms2-border-layout-body > .ms2-border-layout-content {
+        position: relative;
+    }
+    .msSideGrid {
+        margin: 8px 16px;
+        width: ~"calc(100% - 32px)";
+        position: relative;
+        .mapstore-side-card:hover {
+            transform: unset;
+        }
+        .mapstore-side-card {
+            // wrong position on drag event of image overlay
+            // but this cause issue when scroll bar disappear
+            .erd_scroll_detection_container  {
+                display: none;
+            }
+        }
+    }
+    .empty-state-container {
+        margin: auto;
+    }
+    .section-preview {
+        .section-preview-icon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #dddddd;
+            display: flex;
+        }
+    }
+}
+.msSideGrid {
+    margin: 8px 16px;
+    width: ~"calc(100% - 32px)";
+    position: relative;
+    .mapstore-side-card:hover {
+        transform: unset;
+    }
+}
+
+.ms-cascade-story {
+    .ms-cascade-story-header {
+        .shadow-soft;
+        z-index: 2;
+        background-color: @ms2-color-background;
+        padding: 8px;
+    }
+    > .ms2-border-layout-body > .ms2-border-layout-content {
+        position: relative;
+        overflow: hidden;
+    }
+    .sections-container {
+        position: absolute;
+        width: 100%;
+        height: 100%; overflow-y: auto;
+    }
+}
+
+.ms-geostory-editor {
+    .shadow-soft;
+    z-index: 2;
+}
+
+.ms-geostory-layout {
+    position: absolute;
+    top: unset;
+    z-index: 5;
+    .msSideGrid {
+        position: relative;
+    }
+}
+
+.ms-media-modal {
+    &-layout {
+        > .ms2-border-layout-body > .ms2-border-layout-content {
+            position: relative;
+            margin: 8px;
+            .ms-background > * {
+                .shadow-far;
+            }
+        }
+    }
+    &.ms-media-modal-video,
+    &.ms-media-modal-map {
+        .ms-media-modal-layout {
+            > .ms2-border-layout-body > .ms2-border-layout-content {
+                position: relative;
+                margin: 0;
+                .ms-background > * {
+                    .box-shadow(none);
+                }
+            }
+        }
+    }
+}
