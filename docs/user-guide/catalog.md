@@ -3,12 +3,12 @@
 
 The Catalog Service for the Web (CSW) is an OGC Standard to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
-In [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) the Catalog offers demo services that allow you to extract the data and add them to the map from GeoServer or to create connections to other Geoportal services.
+In [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) the Catalog offers demo services that allow you to extract the data and add them to the map from GeoServer or to create connections to other geospatial services (supported services are WMS, WMTS and CSW).
 
 Adding Layers from Demo Services
 --------------------------------
 
-CSW, WMS and WMTS Demo Services are available by default allowing you to import layers from GeoServer and to add them to your map.
+CSW, WMS and WMTS Demo Services are available by default allowing you to import layers from the GeoSolutions GeoServer and to add them to your map.
 
 Starting from a new map or an already existing map:
 

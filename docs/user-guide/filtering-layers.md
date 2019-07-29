@@ -2,7 +2,7 @@
 ******************
 
 When using vector layers it might be useful to work with a subset of features.
-About that, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) let you set up a **Layer Filter** that acts directly on a layer coming from GeoServer and filter its content upfront.  
+About that, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) let you set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.  
 The map will immediately update when a filter is created and all other tools will take it into consideration when used. More over, the filter is saved into the map context so if you save it the filter will apply when you open the map next time.
 
 Creating a new Layer Filter
