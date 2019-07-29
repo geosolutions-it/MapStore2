@@ -50,6 +50,7 @@ pages:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
       - Managing Layer Settings: 'user-guide/layer-settings.md'
+      - Filtering Layers: 'user-guide/filtering-layers.md'
       - Attribute Table: 'user-guide/attributes-table.md'
       - Creating Widgets: 'user-guide/widgets.md'
       - Menu Bar: 'user-guide/menu-bar.md'
