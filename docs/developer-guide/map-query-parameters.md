@@ -40,7 +40,7 @@ Example:
 For more details check out the [zoomToExtent](https://mapstore2.geo-solutions.it/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
 #### Map info
-It performs a [GetFeature](https://docs.geoserver.org/stable/en/user/services/wfs/reference.html#getfeature) request on the specified layer and then a [GetFeatureInfo](https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo) by taking a poin from teh retrieved featurs's geometry. This action can be used only for existing maps (map previously created).
+It performs a [GetFeature](https://docs.geoserver.org/stable/en/user/services/wfs/reference.html#getfeature) request on the specified layer and then a [GetFeatureInfo](https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo) by taking a point from the retrieved features's geometry. This action can be used only for existing maps (map previously created).
 
 With the GetFeature request it takes the first coordinate of the geometry of the first retrieved feature; that coordinates are then used for an usual GFI (WMS GetFeatureInfo) request by limiting it to the specified layer.
 
