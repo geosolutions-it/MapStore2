@@ -120,6 +120,6 @@ After adding a layer, several options can be accessed from the TOC allowing you 
 The remaining tools will be faced in detail in separate sections:
 
 *  <img src="../img/properties.jpg" style="width:30px;"/> [Layer Settings](layer-settings.md): allows you to manage the layers in groups, to set the display mode and the style of the layers, and to set the format of the feature info.
-*  <img src="../img/filter-layer.png" style="max-width:30px;"/> [Filter Layer](filtering-layers.md): acts directly on a layer coming from GeoServer and filter its content upfront.
+*  <img src="../img/filter-layer.png" style="max-width:30px;"/> [Filter Layer](filtering-layers.md): acts directly on a layer and filter its content upfront (this works only on layers with WFS available).
 *  <img src="../img/attributes-table.jpg" /> [Attribute Table](attributes-table.md): allows you to visualize, query, edit and analyze tabular data related to the layer.
 * <img src="../img/widgets.jpg" /> [Widgets](widgets.md): allows you to create charts, texts, tables widgets and add them to the map.

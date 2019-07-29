@@ -33,16 +33,22 @@ In order to add a new annotation:
 * **Click** on the map to define the polygon vertices.
 
     <img src="../img/polygon_annotation_drawing.gif" />
+	
 
     You can also insert new vertices, or edit existing ones, through the coordinates editor using `Decimal` or `Aeronautical` formats.
+	
 
     <img src="../img/coordinates_format_switcher.png" style="max-width:600px;" />
+	
 
     New vertices can be also added using the <img src="../img/++.jpg" style="max-width:30px;" /> button and typing the `latitude` and `longitude` values (see the picture below).
+	
 
     <img src="../img/add_vertex_button.png" style="max-width:450px;" />
+	
 
     Invalid vertices are notified with a red exclamation point icon.
+	
 
     <img src="../img/invalid_vertex.png" style="max-width:600px;" />
 
@@ -59,7 +65,7 @@ The annotations layer will be added to the TOC and the annotation will be visibl
 Styling Annotations
 -------------------
 
-Based on which type of annotation was chosen, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the <img src="../img/annotation-draw.jpg" style="max-width:30px;" /> button of the annotation toolbar.
+Based on which type of annotation was chosen, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the <img src="../img/annotation-draw.jpg" style="max-width:30px;" /> button of the annotation toolbar. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
 
 <img src="../img/annotations_toolbar.png" style="max-width:500px;"/>
 
@@ -75,7 +81,7 @@ MapStore provides two types of *Marker* annotations, so you have to choose what 
 
     Choose the `Shape`, `Color` and `Icon` that best fit your needs.
 
-* *Symbol* types can  have different `Shape` and `Size`, a `Fill color` with a customizable `Opacity` level (%), a `Stroke` of different types (continuous, dashed, etc) and customizable `Color`, `Opacity` and `Width`.
+* *Symbol* types can  have different `Shape` and `Size`, a `Fill color` with a customizable `Opacity` level (%), a `Stroke` of different types (continuous, dashed, etc) and customizable `Color`, `Opacity` and `Width`. Only few symbols are provided by default in MapStore but a custom list of symbols can be configured. 
 
     <img src="../img/symbol_style_editor.png" style="max-width:600px;"/>
 
@@ -99,7 +105,7 @@ See the example below to better understand these options.
 
 *Text* annotations are a bit different from the geometric ones. They display a formatted text on a given point of the map.  
 The style editor lets you customize the text `Font` (`Family`, `Size`, `Style`, `Weight`) and the `Alignment` (`left`, `center` or `right`).
-It also treat the text as a geometric entity, so you can choose a `Fill color` and its `Opacity`, the `Stroke` type, its `Color`, `Opacity` and `Width`. Take a look at the following example.
+You can also choose the text `Fill color` and its `Opacity`, the `Stroke` type, its `Color`, `Opacity` and `Width`. Take a look at the following example.
 
 <img src="../img/text_annotation_editor.png" style="max-width:500px;"/>
 
