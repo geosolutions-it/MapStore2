@@ -20,9 +20,9 @@ let INITIAL_STATE = {
 };
 /*
 // TEST STUFF: uncomment to use test data. TODO: delete when build system is active
-const createSampleSection = (id) => ({
-    type: 'paragraph',
-    id: id,
+const createSampleSection = () => [{
+    type: 'title',
+    id: '000',
     title: 'Abstract',
     contents: [
         {
@@ -39,12 +39,52 @@ const createSampleSection = (id) => ({
                     main elevation of the observatory or of the highest operational instrument if that information is available.</p>`
         }
     ]
-});
+}, {
+    type: 'paragraph',
+    id: '001',
+    title: 'Abstract',
+    contents: [
+        {
+            id: "SomeID",
+            type: 'text',
+            background: {
+                // ...
+            },
+            // For immersive there will be also a background entry
+            html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,
+                    considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories
+                    with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes
+                    or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the
+                    main elevation of the observatory or of the highest operational instrument if that information is available.</p>`
+        }
+    ]
+}, {
+    type: 'immersive',
+    id: '002',
+    title: 'Immersive',
+    contents: [
+        {
+            id: "SomeID",
+            type: 'text',
+            background: {
+                // ...
+            },
+            // For immersive there will be also a background entry
+            html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,
+                    considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories
+                    with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes
+                    or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the
+                    main elevation of the observatory or of the highest operational instrument if that information is available.</p>`
+        }
+    ]
+}];
 
 INITIAL_STATE = {
     currentStory: {
         type: 'cascade',
-        sections: Array.from(Array(10).keys()).map(v => createSampleSection(`${v}`))
+        // Array().keys() DON'T WORK IN IE 11 ( Array.from(Array(10).keys()) )
+        // Use Object.keys([ ...new Array(10) ]) instead
+        sections: createSampleSection()
     }
 };
 */

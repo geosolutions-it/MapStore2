@@ -1,3 +1,6 @@
+@ms-story-bg: @ms2-color-background;
+@ms-story-bg-grey: @ms2-color-shade-lighter;
+
 #page-geostory{
     position: absolute;
     #home-button {
@@ -9,6 +12,62 @@
     }
 }
 
+.ms-sections {
+    &-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+    }
+}
+
+.ms-section {
+    position: relative;
+    background-color: @ms-story-bg;
+    z-index: 1;
+    &-background {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: 0;
+        overflow-y: visible;
+        &-container {
+            z-index: 0;
+            width: 100%;
+            overflow: hidden;
+        }
+    }
+    
+    &-contents {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+    }
+    
+    &-preview {
+        &-icon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: @ms-story-bg-grey;
+            display: flex;
+        }
+    }
+    /*
+    &-paragraph {
+
+    }
+    */
+}
+
+.ms-content {
+    &-text {
+        padding: 10px;
+    }
+}
+
+/*
 .ms-geostory-builder {
     width: 400px;
     .ms-geostory-builder-header {
@@ -110,3 +169,4 @@
         }
     }
 }
+*/

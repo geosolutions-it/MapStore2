@@ -10,7 +10,7 @@ import React from 'react';
 
 const Text = (props) => {
     return (
-        <div className="ms-geostory-content-text" style={{margin: 20}} onClick={() => {
+        <div className="ms-content ms-content-text" onClick={() => {
                 // TODO: enable editing
         }} dangerouslySetInnerHTML={{ __html: props.html }} />
     );
