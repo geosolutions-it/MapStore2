@@ -20,4 +20,6 @@ Switching *CRS* is very simple:
 
     <img src="../img/CRS_selector.gif" />
 
-This selection will be saved along with the map.
+In order to identify the desired CRS, you can also filter the CRS list by typing in a search input field located in the bottom part of the selector. This selection will be saved along with the map.
+
+note: the list of CRSs is customizable by MapStore's configuiration.
