@@ -7,21 +7,39 @@
  */
 import React from "react";
 import Content from '../../contents/Content';
+import { compose, withState, withProps, withHandlers } from 'recompose';
+import { findIndex, get } from "lodash";
+
+const holdBackground = compose(
+    withState('backgroundId', "setBackgroundId", undefined),
+    withHandlers({
+        onVisibilityChange: ({ setBackgroundId = () => { } }) => ({ visible, id }) => visible && setBackgroundId(id)
+    }),
+    withProps(({ backgroundId, contents = [] }) => ({
+        background: get(contents[findIndex(contents, { id: backgroundId }) || 0], 'background') || {
+            type: 'none'
+        }
+    }))
+);
 
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ className = '', contents, type, mode }) => (
+const Immersive = ({ className = '', contents, type, mode, background, onVisibilityChange = () => {} }) => (
     <div
-        className={className}>
+        className={`${className} ms-section-immersive`}>
         <div className="ms-section-background">
             <div className="ms-section-background-container">
-                <img src="https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg"></img>
+                {background ? <img src={background.src}></img> : null}
             </div>
         </div>
         <div className={`ms-section-contents ms-section-contents-${type}`}>
-            {contents.map((props) => (<Content mode={mode} {...props}/>))}
+            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props}/>))}
         </div>
     </div>
 );
+
+export default compose(
+    holdBackground
+)(Immersive);

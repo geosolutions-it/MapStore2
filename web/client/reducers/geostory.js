@@ -18,7 +18,7 @@ let INITIAL_STATE = {
 
     }
 };
-/*
+
 // TEST STUFF: uncomment to use test data. TODO: delete when build system is active
 const createSampleSection = () => [{
     type: 'title',
@@ -67,7 +67,38 @@ const createSampleSection = () => [{
             id: "SomeID",
             type: 'text',
             background: {
-                // ...
+                type: "media",
+                mediaType: "image",
+                src: 'https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg'
+
+            },
+            // For immersive there will be also a background entry
+            html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,
+                    considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories
+                    with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes
+                    or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the
+                    main elevation of the observatory or of the highest operational instrument if that information is available.</p>`
+        }, {
+            id: "SomeID2",
+            type: 'text',
+            background: {
+                type: "media",
+                mediaType: "image",
+                src: 'http://lh5.googleusercontent.com/-6mQ_Rgsis24/Ux3nf2hIQ9I/AAAAAAAABac/1WttfAi5TzA/s1920/sfondo-wallpaper-spazio-universo-0003.jpg'
+            },
+            // For immersive there will be also a background entry
+            html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,
+                    considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories
+                    with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes
+                    or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the
+                    main elevation of the observatory or of the highest operational instrument if that information is available.</p>`
+        }, {
+            id: "SomeID3",
+            type: 'text',
+            background: {
+                type: "media",
+                mediaType: "image",
+                src: 'https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg'
             },
             // For immersive there will be also a background entry
             html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,
@@ -87,7 +118,7 @@ INITIAL_STATE = {
         sections: createSampleSection()
     }
 };
-*/
+
 
 /**
  * Reducer that manage state for geostory plugins. Example:

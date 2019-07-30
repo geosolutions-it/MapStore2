@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { lists, Modes, StoryTypes, SectionTypes} from '../../../../utils/GeoStoryUtils';
 import Immersive from './Immersive';
 import Paragraph from './Paragraph';

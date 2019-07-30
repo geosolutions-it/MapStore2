@@ -8,11 +8,11 @@
 import React from 'react';
 
 
-const Text = (props) => {
+const Text = ({ html, inViewRef}) => {
     return (
-        <div className="ms-content ms-content-text" onClick={() => {
+        <div ref={inViewRef} className="ms-content ms-content-text" onClick={() => {
                 // TODO: enable editing
-        }} dangerouslySetInnerHTML={{ __html: props.html }} />
+        }} dangerouslySetInnerHTML={{ __html: html }} />
     );
 };
 export default Text;

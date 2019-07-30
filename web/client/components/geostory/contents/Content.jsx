@@ -6,9 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Text from './Text';
+import TextB from './Text';
+import { compose, withHandlers } from 'recompose';
+import withIntersectionObserver from '../../misc/enhancers/withIntersectionObserver';
 
-const DummyComponent = ({type}) => <div className="ms-geostory-content-unknown">{`warning: unknown content type "${type}"`}</div>;
+const enhanceContents = compose(
+    withHandlers({
+        onVisibilityChange: ({ id, onVisibilityChange = () => {} } = {}) => (visible, element) => onVisibilityChange({ id, visible, element })
+    }),
+    withIntersectionObserver()
+);
+
+const Text = enhanceContents(TextB);
+const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-geostory-content-unknown">{`warning: unknown content type "${type}"`}</div>;
+
+
 /**
  * Returns the Component to use for the given type
  * @param {string} type the type of the Content
