@@ -200,7 +200,7 @@
     "rxjs": "5.1.1",
     "screenfull": "4.0.0",
     "shpjs": "3.4.2",
-    "stickybits": "^3.6.6",
+    "stickybits": "3.6.6",
     "tinycolor2": "1.4.1",
     "turf-bbox": "3.0.10",
     "turf-buffer": "3.0.10",
