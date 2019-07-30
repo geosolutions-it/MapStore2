@@ -9,6 +9,7 @@ import React from "react";
 import Content from '../../contents/Content';
 import { compose, withState, withProps, withHandlers } from 'recompose';
 import { findIndex, get } from "lodash";
+import Background from './Background';
 
 const holdBackground = compose(
     withState('backgroundId', "setBackgroundId", undefined),
@@ -26,18 +27,18 @@ const holdBackground = compose(
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({ className = '', contents, type, mode, background, onVisibilityChange = () => {} }) => (
-    <div
-        className={`${className} ms-section-immersive`}>
-        <div className="ms-section-background">
-            <div className="ms-section-background-container">
-                {background ? <img src={background.src}></img> : null}
-            </div>
-        </div>
-        <div className={`ms-section-contents ms-section-contents-${type}`}>
+const Immersive = ({contents, mode, background, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
+    <section
+        className="ms-section ms-section-imersive">
+        <Background
+            width={viewWidth}
+            height={viewHeight}>
+            {background ? <img src={background.src}></img> : null}
+        </Background>
+        <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props}/>))}
         </div>
-    </div>
+    </section>
 );
 
 export default compose(

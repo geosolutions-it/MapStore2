@@ -53,11 +53,10 @@ class Section extends React.Component {
         const SectionType = types[this.props.type] || types.UNKNOWN;
         return (
             <SectionType
-                type={this.props.type}
                 mode={this.props.mode}
                 contents={this.props.contents}
-                viewHeight={this.props.viewHeight}
-                className={`ms-section ms-${this.props.storyType}-section${this.props.type ? ` ms-section-${this.props.type}` : ''}`}/>
+                viewWidth={this.props.viewWidth}
+                viewHeight={this.props.viewHeight}/>
         );
     }
 }

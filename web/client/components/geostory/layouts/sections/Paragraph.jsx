@@ -12,11 +12,11 @@ import Content from '../../contents/Content';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ className = '', contents, type, mode }) => (
-    <div
-        className={className}>
-        <div className={`ms-section-contents ms-section-contents-${type}`}>
+export default ({ className = '', contents, mode }) => (
+    <section
+        className="ms-section ms-section-paragraph">
+        <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} {...props}/>))}
         </div>
-    </div>
+    </section>
 );

@@ -18,7 +18,7 @@ const enhanceContents = compose(
 );
 
 const Text = enhanceContents(TextB);
-const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-geostory-content-unknown">{`warning: unknown content type "${type}"`}</div>;
+const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 
 /**

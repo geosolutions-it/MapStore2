@@ -7,22 +7,23 @@
  */
 import React from "react";
 import Content from '../../contents/Content';
+import Background from './Background';
 
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ className = '', contents, type, mode, viewHeight }) => (
-    <div
-        className={className}
+export default ({ className = '', contents, mode, viewWidth, viewHeight }) => (
+    <section
+        className="ms-section ms-section-title"
         style={{ minHeight: viewHeight }}>
-        <div className="ms-section-background">
-            <div className="ms-section-background-container">
+        <Background
+            width={viewWidth}
+            height={viewHeight}>
                 <img src="https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg"></img>
-            </div>
-        </div>
-        <div className={`ms-section-contents ms-section-contents-${type}`}>
+        </Background>
+        <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} {...props}/>))}
         </div>
-    </div>
+    </section>
 );
