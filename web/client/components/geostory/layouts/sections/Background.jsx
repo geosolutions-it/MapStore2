@@ -10,6 +10,11 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import stickySupport from '../../../misc/enhancers/stickySupport';
 
+/**
+ * Background.
+ * This component provides a sticky container inside the Sections.
+ */
+
 class Background extends Component {
 
     static propTypes = {
@@ -40,4 +45,4 @@ class Background extends Component {
         );
     }
 }
-export default stickySupport(Background);
+export default stickySupport()(Background);

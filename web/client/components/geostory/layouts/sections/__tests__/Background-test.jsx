@@ -9,9 +9,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import Story from '../Story';
+import Background from '../Background';
 
-describe('Story component', () => {
+describe('Background component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -21,9 +21,15 @@ describe('Story component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('Story rendering with defaults', () => {
-        ReactDOM.render(<Story />, document.getElementById("container"));
+    it('render and verify the props hight on background container node', () => {
+        const VIEW_HEIGHT = 800;
+        ReactDOM.render(<Background
+            width={1024}
+            height={VIEW_HEIGHT}
+            />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-cascade-story')).toExist();
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        expect(backgroundContainer).toExist();
+        expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
 });

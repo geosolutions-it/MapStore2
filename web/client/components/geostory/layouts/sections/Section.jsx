@@ -17,7 +17,7 @@ const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
     [SectionTypes.PARAGRAPH]: Paragraph,
     [SectionTypes.TITLE]: Title,
-    UNKNOWN: ({type}) => <div className="unknown-session-type">WARNING: unknown session of type {type}</div>
+    UNKNOWN: ({type}) => <div className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
 
 /**

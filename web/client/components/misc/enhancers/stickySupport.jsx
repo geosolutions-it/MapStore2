@@ -10,19 +10,47 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import stickybits from 'stickybits';
 
-export default WrappedComponent =>
+/**
+ * CSS sticky behaviour is replaced with `position: fixed`
+ * only if browser does not support `position: sticky`
+ * this enhancement is based on stickybits library.
+ * @name StickySupport
+ * @memberof components.misc.enhancers
+ * @return {HOC}         An HOC that add sticky support
+ * @example
+ * ```
+ * class Component extends React.Component {
+ *  render() {
+ *   return (
+ *    <div ref="myRefId">
+ *   );
+ *  }
+ * }
+ * const StickyComponent = stickySupport()(Component);
+ * // render
+ * //...
+ * <StickyComponent
+ *  refId="myRefId"
+ *  scrollContainerSelector="#container"
+ *  width={100}
+ *  height={50}/>
+ * ```
+ */
+export default () => WrappedComponent =>
 
     class StickySupport extends Component {
         static propTypes = {
             scrollContainerSelector: PropTypes.string,
             height: PropTypes.number,
-            width: PropTypes.number
+            width: PropTypes.number,
+            refId: PropTypes.string
         };
 
         static defaultProps = {
             scrollContainerSelector: '.ms-sections-container',
             height: 0,
-            width: 0
+            width: 0,
+            refId: 'div'
         };
 
         state = {
@@ -54,8 +82,8 @@ export default WrappedComponent =>
             return (
                 <WrappedComponent
                     ref={cmp => {
-                        if (cmp && cmp.refs && cmp.refs.div) {
-                            this._node = cmp.refs.div;
+                        if (cmp && cmp.refs && cmp.refs[this.props.refId]) {
+                            this._node = cmp.refs[this.props.refId];
                         }
                     }}
                     style={{ ...this.state.style }}
