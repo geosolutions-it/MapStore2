@@ -7,6 +7,7 @@
  */
 import React from "react";
 import { InView } from 'react-intersection-observer';
+import "intersection-observer";
 
 /**
  * Enhancer that adds IntersectionObserver functionalities to trigger appear or disappear events in a scroll context.
