@@ -12,9 +12,9 @@ import withIntersectionObserver from '../../misc/enhancers/withIntersectionObser
 
 const enhanceContents = compose(
     withHandlers({
-        onVisibilityChange: ({ id, onVisibilityChange = () => {} } = {}) => (visible, element) => onVisibilityChange({ id, visible, element })
+        onVisibilityChange: ({ id, onVisibilityChange = () => { } } = {}) => (visible, entry) => onVisibilityChange({ id, visible, entry })
     }),
-    withIntersectionObserver()
+    withIntersectionObserver({ threshold: [0.75]})
 );
 
 const Text = enhanceContents(TextB);

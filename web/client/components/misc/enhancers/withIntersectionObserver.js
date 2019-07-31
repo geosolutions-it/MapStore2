@@ -12,10 +12,11 @@ import "intersection-observer";
 /**
  * Enhancer that adds IntersectionObserver functionalities to trigger appear or disappear events in a scroll context.
  * Returns a component that uses IntersectionObserver to trigger handler. The wrapped component will receive `inView`, `inViewRef` and `inViewEntry` properties.
- * - `inViewRef`: **nust** be attached as ref to the effective component that will need to intercept appear/disappear events.
+ * - `inViewRef`: **must** be attached as ref to the effective component that will need to intercept appear/disappear events.
  * - `inView`: boolean property passed to the contained element that shows if the element is visible or not. Useful to trigger some loading event (e.g. lazy loading of images)
  * - `inViewEntry` the entry object (the same passed to the handler)
  * Uses react-intersection-observer internally.
+ * @memberof components.misc.enhancers
  * @example
  * const CMP = withIntersectionObserver({threshold: 0.5})(({inViewRef, inView}) => <div style={{height: 20}}ref={inViewRef}>{inView}</div> );
  * ReactDOM.render(<div style={{height: 50, overflow: 'auto'}}><div style={{height: 100}}></div><CMP onVisibilityChange={(...args) => console.log(args)} /></div>); //When CMP will be visible, the onVisibilityChange event will be triggered

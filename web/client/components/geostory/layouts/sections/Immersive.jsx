@@ -11,17 +11,20 @@ import { compose, withState, withProps, withHandlers } from 'recompose';
 import { findIndex, get } from "lodash";
 import Background from './Background';
 
+const getContentIndex = (contents, id) => contents[findIndex(contents, { id }) || 0];
+
 const holdBackground = compose(
     withState('backgroundId', "setBackgroundId", undefined),
     withHandlers({
         onVisibilityChange: ({ setBackgroundId = () => { } }) => ({ visible, id }) => visible && setBackgroundId(id)
     }),
     withProps(({ backgroundId, contents = [] }) => ({
-        background: get(contents[findIndex(contents, { id: backgroundId }) || 0], 'background') || {
+        background: get(getContentIndex(contents, backgroundId), 'background') || {
             type: 'none'
         }
     }))
 );
+
 
 /**
  * Paragraph Section Type.
@@ -36,7 +39,7 @@ const Immersive = ({contents, mode, background, onVisibilityChange = () => {}, v
             {background ? <img src={background.src}></img> : null}
         </Background>
         <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props} style={{ minHeight: viewHeight }}/>))}
+            {contents.map((props, i) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} intersectionObserverOptions={i === 0 ? {treshold: 0} : undefined} {...props} style={{ minHeight: viewHeight }}/>))}
         </div>
     </section>
 );
