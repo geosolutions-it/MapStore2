@@ -13,6 +13,23 @@
 }
 
 .ms-geostory-builder {
+    /*
+    overrides for side grid
+    TODO: this style need improvements, missing space between cards and scrollbar
+    */
+    .msSideGrid {
+        position: relative;
+        /*
+        we should not use bootstrap components inside our custom component
+        in particular Row and Col because their behaviours rely on the screen page width
+        */
+        .row {
+            margin: 0;
+        }
+        .col-xs-12 {
+            padding: 0;
+        }
+    }
     .ms-section {
         /*
         Preview card
