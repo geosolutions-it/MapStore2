@@ -12,7 +12,18 @@ General Settings Form
 On the first page of the form, you can change the Title of the layer,
 translate it in several languages, add a description and assign it to a new Layer Group as seen in the [TOC](toc.md).
 
-<img src="../img/general-settings-1.jpg" style="max-width:350px;"/>
+<img src="../img/layer_general_settings.png" style="max-width:500px;"/>
+
+It is also possible to configure the **Tooltip** content displayed when moving the mouse over the TOC elements.
+The *Tooltip* combobox lets you decide what information to display (`Title`, `Description` or both), the *Placement* value indicates the information text position (`Top`, `Right` or `Bottom`).
+
+<img src="../img/tooltip_options.png" style="max-width:350px;"/>
+
+Let's type a *Description* (for example "My first description"), select the `Title and Description` *Tooltip* and the `Right` *Placement*, save this configuration by clicking the *Save* <img src="../img/save_button.png" style="max-width:25px;"/> button and see the results.
+
+<img src="../img/custom_tooltip.png" style="max-width:600px;"/>
+
+So [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) lets you configure a different tooltip for each layer in the TOC.
 
 Display Form
 ------------
