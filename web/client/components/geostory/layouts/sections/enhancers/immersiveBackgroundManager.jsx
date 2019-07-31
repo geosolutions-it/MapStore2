@@ -8,7 +8,10 @@
 import { compose, withState, withProps, withHandlers } from 'recompose';
 import { findIndex, get } from "lodash";
 
-const getContentIndex = (contents, id) => contents[findIndex(contents, { id }) || 0];
+const getContentIndex = (contents, id) => {
+    const index = findIndex(contents, { id });
+    return contents[index === -1 || !index ? 0 : index];
+};
 
 
 /**
