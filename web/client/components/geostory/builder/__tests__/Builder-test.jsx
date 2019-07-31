@@ -1,6 +1,14 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React from 'react';
-const ReactDOM = require('react-dom');
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
 import Builder from '../Builder';
 import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
 
