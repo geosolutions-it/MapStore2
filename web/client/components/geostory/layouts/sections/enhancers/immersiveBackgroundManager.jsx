@@ -10,7 +10,6 @@ import { findIndex, get } from "lodash";
 
 const getContentIndex = (contents, id) => contents[findIndex(contents, { id }) || 0];
 
-
 /**
  * Holds the current background as background property
  * by intercepting onVisibilityChange from components.

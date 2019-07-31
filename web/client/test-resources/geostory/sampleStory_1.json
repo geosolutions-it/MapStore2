@@ -23,7 +23,9 @@
         {
           "id": "col1",
           "type": "column",
-          "background": {},
+          "background": {
+            "id": "BG_col1"
+          },
           "contents": [
             {
               "type": "text"
@@ -36,7 +38,9 @@
         {
           "id": "col2",
           "type": "column",
-          "background": {},
+          "background": {
+            "id": "BG_col2"
+          },
           "contents": [
             {
               "type": "text"
