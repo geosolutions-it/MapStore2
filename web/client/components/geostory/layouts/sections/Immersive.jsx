@@ -25,7 +25,6 @@ const holdBackground = compose(
     }))
 );
 
-
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -39,7 +38,7 @@ const Immersive = ({contents, mode, background, onVisibilityChange = () => {}, v
             {background ? <img src={background.src}></img> : null}
         </Background>
         <div className="ms-section-contents">
-            {contents.map((props, i) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} intersectionObserverOptions={i === 0 ? {treshold: 0} : undefined} {...props} style={{ minHeight: viewHeight }}/>))}
+            {contents.map((props, i) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} intersectionObserverOptions={i === 0 ? {threshold: 0} : undefined} {...props} style={{ minHeight: viewHeight }}/>))}
         </div>
     </section>
 );
