@@ -29,14 +29,11 @@ const createSampleSection = () => [{
             id: "SomeID",
             type: 'text',
             background: {
-                // ...
+                type: "image",
+                src: 'https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80'
             },
             // For immersive there will be also a background entry
-            html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,
-                    considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories
-                    with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes
-                    or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the
-                    main elevation of the observatory or of the highest operational instrument if that information is available.</p>`
+            html: `<h1>Title</h1>`
         }
     ]
 }, {
@@ -67,8 +64,7 @@ const createSampleSection = () => [{
             id: "SomeID",
             type: 'text',
             background: {
-                type: "media",
-                mediaType: "image",
+                type: "image",
                 src: 'https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80'
 
             },
@@ -82,8 +78,7 @@ const createSampleSection = () => [{
             id: "SomeID2",
             type: 'text',
             background: {
-                type: "media",
-                mediaType: "image",
+                type: "image",
                 src: 'http://lh5.googleusercontent.com/-6mQ_Rgsis24/Ux3nf2hIQ9I/AAAAAAAABac/1WttfAi5TzA/s1920/sfondo-wallpaper-spazio-universo-0003.jpg'
             },
             // For immersive there will be also a background entry
@@ -96,8 +91,7 @@ const createSampleSection = () => [{
             id: "SomeID3",
             type: 'text',
             background: {
-                type: "media",
-                mediaType: "image",
+                type: "image",
                 src: 'https://images.unsplash.com/photo-1462331321792-cc44368b8894?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1422&q=80'
             },
             // For immersive there will be also a background entry
