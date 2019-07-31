@@ -254,4 +254,16 @@ describe("Test UserDialog Component", () => {
         expect(retypePassword.children[0].innerHTML).toBe('user.retypePwd');
         expect(retypePassword.children[1].innerHTML).toBe('*');
     });
+
+    it('Test on close dialog, reset password field', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={newUser} />, document.getElementById("container"));
+        expect(comp).toExist();
+        const passwordField = document.querySelector("input[name='newPassword']");
+        const closeBtn = document.querySelector(".btn-default");
+        passwordField.value = 'password';
+        ReactTestUtils.Simulate.click(closeBtn);
+        expect(passwordField.value).toEqual('');
+
+    });
 });

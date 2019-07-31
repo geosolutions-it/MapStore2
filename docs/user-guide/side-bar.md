@@ -38,8 +38,6 @@ The scene will switch from 2D to 3D display mode and you will be guided by a bri
 
 <img src="../img/3D-mode.jpg" style="max-width:600px;" />
 
-
-
 Querying Objects
 ----------------
 
@@ -48,14 +46,47 @@ The Identify tool  <img src="../img/identify.jpg" style="max-width:22px;"/> allo
 * **Add** a layer to the map (e.g. USA Population).
 * **Click** on a feature of the layer added previously. A pop-up page will open on the right showing the requested information and the coordinates of the point.
 
-    <img src="../img/get-info.jpg" style="max-width:500px;" />
+    <img src="../img/get_feature_info.png" />
 
 The returned information are viewed in Text plain format by default. In order to change it:
 
 * **Navigate** into *Settings* from the main menu bar.
 
-    <img src="../img/settings.jpg" style="max-width:500px;" />
+    <img src="../img/settings.png" />
 
-* **Select** from the list menu *Identify response format* another format (e.g. HTML) then **Click** on a feature. The informations will be returned as HTML accordingly.
+* **Select** from the list menu *Identify response format* another format (e.g. HTML) then **Click** on a feature.
 
-    <img src="../img/html-info.jpg" style="max-width:500px;" />
+    <img src="../img/info_formats.png" style="max-width:400px;"/>
+
+* The informations will be returned as HTML accordingly.
+
+    <img src="../img/html_info.png" />
+
+!!! warning
+    This global settings could be overwritten by a layer-specific configuration (see [Feature Info Form](layer-settings.md#feature-info-form)).
+
+Below the point coordinates there are three icons:
+
+* **More Info** <img src="../img/more_info_icon.png" style="max-width:25px;"/> shows a popup window displaying the point address.
+
+    <img src="../img/more_info.png" />
+
+* **Coordinates Editor** <img src="../img/coordinates_editor_icon.png" style="max-width:25px;"/> makes available a tool to perform queries using decimal or aeronautical coordinates (we will explain more in depth this tool in the next paragraph).
+
+* **Highlight Features** <img src="../img/highlight_features_icon.png" style="max-width:25px;"/> highlights the resulting features.
+
+    <img src="../img/highlight_features.png" />
+
+    Using the <img src="../img/zoom-layer.jpg" style="max-width:25px;"/> button it is possible to zoom the highlighted feature.
+
+### Using the Coordinates Editor
+
+You might want to search features starting from their coordinates. The **Coordinates Editor** helps you to have more precision than just clicking on the map, so you can query objects by directly typing in their latitude and longitude.
+
+You can choose between `Decimal` coordinates:
+
+<img src="../img/decimal_coordinates_editor.gif" />
+
+and `Aeronautical` coordinates:
+
+<img src="../img/aeronautical_coordinates_editor.gif" />

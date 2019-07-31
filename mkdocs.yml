@@ -50,6 +50,7 @@ pages:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
       - Managing Layer Settings: 'user-guide/layer-settings.md'
+      - Filtering Layers: 'user-guide/filtering-layers.md'
       - Attribute Table: 'user-guide/attributes-table.md'
       - Creating Widgets: 'user-guide/widgets.md'
       - Menu Bar: 'user-guide/menu-bar.md'
@@ -89,6 +90,7 @@ pages:
     - Plugins:
       - Plugins Architecture: 'developer-guide/plugins-architecture.md'
       - Configuring Plugins: 'developer-guide/plugins-documentation.md'
-    - API:
+    - Communicating with MapStore:
+      - API usage: 'developer-guide/API-usage.md'
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
   - Quick Start: 'quick-start.md'
