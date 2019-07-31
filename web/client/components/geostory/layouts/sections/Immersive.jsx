@@ -7,29 +7,14 @@
  */
 import React from "react";
 import Content from '../../contents/Content';
-import { compose, withState, withProps, withHandlers } from 'recompose';
-import { findIndex, get } from "lodash";
+import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
-
-const getContentIndex = (contents, id) => contents[findIndex(contents, { id }) || 0];
-
-const holdBackground = compose(
-    withState('backgroundId', "setBackgroundId", undefined),
-    withHandlers({
-        onVisibilityChange: ({ setBackgroundId = () => { } }) => ({ visible, id }) => visible && setBackgroundId(id)
-    }),
-    withProps(({ backgroundId, contents = [] }) => ({
-        background: get(getContentIndex(contents, backgroundId), 'background') || {
-            type: 'none'
-        }
-    }))
-);
 
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({contents, mode, background, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
+const Immersive = ({contents = [], mode, background, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
@@ -43,6 +28,4 @@ const Immersive = ({contents, mode, background, onVisibilityChange = () => {}, v
     </section>
 );
 
-export default compose(
-    holdBackground
-)(Immersive);
+export default immersiveBackgroundManager(Immersive);
