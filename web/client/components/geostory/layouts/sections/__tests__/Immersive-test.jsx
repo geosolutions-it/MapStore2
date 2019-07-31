@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 
 import expect from 'expect';
 import Immersive from '../Immersive';
-describe(' component', () => {
+describe('Immersive component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -19,12 +19,6 @@ describe(' component', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
-    });
-    it('Immersive rendering with defaults', () => {
-        ReactDOM.render(<Immersive />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive');
-        expect(el).toExist();
     });
     it('Immersive rendering with defaults', () => {
         ReactDOM.render(<Immersive />, document.getElementById("container"));
