@@ -54,10 +54,10 @@
             overflow-y: auto;
         }
     }
-    /*
-    
-    */
+
     .ms-section {
+        border-bottom: 2px solid red; /* DEBUG BORDER (REMOVE) */
+
         position: relative;
         z-index: 1;
         background-color: @ms-story-bg;
@@ -108,6 +108,21 @@
         */
         &-paragraph {
             background-color: @ms-story-bg;
+        }
+
+        &-immersive {
+            .ms-content-text {
+                border-bottom: 2px solid red; /* DEBUG BORDER (REMOVE) */
+
+                display: flex;
+                p {
+                    width: 50%;
+                    margin: auto;
+                    align-self: center;
+                    background-color: fade(@ms-story-bg, 50%);
+                    padding: 10px;
+                }
+            }
         }
     }
     .ms-content {

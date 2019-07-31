@@ -69,7 +69,7 @@ const createSampleSection = () => [{
             background: {
                 type: "media",
                 mediaType: "image",
-                src: 'https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg'
+                src: 'https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80'
 
             },
             // For immersive there will be also a background entry
@@ -98,7 +98,7 @@ const createSampleSection = () => [{
             background: {
                 type: "media",
                 mediaType: "image",
-                src: 'https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg'
+                src: 'https://images.unsplash.com/photo-1462331321792-cc44368b8894?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1422&q=80'
             },
             // For immersive there will be also a background entry
             html: `<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world,

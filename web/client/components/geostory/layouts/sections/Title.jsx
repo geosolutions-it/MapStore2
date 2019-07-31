@@ -20,7 +20,7 @@ export default ({ className = '', contents, mode, viewWidth, viewHeight }) => (
         <Background
             width={viewWidth}
             height={viewHeight}>
-                <img src="https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg"></img>
+                <img src="https://images.unsplash.com/photo-1433838552652-f9a46b332c40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"></img>
         </Background>
         <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} {...props}/>))}

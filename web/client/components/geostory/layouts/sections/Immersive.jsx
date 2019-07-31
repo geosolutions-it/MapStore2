@@ -29,14 +29,14 @@ const holdBackground = compose(
  */
 const Immersive = ({contents, mode, background, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
     <section
-        className="ms-section ms-section-imersive">
+        className="ms-section ms-section-immersive">
         <Background
             width={viewWidth}
             height={viewHeight}>
             {background ? <img src={background.src}></img> : null}
         </Background>
         <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props}/>))}
+            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props} style={{ minHeight: viewHeight }}/>))}
         </div>
     </section>
 );
