@@ -7,12 +7,17 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { lists, Modes, StoryTypes, SectionTypes} from '../../../../utils/GeoStoryUtils';
+import Immersive from './Immersive';
 import Paragraph from './Paragraph';
+import Title from './Title';
 
 const types = {
+    [SectionTypes.IMMERSIVE]: Immersive,
     [SectionTypes.PARAGRAPH]: Paragraph,
-    UNKNOWN: ({type}) => <div className="unknown-session-type">WARNING: unknown session of type {type}</div>
+    [SectionTypes.TITLE]: Title,
+    UNKNOWN: ({type}) => <div className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
 
 /**
@@ -47,11 +52,11 @@ class Section extends React.Component {
     render() {
         const SectionType = types[this.props.type] || types.UNKNOWN;
         return (
-            <div
-                className={`ms-${this.props.storyType}-section${this.props.type ? ` ms-${this.props.type}` : ''}`}>
-                <SectionType {...this.props}/>
-                {/* TODO: add add section Tool */}
-            </div>
+            <SectionType
+                mode={this.props.mode}
+                contents={this.props.contents}
+                viewWidth={this.props.viewWidth}
+                viewHeight={this.props.viewHeight}/>
         );
     }
 }

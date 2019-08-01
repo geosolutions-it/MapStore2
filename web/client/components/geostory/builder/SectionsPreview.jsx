@@ -33,9 +33,9 @@ const Preview = ({ width } = {}) => {
     const res = 1080 / 1920;
     const height = width * res;
     return (
-        <div className="section-preview" style={{ position: 'relative', width, height }}>
-            <div className="section-preview-icon">
-                <Glyphicon glyph="1-map" style={{ fontSize: height / 2, margin: 'auto' }} />
+        <div className="ms-section-preview" style={{ width, height }}>
+            <div className="ms-section-preview-icon">
+                <Glyphicon glyph="1-map" style={{ fontSize: height / 2 }} />
             </div>
         </div>
     );

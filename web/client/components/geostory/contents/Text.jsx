@@ -8,11 +8,16 @@
 import React from 'react';
 
 
-const Text = (props) => {
+const Text = ({ html, inViewRef, style = {}}) => {
     return (
-        <div className="ms-geostory-content-text" style={{margin: 20}} onClick={() => {
+        <div
+            ref={inViewRef}
+            style={style}
+            className="ms-content ms-content-text"
+            onClick={() => {
                 // TODO: enable editing
-        }} dangerouslySetInnerHTML={{ __html: props.html }} />
+            }}
+            dangerouslySetInnerHTML={{ __html: html }} />
     );
 };
 export default Text;
