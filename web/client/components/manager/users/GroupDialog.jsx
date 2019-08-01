@@ -208,6 +208,7 @@ class GroupDialog extends React.Component {
               id="mapstore-group-dialog"
               className="group-edit-dialog"
               style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
+              draggable={false}
               >
             <span role="header">
                 <button onClick={this.props.onClose} className="login-panel-close close">

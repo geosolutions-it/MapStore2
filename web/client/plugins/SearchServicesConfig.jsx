@@ -149,7 +149,7 @@ class SearchServicesConfigPanel extends React.Component {
         const Section = pages && pages[page] || null;
         return enabled ? (
             <Portal>
-                <Dialog id={id} style={panelStyle} className={panelClassName}>
+                <Dialog id={id} style={{...panelStyle, display: enabled ? 'block' : 'none'}} className={panelClassName} draggable={false} modal>
                     <span role="header">
                         <span>{titleText}</span>
                         { this.isDirty() ? (
