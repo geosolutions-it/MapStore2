@@ -7,14 +7,16 @@
  */
 import React from 'react';
 import TextB from './Text';
-import { compose, withHandlers } from 'recompose';
-import withIntersectionObserver from '../../misc/enhancers/withIntersectionObserver';
+import { compose, nest } from "recompose";
+import visibilityHandler from './enhancers/visibilityHandler';
+import ContentWrapper from './ContentWrapper';
 
+const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
+
+// add proper wrapper and visibility event handlers to content
 const enhanceContents = compose(
-    withHandlers({
-        onVisibilityChange: ({ id, onVisibilityChange = () => { } } = {}) => (visible, entry) => onVisibilityChange({ id, visible, entry })
-    }),
-    withIntersectionObserver({ threshold: [0.75]})
+    visibilityHandler({ threshold: [0.75] }),
+    wrap(ContentWrapper)
 );
 
 const Text = enhanceContents(TextB);

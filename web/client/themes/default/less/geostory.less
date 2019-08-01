@@ -1,6 +1,14 @@
 @ms-story-bg: @ms2-color-background;
 @ms-story-bg-grey: @ms2-color-shade-lighter;
 
+
+
+/* TEXT EDITOR TODO: externalize */
+@import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
+@import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+
+
 #page-geostory{
     position: absolute;
     #home-button {
@@ -58,7 +66,7 @@
 
 .ms-cascade-story {
     .ms-sections {
-        /* 
+        /*
         Main scrollable container of the cascade story
         ---
         .ms-sections-container */
@@ -128,23 +136,35 @@
         }
 
         &-immersive {
+            // generic style for all the content types
+            .ms-content {
+                border-bottom: 2px solid red; /* DEBUG BORDER (TODO: REMOVE) */
+                padding: 10px;
+            }
+            // style for contents of type "text"
             .ms-content-text {
-                border-bottom: 2px solid red; /* DEBUG BORDER (REMOVE) */
-
                 display: flex;
-                p {
+                .ms-content-body {
                     width: 50%;
                     margin: auto;
                     align-self: center;
                     background-color: fade(@ms-story-bg, 50%);
                     padding: 10px;
+                    .ms-text-editor {
+                        // .ms-text-editor-wrapper
+                        &-wrapper { // reference for the toolbaar position
+                            position: relative;
+                        }
+                        // .ms-text-editor-toolbar
+                        &-toolbar { // floating toolbar, refered to the &-wrapper
+                            position: absolute;
+                            top: -40px;
+                        }
+                    }
+
                 }
             }
         }
     }
-    .ms-content {
-        &-text {
-            padding: 10px;
-        }
-    }
+
 }
