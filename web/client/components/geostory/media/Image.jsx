@@ -11,6 +11,15 @@ import Lightbox from 'react-image-lightbox';
 import objectFitImages from 'object-fit-images';
 import { withState } from 'recompose';
 
+/**
+ * Image media component
+ * @class
+ * @name Image
+ * @prop {string} src source of the image
+ * @prop {string} fit one of 'cover' or 'contain'
+ * @prop {boolean} enableFullscreen enable fullscreen preview with pan and zoom options
+ */
+
 class Image extends Component {
 
     static propTypes = {
