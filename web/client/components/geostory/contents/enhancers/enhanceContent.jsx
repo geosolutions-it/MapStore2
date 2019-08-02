@@ -7,8 +7,8 @@
  */
 
 import { compose, nest } from "recompose";
-import visibilityHandler from './enhancers/visibilityHandler';
-import ContentWrapper from './ContentWrapper';
+import visibilityHandler from './visibilityHandler';
+import ContentWrapper from '../ContentWrapper';
 
 // wrap enhancer
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
