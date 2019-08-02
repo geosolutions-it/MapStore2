@@ -32,4 +32,22 @@ describe('Background component', () => {
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
+
+    it('render background with media (image)', () => {
+        const VIEW_HEIGHT = 800;
+        ReactDOM.render(<Background
+            width={1024}
+            height={VIEW_HEIGHT}
+            type="image"
+            src="path/to/image.png"
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        const imageMedia = container.querySelector('.ms-media-image');
+        const image = imageMedia.querySelector('img');
+        expect(backgroundContainer).toExist();
+        expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
+        expect(imageMedia).toExist();
+        expect(image.getAttribute('src')).toBe('path/to/image.png');
+    });
 });

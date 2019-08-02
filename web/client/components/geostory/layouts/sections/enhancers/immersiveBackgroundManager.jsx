@@ -13,6 +13,11 @@ const getContentIndex = (contents, id) => {
     return contents[index === -1 || !index ? 0 : index];
 };
 
+export const backgroundProp = withProps(({ backgroundId, contents = [] }) => ({
+    background: get(getContentIndex(contents, backgroundId) || 0, 'background') || {
+        type: 'none'
+    }
+}));
 
 /**
  * Holds the current background as background property
@@ -23,9 +28,5 @@ export default compose(
     withHandlers({
         onVisibilityChange: ({ setBackgroundId = () => { } }) => ({ visible, id }) => visible && setBackgroundId(id)
     }),
-    withProps(({ backgroundId, contents = [] }) => ({
-        background: get(getContentIndex(contents, backgroundId) || 0, 'background') || {
-            type: 'none'
-        }
-    }))
+    backgroundProp
 );

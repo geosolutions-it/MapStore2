@@ -9,8 +9,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import expect from 'expect';
-import Immersive from '../Immersive';
-describe('Immersive component', () => {
+import Title from '../Title';
+describe('Title component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -20,13 +20,13 @@ describe('Immersive component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('Immersive rendering with defaults', () => {
-        ReactDOM.render(<Immersive />, document.getElementById("container"));
+    it('Title rendering with defaults', () => {
+        ReactDOM.render(<Title />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive');
+        const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
     });
-    it('Immersive background rendering (image)', () => {
+    it('Title background rendering (image)', () => {
         const IMAGE_SRC = 'path/to/image.jpg';
         const CONTENTS = [
             {
@@ -36,21 +36,12 @@ describe('Immersive component', () => {
                     type: 'image',
                     src: IMAGE_SRC
                 },
-                html: '<p>column</p>'
-            },
-            {
-                id: '001',
-                type: 'column',
-                background: {
-                    type: 'image',
-                    src: 'other/path/to/image.jpg'
-                },
-                html: '<p>column</p>'
+                html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Immersive contents={CONTENTS}/>, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive');
+        const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
         const img = el.querySelector('img');
         expect(img).toExist();

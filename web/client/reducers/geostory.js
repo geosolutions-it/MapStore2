@@ -49,6 +49,12 @@ const createSampleSection = () => [{
                 // ...
             },
             html: SAMPLE_TEXT
+        },
+        {
+            id: "SomeID2",
+            type: 'image',
+            src: 'https://images.unsplash.com/photo-1558999539-7a19738f085d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+            enableFullscreen: true
         }
     ]
 }, {
@@ -61,7 +67,8 @@ const createSampleSection = () => [{
             type: 'text',
             background: {
                 type: "image",
-                src: 'https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80'
+                fit: 'cover',
+                src: 'https://images.unsplash.com/photo-1562874724-b33411b38141?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80'
 
             },
             html: SAMPLE_TEXT
@@ -79,6 +86,15 @@ const createSampleSection = () => [{
             background: {
                 type: "image",
                 src: 'https://images.unsplash.com/photo-1462331321792-cc44368b8894?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1422&q=80'
+            },
+            html: SAMPLE_TEXT
+        }, {
+            id: "SomeID4",
+            type: 'text',
+            background: {
+                type: "image",
+                fit: 'contain',
+                src: 'https://images.unsplash.com/photo-1563818500545-86cdb0a38abd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=564&q=80'
             },
             html: SAMPLE_TEXT
         }

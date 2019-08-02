@@ -34,6 +34,6 @@ describe('SectionsPreview component', () => {
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
         // empty view when no session
-        expect(el.querySelectorAll('.items-list > div').length).toBe(5); // 2 + 1 (first inner) + 2 (second inner)
+        expect(el.querySelectorAll('.items-list > div').length).toBe(6); // 2 + 2 (first inner) + 2 (second inner)
     });
 });

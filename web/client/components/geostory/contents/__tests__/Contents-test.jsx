@@ -35,6 +35,12 @@ describe('Content component', () => {
         const el = container.querySelector('.ms-content-text');
         expect(el).toExist();
     });
+    it('Content rendering known type (image)', () => {
+        ReactDOM.render(<Content {...STORY.sections[0].contents[1]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-content-image');
+        expect(el).toExist();
+    });
     it('content has intersection observer', (done) => {
         const ID_1 = "ID_1";
         const ID_2 = "ID_2";

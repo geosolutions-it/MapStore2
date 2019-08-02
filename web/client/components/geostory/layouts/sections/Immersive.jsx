@@ -14,14 +14,14 @@ import Background from './Background';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({contents = [], mode, background, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
+const Immersive = ({contents = [], mode, background = {}, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
+            { ...background }
+            key={background.id}
             width={viewWidth}
-            height={viewHeight}>
-            {background ? <img src={background.src}></img> : null}
-        </Background>
+            height={viewHeight}/>
         <div className="ms-section-contents">
             {contents.map((props, i) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} intersectionObserverOptions={i === 0 ? {threshold: 0} : undefined} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
         </div>

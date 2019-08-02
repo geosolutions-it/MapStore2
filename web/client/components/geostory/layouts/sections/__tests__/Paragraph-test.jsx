@@ -26,5 +26,8 @@ describe('Paragraph component', () => {
         ReactDOM.render(<Paragraph {...STORY.sections[0]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-section-paragraph > .ms-section-contents')).toExist();
+
+        expect(container.querySelector('.ms-content-text')).toExist();
+        expect(container.querySelector('.ms-content-image')).toExist();
     });
 });
