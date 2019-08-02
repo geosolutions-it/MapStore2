@@ -5,7 +5,7 @@ This guide wants to provide general information and suggestions about how to wri
  * [Writing plugins](../plugins-howto)
  * Writing components - TODO TBD
  * [Writing actions and reducers](../writing-actions-reducers)
- * [Writing epics](../writing-epics) - IN PROGRESS (@offtherailz)
- * Writing enhancers - TODO (@baloola)
+ * [Writing epics](../writing-epics)
+ * Writing enhancers - TODO TBD
  * [Styling and theming](../customize-theme)
  * Using JS API - TODO (@kappu72)
