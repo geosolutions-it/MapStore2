@@ -7,19 +7,10 @@
  */
 import React from 'react';
 import TextB from './Text';
-import { compose, nest } from "recompose";
-import visibilityHandler from './enhancers/visibilityHandler';
-import ContentWrapper from './ContentWrapper';
+import enhanceContent from './enhancers/enhanceContent';
 
-const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
 
-// add proper wrapper and visibility event handlers to content
-const enhanceContents = compose(
-    visibilityHandler({ threshold: [0.75] }),
-    wrap(ContentWrapper)
-);
-
-const Text = enhanceContents(TextB);
+const Text = enhanceContent({visibilityEnhancerOptions: { threshold: [0.75] }})(TextB);
 const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 

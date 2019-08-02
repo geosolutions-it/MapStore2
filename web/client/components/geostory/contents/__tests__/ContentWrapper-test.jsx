@@ -44,7 +44,7 @@ describe('ContentWrapper component', () => {
                 expect(ref.className.indexOf("ms-content")).toBeGreaterThanOrEqualTo(0);
                 done();
             }
-        }
+        };
         ReactDOM.render(<ContentWrapper inViewRef={callback} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
