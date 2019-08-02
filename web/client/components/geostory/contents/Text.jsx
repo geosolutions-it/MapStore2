@@ -6,18 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import editableText from './enhancers/editableText';
 
-
-const Text = ({ html, inViewRef, style = {}}) => {
+const Text = ({ toggleEditing = () => {}, html }) => {
     return (
         <div
-            ref={inViewRef}
-            style={style}
-            className="ms-content ms-content-text"
-            onClick={() => {
-                // TODO: enable editing
-            }}
+            onClick={() => toggleEditing(true, html)}
             dangerouslySetInnerHTML={{ __html: html }} />
     );
 };
-export default Text;
+export default editableText(Text);

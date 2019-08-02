@@ -26,7 +26,8 @@ describe('Content component', () => {
     it('Content rendering with defaults', () => {
         ReactDOM.render(<Content />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-content-unknown')).toExist();
+        expect(container.querySelector('.ms-content')).toExist();
+        expect(container.querySelector('.ms-content.ms-content-unknown')).toExist();
     });
     it('Content rendering known type (text)', () => {
         ReactDOM.render(<Content {...STORY.sections[0].contents[0]} />, document.getElementById("container"));

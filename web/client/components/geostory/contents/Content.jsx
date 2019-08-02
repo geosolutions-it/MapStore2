@@ -7,17 +7,10 @@
  */
 import React from 'react';
 import TextB from './Text';
-import { compose, withHandlers } from 'recompose';
-import withIntersectionObserver from '../../misc/enhancers/withIntersectionObserver';
+import enhanceContent from './enhancers/enhanceContent';
 
-const enhanceContents = compose(
-    withHandlers({
-        onVisibilityChange: ({ id, onVisibilityChange = () => { } } = {}) => (visible, entry) => onVisibilityChange({ id, visible, entry })
-    }),
-    withIntersectionObserver({ threshold: [0.75]})
-);
 
-const Text = enhanceContents(TextB);
+const Text = enhanceContent({visibilityEnhancerOptions: { threshold: [0.75] }})(TextB);
 const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 
