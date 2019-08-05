@@ -5,42 +5,59 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const TEXT_SEARCH_STARTED = 'TEXT_SEARCH_STARTED';
-const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
-const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
-const TEXT_SEARCH_RESULTS_PURGE = 'TEXT_SEARCH_RESULTS_PURGE';
-const TEXT_SEARCH_RESET = 'TEXT_SEARCH_RESET';
-const TEXT_SEARCH_ADD_MARKER = 'TEXT_SEARCH_ADD_MARKER';
-const TEXT_SEARCH_TEXT_CHANGE = 'TEXT_SEARCH_TEXT_CHANGE';
-const TEXT_SEARCH_LOADING = 'TEXT_SEARCH_LOADING';
-const TEXT_SEARCH_NESTED_SERVICES_SELECTED = 'TEXT_SEARCH_NESTED_SERVICE_SELECTED';
-const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
-const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
-const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
-const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE';
-const UPDATE_RESULTS_STYLE = 'UPDATE_RESULTS_STYLE';
-const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
-const ZOOM_ADD_POINT = 'SEARCH:ZOOM_ADD_POINT';
-const CHANGE_FORMAT = 'SEARCH:CHANGE_FORMAT';
-const CHANGE_COORD = 'SEARCH:CHANGE_COORD';
+export const SEARCH_LAYER_WITH_FILTER = 'SEARCH:SEARCH_WITH_FILTER';
+export const TEXT_SEARCH_STARTED = 'TEXT_SEARCH_STARTED';
+export const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
+export const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
+export const TEXT_SEARCH_RESULTS_PURGE = 'TEXT_SEARCH_RESULTS_PURGE';
+export const TEXT_SEARCH_RESET = 'TEXT_SEARCH_RESET';
+export const TEXT_SEARCH_ADD_MARKER = 'TEXT_SEARCH_ADD_MARKER';
+export const TEXT_SEARCH_TEXT_CHANGE = 'TEXT_SEARCH_TEXT_CHANGE';
+export const TEXT_SEARCH_LOADING = 'TEXT_SEARCH_LOADING';
+export const TEXT_SEARCH_NESTED_SERVICES_SELECTED = 'TEXT_SEARCH_NESTED_SERVICE_SELECTED';
+export const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
+export const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
+export const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
+export const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE';
+export const UPDATE_RESULTS_STYLE = 'UPDATE_RESULTS_STYLE';
+export const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
+export const ZOOM_ADD_POINT = 'SEARCH:ZOOM_ADD_POINT';
+export const CHANGE_FORMAT = 'SEARCH:CHANGE_FORMAT';
+export const CHANGE_COORD = 'SEARCH:CHANGE_COORD';
 
 /**
- * change the formato for coordinate editor tool
+ * change the format for coordinate editor tool
+ * @memberof actions.search
  * @param {string} format (decimal or aeronautical)
 */
-function changeFormat(format) {
+export function changeFormat(format) {
     return {
         type: CHANGE_FORMAT,
         format
     };
 }
 /**
+ * used to trigger two wfs requests GetFeature and then GetFeatureInfo
+ * @memberof actions.search
+ * @prop {object} options {layer, cql_filter}
+ * @prop {string} options.cql_filter optional filter to apply for both requests
+ * @prop {string} options.layer name of the layer with workspace
+*/
+export function searchLayerWithFilter({layer, cql_filter} = {}) {
+    return {
+        type: SEARCH_LAYER_WITH_FILTER,
+        layer,
+        cql_filter
+    };
+}
+/**
  * zoom to a specific point
+ * @memberof actions.search
  * @param {object} pos as array [x, y] or object {x: ..., y:...}
  * @param {number} zoom level to zoom to
  * @param {string} crs of the point
 */
-function zoomAndAddPoint(pos, zoom, crs) {
+export function zoomAndAddPoint(pos, zoom, crs) {
     return {
         type: ZOOM_ADD_POINT,
         pos,
@@ -54,7 +71,7 @@ function zoomAndAddPoint(pos, zoom, crs) {
  * @memberof actions.search
  * @param {string} activeSearchTool services intrested to use for the next search
  */
-function changeActiveSearchTool(activeSearchTool) {
+export function changeActiveSearchTool(activeSearchTool) {
     return {
         type: CHANGE_SEARCH_TOOL,
         activeSearchTool
@@ -68,7 +85,7 @@ function changeActiveSearchTool(activeSearchTool) {
  * @param {boolean} append [false] tells to append the result to existing ones or not
  * @param {object[]} servies services intrested to use for the next search
  */
-function searchResultLoaded(results, append = false, services) {
+export function searchResultLoaded(results, append = false, services) {
     return {
         type: TEXT_SEARCH_RESULTS_LOADED,
         results: results,
@@ -81,7 +98,7 @@ function searchResultLoaded(results, append = false, services) {
  * @memberof actions.search
  * @param {string} text the new text
  */
-function searchTextChanged(text) {
+export function searchTextChanged(text) {
     return {
         type: TEXT_SEARCH_TEXT_CHANGE,
         searchText: text
@@ -92,7 +109,7 @@ function searchTextChanged(text) {
  * @memberof actions.search
  * @param {boolean} loading boolean flag
  */
-function searchTextLoading(loading) {
+export function searchTextLoading(loading) {
     return {
         type: TEXT_SEARCH_LOADING,
         loading
@@ -104,7 +121,7 @@ function searchTextLoading(loading) {
  * @memberof actions.search
  * @param error the error
  */
-function searchResultError(error) {
+export function searchResultError(error) {
     return {
         type: TEXT_SEARCH_ERROR,
         error
@@ -115,7 +132,7 @@ function searchResultError(error) {
  * clear the results
  * @memberof actions.search
  */
-function resultsPurge() {
+export function resultsPurge() {
     return {
         type: TEXT_SEARCH_RESULTS_PURGE
     };
@@ -125,7 +142,7 @@ function resultsPurge() {
  * reset the search text and clear results
  * @memberof actions.search
  */
-function resetSearch() {
+export function resetSearch() {
     return {
         type: TEXT_SEARCH_RESET
     };
@@ -136,7 +153,7 @@ function resetSearch() {
  * @memberof actions.search
  * @param {object} itemPosition
  */
-function addMarker(itemPosition, itemText) {
+export function addMarker(itemPosition, itemText) {
     return {
         type: TEXT_SEARCH_ADD_MARKER,
         markerPosition: itemPosition,
@@ -148,13 +165,15 @@ function addMarker(itemPosition, itemText) {
  * perform a text search
  * @memberof actions.search
  * @param {string} searchText the text to search
- * @param {object} options [{}] the search options. Contain the services
+ * @param {object} [options={}] - the search options. Contain the services
+ * @param {number} [maxResults=15] - the max results obtained from all the services
  */
-function textSearch(searchText, {services = null} = {}) {
+export function textSearch(searchText, {services = null} = {}, maxResults = 15) {
     return {
         type: TEXT_SEARCH_STARTED,
         searchText,
-        services
+        services,
+        maxResults
     };
 }
 
@@ -165,7 +184,7 @@ function textSearch(searchText, {services = null} = {}) {
  * @param {object} mapConfig the current map configuration (with size, projection...)
  * @param {object} resultsStyle style to apply to results geometries
  */
-function selectSearchItem(item, mapConfig, resultsStyle) {
+export function selectSearchItem(item, mapConfig, resultsStyle) {
     return {
         type: TEXT_SEARCH_ITEM_SELECTED,
         item,
@@ -183,7 +202,7 @@ function selectSearchItem(item, mapConfig, resultsStyle) {
  * @param {object[]} items the selected items
  * @param {object[]} searchText the new search text
  */
-function selectNestedService(services, items, searchText) {
+export function selectNestedService(services, items, searchText) {
     return {
         type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
         searchText,
@@ -197,7 +216,7 @@ function selectNestedService(services, items, searchText) {
  * @memberof actions.search
  * @param {object} item the item to remove
  */
-function cancelSelectedItem(item) {
+export function cancelSelectedItem(item) {
     return {
         type: TEXT_SEARCH_CANCEL_ITEM,
         item
@@ -209,7 +228,7 @@ function cancelSelectedItem(item) {
  * @memberof actions.search
  * @param {object} feature the feature to highlight
  */
-function setHighlightedFeature(feature) {
+export function setHighlightedFeature(feature) {
     return {
         type: TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
         highlightedFeature: feature
@@ -221,7 +240,7 @@ function setHighlightedFeature(feature) {
  * @memberof actions.search
  * @param {object} style style of results geometries
  */
-function updateResultsStyle(style) {
+export function updateResultsStyle(style) {
     return {
         type: UPDATE_RESULTS_STYLE,
         style
@@ -233,7 +252,7 @@ function updateResultsStyle(style) {
  * @memberof actions.search
  * @param {object} coordinate
  */
-function changeCoord(coord, val) {
+export function changeCoord(coord, val) {
     return {
         type: CHANGE_COORD,
         coord,
@@ -244,37 +263,29 @@ function changeCoord(coord, val) {
 /**
  * Actions for search
  * @name actions.search
- */
-module.exports = {
-    TEXT_SEARCH_STARTED,
-    TEXT_SEARCH_LOADING,
-    TEXT_SEARCH_ERROR,
-    TEXT_SEARCH_RESULTS_LOADED,
-    TEXT_SEARCH_PERFORMED,
-    TEXT_SEARCH_RESULTS_PURGE,
-    TEXT_SEARCH_RESET,
-    TEXT_SEARCH_ADD_MARKER,
-    TEXT_SEARCH_TEXT_CHANGE,
-    TEXT_SEARCH_ITEM_SELECTED,
-    TEXT_SEARCH_NESTED_SERVICES_SELECTED,
-    TEXT_SEARCH_CANCEL_ITEM,
-    TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
-    UPDATE_RESULTS_STYLE,
-    zoomAndAddPoint, ZOOM_ADD_POINT,
-    changeActiveSearchTool, CHANGE_SEARCH_TOOL,
-    changeFormat, CHANGE_FORMAT,
-    changeCoord, CHANGE_COORD,
-    searchTextLoading,
-    searchResultError,
-    searchResultLoaded,
-    textSearch,
-    resultsPurge,
-    resetSearch,
-    addMarker,
-    searchTextChanged,
-    selectNestedService,
-    selectSearchItem,
-    cancelSelectedItem,
-    setHighlightedFeature,
-    updateResultsStyle
-};
+*/
+
+import {error} from './notifications';
+
+/**
+ * error for non queriable layer
+*/
+export function nonQueriableLayerError() {
+    return error({
+        title: "Error",
+        position: "tc",
+        message: "search.errors.nonQueriableLayers",
+        autoDismiss: 10
+    });
+}
+/**
+ * server error notification
+*/
+export function serverError() {
+    return error({
+        title: "Error",
+        position: "tc",
+        message: "search.errors.serverError",
+        autoDismiss: 10
+    });
+}

@@ -485,7 +485,7 @@ const CONFIGPROVIDER = {
         }
     },
     CartoDB: {
-        url: 'http://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}.png',
+        url: '//{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}.png',
         options: {
             attribution: '{attribution.OpenStreetMap} &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
             subdomains: ['a', 'b', 'c', 'd'],

@@ -36,6 +36,7 @@
     .mapstore-annotations-info-viewer-styler-container {
         .ms2-border-layout-content {
             overflow: auto;
+            position: relative;
         }
     }
 
@@ -327,11 +328,6 @@
         }
     }
 }
-.mapstore-annotations-info-viewer-item.mapstore-annotations-info-viewer-description {
-    .quill {
-        overflow: -webkit-paged-y;
-    }
-}
 
 .ms-color-selector {
     overflow: hidden;
@@ -515,4 +511,9 @@
 
 .modal-dialog-container{
     border: none;
+}
+
+.ms-style-manager {
+    position: absolute;
+    width: 100%;
 }

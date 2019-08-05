@@ -6,29 +6,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {defaults, DragPan, MouseWheelZoom} from 'ol/interaction';
-import {defaults as defaultControls} from 'ol/control';
+import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
+import { defaults as defaultControls } from 'ol/control';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {toLonLat} from 'ol/proj';
+import { toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
 import Units from 'ol/proj/Units';
 
-import {getWidth, getHeight} from 'ol/extent';
+import { getWidth, getHeight } from 'ol/extent';
 
 import proj4 from 'proj4';
-import {register} from 'ol/proj/proj4.js';
+import { register } from 'ol/proj/proj4.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import assign from 'object-assign';
 
 import CoordinatesUtils from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import mapUtils from'../../../utils/MapUtils';
+import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 
 import isEqual from 'lodash/isEqual';
 import throttle from 'lodash/throttle';
+import isArray from 'lodash/isArray';
+import isNil from 'lodash/isNil';
 
 import 'ol/ol.css';
 
@@ -432,11 +434,11 @@ export default class OpenlayersMap extends React.Component {
         const crs = view.getProjection().getCode();
         // some projections are repeated on the x axis
         // and they need to be updated also if the center is outside of the projection extent
-        const wrappedProjections = [ 'EPSG:3857', 'EPSG:900913', 'EPSG:4326' ];
+        const wrappedProjections = ['EPSG:3857', 'EPSG:900913', 'EPSG:4326'];
         // prevent user from dragging outside the projection extent
         if (wrappedProjections.indexOf(crs) !== -1
-        || (tempCenter && tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
-            tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3])) {
+            || (tempCenter && tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
+                tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3])) {
             let c = this.normalizeCenter(view.getCenter());
             let bbox = view.calculateExtent(this.map.getSize());
             let size = {
@@ -539,12 +541,17 @@ export default class OpenlayersMap extends React.Component {
         mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration } = {}) => {
             let bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
-            // if EPSG:4326 with max extent (-90. 180, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
+            // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3]) {
+            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
+                crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
                 bounds = this.map.getView().getProjection().getExtent();
+            }
+            let maxZoom = zoomLevel;
+            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
+                maxZoom = 21; // TODO: allow to this maxZoom to be customizable
             }
             this.map.getView().fit(bounds, {
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],

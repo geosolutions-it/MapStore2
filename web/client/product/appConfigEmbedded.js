@@ -7,7 +7,7 @@
 */
 
 const {updateMapLayoutEpic} = require('../epics/maplayout');
-const {readQueryParamsOnMapEpic} = require('../epics/share');
+const {readQueryParamsOnMapEpic} = require('../epics/queryparams');
 
 module.exports = {
     mode: "embedded",

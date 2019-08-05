@@ -21,6 +21,7 @@ const {flattenGroups} = require('../utils/TOCUtils');
 const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
+const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));
 const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
 const highlightPointSelector = state => state.annotations && state.annotations.showMarker && state.annotations.clickPoint;
 const geoColderSelector = state => state.search && state.search;
@@ -133,8 +134,15 @@ const elementSelector = (state) => {
 * @return {array} the queriable layers
 */
 const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+/**
+ * Return loading error state for selected layer
+ * @param {object} state the state
+ * @return {boolean} true if selected layer has error
+ */
+const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {}).loadingError === 'Error';
 
 module.exports = {
+    getLayerFromName,
     layersSelector,
     layerSelectorWithMarkers,
     queryableLayersSelector,
@@ -154,5 +162,7 @@ module.exports = {
     currentBackgroundSelector,
     tempBackgroundSelector,
     centerToMarkerSelector,
-    elementSelector
+    elementSelector,
+    selectedLayerLoadingErrorSelector
+
 };

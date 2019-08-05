@@ -316,6 +316,32 @@ describe('Featuregrid toolbar component', () => {
         zoomAllButton = document.getElementById("fg-zoom-all");
         expect(el.children[2].disabled).toBe(false);
     });
+    describe('time sync button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-timeSync-button"))).toBe(false);
+            ReactDOM.render(<Toolbar showTimeSyncButton show mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-timeSync-button"))).toBe(true);
+        });
+        it('enabled/disabled state', () => {
+            ReactDOM.render(<Toolbar showTimeSyncButton timeSync mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar showTimeSyncButton mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toNotInclude('btn-success');
+        });
+        it('handler', () => {
+            const events = {
+                setTimeSync: () => { }
+            };
+            const spy = spyOn(events, "setTimeSync");
+            ReactDOM.render(<Toolbar showTimeSyncButton timeSync events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-timeSync-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar showTimeSyncButton events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-timeSync-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
+        });
+    });
     it('check chart button', () => {
         const events = {
             chart: () => {}

@@ -15,7 +15,7 @@ import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
 import { versionSelector } from '../selectors/version';
-import * as shareEpics from '../epics/share';
+import * as shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';

@@ -936,7 +936,7 @@ describe('FilterUtils', () => {
          + '<ogc:Function name="queryCollection">'
          + '<ogc:Literal>TEST</ogc:Literal>'
          + '<ogc:Literal>GEOMETRY</ogc:Literal>'
-         + '<ogc:Literal>INCLUDE</ogc:Literal>'
+         + '<ogc:Literal><![CDATA[INCLUDE]]></ogc:Literal>'
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
         let expected =
@@ -1010,7 +1010,7 @@ describe('FilterUtils', () => {
          + '<ogc:Function name="queryCollection">'
          + '<ogc:Literal>regions</ogc:Literal>'
          + '<ogc:Literal>regions_geom</ogc:Literal>'
-         + '<ogc:Literal>area > 10</ogc:Literal>'
+         + '<ogc:Literal><![CDATA[area > 10]]></ogc:Literal>'
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
 
@@ -1339,5 +1339,124 @@ describe('FilterUtils', () => {
         });
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
+    it('compose filterFilds', () => {
+        const filterA = {
+            "groupFields": [
+            {
+                "id": 1,
+                "logic": "OR",
+                "index": 0
+            },
+            {
+                "id": 2,
+                "logic": "OR",
+                "groupId": 1,
+                "index": 1
+            }
+            ],
+        "filterFields": [
+            {
+                "rowId": 1545411885028,
+                "groupId": 1,
+                "attribute": "STATE_NAME",
+                "operator": "=",
+                "value": "Alabama",
+                "type": "string",
+                "fieldOptions": {
+                    "valuesCount": 0,
+                    "currentPage": 1
+                },
+                "exception": null,
+                "openAutocompleteMenu": false,
+                "loading": false,
+                "options": {
+                    "STATE_NAME": []
+                }
+            },
+            {
+                "rowId": 1545411894600,
+                "groupId": 2,
+                "attribute": "STATE_NAME",
+                "operator": "=",
+                "value": "Arizona",
+                "type": "string",
+                "fieldOptions": {
+                    "valuesCount": 0,
+                    "currentPage": 1
+                },
+                "exception": null,
+                "openAutocompleteMenu": false,
+                "loading": false,
+                "options": {
+                    "STATE_NAME": []
+                }
+            }]
+        };
+        const filterB = {
+            "groupFields": [
+            {
+                "id": 1,
+                "logic": "OR",
+                "index": 0
+            },
+            {
+                "id": 2,
+                "logic": "OR",
+                "groupId": 1,
+                "index": 1
+            }
+            ],
+        "filterFields": [
+            {
+                "rowId": 15454118,
+                "groupId": 1,
+                "attribute": "STATE_NAME",
+                "operator": "=",
+                "value": "Alabama",
+                "type": "string",
+                "fieldOptions": {
+                    "valuesCount": 0,
+                    "currentPage": 1
+                },
+                "exception": null,
+                "openAutocompleteMenu": false,
+                "loading": false,
+                "options": {
+                    "STATE_NAME": []
+                }
+            },
+            {
+                "rowId": 1545411894,
+                "groupId": 2,
+                "attribute": "STATE_NAME",
+                "operator": "=",
+                "value": "Arizona",
+                "type": "string",
+                "fieldOptions": {
+                    "valuesCount": 0,
+                    "currentPage": 1
+                },
+                "exception": null,
+                "openAutocompleteMenu": false,
+                "loading": false,
+                "options": {
+                    "STATE_NAME": []
+                }
+            }]
+        };
+        const filter = FilterUtils.composeAttributeFilters([filterA, filterB]);
+        expect(filter).toExist();
+        expect(filter.groupFields.length).toBe(5);
+        expect(filter.groupFields[0].logic).toBe("AND");
+        expect(filter.groupFields[1].groupId).toBe(filter.groupFields[0].id);
+        expect(filter.groupFields[2].groupId).toBe(filter.groupFields[1].id);
+        expect(filter.groupFields[3].groupId).toBe(filter.groupFields[0].id);
+        expect(filter.groupFields[4].groupId).toBe(filter.groupFields[3].id);
+        expect(filter.filterFields.length).toBe(4);
+        expect(filter.filterFields[0].groupId).toBe(filter.groupFields[1].id);
+        expect(filter.filterFields[1].groupId).toBe(filter.groupFields[2].id);
+        expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
+        expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
     });
 });

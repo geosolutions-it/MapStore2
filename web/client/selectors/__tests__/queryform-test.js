@@ -14,7 +14,9 @@ const {
     spatialFieldGeomProjSelector,
     spatialFieldGeomCoordSelector,
     spatialFieldMethodSelector,
-    queryFormUiStateSelector
+    queryFormUiStateSelector,
+    storedFilterSelector,
+    appliedFilterSelector
 } = require('../queryform');
 
 const circle = "Circle";
@@ -74,6 +76,10 @@ const initialState = {
                 projection
             }
         }
+    },
+    layerFilter: {
+      persisted: {id: 1},
+      applied: {id: 2}
     }
 };
 
@@ -116,5 +122,15 @@ describe('Test queryform selectors', () => {
         expect(queryFormUiState.attributePanelExpanded).toBe(false);
         expect(queryFormUiState.spatialPanelExpanded).toBe(true);
         expect(queryFormUiState.crossLayerExpanded).toBe(true);
+    });
+    it(' 8) - storedFilterSelector', () => {
+        const storedFilter = storedFilterSelector(initialState);
+        expect(storedFilter).toExist();
+        expect(storedFilter.id).toBe(1);
+    });
+    it(' 9) - appliedFilterSelector', () => {
+        const appliedFilter = appliedFilterSelector(initialState);
+        expect(appliedFilter).toExist();
+        expect(appliedFilter.id).toBe(2);
     });
 });

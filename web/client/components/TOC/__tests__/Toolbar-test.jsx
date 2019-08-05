@@ -25,6 +25,7 @@ const onToolsActions = {
     onRetrieveLayerData: () => {},
     onHideSettings: () => {},
     onReload: () => {},
+    onQueryBuilder: () => {},
     onAddLayer: () => {},
     onAddGroup: () => {},
     onGetMetadataRecord: () => {},
@@ -63,6 +64,7 @@ describe('TOC Toolbar', () => {
     it('layer single selection', () => {
         const spyZoom = expect.spyOn(onToolsActions, 'onZoom');
         const spySettings = expect.spyOn(onToolsActions, 'onSettings');
+        const spyLayerFilter = expect.spyOn(onToolsActions, 'onQueryBuilder');
         const spyBrowseData = expect.spyOn(onToolsActions, 'onBrowseData');
         const spyDownload = expect.spyOn(onToolsActions, 'onDownload');
         const selectedLayers = [{
@@ -90,7 +92,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(5);
+        expect(btn.length).toBe(6);
         TestUtils.Simulate.click(btn[0]);
         expect(spyZoom).toHaveBeenCalledWith({
             maxx: 10,
@@ -101,15 +103,17 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[1]);
         expect(spySettings).toHaveBeenCalledWith('l001', 'layers', {opacity: 1 });
-
         TestUtils.Simulate.click(btn[2]);
-        expect(spyBrowseData).toHaveBeenCalled();
+        expect(spyLayerFilter).toHaveBeenCalled();
+
+        TestUtils.Simulate.click(btn[3]);
+        expect(spyLayerFilter).toHaveBeenCalled();
         expect(spyBrowseData).toHaveBeenCalledWith({
             url: selectedLayers[0].search.url,
             name: selectedLayers[0].name,
             id: selectedLayers[0].id
         });
-        TestUtils.Simulate.click(btn[4]);
+        TestUtils.Simulate.click(btn[5]);
         expect(spyDownload).toHaveBeenCalled();
         expect(spyDownload).toHaveBeenCalledWith({
             url: selectedLayers[0].search.url,
@@ -117,7 +121,7 @@ describe('TOC Toolbar', () => {
             id: selectedLayers[0].id
         });
 
-        TestUtils.Simulate.click(btn[3]);
+        TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
     });
@@ -282,13 +286,13 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(6);
+        expect(btn.length).toBe(7);
 
 
-        TestUtils.Simulate.click(btn[5]);
+        TestUtils.Simulate.click(btn[6]);
         expect(spyGetMetadataRecord).toHaveBeenCalled();
 
-        TestUtils.Simulate.click(btn[3]);
+        TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
     });

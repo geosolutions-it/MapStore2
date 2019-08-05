@@ -17,7 +17,7 @@
         "about_a0": "ceci",
         "about_p5-1": "page.",
         "about_h21": "Crédits",
-        "about_p6": "MapStore2 est développé par:",
+        "about_p6": "MapStore est développé par:",
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Contruire sa propre application</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore2 dans votre application</p>"
+                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore dans votre application</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
@@ -402,6 +402,7 @@
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Pas de résultats",
             "filterPlaceholder": "Filtrer les couches",
@@ -427,6 +428,8 @@
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(s) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches: ",
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
+            "filterIconEnabled": "Désactiver le filtre de calque",
+            "filterIconDisabled": "Activer le filtre de calque",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -600,7 +603,11 @@
             "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5",
             "serviceslistempty": "Aucun service personnalisé n'a été défini",
             "service_missing": "Le service {serviceType} n'est pas configuré",
-            "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur: {message}"
+            "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur: {message}",
+            "errors": {
+                "nonQueriableLayers": "La couche fournie dans l'URL n'est ni interrogeable ni visible sur la carte",
+                "serverError": "Le serveur a renvoyé une erreur lors de l'exécution de la demande GetFeatureInfo. Vérifiez si les paramètres sont corrects"
+            }
         },
         "draw": {
             "fill": "Remplissage",
@@ -762,7 +769,10 @@
         "queryform": {
             "title": "Recherche Avancée",
             "query": "Recherche",
-            "reset": "Recommencer",
+            "apply": "Appliquer",
+            "reset": "Annuler",
+            "save": "Enregistrer",
+            "discard": "Supprimer les modifications du filtre",
             "query_request_exception": "Erreur de requête",
             "config": {
                 "load_config_exception": "Erreur lors du chargement de la configuration"
@@ -849,7 +859,13 @@
                 "errors": {
                     "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
                 }
-            }
+            },
+            "changedFilter": "Filtre modifié",
+            "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver?",
+            "resetFilter": "Supprimer le filtre",
+            "confirmReset": "Confirmer",
+            "loadingError": "Le filtre actuel a posé un problème de rendu pour la couche sur la carte. Vérifiez la configuration de la couche sur le serveur ou corrigez le filtre.",
+            "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer?"
         },
         "annotations": {
             "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",
@@ -1058,7 +1074,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez les fichiers...",
-                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
             },
             "errors": {
@@ -1111,7 +1127,7 @@
             "showTemplate": "Afficher le modèle de métadonnées",
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
-            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
+            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
@@ -1316,6 +1332,8 @@
                 "hideShowColumns": "Masquer / afficher les colonnes",
                 "zoomAll": "Zoom sur la page",
                 "syncOnMap": "Synchroniser la carte avec un filtre",
+                "enableTimeSync": "Synchroniser avec l'heure ou l'intervalle de temps sélectionné",
+                "disableTimeSync": "Ne pas synchroniser avec l'heure ou l'intervalle sélectionné",
                 "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
@@ -1839,7 +1857,7 @@
             "checkbox": "Ne plus me montrer ce message",
             "error": "Erreur: ressource non trouvée",
             "intro": {
-                "title": "Bienvenue dans MapStore2",
+                "title": "Bienvenue dans MapStore",
                 "text": "Environnement de développement d'applications cartographiques en ligne utilisant des librairies cartographiques standards, telles qu'OpenLayers 3 et Leaflet."
             },
             "drawerMenu": {
@@ -1860,7 +1878,7 @@
             },
             "burgerMenu": {
                 "title": "Menu Options",
-                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de BruGIS se trouvent ici"
+                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de MapStore se trouvent ici"
             },
             "zoomInButton": {
                 "title": "Zoom In",
@@ -1884,11 +1902,11 @@
             },
             "mapsGrid": {
                 "title": "Cartes",
-                "text": "Quelques exemples de MapStore2. Cliquez sur une image pour lancer la démo."
+                "text": "Quelques exemples de MapStore. Cliquez sur une image pour lancer la démo."
             },
             "examples": {
                 "title": "Application sur mesure",
-                "text": "Utilisez les composants et outils de MapStore2 pour construire votre application personnalisée"
+                "text": "Utilisez les composants et outils de MapStore pour construire votre application personnalisée"
             },
             "introCesium": {
                 "title": "Instructions carte 3D",
@@ -1927,7 +1945,7 @@
             },
             "dashboardContainer": {
                 "title": "Tableau de bord",
-                "text": "<p> Un tableau de bord dans MapStore2 fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
+                "text": "<p> Un tableau de bord dans MapStore fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
             },
             "dashboardAddWidget": {
                 "title": "Ajouter un widget",

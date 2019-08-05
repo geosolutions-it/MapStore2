@@ -196,5 +196,4 @@ module.exports = {
                 mergeAttrs: true
             }, callback))(response.data)
         )
-
 };

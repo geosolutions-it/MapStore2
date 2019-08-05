@@ -4,7 +4,7 @@
         "Language": "Idioma",
         "msgId0": "{name} tirou {numPhotos, plural, =0 {sem fotos} =1 {one photo} other {# fotos}} em {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
-        "about_title": "Sobre o MapStore2...",
+        "about_title": "Sobre o MapStore...",
         "aboutLbl": "Sobre",
         "about_p0-0": "MapStore 2 é uma plataforma para construir aplicações web mapping que utiliza livrarias de mapping standard, tais como",
         "about_p0-1": "e",
@@ -17,7 +17,7 @@
         "about_a0": "isto",
         "about_p5-1": "página.",
         "about_h21": "Créditos",
-        "about_p6": "MapStore2 é desenvolvido por:",
+        "about_p6": "MapStore é desenvolvido por:",
         "enable": "Activar",
         "layers": "Temas",
         "warning": "Aviso",
@@ -182,7 +182,7 @@
             "open": "Abrir",
             "shortDescription": "Modern webmapping com OpenLayers, Leaflet e React<br/><small>visite a página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentação</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2 foi desenvolvido para criar, guardar e partilhar de uma maneira simples e intuitiva mapas e mashups criados seleccionando conteudos de fontes populares como o Google Maps e OpenStreetMap ou de serviços fornecidos por organisações utilizando protocolos livre como OGC WMS, WFS, WMTS ou TMS, etc.<br/>Visite <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> para mais detalhes.",
+            "description": "MapStore 2 foi desenvolvido para criar, guardar e partilhar de uma maneira simples e intuitiva mapas e mashups criados seleccionando conteudos de fontes populares como o Google Maps e OpenStreetMap ou de serviços fornecidos por organisações utilizando protocolos livre como OGC WMS, WFS, WMTS ou TMS, etc.<br/>Visite <a href=\"http://geosolutions-it.github.io/MapStore/\">home page</a> para mais detalhes.",
             "Applications": "Aplicações",
             "Examples": "Exemplos",
             "LinkedinGroup": "Grupo Mapstore no Linkedin",
@@ -228,7 +228,7 @@
                     "html":"<h3>Plugins</h3><p>Construa a sua aplicação</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Utilize APIs para incluir um mapa do MapStore2 na sua aplicação</p>"
+                    "html":"<h3>API</h3><p>Utilize APIs para incluir um mapa do MapStore na sua aplicação</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Estilize um tema Raster</p>"
@@ -588,7 +588,13 @@
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
-            "serviceslistempty": "No custom services defined"
+            "serviceslistempty": "No custom services defined",
+            "service_missing": "{serviceType} service is not configured",
+            "generic_error": "An error occurred during search. Error details: {message}",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            }
         },
         "draw": {
             "fill": "Fill",
@@ -1045,7 +1051,7 @@
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
-                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "infoSupported": "<p><small>Supported configuration files: MapStore legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
             },
             "errors": {
@@ -1098,7 +1104,7 @@
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
-            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1809,7 +1815,7 @@
             "checkbox": "don't show this message again",
             "error": "Error: target not found",
             "intro": {
-                "title": "Welcome on MapStore2",
+                "title": "Welcome on MapStore",
                 "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
             },
             "drawerMenu": {
@@ -1854,11 +1860,11 @@
             },
             "mapsGrid": {
                 "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "text": "Here some examples of MapStore. Click on an image to try the demo."
             },
             "examples": {
                 "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "text": "You can use components and plugins of MapStore to build custom applications"
             },
             "introCesium": {
                 "title": "3D map instructions",
@@ -1897,7 +1903,7 @@
             },
             "dashboardContainer": {
                 "title": "Dashboard",
-                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+                "text": "<p>A Dashboard in MapStore provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
             },
             "dashboardAddWidget": {
                 "title": "Add Widget",

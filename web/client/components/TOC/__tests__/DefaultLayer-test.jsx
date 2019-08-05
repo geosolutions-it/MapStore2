@@ -339,4 +339,35 @@ describe('test DefaultLayer module component', () => {
         expect(tooltips.length).toBe(0);
     });
 
+    it('showComponent false hides item', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5,
+            showComponent: false
+        };
+        const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l} />,
+            document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toNotExist();
+    });
+
+    it('showComponent true shows item', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5,
+            showComponent: true
+        };
+        const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l} />,
+            document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+    });
 });

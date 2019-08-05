@@ -16,7 +16,7 @@ const getSaveMessageId = ({saving, saved}) => {
     }
     return "featuregrid.toolbar.saveChanges";
 };
-module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: "32.2%"}, mode = "VIEW", showChartButton = true, selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true, disableZoomAll = false, isFilterActive = false} = {}) => {
+module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize: "32.2%" }, mode = "VIEW", showChartButton = true, selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true, disableZoomAll = false, isFilterActive = false, showTimeSyncButton = false, timeSync = false} = {}) => {
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
             id="edit-mode"
@@ -165,5 +165,13 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
                     }
                 }}
         } />
+        <TButton
+            id="timeSync-button"
+            keyProp="fg-timeSync-button"
+            tooltipId={timeSync ? "featuregrid.toolbar.disableTimeSync" : "featuregrid.toolbar.enableTimeSync"}
+            visible={showTimeSyncButton}
+            active={timeSync}
+            onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
+            glyph="time" />
 
 </ButtonGroup>); };

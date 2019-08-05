@@ -190,19 +190,22 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
             .panel-collapse {
                 flex: 1;
                 display: flex;
+                overflow: auto;
                 .panel-body {
                     flex: 1;
                     overflow: auto;
+                    min-height: 100%;
                 }
             }
         }
     }
 }
 
-#mapstore-print-panel, #measure-dialog, #mapstore-about {
+#mapstore-print-panel, #measure-dialog, #mapstore-about, #share-panel-dialog {
     position: absolute;
     top: 0%;
     left: 20%;

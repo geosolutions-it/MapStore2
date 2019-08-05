@@ -456,6 +456,7 @@
         "queryform": {
             "title": "Búsqueda avanzada",
             "query": "Bésqueda",
+            "apply": "Apply filter",
             "reset": "Reset",
             "query_request_exception": "Error de búsqueda",
             "config": {

@@ -13,6 +13,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
 import map from '../../reducers/map';
+import maptype from '../../reducers/maptype';
 import layers from '../../reducers/layers';
 import controls from '../../reducers/controls';
 
@@ -20,7 +21,8 @@ import controls from '../../reducers/controls';
 const rootReducers = {
     map,
     layers,
-    controls
+    controls,
+    maptype
 };
 
 const createRegisterActionsMiddleware = (actions) => {

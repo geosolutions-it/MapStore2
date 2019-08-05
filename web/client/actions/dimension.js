@@ -11,7 +11,8 @@ const SET_OFFSET_TIME = "TIME_MANAGER:SET_OFFSET_TIME";
 const MOVE_TIME = "TIME_MANAGER:MOVE_TIME";
 
 /**
- *
+ * @param {string} layerId the layer Identifier
+ * @param {string} dimension the dimension name ("time", "elevation"...)
  * @param {object} data Sets the time data for a layer
  */
 const updateLayerDimensionData = (layerId, dimension, data) => ({ type: UPDATE_LAYER_DIMENSION_DATA, dimension, layerId, data });

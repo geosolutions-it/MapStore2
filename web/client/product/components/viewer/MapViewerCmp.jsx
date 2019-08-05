@@ -39,10 +39,11 @@ class MapViewerComponent extends React.Component {
     componentDidUpdate(oldProps) {
         const id = this.props.match.params.mapId || '0';
         const oldId = oldProps.match.params.mapId || '0';
-        if (id !== oldId ) {
+        if (id !== oldId) {
             this.updateMap(id);
         }
     }
+
     render() {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer

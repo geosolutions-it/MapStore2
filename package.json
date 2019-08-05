@@ -21,6 +21,7 @@
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.19.0",
     "denodeify": "1.2.1",
+    "dynamic-public-path-webpack-plugin": "1.0.4",
     "docma": "1.5.1",
     "download-cli": "1.0.1",
     "escope": "3.2.0",

@@ -17,7 +17,7 @@
         "about_a0": "esta",
         "about_p5-1": "página.",
         "about_h21": "Créditos",
-        "about_p6": "MapStore2 está hecho por:",
+        "about_p6": "MapStore está hecho por:",
         "enable": "Activar",
         "layers": "Capas",
         "warning": "Atención",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Construya su propia aplicación</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Use las API para  incluir un mapa de MapStore2 en su  aplicación</p>"
+                    "html":"<h3>API</h3><p>Use las API para  incluir un mapa de MapStore en su  aplicación</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Estilos ráster</h3><p>Estilo ráster</p>"
@@ -402,6 +402,7 @@
             "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
             "toolTrashLayersTooltip": "Eliminar las capas seleccionadas",
             "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
+            "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
             "filterPlaceholder": "Filtrar capas",
@@ -427,6 +428,8 @@
             "refreshMessage": "Recargue la configuración de las capas WMS a partir del servidor(es)",
             "refreshError": "Error actualizando las capas: ",
             "epsgNotSupported": "CRS {epsg} no es compatible con el zoom a la capa",
+            "filterIconEnabled": "Deshabilitar filtro de capa",
+            "filterIconDisabled": "Habilitar filtro de capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -600,7 +603,11 @@
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Los resultados Nominatim tienen prioridad = 5",
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
-            "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}"
+            "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
+            "errors": {
+                "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",
+                "serverError": "El servidor ha devuelto un error al realizar la solicitud GetFeatureInfo. Compruebe si los parámetros son correctos"
+            }
         },
         "draw": {
             "fill": "Relleno",
@@ -762,7 +769,10 @@
         "queryform": {
             "title": "Búsqueda avanzada",
             "query": "Búsqueda",
-            "reset": "Eliminar filtros",
+            "apply": "Aplicar",
+            "reset": "Eliminar",
+            "save": "Guardar",
+            "discard": "Desechar",
             "query_request_exception": "Error en la búsqueda",
             "config": {
                 "load_config_exception": "Error cargando configuración"
@@ -849,7 +859,13 @@
                 "errors": {
                     "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
                 }
-            }
+            },
+            "changedFilter": "Filtro cambiado",
+            "changedFilterAlert": "Hay cambios no guardados. ¿Quieres salvarlos?",
+            "resetFilter": "Quitar filtro",
+            "confirmReset": "Confirmar",
+            "loadingError": "El filtro actual causó un problema de representación para la capa en el mapa. Compruebe la configuración de capa en el servidor o arregle el filtro",
+            "changedFilterWithErrorAlert": "El filtro está causando un error de representación de la capa, ¿quieres guardarlo de todos modos?"
         },
         "annotations": {
             "errorLoadingSymbols": "Hubo un problema al cargar la lista de símbolos. Por favor, contacte al administrador para verificar las opciones de configuración.",
@@ -1058,7 +1074,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
-                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore2<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se anulará en el caso de los archivos de configuración </i> </small> </p>"
             },
             "errors": {
@@ -1111,7 +1127,7 @@
             "showTemplate": "Mostrar plantilla de metadatos",
             "showPreview": "Mostrar vista previa",
             "advancedSettings": "Ajustes avanzados",
-            "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
+            "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Introduzca una url y un título válidos",
                 "addCatalogService": "Servicio añadido correctamente",
@@ -1316,6 +1332,8 @@
                 "hideShowColumns": "Ocultar / mostrar columnas",
                 "zoomAll": "Zoom a la extensión de la página",
                 "syncOnMap": "Sincronizar mapa con filtro",
+                "enableTimeSync": "Sincronizar con el tiempo o el intervalo de tiempo seleccionado",
+                "disableTimeSync": "No sincronizar con el tiempo o el intervalo de tiempo seleccionado",
                 "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
@@ -1839,7 +1857,7 @@
             "checkbox": "No volver a mostrar este mensaje",
             "error": "Error: destino no encontrado",
             "intro": {
-                "title": "Bienvenido a MapStore2",
+                "title": "Bienvenido a MapStore",
                 "text": "Marco de trabajo para  construir aplicaciones de mapas usando librerías estándar, como OpenLayers3 y Leaflet."
             },
             "drawerMenu": {
@@ -1888,7 +1906,7 @@
             },
             "examples": {
                 "title": "Aplicaciones personalizadas",
-                "text": "Pueden usar los componentes y plugins de Mapstore2 para construir  aplicaciones personalizadas"
+                "text": "Pueden usar los componentes y plugins de MapStore para construir  aplicaciones personalizadas"
             },
             "introCesium": {
                 "title": "Instrucciones mapa 3D",
@@ -1927,7 +1945,7 @@
             },
             "dashboardContainer": {
                 "title": "Panel de control",
-                "text": "<p> Un panel de control en MapStore2 proporciona un conjunto de información recopilada adecuadamente para mostrar datos agregados en una vista de un solo disparo. Los datos geoespaciales mostrados en un mapa se pueden colocar uno al lado del otro en tablas de atributos relacionados, cuadros y otros, con el objetivo de conectar diferentes tipos de información, mostrar detalles estadísticos y descripciones textuales relacionadas con un contexto específico. </p> <p> Todos los usuarios pueden visualizar e interactuar con los paneles publicados, pero solo los usuarios a los que se les permite editar pueden agregar, organizar, cambiar el tamaño o eliminar todos los widgets dentro de un panel </p>"
+                "text": "<p> Un panel de control en MapStore proporciona un conjunto de información recopilada adecuadamente para mostrar datos agregados en una vista de un solo disparo. Los datos geoespaciales mostrados en un mapa se pueden colocar uno al lado del otro en tablas de atributos relacionados, cuadros y otros, con el objetivo de conectar diferentes tipos de información, mostrar detalles estadísticos y descripciones textuales relacionadas con un contexto específico. </p> <p> Todos los usuarios pueden visualizar e interactuar con los paneles publicados, pero solo los usuarios a los que se les permite editar pueden agregar, organizar, cambiar el tamaño o eliminar todos los widgets dentro de un panel </p>"
             },
             "dashboardAddWidget": {
                 "title": "Agregar Widget",

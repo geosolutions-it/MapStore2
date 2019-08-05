@@ -62,7 +62,6 @@ const startApp = () => {
     const themeSample = require("raw-loader!./sample.less.raw");
 
     let customReducers;
-
     const customReducer = (state = {}, action) => {
         if (customReducers) {
             const newState = assign({}, state);
@@ -265,8 +264,8 @@ const startApp = () => {
                                     {renderPlugins(renderPage)}
                                 </ul>
                             </div>
-                            <div style={{position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden"}}>
-                                <PluginsContainer params={{mapType}} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
+                            <div style={{ position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden" }}>
+                                <PluginsContainer params={{ mapType }} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard" />
                             </div>
                             <Debug/>
                         </div>

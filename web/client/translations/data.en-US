@@ -17,7 +17,7 @@
         "about_a0": "this",
         "about_p5-1": "page.",
         "about_h21": "Credits",
-        "about_p6": "MapStore2 is made by:",
+        "about_p6": "MapStore is made by:",
         "enable": "Enable",
         "layers": "Layers",
         "warning": "Warning",
@@ -227,7 +227,7 @@
                     "html":"<h3>Plugins</h3><p>Build your own application</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Use APIs to include a MapStore2 map in your application</p>"
+                    "html":"<h3>API</h3><p>Use APIs to include a MapStore map in your application</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
@@ -402,6 +402,7 @@
             "toolTrashLayerTooltip": "Remove selected layer",
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolFeaturesGridTooltip": "Open Attribute Table",
+            "layerFilterTooltip": "Filter Layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
             "filterPlaceholder": "Filter layers",
@@ -427,6 +428,8 @@
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+            "filterIconEnabled": "Disable layer filter",
+            "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -600,7 +603,11 @@
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined",
             "service_missing": "{serviceType} service is not configured",
-            "generic_error": "An error occurred during search. Error details: {message}"
+            "generic_error": "An error occurred during search. Error details: {message}",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            }
         },
         "draw": {
             "fill": "Fill",
@@ -762,7 +769,10 @@
         "queryform": {
             "title": "Advanced Search",
             "query": "Search",
+            "apply": "Apply",
             "reset": "Reset",
+            "save": "Save",
+            "discard": "Undo",
             "query_request_exception": "Request Error",
             "config": {
                 "load_config_exception": "Error Loading Configuration"
@@ -849,7 +859,14 @@
                 "errors": {
                     "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
                 }
-            }
+            },
+            "changedFilter": "Filter Changed",
+            "changedFilterAlert": "There are unsaved changes. Do you want to save them?",
+            "resetFilter": "Remove filter",
+            "confirmReset": "Confirm",
+            "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
+            "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway ?"
+
         },
         "annotations": {
             "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
@@ -1058,7 +1075,7 @@
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
-                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "infoSupported": "<p><small>Supported configuration files: MapStore legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
             },
             "errors": {
@@ -1111,7 +1128,7 @@
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced settings",
-            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, description, format, identifier, rights, source, temporal, title, type, uri",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1316,6 +1333,8 @@
                 "hideShowColumns": "Hide/show columns",
                 "zoomAll": "Zoom to page extent",
                 "syncOnMap": "Sync map with filter",
+                "enableTimeSync": "Synchronize with the selected time or time interval",
+                "disableTimeSync": "Do not synchronize with the selected time or interval",
                 "createNewChart": "Create a chart for the selected layer"
             }
         },
@@ -1839,7 +1858,7 @@
             "checkbox": "don't show this message again",
             "error": "Error: target not found",
             "intro": {
-                "title": "Welcome on MapStore2",
+                "title": "Welcome on MapStore",
                 "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
             },
             "drawerMenu": {
@@ -1884,11 +1903,11 @@
             },
             "mapsGrid": {
                 "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "text": "Here some examples of MapStore. Click on an image to try the demo."
             },
             "examples": {
                 "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "text": "You can use components and plugins of MapStore to build custom applications"
             },
             "introCesium": {
                 "title": "3D map instructions",
@@ -1927,7 +1946,7 @@
             },
             "dashboardContainer": {
                 "title": "Dashboard",
-                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+                "text": "<p>A Dashboard in MapStore provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
             },
             "dashboardAddWidget": {
                 "title": "Add Widget",

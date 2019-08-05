@@ -10,10 +10,11 @@ const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap } = require('../../actions/map');
 const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh } = require('../identify');
+const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic } = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 const { registerHook } = require('../../utils/MapUtils');
+const { setControlProperties } = require('../../actions/controls');
 
 const TEST_MAP_STATE = {
     present: {
@@ -70,10 +71,69 @@ describe('identify Epics', () => {
                     type: "wms",
                     visibility: true,
                     url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
                 }]
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a2).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.reqId).toExist();
+                expect(a2.request).toExist();
+                expect(a3.type).toBe(LOAD_FEATURE_INFO);
+                expect(a3.data).toExist();
+                expect(a3.requestParams).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[0].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
+    it('getFeatureInfoOnFeatureInfoClick WMS with filteredList and override params', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}})];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
                 expect(a0).toExist();
@@ -82,6 +142,8 @@ describe('identify Epics', () => {
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a1.reqId).toExist();
                 expect(a1.request).toExist();
+                expect(a1.request.cql_filter).toExist();
+                expect(a1.request.cql_filter).toBe("id>1");
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
@@ -131,6 +193,7 @@ describe('identify Epics', () => {
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a1.reqId).toExist();
                 expect(a1.request).toExist();
+                expect(a1.request.cql_filter).toNotExist();
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
@@ -493,5 +556,37 @@ describe('identify Epics', () => {
                 }
             }
         });
+    });
+
+    it('enable metadataexplorer control is enabled', (done) => {
+        const state = {controls: {}};
+        const NUMBER_OF_ACTIONS = 2;
+        const callback = actions => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            expect(actions[0].type).toEqual(PURGE_MAPINFO_RESULTS);
+            expect(actions[1].type).toEqual(HIDE_MAPINFO_MARKER);
+            done();
+        };
+        testEpic(
+            closeFeatureInfoOnCatalogOpenEpic,
+            NUMBER_OF_ACTIONS,
+            setControlProperties('metadataexplorer', "enabled", true),
+            callback,
+            state);
+    });
+
+    it('disable metadataexplorer should not affect mapinfo', (done) => {
+        const state = {controls: {}};
+        const NUMBER_OF_ACTIONS = 1;
+        const callback = actions => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            done();
+        };
+        testEpic(
+            addTimeoutEpic(closeFeatureInfoOnCatalogOpenEpic),
+            NUMBER_OF_ACTIONS,
+            setControlProperties('metadataexplorer', "enabled", false),
+            callback,
+            state);
     });
 });

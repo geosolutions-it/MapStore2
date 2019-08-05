@@ -25,7 +25,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector
+    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -44,14 +44,18 @@ const catalogSelector = createSelector([
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
     (state) => currentLocaleSelector(state),
-    (state) => currentMessagesSelector(state)
-], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales) =>({
+    (state) => currentMessagesSelector(state),
+    (state) => pageSizeSelector(state),
+    (state) => loadingSelector(state)
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading) =>({
     authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
     newService,
     currentLocale,
+    pageSize,
+    loading,
     records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
@@ -217,6 +221,7 @@ const API = {
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
+ * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
  */
 module.exports = {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {

@@ -12,7 +12,7 @@ const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {widgetBuilderAvailable, wfsDownloadAvailable} = require('../../../selectors/controls');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive, featureCollectionResultSelector} = require('../../../selectors/query');
-const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector} = require('../../../selectors/featuregrid');
+const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector, timeSyncActive, showTimeSync} = require('../../../selectors/featuregrid');
 const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
 const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
@@ -56,7 +56,9 @@ const Toolbar = connect(
         isSearchAllowed: (state) => !isCesium(state),
         isEditingAllowed: (state) => (filterEditingAllowedUser(userRoleSelector(state), editingAllowedRolesSelector(state)) || canEditSelector(state)) && !isCesium(state),
         hasSupportedGeometry,
-        isFilterActive
+        isFilterActive,
+        showTimeSyncButton: showTimeSync,
+        timeSync: timeSyncActive
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(require('../../../components/data/featuregrid/toolbars/Toolbar'));

@@ -64,7 +64,11 @@ class QueryBuilder extends React.Component {
         emptyFilterWarning: PropTypes.bool,
         header: PropTypes.node,
         zoom: PropTypes.number,
-        toolsOptions: PropTypes.object
+        toolsOptions: PropTypes.object,
+        appliedFilter: PropTypes.object,
+        storedFilter: PropTypes.object,
+        advancedToolbar: PropTypes.bool,
+        loadingError: PropTypes.bool
     };
 
     static defaultProps = {
@@ -96,6 +100,8 @@ class QueryBuilder extends React.Component {
         allowEmptyFilter: false,
         autocompleteEnabled: true,
         emptyFilterWarning: false,
+        advancedToolbar: false,
+        loadingError: false,
         attributeFilterActions: {
             onAddGroupField: () => {},
             onAddFilterField: () => {},
@@ -126,7 +132,9 @@ class QueryBuilder extends React.Component {
         queryToolbarActions: {
             onQuery: () => {},
             onReset: () => {},
-            onChangeDrawingStatus: () => {}
+            onChangeDrawingStatus: () => {},
+            onSaveFilter: () => {},
+            onRestoreFilter: () => {}
         },
         toolsOptions: {}
     };
@@ -161,6 +169,10 @@ class QueryBuilder extends React.Component {
                 hits={this.props.hits}
                 allowEmptyFilter={this.props.allowEmptyFilter}
                 emptyFilterWarning={this.props.emptyFilterWarning}
+                appliedFilter={this.props.appliedFilter}
+                storedFilter={this.props.storedFilter}
+                advancedToolbar={this.props.advancedToolbar}
+                loadingError={this.props.loadingError}
             /></div>);
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">

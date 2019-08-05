@@ -12,6 +12,8 @@ const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const {toChangesMap} = require('../utils/FeatureGridUtils');
+const { layerDimensionSelectorCreator } = require('./dimension');
+
 
 const getLayerById = getLayerFromId;
 const getTitle = (layer = {}) => layer.title || layer.name;
@@ -123,6 +125,17 @@ module.exports = {
     newFeaturesSelector,
     hasNewFeaturesSelector,
     showAgainSelector: state => get(state, "featuregrid.showAgain", false),
+    /**
+     * determines if the time sync button should be shown
+     */
+    showTimeSync: state => {
+        const showEnabled = get(state, "featuregrid.showTimeSync", false);
+        if (showEnabled) {
+            const layerId = selectedLayerIdSelector(state);
+            return layerDimensionSelectorCreator({id: layerId}, 'time')(state);
+        }
+    },
+    timeSyncActive: state => get(state, "featuregrid.timeSync", false),
     showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
     editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),

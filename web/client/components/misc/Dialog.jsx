@@ -27,7 +27,8 @@ class Dialog extends React.Component {
         onClickOut: PropTypes.func,
         modal: PropTypes.bool,
         start: PropTypes.object,
-        draggable: PropTypes.bool
+        draggable: PropTypes.bool,
+        bounds: PropTypes.object
     };
 
     static defaultProps = {
@@ -35,7 +36,7 @@ class Dialog extends React.Component {
         backgroundStyle: {
             background: "rgba(0,0,0,.5)"
         },
-        start: {x: 0, y: 0},
+        start: {x: 0, y: 150},
         className: "modal-dialog modal-content",
         maskLoading: false,
         containerClassName: "",
@@ -43,7 +44,8 @@ class Dialog extends React.Component {
         bodyClassName: "modal-body",
         footerClassName: "modal-footer",
         modal: false,
-        draggable: true
+        draggable: true,
+        bounds: 'parent'
     };
 
     renderLoading = () => {
@@ -72,7 +74,7 @@ class Dialog extends React.Component {
     };
 
     render() {
-        const body = (<div id={this.props.id} style={{zIndex: 3, ...this.props.style}} className={this.props.className + " modal-dialog-container"}>
+        const body = (<div id={this.props.id} style={{zIndex: 3, ...this.props.style}} className={`${this.props.draggable ? 'modal-dialog-draggable' : ''} ${this.props.className} modal-dialog-container`}>
             <div className={this.props.headerClassName + " draggable-header"}>
                 {this.renderRole('header')}
             </div>
@@ -84,7 +86,7 @@ class Dialog extends React.Component {
                 {this.renderRole('footer')}
             </div> : <span/>}
         </div>);
-        const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} handle=".draggable-header, .draggable-header *">
+        const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} bounds={this.props.bounds} handle=".draggable-header, .draggable-header *">
             {body}
         </Draggable>) : body;
         let containerStyle = assign({}, this.props.style.display ? {display: this.props.style.display} : {}, this.props.backgroundStyle);
@@ -104,5 +106,6 @@ class Dialog extends React.Component {
         }
     };
 }
+
 
 module.exports = Dialog;

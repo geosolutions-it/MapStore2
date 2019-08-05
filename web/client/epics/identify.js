@@ -16,6 +16,8 @@ const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLI
 
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
 
+const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
+
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
@@ -89,7 +91,8 @@ module.exports = {
      * Triggers data load on FEATURE_INFO_CLICK events
      */
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
-        action$.ofType(FEATURE_INFO_CLICK).switchMap(({ point }) => {
+        action$.ofType(FEATURE_INFO_CLICK)
+        .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
             const queryableLayers = queryableLayersSelector(getState());
             if (queryableLayers.length === 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
@@ -102,9 +105,16 @@ module.exports = {
                 "filter",
                 "propertyName"
             ];
-            const out$ = Rx.Observable.from((queryableLayers))
+            const out$ = Rx.Observable.from((queryableLayers.filter(l => {
+                // filtering a subset of layers
+                return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
+            })))
                 .mergeMap(layer => {
-                    const { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                    let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                    // request override
+                    if (overrideParams[layer.name]) {
+                        request = {...request, ...overrideParams[layer.name]};
+                    }
                     if (url) {
                         return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()) );
                     }
@@ -202,5 +212,15 @@ module.exports = {
                 const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                 return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));
             })
-        )
+        ),
+    /**
+     * Close Feature Info when catalog is enabled
+     */
+    closeFeatureInfoOnCatalogOpenEpic: (action$) =>
+        action$
+            .ofType(SET_CONTROL_PROPERTIES)
+            .filter((action) => action.control === "metadataexplorer" && action.properties && action.properties.enabled)
+            .switchMap(() => {
+                return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
+            })
 };
