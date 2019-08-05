@@ -67,7 +67,7 @@ class DownloadDialog extends React.Component {
     };
 
     render() {
-        return (<Dialog id="mapstore-export" style={{display: this.props.enabled ? "block" : "none"}}>
+        return (<Dialog id="mapstore-export" style={{display: this.props.enabled ? "block" : "none"}} draggable={false} modal>
             <span role="header">
                 <span className="about-panel-title"><Message msgId="wfsdownload.title" /></span>
                 <button onClick={this.props.onClose} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>

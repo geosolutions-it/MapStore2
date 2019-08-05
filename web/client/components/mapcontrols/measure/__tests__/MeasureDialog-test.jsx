@@ -48,7 +48,7 @@ describe("test the MeasureDialog", () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
-        const dialog = document.getElementById('measure');
+        const dialog = document.getElementById('measure-dialog');
         expect(dialog).toExist();
 
     });
@@ -79,7 +79,7 @@ describe("test the MeasureDialog", () => {
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(2);
 
-        const dialog = document.getElementById('measure');
+        const dialog = document.getElementById('measure-dialog');
         expect(dialog).toNotExist();
         expect(spyMount.calls.length).toBe(1);
         expect(spyMount).toHaveBeenCalledWith(showCoordinateEditor);
@@ -119,7 +119,7 @@ describe("test the MeasureDialog", () => {
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(2);
 
-        const dialog = document.getElementById('measure');
+        const dialog = document.getElementById('measure-dialog');
         expect(dialog).toNotExist();
         expect(spyMount.calls.length).toBe(1);
         expect(spyToggleMeasure.calls.length).toBe(1);

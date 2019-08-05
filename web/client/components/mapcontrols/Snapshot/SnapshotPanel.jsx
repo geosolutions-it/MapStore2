@@ -21,6 +21,7 @@ const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 const Dialog = require('../../misc/Dialog');
 
 const Message = require('../../I18N/Message');
+const Portal = require('../../misc/Portal');
 
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
@@ -88,7 +89,8 @@ class SnapshotPanel extends React.Component {
         },
         panelClassName: "snapshot-panel",
         closeGlyph: "1-close",
-        buttonStyle: "primary"
+        buttonStyle: "primary",
+        bounds: '#container'
     };
 
     componentWillMount() {
@@ -193,10 +195,14 @@ class SnapshotPanel extends React.Component {
                     {panel}
                 </Panel>);
             }
-            return (<Dialog id="mapstore-snapshot-panel" style={this.props.style}>
-                <span role="header"><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-                {panel}
-            </Dialog>);
+            return (
+                <Portal>
+                  <Dialog id="mapstore-snapshot-panel" style={this.props.panelStyle} bounds={this.props.bounds}>
+                    <span role="header"><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                    {panel}
+                  </Dialog>
+                </Portal>
+            );
         }
         return panel;
     };
