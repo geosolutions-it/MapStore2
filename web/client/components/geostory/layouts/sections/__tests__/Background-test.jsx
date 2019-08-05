@@ -39,7 +39,7 @@ describe('Background component', () => {
             width={1024}
             height={VIEW_HEIGHT}
             type="image"
-            src="path/to/image.png"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
             />, document.getElementById("container"));
         const container = document.getElementById('container');
         const backgroundContainer = container.querySelector('.ms-section-background-container');
@@ -48,6 +48,6 @@ describe('Background component', () => {
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         expect(imageMedia).toExist();
-        expect(image.getAttribute('src')).toBe('path/to/image.png');
+        expect(image.getAttribute('src')).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
     });
 });

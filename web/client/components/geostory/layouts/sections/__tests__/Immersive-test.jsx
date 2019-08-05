@@ -27,7 +27,7 @@ describe('Immersive component', () => {
         expect(el).toExist();
     });
     it('Immersive background rendering (image)', () => {
-        const IMAGE_SRC = 'path/to/image.jpg';
+        const IMAGE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
         const CONTENTS = [
             {
                 id: '000',
@@ -43,7 +43,7 @@ describe('Immersive component', () => {
                 type: 'column',
                 background: {
                     type: 'image',
-                    src: 'other/path/to/image.jpg'
+                    src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
                 },
                 html: '<p>column</p>'
             }

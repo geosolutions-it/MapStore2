@@ -55,8 +55,8 @@ describe('editableText enhancer', () => {
         const Sink = editableText(createSink(props => {
             if (!check) {
                 props.toggleEditing(true, '<p>test</p>');
-            } else {
-                expect(spy).toHaveBeenCalled();
+            } else if (spy.calls.length > 0) {
+                expect(spy.calls[0].arguments[0].indexOf('<p>test</p>')).toBeGreaterThanOrEqualTo(0);
                 done();
             }
 

@@ -7,11 +7,18 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createSink} from 'recompose';
+import { createSink } from 'recompose';
 import expect from 'expect';
+
+// config for recompose usage of RXJS
+import rxjsconfig from 'recompose/rxjsObservableConfig';
+import { setObservableConfig } from 'recompose';
 import immersiveBackgroundManager from '../immersiveBackgroundManager';
+
 import STORY from 'json-loader!../../../../../../test-resources/geostory/sampleStory_1.json';
 const contents = STORY.sections[1].contents;
+
+setObservableConfig(rxjsconfig);
 
 describe('immersiveBackgroundManager enhancer', () => {
     beforeEach((done) => {
@@ -23,21 +30,21 @@ describe('immersiveBackgroundManager enhancer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('immersiveBackgroundManager rendering with defaults', (done) => {
+    it('rendering with defaults', (done) => {
         const Sink = immersiveBackgroundManager(createSink( props => {
             expect(props).toExist();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
-    it('immersiveBackgroundManager holds last background ', (done) => {
+    it('holds last background ', (done) => {
         const Sink = immersiveBackgroundManager(createSink(props => {
             expect(props).toExist();
             if (props.background.id !== contents[1].background.id) {
                 // first render, trigger onVisibility change to make the background to be 1
                 props.onVisibilityChange({ id: contents[1].id, visible: true });
             } else {
-                    // second render, the background now is the one triggered with onVisbilityChange({id: contents[1].id})
+                // second render, the background now is the one triggered with onVisibilityChange({id: contents[1].id})
                 done();
             }
 

@@ -27,7 +27,7 @@ describe('Title component', () => {
         expect(el).toExist();
     });
     it('Title background rendering (image)', () => {
-        const IMAGE_SRC = 'path/to/image.jpg';
+        const IMAGE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
         const CONTENTS = [
             {
                 id: '000',
