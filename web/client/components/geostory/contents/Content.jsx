@@ -7,10 +7,12 @@
  */
 import React from 'react';
 import TextB from './Text';
+import ImageB from '../media/Image';
 import enhanceContent from './enhancers/enhanceContent';
 
 
 const Text = enhanceContent({visibilityEnhancerOptions: { threshold: [0.75] }})(TextB);
+const Image = enhanceContent({visibilityEnhancerOptions: { threshold: [0.75] }})(ImageB);
 const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 
@@ -22,6 +24,8 @@ const getComponent = type => {
     switch (type) {
         case 'text':
             return Text;
+        case 'image':
+            return Image;
         default:
             return DummyComponent;
     }

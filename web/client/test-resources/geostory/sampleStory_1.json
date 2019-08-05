@@ -12,6 +12,11 @@
           "type": "text",
           "background": {},
           "html": "<p>this is some html content</p>"
+        },
+        {
+          "id": "SomeID2",
+          "type": "image",
+          "src": "path/to/image.png"
         }
       ]
     },

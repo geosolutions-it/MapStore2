@@ -35,5 +35,6 @@ export const Modes = {
 export const lists = {
     StoryTypes: values(StoryTypes),
     SectionTypes: values(SectionTypes),
+    MediaTypes: values(MediaTypes),
     Modes: values(Modes)
 };

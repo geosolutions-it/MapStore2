@@ -9,7 +9,8 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import stickySupport from '../../../misc/enhancers/stickySupport';
-
+import Media from '../../media/index';
+import { lists } from '../../../../utils/GeoStoryUtils';
 /**
  * Background.
  * This component provides a sticky container inside the Sections.
@@ -20,7 +21,8 @@ class Background extends Component {
     static propTypes = {
         height: PropTypes.number,
         width: PropTypes.number,
-        style: PropTypes.object
+        style: PropTypes.object,
+        type: PropTypes.oneOf(lists.MediaTypes)
     };
 
     static defaultProps = {
@@ -31,6 +33,7 @@ class Background extends Component {
 
 
     render() {
+        const MediaType = Media[this.props.type];
         return (
             <div
                 ref="div"
@@ -39,7 +42,7 @@ class Background extends Component {
                 <div
                     className="ms-section-background-container"
                     style={{ height: this.props.height }}>
-                    {this.props.children}
+                    {MediaType && <MediaType { ...this.props } />}
                 </div>
             </div>
         );
