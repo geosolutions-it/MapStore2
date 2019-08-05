@@ -14,6 +14,10 @@ const getContentIndex = (contents, id) => {
     return contents[index === -1 || !index ? 0 : index];
 };
 
+/**
+ * Transforms the intersection events stream into backgroundId property stream.
+ * @param {stream} intersection$ the stream of intersection event calls
+ */
 const createBackgroundIdStream = (intersection$) =>
     intersection$
         // create a map with the latest states of each intersection event
@@ -32,15 +36,18 @@ const createBackgroundIdStream = (intersection$) =>
                 (k) => get(visibleItems[k], 'entry.intersectionRatio')
             )
         )
-        // optimization
+        // optimization to avoid not useful events
         .distinctUntilChanged()
-        // create the prop
+        // create the property from the Id stream
         .map(backgroundId => ({
             backgroundId
         }));
 
+/**
+ * enhancer that uses the `backgroundId` property to select the background object
+ * from `contents` property
+ */
 export const backgroundProp = withProps(
-
     ({ backgroundId, contents = [] }) => ({
         background: get(getContentIndex(contents, backgroundId) || 0, 'background') || {
             type: 'none'
@@ -52,17 +59,18 @@ export const backgroundProp = withProps(
  */
 export default compose(
     mapPropsStream(props$ => {
+        // create an handler for intersection events
         const { handler: onVisibilityChange, stream: intersection$ } = createEventHandler();
         return Observable.combineLatest(
-            props$,
-            createBackgroundIdStream(intersection$, props$)
+            props$, // rendering properties stream
+            createBackgroundIdStream(intersection$, props$) // generates backgroundId property stream
                 .startWith({}), // emit first event from all the streams to allow first rendering
             // HERE WE CAN PLACE EVERY OTHER INTERSECTION EVENT STREAM HANDLER
             (...propsParts) => ({
                 ...(propsParts.reduce((props = {}, part) => ({ ...props, ...part }), {})),
                 onVisibilityChange
             })
-        ).do(props => console.log(props && props.background));
+        );
     }),
     backgroundProp
 );
