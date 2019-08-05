@@ -12,6 +12,7 @@ import expect from 'expect';
 import Image from '../Image';
 import ReactTestUtils from 'react-dom/test-utils';
 
+const SAMPLE_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 describe('Image component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -30,7 +31,7 @@ describe('Image component', () => {
     it('Image rendering with to contain', () => {
         ReactDOM.render(<Image
             fit="contain"
-            src="path/to/image.png"/>, document.getElementById("container"));
+            src={SAMPLE_SRC}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
         expect(image).toExist();
@@ -39,7 +40,7 @@ describe('Image component', () => {
     it('Image rendering with to cover', () => {
         ReactDOM.render(<Image
             fit="cover"
-            src="path/to/image.png"/>, document.getElementById("container"));
+            src={SAMPLE_SRC}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
         expect(image).toExist();
@@ -47,7 +48,7 @@ describe('Image component', () => {
     });
     it('Image rendering with enable fullscreen preview', () => {
         ReactDOM.render(<Image
-            src="path/to/image.png"
+            src={SAMPLE_SRC}
             enableFullscreen/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');

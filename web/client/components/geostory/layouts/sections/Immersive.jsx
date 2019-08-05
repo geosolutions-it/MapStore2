@@ -23,7 +23,7 @@ const Immersive = ({contents = [], mode, background = {}, onVisibilityChange = (
             width={viewWidth}
             height={viewHeight}/>
         <div className="ms-section-contents">
-            {contents.map((props, i) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} intersectionObserverOptions={i === 0 ? {threshold: 0} : undefined} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
+            {contents.map((props, i) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
         </div>
     </section>
 );

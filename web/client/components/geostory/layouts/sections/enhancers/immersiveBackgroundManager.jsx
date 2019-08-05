@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { compose, createEventHandler, withPropsOnChange, mapPropsStream } from 'recompose';
+import { compose, createEventHandler, withProps, mapPropsStream } from 'recompose';
 import { findIndex, get, maxBy } from "lodash";
 import { Observable } from "rxjs";
 
@@ -24,17 +24,14 @@ const createBackgroundIdStream = (intersection$) =>
                 entry
             }
         }), {})
-        .do(r => console.log(r))
         // select the current background id
         .map((visibleItems = {}) =>
             // get the one with max intersectionRatio that should be the selected background ID
             maxBy(
-                Object.keys(visibleItems)
-                    .filter(k => get(visibleItems[k], 'visible')),  // exclude items not visible anymore
-                (k) => get(visibleItems[k], 'event.intersectionRatio')
+                Object.keys(visibleItems),
+                (k) => get(visibleItems[k], 'entry.intersectionRatio')
             )
         )
-        .do(r => console.log(`backgroundId: ${r}`))
         // optimization
         .distinctUntilChanged()
         // create the prop
@@ -42,6 +39,13 @@ const createBackgroundIdStream = (intersection$) =>
             backgroundId
         }));
 
+export const backgroundProp = withProps(
+
+    ({ backgroundId, contents = [] }) => ({
+        background: get(getContentIndex(contents, backgroundId) || 0, 'background') || {
+            type: 'none'
+        }
+    }));
 /**
  * Holds the current background as background property
  * by intercepting onVisibilityChange from components.
@@ -58,13 +62,7 @@ export default compose(
                 ...(propsParts.reduce((props = {}, part) => ({ ...props, ...part }), {})),
                 onVisibilityChange
             })
-        );
+        ).do(props => console.log(props && props.background));
     }),
-    withPropsOnChange(
-        ['backgroundId, contents'],
-        ({ backgroundId, contents = [] }) => ({
-            background: get(getContentIndex(contents, backgroundId) || 0, 'background') || {
-                type: 'none'
-            }
-        }))
+    backgroundProp
 );

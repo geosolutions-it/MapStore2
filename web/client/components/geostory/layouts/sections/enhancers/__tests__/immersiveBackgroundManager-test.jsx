@@ -7,11 +7,19 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createSink} from 'recompose';
+import { compose, createSink, mapPropsStream} from 'recompose';
 import expect from 'expect';
+
+// config for recompose usage of RXJS
+import rxjsconfig from 'recompose/rxjsObservableConfig';
+import { setObservableConfig } from 'recompose';
 import immersiveBackgroundManager from '../immersiveBackgroundManager';
+
 import STORY from 'json-loader!../../../../../../test-resources/geostory/sampleStory_1.json';
+import STORY_2 from 'json-loader!../../../../../../test-resources/geostory/sampleStory_2.json';
 const contents = STORY.sections[1].contents;
+
+setObservableConfig(rxjsconfig);
 
 describe('immersiveBackgroundManager enhancer', () => {
     beforeEach((done) => {
@@ -23,14 +31,14 @@ describe('immersiveBackgroundManager enhancer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('immersiveBackgroundManager rendering with defaults', (done) => {
+    it('rendering with defaults', (done) => {
         const Sink = immersiveBackgroundManager(createSink( props => {
             expect(props).toExist();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
-    it('immersiveBackgroundManager holds last background ', (done) => {
+    it('holds last background ', (done) => {
         const Sink = immersiveBackgroundManager(createSink(props => {
             expect(props).toExist();
             if (props.background.id !== contents[1].background.id) {
