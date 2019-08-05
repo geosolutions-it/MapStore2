@@ -10,9 +10,9 @@ import TextB from './Text';
 import ImageB from '../media/Image';
 import enhanceContent from './enhancers/enhanceContent';
 
-const DEFAULT_TRASHOLDS = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
-const Text = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_TRASHOLDS }})(TextB);
-const Image = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_TRASHOLDS }})(ImageB);
+const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
+const Text = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_THRESHOLD }})(TextB);
+const Image = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_THRESHOLD }})(ImageB);
 const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 
