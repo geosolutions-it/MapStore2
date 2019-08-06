@@ -64,6 +64,10 @@ describe('Title component', () => {
         const sectionContents = container.querySelector('.ms-section-contents');
         expect(sectionContents).toExist();
         expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
+
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        expect(backgroundContainer).toExist();
+        expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
 
     it('Title rendering cover set to false', () => {
@@ -83,5 +87,9 @@ describe('Title component', () => {
         const sectionContents = container.querySelector('.ms-section-contents');
         expect(sectionContents).toExist();
         expect(sectionContents.clientHeight < VIEW_HEIGHT).toBe(true);
+
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        expect(backgroundContainer).toExist();
+        expect(backgroundContainer.clientHeight).toBe(sectionContents.clientHeight);
     });
 });
