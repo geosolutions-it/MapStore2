@@ -615,15 +615,15 @@
             "fontTitle": "Font",
             "color": "Colore",
             "lineDash": "Tratteggio",
-            "stroke": "Linea",
+            "stroke": "Bordo",
             "opacity": "Opacità",
             "width": "Larghezza",
             "font": {
                 "textColor": "Colore",
                 "family": "Famiglia",
-                "size": "Taglia",
+                "size": "Dimensione",
                 "style": "Stile",
-                "weight": "Peso",
+                "weight": "Spessore",
                 "textAlign": "Allineamento"
             },
             "marker": {
