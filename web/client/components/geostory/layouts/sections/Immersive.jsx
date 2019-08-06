@@ -10,11 +10,13 @@ import Content from '../../contents/Content';
 import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 
+import AddBar from '../../common/AddBar';
+import { SectionTypes } from '../../../../utils/GeoStoryUtils';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({contents = [], mode, background = {}, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
+const Immersive = ({id, contents = [], mode, background = {}, onVisibilityChange = () => {}, viewWidth, viewHeight, addSection = () => {} }) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
@@ -25,6 +27,32 @@ const Immersive = ({contents = [], mode, background = {}, onVisibilityChange = (
         <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
         </div>
+        <AddBar
+            containerWidth={viewWidth}
+            containerHeight={viewHeight}
+            conatinerSelector=".ms-sections-container"
+            buttons={[{
+                glyph: 'font',
+                tooltip: 'Add title section',
+                onClick: () => {
+                    addSection(SectionTypes.TITLE, id);
+                }
+            },
+            {
+                glyph: 'sheet',
+                tooltip: 'Add paragraph section',
+                onClick: () => {
+                    addSection(SectionTypes.PARAGRAPH, id);
+                }
+            },
+            {
+                glyph: 'book',
+                tooltip: 'Add immersive section',
+                onClick: () => {
+                    // TODO: add
+                    addSection(SectionTypes.IMMERSIVE, id);
+                }
+            }]}/>
     </section>
 );
 

@@ -14,33 +14,37 @@ import { SectionTypes } from '../../../../utils/GeoStoryUtils';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ id, className = '', contents, mode, addSection = () => {} }) => (
+export default ({ id, className = '', contents, mode, addSection = () => {}, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-paragraph">
         <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} {...props}/>))}
         </div>
-        <AddBar buttons={[{
-            glyph: 'font',
-            tooltip: 'Add title section',
-            onClick: () => {
-                addSection(SectionTypes.TITLE, id);
-            }
-        },
-        {
-            glyph: 'sheet',
-            tooltip: 'Add paragraph section',
-            onClick: () => {
-                addSection(SectionTypes.PARAGRAPH, id);
-            }
-        },
-        {
-            glyph: 'book',
-            tooltip: 'Add immersive section',
-            onClick: () => {
-                // TODO: add
-                addSection(SectionTypes.IMMERSIVE, id);
-            }
-        }]}/>
+        <AddBar
+            containerWidth={viewWidth}
+            containerHeight={viewHeight}
+            conatinerSelector=".ms-sections-container"
+            buttons={[{
+                glyph: 'font',
+                tooltip: 'Add title section',
+                onClick: () => {
+                    addSection(SectionTypes.TITLE, id);
+                }
+            },
+            {
+                glyph: 'sheet',
+                tooltip: 'Add paragraph section',
+                onClick: () => {
+                    addSection(SectionTypes.PARAGRAPH, id);
+                }
+            },
+            {
+                glyph: 'book',
+                tooltip: 'Add immersive section',
+                onClick: () => {
+                    // TODO: add
+                    addSection(SectionTypes.IMMERSIVE, id);
+                }
+            }]}/>
     </section>
 );

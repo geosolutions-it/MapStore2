@@ -10,11 +10,14 @@ import Content from '../../contents/Content';
 import Background from './Background';
 import { backgroundProp } from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
+import AddBar from '../../common/AddBar';
+import { SectionTypes } from '../../../../utils/GeoStoryUtils';
+
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundProp(({ background = {}, contents = [], mode, cover, viewWidth, viewHeight }) => (
+export default backgroundProp(({ id, background = {}, contents = [], addSection = () => {}, mode, cover, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-title">
         <ContainerDimensions>
@@ -34,5 +37,31 @@ export default backgroundProp(({ background = {}, contents = [], mode, cover, vi
         <div className="ms-section-contents">
             {contents.map((props) => (<Content mode={mode} {...props} contentWrapperStyle={cover ? { minHeight: viewHeight } : {}}/>))}
         </div>
+        <AddBar
+            containerWidth={viewWidth}
+            containerHeight={viewHeight}
+            conatinerSelector=".ms-sections-container"
+            buttons={[{
+                glyph: 'font',
+                tooltip: 'Add title section',
+                onClick: () => {
+                    addSection(SectionTypes.TITLE, id);
+                }
+            },
+            {
+                glyph: 'sheet',
+                tooltip: 'Add paragraph section',
+                onClick: () => {
+                    addSection(SectionTypes.PARAGRAPH, id);
+                }
+            },
+            {
+                glyph: 'book',
+                tooltip: 'Add immersive section',
+                onClick: () => {
+                    // TODO: add
+                    addSection(SectionTypes.IMMERSIVE, id);
+                }
+            }]}/>
     </section>
 ));
