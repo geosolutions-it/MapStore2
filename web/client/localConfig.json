@@ -44,7 +44,7 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "format": "aeronautical",
+          "format": "decimal",
           "defaultTextAnnotation": "New"
         },
         "maptype": {
