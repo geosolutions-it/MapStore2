@@ -783,4 +783,78 @@ describe('Test the AnnotationsUtils', () => {
         expect(fts[0].properties.ms_style).toExist();
         expect(fts[0].properties.ms_style.strokeDashstyle).toBe('solid');
     });
+
+    it('test annotationsToPrint text without outline', () => {
+        const f = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                },
+                style: {
+                    color: "#000000",
+                    fillColor: "#000000",
+                    fillOpacity: 1,
+                    font: "14px Arial",
+                    fontFamily: "Arial",
+                    fontSize: "14",
+                    fontSizeUom: "px",
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    highlight: false,
+                    label: "test",
+                    opacity: 1,
+                    textAlign: "center",
+                    title: "Text Style",
+                    type: "Text"
+                }
+            }]
+        };
+        let fts = annotationsToPrint([f]);
+        expect(fts).toExist();
+        expect(fts.length).toBe(1);
+        expect(fts[0].properties.ms_style).toExist();
+        expect(fts[0].properties.ms_style.labelOutlineColor).toNotExist();
+    });
+
+    it('test annotationsToPrint text with outline', () => {
+        const f = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                },
+                style: {
+                    color: "#000000",
+                    fillColor: "#000000",
+                    fillOpacity: 1,
+                    font: "14px Arial",
+                    fontFamily: "Arial",
+                    fontSize: "14",
+                    fontSizeUom: "px",
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    highlight: false,
+                    label: "test",
+                    opacity: 1,
+                    textAlign: "center",
+                    title: "Text Style",
+                    type: "Text",
+                    weight: 2.0
+                },
+                properties: {
+                    isText: true
+                }
+            }]
+        };
+        let fts = annotationsToPrint([f]);
+        expect(fts).toExist();
+        expect(fts.length).toBe(1);
+        expect(fts[0].properties.ms_style).toExist();
+        expect(fts[0].properties.ms_style.labelOutlineColor).toExist();
+    });
 });
