@@ -1,5 +1,6 @@
 @ms-story-bg: @ms2-color-background;
 @ms-story-bg-grey: @ms2-color-shade-lighter;
+@ms-story-highlight: lighten(@ms2-color-primary, 20%);
 
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
@@ -217,6 +218,12 @@
                     color: contrast(@ms-story-bg);
                     background-color: @ms-story-bg;
                     .shadow-soft();
+                    /*
+                    highlight when button is active
+                    base style is not visible */
+                    .rdw-option-active {
+                        outline: 2px solid @ms-story-highlight;
+                    }
                 }
 
                 /*
