@@ -30,6 +30,7 @@ class Feature extends React.Component {
     };
 
     componentDidMount() {
+        this._layers = [];
         if (this.props.container && this.props.geometry || this.props.features) {
             this.createLayer(this.props);
         }
@@ -91,9 +92,7 @@ class Feature extends React.Component {
     }
 
     addLayer(props, styles) {
-        /* remove the current layer to avoid multiple features to overlap */
-        this.removeLayer(props);
-        this._layer = geometryToLayer({
+        const layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
             styleName: props.styleName,
@@ -102,8 +101,8 @@ class Feature extends React.Component {
         }, {
             style: styles
         });
-        props.container.addLayer(this._layer);
-        this._layer.on('click', (event) => {
+        props.container.addLayer(layer);
+        layer.on('click', (event) => {
             if (props.onClick) {
                 props.onClick({
                     pixel: {
@@ -114,13 +113,17 @@ class Feature extends React.Component {
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });
+        this._layers.push(layer);
     }
     /* it removes the layer from a container otherwise we would create and add more
      * layer with same features causing some unintended style override
     */
     removeLayer = (props) => {
-        if (this._layer) {
-            props.container.removeLayer(this._layer);
+        if (this._layers) {
+            this._layers.forEach(l => {
+                props.container.removeLayer(l);
+            });
+            this._layers = [];
         }
     }
 }
