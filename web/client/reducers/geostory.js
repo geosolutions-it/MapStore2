@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { get } from "lodash";
 import { set } from '../utils/ImmutableUtils';
 
-
+import uuid from "uuid";
 import {
+    ADD_SECTION,
     CHANGE_MODE,
     SET_CURRENT_STORY
 } from '../actions/geostory';
@@ -172,6 +174,15 @@ export default (state = INITIAL_STATE, action) => {
         }
         case SET_CURRENT_STORY: {
             return set('currentStory', action.story, state);
+        }
+        case ADD_SECTION: {
+            const {position, type, section} = action;
+            const index = get(state, `currentSTory.sections["${position}"]`) || -1;
+            return set(`currentStory.sections[${index + 1}]`, {
+                id: uuid(),
+                type,
+                ...section
+            }, state);
         }
         default:
             return state;
