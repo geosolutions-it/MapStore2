@@ -47,7 +47,7 @@ const refreshTokenEpic = (action$, store) =>
 const reloadMapConfig = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
     .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1)
-    .filter((data) => data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState()) : true)
+    .filter((data) => data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState()) : pathnameSelector(store.getState()).indexOf("new") === -1)
     .switchMap(() => {
         const urlQuery = url.parse(window.location.href, true).query;
         let mapId = mapIdSelector(store.getState());
@@ -55,6 +55,20 @@ const reloadMapConfig = (action$, store) =>
         const {configUrl} = ConfigUtils.getConfigUrl({mapId, config});
         return Rx.Observable.of(loadMapConfig(configUrl, mapId));
     }).catch((e) => {
+        return Rx.Observable.of(configureError(e));
+    });
+
+const reloadNewMapConfig = (action$, store) =>
+    action$.ofType(LOGOUT)
+    .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1 && pathnameSelector(store.getState()).indexOf("new") !== -1)
+    .switchMap(() => {
+        const urlQuery = url.parse(window.location.href, true).query;
+        let mapId = 'new';
+        let config = urlQuery && urlQuery.config || null;
+        const {configUrl} = ConfigUtils.getConfigUrl({mapId, config});
+        return Rx.Observable.of(loadMapConfig(configUrl, null));
+    })
+    .catch((e) => {
         return Rx.Observable.of(configureError(e));
     });
 
@@ -86,6 +100,7 @@ const initCatalogOnLoginOutEpic = (action$) =>
 module.exports = {
     refreshTokenEpic,
     reloadMapConfig,
+    reloadNewMapConfig,
     promtLoginOnMapError,
     initCatalogOnLoginOutEpic
 };
