@@ -13,7 +13,7 @@ import { backgroundProp } from './enhancers/immersiveBackgroundManager';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundProp(({ background = {}, contents = [], mode, viewWidth, viewHeight }) => (
+export default backgroundProp(({ background = {}, contents = [], mode, cover, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-title">
         <Background
@@ -22,7 +22,7 @@ export default backgroundProp(({ background = {}, contents = [], mode, viewWidth
             width={viewWidth}
             height={viewHeight}/>
         <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
+            {contents.map((props) => (<Content mode={mode} {...props} contentWrapperStyle={cover ? { minHeight: viewHeight } : {}}/>))}
         </div>
     </section>
 ));

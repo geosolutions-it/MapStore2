@@ -34,7 +34,8 @@ class Section extends React.Component {
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
         viewWidth: PropTypes.number,
-        excludeClassName: PropTypes.string
+        excludeClassName: PropTypes.string,
+        cover: PropTypes.boolean
     };
 
     static defaultProps = {
@@ -54,6 +55,7 @@ class Section extends React.Component {
         return (
             <SectionType
                 mode={this.props.mode}
+                cover={this.props.cover}
                 contents={this.props.contents}
                 viewWidth={this.props.viewWidth}
                 viewHeight={this.props.viewHeight}/>

@@ -47,4 +47,41 @@ describe('Title component', () => {
         expect(img).toExist();
         expect(img.getAttribute('src')).toBe(IMAGE_SRC);
     });
+    it('Title rendering cover set to true', () => {
+        const VIEW_HEIGHT = 500;
+        const CONTENTS = [
+            {
+                id: '000',
+                type: 'text',
+                html: '<h1>Title</h1>'
+            }
+        ];
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-title');
+        expect(el).toExist();
+
+        const sectionContents = container.querySelector('.ms-section-contents');
+        expect(sectionContents).toExist();
+        expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
+    });
+
+    it('Title rendering cover set to false', () => {
+        const VIEW_HEIGHT = 500;
+        const CONTENTS = [
+            {
+                id: '000',
+                type: 'text',
+                html: '<h1>Title</h1>'
+            }
+        ];
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-title');
+        expect(el).toExist();
+
+        const sectionContents = container.querySelector('.ms-section-contents');
+        expect(sectionContents).toExist();
+        expect(sectionContents.clientHeight < VIEW_HEIGHT).toBe(true);
+    });
 });
