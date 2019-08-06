@@ -36,7 +36,7 @@ export default ({
         {({ width, height }) =>
             <div className="ms-sections-container">
                     {
-                        sections.map(({ contents = [], id: sectionId, type: sectionType }) => {
+                        sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                             return (
                                 <Section
                                     key={sectionId}
@@ -46,6 +46,7 @@ export default ({
                                     type={sectionType}
                                     mode={mode}
                                     contents={contents}
+                                    cover={cover}
                                 />
                             );
                         })
