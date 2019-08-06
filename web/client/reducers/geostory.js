@@ -28,15 +28,17 @@ const createSampleSection = () => [{
     type: 'title',
     id: '000',
     title: 'Abstract',
+    cover: true,
     contents: [
         {
             id: "SomeID",
-            type: 'text',
             background: {
                 type: "image",
                 src: 'https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80'
             },
-            html: `<h1>Title</h1>`
+            type: 'text',
+            theme: 'bright',
+            html: `<h1 style="text-align:center;">List of Highest Astronomical Observatories</h1><p style="text-align:center;"><em>From Wikipedia, the free encyclopedia</em></p>`
         }
     ]
 }, {
@@ -56,7 +58,24 @@ const createSampleSection = () => [{
             id: "SomeID2",
             type: 'image',
             src: 'https://images.unsplash.com/photo-1558999539-7a19738f085d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
-            enableFullscreen: true
+            enableFullscreen: true,
+            size: 'medium'
+        }
+    ]
+}, {
+    type: 'title',
+    id: '0A0',
+    title: 'Abstract',
+    contents: [
+        {
+            id: "SomeID",
+            background: {
+                type: "image",
+                src: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80'
+            },
+            type: 'text',
+            theme: 'bright',
+            html: `<h1 style="text-align:center;">Enter title...</h1>`
         }
     ]
 }, {
@@ -73,7 +92,9 @@ const createSampleSection = () => [{
                 src: 'https://images.unsplash.com/photo-1562874724-b33411b38141?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80'
 
             },
-            html: SAMPLE_TEXT
+            html: SAMPLE_TEXT,
+            align: 'left',
+            size: 'small'
         }, {
             id: "SomeID2",
             type: 'text',
