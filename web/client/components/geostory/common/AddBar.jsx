@@ -12,7 +12,6 @@ class AddBar extends React.Component {
         id: PropTypes.string,
         type: PropTypes.string,
         buttons: PropTypes.buttons,
-        conatinerSelector: PropTypes.string,
         containerWidth: PropTypes.number,
         containerHeight: PropTypes.number
     };
@@ -54,8 +53,6 @@ class AddBar extends React.Component {
                     if (popover) this.trigger = popover.trigger;
                 }}
                 placement="top"
-                container={this.props.conatinerSelector &&
-                    document.querySelector(this.props.conatinerSelector)}
                 >
                 <Button>
                     <Glyphicon

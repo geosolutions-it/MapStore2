@@ -34,7 +34,9 @@ export default ({
 }) => (<BorderLayout className="ms-cascade-story">
     <ContainerDimensions sections={sections}>
         {({ width, height }) =>
-            <div className="ms-sections-container">
+            <div
+                id="ms-sections-container"
+                className="ms-sections-container">
                     {
                         sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                             return (

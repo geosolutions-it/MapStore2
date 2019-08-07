@@ -47,7 +47,7 @@ export default () => WrappedComponent =>
         };
 
         static defaultProps = {
-            scrollContainerSelector: '.ms-sections-container',
+            scrollContainerSelector: '',
             height: 0,
             width: 0,
             refId: 'div'

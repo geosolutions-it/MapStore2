@@ -21,6 +21,8 @@ const Immersive = ({id, contents = [], mode, background = {}, onVisibilityChange
         className="ms-section ms-section-immersive">
         <Background
             { ...background }
+            // selector used by sticky polyfill to detect scroll events
+            scrollContainerSelector="#ms-sections-container"
             key={background.id}
             width={viewWidth}
             height={viewHeight}/>
@@ -30,7 +32,6 @@ const Immersive = ({id, contents = [], mode, background = {}, onVisibilityChange
         <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
-            conatinerSelector=".ms-sections-container"
             buttons={[{
                 glyph: 'font',
                 tooltip: 'Add title section',

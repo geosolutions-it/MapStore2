@@ -20,7 +20,6 @@ class ToolbarPopover extends React.Component {
         style: PropTypes.object,
         className: PropTypes.string,
         placement: PropTypes.string,
-        container: PropTypes.node,
         title: PropTypes.node,
         content: PropTypes.node
     };
@@ -31,11 +30,13 @@ class ToolbarPopover extends React.Component {
 
     render() {
         return (
-            <div className={this.props.className} style={this.props.style}>
+            <div
+                ref={div => { this.parentNode = div && div.parentNode; }}
+                className={this.props.className} style={this.props.style}>
                 <OverlayTrigger
                     ref={trigger => { this.trigger = trigger; }}
                     trigger={['click']}
-                    container={this.props.container}
+                    container={this.parentNode}
                     placement={this.props.placement}
                     rootClose
                     overlay={

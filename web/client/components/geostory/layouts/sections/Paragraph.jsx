@@ -23,7 +23,6 @@ export default ({ id, className = '', contents, mode, addSection = () => {}, vie
         <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
-            conatinerSelector=".ms-sections-container"
             buttons={[{
                 glyph: 'font',
                 tooltip: 'Add title section',

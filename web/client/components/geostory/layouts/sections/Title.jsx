@@ -28,6 +28,8 @@ export default backgroundProp(({ id, background = {}, contents = [], addSection 
             // in case we increase the z-index of title the whole background is visible and overlap next section
             <Background
                 { ...background }
+                // selector used by sticky polyfill to detect scroll events
+                scrollContainerSelector="#ms-sections-container"
                 key={background.id}
                 width={viewWidth}
                 height={height >= viewHeight
@@ -40,7 +42,6 @@ export default backgroundProp(({ id, background = {}, contents = [], addSection 
         <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
-            conatinerSelector=".ms-sections-container"
             buttons={[{
                 glyph: 'font',
                 tooltip: 'Add title section',
