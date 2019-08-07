@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {createPlugin} from '../utils/PluginsUtils';
+import { addSection } from '../actions/geostory';
 
 import { currentStorySelector } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
@@ -19,11 +20,13 @@ const { Modes } = require('../utils/GeoStoryUtils');
 
 const GeoStory = ({
     story,
-    mode = Modes.VIEW
+    mode = Modes.VIEW,
+    ...props
 }) => (<BorderLayout
         className="ms-geostory">
         <Story
             {...story}
+            {...props} // add actions
             mode={mode}
         />
     </BorderLayout>
@@ -38,7 +41,9 @@ export default createPlugin("GeoStory", {
     component: connect(
         createStructuredSelector({
             story: currentStorySelector
-        }),
+        }), {
+            addSection
+        },
     )(GeoStory),
     reducers: {
         geostory

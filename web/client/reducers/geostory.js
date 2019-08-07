@@ -5,10 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get } from "lodash";
+import { get, isString, isNumber, findIndex } from "lodash";
 import { set } from '../utils/ImmutableUtils';
 
-import uuid from "uuid";
 import {
     ADD_SECTION,
     CHANGE_MODE,
@@ -20,6 +19,34 @@ let INITIAL_STATE = {
     currentStory: {
 
     }
+};
+/**
+ * Return the index of the where to place an item.
+ * If the position is a string, return the index after the item found inside the array (0 if not found)
+ * If the position is a number, return the number or the min between the number and max of the array
+ * If the position is undefined returns the next index of the array
+ * @private
+ * @param {object[]} array array of items
+ * @param {string|number} position the ID of the item or the index
+ * @returns {number} the index where to insert the new element
+ */
+const getIndexToInsert = (array, position) => {
+    const sectionsSize = array.length;
+    let index = 0;
+    // no position means append
+    if (!position && position !== 0) {
+        index = sectionsSize;
+    }
+    // if position is a string, is the ID of the section before the place we want to insert. By default 0;
+    if (isString(position)) {
+        index = findIndex(
+            array,
+            { id: position }
+        ) + 1;
+    } else if (isNumber(position)) {
+        index = Math.min(position, array.length);
+    }
+    return index;
 };
 
 // TEST STUFF: uncomment to use test data. TODO: delete when build system is active
@@ -197,13 +224,22 @@ export default (state = INITIAL_STATE, action) => {
             return set('currentStory', action.story, state);
         }
         case ADD_SECTION: {
-            const {position, type, section} = action;
-            const index = get(state, `currentSTory.sections["${position}"]`) || -1;
-            return set(`currentStory.sections[${index + 1}]`, {
-                id: uuid(),
-                type,
+            const {id, position, sectionType, section} = action;
+
+            const currentSections = get(state, 'currentStory.sections', []);
+            const index = getIndexToInsert(currentSections, position);
+            // create a copy
+            const newSections = currentSections.slice();
+            // insert the new element at the proper index
+            newSections.splice(index, 0, {
+                id,
+                type: sectionType,
                 ...section
-            }, state);
+            });
+            return set(
+                `currentStory.sections`,
+                newSections,
+                state);
         }
         default:
             return state;

@@ -6,7 +6,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Modes } from '../utils/GeoStoryUtils';
+import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 import uuid from "uuid";
 
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
@@ -23,7 +23,18 @@ export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
  */
 export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
 
-export const ADD_SECTION = "GEOSTORY_ADD_SECTION";
-export const addSection = (type, position, content) => ({
-   id: content.id || uuid(),
+export const ADD_SECTION = "GEOSTORY:ADD_SECTION";
+
+/**
+ *
+ * @param {string} type type of the section to add
+ * @param {string|number} [position] the ID or the index of the section where to place the section (if not present the section will be appended at the end)
+ * @param {*} content the section
+ */
+export const addSection = (type, position, section) => ({
+    type: ADD_SECTION,
+    id: section && section.id || uuid(), // automatically assign an ID
+    sectionType: type,
+    position,
+    section: section || getDefaultSectionTemplate(type)
 });
