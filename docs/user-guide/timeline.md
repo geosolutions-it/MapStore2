@@ -44,7 +44,7 @@ If you want to observe the layers in a finite fixed time interval you can set a 
 
 <img src="../img/timeline-current-time-range.jpg" />
 
-Sometimes you may be interested to show on timeline only the times actually visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync Button** <img src="../img/timeline-sync-button.jpg" style="max-width:24px;"/>. When this tool is active the timeline will show only the times of the features available in the current map viewport.
+Sometimes you may be interested to show on the timeline only the times actually visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync Button** <img src="../img/timeline-sync-button.jpg" style="max-width:24px;"/>. When this tool is active the timeline will show only the times of the features available in the current map viewport.
 
 !!! Note
     Map Sync feature need at least **GeoServer 2.15.2**
