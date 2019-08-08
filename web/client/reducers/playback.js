@@ -2,12 +2,14 @@ const { PLAY, PAUSE, STOP, STATUS, SET_FRAMES, APPEND_FRAMES, FRAMES_LOADING, SE
 const { RESET_CONTROLS } = require('../actions/controls');
 const { set } = require('../utils/ImmutableUtils');
 
-module.exports = (state = { status: STATUS.STOP, currentFrame: -1, settings: {
+const DEFAULT_SETTINGS = {
     timeStep: 1,
     stepUnit: "days",
     frameDuration: 2,
     following: true
-}}, action) => {
+};
+
+module.exports = (state = { status: STATUS.STOP, currentFrame: -1, settings: DEFAULT_SETTINGS}, action) => {
     switch (action.type) {
         case PLAY: {
             return set(`status`, STATUS.PLAY, state);
@@ -48,12 +50,7 @@ module.exports = (state = { status: STATUS.STOP, currentFrame: -1, settings: {
         }
         case RESET_CONTROLS: {
             return set('metadata', undefined, set('framesLoading', undefined, set('playbackRange', undefined, set('frames', undefined,
-                       set('currentFrame', -1, set('status', "STOP", set('settings', {
-                        timeStep: 1,
-                        stepUnit: "days",
-                        frameDuration: 5,
-                        following: true
-                       }, state)
+                set('currentFrame', -1, set('status', "STOP", set('settings', DEFAULT_SETTINGS, state)
             ))))));
         }
         default:

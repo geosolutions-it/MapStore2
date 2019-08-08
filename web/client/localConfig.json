@@ -296,7 +296,12 @@
             "AddGroup",
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
-                "name": "Measure"
+                "name": "Measure",
+                "cfg": {
+                  "defaultOptions": {
+                    "showAddAsAnnotation": true
+                  }
+                }
             }, "Print", "MapImport", "MapExport", {
                 "name": "Settings",
                 "cfg": {
