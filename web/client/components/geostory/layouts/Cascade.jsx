@@ -31,7 +31,8 @@ const {Modes} = require('../../../utils/GeoStoryUtils');
 export default ({
     mode = Modes.VIEW,
     sections = [],
-    add = () => {}
+    add = () => {},
+    update = () => {}
 }) => (<BorderLayout className="ms-cascade-story">
     <ContainerDimensions sections={sections}>
         {({ width, height }) =>
@@ -43,6 +44,7 @@ export default ({
                             return (
                                 <Section
                                     add={add}
+                                    update={update}
                                     key={sectionId}
                                     id={sectionId}
                                     viewHeight={height}

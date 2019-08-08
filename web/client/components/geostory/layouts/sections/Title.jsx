@@ -17,7 +17,7 @@ import { SectionTypes } from '../../../../utils/GeoStoryUtils';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundProp(({ id, background = {}, contents = [], add = () => {}, mode, cover, viewWidth, viewHeight }) => (
+export default backgroundProp(({ id, background = {}, contents = [], add = () => {}, update = () => {}, mode, cover, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-title">
         <ContainerDimensions>
@@ -37,7 +37,7 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                     : height}/>}
         </ContainerDimensions>
         <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} {...props} contentWrapperStyle={cover ? { minHeight: viewHeight } : {}}/>))}
+            {contents.map((props) => (<Content mode={mode} {...props} add={add} update={update} sectionId={id} contentWrapperStyle={cover ? { minHeight: viewHeight } : {}}/>))}
         </div>
         <AddBar
             containerWidth={viewWidth}

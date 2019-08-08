@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import editableText from './enhancers/editableText';
-
+import {withHandlers, compose} from 'recompose';
 const Text = ({ toggleEditing = () => {}, html }) => {
     return (
         <div
@@ -15,4 +15,9 @@ const Text = ({ toggleEditing = () => {}, html }) => {
             dangerouslySetInnerHTML={{ __html: html }} />
     );
 };
-export default editableText(Text);
+export default compose(
+    withHandlers({
+        save: ({update = () => {}}) => (html) => update('html', html)
+    }),
+    editableText
+)(Text);

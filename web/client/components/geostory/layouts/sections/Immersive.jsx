@@ -16,18 +16,19 @@ import { SectionTypes } from '../../../../utils/GeoStoryUtils';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChange = () => { }, viewWidth, viewHeight, add = () => {} }) => (
+const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChange = () => { }, viewWidth, viewHeight, add = () => {}, update = () => {} }) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
             { ...background }
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
+            update={ (path, ...args) => update(`sections[{id: ${id}}].contents[${backgroundId}].background.`+ path, ...args)}
             key={background.id}
             width={viewWidth}
             height={viewHeight}/>
         <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
+            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} add={add} update={update} sectionId={id}  {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
         </div>
         <AddBar
             containerWidth={viewWidth}

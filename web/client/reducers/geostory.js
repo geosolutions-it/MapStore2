@@ -5,13 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, toPath } from "lodash";
+import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
 import { set } from '../utils/ImmutableUtils';
 
 import {
     ADD,
     CHANGE_MODE,
-    SET_CURRENT_STORY
+    SET_CURRENT_STORY,
+    UPDATE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
@@ -27,7 +28,7 @@ import { getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
  * transforms the path with  into a path with predicates into a path with array indexes
  */
 const getEffectivePath = (rawPath, state) => {
-    const rawPathArray = toPath(rawPath); // converts a.b['section'].c[{a:b}] into ["a","b","section","c","{a:b}"]
+    const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`
     // use curly brackets elements as predicates of findIndex to get the correct index.
     return rawPathArray.reduce( (path, current) => {
         if (current && current.indexOf('{') === 0) {
@@ -272,6 +273,17 @@ export default (state = INITIAL_STATE, action) => {
                 path,
                 newSections,
                 state);
+        }
+        case UPDATE: {
+            const { path: rawPath, mode } = action;
+            let { element: newElement } = action;
+            const path = getEffectivePath(`currentStory.${rawPath}`, state);
+            const oldElement = get(state, path);
+            if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
+                newElement = {...oldElement, ...newElement};
+            }
+
+            return set(path, newElement, state);
         }
         default:
             return state;
