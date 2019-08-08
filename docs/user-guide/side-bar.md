@@ -38,10 +38,10 @@ The scene will switch from 2D to 3D display mode and you will be guided by a bri
 
 <img src="../img/3D-mode.jpg" style="max-width:600px;" />
 
-Querying Objects
-----------------
+Identify Tool
+-------------
 
-The Identify tool  <img src="../img/identify.jpg" style="max-width:22px;"/> allows you to intercat with the map by clicking on features to get information stored in the attribute table of the queried feature. It is active by default as the green color suggest.
+The Identify tool  <img src="../img/identify.jpg" style="max-width:22px;"/> allows you to interact with the map by clicking on features to get information stored in the attribute table of the queried feature. It is active by default as the green color suggests.
 
 * **Add** a layer to the map (e.g. USA Population).
 * **Click** on a feature of the layer added previously. A pop-up page will open on the right showing the requested information and the coordinates of the point.
