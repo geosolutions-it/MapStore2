@@ -14,8 +14,9 @@ import ContentWrapper from '../ContentWrapper';
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
 
 /**
- * Add basic enhancers valid for all the contents:
- * @param options
+ * Add basic enhancers valid for all the contents of sections.
+ * Adds visibilityHandler, wrapper and maps edit methods (add, update...) to local scope.
+ * @param options visibilityEnhancerOptions: sets up visibility enhancer options for the content.
  */
 export default ({visibilityEnhancerOptions}) => compose(
     // make maths for contents relative to their scope for edit methods

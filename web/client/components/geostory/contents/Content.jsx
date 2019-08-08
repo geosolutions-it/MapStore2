@@ -7,8 +7,9 @@
  */
 import React from 'react';
 import TextB from './Text';
+import ColumnB from './Column';
 import ImageB from '../media/Image';
-import enhanceContent from './enhancers/enhanceContent';
+import enhanceContent from './enhancers/enhanceSectionContent';
 
 const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
 const Text = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_THRESHOLD }})(TextB);

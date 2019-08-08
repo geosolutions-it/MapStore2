@@ -6,6 +6,9 @@ import ToolbarPopover from './ToolbarPopover';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
 
+/**
+ * Generic bar for add Contents
+ */
 class AddBar extends React.Component {
 
     static propTypes = {

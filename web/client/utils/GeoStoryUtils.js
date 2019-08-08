@@ -7,6 +7,9 @@
  */
 
 import { values } from "lodash";
+import uuid from 'uuid';
+import Content from "../components/geostory/contents/Content";
+
 
 // Allowed StoryTypes
 export const StoryTypes = {
@@ -39,6 +42,9 @@ export const lists = {
     Modes: values(Modes)
 };
 
+
+const SAMPLE_HTML = "insert text here...";
+
 export const getDefaultSectionTemplate = (type) => {
     switch (type) {
         case SectionTypes.TITLE:
@@ -48,8 +54,8 @@ export const getDefaultSectionTemplate = (type) => {
                 cover: false,
                 contents: [
                     {
-                        id: "SomeID",
-                        type: 'text',
+                        id: uuid(),
+                        type: ContentTypes.TEXT,
                         theme: 'bright',
                         html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`
                     }
@@ -61,9 +67,9 @@ export const getDefaultSectionTemplate = (type) => {
                 title: 'Paragraph Section',
                 contents: [
                     {
-                        id: "SomeID",
-                        type: 'text',
-                        html: "insert text here..."
+                        id: uuid(),
+                        type: ContentTypes.TEXT,
+                        html: SAMPLE_HTML
                     }
                 ]
             };
@@ -73,18 +79,27 @@ export const getDefaultSectionTemplate = (type) => {
                 title: "Immersive Section",
                 contents: [
                     {
-                        id: "SomeID",
-                        type: 'text',
+                        id: uuid(),
+                        type: ContentTypes.TEXT,
                         background: {
                             type: "image",
                             fit: 'cover'
 
                         },
-                        html: "insert text here...",
+                        html: SAMPLE_HTML,
                         align: 'left',
                         size: 'small'
                     }]
             };
+        case ContentTypes.COLUMN: {
+            return {
+                type: ContentTypes.COLUMN,
+                contents: [{
+                    type: ContentTypes.TEXT,
+                    html: SAMPLE_HTML
+                }]
+            };
+        }
         default:
             return {
                 type,
