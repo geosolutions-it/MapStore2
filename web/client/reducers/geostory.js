@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex } from "lodash";
+import { get, isString, isNumber, findIndex, toPath } from "lodash";
 import { set } from '../utils/ImmutableUtils';
 
 import {
-    ADD_SECTION,
+    ADD,
     CHANGE_MODE,
     SET_CURRENT_STORY
 } from '../actions/geostory';
@@ -20,6 +20,34 @@ let INITIAL_STATE = {
 
     }
 };
+import { getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
+
+
+/**
+ * transforms the path with  into a path with predicates into a path with array indexes
+ */
+const getEffectivePath = (rawPath, state) => {
+    const rawPathArray = toPath(rawPath); // converts a.b['section'].c[{a:b}] into ["a","b","section","c","{a:b}"]
+    // use curly brackets elements as predicates of findIndex to get the correct index.
+    return rawPathArray.reduce( (path, current) => {
+        if (current && current.indexOf('{') === 0) {
+            const predicate = JSON.parse(current);
+            const currentArray = get(state, path);
+            const index = findIndex(
+                currentArray,
+                predicate
+            );
+            if (index >= 0) {
+                return [...path, index];
+            }
+            // if the predicate is not found, it will ignore the unknown part
+            return path;
+        }
+        return [...path, current];
+    }, []);
+}
+
+
 /**
  * Return the index of the where to place an item.
  * If the position is a string, return the index after the item found inside the array (0 if not found)
@@ -223,21 +251,25 @@ export default (state = INITIAL_STATE, action) => {
         case SET_CURRENT_STORY: {
             return set('currentStory', action.story, state);
         }
-        case ADD_SECTION: {
-            const {id, position, sectionType, section} = action;
+        case ADD: {
+            const {id, path: rawPath, position} = action;
+            let {element} = action;
+            if (isString(element) && getDefaultSectionTemplate(element)) {
+                element = getDefaultSectionTemplate(element);
+            }
 
-            const currentSections = get(state, 'currentStory.sections', []);
-            const index = getIndexToInsert(currentSections, position);
+            const path = getEffectivePath(`currentStory.${rawPath}`, state);
+            const arrayToUpdate = get(state, path, []);
+            const index = getIndexToInsert(arrayToUpdate, position);
             // create a copy
-            const newSections = currentSections.slice();
+            const newSections = arrayToUpdate.slice();
             // insert the new element at the proper index
             newSections.splice(index, 0, {
                 id,
-                type: sectionType,
-                ...section
+                ...element
             });
             return set(
-                `currentStory.sections`,
+                path,
                 newSections,
                 state);
         }

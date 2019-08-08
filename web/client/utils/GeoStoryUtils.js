@@ -7,8 +7,6 @@
  */
 
 import { values } from "lodash";
-import uuid from 'uuid';
-
 
 // Allowed StoryTypes
 export const StoryTypes = {
@@ -46,7 +44,7 @@ export const getDefaultSectionTemplate = (type) => {
         case SectionTypes.TITLE:
             return {
                 type: SectionTypes.TITLE,
-                title: 'Abstract',
+                title: 'Title Section',
                 cover: false,
                 contents: [
                     {
@@ -60,7 +58,7 @@ export const getDefaultSectionTemplate = (type) => {
         case SectionTypes.PARAGRAPH:
             return {
                 type: SectionTypes.PARAGRAPH,
-                title: 'No Title',
+                title: 'Paragraph Section',
                 contents: [
                     {
                         id: "SomeID",
@@ -68,6 +66,24 @@ export const getDefaultSectionTemplate = (type) => {
                         html: "insert text here..."
                     }
                 ]
+            };
+        case SectionTypes.IMMERSIVE:
+            return {
+                type: SectionTypes.IMMERSIVE,
+                title: "Immersive Section",
+                contents: [
+                    {
+                        id: "SomeID",
+                        type: 'text',
+                        background: {
+                            type: "image",
+                            fit: 'cover'
+
+                        },
+                        html: "insert text here...",
+                        align: 'left',
+                        size: 'small'
+                    }]
             };
         default:
             return {

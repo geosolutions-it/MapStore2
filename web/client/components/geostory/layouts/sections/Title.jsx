@@ -17,7 +17,7 @@ import { SectionTypes } from '../../../../utils/GeoStoryUtils';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundProp(({ id, background = {}, contents = [], addSection = () => {}, mode, cover, viewWidth, viewHeight }) => (
+export default backgroundProp(({ id, background = {}, contents = [], add = () => {}, mode, cover, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-title">
         <ContainerDimensions>
@@ -46,14 +46,14 @@ export default backgroundProp(({ id, background = {}, contents = [], addSection 
                 glyph: 'font',
                 tooltip: 'Add title section',
                 onClick: () => {
-                    addSection(SectionTypes.TITLE, id);
+                    add('sections', id, SectionTypes.TITLE);
                 }
             },
             {
                 glyph: 'sheet',
                 tooltip: 'Add paragraph section',
                 onClick: () => {
-                    addSection(SectionTypes.PARAGRAPH, id);
+                    add('sections', id, SectionTypes.PARAGRAPH);
                 }
             },
             {
@@ -61,7 +61,7 @@ export default backgroundProp(({ id, background = {}, contents = [], addSection 
                 tooltip: 'Add immersive section',
                 onClick: () => {
                     // TODO: add
-                    addSection(SectionTypes.IMMERSIVE, id);
+                    add('sections', id, SectionTypes.IMMERSIVE);
                 }
             }]}/>
     </section>

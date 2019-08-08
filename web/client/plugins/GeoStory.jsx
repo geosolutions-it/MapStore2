@@ -10,7 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {createPlugin} from '../utils/PluginsUtils';
-import { addSection } from '../actions/geostory';
+import { add } from '../actions/geostory';
 
 import { currentStorySelector } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
@@ -42,7 +42,7 @@ export default createPlugin("GeoStory", {
         createStructuredSelector({
             story: currentStorySelector
         }), {
-            addSection
+            add
         },
     )(GeoStory),
     reducers: {
