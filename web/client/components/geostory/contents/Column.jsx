@@ -18,7 +18,7 @@ export default ({ id, contents = {}, mode, add = () => {}, update= () => {}, vie
     <div
         className="ms-content ms-content-column">
         <div className="ms-column-contents">
-            {contents.map((props) => (<Content mode={mode} add={add} update={(path, ...args) => update(`contents[{"id": "${id}"}].` + path, ...args)} {...props}/>))}
+            {contents.map(({id: subContentId, ...props}) => (<Content id={subContentId} mode={mode} add={add} update={(path, ...args) => update(`contents[{"id": "${subContentId}"}].` + path, ...args)} {...props}/>))}
         </div>
         <AddBar
             containerWidth={viewWidth}

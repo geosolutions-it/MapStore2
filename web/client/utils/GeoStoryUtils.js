@@ -62,6 +62,7 @@ export const getDefaultSectionTemplate = (type) => {
             };
         case SectionTypes.PARAGRAPH:
             return {
+                id: uuid(),
                 type: SectionTypes.PARAGRAPH,
                 title: 'Paragraph Section',
                 contents: [
@@ -74,6 +75,7 @@ export const getDefaultSectionTemplate = (type) => {
             };
         case SectionTypes.IMMERSIVE:
             return {
+                id: uuid(),
                 type: SectionTypes.IMMERSIVE,
                 title: "Immersive Section",
                 contents: [
@@ -97,8 +99,10 @@ export const getDefaultSectionTemplate = (type) => {
             };
         case ContentTypes.COLUMN: {
             return {
+                id: uuid(),
                 type: ContentTypes.COLUMN,
                 contents: [{
+                    id: uuid(),
                     type: ContentTypes.TEXT,
                     html: SAMPLE_HTML
                 }]
@@ -113,6 +117,7 @@ export const getDefaultSectionTemplate = (type) => {
         }
         default:
             return {
+                id: uuid(),
                 type,
                 title: "UNKNOWN"
             };

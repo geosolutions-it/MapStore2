@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Content from '../../contents/Content';
+import Content from '../../contents/SectionContent';
 import Background from './Background';
 import { backgroundProp } from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { compose, createEventHandler, withProps, mapPropsStream } from 'recompose';
+import { compose, createEventHandler, withProps, mapPropsStream, withHandlers } from 'recompose';
 import { findIndex, get, maxBy } from "lodash";
 import { Observable } from "rxjs";
 
@@ -72,5 +72,8 @@ export default compose(
             })
         );
     }),
-    backgroundProp
+    backgroundProp,
+    withHandlers({
+        updateBackground: ({ sectionId, backgroundId, update = () => { } }) => (path, ...args) => update(`sections[{id: ${sectionId}}].contents[{id: ${backgroundId}}].background.` + path, ...args)
+    })
 );
