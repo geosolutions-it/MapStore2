@@ -256,6 +256,7 @@ class MeasureComponent extends React.Component {
         return (
            <BorderLayout
                id={this.props.id}
+               style={{overflow: 'visible'}}
                header={
                    <div>
                        <ButtonToolbar style={{width: '100%', marginBottom: 15, marginTop: 8, display: 'flex', justifyContent: 'center'}}>
