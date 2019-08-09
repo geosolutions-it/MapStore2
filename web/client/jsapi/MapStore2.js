@@ -189,7 +189,7 @@ const MapStore2 = {
         });
         const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
-            storeOpts: assign({}, storeOpts, {notify: true}),
+            storeOpts: assign({}, storeOpts, {notify: true, noRouter: true}),
             appStore,
             pluginsDef,
             initialActions,
