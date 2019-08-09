@@ -10,10 +10,12 @@ import TextB from './Text';
 import ColumnB from './Column';
 import ImageB from '../media/Image';
 import enhanceContent from './enhancers/enhanceSectionContent';
+import { ContentTypes } from '../../../utils/GeoStoryUtils';
 
 const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
 const Text = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_THRESHOLD }})(TextB);
 const Image = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_THRESHOLD }})(ImageB);
+const Column = enhanceContent({ visibilityEnhancerOptions: { threshold: DEFAULT_THRESHOLD } })(ColumnB);
 const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 
@@ -23,10 +25,12 @@ const DummyComponent = ({ type, inViewRef }) => <div ref={inViewRef} className="
  */
 const getComponent = type => {
     switch (type) {
-        case 'text':
+        case ContentTypes.TEXT:
             return Text;
         case 'image':
             return Image;
+        case ContentTypes.COLUMN:
+            return Column;
         default:
             return DummyComponent;
     }

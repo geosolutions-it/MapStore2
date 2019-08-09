@@ -8,7 +8,6 @@
 
 import { values } from "lodash";
 import uuid from 'uuid';
-import Content from "../components/geostory/contents/Content";
 
 
 // Allowed StoryTypes
@@ -80,7 +79,12 @@ export const getDefaultSectionTemplate = (type) => {
                 contents: [
                     {
                         id: uuid(),
-                        type: ContentTypes.TEXT,
+                        type: ContentTypes.COLUMN,
+                        contents: [{
+                            id: uuid(),
+                            type: ContentTypes.TEXT,
+                            html: SAMPLE_HTML
+                        }],
                         background: {
                             type: "image",
                             fit: 'cover'
@@ -98,6 +102,13 @@ export const getDefaultSectionTemplate = (type) => {
                     type: ContentTypes.TEXT,
                     html: SAMPLE_HTML
                 }]
+            };
+        }
+        case ContentTypes.TEXT: {
+            return {
+                id: uuid(),
+                type: ContentTypes.TEXT,
+                html: SAMPLE_HTML
             };
         }
         default:

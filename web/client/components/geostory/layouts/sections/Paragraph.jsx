@@ -27,7 +27,7 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
                 glyph: 'font',
                 tooltip: 'Add title section',
                 onClick: () => {
-                    add(`sections`, id, SectionTypes.TEXT);
+                    add(`sections`, id, SectionTypes.TITLE);
                 }
             },
             {
