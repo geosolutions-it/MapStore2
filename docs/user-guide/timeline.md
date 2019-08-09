@@ -5,7 +5,7 @@ The Timeline is an useful tool for managing layers with a time dimension.
 It makes possible to observe the layers' evolution over time, to inspect the layer configuration at a specific time instant (or in a time range) and to view different layer configurations time by time dynamically through animations.<br>
 
 !!! warning
-    Timeline actually works only with **WMTS-Multidim extension** (WMS time in capabilities is not fully supported) and at least **GeoServer 2.14.5**. Anyway to support all the functionality you need **GeoServer 2.15.2**.
+    Timeline actually works only with [**WMTS-Multidim extension**](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) (WMS time in capabilities is not fully supported) and at least **GeoServer 2.14.5**. Anyway to support all the functionality you need **GeoServer 2.15.2**.
     From now on, the layers that the Timeline can manage will be addressed as ***time layers***.
 
 When you load ***time layers*** the Timeline panel becomes automatically visible and allows you to take a look at the main functionalities.
