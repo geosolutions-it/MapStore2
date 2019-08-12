@@ -46,7 +46,7 @@ const getEffectivePath = (rawPath, state) => {
         }
         return [...path, current];
     }, []);
-}
+};
 
 
 /**

@@ -8,8 +8,6 @@
  */
 import { Modes } from '../utils/GeoStoryUtils';
 import uuid from "uuid";
-import { isString } from 'lodash';
-
 
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
 /**
