@@ -14,10 +14,12 @@ import SectionContent from "./SectionContent";
  * for the handlers and to pass the ContentComponent enhanced for sections
  */
 export default compose(
+    // SectionContent is enhanced to wrap, add scroll events and so on
     defaultProps({
         ContentComponent: SectionContent
     }),
     withHandlers({
+        // NOTE: adds the section initial path to content. The Contents adds contents[...] on it's own for inner add buttons
         add: ({ add = () => { }, sectionId }) => (path, ...args) => add(`sections[{"id": "${sectionId}"}].` + path, ...args),
         update: ({ update = () => { }, sectionId }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].` + path, ...args)
     }),

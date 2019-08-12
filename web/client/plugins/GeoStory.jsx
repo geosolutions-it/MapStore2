@@ -12,7 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import {createPlugin} from '../utils/PluginsUtils';
 import { add, update } from '../actions/geostory';
 
-import { currentStorySelector } from '../selectors/geostory';
+import { currentStorySelector, modeSelector } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
 import Story from '../components/geostory/Story';
@@ -40,6 +40,7 @@ const GeoStory = ({
 export default createPlugin("GeoStory", {
     component: connect(
         createStructuredSelector({
+            mode: modeSelector,
             story: currentStorySelector
         }), {
             add,

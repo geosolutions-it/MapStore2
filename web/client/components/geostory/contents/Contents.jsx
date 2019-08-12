@@ -9,6 +9,19 @@ import React from "react";
 import { Modes } from "../../../utils/GeoStoryUtils";
 import AddBar from "../common/AddBar";
 
+/**
+ * Generic Container for story contents.
+ * Renders the contents and associate the handlers modifying the handlers accordingly. Adds also the add buttons after each content.
+ * @prop {string} className
+ * @prop {object} contentProps
+ * @prop {ojbect[]} addButtons buttons for the popup toolbar. If empty or not present, the add button will not show.
+ * The object handles the click event (TODO: allow customization) and triggers add handler with the correct path and position.
+ * You can configure the type with `template` property of this object as 3rd argument of `add` handler
+ * @prop {string} mode
+ * @prop {component} ContentComponent component to use as content.
+ * @prop {function} add handler for add events. parameters are (path, position, element)
+ * @prop {function} update handler for update events.parameters are (path, value, mode)
+ */
 export default ({
         className,
         contentProps = {},
@@ -23,7 +36,9 @@ export default ({
             const content =
                 [(<ContentComponent
                     id={id}
+                    key={`${id}-content`}
                     mode={mode}
+                    // restructure the path to give it the correct scope
                     add={(path, ...args) => add(`contents[{"id": "${id}"}].` + path, ...args)}
                     update={(path, ...args) => update(`contents[{"id": "${id}"}].` + path, ...args)}
                     {...contentProps}
@@ -31,6 +46,7 @@ export default ({
             if (mode === Modes.EDIT && addButtons.length > 0) {
                 content.push(
                     <AddBar
+                        key={`${id}-content-add-buttons`}
                         buttons={addButtons.map((button = {}) => ({
                                 ...button,
                                 onClick: () => add(`contents`, id, button.template)
