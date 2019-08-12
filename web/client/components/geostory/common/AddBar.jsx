@@ -50,6 +50,9 @@ class AddBar extends React.Component {
                     onClick: (...args) => {
                         onClick(...args);
                         this.trigger.hide();
+                        if (args[0] && args[0].preventDefault) {
+                            args[0].preventDefault();
+                        }
                     }
                 }))}/>)}
                 ref={(popover) => {

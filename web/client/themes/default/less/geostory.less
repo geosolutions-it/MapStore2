@@ -137,6 +137,9 @@
         */
         .ms-section-contents {
             pointer-events: none;
+            .add-bar, .popover-content {
+                pointer-events: auto;
+            }
             position: relative;
             z-index: 1;
             height: 100%;
@@ -328,7 +331,7 @@
         &.ms-size-large { width: 85%; }
         &.ms-size-medium { width: 60%; }
         &.ms-size-small { width: 40%; }
-        
+
         /* alignement of content */
         &.ms-align-center { margin-left: auto; margin-right: auto; }
         &.ms-align-left { margin-left: 0; margin-right: auto; }

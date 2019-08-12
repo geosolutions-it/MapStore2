@@ -181,6 +181,7 @@ const createSampleSection = () => [{
 }];
 
 INITIAL_STATE = {
+    mode: 'edit',
     currentStory: {
         type: 'cascade',
         // Array().keys() DON'T WORK IN IE 11 ( Array.from(Array(10).keys()) )

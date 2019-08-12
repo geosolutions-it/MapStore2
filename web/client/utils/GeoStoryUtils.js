@@ -78,24 +78,7 @@ export const getDefaultSectionTemplate = (type) => {
                 id: uuid(),
                 type: SectionTypes.IMMERSIVE,
                 title: "Immersive Section",
-                contents: [
-                    {
-                        id: uuid(),
-                        type: ContentTypes.COLUMN,
-                        contents: [{
-                            id: uuid(),
-                            type: ContentTypes.TEXT,
-                            html: SAMPLE_HTML
-                        }],
-                        background: {
-                            type: "image",
-                            fit: 'cover'
-
-                        },
-                        html: SAMPLE_HTML,
-                        align: 'left',
-                        size: 'small'
-                    }]
+                contents: [getDefaultSectionTemplate(ContentTypes.COLUMN)]
             };
         case ContentTypes.COLUMN: {
             return {
@@ -105,7 +88,14 @@ export const getDefaultSectionTemplate = (type) => {
                     id: uuid(),
                     type: ContentTypes.TEXT,
                     html: SAMPLE_HTML
-                }]
+                }],
+                background: {
+                    type: "image",
+                    fit: 'cover'
+
+                },
+                align: 'left',
+                size: 'small'
             };
         }
         case ContentTypes.TEXT: {

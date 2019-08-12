@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Content from '../../contents/SectionContent';
+import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
 import { backgroundProp } from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
@@ -36,29 +36,37 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                     ? viewHeight
                     : height}/>}
         </ContainerDimensions>
-        <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} {...props} add={add} update={update} sectionId={id} contentWrapperStyle={cover ? { minHeight: viewHeight } : {}}/>))}
-        </div>
+        <SectionContents
+            className="ms-section-contents"
+            contents={contents}
+            mode={mode}
+            add={add}
+            update={update}
+            sectionId={id}
+            contentProps={{
+                contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
+            }}
+        />
         <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
                 glyph: 'font',
-                tooltip: 'Add title section',
+                tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.TITLE);
                 }
             },
             {
                 glyph: 'sheet',
-                tooltip: 'Add paragraph section',
+                tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.PARAGRAPH);
                 }
             },
             {
                 glyph: 'book',
-                tooltip: 'Add immersive section',
+                tooltipId: 'geostory.addImmersiveSection',
                 onClick: () => {
                     // TODO: add
                     add('sections', id, SectionTypes.IMMERSIVE);

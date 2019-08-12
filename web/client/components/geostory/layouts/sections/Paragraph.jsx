@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Content from '../../contents/SectionContent';
-
 import AddBar from '../../common/AddBar';
-import { SectionTypes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes } from '../../../../utils/GeoStoryUtils';
+import SectionContents from "../../contents/SectionContents";
+
+
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -17,31 +18,40 @@ import { SectionTypes } from '../../../../utils/GeoStoryUtils';
 export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-paragraph">
-        <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} add={add} update={update} sectionId={id} {...props}/>))}
-        </div>
+        <SectionContents
+            className="ms-section-contents"
+            contents={contents}
+            mode={mode}
+            add={add}
+            update={update}
+            sectionId={id}
+            addButtons={[{
+                glyph: 'sheet',
+                tooltip: 'geostory.addTextContent',
+                template: ContentTypes.TEXT
+            }]}
+            />
         <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
                 glyph: 'font',
-                tooltip: 'Add title section',
+                tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.TITLE);
                 }
             },
             {
                 glyph: 'sheet',
-                tooltip: 'Add paragraph section',
+                tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.PARAGRAPH);
                 }
             },
             {
                 glyph: 'book',
-                tooltip: 'Add immersive section',
+                tooltipId: 'geostory.addImmersiveSection',
                 onClick: () => {
-                    // TODO: add
                     add(`sections`, id, SectionTypes.IMMERSIVE);
                 }
             }]}/>

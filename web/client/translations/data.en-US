@@ -1847,6 +1847,13 @@
             "missingconfig": "Rules manager misses the configuration. Access denied!",
             "selectworkspace": "You need to select the workspace to enable advanced options"
         },
+        "geostory": {
+            "addTitleSection": "Add Title Section",
+            "addParagraphSection": "Add Paragraph Section",
+            "addImmersiveSection": "Add Immersive Section",
+            "addImmersiveContent": "Add Immersive Content",
+            "addTextContent": "Add Text Content"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Back",
