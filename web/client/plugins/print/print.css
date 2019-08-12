@@ -37,10 +37,6 @@
     right: -155px;
     z-index: 1000;
 }
-
-#mapstore-print-panel{
-    margin-top: 100px !important;
-}
 #mapstore-print-panel.modal-dialog {
     z-index: 2000;
 }

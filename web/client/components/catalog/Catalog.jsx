@@ -119,6 +119,7 @@ class Catalog extends React.Component {
         pageSize: 4,
         records: [],
         saving: false,
+        loading: false,
         services: {},
         wrapOptions: false,
         zoomToLayer: true,
@@ -126,7 +127,6 @@ class Catalog extends React.Component {
     };
 
     state = {
-        loading: false,
         catalogURL: null
     };
 
@@ -140,9 +140,6 @@ class Catalog extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
-            this.setState({
-                loading: false
-            });
             if (((nextProps.mode === "view" && this.props.mode === "edit") || nextProps.services !== this.props.services || nextProps.selectedService !== this.props.selectedService) &&
                 nextProps.active && this.props.active &&
                 nextProps.selectedService &&
@@ -189,7 +186,7 @@ class Catalog extends React.Component {
     };
 
     renderLoading = () => {
-        return this.state.loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+        return this.props.loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     };
     renderSaving = () => {
         return this.props.saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null;
@@ -502,9 +499,6 @@ class Catalog extends React.Component {
         const url = services[selectedService].url;
         const type = services[selectedService].type;
         this.props.onSearch(type, url, start, this.props.pageSize, searchText || "");
-        this.setState({
-            loading: true
-        });
     };
 
     isViewMode = (mode) => {
@@ -525,9 +519,6 @@ class Catalog extends React.Component {
         if (eventKey) {
             let start = (eventKey - 1) * this.props.pageSize + 1;
             this.search({services: this.props.services, selectedService: this.props.selectedService, start, searchText: this.props.searchText});
-            this.setState({
-                loading: true
-            });
         }
     };
 }
