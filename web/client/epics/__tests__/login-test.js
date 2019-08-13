@@ -10,7 +10,7 @@ const expect = require('expect');
 const { INIT_CATALOG } = require('../../actions/catalog');
 const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/controls');
 const { loginSuccess, logout, logoutWithReload } = require('../../actions/security');
-const { initCatalogOnLoginOutEpic, promtLoginOnMapError, reloadMapConfig, reloadNewMapConfig } = require('../login');
+const { initCatalogOnLoginOutEpic, promtLoginOnMapError, reloadMapConfig } = require('../login');
 const { configureError } = require('../../actions/config');
 const { dashboardLoadError } = require('../../actions/dashboard');
 const { FEEDBACK_MASK_LOADING } = require('../../actions/feedbackMask');
@@ -54,7 +54,7 @@ describe('login Epics', () => {
                 }
             }
         };
-        testEpic(reloadNewMapConfig, 1, logout(null), epicResult, state);
+        testEpic(reloadMapConfig, 1, logout(null), epicResult, state);
     });
 
     it('init catalog on logout', (done) => {
