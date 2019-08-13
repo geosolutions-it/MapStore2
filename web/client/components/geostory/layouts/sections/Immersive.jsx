@@ -11,7 +11,7 @@ import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -40,7 +40,7 @@ const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChang
                 contentWrapperStyle: { minHeight: viewHeight }
             }}
         />
-        <AddBar
+        {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
@@ -63,7 +63,7 @@ const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChang
                 onClick: () => {
                     add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN); // position undefined means append
                 }
-            }]}/>
+            }]}/>}
     </section>
 );
 

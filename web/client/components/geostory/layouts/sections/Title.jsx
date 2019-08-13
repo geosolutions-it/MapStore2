@@ -11,7 +11,7 @@ import Background from './Background';
 import { backgroundProp } from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
-import { SectionTypes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes } from '../../../../utils/GeoStoryUtils';
 
 /**
  * Paragraph Section Type.
@@ -47,7 +47,7 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                 contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
             }}
         />
-        <AddBar
+        {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
@@ -71,6 +71,6 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                     // TODO: add
                     add('sections', id, SectionTypes.IMMERSIVE);
                 }
-            }]}/>
+            }]}/>}
     </section>
 ));

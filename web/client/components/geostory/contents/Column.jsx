@@ -6,22 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Content from './Content';
+import ContentBase from './Content';
 import Contents from './Contents';
-
-
+import ContentWrapper from './ContentWrapper';
 import { ContentTypes } from '../../../utils/GeoStoryUtils';
+
+import { nest, compose, setDisplayName } from "recompose";
+const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
+const ColumnContent = compose(
+    wrap(ContentWrapper),
+    setDisplayName("ColumnContent")
+)(ContentBase);
 /**
  * Column content type.
  * Column is a like a Paragraph section, but as content.
  * has (sub) contents to render like a page.
  */
 export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) => (
-    <div
-        className="ms-content ms-content-column">
+
         <Contents
             className="ms-column-contents"
-            ContentComponent={Content}
+        ContentComponent={ColumnContent}
             contents={contents}
             mode={mode}
             add={add}
@@ -32,5 +37,4 @@ export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) =
                 template: ContentTypes.TEXT
             }]}
             />
-    </div>
 );

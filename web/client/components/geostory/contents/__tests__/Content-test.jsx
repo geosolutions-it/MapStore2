@@ -29,15 +29,10 @@ describe('Content component', () => {
         expect(el).toExist();
     });
     it('Content rendering text', () => {
-        ReactDOM.render(<Content type={ContentTypes.TEXT} />, document.getElementById("container"));
+        ReactDOM.render(<Content type={ContentTypes.TEXT} html={"<p id=\"SOME_TEXT\"></p>"} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-content'); // TODO: it should be content-text
+        const el = container.querySelector('#SOME_TEXT'); // TODO: it should be content-text
         expect(el).toExist();
     });
-    it('Content rendering column', () => {
-        ReactDOM.render(<Content type={ContentTypes.COLUMN} />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.ms-content-column');
-        expect(el).toExist();
-    });
+
 });

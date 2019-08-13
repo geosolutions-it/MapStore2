@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import Text from './Text';
-import Column from './Column';
 import Image from '../media/Image';
 import { ContentTypes } from '../../../utils/GeoStoryUtils';
 
@@ -24,8 +23,6 @@ const getComponent = type => {
             return Text;
         case 'image':
             return Image;
-        case ContentTypes.COLUMN:
-            return Column;
         default:
             return DummyComponent;
     }

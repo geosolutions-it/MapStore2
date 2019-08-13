@@ -9,11 +9,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import Content from '../Content';
+import Content from '../SectionContent';
 import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
 const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
 const TestScrollableContainer = ({ children, height }) => <div id={SCROLLABLE_CONTAINER_ID} style={{ height, overflowY: "auto" }} >{children}</div>;
-describe('Content component', () => {
+describe('Content (Container) component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -41,6 +41,13 @@ describe('Content component', () => {
         const el = container.querySelector('.ms-content-image');
         expect(el).toExist();
     });
+    it('Content rendering known SPECIAL type (column)', () => {
+        ReactDOM.render(<Content type={ContentTypes.COLUMN} contents={[{ type: "text", html: "<p id=\"SOMETHING\"></p>" }]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-content-column');
+        expect(el).toExist();
+        expect(container.querySelector('#SOMETHING')).toExist();
+    });
     it('content has intersection observer', (done) => {
         const ID_1 = "ID_1";
         const ID_2 = "ID_2";
@@ -57,4 +64,5 @@ describe('Content component', () => {
         expect(scrollable).toExist();
         scrollable.scrollBy(0, 120);
     });
+
 });

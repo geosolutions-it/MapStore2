@@ -6,10 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { compose, nest, setDisplayName } from "recompose";
+import { compose, nest, setDisplayName, branch, renderComponent } from "recompose";
 import visibilityHandler from './enhancers/visibilityHandler';
 import ContentWrapper from './ContentWrapper';
 import Content from './Content';
+import Column from './Column';
+import { ContentTypes } from '../../../utils/GeoStoryUtils';
+
+
 
 // wrap enhancer
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
@@ -25,5 +29,9 @@ export default compose(
     // so inside the content you can simply call update('html', value) or add update('contents[{id: "some-sub-content-id"}])
     visibilityHandler({ threshold: DEFAULT_THRESHOLD }),
     wrap(ContentWrapper),
-    setDisplayName("SectionContent")
+    setDisplayName("SectionContent"),
+    branch(
+        ({type}) => type === ContentTypes.COLUMN,
+        renderComponent(Column)
+    )
 )(Content);

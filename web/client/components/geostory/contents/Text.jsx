@@ -12,7 +12,7 @@ import { Modes } from '../../../utils/GeoStoryUtils';
 
 const Text = ({ toggleEditing = () => {}, html }) => {
     return (
-        <div className="ms-content"
+        <div
             onClick={() => toggleEditing(true, html)}
             dangerouslySetInnerHTML={{ __html: html }} />
     );

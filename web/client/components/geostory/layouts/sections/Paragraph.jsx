@@ -7,7 +7,7 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
 import SectionContents from "../../contents/SectionContents";
 
 
@@ -31,7 +31,7 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
                 template: ContentTypes.TEXT
             }]}
             />
-        <AddBar
+        {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
@@ -54,6 +54,6 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
                 onClick: () => {
                     add(`sections`, id, SectionTypes.IMMERSIVE);
                 }
-            }]}/>
+            }]}/>}
     </section>
 );
