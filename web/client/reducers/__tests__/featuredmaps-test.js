@@ -7,6 +7,7 @@
  */
 const expect = require('expect');
 const {attributeUpdated, mapDeleted, mapMetadataUpdated, permissionsUpdated, mapsLoading, setFeaturedMapsEnabled} = require('../../actions/maps');
+const {dashboardDeleted} = require('../../actions/dashboards');
 const { isFeaturedMapsEnabled } = require('../../selectors/featuredmaps');
 const featuredmaps = require('../featuredmaps');
 
@@ -30,6 +31,17 @@ describe('Test the featuredmaps reducer', () => {
         const result = 'result';
         const error = null;
         const state = featuredmaps({}, mapDeleted(resourceId, result, error));
+        expect(state.latestResource).toEqual({
+            resourceId,
+            deleted: true
+        });
+    });
+
+    it('dashboardDeleted action', () => {
+        const resourceId = 1;
+        const result = 'result';
+        const error = null;
+        const state = featuredmaps({}, dashboardDeleted(resourceId, result, error));
         expect(state.latestResource).toEqual({
             resourceId,
             deleted: true
