@@ -600,13 +600,22 @@
             "s_wfs_props_label" : "Propiedades del servicio WFS",
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",
-            "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Los resultados Nominatim tienen prioridad = 5",
+            "s_priority_info": "Usado para ordenar los resultados de búsqueda, de menor a mayor. Los resultados Nominatim tienen prioridad = 5",
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
             "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
             "errors": {
                 "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",
                 "serverError": "El servidor ha devuelto un error al realizar la solicitud GetFeatureInfo. Compruebe si los parámetros son correctos"
+            },
+            "s_launch_info_panel": {
+                "label": "Iniciar panel de información",
+                "no_info": "No Info",
+                "all_layers": "Todas las capas",
+                "single_layer": "Una sola capa",
+                "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
+                "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
+                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS"
             }
         },
         "draw": {
