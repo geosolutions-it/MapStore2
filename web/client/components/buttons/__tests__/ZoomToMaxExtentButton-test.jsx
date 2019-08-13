@@ -194,7 +194,8 @@ describe('This test for ZoomToMaxExtentButton', () => {
             expect(actionsSpy.calls[0].arguments[2]).toNotExist();
             expect(actionsSpy.calls[0].arguments[3]).toExist();
             expect(actionsSpy.calls[0].arguments[4]).toNotExist();
-            expect(actionsSpy.calls[0].arguments[5]).toExist();
+            // the projection is null since no hook was registered
+            expect(actionsSpy.calls[0].arguments[5]).toNotExist();
         };
 
         genericTest("normal");
