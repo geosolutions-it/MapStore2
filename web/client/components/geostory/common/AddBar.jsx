@@ -14,7 +14,7 @@ class AddBar extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         type: PropTypes.string,
-        buttons: PropTypes.buttons,
+        buttons: PropTypes.array,
         containerWidth: PropTypes.number,
         containerHeight: PropTypes.number
     };
