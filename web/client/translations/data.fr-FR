@@ -1846,6 +1846,13 @@
             "missingconfig": "Le gestionnaire de règles n'est pas configuré. Accès refusé!",
             "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées."
         },
+        "geostory": {
+            "addTitleSection": "Ajouter une section de titre",
+            "addParagraphSection": "Ajouter une section de paragraphe",
+            "addImmersiveSection": "Ajouter une section immersive",
+            "addImmersiveContent": "Ajouter du contenu immersif",
+            "addTextContent": "Ajouter du contenu texte"
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",

@@ -1846,6 +1846,13 @@
             "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
             "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
+        "geostory": {
+                "addTitleSection": "Aggiungi sezione titolo",
+                "addParagraphSection": "Aggiungi sezione paragrafo",
+                "addImmersiveSection": "Aggiungi sezione immersiva",
+                "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
+                "addTextContent": "Aggiungi testo"
+            },
             "tutorial": {
                 "title": "Tutorial",
                 "back": "Indietro",
