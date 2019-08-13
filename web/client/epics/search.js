@@ -123,13 +123,13 @@ export const searchItemSelected = action$ =>
                 }
                 return Rx.Observable.of(action.item);
             }).concatMap((item) => {
-                // check if the service has configured to start a getFeature info based on the item selected then do it with a point inside the surface
+                // check if the service has been configured to start a GetFeatureInfo request based on the item selected
+                // if so, then do it with a point inside the geometry
                 if (item.__SERVICE__ && item.__SERVICE__.launchInfoPanel && item.__SERVICE__.launchInfoPanel !== "no_info" && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
                     let coord = pointOnSurface(item).geometry.coordinates;
                     const latlng = { lng: coord[0], lat: coord[1] };
                     const typeName = item.__SERVICE__.options.typeName;
                     if (coord) {
-                        // no need of cql_filter here
                         return [
                             featureInfoClick({ latlng }, typeName, item.__SERVICE__.launchInfoPanel === "single_layer" ? [typeName] : [], { }),
                             showMapinfoMarker()
