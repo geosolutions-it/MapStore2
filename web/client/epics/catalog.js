@@ -61,7 +61,6 @@ module.exports = (API) => ({
     layerSearchEpic: action$ =>
         action$.ofType(LAYER_SEARCH)
         .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
-            // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
             return Rx.Observable.defer( () =>
                 API[format].textSearch(url, startPosition, maxRecords, text, options)
             )
@@ -152,8 +151,7 @@ module.exports = (API) => ({
                         }
                         return Rx.Observable.empty();
                     });
-            }).catch( (e) => {
-                console.log("general error", e);
+            }).catch( () => {
                 return Rx.Observable.empty();
             }),
     /**
@@ -295,6 +293,9 @@ module.exports = (API) => ({
                         }), showLayerMetadata({}, false));
                 });
             }),
+            /**
+             * it trigger search automatically after a delay, default is 1s
+             */
         autoSearchEpic: (action$, {getState = () => {}} = {}) =>
             action$.ofType(CHANGE_TEXT)
             .debounce(() => {

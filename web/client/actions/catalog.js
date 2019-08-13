@@ -51,6 +51,11 @@ export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
 
+/**
+ * it adds a list of layers given its catalog to the map
+ * @param {string[]} layers list with workspace to be added in the map
+ * @param {string[]} sources catalog names related to each layer
+ */
 export function addLayersMapViewerUrl(layers = [], sources = []) {
     return {
         type: ADD_LAYERS_MAPVIEWER_URL,
@@ -58,6 +63,16 @@ export function addLayersMapViewerUrl(layers = [], sources = []) {
         sources
     };
 }
+/**
+ * it search for a layer in the related catalog
+ * @param {object} params
+ * @param {string} params.format format of the catalog
+ * @param {string} params.url catalog url
+ * @param {number} params.startPosition initial position to start search, default 1
+ * @param {number} params.maxRecords max number of records returned
+ * @param {string} params.text layer name
+ * @param {object} params.options layer name
+ */
 export function layerSearch({format, url, startPosition, maxRecords, text, options} = {}) {
     return {
         type: LAYER_SEARCH,
