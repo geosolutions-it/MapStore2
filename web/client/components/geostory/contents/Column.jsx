@@ -12,8 +12,9 @@ import Contents from './Contents';
 
 import { ContentTypes } from '../../../utils/GeoStoryUtils';
 /**
- * Paragraph Section Type.
- * Paragraph is a page block that expands for all it's height
+ * Column content type.
+ * Column is a like a Paragraph section, but as content.
+ * has (sub) contents to render like a page.
  */
 export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) => (
     <div
