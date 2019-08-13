@@ -12,6 +12,9 @@ import expect from 'expect';
 import Content from '../SectionContent';
 import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
 const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
+
+import { ContentTypes } from '../../../../utils/GeoStoryUtils';
+
 const TestScrollableContainer = ({ children, height }) => <div id={SCROLLABLE_CONTAINER_ID} style={{ height, overflowY: "auto" }} >{children}</div>;
 describe('Content (Container) component', () => {
     beforeEach((done) => {
@@ -42,7 +45,7 @@ describe('Content (Container) component', () => {
         expect(el).toExist();
     });
     it('Content rendering known SPECIAL type (column)', () => {
-        ReactDOM.render(<Content type={ContentTypes.COLUMN} contents={[{ type: "text", html: "<p id=\"SOMETHING\"></p>" }]} />, document.getElementById("container"));
+        ReactDOM.render(<Content type={ContentTypes.COLUMN} contents={[{ type: ContentTypes.TEXT, html: "<p id=\"SOMETHING\"></p>" }]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content-column');
         expect(el).toExist();

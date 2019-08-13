@@ -26,7 +26,7 @@ describe('Column component', () => {
     it('Column rendering with defaults', () => {
         ReactDOM.render(<Column />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-content-column');
+        const el = container.querySelector('.ms-column-contents');
         expect(el).toExist();
     });
     it('Column rendering contents', () => {
