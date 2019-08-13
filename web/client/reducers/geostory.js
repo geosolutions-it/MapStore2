@@ -26,6 +26,9 @@ import { getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 
 /**
  * transforms the path with  into a path with predicates into a path with array indexes
+ * @private
+ * @param {string|string[]} rawPath path to transform in real path
+ * @param {object} state the state to check to inspect the tree and get the real path
  */
 const getEffectivePath = (rawPath, state) => {
     const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`

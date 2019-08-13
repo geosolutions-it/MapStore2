@@ -37,6 +37,7 @@ const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChang
             update={update}
             sectionId={id}
             contentProps={{
+                onVisibilityChange,
                 contentWrapperStyle: { minHeight: viewHeight }
             }}
         />

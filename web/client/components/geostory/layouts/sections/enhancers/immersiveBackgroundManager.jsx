@@ -9,6 +9,11 @@ import { compose, createEventHandler, withProps, mapPropsStream, withHandlers } 
 import { findIndex, get, maxBy } from "lodash";
 import { Observable } from "rxjs";
 
+// TODO: externalize
+import { setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+setObservableConfig(rxjsConfig);
+
 const getContentIndex = (contents, id) => {
     const index = findIndex(contents, { id });
     return contents[index === -1 || !index ? 0 : index];

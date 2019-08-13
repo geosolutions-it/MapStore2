@@ -7,6 +7,8 @@
  */
 import React from "react";
 import { Modes } from "../../../utils/GeoStoryUtils";
+import Content from './Content';
+
 import AddBar from "../common/AddBar";
 
 /**
@@ -27,7 +29,7 @@ export default ({
         contentProps = {},
         addButtons = [],
         contents=[],
-        ContentComponent,
+        ContentComponent=Content,
         mode,
         add = () => {},
         update= () => {}}) =>
