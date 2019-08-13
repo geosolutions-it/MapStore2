@@ -13,8 +13,6 @@ import Content from './Content';
 import Column from './Column';
 import { ContentTypes } from '../../../utils/GeoStoryUtils';
 
-
-
 // wrap enhancer
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
 

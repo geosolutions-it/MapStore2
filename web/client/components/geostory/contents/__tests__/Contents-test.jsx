@@ -111,5 +111,5 @@ describe('Contents component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('CONTENTS_CLASS_NAME');
         expect(el).toExist();
-    })
+    });
 });
