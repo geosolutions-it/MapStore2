@@ -10,7 +10,7 @@ const expect = require('expect');
 const maps = require('../maps');
 const {
     mapsLoaded, mapsLoading, loadError, mapCreated, mapUpdating,
-    mapMetadataUpdated, mapDeleting, mapDeleted, attributeUpdated, thumbnailError, permissionsLoading,
+    mapMetadataUpdated, mapDeleting, attributeUpdated, thumbnailError, permissionsLoading,
     permissionsLoaded, saveMap, permissionsUpdated, resetUpdating,
     mapsSearchTextChanged, setShowMapDetails} = require('../../actions/maps');
 
@@ -128,9 +128,7 @@ describe('Test the maps reducer', () => {
         expect(state.results.length).toBe(2);
         state = maps(state, mapDeleting(42, "success"));
         expect(state.results[1].deleting).toBe(true);
-        state = maps(state, mapDeleted(42, "success"));
-        expect(state.results.length).toBe(1);
-        expect(state.totalCount).toBe(1);
+        expect(state.totalCount).toBe(2);
 
     });
     it('on saveMap', () => {

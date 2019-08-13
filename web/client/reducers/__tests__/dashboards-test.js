@@ -13,7 +13,6 @@ const {
     dashboardListLoaded,
     dashboardsLoading
 } = require('../../actions/dashboards');
-const {mapDeleted} = require('../../actions/maps');
 
 
 describe('Test the dashboards reducer', () => {
@@ -46,15 +45,5 @@ describe('Test the dashboards reducer', () => {
         expect(state).toExist();
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);
-    });
-    it('dashboard deleted', () => {
-        const state = {
-            results: [{id: 42}],
-            totalCount: 1
-        };
-        const newState = dashboards(state, mapDeleted(42, "success"));
-        expect(newState.results.length).toBe(0);
-        expect(newState.totalCount).toBe(0);
-
     });
 });

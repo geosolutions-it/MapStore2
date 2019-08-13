@@ -10,7 +10,6 @@ const { MAPS_LIST_LOADING } = require('../actions/maps');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING } = require('../actions/dashboards');
-const { MAP_DELETED } = require('../actions/maps');
 const {set} = require('../utils/ImmutableUtils');
 const { castArray } = require('lodash');
 
@@ -51,17 +50,6 @@ function dashboards(state = {
             return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
                 "loading", action.value, state
             ));
-        }
-        // dashboard delete use map delete action
-        case MAP_DELETED: {
-            let results = state.results === "" ? [] : [...state.results];
-            let newDashboardsState = {
-                results: results.filter(function(el) {
-                    return el.id && el.id !== action.resourceId;
-                }),
-                totalCount: state.totalCount - 1
-            };
-            return {...state, ...newDashboardsState};
         }
         default:
             return state;
