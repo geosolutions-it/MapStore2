@@ -19,7 +19,7 @@ const Text = ({ toggleEditing = () => {}, html }) => {
 };
 
 /**
- * Text Content, editable and
+ * Text Content, editable when mode is 'edit'
  */
 export default compose(
     withHandlers({
