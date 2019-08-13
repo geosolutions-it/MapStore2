@@ -15,7 +15,7 @@ import { ContentTypes } from '../../../utils/GeoStoryUtils';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ id, contents = {}, mode, add = () => {}, update= () => {} }) => (
+export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) => (
     <div
         className="ms-content ms-content-column">
         <Contents

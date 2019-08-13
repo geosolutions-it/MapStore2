@@ -13,6 +13,10 @@ const {
     OverlayTrigger
 } = require('react-bootstrap');
 
+/**
+ * Toolbar for AddBar.
+ * Shows a toolbar inside the popover
+ */
 class ToolbarPopover extends React.Component {
 
     static propTypes = {

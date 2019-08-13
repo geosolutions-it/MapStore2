@@ -7,17 +7,28 @@
  */
 import React from 'react';
 import editableText from './enhancers/editableText';
-import {withHandlers, compose} from 'recompose';
+import { withHandlers, compose, branch} from 'recompose';
+import { Modes } from '../../../utils/GeoStoryUtils';
+
 const Text = ({ toggleEditing = () => {}, html }) => {
     return (
-        <div
+        <div className="ms-content"
             onClick={() => toggleEditing(true, html)}
             dangerouslySetInnerHTML={{ __html: html }} />
     );
 };
+
+/**
+ * Text Content, editable and
+ */
 export default compose(
     withHandlers({
         save: ({update = () => {}}) => (html) => update('html', html)
     }),
-    editableText
+    branch(
+        ({ mode }) => mode === Modes.EDIT,
+        editableText
+    )
+
+
 )(Text);
