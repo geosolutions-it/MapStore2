@@ -33,7 +33,7 @@ export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) =
             update={update}
             addButtons={[{
                 glyph: 'sheet',
-                tooltip: 'geostory.addTextContent',
+                tooltipId: 'geostory.addTextContent',
                 template: ContentTypes.TEXT
             }]}
             />
