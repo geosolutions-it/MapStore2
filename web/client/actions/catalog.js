@@ -22,7 +22,7 @@ import * as ConfigUtils from '../utils/ConfigUtils';
 import {find} from 'lodash';
 import {authkeyParamNameSelector} from '../selectors/catalog';
 
-export const ADD_LAYERS_MAPVIEWER_URL = 'CATALOG:ADD_LAYERS_MAPVIEWER_URL';
+export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
 export const LAYER_SEARCH = 'CATALOG:LAYER_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
@@ -52,13 +52,13 @@ export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
 
 /**
- * it adds a list of layers given its catalog to the map
+ * Adds a list of layers from the given catalogs to the map
  * @param {string[]} layers list with workspace to be added in the map
  * @param {string[]} sources catalog names related to each layer
  */
 export function addLayersMapViewerUrl(layers = [], sources = []) {
     return {
-        type: ADD_LAYERS_MAPVIEWER_URL,
+        type: ADD_LAYERS_FROM_CATALOGS,
         layers,
         sources
     };
@@ -229,26 +229,7 @@ export function getRecords(format, url, startPosition = 1, maxRecords, filter, o
         });
     };
 }
-export function textSearch(format, url, startPosition, maxRecords, text, options) {
-    return (dispatch /* , getState */) => {
-        // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        dispatch(setLoading(true));
-        API[format].textSearch(url, startPosition, maxRecords, text, options).then((result) => {
-            if (result.error) {
-                dispatch(recordsLoadError(result));
-            } else {
-                dispatch(recordsLoaded({
-                    url,
-                    startPosition,
-                    maxRecords,
-                    text
-                }, result));
-            }
-        }).catch((e) => {
-            dispatch(recordsLoadError(e));
-        });
-    };
-}
+
 export function describeError(layer, error) {
     return {
         type: DESCRIBE_ERROR,

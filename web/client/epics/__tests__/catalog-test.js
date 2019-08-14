@@ -15,7 +15,7 @@ const API = {
 };
 import catalog from '../catalog';
 const {
-    addLayersMapViewerUrlEpic,
+    addLayersFromCatalogsEpic,
     getMetadataRecordById,
     autoSearchEpic,
     openCatalogEpic,
@@ -152,9 +152,9 @@ describe('catalog Epics', () => {
         }, { });
     });
 
-    it('addLayersMapViewerUrlEpic csw', (done) => {
+    it('addLayersFromCatalogsEpic csw', (done) => {
         const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(addLayersMapViewerUrlEpic, 0), NUM_ACTIONS, addLayersMapViewerUrl(["gs:us_states"], ["cswCatalog"]), (actions) => {
+        testEpic(addTimeoutEpic(addLayersFromCatalogsEpic, 0), NUM_ACTIONS, addLayersMapViewerUrl(["gs:us_states"], ["cswCatalog"]), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
@@ -185,17 +185,17 @@ describe('catalog Epics', () => {
             }
         });
     });
-    it('addLayersMapViewerUrlEpic wmts', (done) => {
+    it('addLayersFromCatalogsEpic wmts', (done) => {
         const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(addLayersMapViewerUrlEpic, 0), NUM_ACTIONS, addLayersMapViewerUrl(["gs:us_states"], ["cswCatalog"]), (actions) => {
+        testEpic(addTimeoutEpic(addLayersFromCatalogsEpic, 0), NUM_ACTIONS, addLayersMapViewerUrl(["topp:tasmania_cities_hidden"], ["cswCatalog"]), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
                     case ADD_LAYER:
-                        expect(action.layer.name).toBe("gs:us_states");
-                        expect(action.layer.title).toBe("States of US");
+                        expect(action.layer.name).toBe("topp:tasmania_cities_hidden");
+                        expect(action.layer.title).toBe("tasmania_cities");
                         expect(action.layer.type).toBe("wmts");
-                        expect(action.layer.url).toBe("https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts");
+                        expect(action.layer.url).toBe("http://sample.server/geoserver/gwc/service/wmts");
                         break;
                     case TEST_TIMEOUT:
                         break;
@@ -211,7 +211,7 @@ describe('catalog Epics', () => {
                 services: {
                     "cswCatalog": {
                         type: "wmts",
-                        url: "base/web/client/test-resources/csw/getRecordsResponse-gs-us_statesWMTS.xml"
+                        url: "base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml"
                     }
                 },
                 pageSize: 2

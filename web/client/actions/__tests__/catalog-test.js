@@ -16,7 +16,7 @@ const service = {
 const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
 const {
-    addLayersMapViewerUrl, ADD_LAYERS_MAPVIEWER_URL, layerSearch, LAYER_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
+    addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, layerSearch, LAYER_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
@@ -32,7 +32,7 @@ describe('Test correctness of the catalog actions', () => {
         const retval = addLayersMapViewerUrl(layers, sources);
 
         expect(retval).toExist();
-        expect(retval.type).toBe(ADD_LAYERS_MAPVIEWER_URL);
+        expect(retval.type).toBe(ADD_LAYERS_FROM_CATALOGS);
         expect(retval.layers).toEqual(layers);
         expect(retval.sources).toEqual(sources);
     });

@@ -12,7 +12,7 @@ import { get, head, isNaN, isString, includes } from 'lodash';
 import url from 'url';
 
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT } from '../actions/map';
-import { ADD_LAYERS_MAPVIEWER_URL } from '../actions/catalog';
+import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
 import { warning } from '../actions/notifications';
 
@@ -48,7 +48,7 @@ const paramActions = {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
             ZOOM_TO_EXTENT,
-            ADD_LAYERS_MAPVIEWER_URL
+            ADD_LAYERS_FROM_CATALOGS
         ]);
         if (isString(value)) {
             const actions = JSON.parse(value);

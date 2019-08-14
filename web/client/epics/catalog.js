@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import {head, isArray} from 'lodash';
 import {
     ADD_SERVICE,
-    ADD_LAYERS_MAPVIEWER_URL,
+    ADD_LAYERS_FROM_CATALOGS,
     CHANGE_TEXT,
     DELETE_SERVICE,
     GET_METADATA_RECORD_BY_ID,
@@ -58,6 +58,11 @@ import CoordinatesUtils from '../utils/CoordinatesUtils';
     */
 
 module.exports = (API) => ({
+    /**
+     * search a layer given catalog service url, format, startPosition, maxRecords and text
+     * text is the name of the layer to search
+     * it also start with a loading action used to trigger loading state in catalog ui
+     */
     layerSearchEpic: action$ =>
         action$.ofType(LAYER_SEARCH)
         .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
@@ -86,8 +91,8 @@ module.exports = (API) => ({
      * it will perform the getRecords requests to fetch records that are transformed into layer
      * and added to the map
     */
-    addLayersMapViewerUrlEpic: (action$, store) =>
-        action$.ofType(ADD_LAYERS_MAPVIEWER_URL)
+    addLayersFromCatalogsEpic: (action$, store) =>
+        action$.ofType(ADD_LAYERS_FROM_CATALOGS)
             .filter(({layers, sources}) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
             .switchMap(({layers, sources, options, startPosition = 1, maxRecords = 1 }) => {
                 const state = store.getState();
@@ -295,6 +300,7 @@ module.exports = (API) => ({
             }),
             /**
              * it trigger search automatically after a delay, default is 1s
+             * it uses layersSearch in favor of
              */
         autoSearchEpic: (action$, {getState = () => {}} = {}) =>
             action$.ofType(CHANGE_TEXT)

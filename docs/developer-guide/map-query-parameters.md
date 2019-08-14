@@ -73,9 +73,9 @@ Requirements:
 Example:
 ```
 {
-    "type": "CATALOG:ADD_LAYERS_MAPVIEWER_URL",
+    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
     "layers": ["layer1", "layer2"],
     "sources": ["catalog1", "catalog2"]
 }
-?actions=[{"type":"CATALOG:ADD_LAYERS_MAPVIEWER_URL","layers":["layer1", "layer2"],"sources":["catalog1", "catalog2"]}]
+?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2"],"sources":["catalog1", "catalog2"]}]
 ```
