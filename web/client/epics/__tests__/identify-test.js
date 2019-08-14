@@ -67,14 +67,85 @@ describe('identify Epics', () => {
             layers: {
                 flat: [{
                     id: "TEST",
+                    title: "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+<<<<<<< HEAD
+=======
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    title: "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+>>>>>>> 7e5deeb7... Fix random failure of getFeatureInfoOnFeatureInfoClick WMS test (#4091)
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+<<<<<<< HEAD
+=======
+        const NUM_ACTIONS = 5;
+        testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
+            try {
+                expect(actions.length).toBe(5);
+                const [a0, a1, a2, a3, a4] = actions;
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a2).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.reqId).toExist();
+                expect(a2.request).toExist();
+                expect(a3).toExist();
+                expect(a3.type).toBe(LOAD_FEATURE_INFO);
+                expect(a3.data).toExist();
+                expect(a3.requestParams).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[a3.requestParams.id === "TEST" ? 0 : 1].title);
+                expect(a4).toExist();
+                expect(a4.layerMetadata.title).toBe(state.layers.flat[a4.requestParams.id === "TEST" ? 0 : 1].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
+    it('getFeatureInfoOnFeatureInfoClick WMS with filteredList and override params', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    name: "TEST",
                     "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
                     type: "wms",
                     visibility: true,
                     url: 'base/web/client/test-resources/featureInfo-response.json'
                 }]
             }
         };
-        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}})];
+>>>>>>> 7e5deeb7... Fix random failure of getFeatureInfoOnFeatureInfoClick WMS test (#4091)
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
                 expect(a0).toExist();
