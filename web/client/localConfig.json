@@ -585,6 +585,7 @@
           "Attribution",
           "Home",
           "GeoStory",
+          "MediaEditor",
           {
             "name": "GeoStoryEditor",
             "cfg": {
