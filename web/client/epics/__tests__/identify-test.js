@@ -67,7 +67,7 @@ describe('identify Epics', () => {
             layers: {
                 flat: [{
                     id: "TEST",
-                    "title": "TITLE",
+                    title: "TITLE",
                     type: "wms",
                     visibility: true,
                     url: 'base/web/client/test-resources/featureInfo-response.json'
@@ -75,7 +75,7 @@ describe('identify Epics', () => {
                 {
                     id: "TEST2",
                     name: "TEST2",
-                    "title": "TITLE2",
+                    title: "TITLE2",
                     type: "wms",
                     visibility: true,
                     url: 'base/web/client/test-resources/featureInfo-response.json'
@@ -83,8 +83,11 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
+        const NUM_ACTIONS = 5;
+        testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
             try {
+                expect(actions.length).toBe(5);
+                const [a0, a1, a2, a3, a4] = actions;
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
@@ -95,11 +98,14 @@ describe('identify Epics', () => {
                 expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a2.reqId).toExist();
                 expect(a2.request).toExist();
+                expect(a3).toExist();
                 expect(a3.type).toBe(LOAD_FEATURE_INFO);
                 expect(a3.data).toExist();
                 expect(a3.requestParams).toExist();
                 expect(a3.reqId).toExist();
-                expect(a3.layerMetadata.title).toBe(state.layers.flat[0].title);
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[a3.requestParams.id === "TEST" ? 0 : 1].title);
+                expect(a4).toExist();
+                expect(a4.layerMetadata.title).toBe(state.layers.flat[a4.requestParams.id === "TEST" ? 0 : 1].title);
                 done();
             } catch (ex) {
                 done(ex);
