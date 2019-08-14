@@ -173,7 +173,7 @@ module.exports = {
                 enabled
                 && clickPointSelector(getState())
             )
-            .map( () => featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState()))),
+            .switchMap( () => Rx.Observable.from([featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState())), showMapinfoMarker()])),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.

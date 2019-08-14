@@ -67,7 +67,7 @@ const item = {
     }
 };
 
-describe.only('search Epics', () => {
+describe('search Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore();
