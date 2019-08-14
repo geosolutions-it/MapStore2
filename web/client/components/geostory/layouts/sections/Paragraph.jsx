@@ -6,17 +6,54 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Content from '../../contents/Content';
+import AddBar from '../../common/AddBar';
+import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import SectionContents from "../../contents/SectionContents";
+
 
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ className = '', contents, mode }) => (
+export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-paragraph">
-        <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} {...props}/>))}
-        </div>
+        <SectionContents
+            className="ms-section-contents"
+            contents={contents}
+            mode={mode}
+            add={add}
+            update={update}
+            sectionId={id}
+            addButtons={[{
+                glyph: 'sheet',
+                tooltipId: 'geostory.addTextContent',
+                template: ContentTypes.TEXT
+            }]}
+            />
+        {mode === Modes.EDIT && <AddBar
+            containerWidth={viewWidth}
+            containerHeight={viewHeight}
+            buttons={[{
+                glyph: 'font',
+                tooltipId: 'geostory.addTitleSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.TITLE);
+                }
+            },
+            {
+                glyph: 'sheet',
+                tooltipId: 'geostory.addParagraphSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.PARAGRAPH);
+                }
+            },
+            {
+                glyph: 'book',
+                tooltipId: 'geostory.addImmersiveSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.IMMERSIVE);
+                }
+            }]}/>}
     </section>
 );

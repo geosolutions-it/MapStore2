@@ -38,10 +38,19 @@
 }
 
 .ms-geostory-builder {
+
+    /* used to calculate correctly width of children */
+    > .ms2-border-layout-body > .ms2-border-layout-content {
+        position: relative;
+        width: 100%;
+    }
+
+    .ms-geostory-builder-header {
+        padding: 8px 0;
+    }
+
     /*
-    overrides for side grid
-    TODO: this style need improvements, missing space between cards and scrollbar
-    */
+    overrides for side grid*/
     .msSideGrid {
         position: relative;
         /*
@@ -55,27 +64,20 @@
             padding: 0;
         }
     }
-    .ms-section {
+
+    .ms-section-preview {
+        position: relative;
         /*
-        Preview card
-        ---
-        .ms-section-preview */
-        &-preview {
-            position: relative;
-            /*
-            Simple style for icon preview in builder
-            ---
-            .ms-section-preview-icon */
-            &-icon {
-                position: absolute;
-                display: flex;
-                width: 100%;
-                height: 100%;
-                background-color: @ms-story-bg-grey;
-                & > * {
-                    margin: auto; /* center first child in preview */
-                    align-self: center; /* center first child in preview (ie) */
-                }
+        Simple style for icon preview in builder */
+        .ms-section-preview-icon {
+            position: absolute;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background-color: @ms-story-bg-grey;
+            & > * {
+                margin: auto; /* center first child in preview */
+                align-self: center; /* center first child in preview (ie) */
             }
         }
     }
@@ -106,8 +108,6 @@
     ////////////
 
     .ms-section {
-        border-bottom: 2px solid red; /* DEBUG BORDER (REMOVE) */
-
         position: relative;
         z-index: 1;
         background-color: @ms-story-bg;
@@ -137,9 +137,40 @@
         */
         .ms-section-contents {
             pointer-events: none;
+            // make contents and popover clickable.
+            // TODO: maybe anything inside contents should be clickable
+            .add-bar, .popover-content {
+                pointer-events: auto;
+            }
             position: relative;
             z-index: 1;
             height: 100%;
+        }
+
+        .add-bar {
+            position: relative;
+            width: 100%;
+            background-color: @ms-story-bg;
+            border-bottom: 1px solid @ms-story-bg-grey;
+            text-align: center;
+            .btn {
+                /* override default style of bootstrap */
+                .square-button-md();
+                .no-border();
+                background: transparent;
+
+                /*
+                this button needs a outline when focus to highlight
+                outline is vibile also when using tab key*/
+                &:focus,
+                &:active:focus,
+                &.active:focus,
+                &.focus,
+                &:active.focus,
+                &.active.focus {
+                    outline: auto !important; /* outline it desable globally with !important */
+                }
+            }
         }
 
         &.ms-section-title {
@@ -166,11 +197,7 @@
             }
         }
 
-        &.ms-section-immersive {
-            .ms-content {
-                border-bottom: 2px solid red; /* DEBUG BORDER (TODO: REMOVE) */
-            }
-        }
+        &.ms-section-immersive { /**/ }
     }
 
     ////////////
@@ -210,6 +237,7 @@
                 with position sticky the toolbar is visible in the view
                 also when texteditor has height greater than view height*/
                 .ms-text-editor-toolbar {
+                    font-size: 12px;
                     .ms-position-sticky();
                     top: 8px;
                     z-index: 2;
@@ -223,6 +251,22 @@
                     base style is not visible */
                     .rdw-option-active {
                         outline: 2px solid @ms-story-highlight;
+                    }
+                    /* enbale horizontal scrollbar only if needed of color picker*/
+                    .rdw-colorpicker-modal-options {
+                        overflow-x: auto;
+                    }
+                    /* enbale vertical scrollbar only if needed of font family and tag dropdown */
+                    .rdw-dropdown-optionwrapper {
+                        overflow-y: auto;
+                    }
+                    /* reduced font side to avoid new lines */
+                    .rdw-colorpicker-modal-style-label {
+                        font-size: 12px;
+                    }
+                    /* changed border color of color picker tab*/
+                    .rdw-colorpicker-modal-style-label-active {
+                        border-bottom-color: @ms-story-highlight;
                     }
                 }
 
@@ -289,7 +333,7 @@
         &.ms-size-large { width: 85%; }
         &.ms-size-medium { width: 60%; }
         &.ms-size-small { width: 40%; }
-        
+
         /* alignement of content */
         &.ms-align-center { margin-left: auto; margin-right: auto; }
         &.ms-align-left { margin-left: 0; margin-right: auto; }

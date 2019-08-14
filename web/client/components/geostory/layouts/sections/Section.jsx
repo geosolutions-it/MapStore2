@@ -30,6 +30,8 @@ class Section extends React.Component {
         id: PropTypes.string,
         type: PropTypes.oneOf(lists.SectionTypes),
         storyType: PropTypes.oneOf(lists.StoryTypes),
+        add: PropTypes.fun,
+        update: PropTypes.fun,
         mode: PropTypes.oneOf(lists.Modes),
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
@@ -40,6 +42,8 @@ class Section extends React.Component {
 
     static defaultProps = {
         id: '',
+        add: () => {},
+        update: () => {},
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
@@ -54,6 +58,9 @@ class Section extends React.Component {
         const SectionType = types[this.props.type] || types.UNKNOWN;
         return (
             <SectionType
+                id={this.props.id}
+                add={this.props.add}
+                update={this.props.update}
                 mode={this.props.mode}
                 cover={this.props.cover}
                 contents={this.props.contents}

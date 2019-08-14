@@ -8,10 +8,15 @@
 const expect = require('expect');
 
 import {
+    ADD,
+    add,
     CHANGE_MODE,
     setEditing,
     SET_CURRENT_STORY,
-    setCurrentStory
+    setCurrentStory,
+    UPDATE,
+    update
+
 } from '../geostory';
 const { Modes } = require('../../utils/GeoStoryUtils');
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
@@ -30,5 +35,25 @@ describe('test geostory action creators', () => {
             type: SET_CURRENT_STORY,
             story: TEST_STORY
         });
+    });
+    describe('add', () => {
+        const PATH = 'sections';
+        const POSITION = 0;
+        const SECTION = { type: 'dummy' };
+        const action = add(PATH, POSITION, SECTION);
+        expect(action.type).toBe(ADD);
+        expect(action.path).toBe(PATH);
+        expect(action.position).toBe(POSITION);
+        expect(action.element).toBe(SECTION);
+        expect(action.id).toExist("action didn't generated missing ID");
+    });
+    it('update', () => {
+        const PATH = 'sections';
+        const SECTION = { type: 'dummy' };
+        const action = update(PATH, SECTION);
+        expect(action.type).toBe(UPDATE);
+        expect(action.path).toBe(PATH);
+        expect(action.element).toBe(SECTION);
+        expect(action.mode).toBe('replace');
     });
 });

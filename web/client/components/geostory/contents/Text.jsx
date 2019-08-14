@@ -7,6 +7,8 @@
  */
 import React from 'react';
 import editableText from './enhancers/editableText';
+import { withHandlers, compose, branch} from 'recompose';
+import { Modes } from '../../../utils/GeoStoryUtils';
 
 const Text = ({ toggleEditing = () => {}, html }) => {
     return (
@@ -15,4 +17,18 @@ const Text = ({ toggleEditing = () => {}, html }) => {
             dangerouslySetInnerHTML={{ __html: html }} />
     );
 };
-export default editableText(Text);
+
+/**
+ * Text Content, editable when mode is 'edit'
+ */
+export default compose(
+    withHandlers({
+        save: ({update = () => {}}) => (html) => update('html', html)
+    }),
+    branch(
+        ({ mode }) => mode === Modes.EDIT,
+        editableText
+    )
+
+
+)(Text);

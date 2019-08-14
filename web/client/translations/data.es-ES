@@ -1846,6 +1846,13 @@
             "missingconfig": "El administrador de reglas pierde la configuración. ¡Acceso denegado!",
             "selectworkspace": "Debe seleccionar el espacio de trabajo para habilitar opciones avanzadas."
         },
+        "geostory": {
+            "addTitleSection": "Agregar sección de título",
+            "addParagraphSection": "Agregar sección de párrafo",
+            "addImmersiveSection": "Añadir sección inmersiva",
+            "addImmersiveContent": "Añadir contenido inmersivo",
+            "addTextContent": "Agregar contenido de texto"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Atrás",

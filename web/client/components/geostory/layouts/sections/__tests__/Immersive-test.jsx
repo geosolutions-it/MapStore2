@@ -10,6 +10,12 @@ import ReactDOM from 'react-dom';
 
 import expect from 'expect';
 import Immersive from '../Immersive';
+
+// TODO: externalize
+import {setObservableConfig} from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+setObservableConfig(rxjsConfig);
+
 describe('Immersive component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

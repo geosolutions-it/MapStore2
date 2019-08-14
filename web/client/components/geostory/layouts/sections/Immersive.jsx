@@ -6,25 +6,65 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Content from '../../contents/Content';
+import SectionContents from '../../contents/SectionContents';
 import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 
+import AddBar from '../../common/AddBar';
+import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({contents = [], mode, background = {}, onVisibilityChange = () => {}, viewWidth, viewHeight }) => (
+const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChange = () => { }, updateBackground = () => {}, viewWidth, viewHeight, add = () => {}, update = () => {} }) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
             { ...background }
+            // selector used by sticky polyfill to detect scroll events
+            scrollContainerSelector="#ms-sections-container"
+            update={updateBackground}
+            sectionId={id}
+            backgroundId={background.id}
             key={background.id}
             width={viewWidth}
             height={viewHeight}/>
-        <div className="ms-section-contents">
-            {contents.map((props) => (<Content mode={mode} onVisibilityChange={onVisibilityChange} {...props} contentWrapperStyle={{ minHeight: viewHeight }}/>))}
-        </div>
+         <SectionContents
+            className="ms-section-contents"
+            contents={contents}
+            mode={mode}
+            add={add}
+            update={update}
+            sectionId={id}
+            contentProps={{
+                onVisibilityChange,
+                contentWrapperStyle: { minHeight: viewHeight }
+            }}
+        />
+        {mode === Modes.EDIT && <AddBar
+            containerWidth={viewWidth}
+            containerHeight={viewHeight}
+            buttons={[{
+                glyph: 'font',
+                tooltipId: 'geostory.addTitleSection',
+                onClick: () => {
+                    add('sections', id, SectionTypes.TITLE);
+                }
+            },
+            {
+                glyph: 'sheet',
+                tooltipId: 'geostory.addParagraphSection',
+                onClick: () => {
+                    add('sections', id, SectionTypes.PARAGRAPH);
+                }
+            },
+            {
+                glyph: 'book',
+                tooltip: 'geostory.addImmersiveContent',
+                onClick: () => {
+                    add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN); // position undefined means append
+                }
+            }]}/>}
     </section>
 );
 

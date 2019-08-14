@@ -5,15 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React from 'react';
+import ReactTestUtils from 'react-dom/test-utils';
 import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
 import expect from 'expect';
-import Content from '../Content';
-import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
-const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
-const TestScrollableContainer = ({ children, height }) => <div id={SCROLLABLE_CONTAINER_ID} style={{ height, overflowY: "auto" }} >{children}</div>;
-describe('Content component', () => {
+import Contents from '../Contents';
+
+const CONTENTS = [{
+    id: 'TEST_CONTENT',
+    type: 'text',
+    html: '<p class="someTestContent">something</p>'
+}];
+const CONTENTS_2 = [...CONTENTS, {
+    id: 'TEST_CONTENT_2',
+    type: 'text',
+    html: '<p class="someTestContent">something</p>'
+}];
+
+describe('Contents component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -23,38 +34,82 @@ describe('Content component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('Content rendering with defaults', () => {
-        ReactDOM.render(<Content />, document.getElementById("container"));
+    it('Contents rendering with defaults', () => {
+        ReactDOM.render(<Contents className="CONTENTS_CLASS_NAME" />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-content')).toExist();
-        expect(container.querySelector('.ms-content.ms-content-unknown')).toExist();
-    });
-    it('Content rendering known type (text)', () => {
-        ReactDOM.render(<Content {...STORY.sections[0].contents[0]} />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.ms-content-text');
+        const el = container.querySelector('.CONTENTS_CLASS_NAME');
         expect(el).toExist();
     });
-    it('Content rendering known type (image)', () => {
-        ReactDOM.render(<Content {...STORY.sections[0].contents[1]} />, document.getElementById("container"));
+    it('renders components', () => {
+        ReactDOM.render(<Contents className="CONTENTS_CLASS_NAME" contents={CONTENTS}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-content-image');
+        const el = container.querySelector('.CONTENTS_CLASS_NAME');
         expect(el).toExist();
     });
-    it('content has intersection observer', (done) => {
-        const ID_1 = "ID_1";
-        const ID_2 = "ID_2";
-        ReactDOM.render((<TestScrollableContainer height="100">
-            <Content id={ID_1} type="text" height={100} />
-            <Content id={ID_2} onVisibilityChange={({ id, visible }) => {
-                expect(id).toBe(ID_2);
-                expect(visible).toBe(true);
+    it('do nor render add-bar in edit mode if addButtons are not present', () => {
+        ReactDOM.render(<Contents
+            mode="edit"
+            className="CONTENTS_CLASS_NAME"
+            contents={CONTENTS} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.add-bar');
+        expect(el).toNotExist();
+    });
+    it('addButtons rendered for every content', () => {
+        ReactDOM.render(<Contents
+            mode="edit"
+            addButtons={[{
+                id: 'test-button',
+                template: "TEST_TEMPLATE"
+            }]}
+            className="CONTENTS_CLASS_NAME"
+            contents={CONTENTS_2} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelectorAll('.add-bar').length).toBe(2);
+        expect(container.querySelectorAll('.someTestContent').length).toBe(2);
+
+    });
+    it('addButtons rendering and callback', done => {
+        ReactDOM.render(<Contents
+            mode="edit"
+            addButtons={[{
+                id: 'test-button',
+                template: "TEST_TEMPLATE"
+            }]}
+            add={(path, position, value) => {
+                expect(value).toBe("TEST_TEMPLATE");
+                expect(position).toBe(CONTENTS[0].id);
+                expect(path).toBe('contents');
                 done();
-            }} type="text" height={100} />
-        </TestScrollableContainer>), document.getElementById("container"));
+            }}
+            className="CONTENTS_CLASS_NAME"
+            contents={CONTENTS} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const scrollable = container.querySelector(`#${SCROLLABLE_CONTAINER_ID}`);
-        expect(scrollable).toExist();
-        scrollable.scrollBy(0, 120);
+        const el = container.querySelector('.add-bar');
+        expect(el).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector('.add-bar button'));
+        ReactTestUtils.Simulate.click(document.querySelector('#test-button'));
+    });
+    it('modify handlers for content component', done => {
+        const TEST_NEW_CONTENT = "TEST_SECTION";
+        const TEST_VALUE = "TEST_VALUE";
+        const DummyContentComponent = createSink(({ add, update }) => {
+            add('contents', "position", TEST_NEW_CONTENT);
+            update('entry', TEST_VALUE);
+        });
+        ReactDOM.render(<Contents
+            add={(path, position, v) => {
+                expect(path).toBe(`contents[{"id": "${CONTENTS[0].id}"}].contents`);
+                expect(position).toBe("position");
+                expect(v).toBe(TEST_NEW_CONTENT);
+                done();
+            }}
+            className="CONTENTS_CLASS_NAME"
+            contents={CONTENTS}
+            ContentComponent={DummyContentComponent}
+        />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('CONTENTS_CLASS_NAME');
+        expect(el).toExist();
     });
 });
