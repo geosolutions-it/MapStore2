@@ -64,7 +64,7 @@ export function addLayersMapViewerUrl(layers = [], sources = []) {
     };
 }
 /**
- * it search for a layer in the related catalog
+ * Searches for a layer in the related catalog
  * @param {object} params
  * @param {string} params.format format of the catalog
  * @param {string} params.url catalog url
