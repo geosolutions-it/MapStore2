@@ -1,51 +1,58 @@
-
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React from 'react';
-import ResizableModal from '../misc/ResizableModal';
-import Portal from '../misc/Portal';
+
 import BorderLayout from '../layout/BorderLayout';
 import Toolbar from '../misc/toolbar/Toolbar';
+import MediaSelector from './MediaSelector';
 
-
-const MediaModal = ({
-    show,
-    onShow = () => { }
-}) => {
-
-    return (
-        <Portal>
-            <ResizableModal
-                title="Media"
-                show={show}
-                onClose={() => onShow(false)}
-                className={`ms-media-modal ms-media-modal-${currentType}`}
-                size="lg"
-                buttons={[
-                    {
-                        text: 'Apply',
-                        bsSize: 'sm'
-                    }
-                ]}>
-                <BorderLayout
-                    className="ms-media-modal-layout"
-                    header={
-                        <div style={{ padding: 4, zIndex: 2 }} className="shadow-soft">
-                            <Toolbar
-                                btnDefaultProps={{ bsSize: 'sm' }}
-                                buttons={[]} />
-                        </div>
-                    }
-                    columns={[
-                        <div style={{ zIndex: 1, order: -1, width: 300, backgroundColor: '#ffffff' }} className="shadow-soft">
-
-                        </div>
-                    ]}>
-                    <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
-                        TODO
-                    </div>
-                </BorderLayout>
-            </ResizableModal>
-        </Portal>
-    );
-};
-
-export default MediaModal;
+/**
+ * Full view of the media with selector and preview.
+ * TODO: save in the state the local content to provide the correct preview
+ * TODO: manage different types
+ */
+export default ({
+    type,
+    source,
+    resources,
+    saveState,
+    selectedItem,
+    selectItem = () => {},
+    setAddingMedia = () => {},
+    saveMedia = () => {}
+}) => (<BorderLayout
+        header={
+            <div style={{ padding: 4, zIndex: 2 }} >
+                <Toolbar
+                    btnDefaultProps={{ bsSize: 'sm' }}
+                    buttons={[{
+                        text: "Image", // TODO: i18N
+                        active: true
+                    }, {
+                        text: "Video" // TODO: i18N
+                    }]} />
+            </div>
+        }
+        columns={[ //
+            <div key="selector" style={{ zIndex: 2, order: -1, width: 300, backgroundColor: '#ffffff' }} >
+                <MediaSelector
+                    selectedItem={selectedItem}
+                    resources={resources}
+                    mediaType={type}
+                    mediaSource={source}
+                    saveMedia={saveMedia}
+                    setAddingMedia={setAddingMedia}
+                    selectItem={selectItem}
+                    {...saveState}
+                     />
+            </div>
+        ]}>
+        <div key="preview" style={{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
+            PREVIEW
+        </div>
+    </BorderLayout>);

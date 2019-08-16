@@ -6,10 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { Component } from 'react';
+import { find } from 'lodash';
+import { createSelector } from 'reselect';
+
 import PropTypes from 'prop-types';
 import Lightbox from 'react-image-lightbox';
 import objectFitImages from 'object-fit-images';
-import { withState } from 'recompose';
+import { resourcesSelector } from '../../../selectors/geostory';
+import { compose, withState, withProps, branch } from 'recompose';
+
+import { connect } from "react-redux";
 
 /**
  * Image media component
@@ -72,4 +78,20 @@ class Image extends Component {
     }
 }
 
-export default withState('fullscreen', 'onClick', false)(Image);
+export default compose(
+    branch(
+            ({resourceId}) => resourceId,
+            compose(
+                connect(createSelector(resourcesSelector, (resources) => ({resources}))),
+                withProps(
+                    ({ resources, resourceId: id }) => {
+
+                        const resource = find(resources, { id }) || {};
+
+                        return resource.data;
+                    }
+                )
+            )
+    ),
+    withState('fullscreen', 'onClick', false)
+)(Image);

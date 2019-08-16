@@ -10,9 +10,12 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
+import { hide, chooseMedia } from '../actions/mediaEditor';
+import * as epics from '../epics/mediaEditor';
 import mediaEditor from '../reducers/mediaEditor';
+import { openSelector, selectedItemSelector } from '../selectors/mediaEditor';
 
-import MediaEditor from '../components/mediaEditor/MediaEditor';
+import MediaModal from './mediaEditor/MediaModal';
 
 /**
  * Plugin for GeoStory side panel editor
@@ -22,10 +25,15 @@ import MediaEditor from '../components/mediaEditor/MediaEditor';
 export default createPlugin('MediaEditor', {
     component: connect(
         createStructuredSelector({
-            enabled: () => true
-        })
-    )(MediaEditor),
+            open: openSelector,
+            selectedItem: selectedItemSelector
+        }), {
+            hide,
+            chooseMedia
+        }
+    )(MediaModal),
     reducers: {
         mediaEditor
-    }
+    },
+    epics
 });

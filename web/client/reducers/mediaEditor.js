@@ -6,30 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { set, compose } from '../utils/ImmutableUtils';
-import { SHOW, HIDE, SELECTED } from '../actions/mediaEditor';
+import { SHOW, HIDE, CHOOSE_MEDIA, ADDING_MEDIA, LOAD_MEDIA_SUCCESS, SELECT_ITEM} from '../actions/mediaEditor';
 
 const DEFAULT_STATE = {
-    open: true,
+    open: false,
+    // contains local data (path for data is mediaType, sourceId, e.g. data: {image : { geostory: { resultData: {...}, params: {...}}})
+    data: {},
     settings: {
-        sources: {
-            // for each media type
+        mediaType: 'image', // current selected media type
+        sourceId: 'geostory', // current selected service
+        // available media types
+        mediaTypes: {
             image: {
-                // list the services to use (remote services like geostore, and others like Imgur)
-                services: [ // TODO, this have to be configurable, with some default service
-                    {
-                    id: "ID", // must have an Id to identify the source
-                    title: "local resources",
-                    type: "local",
-                    stateLocation: "geostory.resources"
-                }]
-            }/*,
-            video: {
-
+                sources: ['geostory'] // services for the selected media type
             }
-            map: {
-                service
+        },
+        // all media sources available, with their type
+        sources: {
+            geostory: {
+                type: 'geostory'
             }
-            */
         }
     }
 };
@@ -37,21 +33,34 @@ const DEFAULT_STATE = {
 export default (state = DEFAULT_STATE, action) => {
     switch (action.type) {
         case SHOW:
+            // setup media editor settings
             return compose(
                     set('open', true),
                     set('owner', action.owner),
-                    set('settings', action.settings || state.settings), // TODO: allow fine customization
-                    set('stashedSettings', state.settings)
+                    // set('settings', action.settings || state.settings), // TODO: allow fine customization
+                    // set('stashedSettings', state.settings) // This should allow to use default config or customize for a different usage
                 )(state);
         case HIDE:
-        case SELECTED:
+            // hide resets the media editor as well as selected
+        case CHOOSE_MEDIA:
+            // resets all media editor settings
             return compose(
                 set('open', false),
                 set('owner', undefined),
-                set('settings', state.stashedSettings || state.settings ), // restore defaults
+                set('settings', state.stashedSettings || state.settings), // restore defaults
                 set('stashedSettings', undefined)
-            );
-
+            )(state);
+        // set adding media state (to toggle add/select in media selectors)
+        case ADDING_MEDIA: {
+            return set('saveState.addingMedia', action.adding, state);
+        }
+        case LOAD_MEDIA_SUCCESS: {
+            const {resultData, params, mediaType, sourceId} = action;
+            return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
+        }
+        case SELECT_ITEM: {
+            return set('selected', action.id, state);
+        }
         default:
             return state;
     }

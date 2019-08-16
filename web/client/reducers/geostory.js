@@ -10,6 +10,7 @@ import { set } from '../utils/ImmutableUtils';
 
 import {
     ADD,
+    ADD_RESOURCE,
     CHANGE_MODE,
     SET_CURRENT_STORY,
     UPDATE
@@ -259,9 +260,6 @@ export default (state = INITIAL_STATE, action) => {
         case ADD: {
             const {id, path: rawPath, position} = action;
             let {element} = action;
-            if (isString(element) && getDefaultSectionTemplate(element)) {
-                element = getDefaultSectionTemplate(element);
-            }
 
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
             const arrayToUpdate = get(state, path, []);
@@ -288,6 +286,11 @@ export default (state = INITIAL_STATE, action) => {
             }
 
             return set(path, newElement, state);
+        }
+        case ADD_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            // add last resource on top
+            return set('currentStory.resources', [{id, type, data}, ...(state.currentStory && state.currentStory.resources || [])], state);
         }
         default:
             return state;

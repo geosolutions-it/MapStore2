@@ -68,7 +68,7 @@ module.exports = {
         MapSearchPlugin: require('../plugins/MapSearch'),
         MapsPlugin: require('../plugins/Maps'),
         MeasurePlugin: require('../plugins/Measure'),
-        MediaEditor: require('../plugins/MediaEditor'),
+        MediaEditorPlugin: require('../plugins/MediaEditor').default,
         MetadataExplorerPlugin: require('../plugins/MetadataExplorer'),
         MousePositionPlugin: require('../plugins/MousePosition'),
         NotificationsPlugin: require('../plugins/Notifications'),

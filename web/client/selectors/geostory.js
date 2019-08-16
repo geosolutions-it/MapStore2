@@ -38,3 +38,6 @@ export const sectionSelectorCreator = id => state => find(sectionsSelector(state
  */
 export const sectionAtIndexSelectorCreator = index => state => (sectionsSelector(state) || [])[index];
 
+export const resourcesSelector = state => get(currentStorySelector(state), "resources", []);
+
+export const resourceByIdSelectorCreator = id => state => find(resourcesSelector(state), {id});
