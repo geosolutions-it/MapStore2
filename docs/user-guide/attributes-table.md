@@ -113,10 +113,53 @@ In *Edit mode*, you can delete existing features following these steps:
 
 <img src="../img/delete-line-shape.gif" />
 
+Quick Filtering
+-------------------
+
+[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) attibute table allow you to quickly filtering the table records(features) by using the 
+filter field located at the top of each table column. 
+
+<p><img src="../img/attribute-table-quick-filter.png" style="max-width:620px;"/></p>
+
+To use attribute table quick filters, you simply have to type in the filter field with the filter data relate to the respected column. 
+
+* Forexample to filter **Arizona State** type in arizona in the filter field located on state_name column
+<p><img src="../img/attribute-table-quick-filter-1.png" style="max-width:620px;"/></p>
+
+!!! note
+    We have got 1 item and since the map is by default synchronized with the tabular data so all states have disappeared in the map except **Arizona** state.
+
+
+### Operator based filtering
+Quick filters allow you to do quick comparison operator based filtering by preceding the filter text with operator. 
+Operator can be used to all data type including float and date types.
+
+<p><img src="../img/attribute-table-quick-filter-2.png" style="max-width:620px;"/></p>
+
+So far the operators allowed are as follows 
+
+* **!== or != or <>**  Not equal 
+* **<=**  Less than or equal
+* **>=**  Greater than or equal
+* **<**  Less than
+* **>**  Greater than
+* **=== or == or =** Equal, this is internal set as default operator when no operator is specified in filter text.
+
+Examples;
+
+* States with **persons >= 4,000,000**
+<p><img src="../img/attribute-table-quick-filter-3.png" style="max-width:620px;"/></p>
+
+* States with male population **Male < 2000,0000**
+<p><img src="../img/attribute-table-quick-filter-4.png" style="max-width:620px;"/></p>
+
+!!! note
+    Please note the comparison operator preceding the filter text in both examples.
+
 Advanced Filtering
 ------------------
 
-[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to filter and select the data by attribute or by region and to perform cross filtering between two present layers in the map.
+In addition to quick filters, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) attribute table allows you to perform advance filtering and select the data by attribute or by region and to perform cross filtering between two present layers in the map.
 
 * **Click** on the *Advanced Search* icon <img src="../img/filter-icon.jpg" style="max-width:25px;" />.
 
