@@ -40,7 +40,7 @@ const Previews = emptyState(
 class Builder extends React.Component {
 
     static propTypes = {
-        story: PropTypes.array,
+        story: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
         setEditing: PropTypes.func
     };
