@@ -162,7 +162,7 @@ describe('catalog Epics', () => {
                         expect(action.layer.name).toBe("gs:us_states");
                         expect(action.layer.title).toBe("States of US");
                         expect(action.layer.type).toBe("wms");
-                        expect(action.layer.url).toBe("https://gs-stable.geo-solutions.it/geoserver/wms");
+                        expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
                         break;
                     case TEST_TIMEOUT:
                         break;

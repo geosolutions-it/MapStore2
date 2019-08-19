@@ -6,6 +6,7 @@
       <dc:creator>GeoServer Catalog</dc:creator>
       <dc:subject>features</dc:subject>
       <dc:subject>states</dc:subject>
+      <dct:references scheme="OGC:WMS">https://sample.server/geoserver/wms?service=WMS&amp;request=GetMap&amp;layers=gs:us_states</dct:references>
       <dc:title>States of US</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
