@@ -14,14 +14,14 @@ import {
     CHANGE_TEXT,
     DELETE_SERVICE,
     GET_METADATA_RECORD_BY_ID,
-    LAYER_SEARCH,
+    TEXT_SEARCH,
     addCatalogService,
     setLoading,
     deleteCatalogService,
     recordsLoaded,
     recordsLoadError,
     savingService,
-    layerSearch
+    textSearch
 } from '../actions/catalog';
 import {showLayerMetadata, addLayer} from '../actions/layers';
 import {error, success} from '../actions/notifications';
@@ -63,8 +63,8 @@ module.exports = (API) => ({
      * text is the name of the layer to search
      * it also start with a loading action used to trigger loading state in catalog ui
      */
-    layerSearchEpic: action$ =>
-        action$.ofType(LAYER_SEARCH)
+    recordSearchEpic: action$ =>
+        action$.ofType(TEXT_SEARCH)
         .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
             return Rx.Observable.defer( () =>
                 API[format].textSearch(url, startPosition, maxRecords, text, options)
@@ -313,6 +313,6 @@ module.exports = (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const {type, url} = selectedCatalogSelector(state);
-                return Rx.Observable.of(layerSearch({format: type, url, startPosition: 1, maxRecords: pageSize, text}));
+                return Rx.Observable.of(textSearch({format: type, url, startPosition: 1, maxRecords: pageSize, text}));
             })
 });

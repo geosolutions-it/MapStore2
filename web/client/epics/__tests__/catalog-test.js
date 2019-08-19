@@ -19,7 +19,7 @@ const {
     getMetadataRecordById,
     autoSearchEpic,
     openCatalogEpic,
-    layerSearchEpic
+    recordSearchEpic
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
@@ -31,7 +31,7 @@ import {
     addLayersMapViewerUrl,
     getMetadataRecordById as initAction,
     changeText,
-    layerSearch, LAYER_SEARCH,
+    textSearch, TEXT_SEARCH,
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     SET_LOADING
@@ -60,7 +60,7 @@ describe('catalog Epics', () => {
         const NUM_ACTIONS = 1;
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
-            expect(actions[0].type).toBe(LAYER_SEARCH);
+            expect(actions[0].type).toBe(TEXT_SEARCH);
             done();
         }, {
             catalog: {
@@ -94,9 +94,9 @@ describe('catalog Epics', () => {
         }, { });
     });
 
-    it('layerSearchEpic with two layers', (done) => {
+    it('recordSearchEpic with two layers', (done) => {
         const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(layerSearchEpic), NUM_ACTIONS, layerSearch({
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
             url: "base/web/client/test-resources/csw/getRecordsResponseDC.xml",
             startPosition: 1,
@@ -122,9 +122,9 @@ describe('catalog Epics', () => {
             done();
         }, { });
     });
-    it('layerSearchEpic with exception', (done) => {
+    it('recordSearchEpic with exception', (done) => {
         const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(layerSearchEpic), NUM_ACTIONS, layerSearch({
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
             url: "base/web/client/test-resources/csw/getRecordsResponseEsxception.xml",
             startPosition: 1,

@@ -16,7 +16,7 @@ const service = {
 const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
 const {
-    addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, layerSearch, LAYER_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
+    addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, textSearch, TEXT_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
@@ -36,17 +36,17 @@ describe('Test correctness of the catalog actions', () => {
         expect(retval.layers).toEqual(layers);
         expect(retval.sources).toEqual(sources);
     });
-    it('layerSearch', () => {
+    it('textSearch', () => {
         const format = "csw";
         const urlValue = "url";
         const startPosition = 1;
         const maxRecords = 1;
         const text = "text";
         const options = {};
-        const retval = layerSearch({format, url: urlValue, startPosition, maxRecords, text, options});
+        const retval = textSearch({format, url: urlValue, startPosition, maxRecords, text, options});
 
         expect(retval).toExist();
-        expect(retval.type).toBe(LAYER_SEARCH);
+        expect(retval.type).toBe(TEXT_SEARCH);
         expect(retval.format).toBe(format);
         expect(retval.url).toBe(urlValue);
         expect(retval.startPosition).toBe(startPosition);

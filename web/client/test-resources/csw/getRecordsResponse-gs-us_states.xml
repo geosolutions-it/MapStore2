@@ -4,7 +4,6 @@
     <csw:Record>
       <dc:identifier>gs:us_states</dc:identifier>
       <dc:creator>GeoServer Catalog</dc:creator>
-      <dct:references scheme="OGC:WMS">https://gs-stable.geo-solutions.it/geoserver/wms?service=WMS&amp;request=GetMap&amp;layers=gs:us_states</dct:references>
       <dc:subject>features</dc:subject>
       <dc:subject>states</dc:subject>
       <dc:title>States of US</dc:title>

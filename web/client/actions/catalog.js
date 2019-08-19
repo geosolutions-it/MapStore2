@@ -23,7 +23,7 @@ import {find} from 'lodash';
 import {authkeyParamNameSelector} from '../selectors/catalog';
 
 export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
-export const LAYER_SEARCH = 'CATALOG:LAYER_SEARCH';
+export const TEXT_SEARCH = 'CATALOG:TEXT_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
 export const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
@@ -73,9 +73,9 @@ export function addLayersMapViewerUrl(layers = [], sources = []) {
  * @param {string} params.text layer name
  * @param {object} params.options layer name
  */
-export function layerSearch({format, url, startPosition, maxRecords, text, options} = {}) {
+export function textSearch({format, url, startPosition, maxRecords, text, options} = {}) {
     return {
-        type: LAYER_SEARCH,
+        type: TEXT_SEARCH,
         format,
         url,
         startPosition,
