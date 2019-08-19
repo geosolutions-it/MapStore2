@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
 import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
-import { sortBy } from 'lodash';
+import { sortBy, isNil } from 'lodash';
 
 import { queryableLayersSelector, getLayerFromName } from '../selectors/layers';
 
@@ -125,7 +125,7 @@ export const searchItemSelected = action$ =>
             }).concatMap((item) => {
                 // check if the service has been configured to start a GetFeatureInfo request based on the item selected
                 // if so, then do it with a point inside the geometry
-                if (item.__SERVICE__ && item.__SERVICE__.launchInfoPanel && item.__SERVICE__.launchInfoPanel !== "no_info" && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
+                if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
                     let coord = pointOnSurface(item).geometry.coordinates;
                     const latlng = { lng: coord[0], lat: coord[1] };
                     const typeName = item.__SERVICE__.options.typeName;

@@ -96,7 +96,7 @@ class ResultsProps extends React.Component {
                     <Select
                         options={launchInfoPanelOptions}
                         clearable={false}
-                        value={service && service.launchInfoPanel || "no_info"}
+                        value={service && service.launchInfoPanel || this.props.launchInfoPanelDefault}
                         onChange={this.updateLaunchInfoPanel}
                     />
                     <span className="priority-info with-top-margin">
@@ -115,7 +115,13 @@ class ResultsProps extends React.Component {
         this.props.onPropertyChange("service", assign({}, this.props.service, {priority: parseFloat(val[0], 10)}));
     };
     updateLaunchInfoPanel = (val) => {
-        this.props.onPropertyChange("service", {...this.props.service, launchInfoPanel: val && val.value ? val.value : ""});
+        // determine launchInfoPanel value
+        let launchInfoPanel = val && val.value ? val.value : "";
+        if ( launchInfoPanel === "no_info" ) {
+            // avoid to use a value for default behaviour i.e. without record search
+            launchInfoPanel = undefined;
+        }
+        this.props.onPropertyChange("service", {...this.props.service, launchInfoPanel});
     };
 }
 
