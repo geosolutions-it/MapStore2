@@ -47,6 +47,10 @@ module.exports = {
         name: "geostory",
         path: "/geostory",
         component: require('./pages/GeoStory')
+    }, {
+        name: "geostory",
+        path: "/geostory/:gid",
+        component: require('./pages/GeoStory')
     }],
     initialState: {
         defaultState: {

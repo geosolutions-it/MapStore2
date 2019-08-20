@@ -1846,12 +1846,21 @@
             "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
             "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
-            "geostory": {
+        "geostory": {
             "addTitleSection": "Titelabschnitt hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addImmersiveContent": "Füge immersiven Inhalt hinzu",
-            "addTextContent": "Textinhalt hinzufügen"
+            "addTextContent": "Textinhalt hinzufügen",
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unbekannter Fehler",
+                    "pleaseLogin": "Bitte loggen Sie sich ein",
+                    "geostoryNotAccessible": "Diese Geschichte ist nicht zugänglich",
+                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                }
+            }
         },
         "tutorial": {
             "title": "Anleitung",
