@@ -74,3 +74,23 @@ The MapStore invocation URL above executes the following operations:
 - Execution of a map zoom to the provided extent
 
 For more details check out the [searchLayerWithFilter](https://mapstore2.geo-solutions.it/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
+
+
+#### Add Layers
+
+This action allows to add layers from catalog present in the map
+
+Requirements:
+- the number of values must be even
+- catalog name must be present in the map
+
+
+Example:
+```
+{
+    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
+    "layers": ["layer1", "layer2"],
+    "sources": ["catalog1", "catalog2"]
+}
+?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2"],"sources":["catalog1", "catalog2"]}]
+```
