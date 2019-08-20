@@ -67,4 +67,14 @@ describe('exportableWidget enhancer', () => {
         expect(spyImage.calls[0].arguments[0].widgetDivId).toBe("widget-chart-ID");
         expect(spyImage.calls[0].arguments[0].title).toBe("widget title");
     });
+
+    it('should hide exportCSV or exportImage btns when data is empty', () => {
+        const Sink = exportable(createSink(({ widgetTools = [] }) => {
+            expect(widgetTools[0].visible).toBe(0);
+            expect(widgetTools[1].visible).toBe(0);
+            widgetTools[0].onClick();
+        }));
+
+        ReactDOM.render(<Sink title="widget title" data={[]} />, document.getElementById("container"));
+    });
 });
