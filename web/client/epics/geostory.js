@@ -39,7 +39,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 if (isString(data)) {
                     return setCurrentStory(JSON.parse(data));
                 }
-                return (loadingGeostory(false, "loading"), setCurrentStory({}));
+                return setCurrentStory({});
             })
             .let(wrapStartStop(
                 loadingGeostory(true, "loading"),
