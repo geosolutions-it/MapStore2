@@ -132,6 +132,7 @@ describe('identify Epics', () => {
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a1.reqId).toExist();
                 expect(a1.request).toExist();
+                expect(a1.request.cql_filter).toNotExist();
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
