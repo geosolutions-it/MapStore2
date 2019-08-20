@@ -4,21 +4,26 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
+import csw from '../api/CSW';
+import wms from '../api/WMS';
+import wmts from '../api/WMTS';
 var API = {
-    csw: require('../api/CSW'),
-    wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
+    csw,
+    wms,
+    wmts
 };
 
-const {addLayer: addNewLayer, changeLayerProperties} = require('./layers');
+import {addLayer as addNewLayer, changeLayerProperties} from './layers';
 
-const LayersUtils = require('../utils/LayersUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
-const {find} = require('lodash');
-const {authkeyParamNameSelector} = require('../selectors/catalog');
+import * as LayersUtils from '../utils/LayersUtils';
+import * as ConfigUtils from '../utils/ConfigUtils';
+import {find} from 'lodash';
+import {authkeyParamNameSelector} from '../selectors/catalog';
 
+export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
+export const TEXT_SEARCH = 'CATALOG:TEXT_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
 export const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
@@ -46,6 +51,39 @@ export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
 
+/**
+ * Adds a list of layers from the given catalogs to the map
+ * @param {string[]} layers list with workspace to be added in the map
+ * @param {string[]} sources catalog names related to each layer
+ */
+export function addLayersMapViewerUrl(layers = [], sources = []) {
+    return {
+        type: ADD_LAYERS_FROM_CATALOGS,
+        layers,
+        sources
+    };
+}
+/**
+ * Searches for a layer in the related catalog
+ * @param {object} params
+ * @param {string} params.format format of the catalog
+ * @param {string} params.url catalog url
+ * @param {number} params.startPosition initial position to start search, default 1
+ * @param {number} params.maxRecords max number of records returned
+ * @param {string} params.text layer name
+ * @param {object} params.options layer name
+ */
+export function textSearch({format, url, startPosition, maxRecords, text, options} = {}) {
+    return {
+        type: TEXT_SEARCH,
+        format,
+        url,
+        startPosition,
+        maxRecords,
+        text,
+        options
+    };
+}
 export function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
@@ -191,26 +229,7 @@ export function getRecords(format, url, startPosition = 1, maxRecords, filter, o
         });
     };
 }
-export function textSearch(format, url, startPosition, maxRecords, text, options) {
-    return (dispatch /* , getState */) => {
-        // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        dispatch(setLoading(true));
-        API[format].textSearch(url, startPosition, maxRecords, text, options).then((result) => {
-            if (result.error) {
-                dispatch(recordsLoadError(result));
-            } else {
-                dispatch(recordsLoaded({
-                    url,
-                    startPosition,
-                    maxRecords,
-                    text
-                }, result));
-            }
-        }).catch((e) => {
-            dispatch(recordsLoadError(e));
-        });
-    };
-}
+
 export function describeError(layer, error) {
     return {
         type: DESCRIBE_ERROR,
