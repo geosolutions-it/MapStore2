@@ -177,10 +177,10 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
-    it('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
+    it.skip('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
         const NUM_ACTIONS = 5;
         mockAxios.onGet().reply(200, `{"description":"Sample story with 1 paragraph and 1 immersive section, two columns","type":"cascade","sections":[{"type":"paragraph","id":"SomeID","title":"Abstract","contents":[{"id":"SomeID","type":'text',"background":{},"html":"<p>this is some html content</p>"}]}]}`);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
+        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("StoryWithError"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((a, i) => {
                 switch (a.type) {
