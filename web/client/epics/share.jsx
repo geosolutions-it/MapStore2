@@ -8,11 +8,16 @@
 
 import Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { get, head, isNaN } from 'lodash';
+import { get, head, isNaN, isString, includes } from 'lodash';
 import url from 'url';
-import { CHANGE_MAP_VIEW, zoomToExtent } from '../actions/map';
-import { isValidExtent } from '../utils/CoordinatesUtils';
+
+import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT } from '../actions/map';
+import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
+import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
 import { warning } from '../actions/notifications';
+
+import { getConfigProp } from '../utils/ConfigUtils';
+import { isValidExtent } from '../utils/CoordinatesUtils';
 /*
 it maps params key to function.
 functions must return an array of actions or and empty array
@@ -37,6 +42,17 @@ const paramActions = {
                 position: "tc"
             })
         ];
+    },
+    actions: ({value = ''}) => {
+        const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
+            SEARCH_LAYER_WITH_FILTER,
+            ZOOM_TO_EXTENT,
+            ADD_LAYERS_FROM_CATALOGS
+        ]);
+        if (isString(value)) {
+            const actions = JSON.parse(value);
+            return actions.filter(a => includes(whiteList, a.type));
+        }
     }
 };
 /**
