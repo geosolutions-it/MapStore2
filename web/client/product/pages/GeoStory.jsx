@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { connect } = require('react-redux');
-const { get, isNil } = require('lodash');
-const url = require('url');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { get, isNil } from 'lodash';
+import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
-const Page = require('../../containers/Page');
-const BorderLayout = require('../../components/layout/BorderLayout');
+import Page from '../../containers/Page';
+import {loadGeostory} from '../../actions/geostory';
+import BorderLayout from '../../components/layout/BorderLayout';
 
 class GeoStoryPage extends React.Component {
     static propTypes = {
@@ -31,17 +32,17 @@ class GeoStoryPage extends React.Component {
     };
 
     componentWillMount() {
-        const id = get(this.props, "match.params.did");
+        const id = get(this.props, "match.params.gid");
+
+        this.props.reset();
         if (id) {
-            this.props.reset();
             this.props.loadResource(id);
-        } else {
-            this.props.reset();
         }
     }
     componentDidUpdate(oldProps) {
-        const id = get(this.props, "match.params.did");
-        if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did")) {
+        const id = get(this.props, "match.params.gid");
+        const oldId = get(oldProps, "match.params.gid");
+        if (oldId !== id) {
             if (isNil(id)) {
                 this.props.reset();
             } else {
@@ -67,6 +68,6 @@ module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
     {
-        // loadResource: loadDashboard,
-        // reset: resetDashboard
+        loadResource: loadGeostory
+        // reset: resetGeostory
     })(GeoStoryPage);

@@ -10,21 +10,14 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 import { isString } from 'lodash';
 import uuid from "uuid";
 
-export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
-/**
- * Turn on/off editing mode.
- * @param {boolean} editing editing mode. true to activate, false to deactivate.
- */
-export const setEditing = (editing) => ({ type: CHANGE_MODE, mode: editing ? Modes.EDIT : Modes.VIEW});
-export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
-
-/**
- * Sets the current story for editor/viewer
- * @param {object} story the story object
- */
-export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
-
 export const ADD = "GEOSTORY:ADD";
+export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
+export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
+export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
+export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
+export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
+export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
+export const UPDATE = "GEOSTORY:UPDATE";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -40,9 +33,36 @@ export const add = (path, position, element) => ({
     position,
     element: isString(element) && getDefaultSectionTemplate(element) || element
 });
-
-export const UPDATE = "GEOSTORY:UPDATE";
-
+/**
+ * Adds a resource to the current story
+ */
+export const addResource = ( id, mediaType, data ) => ({type: ADD_RESOURCE, id, mediaType, data});
+/**
+ * Turn on/off editing mode.
+ * @param {boolean} editing editing mode. true to activate, false to deactivate.
+*/
+export const setEditing = (editing) => ({ type: CHANGE_MODE, mode: editing ? Modes.EDIT : Modes.VIEW});
+/**
+ * Load geostory from configuration
+ * @param {string} id the story name of .json file
+ */
+export const loadGeostory = (id) => ({ type: LOAD_GEOSTORY, id});
+/**
+ * Loading status of geostory
+ * @param {boolean} value the status of the loading process
+ * @param {string} name of the loading process
+ */
+export const loadingGeostory = (value = false, name = "loading") => ({ type: LOADING_GEOSTORY, value, name});
+/**
+ * load failed and this intercept error
+ * @param {object} error the status of the loading process
+ */
+export const loadGeostoryError = (error) => ({ type: LOAD_GEOSTORY_ERROR, error});
+/**
+ * Sets the current story for editor/viewer
+ * @param {object} story the story object
+*/
+export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
 /**
  * Updates a value or an object in the current Story. Useful to update contents, settings and so on.
  * @param {string} path the path of the element to modify. It can contain path like this `sections[{id: "abc"}].contents[{id: "def"}]` to resolve the predicate between brackets.
@@ -55,9 +75,3 @@ export const update = (path, element, mode = "replace") => ({
     element,
     mode
 });
-
-/**
- * Adds a resource to the current story
- */
-export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
-export const addResource = ( id, mediaType, data ) => ({type: ADD_RESOURCE, id, mediaType, data});

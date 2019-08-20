@@ -29,7 +29,7 @@ class Home extends React.Component {
     render() {
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
         return (
-            <OverlayTrigger overlay={tooltip}>
+            <OverlayTrigger overlay={tooltip} placement="left">
             <Button
                 {...this.props}
                 id="home-button"
