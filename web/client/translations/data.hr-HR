@@ -1847,6 +1847,22 @@
             "missingconfig": "Upravitelju pravila nedostaje konfiguracija. Pristup odbijen!",
             "selectworkspace": "Morate odabrati radnu okolinu za omogućavanje naprednih postavki"
         },
+        "geostory": {
+            "addTitleSection": "Add Title Section",
+            "addParagraphSection": "Add Paragraph Section",
+            "addImmersiveSection": "Add Immersive Section",
+            "addImmersiveContent": "Add Immersive Content",
+            "addTextContent": "Add Text Content",
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "pleaseLogin": "Please login",
+                    "geostoryNotAccessible": "This story is not accessible",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
+            }
+        },
         "tutorial": {
             "title": "Tutorijal",
             "back": "Natrag",

@@ -14,6 +14,7 @@ import { add, update } from '../actions/geostory';
 
 import { currentStorySelector, modeSelector } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
+import * as geostoryEpics from '../epics/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
 import Story from '../components/geostory/Story';
 const { Modes } = require('../utils/GeoStoryUtils');
@@ -49,5 +50,6 @@ export default createPlugin("GeoStory", {
     )(GeoStory),
     reducers: {
         geostory
-    }
+    },
+    epics: geostoryEpics
 });

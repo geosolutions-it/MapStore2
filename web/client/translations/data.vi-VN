@@ -1490,6 +1490,22 @@
             "toolZoomToLayersTooltip": "Thu phóng đến phạm vi lớp đã chọn",
             "zoomToLayerExtent": "Thu phóng đến phạm vi lớp"
         },
+        "geostory": {
+            "addTitleSection": "Add Title Section",
+            "addParagraphSection": "Add Paragraph Section",
+            "addImmersiveSection": "Add Immersive Section",
+            "addImmersiveContent": "Add Immersive Content",
+            "addTextContent": "Add Text Content",
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "pleaseLogin": "Please login",
+                    "geostoryNotAccessible": "This story is not accessible",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
+            }
+        },
         "tutorial": {
             "back": "Trở lại",
             "burgerMenu": {

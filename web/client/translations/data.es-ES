@@ -1851,7 +1851,16 @@
             "addParagraphSection": "Agregar sección de párrafo",
             "addImmersiveSection": "Añadir sección inmersiva",
             "addImmersiveContent": "Añadir contenido inmersivo",
-            "addTextContent": "Agregar contenido de texto"
+            "addTextContent": "Agregar contenido de texto",
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Error desconocido",
+                    "pleaseLogin": "Por favor Iniciar sesión",
+                    "geostoryNotAccessible": "Esta historia no es accesible",
+                    "geostoryDoesNotExist": "Esta historia no existe"
+                }
+            }
         },
         "tutorial": {
             "title": "Tutorial",
