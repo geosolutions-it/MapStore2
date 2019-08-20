@@ -78,10 +78,6 @@ const getIndexToInsert = (array, position) => {
     return index;
 };
 
-// Array().keys() DON'T WORK IN IE 11 ( Array.from(Array(10).keys()) )
-// Use Object.keys([ ...new Array(10) ]) instead
-
-
 /**
  * Reducer that manage state for geostory plugins. Example:
  * @memberof reducers
