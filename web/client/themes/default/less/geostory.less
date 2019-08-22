@@ -161,27 +161,53 @@
 
                 /*
                 this button needs a outline when focus to highlight
-                outline is vibile also when using tab key*/
+                outline is visible also when using tab key*/
                 &:focus,
                 &:active:focus,
                 &.active:focus,
                 &.focus,
                 &:active.focus,
                 &.active.focus {
-                    outline: auto !important; /* outline it desable globally with !important */
+                    outline: auto !important; /* outline it disable globally with !important */
                 }
             }
         }
 
         &.ms-section-title {
-            .ms-content-text {
-                display: flex;
-            }
             .ms-content-body {
                 display: flex;
                 margin: auto;
                 align-self: center;
                 padding: 32px;
+            }
+            .ms-content-text {
+                display: flex;
+                /* render the toolbar has a floating container at top left corner of title container */
+                .ms-content-toolbar {
+                    position: absolute;
+                    transform: translate(-@square-btn-medium-size / 2, -60%);
+                    padding: 0;
+                    .shadow-far;
+                }
+                /* text on full size should fill all the width of container */
+                &.ms-size-full {
+                    width: 100%;
+                    .ms-content-body,
+                    .ms-content-body > div {
+                        width: 100%;
+                    }
+                    .ms-content-body .ms-content-toolbar {
+                        width: auto;
+                    }
+                }
+                /*
+                content body needs to be aligned accordingly with the alignment of container,
+                this is needed in particular for size equal to large and short titles
+                where the alignment effect is not visible without this improvement
+                */
+                &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
+                &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
+                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
             }
         }
 
@@ -235,7 +261,7 @@
 
                 /*
                 with position sticky the toolbar is visible in the view
-                also when texteditor has height greater than view height*/
+                also when text editor has height greater than view height*/
                 .ms-text-editor-toolbar {
                     font-size: 12px;
                     .ms-position-sticky();
@@ -252,11 +278,11 @@
                     .rdw-option-active {
                         outline: 2px solid @ms-story-highlight;
                     }
-                    /* enbale horizontal scrollbar only if needed of color picker*/
+                    /* enable horizontal scrollbar only if needed of color picker*/
                     .rdw-colorpicker-modal-options {
                         overflow-x: auto;
                     }
-                    /* enbale vertical scrollbar only if needed of font family and tag dropdown */
+                    /* enable vertical scrollbar only if needed of font family and tag dropdown */
                     .rdw-dropdown-optionwrapper {
                         overflow-y: auto;
                     }
@@ -313,8 +339,8 @@
                 background-color: fade(@ms-story-bg, 75%);
                 .shadow-far();
             }
-            &.ms-bright-transparent .ms-content-body > * {
-                color: contrast(@ms-story-bg);
+            &.ms-bright-text .ms-content-body > * {
+                color: @ms-story-bg;
                 background-color: transparent;
             }
             &.ms-dark .ms-content-body > * {
@@ -322,8 +348,8 @@
                 background-color: fade(contrast(@ms-story-bg), 75%);
                 .shadow-far();
             }
-            &.ms-dark-transparent .ms-content-body > * {
-                color: @ms-story-bg;
+            &.ms-dark-text .ms-content-body > * {
+                color: contrast(@ms-story-bg);
                 background-color: transparent;
             }
         }
@@ -334,7 +360,7 @@
         &.ms-size-medium { width: 60%; }
         &.ms-size-small { width: 40%; }
 
-        /* alignement of content */
+        /* alignment of content */
         &.ms-align-center { margin-left: auto; margin-right: auto; }
         &.ms-align-left { margin-left: 0; margin-right: auto; }
         &.ms-align-right { margin-left: auto; margin-right: 0; }
@@ -361,7 +387,7 @@
     // LIBRARIES FIX
     /////////////////////
 
-    // issue in react-draft-wysiwyg align not working on multiline paragraph
+    // issue in react-draft-wysiwyg align not working on multi line paragraph
     .public-DraftStyleDefault-ltr {
         text-align: inherit;
     }

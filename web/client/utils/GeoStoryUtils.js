@@ -42,7 +42,7 @@ export const lists = {
 };
 
 
-const SAMPLE_HTML = "insert text here...";
+const SAMPLE_HTML = "<p>insert text here...</p>";
 
 export const getDefaultSectionTemplate = (type) => {
     switch (type) {
@@ -55,8 +55,10 @@ export const getDefaultSectionTemplate = (type) => {
                     {
                         id: uuid(),
                         type: ContentTypes.TEXT,
-                        theme: 'bright',
-                        html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`
+                        html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`,
+                        size: 'large',
+                        align: 'center',
+                        theme: 'bright'
                     }
                 ]
             };
@@ -68,8 +70,12 @@ export const getDefaultSectionTemplate = (type) => {
                 contents: [
                     {
                         id: uuid(),
-                        type: ContentTypes.TEXT,
-                        html: SAMPLE_HTML
+                        type: ContentTypes.COLUMN,
+                        contents: [{
+                            id: uuid(),
+                            type: ContentTypes.TEXT,
+                            html: SAMPLE_HTML
+                        }]
                     }
                 ]
             };
@@ -95,7 +101,7 @@ export const getDefaultSectionTemplate = (type) => {
 
                 },
                 align: 'left',
-                size: 'small'
+                size: 'medium'
             };
         }
         case ContentTypes.TEXT: {

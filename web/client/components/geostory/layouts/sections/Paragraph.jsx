@@ -7,7 +7,7 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes } from '../../../../utils/GeoStoryUtils';
 import SectionContents from "../../contents/SectionContents";
 
 
@@ -24,13 +24,7 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
             mode={mode}
             add={add}
             update={update}
-            sectionId={id}
-            addButtons={[{
-                glyph: 'sheet',
-                tooltipId: 'geostory.addTextContent',
-                template: ContentTypes.TEXT
-            }]}
-            />
+            sectionId={id}/>
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
