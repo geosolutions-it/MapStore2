@@ -9,7 +9,7 @@ import { set, compose } from '../utils/ImmutableUtils';
 import { ADDING_MEDIA, CHOOSE_MEDIA, EDITING_MEDIA, HIDE, LOAD_MEDIA_SUCCESS, SELECT_ITEM, SHOW} from '../actions/mediaEditor';
 
 export const DEFAULT_STATE = {
-    open: true,
+    open: false,
     // contains local data (path for data is mediaType, sourceId, e.g. data: {image : { geostory: { resultData: {...}, params: {...}}})
     data: {},
     settings: {
