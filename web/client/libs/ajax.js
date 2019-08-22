@@ -122,11 +122,17 @@ axios.interceptors.request.use(config => {
             const cannotUseCORS = corsDisabled.reduce((found, current) => found || uri.indexOf(current) === 0, false);
             if (!isCORS && (!autoDetectCORS || cannotUseCORS)) {
                 const parsedUri = urlUtil.parse(uri, true, true);
+                const params = Object.keys(config.params || {}).reduce((acc, key) => {
+                    if (config.params[key] !== undefined && config.params[key] !== null) {
+                        acc[key] = config.params[key];
+                    }
+                    return acc;
+                }, {});
                 config.url = proxyUrl + encodeURIComponent(
                     urlUtil.format(
                         assign({}, parsedUri, {
                             search: null,
-                            query: assign({}, parsedUri.query, config.params )
+                            query: assign({}, parsedUri.query, params)
                         })
                     )
                 );

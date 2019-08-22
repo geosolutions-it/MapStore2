@@ -141,6 +141,32 @@ describe('Tests ajax library', () => {
             });
     });
 
+    it('ignore undefined and null query params with custom proxy', (done) => {
+        axios.get('http://fakeexternaldomain.mapstore2', {
+            proxyUrl: '/proxy/?url=',
+            params: {
+                param1: 'param1',
+                param2: '',
+                param3: undefined,
+                param4: null,
+                param5: [],
+                param6: [1, 2, "3", ''],
+                param7: {},
+                param8: {
+                    a: 'a'
+                },
+                param9: new Date()
+            }})
+            .then(() => {
+                done();
+            })
+            .catch((ex) => {
+                const decodedUrl = urlUtil.parse(decodeURIComponent(ex.config.url), true);
+                expect(decodedUrl.query).toNotContainKeys(['param3', 'param4']);
+                done();
+            });
+    });
+
     it('uses a custom proxy for requests on the same origin with string query param', (done) => {
         axios.get('http://fakeexternaldomain.mapstore2', {
             proxyUrl: '/proxy/?url=',
