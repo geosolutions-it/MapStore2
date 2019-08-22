@@ -16,6 +16,7 @@ import { saveStateSelector, currentResourcesSelector, selectedItemSelector } fro
 import ResizableModal from '../../components/misc/ResizableModal';
 import Portal from '../../components/misc/Portal';
 import MediaEditor from '../../components/mediaEditor/MediaEditor';
+import Message from '../../components/I18N/Message';
 
 // connect editor state
 const Editor = connect(createStructuredSelector({
@@ -44,13 +45,13 @@ const MediaModal = ({
     return (
         <Portal>
             <ResizableModal
-                title="Media"
+                title={<Message msgId="mediaEditor.modalTitle"/>}
                 show={open}
                 onClose={() => hide()}
                 size="lg"
                 buttons={[
                     {
-                        text: 'Apply',
+                        text: <Message msgId="mediaEditor.apply"/>,
                         bsSize: 'sm',
                         disabled: !selectedItem,
                         onClick: () => chooseMedia(selectedItem)

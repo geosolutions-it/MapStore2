@@ -13,7 +13,7 @@ import { resourcesSelector } from '../../selectors/geostory';
 
 
 /**
- * API to save in local resources. The method must all implement the same interface.
+ * API to save in local resources. All the methods must implement the same interface.
  * TODO: bring the interface documentation into mediaAPI
  */
 export default {
@@ -42,8 +42,8 @@ export default {
      * @returns {Observable} a stream that emits an object with the following shape:
      * ```json
      * {
-     *     resources: [{id, type, data}],
-     *     totalCount: 1
+     *     "resources": [{id, type, data}],
+     *     "totalCount": 1
      * }
      * ```
      */

@@ -6,9 +6,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 import { isString } from 'lodash';
 import uuid from "uuid";
+import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";

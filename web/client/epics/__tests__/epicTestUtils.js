@@ -15,7 +15,7 @@ module.exports = {
     testEpic: (epic, count, action, callback, state = {}) => {
         const actions = new Rx.Subject();
         const actions$ = new ActionsObservable(actions);
-        const store = { getState: () => isFunction(state) ? state() : state};
+        const store = { getState: () => isFunction(state) ? state() : state, dispatch: () => {}};
         epic(actions$, store)
             .take(count)
             .toArray()

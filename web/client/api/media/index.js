@@ -14,4 +14,4 @@ const registry = {
 };
 
 
-export default () => registry.geostory; // TODO: support other kinds of media types and soruces
+export default () => registry.geostory; // TODO: support other kinds of media types and sources

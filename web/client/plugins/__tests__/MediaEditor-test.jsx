@@ -9,14 +9,10 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import GeoStory from '../GeoStory';
+import MediaEditor from '../MediaEditor';
 import { getPluginForTest } from './pluginsTestUtils';
-import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 
-import geostory from '../../reducers/geostory';
-
-describe('GeoStory Plugin', () => {
-    const stateMocker = createStateMocker({geostory}, ({type: "DUMMY_ACTION"}));
+describe('MediaEditor Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -27,9 +23,9 @@ describe('GeoStory Plugin', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('Shows GeoStory plugin', () => {
-        const { Plugin } = getPluginForTest(GeoStory, stateMocker({geostory}));
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementsByClassName('ms-geostory').length).toBe(1);
+    it('Shows MediaEditor plugin', () => {
+        const { Plugin } = getPluginForTest(MediaEditor, {mediaEditor: {open: true}});
+        ReactDOM.render(<Plugin open/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('ms-mediaEditor').length).toBe(1);
     });
 });

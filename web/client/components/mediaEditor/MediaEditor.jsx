@@ -10,7 +10,7 @@ import React from 'react';
 import BorderLayout from '../layout/BorderLayout';
 import Toolbar from '../misc/toolbar/Toolbar';
 import MediaSelector from './MediaSelector';
-
+import Message from '../I18N/Message';
 /**
  * Full view of the media with selector and preview.
  * TODO: save in the state the local content to provide the correct preview
@@ -26,15 +26,16 @@ export default ({
     setAddingMedia = () => {},
     saveMedia = () => {}
 }) => (<BorderLayout
+        className="ms-mediaEditor"
         header={
             <div style={{ padding: 4, zIndex: 2 }} >
                 <Toolbar
                     btnDefaultProps={{ bsSize: 'sm' }}
                     buttons={[{
-                        text: "Image", // TODO: i18N
+                        text: <Message msgId= "mediaEditor.images"/>,
                         active: true
                     }, {
-                        text: "Video" // TODO: i18N
+                        text: <Message msgId= "mediaEditor.videos"/>
                     }]} />
             </div>
         }
@@ -53,6 +54,6 @@ export default ({
             </div>
         ]}>
         <div key="preview" style={{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            PREVIEW
+            <Message msgId= "mediaEditor.preview"/>
         </div>
     </BorderLayout>);

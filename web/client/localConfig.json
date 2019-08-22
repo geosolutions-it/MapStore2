@@ -54,6 +54,9 @@
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
         },
+        "mediaEditor": {
+          "open": true
+        },
         "catalog": {
           "default": {
             "newService": {

@@ -8,18 +8,30 @@
 
 import expect from 'expect';
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
+import MockAdapter from 'axios-mock-adapter';
 
-import {loadGeostoryEpic} from '../geostory';
+import axios from '../../libs/ajax';
+
+import {
+    loadGeostoryEpic,
+    openMediaEditorForNewMedia
+} from '../geostory';
 import {
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
-    LOAD_GEOSTORY_ERROR
+    LOAD_GEOSTORY_ERROR,
+    add,
+    UPDATE
 } from '../../actions/geostory';
+import {
+    SHOW,
+    hide,
+    chooseMedia
+} from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import {testEpic} from './epicTestUtils';
-const axios = require('../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
+import {testEpic, addTimeoutEpic} from './epicTestUtils';
+import { ContentTypes } from '../../utils/GeoStoryUtils';
 
 let mockAxios;
 describe('Geostory Epics', () => {
@@ -177,6 +189,10 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
+    /*
+     * TODO: investigate why it fails only in travis, (tested locally with both firefox and chrome),
+     * with firefox it works but i have some problems of stability
+    */
     it.skip('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
         const NUM_ACTIONS = 5;
         mockAxios.onGet().reply(200, `{"description":"Sample story with 1 paragraph and 1 immersive section, two columns","type":"cascade","sections":[{"type":"paragraph","id":"SomeID","title":"Abstract","contents":[{"id":"SomeID","type":'text',"background":{},"html":"<p>this is some html content</p>"}]}]}`);
@@ -219,6 +235,60 @@ describe('Geostory Epics', () => {
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                }
+            });
+            done();
+        }, {
+            geostory: {}
+        });
+    });
+    it('openMediaEditorForNewMedia showing media and updating story', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
+            chooseMedia({id: "geostory"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                    case UPDATE:
+                        expect(a.element).toEqual("geostory");
+                        expect(a.mode).toEqual("replace");
+                        expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}].resourceId`);
+                        break;
+                    case SHOW:
+                        expect(a.owner).toEqual("geostory");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                }
+            });
+            done();
+        }, {
+            geostory: {}
+        });
+    });
+    // TODO: finish to test also takeUntil flow
+    it.skip('openMediaEditorForNewMedia showing media and updating story and hide', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(openMediaEditorForNewMedia), NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
+            chooseMedia({id: "geostory"}),
+            hide()
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                    case UPDATE:
+                        expect(a.element).toEqual("geostory");
+                        expect(a.mode).toEqual("replace");
+                        expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}].resourceId`);
+                        break;
+                    case SHOW:
+                        expect(a.owner).toEqual("geostory");
                         break;
                     default: expect(true).toBe(false);
                         break;

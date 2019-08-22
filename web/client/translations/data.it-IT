@@ -1847,150 +1847,171 @@
             "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
         "geostory": {
-                "addTitleSection": "Aggiungi sezione titolo",
-                "addParagraphSection": "Aggiungi sezione paragrafo",
-                "addImmersiveSection": "Aggiungi sezione immersiva",
-                "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
-                "addTextContent": "Aggiungi testo",
-                "errors": {
-                    "loading": {
-                        "title": "Errore",
-                        "unknownError": "Error sconosciuto",
-                        "pleaseLogin": "Per favore effettua il login",
-                        "geostoryNotAccessible": "Questa storia non è accessibile",
-                        "geostoryDoesNotExist": "Questa storia non esiste"
-                    }
-                }
-            },
-            "tutorial": {
-                "title": "Tutorial",
-                "back": "Indietro",
-                "next": "Avanti",
-                "close": "Chiudi",
-                "skip": "Salta",
-                "last": "Fine",
-                "start": "Inizia",
-                "checkbox": "non mostrare più questo messaggio",
-                "error": "Errore: oggetto non trovato",
-                "intro": {
-                    "title": "Benvenuto su MapStore",
-                    "text": "framework per costruire applicazioni di web mapping usando librerie standard di mappatura, come OpenLayers 3 e Leaflet."
-                },
-                "drawerMenu": {
-                    "title": "Menu principale",
-                    "text": "Puoi trovare informazioni e strumenti per controllare i layer"
-                },
-                "searchBar": {
-                    "title": "Barra di ricerca",
-                    "text": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
-                },
-                "home": {
-                    "title": "Home",
-                    "text": "Clicca per raggiungere la homepage"
-                },
-                "searchButton": {
-                    "title": "Ricerca",
-                    "text": "Premi il pulsante per aprire la barra di ricerca, poi scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
-                },
-                "burgerMenu": {
-                    "title": "Menu delle opzioni",
-                    "text": "Puoi trovare opzioni, impostazioni e aiuti"
-                },
-                "zoomInButton": {
-                    "title": "Zoom In",
-                    "text": "Premi per allargare la mappa"
-                },
-                "zoomOutButton": {
-                    "title": "Zoom Out",
-                    "text": "Premi per ridurre la mappa"
-                },
-                "fullscreen": {
-                    "title": "Schermo Intero",
-                    "text": "Premi per passare a schermo intero"
-                },
-                "identifyButton": {
-                    "title": "Info",
-                    "text": "Premi il pulsante per attivare lo strumento, poi fai click sulla mappa per ottenere informazioni dal layer"
-                },
-                "mapType": {
-                    "title": "Libreria",
-                    "text": "Puoi scegliere tra Leaflet o OpenLayers per visualizzare le mappe"
-                },
-                "mapsGrid": {
-                    "title": "Mappe",
-                    "text": "Qui alcuni esempi di MapStore. Fai click su un'immagine per provare la demo"
-                },
-                "examples": {
-                    "title": "Applicazioni personalizzate",
-                    "text": "Puoi utilizzare componenti e plugins di MapStore per costruire applicazioni personalizzate"
-                },
-                "introCesium": {
-                    "title": "Istruzioni della mappa 3D",
-                    "text": "Premi il pulsante avanti per aprire il tutorial"
-                },
-                "cesium": {
-                    "title": "Interazioni con la mappa",
-                    "pan": "Vista Pan",
-                    "zoom": "Vista Zoom",
-                    "tilt": "Vista Tilt",
-                    "rotate": "Vista Rotazione",
-                    "oneDrag": "Trascina con un dito",
-                    "twoPinch": "Pinch con due dita",
-                    "twoDragSame": "Trascina con due dita nella stessa direzione",
-                    "twoDragOpposite": "Trascina con due dita in direzione opposta",
-                    "leftClick": "Click pulsante sinistro + trascina",
-                    "rightClick": "Click pulsante destro + trascina, o scroll con il pulsante centrale",
-                    "middleClick": "Click pulsante centrale + trascina, o CTRL + Click sinistro/destro + trascina"
-
-                },
-                "cesiumCompass": {
-                    "title": "Bussola",
-                    "text": "Puoi usare la bussola per orbitare intorno al globo. Trascina per ruotare la mappa"
-                },
-                "cesiumNavigation": {
-                    "title": "Navigazione",
-                    "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
-                },
-                "dashboardIntro": {
-                    "title": "Dashboard Tutorial",
-                    "text": "Panoramica delle funzionalità della dashboard"
-                },
-                "dashboardNav": {
-                    "title": "Barra di navigazione",
-                    "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
-                },
-                "dashboardContainer": {
-                    "title": "Cruscotto",
-                    "text": "<p> Una Dashboard in MapStore fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
-                },
-                "dashboardAddWidget": {
-                    "title": "Aggiungi widget",
-                    "text": "Per aggiungere un widget alla dashboard, puoi cliccare sul pulsante +"
-                },
-                "dashboardBuilder": {
-                    "title": "Crea un nuovo widget",
-                    "text": "È possibile selezionare il tipo di widget desiderato e quindi aggiungerlo alla dashboard selezionando uno degli elementi nell'elenco"
-                },
-                "dashboardAddChart": {
-                    "title": "Widget Grafico",
-                    "text": "<p> È un widget che mostra e aggrega i dati in grafici a torta, linea o a istogramma. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddText": {
-                    "title": "Widget Testo",
-                    "text": "<p> Aggiungi un testo alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddTable": {
-                    "title": "Widget Tabella ",
-                    "text": "<p> Aggiungi una tabella di attributi alla dashboard che contiene dati di un livello vettoriale selezionato. Puoi anche filtrare i dati per personalizzare la tabella. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura dati tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddCounter": {
-                    "title": "Widget Contatore",
-                    "text": "<p> Aggiungi un nuovo contatore alla dashboard. Il contatore mostrerà il valore numerico aggregando i dati da un livello vettoriale selezionato. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura i dati del contatore </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddMap": {
-                    "title": "Widget Mappa",
-                    "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            "addTitleSection": "Aggiungi sezione titolo",
+            "addParagraphSection": "Aggiungi sezione paragrafo",
+            "addImmersiveSection": "Aggiungi sezione immersiva",
+            "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
+            "addTextContent": "Aggiungi testo",
+            "errors": {
+                "loading": {
+                    "title": "Errore",
+                    "unknownError": "Error sconosciuto",
+                    "pleaseLogin": "Per favore effettua il login",
+                    "geostoryNotAccessible": "Questa storia non è accessibile",
+                    "geostoryDoesNotExist": "Questa storia non esiste"
                 }
             }
+        },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Immagini",
+            "videos": "Video",
+            "preview": "Anteprima",
+            "apply": "Applica",
+            "imagePicker": {
+                "add": "Aggiungi",
+                "back": "Indietro",
+                "save": "Salva",
+                "sourcePlaceholder": "Inserisci una sorgente",
+                "source": "Sorgente",
+                "titlePlaceholder": "Inserisci un titolo",
+                "title": "Titolo",
+                "altTextPlaceholder": "Inserisci un testo alternativo",
+                "altText": "Testo alternativo",
+                "descriptionPlaceholder": "Inserisci una descrizione",
+                "description": "Descrizione",
+                "creditsPlaceholder": "Inserisci i crediti",
+                "credits": "Crediti"
+            }
+        },
+        "tutorial": {
+            "title": "Tutorial",
+            "back": "Indietro",
+            "next": "Avanti",
+            "close": "Chiudi",
+            "skip": "Salta",
+            "last": "Fine",
+            "start": "Inizia",
+            "checkbox": "non mostrare più questo messaggio",
+            "error": "Errore: oggetto non trovato",
+            "intro": {
+                "title": "Benvenuto su MapStore",
+                "text": "framework per costruire applicazioni di web mapping usando librerie standard di mappatura, come OpenLayers 3 e Leaflet."
+            },
+            "drawerMenu": {
+                "title": "Menu principale",
+                "text": "Puoi trovare informazioni e strumenti per controllare i layer"
+            },
+            "searchBar": {
+                "title": "Barra di ricerca",
+                "text": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
+            },
+            "home": {
+                "title": "Home",
+                "text": "Clicca per raggiungere la homepage"
+            },
+            "searchButton": {
+                "title": "Ricerca",
+                "text": "Premi il pulsante per aprire la barra di ricerca, poi scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "Menu delle opzioni",
+                "text": "Puoi trovare opzioni, impostazioni e aiuti"
+            },
+            "zoomInButton": {
+                "title": "Zoom In",
+                "text": "Premi per allargare la mappa"
+            },
+            "zoomOutButton": {
+                "title": "Zoom Out",
+                "text": "Premi per ridurre la mappa"
+            },
+            "fullscreen": {
+                "title": "Schermo Intero",
+                "text": "Premi per passare a schermo intero"
+            },
+            "identifyButton": {
+                "title": "Info",
+                "text": "Premi il pulsante per attivare lo strumento, poi fai click sulla mappa per ottenere informazioni dal layer"
+            },
+            "mapType": {
+                "title": "Libreria",
+                "text": "Puoi scegliere tra Leaflet o OpenLayers per visualizzare le mappe"
+            },
+            "mapsGrid": {
+                "title": "Mappe",
+                "text": "Qui alcuni esempi di MapStore. Fai click su un'immagine per provare la demo"
+            },
+            "examples": {
+                "title": "Applicazioni personalizzate",
+                "text": "Puoi utilizzare componenti e plugins di MapStore per costruire applicazioni personalizzate"
+            },
+            "introCesium": {
+                "title": "Istruzioni della mappa 3D",
+                "text": "Premi il pulsante avanti per aprire il tutorial"
+            },
+            "cesium": {
+                "title": "Interazioni con la mappa",
+                "pan": "Vista Pan",
+                "zoom": "Vista Zoom",
+                "tilt": "Vista Tilt",
+                "rotate": "Vista Rotazione",
+                "oneDrag": "Trascina con un dito",
+                "twoPinch": "Pinch con due dita",
+                "twoDragSame": "Trascina con due dita nella stessa direzione",
+                "twoDragOpposite": "Trascina con due dita in direzione opposta",
+                "leftClick": "Click pulsante sinistro + trascina",
+                "rightClick": "Click pulsante destro + trascina, o scroll con il pulsante centrale",
+                "middleClick": "Click pulsante centrale + trascina, o CTRL + Click sinistro/destro + trascina"
+            },
+            "cesiumCompass": {
+                "title": "Bussola",
+                "text": "Puoi usare la bussola per orbitare intorno al globo. Trascina per ruotare la mappa"
+            },
+            "cesiumNavigation": {
+                "title": "Navigazione",
+                "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Panoramica delle funzionalità della dashboard"
+            },
+            "dashboardNav": {
+                "title": "Barra di navigazione",
+                "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
+            },
+            "dashboardContainer": {
+                "title": "Cruscotto",
+                "text": "<p> Una Dashboard in MapStore fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Aggiungi widget",
+                "text": "Per aggiungere un widget alla dashboard, puoi cliccare sul pulsante +"
+            },
+            "dashboardBuilder": {
+                "title": "Crea un nuovo widget",
+                "text": "È possibile selezionare il tipo di widget desiderato e quindi aggiungerlo alla dashboard selezionando uno degli elementi nell'elenco"
+            },
+            "dashboardAddChart": {
+                "title": "Widget Grafico",
+                "text": "<p> È un widget che mostra e aggrega i dati in grafici a torta, linea o a istogramma. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Widget Testo",
+                "text": "<p> Aggiungi un testo alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Widget Tabella ",
+                "text": "<p> Aggiungi una tabella di attributi alla dashboard che contiene dati di un livello vettoriale selezionato. Puoi anche filtrare i dati per personalizzare la tabella. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura dati tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Widget Contatore",
+                "text": "<p> Aggiungi un nuovo contatore alla dashboard. Il contatore mostrerà il valore numerico aggregando i dati da un livello vettoriale selezionato. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura i dati del contatore </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Widget Mappa",
+                "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            }
+        }
     }
 }

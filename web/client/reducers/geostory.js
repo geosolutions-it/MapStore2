@@ -17,10 +17,8 @@ import {
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
-    mode: 'view'
+    mode: 'edit'
 };
-import { getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
-
 
 /**
  * transforms the path with  into a path with predicates into a path with array indexes
@@ -135,12 +133,6 @@ const getIndexToInsert = (array, position) => {
  */
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case CHANGE_MODE: {
-            return set('mode', action.mode, state);
-        }
-        case SET_CURRENT_STORY: {
-            return set('currentStory', action.story, state);
-        }
         case ADD: {
             const {id, path: rawPath, position} = action;
             let {element} = action;
@@ -160,6 +152,17 @@ export default (state = INITIAL_STATE, action) => {
                 newSections,
                 state);
         }
+        case ADD_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            // add last resource on top
+            return set('currentStory.resources', [{id, type, data}, ...(state.currentStory && state.currentStory.resources || [])], state);
+        }
+        case CHANGE_MODE: {
+            return set('mode', action.mode, state);
+        }
+        case SET_CURRENT_STORY: {
+            return set('currentStory', action.story, state);
+        }
         case UPDATE: {
             const { path: rawPath, mode } = action;
             let { element: newElement } = action;
@@ -168,13 +171,7 @@ export default (state = INITIAL_STATE, action) => {
             if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
                 newElement = {...oldElement, ...newElement};
             }
-
             return set(path, newElement, state);
-        }
-        case ADD_RESOURCE: {
-            const {id, mediaType: type, data} = action;
-            // add last resource on top
-            return set('currentStory.resources', [{id, type, data}, ...(state.currentStory && state.currentStory.resources || [])], state);
         }
         default:
             return state;

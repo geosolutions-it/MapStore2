@@ -8,14 +8,15 @@
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import SideGrid from '../../misc/cardgrids/SideGrid';
-
+import {isNil} from 'lodash';
 
 export default ({
     resources = [],
     selectedItem,
     selectItem = () => { },
     setAddingMedia = () => {}
-}) => (<div style={{position: 'relative'}}>
+}) => (
+<div style={{position: 'relative'}} className="ms-imageList">
     <div
         className="text-center"
         key="toolbar"
@@ -33,24 +34,32 @@ export default ({
                 bsStyle: 'primary',
                 className: 'square-button-md'
             }}
-            buttons={[{
-                glyph: 'plus',
-                tooltipId: 'mediaEditor.imagePicker.add',
-                onClick: () => setAddingMedia(true)
-            }]} />
+            buttons={[
+                {
+                    glyph: 'plus',
+                    tooltipId: 'mediaEditor.imagePicker.add',
+                    onClick: () => setAddingMedia(true)
+                },
+                {
+                    glyph: 'pencil',
+                    tooltipId: 'mediaEditor.imagePicker.edit',
+                    visible: !isNil(selectedItem),
+                    onClick: () => {} // TODO implement edit of image
+                }
+            ]} />
     </div>
-        <SideGrid
-            items={resources.map(({ id, data = {}}) => ({
-                preview: <div
-                    style={{
-                        background: `url("${data.src}")`,
-                        backgroundSize: 'cover',
-                        height: "100%",
-                        overflow: 'hidden'
-                    }} />,
-                title: data.title,
-                onClick: () => selectItem(id),
-                selected: selectedItem && selectedItem.id && id === selectedItem.id,
-                description: data.description
-            }))} />
+    <SideGrid
+        items={resources.map(({ id, data = {}}) => ({
+            preview: <div
+                style={{
+                    background: `url("${data.src}")`,
+                    backgroundSize: 'cover',
+                    height: "100%",
+                    overflow: 'hidden'
+                }} />,
+            title: data.title,
+            onClick: () => selectItem(id),
+            selected: selectedItem && selectedItem.id && id === selectedItem.id,
+            description: data.description
+        }))} />
 </div>);

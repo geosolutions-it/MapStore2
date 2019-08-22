@@ -1862,6 +1862,28 @@
                 }
             }
         },
+        "mediaEditor": {
+            "modalTitle": "Medien",
+            "images": "Bilder",
+            "videos": "Videos",
+            "preview": "Vorschau",
+            "apply": "Sich bewerben",
+            "imagePicker": {
+                "add": "Hinzufügen",
+                "back": "Zurück",
+                "save": "Sparen",
+                "sourcePlaceholder": "Geben Sie eine Quelle ein",
+                "source": "Quelle",
+                "titlePlaceholder": "Geben Sie einen Titel ein",
+                "title": "Titel",
+                "altTextPlaceholder": "Geben Sie einen alternativen Text ein",
+                "altText": "Alternative text",
+                "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
+                "description": "Beschreibung",
+                "creditsPlaceholder": "Geben Sie Credits ein",
+                "credits": "Credits"
+            }
+        },
         "tutorial": {
             "title": "Anleitung",
             "back": "zurück",

@@ -7,8 +7,9 @@
  */
 
 import { Observable } from 'rxjs';
-import axios from 'axios';
 import {isNaN, isString, isNil, isObject} from 'lodash';
+
+import axios from '../libs/ajax';
 
 import {
     ADD,
@@ -39,7 +40,13 @@ export const openMediaEditorForNewMedia = action$ =>
                         .takeUntil(action$.ofType(HIDE))
                 );
         });
-
+/**
+ * Load a story configuration from local files
+ * it is triggered by LOAD_GEOSTORY action type
+ * if the name provided is not present then return the default one (sampleStory.json)
+ * @param {*} action$ the actions
+ * @param {object} store
+ */
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
         .ofType(LOAD_GEOSTORY)
         .switchMap( ({id}) =>
@@ -59,6 +66,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return setCurrentStory({});
             })
+            // adds loading status to the start and to the end of the stream and handles exceptions
             .let(wrapStartStop(
                 loadingGeostory(true, "loading"),
                 loadingGeostory(false, "loading"),
