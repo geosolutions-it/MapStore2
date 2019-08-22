@@ -30,14 +30,14 @@ class Section extends React.Component {
         id: PropTypes.string,
         type: PropTypes.oneOf(lists.SectionTypes),
         storyType: PropTypes.oneOf(lists.StoryTypes),
-        add: PropTypes.fun,
-        update: PropTypes.fun,
+        add: PropTypes.func,
+        update: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
         viewWidth: PropTypes.number,
         excludeClassName: PropTypes.string,
-        cover: PropTypes.boolean
+        cover: PropTypes.bool
     };
 
     static defaultProps = {

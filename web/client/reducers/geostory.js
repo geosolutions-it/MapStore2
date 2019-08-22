@@ -6,20 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
-import { set } from '../utils/ImmutableUtils';
+import { set, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
+    ADD_RESOURCE,
     CHANGE_MODE,
+    EDIT_RESOURCE,
     SET_CURRENT_STORY,
     UPDATE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
-    mode: 'view'
+    mode: 'edit'
 };
-import { getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
-
 
 /**
  * transforms the path with  into a path with predicates into a path with array indexes
@@ -134,18 +134,9 @@ const getIndexToInsert = (array, position) => {
  */
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case CHANGE_MODE: {
-            return set('mode', action.mode, state);
-        }
-        case SET_CURRENT_STORY: {
-            return set('currentStory', action.story, state);
-        }
         case ADD: {
             const {id, path: rawPath, position} = action;
             let {element} = action;
-            if (isString(element) && getDefaultSectionTemplate(element)) {
-                element = getDefaultSectionTemplate(element);
-            }
 
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
             const arrayToUpdate = get(state, path, []);
@@ -162,6 +153,22 @@ export default (state = INITIAL_STATE, action) => {
                 newSections,
                 state);
         }
+        case ADD_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            // add last resource on top
+            return set('currentStory.resources', [{id, type, data}, ...(state.currentStory && state.currentStory.resources || [])], state);
+        }
+        case CHANGE_MODE: {
+            return set('mode', action.mode, state);
+        }
+        case EDIT_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            const newState = arrayUpdate("currentStory.resources", {id, type, data}, {id}, state);
+            return newState;
+        }
+        case SET_CURRENT_STORY: {
+            return set('currentStory', action.story, state);
+        }
         case UPDATE: {
             const { path: rawPath, mode } = action;
             let { element: newElement } = action;
@@ -170,7 +177,6 @@ export default (state = INITIAL_STATE, action) => {
             if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
                 newElement = {...oldElement, ...newElement};
             }
-
             return set(path, newElement, state);
         }
         default:

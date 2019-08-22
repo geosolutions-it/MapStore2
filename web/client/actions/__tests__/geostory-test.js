@@ -14,7 +14,8 @@ import {
     UPDATE, update,
     LOAD_GEOSTORY, loadGeostory,
     LOADING_GEOSTORY, loadingGeostory,
-    LOAD_GEOSTORY_ERROR, loadGeostoryError
+    LOAD_GEOSTORY_ERROR, loadGeostoryError,
+    editResource, EDIT_RESOURCE
 } from '../geostory';
 const { Modes } = require('../../utils/GeoStoryUtils');
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
@@ -34,7 +35,7 @@ describe('test geostory action creators', () => {
             story: TEST_STORY
         });
     });
-    describe('add', () => {
+    it('add', () => {
         const PATH = 'sections';
         const POSITION = 0;
         const SECTION = { type: 'dummy' };
@@ -45,20 +46,21 @@ describe('test geostory action creators', () => {
         expect(action.element).toBe(SECTION);
         expect(action.id).toExist("action didn't generated missing ID");
     });
-    it('update', () => {
-        const PATH = 'sections';
-        const SECTION = { type: 'dummy' };
-        const action = update(PATH, SECTION);
-        expect(action.type).toBe(UPDATE);
-        expect(action.path).toBe(PATH);
-        expect(action.element).toBe(SECTION);
-        expect(action.mode).toBe('replace');
-    });
     it('loadGeostory', () => {
         const id = 'sampleStory';
         const action = loadGeostory(id);
         expect(action.type).toBe(LOAD_GEOSTORY);
         expect(action.id).toBe(id);
+    });
+    it('editResource', () => {
+        const mediaType = "image";
+        const id = "id";
+        const data = {type: "image"};
+        const action = editResource(id, mediaType, data);
+        expect(action.type).toBe(EDIT_RESOURCE);
+        expect(action.id).toEqual(id);
+        expect(action.mediaType).toEqual(mediaType);
+        expect(action.data).toEqual(data);
     });
     it('loadingGeostory', () => {
         // defaults
@@ -77,5 +79,14 @@ describe('test geostory action creators', () => {
         const action = loadGeostoryError(error);
         expect(action.type).toBe(LOAD_GEOSTORY_ERROR);
         expect(action.error).toEqual(error);
+    });
+    it('update', () => {
+        const PATH = 'sections';
+        const SECTION = { type: 'dummy' };
+        const action = update(PATH, SECTION);
+        expect(action.type).toBe(UPDATE);
+        expect(action.path).toBe(PATH);
+        expect(action.element).toBe(SECTION);
+        expect(action.mode).toBe('replace');
     });
 });

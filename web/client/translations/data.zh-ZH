@@ -1795,6 +1795,29 @@
                 }
             }
         },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Images",
+            "videos": "Videos",
+            "preview": "Preview",
+            "apply": "Apply",
+            "imagePicker": {
+                "add": "Add",
+                "back": "Back",
+                "save": "Save",
+                "edit": "Edit",
+                "sourcePlaceholder": "Enter a source",
+                "source": "Source",
+                "titlePlaceholder": "Enter a title",
+                "title": "Title",
+                "altTextPlaceholder": "Enter an alternative text",
+                "altText": "Alternative text",
+                "descriptionPlaceholder": "Enter a description",
+                "description": "Description",
+                "creditsPlaceholder": "Enter credits",
+                "credits": "Credits"
+            }
+        },
         "tutorial": {
             "title": "教程",
             "back": "返回",

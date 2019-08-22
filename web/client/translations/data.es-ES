@@ -1862,6 +1862,29 @@
                 }
             }
         },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Imágenes",
+            "videos": "Videos",
+            "preview": "Avance",
+            "apply": "Aplicar",
+            "imagePicker": {
+                "add": "Añadir",
+                "back": "Atrás",
+                "save": "Salvar",
+                "edit": "Editar",
+                "sourcePlaceholder": "Ingrese una fuente",
+                "source": "Fuente",
+                "titlePlaceholder": "Ingrese un título",
+                "title": "Título",
+                "altTextPlaceholder": "Ingrese un texto alternativo",
+                "altText": "Texto alternativo",
+                "descriptionPlaceholder": "Ingrese una descripción",
+                "description": "Descripción",
+                "creditsPlaceholder": "Ingrese créditos",
+                "credits": "Créditos"
+            }
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Atrás",

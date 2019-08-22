@@ -4,28 +4,53 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
-*/
+ */
 
-import * as Rx from 'rxjs';
-import axios from 'axios';
+import { Observable } from 'rxjs';
 import {isNaN, isString, isNil, isObject} from 'lodash';
 
+import axios from '../libs/ajax';
+
 import {
+    ADD,
     LOAD_GEOSTORY,
     loadingGeostory,
+    loadGeostoryError,
     setCurrentStory,
-    loadGeostoryError
+    update
 } from '../actions/geostory';
+import { show, HIDE, CHOOSE_MEDIA } from '../actions/mediaEditor';
 import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
 
 import { wrapStartStop } from '../observables/epics';
+import { ContentTypes } from '../utils/GeoStoryUtils';
 
+export const openMediaEditorForNewMedia = action$ =>
+    action$.ofType(ADD)
+        .filter(({ element }) => element.type === ContentTypes.MEDIA)
+        .switchMap(({path: arrayPath, element}) => {
+            return Observable.of(show('geostory'))
+                .merge(
+                    action$.ofType(CHOOSE_MEDIA)
+                        .switchMap( ({resource = {}}) => {
+                            return Observable.of(update(`${arrayPath}[{"id":"${element.id}"}].resourceId`, resource.id ));
+                        })
+                        .takeUntil(action$.ofType(HIDE))
+                );
+        });
+/**
+ * Load a story configuration from local files
+ * it is triggered by LOAD_GEOSTORY action type
+ * if the name provided is not present then return the default one (sampleStory.json)
+ * @param {*} action$ the actions
+ * @param {object} store
+ */
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
         .ofType(LOAD_GEOSTORY)
         .switchMap( ({id}) =>
-            Rx.Observable.defer(() => {
+            Observable.defer(() => {
                 if (isNaN(parseInt(id, 10))) {
                     return axios.get(`${id}.json`);
                 }
@@ -41,6 +66,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return setCurrentStory({});
             })
+            // adds loading status to the start and to the end of the stream and handles exceptions
             .let(wrapStartStop(
                 loadingGeostory(true, "loading"),
                 loadingGeostory(false, "loading"),
@@ -57,7 +83,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                         // manage generic errors like json parse errors (syntax errors)
                         message = e.message;
                     }
-                    return Rx.Observable.of(
+                    return Observable.of(
                         error({
                             title: "geostory.errors.loading.title",
                             message

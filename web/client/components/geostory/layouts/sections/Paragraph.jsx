@@ -29,6 +29,10 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
                 glyph: 'sheet',
                 tooltipId: 'geostory.addTextContent',
                 template: ContentTypes.TEXT
+            }, {
+                glyph: 'picture',
+                tooltipId: 'geostory.addTextContent',
+                template: ContentTypes.MEDIA
             }]}
             />
         {mode === Modes.EDIT && <AddBar

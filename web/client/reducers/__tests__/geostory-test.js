@@ -5,19 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
 import {
     add,
-    update,
+    addResource,
+    editResource,
     setCurrentStory,
-    setEditing
+    setEditing,
+    update
 } from '../../actions/geostory';
 import {
     currentStorySelector,
     modeSelector,
     sectionsSelector,
-    sectionAtIndexSelectorCreator
+    sectionAtIndexSelectorCreator,
+    resourcesSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 
@@ -105,5 +108,18 @@ describe('geostory reducer', () => {
             expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].html).toBe(TEST_CONTENT);
             expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].newProp).toBe("PROP");
         });
+    });
+    it('ADD_RESOURCE', () => {
+        expect(
+            resourcesSelector({ geostory: geostory({}, addResource("id", "image", {}))})
+        ).toEqual([{id: "id", type: "image", data: {}}]);
+    });
+    it('EDIT_RESOURCE', () => {
+        expect(
+            resourcesSelector({ geostory: geostory({
+                currentStory: {resources: [{id: "id", type: "image", data: {title: "tit"}}]}
+            },
+            editResource("id", "image", {title: "title"}))})
+        ).toEqual([{id: "id", type: "image", data: {title: "title"}}]);
     });
 });
