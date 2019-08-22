@@ -10,8 +10,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { setAddingMedia, saveMedia, selectItem } from '../../actions/mediaEditor';
-import { saveStateSelector, currentResourcesSelector, selectedItemSelector } from '../../selectors/mediaEditor';
+import { setAddingMedia, setEditingMedia, saveMedia, selectItem } from '../../actions/mediaEditor';
+import { saveStateSelector, currentResourcesSelector, editingSelector, selectedItemSelector } from '../../selectors/mediaEditor';
 
 import ResizableModal from '../../components/misc/ResizableModal';
 import Portal from '../../components/misc/Portal';
@@ -22,10 +22,12 @@ import Message from '../../components/I18N/Message';
 const Editor = connect(createStructuredSelector({
     saveState: saveStateSelector,
     selectedItem: selectedItemSelector,
+    editing: editingSelector,
     resources: currentResourcesSelector
 }), {
     selectItem,
     setAddingMedia,
+    setEditingMedia,
     saveMedia
 })(MediaEditor);
 
@@ -47,6 +49,7 @@ const MediaModal = ({
             <ResizableModal
                 title={<Message msgId="mediaEditor.modalTitle"/>}
                 show={open}
+                clickOutEnabled={false}
                 onClose={() => hide()}
                 size="lg"
                 buttons={[

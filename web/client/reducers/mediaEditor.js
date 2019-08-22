@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { set, compose } from '../utils/ImmutableUtils';
-import { ADDING_MEDIA, CHOOSE_MEDIA, HIDE, LOAD_MEDIA_SUCCESS, SELECT_ITEM, SHOW} from '../actions/mediaEditor';
+import { ADDING_MEDIA, CHOOSE_MEDIA, EDITING_MEDIA, HIDE, LOAD_MEDIA_SUCCESS, SELECT_ITEM, SHOW} from '../actions/mediaEditor';
 
 export const DEFAULT_STATE = {
-    open: false,
+    open: true,
     // contains local data (path for data is mediaType, sourceId, e.g. data: {image : { geostory: { resultData: {...}, params: {...}}})
     data: {},
     settings: {
@@ -34,6 +34,12 @@ export default (state = DEFAULT_STATE, action) => {
     switch (action.type) {
         case ADDING_MEDIA: {
             return set('saveState.addingMedia', action.adding, state);
+        }
+        case EDITING_MEDIA: {
+            return compose(
+                set('saveState.addingMedia', action.editing),
+                set('saveState.editing', action.editing)
+            )(state);
         }
         case HIDE:
             // hide resets the media editor as well as selected

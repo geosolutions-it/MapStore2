@@ -1872,6 +1872,7 @@
                 "add": "Ajouter",
                 "back": "Retour",
                 "save": "Sauver",
+                "edit": "Modifier",
                 "sourcePlaceholder": "Entrez une source",
                 "source": "Source",
                 "titlePlaceholder": "Entrez un titre",

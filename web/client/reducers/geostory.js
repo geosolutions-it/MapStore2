@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
-import { set } from '../utils/ImmutableUtils';
+import { set, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
     ADD_RESOURCE,
     CHANGE_MODE,
+    EDIT_RESOURCE,
     SET_CURRENT_STORY,
     UPDATE
 } from '../actions/geostory';
@@ -159,6 +160,11 @@ export default (state = INITIAL_STATE, action) => {
         }
         case CHANGE_MODE: {
             return set('mode', action.mode, state);
+        }
+        case EDIT_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            const newState = arrayUpdate("currentStory.resources", {id, type, data}, {id}, state);
+            return newState;
         }
         case SET_CURRENT_STORY: {
             return set('currentStory', action.story, state);

@@ -14,7 +14,8 @@ export default ({
     resources = [],
     selectedItem,
     selectItem = () => { },
-    setAddingMedia = () => {}
+    setAddingMedia = () => {},
+    setEditingMedia = () => {}
 }) => (
 <div style={{position: 'relative'}} className="ms-imageList">
     <div
@@ -44,7 +45,7 @@ export default ({
                     glyph: 'pencil',
                     tooltipId: 'mediaEditor.imagePicker.edit',
                     visible: !isNil(selectedItem),
-                    onClick: () => {} // TODO implement edit of image
+                    onClick: () => setEditingMedia(true)
                 }
             ]} />
     </div>

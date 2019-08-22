@@ -17,6 +17,7 @@ import {
     saveMediaSuccess, SAVE_MEDIA_SUCCESS,
     selectItem, SELECT_ITEM,
     setAddingMedia, ADDING_MEDIA,
+    setEditingMedia, EDITING_MEDIA,
     show, SHOW
 } from '../mediaEditor';
 
@@ -81,10 +82,16 @@ describe('mediaEditor actions', () => {
         expect(action.type).toEqual(SELECT_ITEM);
     });
     it('setAddingMedia', () => {
-        const adding = "geostory";
+        const adding = true;
         const action = setAddingMedia(adding);
         expect(action.adding).toEqual(adding);
         expect(action.type).toEqual(ADDING_MEDIA);
+    });
+    it('setEditingMedia', () => {
+        const editing = true;
+        const action = setEditingMedia(editing);
+        expect(action.editing).toEqual(editing);
+        expect(action.type).toEqual(EDITING_MEDIA);
     });
     it('show', () => {
         const owner = "geostory";

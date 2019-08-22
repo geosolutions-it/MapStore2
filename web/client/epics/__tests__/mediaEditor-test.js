@@ -12,7 +12,7 @@ import {testEpic} from './epicTestUtils';
 
 import {
     loadMediaEditorDataEpic,
-    editorSaveNewMediaEpic
+    editorSaveUpdateMediaEpic
 } from '../mediaEditor';
 
 import {
@@ -20,6 +20,7 @@ import {
     saveMedia,
     show,
     ADDING_MEDIA,
+    EDITING_MEDIA,
     LOAD_MEDIA,
     LOAD_MEDIA_SUCCESS,
     SAVE_MEDIA_SUCCESS
@@ -58,7 +59,7 @@ describe('MediaEditor Epics', () => {
     });
     it('loadMediaEditorDataEpic with show ', (done) => {
         const NUM_ACTIONS = 1;
-        const params = {mediaType: "image"};
+        const params = {};
         const mediaType = "image";
         const resultData = {
             resources: [],
@@ -85,12 +86,12 @@ describe('MediaEditor Epics', () => {
             mediaEditor: {}
         });
     });
-    it('editorSaveNewMediaEpic ', (done) => {
+    it('editorSaveUpdateMediaEpic add new media', (done) => {
         const NUM_ACTIONS = 3;
         const source = "geostory";
         const type = "image";
         const data = {};
-        testEpic(editorSaveNewMediaEpic, NUM_ACTIONS, saveMedia({type, source, data}), (actions) => {
+        testEpic(editorSaveUpdateMediaEpic, NUM_ACTIONS, saveMedia({type, source, data}), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
@@ -114,7 +115,59 @@ describe('MediaEditor Epics', () => {
             done();
         }, {
             geostory: {},
-            mediaEditor: {}
+            mediaEditor: {
+                saveState: {
+                    adding: true
+                },
+                selected: "id"
+            }
+        });
+    });
+
+    it('editorSaveUpdateMediaEpic update media', (done) => {
+        const NUM_ACTIONS = 3;
+        const source = "geostory";
+        const type = "image";
+        const data = {src: "http", title: "title"};
+        testEpic(editorSaveUpdateMediaEpic, NUM_ACTIONS, saveMedia({type, source, data}), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                    case SAVE_MEDIA_SUCCESS:
+                        expect(a.id.length).toEqual(36);
+                        expect(a.mediaType).toEqual(type);
+                        expect(a.source).toEqual(source);
+                        expect(a.data).toEqual(data);
+                        break;
+                    case EDITING_MEDIA:
+                        expect(a.editing).toEqual(false);
+                        break;
+                    case LOAD_MEDIA:
+                        expect(a.mediaType).toEqual(type);
+                        expect(a.sourceId).toEqual(source);
+                        break;
+                    default: expect(true).toEqual(false);
+                        break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                resources: [{
+                    id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                    data: {
+                        src: "ht",
+                        title: "ti"
+                    }
+                }]
+            },
+            mediaEditor: {
+                saveState: {
+                    editing: true,
+                    adding: true
+                },
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"
+            }
         });
     });
 });

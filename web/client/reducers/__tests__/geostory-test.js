@@ -10,6 +10,7 @@ import expect from 'expect';
 import {
     add,
     addResource,
+    editResource,
     setCurrentStory,
     setEditing,
     update
@@ -112,5 +113,13 @@ describe('geostory reducer', () => {
         expect(
             resourcesSelector({ geostory: geostory({}, addResource("id", "image", {}))})
         ).toEqual([{id: "id", type: "image", data: {}}]);
+    });
+    it('EDIT_RESOURCE', () => {
+        expect(
+            resourcesSelector({ geostory: geostory({
+                currentStory: {resources: [{id: "id", type: "image", data: {title: "tit"}}]}
+            },
+            editResource("id", "image", {title: "title"}))})
+        ).toEqual([{id: "id", type: "image", data: {title: "title"}}]);
     });
 });

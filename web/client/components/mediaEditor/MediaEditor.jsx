@@ -24,6 +24,7 @@ export default ({
     selectedItem,
     selectItem = () => {},
     setAddingMedia = () => {},
+    setEditingMedia = () => {},
     saveMedia = () => {}
 }) => (<BorderLayout
         className="ms-mediaEditor"
@@ -48,12 +49,14 @@ export default ({
                     mediaSource={source}
                     saveMedia={saveMedia}
                     setAddingMedia={setAddingMedia}
+                    setEditingMedia={setEditingMedia}
                     selectItem={selectItem}
                     {...saveState}
                      />
             </div>
         ]}>
         <div key="preview" style={{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            <Message msgId= "mediaEditor.preview"/>
+            {/* TODO this is just for showing images, this needs to be a new component  */}
+            { selectedItem && selectedItem.data && selectedItem.data.src && <img src={selectedItem && selectedItem.data && selectedItem.data.src} style={{objectFit: "contain", width: "100%", height: "100%"}}/> }
         </div>
     </BorderLayout>);

@@ -13,8 +13,11 @@ import {
     SAVE_MEDIA,
     saveMediaSuccess,
     setAddingMedia,
+    setEditingMedia,
     SHOW
 } from '../actions/mediaEditor';
+import { editingSelector } from '../selectors/mediaEditor';
+
 import mediaAPI from '../api/media';
 
 export const loadMediaEditorDataEpic = (action$, store) =>
@@ -24,7 +27,7 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     action$.ofType(SHOW, LOAD_MEDIA)
     .switchMap((action) => {
         // TODO: get params from action
-        let params = action.params || {mediaType: "image"};
+        let params = action.params || {};
         let mediaType = action.mediaType || "image";
         let sourceId = action.sourceId || "geostory";
         if (action.type === SHOW) {
@@ -39,7 +42,7 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     });
 
 /**
- * Handles save new media events:
+ * Handles save|updates media events:
  * - API callback
  * - Success action emission
  * - close add form
@@ -48,17 +51,22 @@ export const loadMediaEditorDataEpic = (action$, store) =>
  * @param {Observable} action$ stream of actions
  * @param {object} store redux store
  */
-export const editorSaveNewMediaEpic = (action$, store) =>
+export const editorSaveUpdateMediaEpic = (action$, store) =>
     action$.ofType(SAVE_MEDIA)
-    .switchMap(({mediaType, source, data}) =>
-        mediaAPI(mediaType, source)
-            .save(mediaType, source, data, store) // store is required both for some custom auth, or to dispatch actions in case of local
+    .switchMap(({mediaType, source, data}) => {
+        const editing = editingSelector(store.getState());
+        const handler = editing ?
+            mediaAPI(mediaType, source).edit(mediaType, source, data, store) :
+            mediaAPI(mediaType, source).save(mediaType, source, data, store);
+        const feedbackAction = editing ? setEditingMedia(false) : setAddingMedia(false);
+        return handler // store is required both for some custom auth, or to dispatch actions in case of local
             // TODO: saving state (for loading spinners), errors
-            .switchMap(({id}) =>
-                Observable.of(
+            .switchMap(({id}) => {
+                return Observable.of(
                     saveMediaSuccess({mediaType, source, data, id}),
-                    setAddingMedia(false),
-                    loadMedia({mediaType}, mediaType, source)
-                )
-            )
+                    feedbackAction,
+                    loadMedia(undefined, mediaType, source)
+                );
+            });
+    }
     );

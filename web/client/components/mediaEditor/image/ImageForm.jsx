@@ -59,7 +59,7 @@ const form = [
 ];
 
 const enhance = compose(
-    withState("properties", "setProperties", {}),
+    withState("properties", "setProperties", ({selectedItem = {}, editing}) => ( editing ? {...selectedItem.data} : {})),
     getContext({messages: {}})
 );
 
@@ -67,9 +67,11 @@ const enhance = compose(
 export default enhance(({
     properties = {},
     setAddingMedia = () => {},
+    setEditingMedia = () => {},
     setProperties = () => {},
     onSave = () => {},
-    messages
+    messages,
+    editing
 }) => (
     <BorderLayout
         className="ms-imageForm"
@@ -94,7 +96,7 @@ export default enhance(({
                         buttons={[{
                             glyph: "arrow-left",
                             tooltipId: "mediaEditor.imagePicker.back",
-                            onClick: () => setAddingMedia(false)
+                            onClick: () => editing ? setEditingMedia(false) : setAddingMedia(false)
                         }, {
                             glyph: "floppy-disk",
                             tooltipId: "mediaEditor.imagePicker.save",

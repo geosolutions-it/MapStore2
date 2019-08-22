@@ -1873,6 +1873,7 @@
                 "add": "Add",
                 "back": "Back",
                 "save": "Save",
+                "edit": "Edit",
                 "sourcePlaceholder": "Enter a source",
                 "source": "Source",
                 "titlePlaceholder": "Enter a title",

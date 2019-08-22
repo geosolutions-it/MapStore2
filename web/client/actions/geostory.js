@@ -13,6 +13,7 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
+export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
@@ -42,6 +43,10 @@ export const addResource = ( id, mediaType, data ) => ({type: ADD_RESOURCE, id, 
  * @param {boolean} editing editing mode. true to activate, false to deactivate.
 */
 export const setEditing = (editing) => ({ type: CHANGE_MODE, mode: editing ? Modes.EDIT : Modes.VIEW});
+/**
+ * Edits a resource in the current story
+ */
+export const editResource = ( id, mediaType, data ) => ({type: EDIT_RESOURCE, id, mediaType, data});
 /**
  * Load geostory from configuration
  * @param {string} id the story name of .json file

@@ -8,23 +8,25 @@
 import expect from 'expect';
 
 import {
-    openSelector,
-    saveStateSelector,
-    mediaTypeSelector,
-    sourceIdSelector,
-    resultDataSelector,
     currentResourcesSelector,
+    editingSelector,
+    mediaTypeSelector,
+    openSelector,
+    resultDataSelector,
+    saveStateSelector,
     selectedIdSelector,
-    selectedItemSelector
+    selectedItemSelector,
+    sourceIdSelector
  } from "../mediaEditor";
 
 describe('mediaEditor selectors', () => {
+    it('currentResourcesSelector', () => { expect(currentResourcesSelector({mediaEditor: {settings: {mediaType: "image", sourceId: "id"}, data: {image: {id: {resultData: {resources: []}}}}}})).toEqual([]); });
+    it('editingSelector', () => { expect(editingSelector({mediaEditor: {saveState: {editing: true}}})).toEqual(true); });
     it('openSelector', () => { expect(openSelector({mediaEditor: {open: true}})).toEqual(true); });
-    it('saveStateSelector', () => { expect(saveStateSelector({mediaEditor: {saveState: "loading"}})).toEqual("loading"); });
     it('mediaTypeSelector', () => { expect(mediaTypeSelector({mediaEditor: {settings: {mediaType: "image"}}})).toEqual("image"); });
     it('sourceIdSelector', () => { expect(sourceIdSelector({mediaEditor: {settings: {sourceId: "id"}}})).toEqual("id"); });
     it('resultDataSelector', () => { expect(resultDataSelector({mediaEditor: {settings: {mediaType: "image", sourceId: "id"}, data: {image: {id: {resultData: {}}}}}})).toEqual({}); });
-    it('currentResourcesSelector', () => { expect(currentResourcesSelector({mediaEditor: {settings: {mediaType: "image", sourceId: "id"}, data: {image: {id: {resultData: {resources: []}}}}}})).toEqual([]); });
+    it('saveStateSelector', () => { expect(saveStateSelector({mediaEditor: {saveState: "loading"}})).toEqual("loading"); });
     it('selectedIdSelector', () => { expect(selectedIdSelector({mediaEditor: {selected: "id"}})).toEqual("id"); });
     it('selectedItemSelector', () => {
         expect(selectedItemSelector({

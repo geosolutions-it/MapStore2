@@ -8,6 +8,7 @@
 
 export const ADDING_MEDIA = "MEDIA_EDITOR:ADDING_MEDIA";
 export const CHOOSE_MEDIA = "MEDIA_EDITOR:CHOOSE_MEDIA";
+export const EDITING_MEDIA = "MEDIA_EDITOR:EDITING_MEDIA";
 export const LOAD_MEDIA = "MEDIA_EDITOR:LOAD_MEDIA";
 export const LOAD_MEDIA_SUCCESS = "MEDIA_EDITOR:LOAD_MEDIA_SUCCESS";
 export const HIDE = "MEDIA_EDITOR:HIDE";
@@ -74,6 +75,11 @@ export const selectItem = (id) => ({ type: SELECT_ITEM, id});
  * @param {boolean} adding
  */
 export const setAddingMedia = (adding) => ({ type: ADDING_MEDIA, adding });
+/**
+ * editing media
+ * @param {boolean} editing
+ */
+export const setEditingMedia = (editing) => ({ type: EDITING_MEDIA, editing });
 /**
  * show media editor
  * @param {*} owner

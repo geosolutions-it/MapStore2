@@ -13,6 +13,7 @@ const {
     loadMediaSuccess,
     selectItem,
     setAddingMedia,
+    setEditingMedia,
     show
 } = require('../../actions/mediaEditor');
 
@@ -23,8 +24,15 @@ describe('Test the mediaEditor reducer', () => {
         expect(state).toEqual(DEFAULT_STATE);
     });
     it('ADDING_MEDIA', () => {
-        let state = mediaEditor({}, setAddingMedia(true));
-        expect(state.saveState.addingMedia).toEqual(true);
+        const adding = false;
+        let state = mediaEditor({}, setAddingMedia(adding));
+        expect(state.saveState.addingMedia).toEqual(adding);
+    });
+    it('EDITING_MEDIA', () => {
+        const editing = false;
+        let state = mediaEditor({}, setEditingMedia(editing));
+        expect(state.saveState.addingMedia).toEqual(editing);
+        expect(state.saveState.editing).toEqual(editing);
     });
     it('CHOOSE_MEDIA', () => {
         let state = mediaEditor({}, chooseMedia());
@@ -59,7 +67,7 @@ describe('Test the mediaEditor reducer', () => {
         const sourceId = "id";
         const params = "params";
         const resultData = {};
-        let state = mediaEditor({}, loadMediaSuccess(mediaType, sourceId, params, resultData));
+        let state = mediaEditor({}, loadMediaSuccess({mediaType, sourceId, params, resultData}));
         expect(state.data[mediaType][sourceId]).toEqual({ params, resultData });
     });
     it('SELECT_ITEM', () => {

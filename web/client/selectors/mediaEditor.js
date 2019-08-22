@@ -15,6 +15,7 @@ import { createSelector } from "reselect";
  * @param {object} state application state
  */
 export const openSelector = state => get(state, "mediaEditor.open");
+export const editingSelector = state => get(state, "mediaEditor.saveState.editing");
 export const saveStateSelector = state => get(state, "mediaEditor.saveState");
 export const mediaTypeSelector = state => get(state, "mediaEditor.settings.mediaType");
 export const sourceIdSelector = state => get(state, "mediaEditor.settings.sourceId");
