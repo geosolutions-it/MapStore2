@@ -62,7 +62,7 @@ const sectionToItem = ({
                 {
                     glyph: 'zoom-to',
                     visible: contents.length === 1,
-                    tooltip: 'Zoom to content'
+                    tooltipId: "geostory.zoomToContent"
                 }
             ]} />,
         title: title,
@@ -85,7 +85,8 @@ const sectionToItem = ({
                                 }}
                                 buttons={[
                                     {
-                                        glyph: 'zoom-to'
+                                        glyph: 'zoom-to',
+                                        tooltipId: "geostory.zoomToContent"
                                     }
                                 ]} />,
                             title: capitalize(content.type),

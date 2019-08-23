@@ -27,16 +27,4 @@ describe('ToolbarDropdownButton component', () => {
         const el = container.querySelector('.square-button-md.no-border');
         expect(el).toExist();
     });
-    it('ToolbarDropdownButton toggle popover and button click events', done => {
-        ReactDOM.render(<ToolbarDropdownButton buttons={[{glyph: "sheet", onClick: () => done()} ]} />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.square-button-md.no-border button');
-        expect(el).toExist();
-        ReactTestUtils.Simulate.click(el);
-        // check the popover is shown after click
-        const popover = document.querySelector('.popover-content'); // the popover is rendered in document
-        expect(popover).toExist();
-        // emulate toolbar button click, done in click handler
-        ReactTestUtils.Simulate.click(document.querySelector('.popover-content .glyphicon-sheet'));
-    });
 });

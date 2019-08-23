@@ -17,19 +17,19 @@ const toolButtons = {
         Element: () => <ToolbarDropdownButton
             value={size}
             glyph="resize-horizontal"
-            tooltipId="geostory.contentSize"
+            tooltipId="geostory.contentToolbar.contentSize"
             options={[{
                 value: 'small',
-                label: <Message msgId="geostory.smallSizeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.smallSizeLabel"/>
             }, {
                 value: 'medium',
-                label: <Message msgId="geostory.mediumSizeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.mediumSizeLabel"/>
             }, {
                 value: 'large',
-                label: <Message msgId="geostory.largeSizeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.largeSizeLabel"/>
             }, {
                 value: 'full',
-                label: <Message msgId="geostory.fullSizeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
             }]}
             onSelect={(selected) => update('size', selected)}/>
     }),
@@ -38,18 +38,18 @@ const toolButtons = {
             value={align}
             disabled={size === 'full'}
             glyph="align-center"
-            tooltipId="geostory.contentAlign"
+            tooltipId="geostory.contentToolbar.contentAlign"
             options={[{
                 value: 'left',
-                label: <Message msgId="geostory.leftAlignLabel"/>,
+                label: <Message msgId="geostory.contentToolbar.leftAlignLabel"/>,
                 glyph: 'align-left'
             }, {
                 value: 'center',
-                label: <Message msgId="geostory.centerAlignLabel"/>,
+                label: <Message msgId="geostory.contentToolbar.centerAlignLabel"/>,
                 glyph: 'align-center'
             }, {
                 value: 'right',
-                label: <Message msgId="geostory.rightAlignLabel"/>,
+                label: <Message msgId="geostory.contentToolbar.rightAlignLabel"/>,
                 glyph: 'align-right'
             }]}
             onSelect={(selected) => update('align', selected)}/>
@@ -58,19 +58,19 @@ const toolButtons = {
         Element: () => <ToolbarDropdownButton
             value={theme}
             glyph="dropper"
-            tooltipId="geostory.contentTheme"
+            tooltipId="geostory.contentToolbar.contentTheme"
             options={[{
                 value: 'bright',
-                label: <Message msgId="geostory.brightThemeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
             }, {
                 value: 'bright-text',
-                label: <Message msgId="geostory.brightTextThemeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.brightTextThemeLabel"/>
             }, {
                 value: 'dark',
-                label: <Message msgId="geostory.darkThemeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
             }, {
                 value: 'dark-text',
-                label: <Message msgId="geostory.darkTextThemeLabel"/>
+                label: <Message msgId="geostory.contentToolbar.darkTextThemeLabel"/>
             }]}
             onSelect={(selected) => update('theme', selected)}/>
     })

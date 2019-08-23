@@ -1852,6 +1852,24 @@
             "addImmersiveSection": "Ajouter une section immersive",
             "addImmersiveContent": "Ajouter du contenu immersif",
             "addTextContent": "Ajouter du contenu texte",
+            "addMediaContent": "Ajouter du contenu multimédia",
+            "zoomToContent": "Zoom sur le contenu",
+            "contentToolbar": {
+                "contentSize": "Changer la taille",
+                "smallSizeLabel": "Petit",
+                "mediumSizeLabel": "Moyen",
+                "largeSizeLabel": "Large",
+                "fullSizeLabel": "Plein",
+                "contentAlign": "Aligner le contenu",
+                "leftAlignLabel": "Gauche",
+                "centerAlignLabel": "Centre",
+                "rightAlignLabel": "Droite",
+                "contentTheme": "Changer de thème de champ",
+                "brightThemeLabel": "Brillant",
+                "brightTextThemeLabel": "Texte clair",
+                "darkThemeLabel": "Sombre",
+                "darkTextThemeLabel": "Texte sombre"
+            },
             "errors": {
                 "loading": {
                     "title": "Erreur",

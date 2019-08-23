@@ -17,7 +17,6 @@ const DropdownButton = tooltip(DropdownButtonRB);
 /**
  * Dropdown button for Toolbar component
  */
-
 export default function ToolbarDropdownButton({
     value,
     options = [],
@@ -31,7 +30,7 @@ export default function ToolbarDropdownButton({
     return (
         <DropdownButton
             noCaret
-            tooltip={tooltipId}
+            tooltipId={tooltipId}
             className={className}
             disabled={disabled}
             title={<Glyphicon glyph={glyphOption || glyph}/>}>
