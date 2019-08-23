@@ -11,7 +11,7 @@ import Background from './Background';
 import { backgroundProp } from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
 
 /**
  * Paragraph Section Type.
@@ -45,6 +45,9 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
             sectionId={id}
             contentProps={{
                 contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
+            }}
+            tools={{
+                [ContentTypes.TEXT]: ['size', 'align', 'theme']
             }}
         />
         {mode === Modes.EDIT && <AddBar

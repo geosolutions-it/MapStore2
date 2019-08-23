@@ -60,7 +60,7 @@ const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChang
             },
             {
                 glyph: 'book',
-                tooltip: 'geostory.addImmersiveContent',
+                tooltipId: 'geostory.addImmersiveContent',
                 onClick: () => {
                     add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN); // position undefined means append
                 }

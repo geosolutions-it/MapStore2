@@ -36,9 +36,9 @@ export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) =
                 tooltipId: 'geostory.addTextContent',
                 template: ContentTypes.TEXT
             }, {
-                    glyph: 'picture',
-                    tooltipId: 'geostory.addTextContent',
-                    template: ContentTypes.MEDIA
+                glyph: 'picture',
+                tooltipId: 'geostory.addMediaContent',
+                template: ContentTypes.MEDIA
             }]}
             />
 );

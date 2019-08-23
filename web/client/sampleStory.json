@@ -13,6 +13,8 @@
           "src": "https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
         },
         "type": "text",
+        "size": "large",
+        "align": "center",
         "theme": "bright",
         "html": "<h1 style='text-align:center;'>List of Highest Astronomical Observatories</h1><p style='text-align:center;'><em>From Wikipedia, the free encyclopedia</em></p>"
       }
