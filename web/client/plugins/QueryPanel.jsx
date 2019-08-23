@@ -26,6 +26,7 @@ const {toggleControl} = require('../actions/controls');
 
 const {groupsSelector, selectedLayerLoadingErrorSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
+const {isDashboardAvailable} = require('../selectors/dashboard');
 const {
     crossLayerFilterSelector,
     availableCrossLayerFilterLayersSelector,
@@ -179,16 +180,17 @@ const tocSelector = createSelector(
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
         (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
         state => mapLayoutValuesSelector(state, {height: true}),
+        isDashboardAvailable,
         appliedFilterSelector,
         storedFilterSelector,
         (state) => state && state.query && state.query.isLayerFilter,
         selectedLayerLoadingErrorSelector
-    ], (enabled, groups, settings, querypanelEnabled, layout, appliedFilter, storedFilter, advancedToolbar, loadingError) => ({
+    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError) => ({
         enabled,
         groups,
         settings,
         querypanelEnabled,
-        layout,
+        layout: !dashboardAvailable ? layoutHeight : {},
         appliedFilter,
         storedFilter,
         advancedToolbar,
