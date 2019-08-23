@@ -41,21 +41,25 @@ export const lists = {
     Modes: values(Modes)
 };
 
+export const SAMPLE_HTML = "<p>insert text here...</p>";
 
-const SAMPLE_HTML = "<p>insert text here...</p>";
-
+/**
+ * creates a default template
+ * @param {string} type can be section type or content type
+ * @return {object} the template
+ */
 export const getDefaultSectionTemplate = (type) => {
     switch (type) {
         case SectionTypes.TITLE:
             return {
                 type: SectionTypes.TITLE,
-                title: 'Title Section',
+                title: 'Title Section', // TODO I18N
                 cover: false,
                 contents: [
                     {
                         id: uuid(),
                         type: ContentTypes.TEXT,
-                        html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`,
+                        html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`, // TODO I18N
                         size: 'large',
                         align: 'center',
                         theme: 'bright'
@@ -66,7 +70,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.PARAGRAPH,
-                title: 'Paragraph Section',
+                title: 'Paragraph Section', // TODO I18N
                 contents: [
                     {
                         id: uuid(),
@@ -83,7 +87,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.IMMERSIVE,
-                title: "Immersive Section",
+                title: "Immersive Section", // TODO I18N
                 contents: [getDefaultSectionTemplate(ContentTypes.COLUMN)]
             };
         case ContentTypes.COLUMN: {
@@ -115,7 +119,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type,
-                title: "UNKNOWN"
+                title: "UNKNOWN" // TODO I18N
             };
     }
 };

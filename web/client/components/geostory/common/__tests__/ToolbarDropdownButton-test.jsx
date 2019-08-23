@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import ReactTestUtils from 'react-dom/test-utils';
+import ReactTestUtils from 'react-dom/test-utils';
 
 import expect from 'expect';
 import ToolbarDropdownButton from '../ToolbarDropdownButton';
@@ -21,16 +21,16 @@ describe('ToolbarDropdownButton component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('AddBar rendering with defaults', () => {
+    it('ToolbarDropdownButton rendering with defaults', () => {
         ReactDOM.render(<ToolbarDropdownButton />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.add-bar');
+        const el = container.querySelector('.square-button-md.no-border');
         expect(el).toExist();
     });
-    /*it('AddBar toggle popover and button click events', done => {
-        ReactDOM.render(<AddBar buttons={[{glyph: "sheet", onClick: () => done()} ]} />, document.getElementById("container"));
+    it('ToolbarDropdownButton toggle popover and button click events', done => {
+        ReactDOM.render(<ToolbarDropdownButton buttons={[{glyph: "sheet", onClick: () => done()} ]} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.add-bar button');
+        const el = container.querySelector('.square-button-md.no-border button');
         expect(el).toExist();
         ReactTestUtils.Simulate.click(el);
         // check the popover is shown after click
@@ -38,5 +38,5 @@ describe('ToolbarDropdownButton component', () => {
         expect(popover).toExist();
         // emulate toolbar button click, done in click handler
         ReactTestUtils.Simulate.click(document.querySelector('.popover-content .glyphicon-sheet'));
-    });*/
+    });
 });

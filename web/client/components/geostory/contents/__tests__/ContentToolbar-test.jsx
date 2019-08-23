@@ -9,6 +9,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import ReactTestUtils from 'react-dom/test-utils';
+import {includes, castArray} from 'lodash';
 
 import ContentToolbar from '../ContentToolbar';
 
@@ -34,30 +36,46 @@ describe('ContentToolbar component', () => {
         expect(buttons).toExist();
         expect(buttons.length).toEqual(3);
     });
-    const testOptions = [{
+    const testItems = [{
             name: "align",
             length: 3,
-            totButtons: 1
+            totButtons: 1,
+            aTag: ["left", "center", "right"]
         },
         {
             name: "size",
             length: 4,
-            totButtons: 1
+            totButtons: 1,
+            aTag: ["small", "medium", "large", "full"]
         },
         {
             name: "theme",
             length: 4,
-            totButtons: 1
+            totButtons: 1,
+            aTag: ["bright", "bright-text", "dark", "dark-text"]
         }];
-    testOptions.forEach(tool => {
-        it(`ContentToolbar rendering ${tool.name} item`, () => {
-            ReactDOM.render(<ContentToolbar tools={[tool.name]}/>, document.getElementById("container"));
+    testItems.forEach(tool => {
+        it(`ContentToolbar rendering ${tool.name} item and click event`, () => {
+            ReactDOM.render(<ContentToolbar
+                tools={[tool.name]}
+                update={(t, selected) => {
+                    expect(t).toEqual(tool.name);
+                    expect(includes(tool.aTag, selected)).toEqual(true);
+                }}
+            />, document.getElementById("container"));
             const buttons = document.getElementsByTagName('button');
             expect(buttons).toExist();
             expect(buttons.length).toEqual(tool.totButtons);
+
             const list = document.getElementsByTagName('li');
             expect(list).toExist();
             expect(list.length).toEqual(tool.length, `the ${tool.name} had wrong number of li tags, expect ${list.length} toEqual ${tool.length}`);
+
+            const aTags = document.getElementsByTagName('a');
+            expect(aTags).toExist();
+            castArray(aTags).forEach((a, i) => {
+                ReactTestUtils.Simulate.click(aTags[i]);
+            });
         });
     });
 });
