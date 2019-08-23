@@ -1846,12 +1846,44 @@
             "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
             "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
-            "geostory": {
+        "geostory": {
             "addTitleSection": "Titelabschnitt hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addImmersiveContent": "Füge immersiven Inhalt hinzu",
-            "addTextContent": "Textinhalt hinzufügen"
+            "addTextContent": "Textinhalt hinzufügen",
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unbekannter Fehler",
+                    "pleaseLogin": "Bitte loggen Sie sich ein",
+                    "geostoryNotAccessible": "Diese Geschichte ist nicht zugänglich",
+                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                }
+            }
+        },
+        "mediaEditor": {
+            "modalTitle": "Medien",
+            "images": "Bilder",
+            "videos": "Videos",
+            "preview": "Vorschau",
+            "apply": "Sich bewerben",
+            "imagePicker": {
+                "add": "Hinzufügen",
+                "back": "Zurück",
+                "save": "Sparen",
+                "edit": "Bearbeiten",
+                "sourcePlaceholder": "Geben Sie eine Quelle ein",
+                "source": "Quelle",
+                "titlePlaceholder": "Geben Sie einen Titel ein",
+                "title": "Titel",
+                "altTextPlaceholder": "Geben Sie einen alternativen Text ein",
+                "altText": "Alternative text",
+                "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
+                "description": "Beschreibung",
+                "creditsPlaceholder": "Geben Sie Credits ein",
+                "credits": "Credits"
+            }
         },
         "tutorial": {
             "title": "Anleitung",

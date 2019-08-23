@@ -15,7 +15,7 @@ import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 
 import geostory from '../../reducers/geostory';
 
-describe('TOCPlugin Plugin', () => {
+describe('GeoStory Plugin', () => {
     const stateMocker = createStateMocker({geostory}, ({type: "DUMMY_ACTION"}));
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

@@ -35,6 +35,10 @@ export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) =
                 glyph: 'sheet',
                 tooltipId: 'geostory.addTextContent',
                 template: ContentTypes.TEXT
+            }, {
+                    glyph: 'picture',
+                    tooltipId: 'geostory.addTextContent',
+                    template: ContentTypes.MEDIA
             }]}
             />
 );

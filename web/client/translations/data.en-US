@@ -1852,7 +1852,39 @@
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
             "addImmersiveContent": "Add Immersive Content",
-            "addTextContent": "Add Text Content"
+            "addTextContent": "Add Text Content",
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "pleaseLogin": "Please login",
+                    "geostoryNotAccessible": "This story is not accessible",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
+            }
+        },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Images",
+            "videos": "Videos",
+            "preview": "Preview",
+            "apply": "Apply",
+            "imagePicker": {
+                "add": "Add",
+                "back": "Back",
+                "save": "Save",
+                "edit": "Edit",
+                "sourcePlaceholder": "Enter a source",
+                "source": "Source",
+                "titlePlaceholder": "Enter a title",
+                "title": "Title",
+                "altTextPlaceholder": "Enter an alternative text",
+                "altText": "Alternative text",
+                "descriptionPlaceholder": "Enter a description",
+                "description": "Description",
+                "creditsPlaceholder": "Enter credits",
+                "credits": "Credits"
+            }
         },
         "tutorial": {
             "title": "Tutorial",

@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {createPlugin} from '../utils/PluginsUtils';
 import { add, update } from '../actions/geostory';
-
+import * as epics from '../epics/geostory';
 import { currentStorySelector, modeSelector } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
@@ -49,5 +49,6 @@ export default createPlugin("GeoStory", {
     )(GeoStory),
     reducers: {
         geostory
-    }
+    },
+    epics
 });

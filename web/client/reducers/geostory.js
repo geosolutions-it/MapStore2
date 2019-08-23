@@ -6,23 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
-import { set } from '../utils/ImmutableUtils';
+import { set, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
+    ADD_RESOURCE,
     CHANGE_MODE,
+    EDIT_RESOURCE,
     SET_CURRENT_STORY,
     UPDATE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
-    mode: 'view',
-    currentStory: {
-
-    }
+    mode: 'edit'
 };
-import { getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
-
 
 /**
  * transforms the path with  into a path with predicates into a path with array indexes
@@ -81,121 +78,6 @@ const getIndexToInsert = (array, position) => {
     return index;
 };
 
-// TEST STUFF: uncomment to use test data. TODO: delete when build system is active
-const SAMPLE_TEXT = "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>";
-const createSampleSection = () => [{
-    type: 'title',
-    id: '000',
-    title: 'Abstract',
-    cover: true,
-    contents: [
-        {
-            id: "SomeID",
-            background: {
-                type: "image",
-                src: 'https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80'
-            },
-            type: 'text',
-            size: 'large',
-            align: 'center',
-            theme: 'bright',
-            html: `<h1 style="text-align:center;">List of Highest Astronomical Observatories</h1><p style="text-align:center;"><em>From Wikipedia, the free encyclopedia</em></p>`
-        }
-    ]
-}, {
-    type: 'paragraph',
-    id: '001',
-    title: 'Abstract',
-    contents: [
-        {
-            id: "SomeID",
-            type: 'text',
-            background: {
-                // ...
-            },
-            html: SAMPLE_TEXT
-        },
-        {
-            id: "SomeID2",
-            type: 'image',
-            src: 'https://images.unsplash.com/photo-1558999539-7a19738f085d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
-            enableFullscreen: true,
-            size: 'medium'
-        }
-    ]
-}, {
-    type: 'title',
-    id: '0A0',
-    title: 'Abstract',
-    contents: [
-        {
-            id: "SomeID",
-            background: {
-                type: "image",
-                src: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80'
-            },
-            type: 'text',
-            theme: 'bright',
-            html: `<h1 style="text-align:center;">Enter title...</h1>`
-        }
-    ]
-}, {
-    type: 'immersive',
-    id: '002',
-    title: 'Immersive',
-    contents: [
-        {
-            id: "SomeID",
-            type: 'text',
-            background: {
-                type: "image",
-                fit: 'cover',
-                src: 'https://images.unsplash.com/photo-1562874724-b33411b38141?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80'
-
-            },
-            html: SAMPLE_TEXT,
-            align: 'left',
-            size: 'small'
-        }, {
-            id: "SomeID2",
-            type: 'text',
-            background: {
-                type: "image",
-                src: 'http://lh5.googleusercontent.com/-6mQ_Rgsis24/Ux3nf2hIQ9I/AAAAAAAABac/1WttfAi5TzA/s1920/sfondo-wallpaper-spazio-universo-0003.jpg'
-            },
-            html: SAMPLE_TEXT
-        }, {
-            id: "SomeID3",
-            type: 'text',
-            background: {
-                type: "image",
-                src: 'https://images.unsplash.com/photo-1462331321792-cc44368b8894?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1422&q=80'
-            },
-            html: SAMPLE_TEXT
-        }, {
-            id: "SomeID4",
-            type: 'text',
-            background: {
-                type: "image",
-                fit: 'contain',
-                src: 'https://images.unsplash.com/photo-1563818500545-86cdb0a38abd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=564&q=80'
-            },
-            html: SAMPLE_TEXT
-        }
-    ]
-}];
-
-INITIAL_STATE = {
-    mode: 'edit',
-    currentStory: {
-        type: 'cascade',
-        // Array().keys() DON'T WORK IN IE 11 ( Array.from(Array(10).keys()) )
-        // Use Object.keys([ ...new Array(10) ]) instead
-        sections: createSampleSection()
-    }
-};
-
-
 /**
  * Reducer that manage state for geostory plugins. Example:
  * @memberof reducers
@@ -252,18 +134,9 @@ INITIAL_STATE = {
  */
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case CHANGE_MODE: {
-            return set('mode', action.mode, state);
-        }
-        case SET_CURRENT_STORY: {
-            return set('currentStory', action.story, state);
-        }
         case ADD: {
             const {id, path: rawPath, position} = action;
             let {element} = action;
-            if (isString(element) && getDefaultSectionTemplate(element)) {
-                element = getDefaultSectionTemplate(element);
-            }
 
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
             const arrayToUpdate = get(state, path, []);
@@ -280,6 +153,22 @@ export default (state = INITIAL_STATE, action) => {
                 newSections,
                 state);
         }
+        case ADD_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            // add last resource on top
+            return set('currentStory.resources', [{id, type, data}, ...(state.currentStory && state.currentStory.resources || [])], state);
+        }
+        case CHANGE_MODE: {
+            return set('mode', action.mode, state);
+        }
+        case EDIT_RESOURCE: {
+            const {id, mediaType: type, data} = action;
+            const newState = arrayUpdate("currentStory.resources", {id, type, data}, {id}, state);
+            return newState;
+        }
+        case SET_CURRENT_STORY: {
+            return set('currentStory', action.story, state);
+        }
         case UPDATE: {
             const { path: rawPath, mode } = action;
             let { element: newElement } = action;
@@ -288,7 +177,6 @@ export default (state = INITIAL_STATE, action) => {
             if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
                 newElement = {...oldElement, ...newElement};
             }
-
             return set(path, newElement, state);
         }
         default:

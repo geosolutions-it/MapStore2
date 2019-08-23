@@ -21,6 +21,7 @@ const getComponent = type => {
     switch (type) {
         case ContentTypes.TEXT:
             return Text;
+        case ContentTypes.MEDIA:
         case 'image':
             return Image;
         default:
