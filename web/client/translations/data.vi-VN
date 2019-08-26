@@ -1252,7 +1252,16 @@
             "searchservicesbutton": "Cấu hình dịch vụ tìm kiếm",
             "service_missing": "{serviceType} dịch vụ không được định cấu hình",
             "serviceslistempty": "Không có dịch vụ tùy chỉnh được xác định",
-            "serviceslistlabel": "Dịch vụ có sẵn"
+            "serviceslistlabel": "Dịch vụ có sẵn",
+            "s_launch_info_panel": {
+                "label": "Launch Info panel",
+                "no_info": "No Info",
+                "all_layers": "All Layers",
+                "single_layer": "Search Layer",
+                "no_info_description": "Identify panel will not show up on search",
+                "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
+                "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
+            }
         },
         "settings": "Cài đặt",
         "shapefile": {
