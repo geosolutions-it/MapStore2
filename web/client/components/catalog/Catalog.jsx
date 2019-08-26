@@ -498,7 +498,7 @@ class Catalog extends React.Component {
     search = ({services, selectedService, start = 1, searchText = ""} = {}) => {
         const url = services[selectedService].url;
         const type = services[selectedService].type;
-        this.props.onSearch(type, url, start, this.props.pageSize, searchText || "");
+        this.props.onSearch({format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || ""});
     };
 
     isViewMode = (mode) => {

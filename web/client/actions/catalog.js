@@ -73,7 +73,7 @@ export function addLayersMapViewerUrl(layers = [], sources = []) {
  * @param {string} params.text layer name
  * @param {object} params.options layer name
  */
-export function textSearch({format, url, startPosition, maxRecords, text, options} = {}) {
+export function textSearch({format, url, startPosition, maxRecords, text, options = {}} = {}) {
     return {
         type: TEXT_SEARCH,
         format,
