@@ -1868,7 +1868,9 @@
                 "brightThemeLabel": "Chiaro",
                 "brightTextThemeLabel": "Testo chiaro",
                 "darkThemeLabel": "Scuro",
-                "darkTextThemeLabel": "Testo scuro"
+                "darkTextThemeLabel": "Testo scuro",
+                "cover": "Copri lo spazio del contenitore",
+                "fit": "Riempi lo spazio del contenitore"
             },
             "errors": {
                 "loading": {

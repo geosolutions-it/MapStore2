@@ -11,16 +11,22 @@ import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-const Immersive = ({ id, contents = [], mode, background = {}, onVisibilityChange = () => { }, updateBackground = () => {}, viewWidth, viewHeight, add = () => {}, update = () => {} }) => (
+const Immersive = ({
+    id, background = {}, contents = [], add = () => {}, update = () => {}, onVisibilityChange = () => { }, updateBackground = () => {}, mode, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
             { ...background }
+            mode={mode}
+
+            tools={{
+                [MediaTypes.IMAGE]: ['fit', 'size', 'align']
+            }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
             update={updateBackground}

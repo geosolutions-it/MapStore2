@@ -55,12 +55,13 @@ describe('ContentToolbar component', () => {
             aTag: ["bright", "bright-text", "dark", "dark-text"]
         }];
     testItems.forEach(tool => {
-        it(`ContentToolbar rendering ${tool.name} item and click event`, () => {
+        it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={[tool.name]}
                 update={(t, selected) => {
                     expect(t).toEqual(tool.name);
                     expect(includes(tool.aTag, selected)).toEqual(true);
+                    done();
                 }}
             />, document.getElementById("container"));
             const buttons = document.getElementsByTagName('button');
@@ -78,6 +79,19 @@ describe('ContentToolbar component', () => {
             });
         });
     });
+    it(`ContentToolbar rendering fit item and handling click event`, (done) => {
+        ReactDOM.render(<ContentToolbar
+            tools={["fit"]}
+            fit="fit"
+            update={(t, fitValue) => {
+                expect(t).toEqual("fit");
+                expect(fitValue).toEqual("cover");
+                done();
+            }}
+        />, document.getElementById("container"));
+        const buttons = document.getElementsByTagName('button');
+        expect(buttons).toExist();
+        expect(buttons.length).toEqual(1);
+        ReactTestUtils.Simulate.click(buttons[0]);
+    });
 });
-
-

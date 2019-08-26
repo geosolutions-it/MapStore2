@@ -53,11 +53,18 @@ const createBackgroundIdStream = (intersection$) =>
  * from `contents` property
  */
 export const backgroundProp = withProps(
-    ({ backgroundId, contents = [] }) => ({
-        background: get(getContentIndex(contents, backgroundId) || 0, 'background') || {
-            type: 'none'
-        }
-    }));
+    ({ id, contents = [] }) => {
+        const contextIndex = getContentIndex(contents, id);
+        return {
+            background: {
+                ...get(contextIndex || 0, 'background') || {
+                    type: 'none'
+                }
+            },
+            contentId: contextIndex && contextIndex.id,
+            sectionId: id
+        };
+    });
 /**
  * Holds the current background as background property
  * by intercepting onVisibilityChange from components.
@@ -79,6 +86,6 @@ export default compose(
     }),
     backgroundProp,
     withHandlers({
-        updateBackground: ({ sectionId, backgroundId, update = () => { } }) => (path, ...args) => update(`sections[{id: ${sectionId}}].contents[{id: ${backgroundId}}].background.` + path, ...args)
+        updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args)
     })
 );

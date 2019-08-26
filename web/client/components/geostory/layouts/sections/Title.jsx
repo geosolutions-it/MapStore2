@@ -8,16 +8,17 @@
 import React from "react";
 import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
-import { backgroundProp } from './enhancers/immersiveBackgroundManager';
+import immersiveBackgroundManager from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
 
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundProp(({ id, background = {}, contents = [], add = () => {}, update = () => {}, mode, cover, viewWidth, viewHeight }) => (
+export default immersiveBackgroundManager(({
+    id, background = {}, contents = [], add = () => {}, update = () => {}, updateBackground = () => {}, mode, cover, viewWidth, viewHeight }) => (
     <section
         className="ms-section ms-section-title">
         <ContainerDimensions>
@@ -31,7 +32,12 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                 // selector used by sticky polyfill to detect scroll events
                 scrollContainerSelector="#ms-sections-container"
                 key={background.id}
+                mode={mode}
+                update={updateBackground}
                 width={viewWidth}
+                tools={{
+                    [MediaTypes.IMAGE]: ['fit', 'size', 'align']
+                }}
                 height={height >= viewHeight
                     ? viewHeight
                     : height}/>}

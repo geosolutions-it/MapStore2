@@ -51,7 +51,7 @@ describe('Content (Container) component', () => {
         expect(el).toExist();
         expect(container.querySelector('#SOMETHING')).toExist();
     });
-    it('content has intersection observer', (done) => {
+    it('Content has intersection observer', (done) => {
         const ID_1 = "ID_1";
         const ID_2 = "ID_2";
         ReactDOM.render((<TestScrollableContainer height="100">

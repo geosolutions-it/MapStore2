@@ -130,6 +130,35 @@
                 position: relative;
                 pointer-events: auto;
                 background-color: @ms-story-bg-grey;
+                .ms-content-toolbar {
+                    position: absolute;
+                    padding: 8px;
+                    top: 0;
+                }
+                /* alignment of content */
+                &.ms-align-center { margin-left: auto; margin-right: auto; }
+                &.ms-align-left { margin-left: 0; margin-right: auto; }
+                &.ms-align-right { margin-left: auto; margin-right: 0; }
+
+                /* size of content */
+                &.ms-size-full { width: 100%; }
+                &.ms-size-large { width: 85%; }
+                &.ms-size-medium { width: 60%; }
+                &.ms-size-small { width: 40%; }
+                &.ms-size-cover img {
+                    object-fit: cover;
+                }
+                &.ms-size-fit {
+                    img {
+                        object-fit: unset;
+                        height: unset;
+                    }
+                    .ms-media.ms-media-image {
+                        align-items: center;
+                        display: flex;
+                        padding: 16px;
+                    }
+                }
             }
         }
         /*

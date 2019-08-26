@@ -1868,7 +1868,9 @@
                 "brightThemeLabel": "Hell",
                 "brightTextThemeLabel": "Heller text",
                 "darkThemeLabel": "Dunkel",
-                "darkTextThemeLabel": "Dark text"
+                "darkTextThemeLabel": "Dark text",
+                "cover": "Decken Sie den Behälterraum ab",
+                "fit": "Den Behälterraum montieren"
             },
             "errors": {
                 "loading": {

@@ -31,6 +31,8 @@ describe('Immersive component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-immersive');
         expect(el).toExist();
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
     it('Immersive background rendering (image)', () => {
         const IMAGE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
@@ -61,5 +63,7 @@ describe('Immersive component', () => {
         const img = el.querySelector('img');
         expect(img).toExist();
         expect(img.getAttribute('src')).toBe(IMAGE_SRC);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
 });

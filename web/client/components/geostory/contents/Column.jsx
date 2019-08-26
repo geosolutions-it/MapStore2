@@ -26,7 +26,7 @@ export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) =
 
         <Contents
             className="ms-column-contents"
-        ContentComponent={ColumnContent}
+            ContentComponent={ColumnContent}
             contents={contents}
             mode={mode}
             add={add}

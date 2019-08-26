@@ -10,6 +10,7 @@ import { values, isArray } from "lodash";
 import uuid from 'uuid';
 
 import {
+    getClassNameFromProps,
     StoryTypes,
     SectionTypes,
     ContentTypes,
@@ -29,6 +30,19 @@ describe("GeoStory", () => {
         document.body.innerHTML = "";
         setTimeout(done);
     });
+    it('test getClassNameFromProps class creator', () => {
+        let classes = getClassNameFromProps({}); // defaults
+        expect(classes).toBe(" ms-bright ms-align-center ms-size-large ms-size-cover");
+
+        classes = getClassNameFromProps({
+            theme: "dark",
+            fit: "fit",
+            align: "left",
+            size: "medium"
+        }); // with custom params
+        expect(classes).toBe(" ms-dark ms-align-left ms-size-medium ms-size-fit");
+    });
+
     it("test StoryTypes", () => {
         expect(StoryTypes).toEqual({
             CASCADE: "cascade"
@@ -60,7 +74,7 @@ describe("GeoStory", () => {
             VIEW: "view"
         });
     });
-    it("lists", () => {
+    it("test lists", () => {
         expect(lists).toEqual({
             StoryTypes: values(StoryTypes),
             SectionTypes: values(SectionTypes),
@@ -90,5 +104,4 @@ describe("GeoStory", () => {
         // TODO wait for testing the getDefaultSectionTemplate because it's a wip
         // and needs to be finalized with a load mechanism
     });
-
 });

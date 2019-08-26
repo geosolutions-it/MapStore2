@@ -73,8 +73,17 @@ const toolButtons = {
                 label: <Message msgId="geostory.contentToolbar.darkTextThemeLabel"/>
             }]}
             onSelect={(selected) => update('theme', selected)}/>
+    }),
+    fit: ({ fit, update }) => ({
+        // using normal ToolbarButton because this is a toggle button without options
+        value: fit,
+        glyph: "1-full-screen",
+        visible: true,
+        tooltipId: fit === "fit" ? "geostory.contentToolbar.fit" : "geostory.contentToolbar.cover",
+        onClick: () => update('fit', fit === "fit" ? "cover" : "fit") // toggle
     })
 };
+
 /**
  * Toolbar to update properties of content,
  * @prop {array} tools list of tool's names to display in the edit toolbar, available tools `size`, `align` and `theme`

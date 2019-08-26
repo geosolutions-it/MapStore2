@@ -46,6 +46,8 @@ describe('Title component', () => {
         const img = el.querySelector('img');
         expect(img).toExist();
         expect(img.getAttribute('src')).toBe(IMAGE_SRC);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
     it('Title rendering cover set to true', () => {
         const VIEW_HEIGHT = 500;
@@ -68,6 +70,8 @@ describe('Title component', () => {
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
 
     it('Title rendering cover set to false', () => {
@@ -91,5 +95,7 @@ describe('Title component', () => {
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(sectionContents.clientHeight);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
 });
