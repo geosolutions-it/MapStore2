@@ -107,7 +107,7 @@ module.exports = (API) => ({
                         const {type: format, url} = services[sources[i]];
                         const text = layers[i];
                         return Rx.Observable.defer( () =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch((e) => ({results: []}))
+                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({results: []}))
                         ).map(r => ({...r, format, url, text}));
                     });
                 return Rx.Observable.forkJoin(actions)
