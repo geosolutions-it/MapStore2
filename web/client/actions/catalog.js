@@ -22,6 +22,7 @@ import * as ConfigUtils from '../utils/ConfigUtils';
 import {find} from 'lodash';
 import {authkeyParamNameSelector} from '../selectors/catalog';
 
+
 export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
 export const TEXT_SEARCH = 'CATALOG:TEXT_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
@@ -281,3 +282,13 @@ export const changeMetadataTemplate = (metadataTemplate) => ({type: CHANGE_METAD
 export const toggleAdvancedSettings = () => ({type: TOGGLE_ADVANCED_SETTINGS});
 export const toggleTemplate = () => ({type: TOGGLE_TEMPLATE});
 export const toggleThumbnail = () => ({type: TOGGLE_THUMBNAIL});
+
+import {error} from './notifications';
+
+export function recordsNotFound(records = "") {
+    return error({
+        title: "catalog.notification.errorTitle",
+        message: "catalog.notification.errorSearchingRecords",
+        values: {records}
+    });
+}

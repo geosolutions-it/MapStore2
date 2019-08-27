@@ -19,7 +19,7 @@ To dispatch additional actions when the map viewer is started, the **actions** q
   "initialActionsWhiteList": ["ZOOM_TO_EXTENT", "ADD_LAYER", ...]
 ```
 
-The value of this paramater is a JSON string containing an array with an object per action. The structure of the object consist of a property type and a bunch of other properties depending on the action.
+The value of this parameter is a JSON string containing an array with an object per action. The structure of the object consist of a property type and a bunch of other properties depending on the action.
 
 ### Available actions
 Only the following actions can be used in the **actions** json string.
@@ -78,18 +78,18 @@ For more details check out the [searchLayerWithFilter](https://mapstore2.geo-sol
 
 #### Add Layers
 
-This action allows to add layers from catalog present in the map
+This action allows to add layers directly to the map by taking them from the Catalogs
 
 Requirements:
-- the number of values must be even
-- catalog name must be present in the map
 
+- The number of layers should match the number of sources
+- The source name must match a catalog service name present in the map
 
 Example:
 ```
 {
     "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
-    "layers": ["layer1", "layer2"],
+    "layers": ["workspace1:layer1", "workspace2:layer2"],
     "sources": ["catalog1", "catalog2"]
 }
 ?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2"],"sources":["catalog1", "catalog2"]}]

@@ -414,11 +414,11 @@ const CatalogUtils = {
         const urls = ogcServiceReference.url;
 
         // extract additional parameters and alternative URLs.
-        if (isArray(urls)) {
+        if (urls && isArray(urls)) {
             originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
             params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
         } else {
-            const { url: uu, params: pp } = cleanURL(urls);
+            const { url: uu, params: pp } = cleanURL(urls || catalogURL);
             originalUrl = uu;
             params = pp;
         }

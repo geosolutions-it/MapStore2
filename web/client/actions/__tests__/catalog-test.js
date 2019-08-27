@@ -21,9 +21,11 @@ const {
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
     SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
-    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING
+    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING,
+    recordsNotFound
 } = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
+const {SHOW_NOTIFICATION} = require('../notifications');
 describe('Test correctness of the catalog actions', () => {
 
     it('addLayersMapViewerUrl', () => {
@@ -294,5 +296,11 @@ describe('Test correctness of the catalog actions', () => {
         const action = changeMetadataTemplate("${title}");
         expect(action.type).toBe(CHANGE_METADATA_TEMPLATE);
         expect(action.metadataTemplate).toBe("${title}");
+    });
+    it('test recordsNotFound action', () => {
+        const action = recordsNotFound("topp:states , topp:states-tasmania");
+        expect(action.type).toBe(SHOW_NOTIFICATION);
+        expect(action.message).toBe("catalog.notification.errorSearchingRecords");
+        expect(action.values).toEqual({records: "topp:states , topp:states-tasmania"});
     });
 });
