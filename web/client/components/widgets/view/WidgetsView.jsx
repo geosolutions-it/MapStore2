@@ -25,6 +25,9 @@ const DefaultWidget = withGroupColor(require('../widget/DefaultWidget'));
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
 require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
+const WIDGET_MOBILE_RIGHT_SPACE = 34;
+const getResponsiveWidgetWidth = width => width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width;
+
 module.exports = pure(({
     id,
     style,
@@ -56,7 +59,7 @@ module.exports = pure(({
         key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
-        width={!useDefaultWidthProvider ? width : undefined}
+        width={!useDefaultWidthProvider ? getResponsiveWidgetWidth(width) : undefined}
         isResizable={canEdit}
         isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
