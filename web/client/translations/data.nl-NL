@@ -1062,7 +1062,16 @@
             "showTemplate": "Show metadata template",
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
-            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri"
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
+                "warningAddCatalogService": "Insert a valid url and title",
+                "addCatalogService": "Service added correctly",
+                "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
+                "serviceDeletedCorrectly": "The service was deleted correctly",
+                "errorServiceUrl": "Service not available. Please, check the provided url"
+            }
         },
         "uploader": {
             "filename": "File Name",

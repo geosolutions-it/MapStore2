@@ -98,6 +98,23 @@ describe('Test the CatalogUtils', () => {
         expect(layer.allowedSRS['EPSG:5041']).toNotExist();
     });
 
+    it('wms with no ogcServiceReference.url', () => {
+        const records = CatalogUtils.getCatalogRecords(
+            'wms',
+            {
+                records: [{
+                    SRS: ['EPSG:4326', 'EPSG:3857', 'EPSG:5041']
+                }]
+            }, {
+                url: undefined
+            });
+        expect(records.length).toBe(1);
+        const sampleUrl = "http://sample";
+        const layer = CatalogUtils.recordToLayer(records[0], "wms", {catalogURL: sampleUrl});
+
+        expect(layer.url).toBe(sampleUrl);
+    });
+
     it('wmts', () => {
         const records = CatalogUtils.getCatalogRecords('wmts', {
             records: [{}]

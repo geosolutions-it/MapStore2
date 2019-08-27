@@ -1138,6 +1138,8 @@
             "advancedSettings": "Réglages avancés",
             "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Erreur",
+                "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . S'il vous plaît vérifier la requête param url",
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
                 "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
