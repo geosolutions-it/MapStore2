@@ -165,7 +165,9 @@
                 "cfg": {
                     "activateMetedataTool": false,
                     "activateMapTitle": false,
-                    "activateSortLayer": false
+                    "activateSortLayer": false,
+                    "activateLayerFilterTool": false,
+                    "activateQueryTool": false
                 }
             }, "AddGroup", {
                 "name": "TOCItemsSettings",
