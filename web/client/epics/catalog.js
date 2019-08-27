@@ -7,7 +7,7 @@
 */
 
 import * as Rx from 'rxjs';
-import {head, isArray} from 'lodash';
+import {head, isArray, isString, isObject} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -18,6 +18,7 @@ import {
     addCatalogService,
     setLoading,
     deleteCatalogService,
+    recordsNotFound,
     recordsLoaded,
     recordsLoadError,
     savingService,
@@ -94,7 +95,9 @@ module.exports = (API) => ({
     addLayersFromCatalogsEpic: (action$, store) =>
         action$.ofType(ADD_LAYERS_FROM_CATALOGS)
             .filter(({layers, sources}) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
-            .switchMap(({layers, sources, options, startPosition = 1, maxRecords = 1 }) => {
+            // maxRecords is 4 (by default), but there can be a possibility that the record desired is not among
+            // the results. In that case a more detailed search with full record name can be helpful
+            .switchMap(({layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
@@ -104,23 +107,17 @@ module.exports = (API) => ({
                         const {type: format, url} = services[sources[i]];
                         const text = layers[i];
                         return Rx.Observable.defer( () =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions)
-                        ).map(r => ({...r, format, url}));
+                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({results: []}))
+                        ).map(r => ({...r, format, url, text}));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
-                            return Rx.Observable.from(results.filter(r => {
-                                // filter results with no records
-                                const {format, url, ...result} = r;
+                            return Rx.Observable.of(results.map(r => {
+                                const {format, url, text, ...result} = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
-                                return records && records.length >= 1;
-                            }).map(r => {
-                                const {format, url, ...result} = r;
-                                const locales = currentMessagesSelector(state);
-                                const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
-                                const record = head(records);
+                                const record = head(records.filter(rec => rec.identifier === text)); // exact match of text and record identifier
                                 const {wms, wmts} = extractOGCServicesReferences(record);
                                 let layer = {};
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
@@ -133,7 +130,7 @@ module.exports = (API) => ({
                                     }
                                     layer = recordToLayer(record, "wms", {
                                         removeParams: authkeyParamName,
-                                        catalogURL: format === 'csw' && url ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier : null
+                                        catalogURL: format === 'csw' && url ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier : url
                                     }, layerBaseConfig);
                                 } else if (wmts) {
                                     layer = {};
@@ -151,12 +148,30 @@ module.exports = (API) => ({
                                         layer = esriToLayer(record, layerBaseConfig);
                                     }
                                 }
-                                return addLayer(layer);
+                                if (!record) {
+                                    return text;
+                                }
+                                return layer;
                             }));
                         }
                         return Rx.Observable.empty();
                     });
-            }).catch( () => {
+            })
+            .mergeMap(results => {
+                if (results) {
+                    const allRecordsNotFound = results.filter(r => isString(r)).join(" ");
+                    let actions = [];
+                    if (allRecordsNotFound) {
+                        // return one notification for all records that have not been found
+                        actions = [recordsNotFound(allRecordsNotFound)];
+                    }
+                    // add all layers found to the map
+                    actions = [...actions, ...results.filter(r => isObject(r)).map(r => addLayer(r))];
+                    return Rx.Observable.from(actions);
+                }
+                return Rx.Observable.empty();
+            })
+            .catch( () => {
                 return Rx.Observable.empty();
             }),
     /**

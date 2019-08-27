@@ -8,9 +8,11 @@
 
 import expect from 'expect';
 import csw from '../../api/CSW';
+import wms from '../../api/WMS';
 import wmts from '../../api/WMTS';
 const API = {
     csw,
+    wms,
     wmts
 };
 import catalog from '../catalog';
@@ -36,6 +38,7 @@ import {
     RECORD_LIST_LOAD_ERROR,
     SET_LOADING
 } from '../../actions/catalog';
+
 
 describe('catalog Epics', () => {
     it('getMetadataRecordById', (done) => {
@@ -179,6 +182,90 @@ describe('catalog Epics', () => {
                     "cswCatalog": {
                         type: "csw",
                         url: "base/web/client/test-resources/csw/getRecordsResponse-gs-us_states.xml"
+                    }
+                },
+                pageSize: 2
+            }
+        });
+    });
+    it('addLayersFromCatalogsEpic csw and wms both found', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayersFromCatalogsEpic, 10), NUM_ACTIONS, addLayersMapViewerUrl(["gs:us_states", "some_layer"], ["cswCatalog", "wmsCatalog"]), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                    case ADD_LAYER:
+                        if (action.layer.name === "gs:us_states") {
+                            expect(action.layer.title).toBe("States of US");
+                            expect(action.layer.type).toBe("wms");
+                            expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
+                        } else {
+                            expect(action.layer.name).toBe("some_layer");
+                            expect(action.layer.title).toBe("some layer");
+                            expect(action.layer.type).toBe("wms");
+                            expect(action.layer.url).toBe("base/web/client/test-resources/wms/attribution.xml");
+                        }
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {
+            catalog: {
+                delayAutoSearch: 50,
+                selectedService: "cswCatalog",
+                services: {
+                    "cswCatalog": {
+                        type: "csw",
+                        url: "base/web/client/test-resources/csw/getRecordsResponse-gs-us_states.xml"
+                    },
+                    "wmsCatalog": {
+                        type: "wms",
+                        url: "base/web/client/test-resources/wms/attribution.xml"
+                    }
+                },
+                pageSize: 2
+            }
+        });
+    });
+    it('addLayersFromCatalogsEpic csw found and wms not found', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayersFromCatalogsEpic, 10), NUM_ACTIONS, addLayersMapViewerUrl(["gs:us_states", "not_found"], ["cswCatalog", "wmsCatalog"]), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                    case ADD_LAYER:
+                        expect(action.layer.name).toBe("gs:us_states");
+                        expect(action.layer.title).toBe("States of US");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.message).toBe("catalog.notification.errorSearchingRecords");
+                        expect(action.values).toEqual({records: "not_found"});
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {
+            catalog: {
+                delayAutoSearch: 50,
+                selectedService: "cswCatalog",
+                services: {
+                    "cswCatalog": {
+                        type: "csw",
+                        url: "base/web/client/test-resources/csw/getRecordsResponse-gs-us_states.xml"
+                    },
+                    "wmsCatalog": {
+                        type: "wms",
+                        url: "base/web/client/test-resources/wms/attribution.xml"
                     }
                 },
                 pageSize: 2

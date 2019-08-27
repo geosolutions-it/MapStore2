@@ -1126,6 +1126,8 @@
             "advancedSettings": "Napredne mogućnosti",
             "templateMetadataAvailable": "Metapodaci distupni iz Dublin Core formata: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
                 "duplicatedServiceTitle": "Servis sa tim naslovom već postoji. Molim, promijenite naslov",
