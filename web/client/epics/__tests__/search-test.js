@@ -170,6 +170,7 @@ describe('search Epics', () => {
 
     it('produces the selectSearchItem epic and GFI for for single layer', () => {
         let action = selectSearchItem({
+            "id": "Feature_1",
             "type": "Feature",
             "bbox": [125, 10, 126, 11],
             "geometry": {
@@ -199,7 +200,9 @@ describe('search Epics', () => {
         expect(actions.length).toBe(4);
         expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
         expect(actions[2].type).toBe(FEATURE_INFO_CLICK);
+        expect(actions[2].itemId).toEqual("Feature_1");
         expect(actions[2].filterNameList).toEqual(["gs:layername"]);
+        expect(actions[2].overrideParams).toEqual({"gs:layername": {info_format: "application/json"}});
         expect(actions[3].type).toBe(SHOW_MAPINFO_MARKER);
     });
 

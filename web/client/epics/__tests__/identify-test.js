@@ -139,7 +139,7 @@ describe('identify Epics', () => {
                 }]
             }
         };
-        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}})];
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5")];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
                 expect(a0).toExist();
@@ -153,6 +153,8 @@ describe('identify Epics', () => {
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
+                expect(a2.data.features).toExist();
+                expect(a2.data.features.length).toBe(1);
                 expect(a2.requestParams).toExist();
                 expect(a2.reqId).toExist();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
@@ -160,7 +162,10 @@ describe('identify Epics', () => {
             } catch (ex) {
                 done(ex);
             }
-        }, state);
+        }, {...state, mapInfo: {
+            ...state.mapInfo,
+            itemId: "province_view.5"
+        }});
     });
     it('getFeatureInfoOnFeatureInfoClick with multiSelection', (done) => {
         // remove previous hook

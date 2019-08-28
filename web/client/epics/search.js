@@ -130,8 +130,19 @@ export const searchItemSelected = action$ =>
                     const latlng = { lng: coord[0], lat: coord[1] };
                     const typeName = item.__SERVICE__.options.typeName;
                     if (coord) {
+                        let itemId = null;
+                        let filterNameList = [];
+                        let overrideParams = {};
+                        if (item.__SERVICE__.launchInfoPanel === "single_layer") {
+                            /* take info from the item selected and restrict feature info to this layer
+                             * and force info_format to application/json for allowing
+                             * filtering results later on (identify epic) */
+                            filterNameList = [typeName];
+                            itemId = item.id;
+                            overrideParams = {[item.__SERVICE__.options.typeName]: {info_format: "application/json"}};
+                        }
                         return [
-                            featureInfoClick({ latlng }, typeName, item.__SERVICE__.launchInfoPanel === "single_layer" ? [typeName] : [], { }),
+                            featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
                             showMapinfoMarker()
                         ];
                     }

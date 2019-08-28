@@ -7,7 +7,7 @@
 */
 const Rx = require('rxjs');
 
-const {get, find} = require('lodash');
+const {get, find, isString} = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
@@ -30,7 +30,7 @@ const { mapSelector, projectionDefsSelector, projectionSelector } = require('../
 const { boundingMapRectSelector } = require('../selectors/maplayout');
 const { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox } = require('../utils/CoordinatesUtils');
 
-const { isHighlightEnabledSelector } = require('../selectors/mapInfo');
+const { isHighlightEnabledSelector, itemIdSelector, overrideParamsSelector, filterNameListSelector } = require('../selectors/mapInfo');
 
 const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
 const MapInfoUtils = require('../utils/MapInfoUtils');
@@ -46,7 +46,7 @@ const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditin
  * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON) => {
+const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON, itemId = null) => {
     const param = { ...appParams, ...requestParams };
     const reqId = uuid.v1();
     const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
@@ -60,15 +60,18 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
                         .catch(() => Rx.Observable.of({})) // errors on geometry retrieval are ignored
                 ).map(([response, data ]) => ({
                     ...response,
-                    features: data && data.features,
+                    features: data && data.features && data.features.filter(f => itemId ? f.id === itemId : true),
                     featuresCrs: data && data.crs && parseURN(data.crs)
                 }))
             // simply get the feature info, geometry is already there
             : retrieveFlow(param)
                 .map(res => res.data)
                 .map( ( data = {} ) => ({
-                    data,
-                    features: data.features,
+                    data: isString(data) ? data : {
+                        ...data,
+                        features: data.features && data.features.filter(f => itemId ? f.id === itemId : true)
+                    },
+                    features: data.features && data.features.filter(f => itemId ? f.id === itemId : true),
                     featuresCrs: data && data.crs && parseURN(data.crs)
                 }))
         )
@@ -97,7 +100,7 @@ module.exports = {
             if (queryableLayers.length === 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
-            // TODO: make it in the application state
+            // TODO: make it in the application getState()
             const excludeParams = ["SLD_BODY"];
             const includeOptions = [
                 "buffer",
@@ -112,11 +115,14 @@ module.exports = {
                 .mergeMap(layer => {
                     let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
                     // request override
+                    if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
+                        request = {...request, ...overrideParamsSelector(getState())[layer.name]};
+                    }
                     if (overrideParams[layer.name]) {
                         request = {...request, ...overrideParams[layer.name]};
                     }
                     if (url) {
-                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()) );
+                        return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()), itemIdSelector(getState()));
                     }
                     return Rx.Observable.of(getVectorInfo(layer, request, metadata));
                 });
@@ -173,7 +179,7 @@ module.exports = {
                 enabled
                 && clickPointSelector(getState())
             )
-            .switchMap( () => Rx.Observable.from([featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState())), showMapinfoMarker()])),
+            .switchMap( () => Rx.Observable.from([featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState()), filterNameListSelector(getState()), overrideParamsSelector(getState()), itemIdSelector(getState())), showMapinfoMarker()])),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.

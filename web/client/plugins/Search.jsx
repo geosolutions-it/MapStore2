@@ -202,7 +202,7 @@ class extends React.Component {
 
     static defaultProps = {
         searchOptions: {
-            services: [{type: "nominatim"}]
+            services: [{type: "nominatim", priority: 5}]
         },
         isSearchClickable: false,
         splitTools: true,

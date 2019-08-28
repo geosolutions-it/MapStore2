@@ -192,14 +192,16 @@ function updateCenterToMarker(status) {
  * @param {string} layer the name of the layer without workspace
  * @param {object[]} [filterNameList=[]] list of layers to perform the GFI request
  * @param {object} [overrideParams={}] a map based on name as key and objec as value for overriding request params
+ * @param {string} [itemId=null] id of the item needed for filtering results
  */
-function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}) {
+function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null) {
     return {
         type: FEATURE_INFO_CLICK,
         point,
         layer,
         filterNameList,
-        overrideParams
+        overrideParams,
+        itemId
     };
 }
 
