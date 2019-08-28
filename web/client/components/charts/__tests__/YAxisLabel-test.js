@@ -42,7 +42,7 @@ describe('YAxisLabel component', () => {
         const container = document.getElementById('container');
         const text = container.querySelector('text');
         expect(text).toExist();
-        expect(text.innerText).toBe("1234");
+        expect(text.innerText).toBe("1.2 K");
     });
 
     it('YAxisLabel rendering with a string as label', () => {

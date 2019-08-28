@@ -67,7 +67,7 @@ class LineChartWrapper extends React.Component {
                 margin={props.xAxisAngle ? {
                     top: 20,
                     right: 30,
-                    left: marginLeft,
+                    left: marginLeft + 5,
                     bottom: marginBottom + 20
                 } : margin }
             >

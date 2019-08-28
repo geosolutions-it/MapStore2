@@ -9,6 +9,7 @@
 const expect = require('expect');
 
 const { getConnectionList, getWidgetsGroups, shortenLabel } = require('../WidgetsUtils');
+const ConfigUtils = require('../ConfigUtils');
 
 const {widgets} = require('json-loader!../../test-resources/widgets/widgets1.json');
 const { widgets: complexGraphWidgets } = require('json-loader!../../test-resources/widgets/complex_graph.json');
@@ -47,18 +48,27 @@ describe('Test WidgetsUtils', () => {
         expect(complexChartGroups[1].widgets.length).toBe(2);
     });
 
-    it('shortenLabel with 2500000000', () => {
+    it('shortenLabel with 2500000000 and threshold=1000', () => {
         const num = 2500000000;
+        ConfigUtils.setConfigProp('shortenLabelThreshold', 1000);
         const label = shortenLabel(num);
         expect(label).toEqual("2.5 B");
     });
-    it('shortenLabel with 123456789', () => {
+    it('shortenLabel with 123456789 and threshold=1000', () => {
         const num = 123456789;
+        ConfigUtils.setConfigProp('shortenLabelThreshold', 1000);
         const label = shortenLabel(num);
         expect(label).toEqual("123.5 M");
     });
-    it('shortenLabel with 2500', () => {
+    it('shortenLabel with 2500 and threshold=1000', () => {
         const num = 2500;
+        ConfigUtils.setConfigProp('shortenLabelThreshold', 1000);
+        const label = shortenLabel(num);
+        expect(label).toEqual("2.5 K");
+    });
+    it('shortenLabel with 2500 and threshold=10000', () => {
+        const num = 2500;
+        ConfigUtils.setConfigProp('shortenLabelThreshold', 10000);
         const label = shortenLabel(num);
         expect(label).toEqual(2500);
     });
