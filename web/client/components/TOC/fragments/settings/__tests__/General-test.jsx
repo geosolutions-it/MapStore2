@@ -47,7 +47,7 @@ describe('test  Layer Properties General module component', () => {
         expect(inputs.length).toBe(15);
 
     });
-    it('tests Layer Properties Display component events', () => {
+    it('tests Layer Properties Display component events', async () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -71,6 +71,7 @@ describe('test  Layer Properties General module component', () => {
         expect(inputs).toExist();
         expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.change(inputs[0]);
+        await new Promise((resolve) => setTimeout(resolve, 700));
         expect(spy.calls.length).toBe(1);
     });
     it('tests hidden title translations', () => {

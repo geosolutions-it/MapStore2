@@ -47,8 +47,11 @@ class General extends React.Component {
         allowNew: false
     };
 
-    state = {
-        elementFormValue: this.props.element
+    constructor(props) {
+        super(props);
+        this.state = {
+            elementFormValue: this.props.element
+        };
     }
 
     getLabelName = (groupLable = "") => {
@@ -108,7 +111,7 @@ class General extends React.Component {
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
                     <FormControl
-                        value={elementFormValue.name || ''}
+                        value={elementFormValue.name || this.props.element.name || ''}
                         key="name"
                         type="text"
                         disabled
@@ -118,7 +121,7 @@ class General extends React.Component {
                     <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                     {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle"/> :
                     <FormControl
-                        value={elementFormValue.description || ''}
+                        value={elementFormValue.description || this.props.element.description || ''}
                         key="description"
                         rows="2"
                         componentClass="textarea"
@@ -193,7 +196,7 @@ class General extends React.Component {
 
     debouncedUpdateFormState = debounce((key, value) => this.props.onChange(key, value), 600);
 
-    updateEntry = (key, event, withDebounce = false) => {
+    updateEntry = (key, withDebounce = false, event) => {
         const value = event.target.value;
         this.setState(
             ({ elementFormValue }) => ({ elementFormValue: { ...elementFormValue, [key]: value } }),
