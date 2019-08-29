@@ -47,7 +47,7 @@ describe('test  Layer Properties General module component', () => {
         expect(inputs.length).toBe(15);
 
     });
-    it('tests Layer Properties Display component events', async () => {
+    it('tests Layer Properties Display component events', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
