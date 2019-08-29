@@ -306,7 +306,9 @@
                     "errorLoadingDashboards": "Hubo un error al cargar los paneles de control"
             },
             "maps": {
-                "title": "Mapas ({count})"
+                "title": "Mapas ({count})",
+                "noMapAvailable": "No hay mapa disponible",
+                "createNewOne": "Crea uno nuevo"
             }
         },
         "map": {

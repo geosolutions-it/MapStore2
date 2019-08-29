@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des tableaux de bord"
             },
             "maps": {
-                "title": "Cartes ({count})"
+                "title": "Cartes ({count})",
+                "noMapAvailable": "Aucune carte disponible",
+                "createNewOne": "Créer un nouveau"
             }
         },
         "map": {

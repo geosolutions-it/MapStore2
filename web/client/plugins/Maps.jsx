@@ -9,6 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
+const { compose } = require('recompose');
 const ConfigUtils = require('../utils/ConfigUtils');
 const Message = require("../components/I18N/Message");
 
@@ -18,10 +19,12 @@ const {mapTypeSelector} = require('../selectors/maptype');
 const {userRoleSelector} = require('../selectors/security');
 const { totalCountSelector } = require('../selectors/maps');
 const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
+const emptyState = require('../components/misc/enhancers/emptyState');
 const {createSelector} = require('reselect');
 
 const MapsGrid = require('./maps/MapsGrid');
 const MetadataModal = require('./maps/MetadataModal');
+const EmptyMaps = require('./maps/EmptyMaps');
 
 const {loadMaps, setShowMapDetails} = require('../actions/maps');
 
@@ -111,17 +114,29 @@ const mapsPluginSelector = createSelector([
     mapTypeSelector,
     state => state.maps && state.maps.searchText,
     state => state.maps && state.maps.results ? state.maps.results : [],
+    state => state.maps && state.maps.loading,
     isFeaturedMapsEnabled,
     userRoleSelector
-], (mapType, searchText, maps, featuredEnabled, role) => ({
+], (mapType, searchText, maps, loading, featuredEnabled, role) => ({
     mapType,
     searchText,
-    maps: maps.map(map => ({...map, featuredEnabled: featuredEnabled && role === 'ADMIN'}))
+    maps: maps.map(map => ({...map, featuredEnabled: featuredEnabled && role === 'ADMIN'})),
+    loading
 }));
 
-const MapsPlugin = connect(mapsPluginSelector, {
-    loadMaps, setShowMapDetails
-})(Maps);
+const MapsPlugin = compose(
+    connect(mapsPluginSelector, {
+        loadMaps, setShowMapDetails
+    }),
+    emptyState(
+        ({maps =[], loading}) => !loading && maps.length === 0,
+        () => ({
+            glyph: "1-map",
+            title: <Message msgId="resources.maps.noMapAvailable" />,
+            content: <EmptyMaps />
+        })
+    )
+)(Maps);
 
 module.exports = {
     MapsPlugin: assign(MapsPlugin, {
