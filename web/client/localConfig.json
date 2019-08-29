@@ -19,7 +19,6 @@
     "ignoreMobileCss": false,
     "useAuthenticationRules": true,
     "loadAfterTheme": true,
-    "shortenLabelThreshold": 1000,
     "defaultMapOptions": {
       "cesium": {
           "flyTo": true,
@@ -387,7 +386,19 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets", "WidgetsTray",
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu",
+            "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", {
+                "name": "WidgetsBuilder",
+                "cfg": {
+                    "shortenChartLabelThreshold": 1000
+                }
+            }, {
+                "name": "Widgets",
+                "cfg": {
+                    "shortenChartLabelThreshold": 1000
+                }
+            },
+            "WidgetsTray",
             "Timeline",
             "Playback",
             "FeedbackMask",

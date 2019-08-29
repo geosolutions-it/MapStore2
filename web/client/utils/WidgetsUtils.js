@@ -10,7 +10,6 @@ const { get, find, isNumber, round} = require('lodash');
 const {WIDGETS_REGEX} = require('../actions/widgets');
 const { findGroups } = require('./GraphUtils');
 const { sameToneRangeColors } = require('./ColorUtils');
-const ConfigUtils = require('./ConfigUtils');
 
 const getDependentWidget = (k, widgets) => {
     const [match, id] = WIDGETS_REGEX.exec(k);
@@ -54,7 +53,7 @@ const getConnectionList = (widgets = []) => {
  * @param {number} decimals number of decimal to use when rounding
  * @return the shortened number plus a suffix or the label is a string is passed
 */
-const shortenLabel = (label, threshold = (ConfigUtils.getConfigProp('shortenLabelThreshold') || 1000), decimals = 1) => {
+const shortenLabel = (label, threshold = 1000, decimals = 1) => {
     if (!isNumber(label)) {
         return label;
     }
