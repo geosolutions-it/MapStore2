@@ -1,5 +1,5 @@
 /**
- * Copyright 2018, GeoSolutions Sas.
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -8,14 +8,17 @@
 
 
 /**
- * Collection of tool to work on DOM
+ * Utility functions for DOM
+ * @memberof utils
+ * @static
+ * @name DOMUtils
  */
-const DOMUtil = {
-    scrollIntoViewId: (viewId) => {
-        const node = document.getElementById(viewId);
-        if (node && node.scrollIntoView) {
-            node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+
+
+export const scrollIntoViewId = (viewId) => {
+    const node = document.getElementById(viewId);
+    if (node && node.scrollIntoView) {
+        node.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 };
-module.exports = DOMUtil;
+

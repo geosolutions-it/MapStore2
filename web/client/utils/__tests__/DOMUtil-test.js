@@ -7,9 +7,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const { scrollIntoViewId } = require('../DOMUtil');
+import { scrollIntoViewId } from '../DOMUtil';
 
 describe('Test the DOMUtils', () => {
 

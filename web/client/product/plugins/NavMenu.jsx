@@ -27,6 +27,8 @@ const {scrollIntoViewId} = require('../../utils/DOMUtil');
  * In case of `href`, or `linkId`, the item can also to contain:
  *  - `label`: a node (react element or string, for instance) to render
  *  - `glyph` icon to use when the window's width is less then `minWidth`
+ *  - `labelComponent` react element to render as navItem label, label will be visible when screen size is bigger
+ *  - `iconComponent` react element to render as navItem on small screen, it should contain only icon
  *
  * Examples:
  * ```

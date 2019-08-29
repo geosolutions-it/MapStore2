@@ -308,7 +308,7 @@
             "maps": {
                 "title": "Mappe ({count})",
                 "noMapAvailable": "Nessuna mappa disponibile",
-                "createNewOne": "Creane uno nuovo"
+                "createNewOne": "Creane una nuova"
             }
         },
         "map": {

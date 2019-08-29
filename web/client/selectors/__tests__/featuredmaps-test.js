@@ -9,7 +9,8 @@ const expect = require('expect');
 
 const {
     resourceSelector,
-    searchTextSelector
+    searchTextSelector,
+    isFeaturedMapsEnabled
 } = require('../featuredmaps');
 
 describe('featuredMaps selectors', () => {
@@ -36,6 +37,15 @@ describe('featuredMaps selectors', () => {
         expect(searchTextSelector(state)).toBe('text');
 
         expect(searchTextSelector()).toBe('');
+    });
+
+    it('test isFeaturedMapsEnabled', () => {
+        const state = {
+            featuredmaps: {
+                enabled: true
+            }
+        };
+        expect(isFeaturedMapsEnabled(state)).toBeTruthy();
     });
 });
 
