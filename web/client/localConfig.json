@@ -387,12 +387,8 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu",
-            "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", {
-                "name": "WidgetsBuilder",
-                "cfg": {
-                    "shortenChartLabelThreshold": 1000
-                }
-            }, {
+            "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig",
+            "WidgetsBuilder", {
                 "name": "Widgets",
                 "cfg": {
                     "shortenChartLabelThreshold": 1000

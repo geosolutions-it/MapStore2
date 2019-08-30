@@ -59,6 +59,7 @@ class SideBarComponent extends React.Component {
          fluid: false,
          dimMode: "none",
          position: "left",
+         shortenChartLabelThreshold: 1000,
          onMount: () => {},
          onUnmount: () => {},
          onClose: () => {},
