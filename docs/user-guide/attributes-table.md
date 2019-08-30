@@ -123,7 +123,7 @@ filter field located at the top of each table column.
 
 To use the attribute table quick filters, just type in anything in the filter fields located at the top of each column  
 
-**Forexample** to filter **Arizona State** type in **arizona** in the filter field located on **state_name** column
+For example to filter **Arizona State** type in **arizona** in the filter field located on **state_name** column
 <p><img src="../img/attribute-table-quick-filter-1.jpg" style="max-width:620px;"/></p>
 
 !!! note
