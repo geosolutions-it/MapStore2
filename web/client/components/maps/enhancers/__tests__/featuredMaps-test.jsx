@@ -69,7 +69,7 @@ describe('featuredMaps enhancher', () => {
         });
     });
 
-    it('updateItemsLifecycle verify previews items and view size changes', () => {
+    it('updateItemsLifecycle verify previews items, view size changes and enableFeaturedMaps called', () => {
 
         const CMP = updateItemsLifecycle(({items, previousItems, viewSize = 4}) =>
             <div id="CMP">
@@ -79,7 +79,13 @@ describe('featuredMaps enhancher', () => {
             </div>
         );
 
-        ReactDOM.render(<CMP items={[]}/>, document.getElementById("container"));
+        const handlers = {
+            enableFeaturedMaps: () => {}
+        };
+
+        const spy = expect.spyOn(handlers, 'enableFeaturedMaps');
+
+        ReactDOM.render(<CMP items={[]} enableFeaturedMaps={handlers.enableFeaturedMaps} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
         expect(el).toExist();
@@ -92,7 +98,7 @@ describe('featuredMaps enhancher', () => {
         expect(viewSize.innerHTML).toBe('4');
 
 
-        ReactDOM.render(<CMP items={[0, 1, 2, 3, 4, 5]}/>, document.getElementById("container"));
+        ReactDOM.render(<CMP items={[0, 1, 2, 3, 4, 5]} enableFeaturedMaps={handlers.enableFeaturedMaps} />, document.getElementById("container"));
         previousItemsCount = el.querySelector('.previous-items-count');
         expect(previousItemsCount.innerHTML).toBe('0');
         itemsCount = el.querySelector('.items-count');
@@ -100,13 +106,15 @@ describe('featuredMaps enhancher', () => {
         viewSize = el.querySelector('.view-size');
         expect(viewSize.innerHTML).toBe('8');
 
-        ReactDOM.render(<CMP items={[0]}/>, document.getElementById("container"));
+        ReactDOM.render(<CMP items={[0]} enableFeaturedMaps={handlers.enableFeaturedMaps} />, document.getElementById("container"));
         previousItemsCount = el.querySelector('.previous-items-count');
         expect(previousItemsCount.innerHTML).toBe('6');
         itemsCount = el.querySelector('.items-count');
         expect(itemsCount.innerHTML).toBe('1');
         viewSize = el.querySelector('.view-size');
         expect(viewSize.innerHTML).toBe('4');
+
+        expect(spy.calls.length).toEqual(2);
     });
 
 });

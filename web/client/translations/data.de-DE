@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "Beim Laden von Dashboards ist ein Fehler aufgetreten"
             },
             "maps": {
-                "title": "Karten ({count})"
+                "title": "Karten ({count})",
+                "noMapAvailable": "Keine Karte verfügbar",
+                "createNewOne": "Erstelle ein neues"
             }
         },
         "map": {

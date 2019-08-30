@@ -305,7 +305,9 @@
                 "errorLoadingDashboards": "There was an error loading dashboards"
             },
             "maps": {
-                "title": "Maps ({count})"
+                "title": "Maps ({count})",
+                "noMapAvailable": "Geen kaart beschikbaar",
+                "createNewOne": "Maak een nieuwe"
             }
         },
         "map": {
