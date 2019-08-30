@@ -13,7 +13,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const SecurityUtils = require('../utils/SecurityUtils');
 const assign = require('object-assign');
-const {isObject} = require('lodash');
+const {isObject, omitBy, isNil} = require('lodash');
 const urlUtil = require('url');
 
 /**
@@ -122,12 +122,7 @@ axios.interceptors.request.use(config => {
             const cannotUseCORS = corsDisabled.reduce((found, current) => found || uri.indexOf(current) === 0, false);
             if (!isCORS && (!autoDetectCORS || cannotUseCORS)) {
                 const parsedUri = urlUtil.parse(uri, true, true);
-                const params = Object.keys(config.params || {}).reduce((acc, key) => {
-                    if (config.params[key] !== undefined && config.params[key] !== null) {
-                        acc[key] = config.params[key];
-                    }
-                    return acc;
-                }, {});
+                const params = omitBy(config.params, isNil);
                 config.url = proxyUrl + encodeURIComponent(
                     urlUtil.format(
                         assign({}, parsedUri, {

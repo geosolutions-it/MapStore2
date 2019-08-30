@@ -155,14 +155,17 @@ describe('Tests ajax library', () => {
                 param8: {
                     a: 'a'
                 },
-                param9: new Date()
+                param9: new Date(),
+                param10: false,
+                param11: NaN,
+                param12: 0
             }})
             .then(() => {
                 done();
             })
             .catch((ex) => {
                 const decodedUrl = urlUtil.parse(decodeURIComponent(ex.config.url), true);
-                expect(decodedUrl.query).toNotContainKeys(['param3', 'param4']);
+                expect(decodedUrl.query).toNotContainKeys(['param3', 'param4', 'param11']);
                 done();
             });
     });
