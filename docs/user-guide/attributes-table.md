@@ -116,25 +116,24 @@ In *Edit mode*, you can delete existing features following these steps:
 Quick Filtering
 -------------------
 
-[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) attibute table allow you to quickly filtering the table records(features) by using the 
+The [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) Attribute Table allows you to quickly filter the table records(features) by using the  
 filter field located at the top of each table column. 
 
-<p><img src="../img/attribute-table-quick-filter.png" style="max-width:620px;"/></p>
+<p><img src="../img/attribute-table-quick-filter.jpg" style="max-width:620px;"/></p>
 
-To use attribute table quick filters, you simply have to type in the filter field with the filter data relate to the respected column. 
+To use the attribute table quick filters, just type in anything in the filter fields located at the top of each column  
 
-* Forexample to filter **Arizona State** type in arizona in the filter field located on state_name column
-<p><img src="../img/attribute-table-quick-filter-1.png" style="max-width:620px;"/></p>
+**Forexample** to filter **Arizona State** type in **arizona** in the filter field located on **state_name** column
+<p><img src="../img/attribute-table-quick-filter-1.jpg" style="max-width:620px;"/></p>
 
 !!! note
-    We have got 1 item and since the map is by default synchronized with the tabular data so all states have disappeared in the map except **Arizona** state.
+    We have got **one** item and since the map is by default synchronized with the **attribute table**, only the **Arizona** state is visible.
 
 
 ### Operator based filtering
-Quick filters allow you to do quick comparison operator based filtering by preceding the filter text with operator. 
-Operator can be used to all data type including float and date types.
+Quick filters allow you to filter records in the Attribute Table by using comparison operators (the operators must precede the filter text): operator can be used for all data type including float and date types.
 
-<p><img src="../img/attribute-table-quick-filter-2.png" style="max-width:620px;"/></p>
+<p><img src="../img/attribute-table-quick-filter-2.jpg" style="max-width:620px;"/></p>
 
 So far the operators allowed are as follows 
 
@@ -143,15 +142,15 @@ So far the operators allowed are as follows
 * **>=**  Greater than or equal
 * **<**  Less than
 * **>**  Greater than
-* **=== or == or =** Equal, this is internal set as default operator when no operator is specified in filter text.
+* **=== or == or =** Equal, this is the internal default one if the operator isn't specified.
 
 Examples;
 
 * States with **persons >= 4,000,000**
-<p><img src="../img/attribute-table-quick-filter-3.png" style="max-width:620px;"/></p>
+<p><img src="../img/attribute-table-quick-filter-3.jpg" style="max-width:620px;"/></p>
 
 * States with male population **Male < 2000,0000**
-<p><img src="../img/attribute-table-quick-filter-4.png" style="max-width:620px;"/></p>
+<p><img src="../img/attribute-table-quick-filter-4.jpg" style="max-width:620px;"/></p>
 
 !!! note
     Please note the comparison operator preceding the filter text in both examples.
