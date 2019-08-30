@@ -28,11 +28,12 @@ module.exports = ({ className = "widget-menu", menuIcon = "option-vertical"} = {
         topRightItems: hasMenuItems(widgetTools)
             ? [...topRightItems, (<ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className={className} title={<Glyphicon glyph={menuIcon} />} noCaret id="dropdown-no-caret">
-                    {widgetTools.filter(isMenuItem).map(({ onClick = () => { }, glyph, glyphClassName, text, textId, tooltipId, active}, i) =>
+                    {widgetTools.filter(isMenuItem).map(({ onClick = () => { }, disabled = false, glyph, glyphClassName, text, textId, tooltipId, active}, i) =>
                         <MenuItem
                             active={active}
                             tooltipId={tooltipId}
                         onClick={onClick}
+                        disabled={disabled}
                         eventKey={i}>
                             <Glyphicon className={glyphClassName} glyph={glyph} />
                             {textId ? <Message msgId={textId} /> : text}
