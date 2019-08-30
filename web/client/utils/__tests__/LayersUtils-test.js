@@ -741,6 +741,23 @@ describe('LayersUtils', () => {
         const matchedGeoServerNameCustomReg = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows", regex: /\/geoserver\//});
         expect(matchedGeoServerNameCustomReg).toBe(null);
     });
+    it('test findGeoServerName with array url', () => {
+        const matched = LayersUtils
+        .findGeoServerName({url: ['https://1maps.geo-solutions.it/geoserver/wms'], regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
+        expect(matched).toExist();
+    });
+
+    it('test findGeoServerName with string url', () => {
+        const matched = LayersUtils
+        .findGeoServerName({url: 'https://1maps.geo-solutions.it/geoserver/wms', regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
+        expect(matched).toExist();
+    });
+
+    it('test getCapabilitiesUrl', () => {
+        const capabilities = LayersUtils
+        .getCapabilitiesUrl({url: ['https://1maps.geo-solutions.it/geoserver/wms'], name: 'states'});
+        expect(capabilities).toExist();
+    });
     it('getAuthenticationParam', () => {
         expect(LayersUtils.getAuthenticationParam({
             url: ['http://url/'],
