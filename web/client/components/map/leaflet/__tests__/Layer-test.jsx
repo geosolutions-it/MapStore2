@@ -186,6 +186,78 @@ describe('Leaflet layer', () => {
         expect(urls.length).toBe(1);
     });
 
+    it('test wms vector formats must change to default image format (image/png)', () => {
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'osm:vector_tile',
+            group: 'Vector',
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/png');
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/vnd.mapbox-vector-tile'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/png');
+
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=topojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/png');
+
+        // check if it switches to jpeg
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'image/jpeg'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams.format).toBe('image/jpeg');
+
+    });
+
     it('creates a wms elevation layer for leaflet map', () => {
         var options = {
             "type": "wms",
@@ -923,5 +995,89 @@ describe('Leaflet layer', () => {
         map.eachLayer(() => { lcount++; });
         expect(lcount).toBe(1);
         expect(layer.layer.wmsParams.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
+    });
+
+    it('test wmts vector formats must change to default image format (image/png)', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'osm:vector_tile',
+            group: 'Vector',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+
+        const GeoJSON = 'application/json;type=geojson';
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: GeoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe('image/png');
+
+        const MVT = 'application/vnd.mapbox-vector-tile';
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: MVT
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe('image/png');
+
+
+        const TopoJSON = 'application/json;type=topojson';
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: TopoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe('image/png');
+
+        // check if it switches to jpeg
+        const JPEG = 'image/jpeg';
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: JPEG
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams.format).toBe(JPEG);
+
     });
 });

@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const ol = require('openlayers');
+import PropTypes from 'prop-types';
+import React from 'react';
+import assign from 'object-assign';
+import ScaleLine from 'ol/control/ScaleLine';
 
-const assign = require('object-assign');
-
-class ScaleBar extends React.Component {
+export default class ScaleBar extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         className: PropTypes.string,
@@ -29,7 +28,7 @@ class ScaleBar extends React.Component {
     };
 
     componentDidMount() {
-        this.scalebar = new ol.control.ScaleLine(assign({}, this.props, this.props.container ? {
+        this.scalebar = new ScaleLine(assign({}, this.props, this.props.container ? {
             target: document.querySelector(this.props.container)
         } : {}));
         if (this.props.map) {
@@ -48,4 +47,3 @@ class ScaleBar extends React.Component {
     }
 }
 
-module.exports = ScaleBar;

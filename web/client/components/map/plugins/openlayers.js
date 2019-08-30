@@ -9,14 +9,14 @@
 module.exports = () => {
     require('../openlayers/plugins/index');
     return {
-        Map: require('../openlayers/Map'),
-        Layer: require('../openlayers/Layer'),
-        Feature: require('../openlayers/Feature'),
-        Locate: require('../openlayers/Locate'),
-        MeasurementSupport: require('../openlayers/MeasurementSupport'),
-        Overview: require('../openlayers/Overview'),
-        ScaleBar: require('../openlayers/ScaleBar'),
-        DrawSupport: require('../openlayers/DrawSupport')
+        Map: require('../openlayers/Map').default,
+        Layer: require('../openlayers/Layer').default,
+        Feature: require('../openlayers/Feature').default,
+        Locate: require('../openlayers/Locate').default,
+        MeasurementSupport: require('../openlayers/MeasurementSupport').default,
+        Overview: require('../openlayers/Overview').default,
+        ScaleBar: require('../openlayers/ScaleBar').default,
+        DrawSupport: require('../openlayers/DrawSupport').default
     };
 };
 

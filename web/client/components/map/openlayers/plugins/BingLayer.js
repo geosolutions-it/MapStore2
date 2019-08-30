@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/openlayers/Layers');
-var ol = require('openlayers');
+import Layers from '../../../../utils/openlayers/Layers';
+import TileLayer from 'ol/layer/Tile';
+import BingMaps from 'ol/source/BingMaps';
 
 const checkLoaded = (layer, options) => {
     if (layer.getSource && layer.getSource().getState() === 'error') {
@@ -24,12 +25,12 @@ Layers.registerType('bing', {
     create: (options) => {
         var key = options.apiKey;
         var maxNativeZoom = options.maxNativeZoom || 19;
-        const layer = new ol.layer.Tile({
+        const layer = new TileLayer({
             preload: Infinity,
             opacity: options.opacity !== undefined ? options.opacity : 1,
             zIndex: options.zIndex,
             visible: options.visibility,
-            source: new ol.source.BingMaps({
+            source: new BingMaps({
                 key: key,
                 imagerySet: options.name,
                 maxZoom: maxNativeZoom

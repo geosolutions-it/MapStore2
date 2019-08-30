@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import * as Icons from '../Icons';
+import Icons from '../Icons';
 import expect from 'expect';
 
 describe('Icons openlayers styles', () => {
@@ -39,7 +39,6 @@ describe('Icons openlayers styles', () => {
         expect(iconImage.getOrigin()).toEqual([72, 46]);
         expect(iconImage.getRotation()).toEqual(1);
         expect(iconImage.getSize()).toEqual([36, 46]);
-        expect(iconImage.getSnapToPixel()).toEqual(true);
         expect(new RegExp("/web/client/components/mapcontrols/annotations/img/markers_default.png").test(iconImage.getSrc())).toEqual(true);
         const iconText = icon.getText();
         expect(iconText).toExist();
@@ -91,7 +90,6 @@ describe('Icons openlayers styles', () => {
         expect(iconImage.getOrigin()).toEqual([0, 0]);
         expect(iconImage.getRotation()).toEqual(1);
         expect(iconImage.getSize()).toEqual([14, 14]);
-        expect(iconImage.getSnapToPixel()).toEqual(true);
     });
     it('test standard getIcon iconUrl, yes shadow, yes highlight', () => {
         const getIcon = Icons.standard.getIcon;
@@ -119,7 +117,6 @@ describe('Icons openlayers styles', () => {
         expect(iconImage.getOrigin()).toEqual([0, 0]);
         expect(iconImage.getRotation()).toEqual(1);
         expect(iconImage.getSize()).toEqual([14, 14]);
-        expect(iconImage.getSnapToPixel()).toEqual(true);
         const highlightStyle = styles[2];
         expect(highlightStyle).toExist();
         const highlightStyleText = highlightStyle.getText();
