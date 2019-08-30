@@ -7,14 +7,19 @@
 */
 const Rx = require('rxjs');
 
-const {get, find, isString} = require('lodash');
+const {get, find, isString, isNil} = require('lodash');
 const axios = require('../libs/ajax');
 
 const uuid = require('uuid');
 
-const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE, featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
-
-    exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo, noQueryableLayers, newMapInfoRequest, getVectorInfo, showMapinfoMarker, hideMapinfoMarker } = require('../actions/mapInfo');
+const {
+    LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
+    FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
+    featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
+    exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
+    noQueryableLayers, newMapInfoRequest, getVectorInfo,
+    showMapinfoMarker, hideMapinfoMarker
+} = require('../actions/mapInfo');
 
 const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
 
@@ -60,7 +65,7 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
                         .catch(() => Rx.Observable.of({})) // errors on geometry retrieval are ignored
                 ).map(([response, data ]) => ({
                     ...response,
-                    features: data && data.features && data.features.filter(f => itemId ? f.id === itemId : true),
+                    features: data && data.features && data.features.filter(f => !isNil(itemId) ? f.id === itemId : true),
                     featuresCrs: data && data.crs && parseURN(data.crs)
                 }))
             // simply get the feature info, geometry is already there
