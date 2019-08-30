@@ -17,7 +17,19 @@ import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils
  * Paragraph is a page block that expands for all it's height
  */
 const Immersive = ({
-    id, background = {}, contents = [], add = () => {}, update = () => {}, onVisibilityChange = () => { }, updateBackground = () => {}, mode, viewWidth, viewHeight }) => (
+    add = () => {},
+    editMedia = () => {},
+    onVisibilityChange = () => { },
+    update = () => {},
+    updateBackground = () => {},
+    id,
+    background = {},
+    path,
+    contents = [],
+    mode,
+    viewWidth,
+    viewHeight
+}) => (
     <section
         className="ms-section ms-section-immersive">
         <Background
@@ -25,10 +37,13 @@ const Immersive = ({
             mode={mode}
 
             tools={{
-                [MediaTypes.IMAGE]: ['fit', 'size', 'align']
+                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
+            add={add}
+            editMedia={editMedia}
+            path={path}
             update={updateBackground}
             sectionId={id}
             backgroundId={background.id}

@@ -7,7 +7,7 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes, MediaTypes} from '../../../../utils/GeoStoryUtils';
 import SectionContents from "../../contents/SectionContents";
 
 
@@ -15,7 +15,16 @@ import SectionContents from "../../contents/SectionContents";
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidth, viewHeight }) => (
+export default ({
+    id,
+    contents,
+    mode,
+    add = () => {},
+    update= () => {},
+    editMedia= () => {},
+    viewWidth,
+    viewHeight
+}) => (
     <section
         className="ms-section ms-section-paragraph">
         <SectionContents
@@ -23,8 +32,12 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
             contents={contents}
             mode={mode}
             add={add}
+            editMedia={editMedia}
             update={update}
             sectionId={id}
+            tools={{
+                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align']
+            }}
             />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}

@@ -53,7 +53,7 @@ export const loadMediaEditorDataEpic = (action$, store) =>
  */
 export const editorSaveUpdateMediaEpic = (action$, store) =>
     action$.ofType(SAVE_MEDIA)
-    .switchMap(({mediaType, source, data}) => {
+    .switchMap(({mediaType = "image", source, data}) => {
         const editing = editingSelector(store.getState());
         const handler = editing ?
             mediaAPI(mediaType, source).edit(mediaType, source, data, store) :

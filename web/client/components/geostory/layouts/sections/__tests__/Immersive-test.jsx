@@ -27,7 +27,7 @@ describe('Immersive component', () => {
         setTimeout(done);
     });
     it('Immersive rendering with defaults', () => {
-        ReactDOM.render(<Immersive />, document.getElementById("container"));
+        ReactDOM.render(<Immersive mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-immersive');
         expect(el).toExist();
@@ -56,7 +56,7 @@ describe('Immersive component', () => {
                 html: '<p>column</p>'
             }
         ];
-        ReactDOM.render(<Immersive contents={CONTENTS}/>, document.getElementById("container"));
+        ReactDOM.render(<Immersive contents={CONTENTS} mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-immersive');
         expect(el).toExist();

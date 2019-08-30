@@ -27,7 +27,7 @@ let INITIAL_STATE = {
  * @param {string|string[]} rawPath path to transform in real path
  * @param {object} state the state to check to inspect the tree and get the real path
  */
-const getEffectivePath = (rawPath, state) => {
+export const getEffectivePath = (rawPath, state) => {
     const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`
     // use curly brackets elements as predicates of findIndex to get the correct index.
     return rawPathArray.reduce( (path, current) => {

@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, isObject} from 'lodash';
+import {isNaN, isString, isNil, isObject, get} from 'lodash';
 
 import axios from '../libs/ajax';
 
@@ -19,23 +19,67 @@ import {
     setCurrentStory,
     update
 } from '../actions/geostory';
-import { show, HIDE, CHOOSE_MEDIA } from '../actions/mediaEditor';
+import {
+    show,
+    HIDE,
+    EDIT_MEDIA,
+    CHOOSE_MEDIA,
+    selectItem
+} from '../actions/mediaEditor';
 import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
 
 import { wrapStartStop } from '../observables/epics';
 import { ContentTypes } from '../utils/GeoStoryUtils';
+import { getEffectivePath } from '../reducers/geostory';
 
+/**
+ * opens the media editor for new image with content type media is passed
+ * then it waits for chose media for updating the resourceId
+ * @param {*} action$
+ */
 export const openMediaEditorForNewMedia = action$ =>
     action$.ofType(ADD)
         .filter(({ element }) => element.type === ContentTypes.MEDIA)
         .switchMap(({path: arrayPath, element}) => {
-            return Observable.of(show('geostory'))
+            return Observable.of(
+                    show('geostory') // open mediaEditor
+                )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
-                            return Observable.of(update(`${arrayPath}[{"id":"${element.id}"}].resourceId`, resource.id ));
+                            return Observable.of(
+                                update(`${arrayPath}[{"id":"${element.id}"}].resourceId`, resource.id ),
+                                update(`${arrayPath}[{"id":"${element.id}"}].type`, "image" ) // TODO take type from mediaEditor state or from resource
+                                );
+                        })
+                        .takeUntil(action$.ofType(HIDE))
+                );
+        });
+
+/**
+ * opens the media editor with current media as the selected one
+ * then it updates the resourceId reference of that content
+ * @param {*} action$
+ * @param {*} store
+ */
+export const editMediaForBackgroundEpic = (action$, store) =>
+    action$.ofType(EDIT_MEDIA)
+        .switchMap(({path, owner}) => {
+            const state = store.getState();
+            const resourceId = get(state, getEffectivePath(`geostory.currentStory.${path}.resourceId`, state), "");
+
+            return Observable.of(
+                    show(owner), // open mediaEditor
+                    selectItem(resourceId)
+                )
+                .merge(
+                    action$.ofType(CHOOSE_MEDIA)
+                        .switchMap( ({resource = {}}) => {
+                            return Observable.of(
+                                update(`${path}.resourceId`, resource.id )
+                                );
                         })
                         .takeUntil(action$.ofType(HIDE))
                 );

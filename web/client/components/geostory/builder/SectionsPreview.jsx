@@ -61,7 +61,7 @@ const sectionToItem = ({
             buttons={[
                 {
                     glyph: 'zoom-to',
-                    visible: contents.length === 1,
+                    visible: contents && contents.length === 1,
                     tooltipId: "geostory.zoomToContent"
                 }
             ]} />,
@@ -100,7 +100,7 @@ const sectionToItem = ({
                     })} />
             </div>
             : <ContainerDimensions>
-                <Preview content={contents[0]} />
+                <Preview content={contents && contents[0]} />
             </ContainerDimensions>
     };
 

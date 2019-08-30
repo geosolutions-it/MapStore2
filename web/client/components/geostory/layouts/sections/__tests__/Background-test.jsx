@@ -37,6 +37,7 @@ describe('Background component', () => {
         const VIEW_HEIGHT = 800;
         ReactDOM.render(<Background
             width={1024}
+            mode="edit"
             height={VIEW_HEIGHT}
             type="image"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="

@@ -14,7 +14,7 @@ import { setObservableConfig } from 'recompose';
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 
-const getContentIndex = (contents, id) => {
+const getContentInView = (contents, id) => {
     const index = findIndex(contents, { id });
     return contents[index === -1 || !index ? 0 : index];
 };
@@ -53,22 +53,30 @@ const createBackgroundIdStream = (intersection$) =>
  * from `contents` property
  */
 export const backgroundProp = withProps(
-    ({ id, contents = [] }) => {
-        const contextIndex = getContentIndex(contents, id);
+    ({ id, backgroundId, contents = [] }) => {
+        const contentInView = getContentInView(contents, backgroundId) || {};
+        const contentId = contentInView && contentInView.id;
         return {
-            background: {
-                ...get(contextIndex || 0, 'background') || {
-                    type: 'none'
-                }
-            },
-            contentId: contextIndex && contextIndex.id,
-            sectionId: id
+            background: get(contentInView, 'background') || { type: 'none' },
+            contentId,
+            sectionId: id,
+            path: `sections[{"id": "${id}"}].contents[{"id": "${contentId}"}].background`
         };
     });
 /**
  * Holds the current background as background property
  * by intercepting onVisibilityChange from components.
  */
+
+export const updateBackgroundEnhancer = withHandlers({
+    updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args)
+});
+
+export const backgroundPropWithHandler = compose(
+    backgroundProp,
+    updateBackgroundEnhancer
+);
+
 export default compose(
     mapPropsStream(props$ => {
         // create an handler for intersection events
@@ -84,8 +92,5 @@ export default compose(
             })
         );
     }),
-    backgroundProp,
-    withHandlers({
-        updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args)
-    })
+    backgroundPropWithHandler
 );

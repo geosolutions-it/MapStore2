@@ -82,7 +82,7 @@ describe('ContentToolbar component', () => {
     it(`ContentToolbar rendering fit item and handling click event`, (done) => {
         ReactDOM.render(<ContentToolbar
             tools={["fit"]}
-            fit="fit"
+            fit="contain"
             update={(t, fitValue) => {
                 expect(t).toEqual("fit");
                 expect(fitValue).toEqual("cover");

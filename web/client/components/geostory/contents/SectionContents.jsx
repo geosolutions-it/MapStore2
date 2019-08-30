@@ -10,7 +10,7 @@ import Contents from './Contents';
 import SectionContent from "./SectionContent";
 
 /**
- * Enhances the Contents container to wrap the methods for SectionContents, setting up th ecorrect path
+ * Enhances the Contents container to wrap the methods for SectionContents, setting up the correct path
  * for the handlers and to pass the ContentComponent enhanced for sections
  */
 export default compose(
@@ -20,6 +20,7 @@ export default compose(
     }),
     withHandlers({
         // NOTE: adds the section initial path to content. The Contents adds contents[...] on it's own for inner add buttons
+        editMedia: ({ editMedia = () => { }, sectionId }) => ({path}, ...args) => editMedia({path: `sections[{"id": "${sectionId}"}].` + path}, ...args),
         add: ({ add = () => { }, sectionId }) => (path, ...args) => add(`sections[{"id": "${sectionId}"}].` + path, ...args),
         update: ({ update = () => { }, sectionId }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].` + path, ...args)
     }),

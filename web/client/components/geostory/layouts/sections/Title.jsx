@@ -8,7 +8,7 @@
 import React from "react";
 import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
-import immersiveBackgroundManager from './enhancers/immersiveBackgroundManager';
+import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
@@ -17,8 +17,21 @@ import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default immersiveBackgroundManager(({
-    id, background = {}, contents = [], add = () => {}, update = () => {}, updateBackground = () => {}, mode, cover, viewWidth, viewHeight }) => (
+export default backgroundPropWithHandler(({
+    id,
+    background = {},
+    contents = [],
+    mode,
+    contentId,
+    path,
+    cover,
+    viewWidth,
+    viewHeight,
+    add = () => {},
+    update = () => {},
+    updateBackground = () => {},
+    editMedia = () => {}
+}) => (
     <section
         className="ms-section ms-section-title">
         <ContainerDimensions>
@@ -33,10 +46,14 @@ export default immersiveBackgroundManager(({
                 scrollContainerSelector="#ms-sections-container"
                 key={background.id}
                 mode={mode}
+                id={contentId}
+                path={path}
                 update={updateBackground}
+                add={add}
+                editMedia={editMedia}
                 width={viewWidth}
                 tools={{
-                    [MediaTypes.IMAGE]: ['fit', 'size', 'align']
+                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
                 }}
                 height={height >= viewHeight
                     ? viewHeight
@@ -80,6 +97,13 @@ export default immersiveBackgroundManager(({
                     // TODO: add
                     add('sections', id, SectionTypes.IMMERSIVE);
                 }
-            }]}/>}
+            }/*,
+            {
+                glyph: 'picture',
+                tooltipId: 'geostory.addMediaSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.MEDIA);
+                }
+            }*/]}/>}
     </section>
 ));

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import stickySupport from '../../../misc/enhancers/stickySupport';
 import Media from '../../media/index';
-import { lists, getClassNameFromProps } from '../../../../utils/GeoStoryUtils';
+import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
 import ContentToolbar from '../../contents/ContentToolbar';
 
 /**
@@ -23,10 +23,15 @@ class Background extends Component {
 
     static propTypes = {
         mode: PropTypes.string,
+        fit: PropTypes.string,
+        size: PropTypes.string,
+        path: PropTypes.string,
         height: PropTypes.number,
         width: PropTypes.number,
         tools: PropTypes.array,
         style: PropTypes.object,
+        add: PropTypes.func,
+        editMedia: PropTypes.func,
         update: PropTypes.func,
         type: PropTypes.oneOf(lists.MediaTypes)
     };
@@ -34,6 +39,7 @@ class Background extends Component {
     static defaultProps = {
         height: 0,
         type: "image",
+        size: "full",
         width: 0,
         style: {}
     };
@@ -51,10 +57,11 @@ class Background extends Component {
                     style={{ height: this.props.height }}>
                     {MediaType && <MediaType { ...this.props } />}
                 >
+                { this.props.mode === Modes.EDIT &&
                 <ContentToolbar
                     {...this.props}
                     tools={this.props.tools && this.props.tools[this.props.type]}
-                    />
+                    />}
                 </div>
 
             </div>

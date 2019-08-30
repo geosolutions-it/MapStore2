@@ -32,15 +32,14 @@ describe("GeoStory", () => {
     });
     it('test getClassNameFromProps class creator', () => {
         let classes = getClassNameFromProps({}); // defaults
-        expect(classes).toBe(" ms-bright ms-align-center ms-size-large ms-size-cover");
+        expect(classes).toBe(" ms-bright ms-align-center ms-size-large");
 
         classes = getClassNameFromProps({
             theme: "dark",
-            fit: "fit",
             align: "left",
             size: "medium"
         }); // with custom params
-        expect(classes).toBe(" ms-dark ms-align-left ms-size-medium ms-size-fit");
+        expect(classes).toBe(" ms-dark ms-align-left ms-size-medium");
     });
 
     it("test StoryTypes", () => {

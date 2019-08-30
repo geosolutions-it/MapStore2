@@ -48,14 +48,12 @@ export const SAMPLE_HTML = "<p>insert text here...</p>";
  * @prop {string} theme one of 'bright', 'dark', 'dark-transparent' or 'bright-transparent'
  * @prop {string} align one of 'center', 'left' or 'right'
  * @prop {string} size one of 'full', 'large', 'medium' or 'small'
- * @prop {string} fit one of 'cover' or 'fit'
  */
-export const getClassNameFromProps = ({ theme = 'bright', align = 'center', size = 'large', fit = 'cover' }) => {
+export const getClassNameFromProps = ({ theme = 'bright', align = 'center', size = 'large' }) => {
     const themeClassName = ` ms-${theme}`;
     const alignClassName = ` ms-align-${align}`;
     const sizeClassName = ` ms-size-${size}`;
-    const fitClassName = ` ms-size-${fit}`;
-    return `${themeClassName}${alignClassName}${sizeClassName}${fitClassName}`;
+    return `${themeClassName}${alignClassName}${sizeClassName}`;
 };
 
 /**
@@ -117,7 +115,6 @@ export const getDefaultSectionTemplate = (type) => {
                 background: {
                     type: "image",
                     fit: 'cover'
-
                 },
                 align: 'left',
                 size: 'medium'

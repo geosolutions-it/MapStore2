@@ -11,9 +11,10 @@ import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
 import Message from '../../I18N/Message';
+// import {ContentTypes} from '../../../utils/GeoStoryUtils';
 
 const toolButtons = {
-    size: ({ size, update }) => ({
+    size: ({ size, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={size}
             glyph="resize-horizontal"
@@ -33,7 +34,7 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('size', selected)}/>
     }),
-    align: ({ size, align, update }) => ({
+    align: ({ size, align, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={align}
             disabled={size === 'full'}
@@ -54,7 +55,7 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('align', selected)}/>
     }),
-    theme: ({ theme, update }) => ({
+    theme: ({ theme, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={theme}
             glyph="dropper"
@@ -74,13 +75,22 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('theme', selected)}/>
     }),
-    fit: ({ fit, update }) => ({
+    fit: ({ fit, update = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: fit,
         glyph: "1-full-screen",
         visible: true,
-        tooltipId: fit === "fit" ? "geostory.contentToolbar.fit" : "geostory.contentToolbar.cover",
-        onClick: () => update('fit', fit === "fit" ? "cover" : "fit") // toggle
+        tooltipId: fit === "contain" ? "geostory.contentToolbar.fit" : "geostory.contentToolbar.cover",
+        onClick: () => update('fit', fit === "contain" ? "cover" : "contain") // toggle
+    }),
+    editMedia: ({ path, editMedia = () => {} }) => ({
+        // using normal ToolbarButton because this has no options
+        glyph: "pencil",
+        visible: true,
+        tooltipId: "geostory.contentToolbar.edit",
+        onClick: () => {
+            editMedia({path});
+        }
     })
 };
 
@@ -90,6 +100,7 @@ const toolButtons = {
  * @prop {string} size one of `small`, `medium`, `large` and `full`
  * @prop {string} align one of `left`, `center` and `right`
  * @prop {string} theme one of `bright`, `bright-text`, `dark` and `dark-text`
+ * @prop {string} fit one of `contain` and `cover`
  * @prop {function} update handler for select properties events, parameters (key, value)
  * @example
  */

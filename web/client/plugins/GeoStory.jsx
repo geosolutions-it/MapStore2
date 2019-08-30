@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {createPlugin} from '../utils/PluginsUtils';
 import { add, update } from '../actions/geostory';
+import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
 import { currentStorySelector, modeSelector } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
@@ -44,7 +45,8 @@ export default createPlugin("GeoStory", {
             story: currentStorySelector
         }), {
             add,
-            update
+            update,
+            editMedia
         },
     )(GeoStory),
     reducers: {

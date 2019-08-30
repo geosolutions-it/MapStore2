@@ -14,7 +14,8 @@ import axios from '../../libs/ajax';
 
 import {
     loadGeostoryEpic,
-    openMediaEditorForNewMedia
+    openMediaEditorForNewMedia,
+    editMediaForBackgroundEpic
 } from '../geostory';
 import {
     LOADING_GEOSTORY,
@@ -26,8 +27,9 @@ import {
 } from '../../actions/geostory';
 import {
     SHOW,
-    hide,
-    chooseMedia
+    SELECT_ITEM,
+    chooseMedia,
+    editMedia
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic} from './epicTestUtils';
@@ -271,13 +273,11 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
-    // TODO: finish to test also takeUntil flow
-    it.skip('openMediaEditorForNewMedia showing media and updating story and hide', (done) => {
-        const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(openMediaEditorForNewMedia), NUM_ACTIONS, [
-            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
-            chooseMedia({id: "geostory"}),
-            hide()
+    it('editMediaForBackgroundEpic showing media and updating story', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostory"}),
+            chooseMedia({id: "geostory"})
         ], (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(a => {
@@ -285,10 +285,13 @@ describe('Geostory Epics', () => {
                     case UPDATE:
                         expect(a.element).toEqual("geostory");
                         expect(a.mode).toEqual("replace");
-                        expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}].resourceId`);
+                        expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}].resourceId`);
                         break;
                     case SHOW:
                         expect(a.owner).toEqual("geostory");
+                        break;
+                    case SELECT_ITEM:
+                        expect(a.id).toEqual("resource_id");
                         break;
                     default: expect(true).toBe(false);
                         break;
@@ -296,7 +299,17 @@ describe('Geostory Epics', () => {
             });
             done();
         }, {
-            geostory: {}
+            geostory: {
+                currentStory: {
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resource_id"
+                        }]
+                    }]
+                }
+            }
         });
     });
 });

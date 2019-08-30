@@ -39,7 +39,7 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS}/>, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
@@ -58,7 +58,7 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover />, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
@@ -83,7 +83,7 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false} />, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false} mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
@@ -92,7 +92,7 @@ describe('Title component', () => {
         expect(sectionContents).toExist();
         expect(sectionContents.clientHeight < VIEW_HEIGHT).toBe(true);
 
-        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        const backgroundContainer = container.querySelector('.ms-section-background');
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(sectionContents.clientHeight);
         const contentToolbar = container.querySelector('.ms-content-toolbar');

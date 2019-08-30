@@ -6,7 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { set, compose } from '../utils/ImmutableUtils';
-import { ADDING_MEDIA, CHOOSE_MEDIA, EDITING_MEDIA, HIDE, LOAD_MEDIA_SUCCESS, SELECT_ITEM, SHOW} from '../actions/mediaEditor';
+import {
+    ADDING_MEDIA,
+    CHOOSE_MEDIA,
+    EDITING_MEDIA,
+    HIDE,
+    LOAD_MEDIA_SUCCESS,
+    SELECT_ITEM,
+    SHOW
+} from '../actions/mediaEditor';
 
 export const DEFAULT_STATE = {
     open: false,
