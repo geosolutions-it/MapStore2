@@ -203,6 +203,18 @@ describe('Test the mapInfo reducer', () => {
         state = mapInfo({ clickPoint: 'oldP' }, featureInfoClick("p"));
         expect(state.clickPoint).toExist();
         expect(state.clickPoint).toBe('p');
+
+        const overrideParams = {"ws:layername": {info_format: "application/json"}};
+        const filterNameList = ["ws:layername"];
+        const layer = {};
+        const itemId = "ws:layername_1";
+        state = mapInfo({ clickPoint: 'oldP' }, featureInfoClick("p", layer, filterNameList, overrideParams, itemId ));
+        expect(state.clickPoint).toExist();
+        expect(state.clickPoint).toEqual('p');
+        expect(state.clickLayer).toEqual(layer);
+        expect(state.filterNameList).toEqual(filterNameList);
+        expect(state.overrideParams).toEqual(overrideParams);
+        expect(state.itemId).toEqual(itemId);
     });
 
     it('enables map info', () => {

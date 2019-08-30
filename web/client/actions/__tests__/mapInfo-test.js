@@ -94,15 +94,17 @@ describe('Test correctness of the map actions', () => {
         const point = {latlng: {lat: 1, lng: 3}};
         const layer = {id: "layer.1"};
         const filterNameList = [];
+        const itemId = "itemId";
         const overrideParams = {cql_filter: "ID_ORIG=1234"};
 
-        const action = featureInfoClick(point, layer, filterNameList, overrideParams);
+        const action = featureInfoClick(point, layer, filterNameList, overrideParams, itemId);
         expect(action).toExist();
         expect(action.type).toBe(FEATURE_INFO_CLICK);
         expect(action.point).toBe(point);
         expect(action.layer).toBe(layer);
         expect(action.filterNameList).toBe(filterNameList);
         expect(action.overrideParams).toBe(overrideParams);
+        expect(action.itemId).toBe(itemId);
     });
     it('reset reverse geocode data', () => {
         const e = hideMapinfoRevGeocode();

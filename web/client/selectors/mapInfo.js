@@ -51,7 +51,9 @@ const measureActiveSelector = (state) => get(state, "controls.measure.enabled") 
 const clickPointSelector = state => state && state.mapInfo && state.mapInfo.clickPoint;
 const clickLayerSelector = state => state && state.mapInfo && state.mapInfo.clickLayer;
 const showMarkerSelector = state => state && state.mapInfo && state.mapInfo.showMarker;
-
+const itemIdSelector = state => get(state, "mapInfo.itemId", null);
+const overrideParamsSelector = state => get(state, "mapInfo.overrideParams", {});
+const filterNameListSelector = state => get(state, "mapInfo.filterNameList", []);
 const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
@@ -190,5 +192,8 @@ module.exports = {
     stopGetFeatureInfoSelector,
     showEmptyMessageGFISelector,
     mapInfoConfigurationSelector,
-    isHighlightEnabledSelector
+    isHighlightEnabledSelector,
+    itemIdSelector,
+    overrideParamsSelector,
+    filterNameListSelector
 };

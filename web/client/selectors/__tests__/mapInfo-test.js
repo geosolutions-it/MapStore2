@@ -18,7 +18,10 @@ const {
     showEmptyMessageGFISelector,
     clickPointSelector,
     clickedPointWithFeaturesSelector,
-    highlightStyleSelector
+    highlightStyleSelector,
+    itemIdSelector,
+    filterNameListSelector,
+    overrideParamsSelector
 } = require('../mapInfo');
 
 const QUERY_PARAMS = {
@@ -257,6 +260,21 @@ describe('Test mapinfo selectors', () => {
                 highlightStyle: TEST
             }
         })).toBe(TEST);
+    });
+    it('test clickPointSelector', () => {
+        expect(clickPointSelector(RESPONSE_STATE)).toBe(RESPONSE_STATE.mapInfo.clickPoint);
+    });
+    it('test itemIdSelector', () => {
+        const itemId = "itemId";
+        expect(itemIdSelector({mapInfo: {...RESPONSE_STATE, itemId}})).toBe(itemId);
+    });
+    it('test filterNameListSelector', () => {
+        const filterNameList = ["layer"];
+        expect(filterNameListSelector({mapInfo: {...RESPONSE_STATE, filterNameList}})).toEqual(filterNameList);
+    });
+    it('test overrideParamsSelector', () => {
+        const overrideParams = {"ws:layername": {info_format: "application/json"}};
+        expect(overrideParamsSelector({mapInfo: {...RESPONSE_STATE, overrideParams}})).toEqual(overrideParams);
     });
     it('test clickPointSelector', () => {
         expect(clickPointSelector(RESPONSE_STATE)).toBe(RESPONSE_STATE.mapInfo.clickPoint);
