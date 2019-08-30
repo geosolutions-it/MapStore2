@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "Došlo je do greške prilikom učitavanja kontrolnih ploča"
             },
             "maps": {
-                "title": "Karte ({count})"
+                "title": "Karte ({count})",
+                "noMapAvailable": "Karta nije dostupna",
+                "createNewOne": "Izradite novi"
             }
         },
         "map": {

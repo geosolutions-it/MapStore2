@@ -307,7 +307,9 @@
                 "errorLoadingDashboards": "Ocorreu um erro ao abrir os dashboards"
             },
             "maps": {
-                "title": "Mapas ({count})"
+                "title": "Mapas ({count})",
+                "noMapAvailable": "Nenhum mapa disponível",
+                "createNewOne": "Crie um novo"
             }
         },
         "map": {

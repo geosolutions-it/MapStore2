@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "There was an error loading dashboards"
             },
             "maps": {
-                "title": "Maps ({count})"
+                "title": "Maps ({count})",
+                "noMapAvailable": "没有可用的地图",
+                "createNewOne": "创建一个新的"
             }
         },
         "map": {
