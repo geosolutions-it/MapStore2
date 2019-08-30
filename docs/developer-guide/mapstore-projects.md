@@ -1,5 +1,5 @@
 # MapStore Projects
-MapStore projects can be created using the [Project Creation Script](project-creation-script).
+MapStore projects can be created using the [Project Creation Script](../project-creation-script).
 
 A MapStore project is a custom WebGis application that uses MapStore as a framework.
 

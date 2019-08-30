@@ -8,7 +8,7 @@
 
 const {
     MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING,
-    MAP_METADATA_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
+    MAP_METADATA_UPDATED, MAP_DELETING, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING,
     MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED, SHOW_DETAILS} = require('../actions/maps');
 const {
@@ -162,17 +162,7 @@ function maps(state = {
         }
         return assign({}, state, {results: newMaps});
     }
-    case MAP_DELETED: {
-        let newMaps = state.results === "" ? [] : [...state.results];
-        let newMapsState = {
-            results: newMaps.filter(function(el) {
-                return el.id && el.id !== action.resourceId;
-            }),
-            totalCount: state.totalCount - 1
-        };
 
-        return assign({}, state, newMapsState);
-    }
     case MAP_CREATED: {
         let newMaps = state.results === "" ? [] : [...state.results];
         let newMapsState = {

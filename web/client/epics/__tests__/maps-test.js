@@ -14,8 +14,8 @@ const {
     saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED,
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
-    MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET,
-    saveMapResource, MAP_CREATED, DISPLAY_METADATA_EDIT, SAVING_MAP, MAP_UPDATING
+    MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
+    saveMapResource, MAP_CREATED, DISPLAY_METADATA_EDIT, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP
 } = require('../../actions/maps');
 const { mapInfoLoaded } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -27,7 +27,7 @@ const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
     fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic} = require('../maps');
+    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -580,5 +580,14 @@ describe('Create and update flow using persistence api', () => {
             });
             done();
         });
+    });
+
+    it('test reloadMaps', function(done) {
+        const callback = actions => {
+            expect(actions.length).toEqual(1);
+            expect(actions[0].type).toEqual(MAPS_LOAD_MAP);
+            done();
+        };
+        testEpic(reloadMapsEpic, 1, mapDeleted(9, 'success'), callback);
     });
 });

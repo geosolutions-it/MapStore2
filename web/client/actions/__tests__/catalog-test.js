@@ -15,16 +15,47 @@ const service = {
 };
 const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
-const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
-     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
+const {
+    addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, textSearch, TEXT_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
+    focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
     SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
-    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING
+    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING,
+    recordsNotFound
 } = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
+const {SHOW_NOTIFICATION} = require('../notifications');
 describe('Test correctness of the catalog actions', () => {
 
+    it('addLayersMapViewerUrl', () => {
+        const layers = ["layer name"];
+        const sources = ["catalog name"];
+        const retval = addLayersMapViewerUrl(layers, sources);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_LAYERS_FROM_CATALOGS);
+        expect(retval.layers).toEqual(layers);
+        expect(retval.sources).toEqual(sources);
+    });
+    it('textSearch', () => {
+        const format = "csw";
+        const urlValue = "url";
+        const startPosition = 1;
+        const maxRecords = 1;
+        const text = "text";
+        const options = {};
+        const retval = textSearch({format, url: urlValue, startPosition, maxRecords, text, options});
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(TEXT_SEARCH);
+        expect(retval.format).toBe(format);
+        expect(retval.url).toBe(urlValue);
+        expect(retval.startPosition).toBe(startPosition);
+        expect(retval.maxRecords).toBe(maxRecords);
+        expect(retval.text).toBe(text);
+        expect(retval.options).toEqual(options);
+    });
     it('deleteCatalogService', () => {
         var retval = deleteCatalogService(service);
 
@@ -265,5 +296,11 @@ describe('Test correctness of the catalog actions', () => {
         const action = changeMetadataTemplate("${title}");
         expect(action.type).toBe(CHANGE_METADATA_TEMPLATE);
         expect(action.metadataTemplate).toBe("${title}");
+    });
+    it('test recordsNotFound action', () => {
+        const action = recordsNotFound("topp:states , topp:states-tasmania");
+        expect(action.type).toBe(SHOW_NOTIFICATION);
+        expect(action.message).toBe("catalog.notification.errorSearchingRecords");
+        expect(action.values).toEqual({records: "topp:states , topp:states-tasmania"});
     });
 });

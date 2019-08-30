@@ -7,6 +7,7 @@
  */
 const Rx = require('rxjs');
 const { MAPS_LIST_LOADING, ATTRIBUTE_UPDATED} = require('../actions/maps');
+const { MAP_DELETED } = require('../actions/maps');
 const { DASHBOARD_SAVED } = require('../actions/dashboard');
 
 const { SEARCH_DASHBOARDS, DELETE_DASHBOARD, DASHBOARD_DELETED, RELOAD, searchDashboards, dashboardListLoaded, dashboardDeleted, dashboardsLoading } = require('../actions/dashboards');
@@ -73,7 +74,7 @@ module.exports = {
             }))
         )),
     reloadOnDashboards: (action$, { getState = () => { } }) =>
-        action$.ofType(DASHBOARD_DELETED, RELOAD, ATTRIBUTE_UPDATED, DASHBOARD_SAVED)
+        action$.ofType(DASHBOARD_DELETED, MAP_DELETED, RELOAD, ATTRIBUTE_UPDATED, DASHBOARD_SAVED)
             .delay(1000) // delay as a workaround for geostore issue #178
             .switchMap( () => Rx.Observable.of(searchDashboards(
                 searchTextSelector(getState()),

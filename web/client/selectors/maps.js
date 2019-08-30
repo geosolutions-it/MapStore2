@@ -24,6 +24,8 @@ const mapDescriptionSelector = (state, id) => mapFromIdSelector(state, id) && ma
 const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).details || "";
 const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).permissions || "";
 const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).thumbnail || "";
+const searchTextSelector = state => state && state.maps && state.maps.searchText;
+const searchParamsSelector = state => ({start: get(state, 'maps.start'), limit: get(state, 'maps.limit')});
 /**
  * Get flag for enable/disable of the map card details
  * @function
@@ -44,5 +46,7 @@ module.exports = {
     mapDescriptionSelector,
     mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector,
-    mapThumbnailsUriFromIdSelector
+    mapThumbnailsUriFromIdSelector,
+    searchTextSelector,
+    searchParamsSelector
 };

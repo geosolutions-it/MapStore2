@@ -48,7 +48,7 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "format": "aeronautical",
+          "format": "decimal",
           "defaultTextAnnotation": "New"
         },
         "maptype": {
@@ -165,7 +165,9 @@
                 "cfg": {
                     "activateMetedataTool": false,
                     "activateMapTitle": false,
-                    "activateSortLayer": false
+                    "activateSortLayer": false,
+                    "activateLayerFilterTool": false,
+                    "activateQueryTool": false
                 }
             }, "AddGroup", {
                 "name": "TOCItemsSettings",
@@ -296,7 +298,12 @@
             "AddGroup",
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
-                "name": "Measure"
+                "name": "Measure",
+                "cfg": {
+                  "defaultOptions": {
+                    "showAddAsAnnotation": true
+                  }
+                }
             }, "Print", "MapImport", "MapExport", {
                 "name": "Settings",
                 "cfg": {

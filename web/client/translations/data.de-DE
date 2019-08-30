@@ -600,13 +600,22 @@
             "s_wfs_props_label" : "WFS-Service-Requisiten",
             "s_wfs_opt_props_label" : "Optionale Requisiten",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",
-            "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
+            "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, niedrigere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
             "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
             "errors": {
                 "nonQueriableLayers": "Der in der URL angegebene Layer ist nicht abfragbar oder in der Karte nicht sichtbar.",
                 "serverError": "Der Server hat beim Ausführen der GetFeatureInfo-Anforderung einen Fehler zurückgegeben. Überprüfen Sie, ob die Parameter korrekt sind"
+            },
+            "s_launch_info_panel": {
+                "label": "Starten Sie das Infofenster",
+                "no_info": "Keine Infos",
+                "all_layers": "Alle Schichten",
+                "single_layer": "Einzelne Schicht",
+                "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
+                "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
+                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind"
             }
         },
         "draw": {
@@ -1129,6 +1138,8 @@
             "advancedSettings": "Erweiterte Einstellungen",
             "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Einige Datensätze wurden nicht gefunden: {records} . Bitte überprüfen Sie die URL des Abfrageparameters",
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
                 "duplicatedServiceTitle": "Ein Service mit diesem Titel existiert bereits, bitte ändere den Titel",

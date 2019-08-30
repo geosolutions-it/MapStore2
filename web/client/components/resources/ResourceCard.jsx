@@ -139,9 +139,10 @@ class ResourceCard extends React.Component {
                     onHide={this.close}
                     onClose={this.close}
                     onConfirm={this.onConfirmDelete}
-                    title={<Message msgId="resources.deleteConfirmTitle" />}
-                    confirmText={<Message msgId="resources.deleteConfirmButtonText" />}
-                    cancelText={<Message msgId="resources.deleteCancelButtonText" />}>
+                    title={this.props.resource.title || this.props.resource.name || <Message msgId="resources.deleteConfirmTitle" />}
+                    cancelText={<Message msgId="no" />}
+                    confirmText={<Message msgId="yes" />}
+                >
                     <Message msgId="resources.deleteConfirmMessage" />
                 </ConfirmModal>
             </GridCard>

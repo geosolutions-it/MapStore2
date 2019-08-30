@@ -16,7 +16,7 @@ const {set} = require('../../utils/ImmutableUtils');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults} = require('../../actions/mapInfo');
 const {configureMap} = require('../../actions/config');
 const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
-const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
+const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, startDrawing, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
     resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION
 } = require('../../actions/annotations');
@@ -853,6 +853,26 @@ describe('annotations Epics', () => {
             }
         });
 
+        store.dispatch(action);
+    });
+
+    it('should safely start drawing annotation when no annotation config provided', (done) => {
+        store = mockStore({
+            annotations: {
+                editing: {
+                    features: [{}]
+                }
+            }
+        });
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = startDrawing();
         store.dispatch(action);
     });
 

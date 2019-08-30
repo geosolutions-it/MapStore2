@@ -5,7 +5,8 @@ The Timeline is an useful tool for managing layers with a time dimension.
 It makes possible to observe the layers' evolution over time, to inspect the layer configuration at a specific time instant (or in a time range) and to view different layer configurations time by time dynamically through animations.<br>
 
 !!! warning
-    Timeline actually works only with **WMTS-Multidim extension** (WMS time in capabilities is not fully supported). From now on, the layers that the Timeline can manage will be addressed as ***time layers***.
+    Timeline actually works only with [**WMTS-Multidim extension**](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) (WMS time in capabilities is not fully supported) and at least **GeoServer 2.14.5**. Anyway to support all the functionality you need **GeoServer 2.15.2**.
+    From now on, the layers that the Timeline can manage will be addressed as ***time layers***.
 
 When you load ***time layers*** the Timeline panel becomes automatically visible and allows you to take a look at the main functionalities.
 
@@ -43,6 +44,12 @@ If you want to observe the layers in a finite fixed time interval you can set a 
 
 <img src="../img/timeline-current-time-range.jpg" />
 
+Sometimes you may be interested to show on the timeline only the times actually visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync Button** <img src="../img/timeline-sync-button.jpg" style="max-width:24px;"/>. When this tool is active the timeline will show only the times of the features available in the current map viewport.
+
+!!! Note
+    Map Sync feature need at least **GeoServer 2.15.2**
+
+<img src="../img/timeline-sync-example.jpg" />
 
 Animations
 ----------

@@ -19,7 +19,7 @@ To dispatch additional actions when the map viewer is started, the **actions** q
   "initialActionsWhiteList": ["ZOOM_TO_EXTENT", "ADD_LAYER", ...]
 ```
 
-The value of this paramater is a JSON string containing an array with an object per action. The structure of the object consist of a property type and a bunch of other properties depending on the action.
+The value of this parameter is a JSON string containing an array with an object per action. The structure of the object consist of a property type and a bunch of other properties depending on the action.
 
 ### Available actions
 Only the following actions can be used in the **actions** json string.
@@ -74,3 +74,23 @@ The MapStore invocation URL above executes the following operations:
 - Execution of a map zoom to the provided extent
 
 For more details check out the [searchLayerWithFilter](https://mapstore2.geo-solutions.it/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
+
+
+#### Add Layers
+
+This action allows to add layers directly to the map by taking them from the Catalogs
+
+Requirements:
+
+- The number of layers should match the number of sources
+- The source name must match a catalog service name present in the map
+
+Example:
+```
+{
+    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
+    "layers": ["workspace1:layer1", "workspace2:layer2"],
+    "sources": ["catalog1", "catalog2"]
+}
+?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2"],"sources":["catalog1", "catalog2"]}]
+```
