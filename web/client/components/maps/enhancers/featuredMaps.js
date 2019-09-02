@@ -109,15 +109,17 @@ const updateItemsLifecycle = compose(
                 pageSize = 4,
                 onChangeSize = () => {},
                 previousItems,
-                onUpdatePreviousItems = () => {}
+                onUpdatePreviousItems = () => {},
+                enableFeaturedMaps = () => {}
             } = this.props;
             if (!isEqual(newProps.items, items)) {
 
                 onUpdatePreviousItems(items);
-
                 if (newProps.items.length > 0) {
+                    enableFeaturedMaps(true);
                     onChangeSize(Math.ceil(newProps.items.length / pageSize) * pageSize);
                 } else if (newProps.items.length === 0 && newProps.searchText !== '*' && newProps.searchText) {
+                    enableFeaturedMaps(false);
                     onUpdatePreviousItems(null);
                 }
 
