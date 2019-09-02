@@ -251,8 +251,36 @@
                 box-shadow: none;
             }
         }
-
-        &.ms-section-immersive { /**/ }
+        // immersive
+        &.ms-section-immersive {
+            // column contents overrides
+            .ms-content-column {
+                    display: flex; // align vertically the content
+                    pointer-events: none; // pass pointer events to background (this div takes full width and eight)
+                .ms-content-body {
+                    // TODO
+                    &>.ms-content-toolbar {
+                        position: absolute;
+                        transform: translate(-@square-btn-medium-size / 2, -60%);
+                        padding: 0;
+                        .shadow-far;
+                    }
+                    pointer-events: auto; // reset pointer-events: none of the body
+                    width: 100%;
+                    margin: auto; // align vertically
+                    .ms-column-contents {
+                        // override default class and width of the content
+                        .ms-content-text {
+                            &.ms-size-full { width: 100%; }
+                            &.ms-size-large { width: 100%; }
+                            &.ms-size-medium { width: 100%; }
+                            &.ms-size-small { width: 100%; }
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     ////////////
@@ -382,6 +410,15 @@
                 background-color: transparent;
             }
         }
+        .ms-content-image {
+            .ms-content-toolbar {
+                    position: absolute;
+                    padding: 8px;
+                    z-index: 2;
+                    top: 0;
+                    .shadow-far;
+                }
+        }
 
         /* size of content */
         &.ms-size-full { width: @ms-story-size-full; }
@@ -393,7 +430,9 @@
         &.ms-align-center { .ms-story-align-center(); }
         &.ms-align-left { .ms-story-align-left(); }
         &.ms-align-right { .ms-story-align-right(); }
+
     }
+
 
     //////////
     // MEDIA
