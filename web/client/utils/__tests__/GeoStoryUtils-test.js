@@ -13,6 +13,7 @@ import {
     getClassNameFromProps,
     StoryTypes,
     SectionTypes,
+    SectionTemplates,
     ContentTypes,
     MediaTypes,
     Modes,
@@ -101,10 +102,10 @@ describe("GeoStory", () => {
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
         });
-        it("SectionTypes.MEDIA", () => {
-            const data = getDefaultSectionTemplate(SectionTypes.MEDIA);
+        it("SectionTemplates.MEDIA", () => {
+            const data = getDefaultSectionTemplate(SectionTemplates.MEDIA);
             expect(data.id).toExist();
-            expect(data.type).toBe(SectionTypes.MEDIA);
+            expect(data.type).toBe(SectionTypes.PARAGRAPH);
             expect(data.title).toBe("Media Section");
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];

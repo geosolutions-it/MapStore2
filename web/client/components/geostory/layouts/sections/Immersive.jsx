@@ -11,7 +11,7 @@ import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -90,7 +90,7 @@ const Immersive = ({
                 glyph: 'picture',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
-                    add(`sections`, id, ContentTypes.MEDIA);
+                    add(`sections`, id, SectionTemplates.MEDIA);
                 }
             }]}/>}
     </section>

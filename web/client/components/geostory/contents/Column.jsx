@@ -9,7 +9,7 @@ import React from "react";
 import ContentBase from './Content';
 import Contents from './Contents';
 import ContentWrapper from './ContentWrapper';
-import { ContentTypes, MediaTypes, SectionTypes } from '../../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes, SectionTemplates } from '../../../utils/GeoStoryUtils';
 
 import { nest, compose, setDisplayName } from "recompose";
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);

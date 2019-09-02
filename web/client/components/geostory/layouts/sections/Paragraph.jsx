@@ -7,7 +7,7 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes, ContentTypes} from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes, ContentTypes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
 import SectionContents from "../../contents/SectionContents";
 
 
@@ -36,7 +36,7 @@ export default ({
             update={update}
             sectionId={id}
             tools={{
-                [ContentTypes.COLUMN]: ['editMedia', 'size', 'align']
+                [ContentTypes.COLUMN]: ['size', 'align']
             }}
             />
         {mode === Modes.EDIT && <AddBar
@@ -67,7 +67,7 @@ export default ({
                 glyph: 'picture',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
-                    add(`sections`, id, SectionTypes.MEDIA);
+                    add(`sections`, id, ContentTypes.MEDIA);
                 }
             }]}
         />}

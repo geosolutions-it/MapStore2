@@ -62,7 +62,7 @@
         position: relative;
         /*
         we should not use bootstrap components inside our custom component
-        in particular Row and Col because their behaviours rely on the screen page width
+        in particular Row and Col because their behaviors rely on the screen page width
         */
         .row {
             margin: 0;
@@ -216,7 +216,6 @@
                     position: absolute;
                     transform: translate(-@square-btn-medium-size / 2, -60%);
                     padding: 0;
-                    .shadow-far;
                 }
                 /* text on full size should fill all the width of container */
                 &.ms-size-full {
@@ -263,7 +262,7 @@
                         position: absolute;
                         transform: translate(-@square-btn-medium-size / 2, -60%);
                         padding: 0;
-                        .shadow-far;
+                        .shadow-far();
                     }
                     pointer-events: auto; // reset pointer-events: none of the body
                     width: 100%;
@@ -416,7 +415,9 @@
                     padding: 8px;
                     z-index: 2;
                     top: 0;
-                    .shadow-far;
+                    &>.btn-group {
+                        .shadow-far();
+                    }
                 }
         }
 

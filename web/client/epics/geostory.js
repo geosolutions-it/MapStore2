@@ -41,7 +41,7 @@ import { ContentTypes, SectionTypes } from '../utils/GeoStoryUtils';
  */
 export const openMediaEditorForNewMedia = action$ =>
     action$.ofType(ADD)
-        .filter(({ element }) => element.type === ContentTypes.MEDIA)
+        .filter(({ element = {} }) => element.type === ContentTypes.MEDIA)
         .switchMap(({path: arrayPath, element}) => {
             return Observable.of(
                     show('geostory') // open mediaEditor

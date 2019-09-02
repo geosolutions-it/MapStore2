@@ -108,7 +108,7 @@ export const getDefaultSectionTemplate = (type) => {
                 title: "Immersive Section", // TODO I18N
                 contents: [getDefaultSectionTemplate(ContentTypes.COLUMN)]
             };
-        case ContentTypes.MEDIA: {
+        case SectionTemplates.MEDIA: {
             return {
                 id: uuid(),
                 type: SectionTypes.PARAGRAPH,
