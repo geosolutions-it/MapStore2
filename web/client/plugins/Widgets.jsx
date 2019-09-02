@@ -110,10 +110,12 @@ compose(
 
 class Widgets extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        shortenChartLabelThreshold: PropTypes.number
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        shortenChartLabelThreshold: 1000
     };
     render() {
         return this.props.enabled ? <WidgetsView {...this.props /* pass options to the plugin */ } /> : null;
