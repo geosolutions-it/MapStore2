@@ -16,7 +16,7 @@ import { queryableLayersSelector, getLayerFromName } from '../selectors/layers';
 
 import { updateAdditionalLayer } from '../actions/additionallayers';
 import { showMapinfoMarker, featureInfoClick} from '../actions/mapInfo';
-import { changeMapView, zoomToPoint} from '../actions/map';
+import { zoomToExtent, zoomToPoint} from '../actions/map';
 import {
     SEARCH_LAYER_WITH_FILTER,
     TEXT_SEARCH_STARTED,
@@ -36,7 +36,6 @@ import {
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import mapUtils from '../utils/MapUtils';
 import {defaultIconStyle} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
@@ -149,24 +148,9 @@ export const searchItemSelected = action$ =>
                 }
 
                 let bbox = item.bbox || item.properties.bbox || toBbox(item);
-                let mapSize = action.mapConfig.size;
-                // zoom by the max. extent defined in the map's config
-                let newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", action.mapConfig.projection), mapSize, 0, 21, null);
-
-                // center by the max. extent defined in the map's config
-                let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
 
                 let actions = [
-                    changeMapView(newCenter, newZoom, {
-                        bounds: {
-                            minx: bbox[0],
-                            miny: bbox[1],
-                            maxx: bbox[2],
-                            maxy: bbox[3]
-                        },
-                        crs: "EPSG:4326",
-                        rotation: 0
-                    }, action.mapConfig.size, null, action.mapConfig.projection),
+                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326"),
                     addMarker(item)
                 ];
                 return actions;

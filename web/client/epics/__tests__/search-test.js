@@ -27,7 +27,7 @@ const {
 } = require('../../actions/search');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const {CHANGE_MAP_VIEW, ZOOM_TO_POINT} = require('../../actions/map');
+const {CHANGE_MAP_VIEW, ZOOM_TO_EXTENT, ZOOM_TO_POINT} = require('../../actions/map');
 const {UPDATE_ADDITIONAL_LAYER} = require('../../actions/additionallayers');
 const {searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic } = require('../search');
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic);
@@ -219,7 +219,7 @@ describe('search Epics', () => {
 
         let actions = store.getActions();
         expect(actions.length).toBe(6);
-        let expectedActions = [CHANGE_MAP_VIEW, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
+        let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
         let actionsType = actions.map(a => a.type);
 
         expectedActions.forEach((a) => {
