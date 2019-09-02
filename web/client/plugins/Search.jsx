@@ -178,6 +178,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
  * it has the following values:
  * - undefined | not configured, it does not perform the GFI request
+ * Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
  * - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
  * - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
  */
