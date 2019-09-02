@@ -150,7 +150,7 @@ export const searchItemSelected = action$ =>
                 let bbox = item.bbox || item.properties.bbox || toBbox(item);
 
                 let actions = [
-                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326"),
+                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
                     addMarker(item)
                 ];
                 return actions;
