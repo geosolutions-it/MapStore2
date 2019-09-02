@@ -15,7 +15,6 @@ import Title from './Title';
 
 const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
-    [SectionTypes.MEDIA]: Paragraph,
     [SectionTypes.PARAGRAPH]: Paragraph,
     [SectionTypes.TITLE]: Title,
     UNKNOWN: ({type}) => <div className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>

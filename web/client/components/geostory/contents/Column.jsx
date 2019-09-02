@@ -40,7 +40,7 @@ export default ({
             update={update}
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'size', 'align'],
-                [SectionTypes.MEDIA]: ['editMedia', 'size', 'align'],
+                [ContentTypes.MEDIA]: ['editMedia', 'size', 'align'],
                 [MediaTypes.VIDEO]: ['editMedia'] // TODO change this list for video
             }}
             addButtons={[{

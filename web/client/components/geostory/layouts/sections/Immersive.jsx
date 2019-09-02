@@ -90,7 +90,7 @@ const Immersive = ({
                 glyph: 'picture',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
-                    add(`sections`, id, SectionTypes.MEDIA);
+                    add(`sections`, id, ContentTypes.MEDIA);
                 }
             }]}/>}
     </section>
