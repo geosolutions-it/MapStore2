@@ -31,6 +31,10 @@ class Image extends Component {
     static propTypes = {
         src: PropTypes.string,
         fit: PropTypes.string,
+        description: PropTypes.string,
+        descriptionEnabled: PropTypes.bool,
+        credits: PropTypes.string,
+        altText: PropTypes.string,
         enableFullscreen: PropTypes.bool,
         fullscreen: PropTypes.bool,
         onClick: PropTypes.func
@@ -52,7 +56,10 @@ class Image extends Component {
             fit = 'cover',
             enableFullscreen,
             fullscreen,
-            onClick
+            onClick,
+            description,
+            descriptionEnabled = true,
+            credits
         } = this.props;
         return (
             <div
@@ -68,6 +75,16 @@ class Image extends Component {
 
                         cursor: enableFullscreen ? 'pointer' : 'default'
                     }}/>
+                {credits && <div className="ms-media-credits">
+                    <small>
+                        {credits}
+                    </small>
+                </div>}
+                {descriptionEnabled && description && <div className="ms-media-description">
+                    <small>
+                        {description}
+                    </small>
+                </div>}
                 {enableFullscreen && fullscreen ?
                     <Lightbox
                         mainSrc={src}

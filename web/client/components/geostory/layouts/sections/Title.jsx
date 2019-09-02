@@ -70,7 +70,8 @@ export default backgroundPropWithHandler(({
                 contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
             }}
             tools={{
-                [ContentTypes.TEXT]: ['size', 'align', 'theme']
+                [ContentTypes.TEXT]: ['size', 'align', 'theme'],
+                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align']
             }}
         />
         {mode === Modes.EDIT && <AddBar
@@ -97,13 +98,13 @@ export default backgroundPropWithHandler(({
                     // TODO: add
                     add('sections', id, SectionTypes.IMMERSIVE);
                 }
-            }/*,
+            },
             {
                 glyph: 'picture',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.MEDIA);
                 }
-            }*/]}/>}
+            }]}/>}
     </section>
 ));

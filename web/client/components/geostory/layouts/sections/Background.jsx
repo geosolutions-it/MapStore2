@@ -26,6 +26,8 @@ class Background extends Component {
         fit: PropTypes.string,
         size: PropTypes.string,
         path: PropTypes.string,
+        credits: PropTypes.string,
+        description: PropTypes.string,
         height: PropTypes.number,
         width: PropTypes.number,
         tools: PropTypes.array,
@@ -55,7 +57,7 @@ class Background extends Component {
                 <div
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
                     style={{ height: this.props.height }}>
-                    {MediaType && <MediaType { ...this.props } />}
+                    {MediaType && <MediaType { ...this.props } descriptionEnabled={false}/>}
                 >
                 { this.props.mode === Modes.EDIT &&
                 <ContentToolbar
@@ -63,6 +65,7 @@ class Background extends Component {
                     tools={this.props.tools && this.props.tools[this.props.type]}
                     />}
                 </div>
+
 
             </div>
         );

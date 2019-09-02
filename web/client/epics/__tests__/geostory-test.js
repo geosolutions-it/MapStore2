@@ -257,9 +257,9 @@ describe('Geostory Epics', () => {
             actions.map(a => {
                 switch (a.type) {
                     case UPDATE:
-                        expect(a.element).toEqual("geostory");
-                        expect(a.mode).toEqual("replace");
-                        expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}].resourceId`);
+                        expect(a.element).toEqual({resourceId: "geostory", type: ContentTypes.MEDIA});
+                        expect(a.mode).toEqual("merge");
+                        expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}]`);
                         break;
                     case SHOW:
                         expect(a.owner).toEqual("geostory");

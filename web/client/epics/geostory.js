@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, isObject, get} from 'lodash';
+import {isNaN, isString, isNil, isObject} from 'lodash';
 
 import axios from '../libs/ajax';
 
@@ -29,10 +29,10 @@ import {
 import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
+import { resourceIdSelectorCreator } from '../selectors/geostory';
 
 import { wrapStartStop } from '../observables/epics';
-import { ContentTypes } from '../utils/GeoStoryUtils';
-import { getEffectivePath } from '../reducers/geostory';
+import { ContentTypes, SectionTypes } from '../utils/GeoStoryUtils';
 
 /**
  * opens the media editor for new image with content type media is passed
@@ -49,9 +49,14 @@ export const openMediaEditorForNewMedia = action$ =>
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
+                            let mediaPath = "";
+                            if (element.type === SectionTypes.MEDIA && arrayPath === "sections") {
+                                mediaPath = "contents[0].contents[0]";
+                            }
                             return Observable.of(
-                                update(`${arrayPath}[{"id":"${element.id}"}].resourceId`, resource.id ),
-                                update(`${arrayPath}[{"id":"${element.id}"}].type`, "image" ) // TODO take type from mediaEditor state or from resource
+                                update(`${arrayPath}[{"id":"${element.id}"}]${mediaPath}`, {
+                                    resourceId: resource.id,
+                                    type: element.type || "image" }, "merge" )// TODO take type from mediaEditor state or from resource
                                 );
                         })
                         .takeUntil(action$.ofType(HIDE))
@@ -68,8 +73,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
             const state = store.getState();
-            const resourceId = get(state, getEffectivePath(`geostory.currentStory.${path}.resourceId`, state), "");
-
+            const resourceId = resourceIdSelectorCreator(path)(state);
             return Observable.of(
                     show(owner), // open mediaEditor
                     selectItem(resourceId)
@@ -96,10 +100,10 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
         .switchMap( ({id}) =>
             Observable.defer(() => {
                 if (isNaN(parseInt(id, 10))) {
-                    return axios.get(`${id}.json`);
+                    return axios.get(`configs/${id}.json`);
                 }
                 // TODO manage load process from external api
-                return axios.get(`sampleStory.json`);
+                return axios.get(`configs/sampleStory.json`);
             })
             .map(({ data }) => {
                 if (isObject(data)) {

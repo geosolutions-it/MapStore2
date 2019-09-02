@@ -17,6 +17,7 @@ export const StoryTypes = {
 // Allowed types
 export const SectionTypes = {
     TITLE: 'title',
+    MEDIA: 'media',
     PARAGRAPH: 'paragraph',
     IMMERSIVE: 'immersive'
 };
@@ -103,6 +104,24 @@ export const getDefaultSectionTemplate = (type) => {
                 title: "Immersive Section", // TODO I18N
                 contents: [getDefaultSectionTemplate(ContentTypes.COLUMN)]
             };
+        case SectionTypes.MEDIA: {
+            return {
+                id: uuid(),
+                type: SectionTypes.MEDIA,
+                title: 'Media Section', // TODO I18N
+                contents: [
+                    {
+                        id: uuid(),
+                        type: ContentTypes.COLUMN,
+                        contents: [{
+                            id: uuid(),
+                            type: MediaTypes.IMAGE,
+                            resourceId: '3025f52e-8d57-48df-9a56-8e21ac252282' // TODO change default image
+                        }]
+                    }
+                ]
+            };
+        }
         case ContentTypes.COLUMN: {
             return {
                 id: uuid(),

@@ -1850,6 +1850,7 @@
             "addTitleSection": "Ajouter une section de titre",
             "addParagraphSection": "Ajouter une section de paragraphe",
             "addImmersiveSection": "Ajouter une section immersive",
+            "addMediaSection": "Ajouter une section multimédia",
             "addImmersiveContent": "Ajouter du contenu immersif",
             "addTextContent": "Ajouter du contenu texte",
             "addMediaContent": "Ajouter du contenu multimédia",
@@ -1870,7 +1871,8 @@
                 "darkThemeLabel": "Sombre",
                 "darkTextThemeLabel": "Texte sombre",
                 "cover": "Couvrir l'espace conteneur",
-                "fit": "Adapter l'espace conteneur"
+                "fit": "Adapter l'espace conteneur",
+                "editMedia": "Changer de source média"
             },
             "errors": {
                 "loading": {

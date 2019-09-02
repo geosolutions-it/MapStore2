@@ -87,7 +87,7 @@ const toolButtons = {
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
         visible: true,
-        tooltipId: "geostory.contentToolbar.edit",
+        tooltipId: "geostory.contentToolbar.editMedia",
         onClick: () => {
             editMedia({path});
         }

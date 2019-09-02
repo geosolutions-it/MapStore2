@@ -85,6 +85,13 @@ const Immersive = ({
                 onClick: () => {
                     add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN); // position undefined means append
                 }
+            },
+            {
+                glyph: 'picture',
+                tooltipId: 'geostory.addMediaSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.MEDIA);
+                }
             }]}/>}
     </section>
 );

@@ -62,6 +62,14 @@ export default ({
                 onClick: () => {
                     add(`sections`, id, SectionTypes.IMMERSIVE);
                 }
-            }]}/>}
+            },
+            {
+                glyph: 'picture',
+                tooltipId: 'geostory.addMediaSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.MEDIA);
+                }
+            }]}
+        />}
     </section>
 );

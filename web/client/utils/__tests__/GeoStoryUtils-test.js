@@ -51,6 +51,7 @@ describe("GeoStory", () => {
         expect(SectionTypes).toEqual({
             TITLE: "title",
             PARAGRAPH: "paragraph",
+            MEDIA: "media",
             IMMERSIVE: "immersive"
         });
     });
@@ -99,6 +100,20 @@ describe("GeoStory", () => {
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
+        });
+        it("SectionTypes.MEDIA", () => {
+            const data = getDefaultSectionTemplate(SectionTypes.MEDIA);
+            expect(data.id).toExist();
+            expect(data.type).toBe(SectionTypes.MEDIA);
+            expect(data.title).toBe("Media Section");
+            expect(isArray(data.contents)).toBe(true);
+            const content = data.contents[0];
+            expect(content.id.length).toBe(uuid().length);
+            expect(content.type).toBe(ContentTypes.COLUMN);
+            const contentInContent = content.contents[0];
+            expect(contentInContent.type).toBe(MediaTypes.IMAGE);
+            expect(contentInContent.id.length).toBe(uuid().length);
+            expect(contentInContent.resourceId).toBe("3025f52e-8d57-48df-9a56-8e21ac252282");
         });
         // TODO wait for testing the getDefaultSectionTemplate because it's a wip
         // and needs to be finalized with a load mechanism
