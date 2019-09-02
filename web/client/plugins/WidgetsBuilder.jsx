@@ -47,7 +47,8 @@ class SideBarComponent extends React.Component {
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object,
-         layout: PropTypes.object
+         layout: PropTypes.object,
+         shortenChartLabelThreshold: PropTypes.number
      };
      static defaultProps = {
          id: "widgets-builder-plugin",
@@ -58,6 +59,7 @@ class SideBarComponent extends React.Component {
          fluid: false,
          dimMode: "none",
          position: "left",
+         shortenChartLabelThreshold: 1000,
          onMount: () => {},
          onUnmount: () => {},
          onClose: () => {},
@@ -80,7 +82,11 @@ class SideBarComponent extends React.Component {
             bsStyle="primary"
             hideHeader
             style={{...this.props.layout, background: "white"}}>
-            <Builder enabled={this.props.enabled} onClose={this.props.onClose} typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend' }/>
+            <Builder
+                enabled={this.props.enabled}
+                onClose={this.props.onClose}
+                typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend'}
+                shortenChartLabelThreshold={this.props.shortenChartLabelThreshold}/>
         </DockPanel>);
 
     }
