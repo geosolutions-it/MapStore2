@@ -87,14 +87,14 @@ The following example shows the steps required to set up a custom service:
 
     - **Priority** is a weight assigned to the custom results. It is used to sort all the search results so lower values determine higher positions in the results list (top). The default [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, so to see our custom results in the first positions we should set a value lower than 5 for this field. We use 3.
 
-    - **Launch Info Panel** is a flag that can be used to trigger GetFeatureInfo requests when selecting a record after a search. The point for the GFI request is taken from the selected record's geometry.
+    - **Launch Info Panel** is a flag that can be used to trigger GetFeatureInfo requests when selecting a record after a search.
     It has three values as shown here:
     <img src="../img/launch-info-panel.jpg" style="max-height:500px;" />
      - "No info" means that no GFI request will be triggered and it is the default value. 
      
      Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
      
-     - "Search Layer" means that the GFI will filter results to the record selected and to its layer. It will also force the info_format to "application/json" (PROPERTIES).
+     - "Search Layer" means that the GFI will filter results to the record selected and to its layer. It will also force the info_format to "application/json" (PROPERTIES) for allowing filtering on the features by using the id of the selected record.
      - "All Layers" means that there will be no filtering as it happens when you click on map.
 
 
@@ -142,7 +142,7 @@ If "All Layers" option is used then the results would be something like this:
 
 <img src="../img/custom-search-results-all-layers.jpg" style="max-height:500px;" />
 
-Since other layers are on the map then the navigation arrows is visible in the top-right corner of the FeatureInfo panel
+Since other layers are on the map then the navigation arrows is visible in the top-right corner of the FeatureInfo panel under the calculated search point.
 
 Burger Menu
 -----------
