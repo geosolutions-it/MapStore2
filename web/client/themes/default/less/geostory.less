@@ -250,14 +250,23 @@
                 box-shadow: none;
             }
         }
-        // immersive
+        // overrides and specific styles for immersive section layout
         &.ms-section-immersive {
             // column contents overrides
             .ms-content-column {
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and eight)
-                .ms-content-body {
-                    // TODO
+                &>.ms-content-body {
+                    // column toolbar
+                    &>.ms-content-toolbar {
+                        z-index: 2;
+                    }
+                    // the background in this case is only of the column
+                    background-color: @ms-story-bg;
+                    // override background of paragraph (or title) content.
+                    .ms-content-body {
+                        background-color: transparent;
+                    }
                     &>.ms-content-toolbar {
                         position: absolute;
                         transform: translate(-@square-btn-medium-size / 2, -60%);
@@ -334,11 +343,11 @@
                     .rdw-option-active {
                         outline: 2px solid @ms-story-highlight;
                     }
-                    /* enable horizontal scrollbar only if needed of color picker*/
+                    /* enable horizontal scroll bar only if needed of color picker*/
                     .rdw-colorpicker-modal-options {
                         overflow-x: auto;
                     }
-                    /* enable vertical scrollbar only if needed of font family and tag dropdown */
+                    /* enable vertical scroll bar only if needed of font family and tag dropdown */
                     .rdw-dropdown-optionwrapper {
                         overflow-y: auto;
                     }

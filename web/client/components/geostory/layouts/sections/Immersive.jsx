@@ -11,7 +11,7 @@ import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -51,6 +51,9 @@ const Immersive = ({
             width={viewWidth}
             height={viewHeight}/>
          <SectionContents
+            tools={{
+                [ContentTypes.COLUMN]: ['size', 'align']
+            }}
             className="ms-section-contents"
             contents={contents}
             mode={mode}

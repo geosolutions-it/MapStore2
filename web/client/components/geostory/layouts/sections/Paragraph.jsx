@@ -35,9 +35,7 @@ export default ({
             editMedia={editMedia}
             update={update}
             sectionId={id}
-            tools={{
-                [ContentTypes.COLUMN]: ['size', 'align']
-            }}
+
             />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
