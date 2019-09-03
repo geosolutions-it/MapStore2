@@ -23,6 +23,8 @@ const ColumnContent = compose(
  * has (sub) contents to render like a page.
  */
 export default ({
+    viewWidth,
+    viewHeight,
     contents = [],
     mode,
     add = () => {},
@@ -37,6 +39,8 @@ export default ({
             add={add}
             editMedia={editMedia}
             update={update}
+            viewWidth={viewWidth}
+            viewHeight={viewHeight}
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'size', 'align'],
                 [MediaTypes.VIDEO]: ['editMedia'] // TODO change this list for video
