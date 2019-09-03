@@ -46,11 +46,23 @@ const fromLeafletFeatureToQueryform = (layer) => {
         projection
     };
 };
-const calculateRadius = (center, coordinates) => {
-    return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
+
+const calculateRadius = (center, coordinates, mapCrs, coordinateCrs) => {
+    if (isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0])) {
+        const point = reproject(coordinates[0][0], coordinateCrs, mapCrs);
+        return Math.sqrt(Math.pow(center[0] - point.x, 2) + Math.pow(center[1] - point.y, 2));
+    }
+    return 100;
 };
 
-const transformPolygonToCircle = (feature, mapCrs) => {
+/**
+ * Transform a feature that is a circle with Polygon geometry in coordinateCrs to a feature with Circle geometry in mapCrs
+ * @param {Feature} feature feature to transform
+ * @param {string} mapCrs map's current crs
+ * @param {string} [coordinateCrs=mapCrs] crs that feature's coordinates are in
+ * @returns {Feature} the transformed feature
+ */
+const transformPolygonToCircle = (feature, mapCrs, coordinateCrs = mapCrs) => {
 
     if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
         return feature;
@@ -65,7 +77,7 @@ const transformPolygonToCircle = (feature, mapCrs) => {
         } else {
             center = ol.extent.getCenter(extent);
         }
-        const radius = feature.getProperties().radius || calculateRadius(center, feature.getGeometry().getCoordinates());
+        const radius = calculateRadius(center, feature.getGeometry().getCoordinates(), mapCrs, coordinateCrs);
         feature.setGeometry(new ol.geom.Circle(center, radius));
         return feature;
     }

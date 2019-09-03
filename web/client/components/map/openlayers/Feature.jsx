@@ -85,7 +85,7 @@ class Feature extends React.Component {
             this._feature.map(f => {
                 let newF = f;
                 if (f.getProperties().isCircle) {
-                    newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857');
+                    newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857', props.featuresCrs);
                     newF.setGeometry(newF.getGeometry().transform(props.crs || 'EPSG:3857', props.featuresCrs));
                 }
                 return newF;
