@@ -6,7 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { values } from "lodash";
+/**
+ * Utils for geostory
+ */
+
+
+import { values, isArray } from "lodash";
 import uuid from 'uuid';
 
 
@@ -61,6 +66,19 @@ export const getClassNameFromProps = ({ theme = 'bright', align = 'center', size
     const sizeClassName = ` ms-size-${size}`;
     return `${themeClassName}${alignClassName}${sizeClassName}`;
 };
+
+/**
+ * tells if an element is a paragraph and it contains a media
+ * @param {object} element
+ * @return {boolean}
+ */
+export const isMediaSection = (element) => element.type === SectionTypes.PARAGRAPH &&
+    element &&
+    isArray(element.contents) &&
+    element.contents.length &&
+    isArray(element.contents[0].contents) &&
+    element.contents[0].contents.length &&
+    element.contents[0].contents[0].type === ContentTypes.MEDIA;
 
 /**
  * Creates a default template for the given type
@@ -121,7 +139,7 @@ export const getDefaultSectionTemplate = (type) => {
                         type: ContentTypes.COLUMN,
                         contents: [{
                             id: uuid(),
-                            type: MediaTypes.IMAGE
+                            type: ContentTypes.MEDIA
                         }]
                     }
                 ]

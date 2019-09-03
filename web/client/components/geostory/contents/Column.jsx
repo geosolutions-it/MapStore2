@@ -9,7 +9,7 @@ import React from "react";
 import ContentBase from './Content';
 import Contents from './Contents';
 import ContentWrapper from './ContentWrapper';
-import { ContentTypes, MediaTypes, SectionTemplates } from '../../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
 
 import { nest, compose, setDisplayName } from "recompose";
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
@@ -29,7 +29,6 @@ export default ({
     editMedia = () => {},
     update= () => {}
 }) => (
-
         <Contents
             className="ms-column-contents"
             ContentComponent={ColumnContent}
@@ -40,7 +39,6 @@ export default ({
             update={update}
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'size', 'align'],
-                [ContentTypes.MEDIA]: ['editMedia', 'size', 'align'],
                 [MediaTypes.VIDEO]: ['editMedia'] // TODO change this list for video
             }}
             addButtons={[{

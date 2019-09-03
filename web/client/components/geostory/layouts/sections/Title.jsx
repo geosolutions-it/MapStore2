@@ -11,7 +11,7 @@ import Background from './Background';
 import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 
 /**
  * Paragraph Section Type.
@@ -103,7 +103,7 @@ export default backgroundPropWithHandler(({
                 glyph: 'picture',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
-                    add(`sections`, id, SectionTypes.MEDIA);
+                    add(`sections`, id, SectionTemplates.MEDIA);
                 }
             }]}/>}
     </section>

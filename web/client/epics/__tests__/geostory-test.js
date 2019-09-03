@@ -33,10 +33,10 @@ import {
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic} from './epicTestUtils';
-import { ContentTypes } from '../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes } from '../../utils/GeoStoryUtils';
 
 let mockAxios;
-describe('Geostory Epics', () => {
+describe.only('Geostory Epics', () => {
     beforeEach(done => {
         mockAxios = new MockAdapter(axios);
         setTimeout(done);
@@ -247,7 +247,7 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
-    it('openMediaEditorForNewMedia showing media and updating story', (done) => {
+    it('test openMediaEditorForNewMedia, adding a media content and choosing an image', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
             add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
@@ -257,9 +257,53 @@ describe('Geostory Epics', () => {
             actions.map(a => {
                 switch (a.type) {
                     case UPDATE:
-                        expect(a.element).toEqual({resourceId: "geostory", type: ContentTypes.MEDIA});
+                        expect(a.element).toEqual({resourceId: "geostory", type: MediaTypes.IMAGE});
                         expect(a.mode).toEqual("merge");
                         expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}]`);
+                        break;
+                    case SHOW:
+                        expect(a.owner).toEqual("geostory");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                }
+            });
+            done();
+        }, {
+            geostory: {}
+        });
+    });
+    it('test openMediaEditorForNewMedia, adding a media section and choosing an image', (done) => {
+        const NUM_ACTIONS = 2;
+        const element = {
+            id: '57cd0993-ad29-438a-b02a-d8f110de5d81',
+            type: 'paragraph',
+            title: 'Media Section',
+            contents: [
+            {
+                id: '724f91c4-f438-4be8-aef5-587ce623c96f',
+                type: 'column',
+                contents: [
+                {
+                    id: '6296fd1a-fbad-4736-8ae1-124150b9f952',
+                    type: 'media'
+                }
+                ]
+            }
+            ]
+        };
+
+        testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
+            add(`sections`, undefined, element),
+            chooseMedia({id: "geostory"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                    case UPDATE:
+                        expect(a.element).toEqual({resourceId: "geostory", type: MediaTypes.IMAGE});
+                        expect(a.mode).toEqual("merge");
+                        expect(a.path).toEqual(`sections[{"id":"57cd0993-ad29-438a-b02a-d8f110de5d81"}].contents[0].contents[0]`);
                         break;
                     case SHOW:
                         expect(a.owner).toEqual("geostory");

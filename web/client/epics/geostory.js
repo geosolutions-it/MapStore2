@@ -32,7 +32,8 @@ import { isLoggedIn } from '../selectors/security';
 import { resourceIdSelectorCreator } from '../selectors/geostory';
 
 import { wrapStartStop } from '../observables/epics';
-import { ContentTypes, SectionTypes } from '../utils/GeoStoryUtils';
+import { ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
+
 
 /**
  * opens the media editor for new image with content type media is passed
@@ -41,7 +42,10 @@ import { ContentTypes, SectionTypes } from '../utils/GeoStoryUtils';
  */
 export const openMediaEditorForNewMedia = action$ =>
     action$.ofType(ADD)
-        .filter(({ element = {} }) => element.type === ContentTypes.MEDIA)
+        .filter(({ element = {} }) => {
+            const isMediaContent = element.type === ContentTypes.MEDIA;
+            return isMediaContent || isMediaSection(element);
+        })
         .switchMap(({path: arrayPath, element}) => {
             return Observable.of(
                     show('geostory') // open mediaEditor
@@ -50,16 +54,17 @@ export const openMediaEditorForNewMedia = action$ =>
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
                             let mediaPath = "";
-                            if (element.type === SectionTypes.MEDIA && arrayPath === "sections") {
-                                mediaPath = "contents[0].contents[0]";
+                            if (isMediaSection(element) && arrayPath === "sections") {
+                                mediaPath = ".contents[0].contents[0]";
                             }
                             return Observable.of(
                                 update(`${arrayPath}[{"id":"${element.id}"}]${mediaPath}`, {
                                     resourceId: resource.id,
-                                    type: element.type || "image" }, "merge" )// TODO take type from mediaEditor state or from resource
+                                    type: "image" }, // TODO take type from mediaEditor state or from resource
+                                    "merge" )
                                 );
                         })
-                        .takeUntil(action$.ofType(HIDE))
+                        .takeUntil(action$.ofType(HIDE, EDIT_MEDIA))
                 );
         });
 
@@ -85,7 +90,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                                 update(`${path}.resourceId`, resource.id )
                                 );
                         })
-                        .takeUntil(action$.ofType(HIDE))
+                        .takeUntil(action$.ofType(HIDE, ADD))
                 );
         });
 /**

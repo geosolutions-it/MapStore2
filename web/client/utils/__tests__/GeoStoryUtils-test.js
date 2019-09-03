@@ -17,6 +17,7 @@ import {
     ContentTypes,
     MediaTypes,
     Modes,
+    isMediaSection,
     lists,
     SAMPLE_HTML,
     getDefaultSectionTemplate
@@ -52,9 +53,27 @@ describe("GeoStory", () => {
         expect(SectionTypes).toEqual({
             TITLE: "title",
             PARAGRAPH: "paragraph",
-            MEDIA: "media",
             IMMERSIVE: "immersive"
         });
+    });
+    it("test isMediaSection", () => {
+        expect(isMediaSection({
+            "id": "1dc0bf18-9231-4d09-8f41-02df104b0f71",
+            "type": "paragraph",
+            "title": "Media Section",
+            "contents": [
+                {
+                    "id": "85d354a1-6ffd-45c0-9b67-550d9a8f0022",
+                    "type": "column",
+                    "contents": [
+                        {
+                            "id": "84feac60-8f0f-4a93-9ec5-6452f261b490",
+                            "type": "media"
+                        }
+                    ]
+                }
+            ]
+        })).toBe(true);
     });
     it("test ContentTypes", () => {
         expect(ContentTypes).toEqual({
@@ -73,6 +92,11 @@ describe("GeoStory", () => {
         expect(Modes).toEqual({
             EDIT: "edit",
             VIEW: "view"
+        });
+    });
+    it("test SectionTemplates", () => {
+        expect(SectionTemplates).toEqual({
+            MEDIA: "template-media"
         });
     });
     it("test lists", () => {
@@ -111,10 +135,10 @@ describe("GeoStory", () => {
             const content = data.contents[0];
             expect(content.id.length).toBe(uuid().length);
             expect(content.type).toBe(ContentTypes.COLUMN);
-            const contentInContent = content.contents[0];
-            expect(contentInContent.type).toBe(MediaTypes.IMAGE);
-            expect(contentInContent.id.length).toBe(uuid().length);
-            expect(contentInContent.resourceId).toBe("3025f52e-8d57-48df-9a56-8e21ac252282");
+            const mediaContent = content.contents[0];
+            expect(mediaContent.type).toBe(ContentTypes.MEDIA);
+            expect(mediaContent.id.length).toBe(uuid().length);
+            expect(mediaContent.resourceId).toNotExist();
         });
         // TODO wait for testing the getDefaultSectionTemplate because it's a wip
         // and needs to be finalized with a load mechanism
