@@ -12,15 +12,22 @@ import { reproject } from '../CoordinatesUtils';
 import { getCenter } from 'ol/extent';
 import { Circle } from 'ol/geom';
 
-const calculateRadius = (center, coordinates, mapCrs, featureCrs) => {
+const calculateRadius = (center, coordinates, mapCrs, coordinateCrs) => {
     if (isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0])) {
-        const point = reproject(coordinates[0][0], featureCrs, mapCrs);
+        const point = reproject(coordinates[0][0], coordinateCrs, mapCrs);
         return Math.sqrt(Math.pow(center[0] - point.x, 2) + Math.pow(center[1] - point.y, 2));
     }
     return 100;
 };
 
-export const transformPolygonToCircle = (feature, mapCrs, featureCrs = mapCrs) => {
+/**
+ * Transform a feature that is a circle with Polygon geometry in coordinateCrs to a feature with Circle geometry in mapCrs
+ * @param {Feature} feature feature to transform
+ * @param {string} mapCrs map's current crs
+ * @param {string} [coordinateCrs=mapCrs] crs that feature's coordinates are in
+ * @returns {Feature} the transformed feature
+ */
+export const transformPolygonToCircle = (feature, mapCrs, coordinateCrs = mapCrs) => {
     if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
         return feature;
     }
@@ -34,7 +41,7 @@ export const transformPolygonToCircle = (feature, mapCrs, featureCrs = mapCrs) =
         } else {
             center = getCenter(extent);
         }
-        const radius = calculateRadius(center, feature.getGeometry().getCoordinates(), mapCrs, featureCrs);
+        const radius = calculateRadius(center, feature.getGeometry().getCoordinates(), mapCrs, coordinateCrs);
         feature.setGeometry(new Circle(center, radius));
         return feature;
     }
