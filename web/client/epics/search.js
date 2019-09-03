@@ -124,6 +124,11 @@ export const searchItemSelected = action$ =>
             }).concatMap((item) => {
                 // check if the service has been configured to start a GetFeatureInfo request based on the item selected
                 // if so, then do it with a point inside the geometry
+                let bbox = item.bbox || item.properties.bbox || toBbox(item);
+                let actions = [
+                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
+                    addMarker(item)
+                ];
                 if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
                     let coord = pointOnSurface(item).geometry.coordinates;
                     const latlng = { lng: coord[0], lat: coord[1] };
@@ -142,17 +147,11 @@ export const searchItemSelected = action$ =>
                         }
                         return [
                             featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
-                            showMapinfoMarker()
+                            showMapinfoMarker(),
+                            ...actions
                         ];
                     }
                 }
-
-                let bbox = item.bbox || item.properties.bbox || toBbox(item);
-
-                let actions = [
-                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
-                    addMarker(item)
-                ];
                 return actions;
             });
 
