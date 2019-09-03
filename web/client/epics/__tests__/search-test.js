@@ -160,11 +160,13 @@ describe('search Epics', () => {
         store.dispatch( action );
 
         let actions = store.getActions();
-        expect(actions.length).toBe(4);
+        expect(actions.length).toBe(6);
         expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
         expect(actions[2].type).toBe(FEATURE_INFO_CLICK);
         expect(actions[2].filterNameList).toEqual([]);
         expect(actions[3].type).toBe(SHOW_MAPINFO_MARKER);
+        expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[5].type).toBe(TEXT_SEARCH_ADD_MARKER);
     });
 
 
@@ -197,13 +199,15 @@ describe('search Epics', () => {
         store.dispatch( action );
 
         let actions = store.getActions();
-        expect(actions.length).toBe(4);
+        expect(actions.length).toBe(6);
         expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
         expect(actions[2].type).toBe(FEATURE_INFO_CLICK);
         expect(actions[2].itemId).toEqual("Feature_1");
         expect(actions[2].filterNameList).toEqual(["gs:layername"]);
         expect(actions[2].overrideParams).toEqual({"gs:layername": {info_format: "application/json"}});
         expect(actions[3].type).toBe(SHOW_MAPINFO_MARKER);
+        expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[5].type).toBe(TEXT_SEARCH_ADD_MARKER);
     });
 
     it('searchItemSelected epic with nested services', () => {
