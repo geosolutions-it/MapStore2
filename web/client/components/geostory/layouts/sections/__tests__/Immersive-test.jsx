@@ -41,7 +41,7 @@ const CONTENTS = [
             src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
         },
         contents: [{
-            type: 'media',
+            type: 'image',
             src: IMAGE_SRC
 
         }]
@@ -59,6 +59,14 @@ describe('Immersive component', () => {
         setTimeout(done);
     });
     it('Immersive rendering with defaults', () => {
+        ReactDOM.render(<Immersive />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-immersive');
+        expect(el).toExist();
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toNotExist();
+    });
+    it('Immersive rendering in edit mode ', () => {
         ReactDOM.render(<Immersive mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-immersive');
@@ -100,7 +108,7 @@ describe('Immersive component', () => {
         expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
 
         // inner media and image contents must have edit, resize and align tools
-        const innerMediaToolbar = document.querySelector('.ms-section-contents .ms-column-contents .ms-content-media .ms-content-toolbar .btn-group');
+        const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');
         expect(innerMediaToolbar).toExist();
         expect(innerMediaToolbar.querySelectorAll('button').length).toBe(3);
         expect(innerMediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
