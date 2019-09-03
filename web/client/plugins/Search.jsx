@@ -107,16 +107,16 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *          "fillColor": "#3388ff",
  *          "fillOpacity": 0.2,
  *          "LineString": {
- *              // custom style for LineString, it overrides deafult/general style (optional)
+ *              // custom style for LineString, it overrides default/general style (optional)
  *          },
  *          "MultiLineString": {
- *              // custom style for MultiLineString, it overrides deafult/general style (optional)
+ *              // custom style for MultiLineString, it overrides default/general style (optional)
  *          },
  *          "Polygon": {
- *              // custom style for Polygon, it overrides deafult/general style (optional)
+ *              // custom style for Polygon, it overrides default/general style (optional)
  *          },
  *          "MultiPolygon": {
- *              // custom style for MultiPolygon, it overrides deafult/general style (optional)
+ *              // custom style for MultiPolygon, it overrides default/general style (optional)
  *          }
  *      }
  *    }
@@ -175,6 +175,12 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * ```
  * **note:** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
  * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
+ * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
+ * it has the following values:
+ * - undefined | not configured, it does not perform the GFI request
+ * Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
+ * - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
+ * - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
  */
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,

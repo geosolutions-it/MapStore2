@@ -83,7 +83,9 @@ class ResultsProps extends React.Component {
                         <Message msgId="search.s_priority" />
                         <Label key="priority-label" className="slider-label">{parseInt(service.priority || 1, 10)}</Label>
                     </ControlLabel>
-                    <Slider key="priority" start={[service.priority || 1]}
+                    <Slider key="priority"
+                        start={[service.priority || 1]}
+                        step={1}
                         range={{min: 1, max: 10}}
                         onSlide={this.updatePriority}
                         />
