@@ -46,13 +46,12 @@ describe('Column component', () => {
         ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));
         const textToolbar = document.querySelector('.ms-content-toolbar .btn-group button');
         expect(textToolbar).toNotExist(); // TODO: check delete button
+
         // media and image contents must have edit, resize and align tools
         ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.MEDIA }]} />, document.getElementById("container"));
         let mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
         expect(mediaToolbar).toExist();
-        expect(mediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
-        expect(mediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
-        expect(mediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        // TODO:  check (empty) media button (Should be type: media)
         // image contents must have edit, resize and align tools (same as media )
         ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: MediaTypes.IMAGE }]} />, document.getElementById("container"));
         mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
