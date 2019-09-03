@@ -35,6 +35,8 @@ import AddBar from "../common/AddBar";
  * ```
  */
 export default ({
+        viewWidth,
+        viewHeight,
         className,
         contentProps = {},
         addButtons = [],
@@ -52,6 +54,8 @@ export default ({
                     id={id}
                     key={`${id}-content`}
                     mode={mode}
+                    viewWidth={viewWidth}
+                    viewHeight={viewHeight}
                     editMedia={({path = ""}, ...args) => editMedia({path: `contents[{"id": "${id}"}]` + path}, ...args)}
                     // restructure the path to give it the correct scope
                     add={(path, ...args) => add(`contents[{"id": "${id}"}].` + path, ...args)}
@@ -63,6 +67,8 @@ export default ({
                 content.push(
                     <AddBar
                         key={`${id}-content-add-buttons`}
+                        containerWidth={viewWidth}
+                        containerHeight={viewHeight}
                         buttons={addButtons.map((button = {}) => ({
                                 ...button,
                                 onClick: () => add(`contents`, id, button.template)

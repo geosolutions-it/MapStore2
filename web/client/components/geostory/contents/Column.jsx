@@ -9,7 +9,7 @@ import React from "react";
 import ContentBase from './Content';
 import Contents from './Contents';
 import ContentWrapper from './ContentWrapper';
-import { ContentTypes, MediaTypes, SectionTemplates } from '../../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
 
 import { nest, compose, setDisplayName } from "recompose";
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
@@ -23,6 +23,8 @@ const ColumnContent = compose(
  * has (sub) contents to render like a page.
  */
 export default ({
+    viewWidth,
+    viewHeight,
     contents = [],
     mode,
     add = () => {},
@@ -38,6 +40,8 @@ export default ({
             add={add}
             editMedia={editMedia}
             update={update}
+            viewWidth={viewWidth}
+            viewHeight={viewHeight}
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'size', 'align'],
                 [ContentTypes.MEDIA]: ['editMedia', 'size', 'align'],

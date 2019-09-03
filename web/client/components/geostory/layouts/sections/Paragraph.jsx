@@ -7,7 +7,7 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes, ContentTypes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes, ContentTypes} from '../../../../utils/GeoStoryUtils';
 import SectionContents from "../../contents/SectionContents";
 
 
@@ -35,7 +35,8 @@ export default ({
             editMedia={editMedia}
             update={update}
             sectionId={id}
-
+            viewWidth={viewWidth}
+            viewHeight={viewHeight}
             />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
