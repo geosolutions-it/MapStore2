@@ -50,7 +50,7 @@ const Immersive = ({
             key={background.id}
             width={viewWidth}
             height={viewHeight}/>
-         <SectionContents
+        <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align']
             }}

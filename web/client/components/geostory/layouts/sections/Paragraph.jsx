@@ -8,6 +8,7 @@
 import React from "react";
 import AddBar from '../../common/AddBar';
 import { SectionTypes, Modes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
+
 import SectionContents from "../../contents/SectionContents";
 
 

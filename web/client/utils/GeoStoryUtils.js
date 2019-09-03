@@ -25,7 +25,9 @@ export const SectionTypes = {
     PARAGRAPH: 'paragraph',
     IMMERSIVE: 'immersive'
 };
-// Allowed contents
+/**
+ * Allowed contents
+ */
 export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
