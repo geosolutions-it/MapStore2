@@ -58,7 +58,7 @@ export const saveMedia = ({type, source, data}) => ({ type: SAVE_MEDIA, mediaTyp
 export const saveMediaSuccess = ({ mediaType, source, data, id }) => ({ type: SAVE_MEDIA_SUCCESS, mediaType, source, data, id });
 /**
  * select item
- * @param {*} id
+ * @param {string} id of the resource
  */
 export const selectItem = (id) => ({ type: SELECT_ITEM, id});
 // RESOURCE FORMAT DRAFT :

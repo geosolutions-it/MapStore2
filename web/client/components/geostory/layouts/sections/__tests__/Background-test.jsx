@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Background from '../Background';
+import {Provider} from 'react-redux';
 
 describe('Background component', () => {
     beforeEach((done) => {
@@ -35,13 +36,16 @@ describe('Background component', () => {
 
     it('render background with media (image)', () => {
         const VIEW_HEIGHT = 800;
-        ReactDOM.render(<Background
-            width={1024}
-            mode="edit"
-            height={VIEW_HEIGHT}
-            type="image"
-            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-            />, document.getElementById("container"));
+        ReactDOM.render(
+        <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
+            <Background
+                width={1024}
+                mode="edit"
+                height={VIEW_HEIGHT}
+                type="image"
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+            />
+        </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         const imageMedia = container.querySelector('.ms-media-image');

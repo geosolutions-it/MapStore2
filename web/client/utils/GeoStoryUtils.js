@@ -120,6 +120,8 @@ export const getDefaultSectionTemplate = (type) => {
                     {
                         id: uuid(),
                         type: ContentTypes.COLUMN,
+                        size: 'full',
+                        align: 'center',
                         contents: [{
                             id: uuid(),
                             type: ContentTypes.TEXT,
@@ -146,7 +148,9 @@ export const getDefaultSectionTemplate = (type) => {
                         type: ContentTypes.COLUMN,
                         contents: [{
                             id: uuid(),
-                            type: ContentTypes.MEDIA
+                            type: ContentTypes.MEDIA,
+                            size: 'medium',
+                            align: 'center'
                         }]
                     }
                 ]
@@ -156,20 +160,21 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: ContentTypes.COLUMN,
+                align: 'left',
+                size: 'small',
+                theme: 'bright',
                 contents: [{
                     id: uuid(),
                     type: ContentTypes.TEXT,
                     html: SAMPLE_HTML
                 }],
                 background: {
+                    type: "image",
                     fit: 'cover',
-                    theme: 'bright',
                     size: 'full',
-                    align: 'center'
-                },
-                align: 'left',
-                size: 'small',
-                theme: 'bright'
+                    align: 'center',
+                    theme: 'bright'
+                }
             };
         }
         case ContentTypes.TEXT: {
