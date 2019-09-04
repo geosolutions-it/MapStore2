@@ -5,10 +5,9 @@
       "data": {
         "src": "https://images.unsplash.com/photo-1566305828756-cacc74d3dd20?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
         "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-        "credits": "Lorem Ipsum and Internation Spacial Agency",
+        "credits": "Lorem Ipsum and Internation Spatial Agency",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-
       }
     },
     {
@@ -19,7 +18,6 @@
         "credits": "Lorem Ipsum",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-
       }
     },
     {
@@ -94,6 +92,8 @@
         "id": "title_content_id1",
         "background": {
           "type": "image",
+          "size": "full",
+          "align": "center",
           "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
         },
         "type": "text",
@@ -122,7 +122,8 @@
           "type": "image",
           "resourceId": "8d578d57-8d57-48df-9a56-8e21ac252282",
           "enableFullscreen": true,
-          "size": "medium"
+          "size": "medium",
+          "align": "center"
         }
       ]
     }]
@@ -135,9 +136,13 @@
         "id": "title_content_id1",
         "background": {
           "type": "image",
-          "resourceId": "48df48df-8d57-48df-9a56-8e21ac252282"
+          "resourceId": "48df48df-8d57-48df-9a56-8e21ac252282",
+          "size": "medium",
+          "align": "center"
         },
         "type": "text",
+        "size": "medium",
+        "align": "center",
         "theme": "bright",
         "html": "<h1 style='text-align:center;'>Enter title...</h1>"
       }
@@ -152,6 +157,8 @@
         "background": {
             "type": "image",
             "fit": "cover",
+            "size": "medium",
+            "align": "center",
             "resourceId": "1ac21ac2-8d57-48df-9a56-8e21ac252282"
           },
         "contents": [{
@@ -166,11 +173,15 @@
         "id": "column_id2",
         "background": {
           "type": "image",
+          "align": "center",
+          "size": "medium",
           "resourceId": "52285228-8d57-48df-9a56-8e21ac252282"
         },
         "contents": [{
           "id": "immersive_content_id2",
           "type": "text",
+          "align": "center",
+          "size": "medium",
           "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
         }]
     },{
@@ -178,12 +189,15 @@
         "id": "column_id3",
         "background": {
           "type": "image",
+          "align": "center",
+          "size": "medium",
           "resourceId": "e21ae21a-8d57-48df-9a56-8e21ac252282"
         },
         "contents": [{
         "id": "immersive_content_id3",
         "type": "text",
-
+        "align": "center",
+        "size": "medium",
         "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
       }]
     },{
@@ -192,11 +206,15 @@
         "background": {
           "type": "image",
           "fit": "contain",
+          "align": "center",
+          "size": "medium",
           "resourceId": "8d8de21a-8d57-48df-9a56-8e21ac252282"
         },
         "contents": [{
         "id": "immersive_content_id4",
         "type": "text",
+        "align": "center",
+        "size": "medium",
         "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
       }]
     }

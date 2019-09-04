@@ -14,6 +14,7 @@ import {
     saveMediaSuccess,
     setAddingMedia,
     setEditingMedia,
+    selectItem,
     SHOW
 } from '../actions/mediaEditor';
 import { editingSelector } from '../selectors/mediaEditor';
@@ -65,7 +66,8 @@ export const editorSaveUpdateMediaEpic = (action$, store) =>
                 return Observable.of(
                     saveMediaSuccess({mediaType, source, data, id}),
                     feedbackAction,
-                    loadMedia(undefined, mediaType, source)
+                    loadMedia(undefined, mediaType, source),
+                    selectItem(id)
                 );
             });
     }

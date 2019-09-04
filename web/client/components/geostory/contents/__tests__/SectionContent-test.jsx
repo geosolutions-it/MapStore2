@@ -16,7 +16,7 @@ const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
 import { ContentTypes } from '../../../../utils/GeoStoryUtils';
 
 const TestScrollableContainer = ({ children, height }) => <div id={SCROLLABLE_CONTAINER_ID} style={{ height, overflowY: "auto" }} >{children}</div>;
-describe('Content (Container) component', () => {
+describe('Section Content (Container) component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);

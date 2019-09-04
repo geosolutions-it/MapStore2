@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import {isNaN, isString, isNil, isObject, lastIndexOf} from 'lodash';
 
 import axios from '../libs/ajax';
-
 import {
     ADD,
     REMOVE,
@@ -32,6 +31,7 @@ import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
+import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
 import { ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
@@ -54,20 +54,30 @@ export const openMediaEditorForNewMedia = action$ =>
                     show('geostory') // open mediaEditor
                 )
                 .merge(
-                    action$.ofType(CHOOSE_MEDIA)
-                        .switchMap( ({resource = {}}) => {
+                    action$.ofType(CHOOSE_MEDIA, HIDE)
+                        .switchMap( ({type, resource = {}}) => {
                             let mediaPath = "";
                             if (isMediaSection(element) && arrayPath === "sections") {
                                 mediaPath = ".contents[0].contents[0]";
                             }
-                            return Observable.of(
-                                update(`${arrayPath}[{"id":"${element.id}"}]${mediaPath}`, {
-                                    resourceId: resource.id,
-                                    type: "image" }, // TODO take type from mediaEditor state or from resource
-                                    "merge" )
+                            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
+                            // if HIDE then update only the type but not the resource, this allows to use placeholder
+                            return type === HIDE ?
+                                Observable.of(
+                                    update(
+                                        path,
+                                        { type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        "merge" )
+                                    ) :
+                                Observable.of(
+                                    update(
+                                        path,
+                                        { resourceId: resource.id, type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        "merge"
+                                    )
                                 );
                         })
-                        .takeUntil(action$.ofType(HIDE, EDIT_MEDIA))
+                        .takeUntil(action$.ofType(EDIT_MEDIA))
                 );
         });
 
@@ -89,8 +99,9 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
+                            const type = mediaTypeSelector(state);
                             return Observable.of(
-                                update(`${path}.resourceId`, resource.id )
+                                update(`${path}`, {resourceId: resource.id, type}, "merge" )
                                 );
                         })
                         .takeUntil(action$.ofType(HIDE, ADD))
@@ -107,7 +118,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
         .ofType(LOAD_GEOSTORY)
         .switchMap( ({id}) =>
             Observable.defer(() => {
-                if (isNaN(parseInt(id, 10))) {
+                if (id && isNaN(parseInt(id, 10))) {
                     return axios.get(`configs/${id}.json`);
                 }
                 // TODO manage load process from external api

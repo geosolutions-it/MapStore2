@@ -188,7 +188,7 @@ export default (state = INITIAL_STATE, action) => {
             const container = get(state, containerPath);
             if (isArray(container)) {
                 if (isString(lastElement)) {
-                    // path sometimes can not be converted into numbers (e.g. when recoursive remove of containers)
+                    // path sometimes can not be converted into numbers (e.g. when recursive remove of containers)
                     lastElement = parseInt(lastElement, 10);
                 }
                 return set(containerPath, [...container.slice(0, lastElement), ...container.slice(lastElement + 1)], state);

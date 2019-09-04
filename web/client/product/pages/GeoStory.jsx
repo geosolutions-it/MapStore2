@@ -33,11 +33,8 @@ class GeoStoryPage extends React.Component {
 
     componentWillMount() {
         const id = get(this.props, "match.params.gid");
-
         this.props.reset();
-        if (id) {
-            this.props.loadResource(id);
-        }
+        this.props.loadResource(id);
     }
     componentDidUpdate(oldProps) {
         const id = get(this.props, "match.params.gid");

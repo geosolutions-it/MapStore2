@@ -23,7 +23,8 @@ import {
     EDITING_MEDIA,
     LOAD_MEDIA,
     LOAD_MEDIA_SUCCESS,
-    SAVE_MEDIA_SUCCESS
+    SAVE_MEDIA_SUCCESS,
+    SELECT_ITEM
 } from '../../actions/mediaEditor';
 
 describe('MediaEditor Epics', () => {
@@ -87,7 +88,7 @@ describe('MediaEditor Epics', () => {
         });
     });
     it('editorSaveUpdateMediaEpic add new media', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         const source = "geostory";
         const type = "image";
         const data = {};
@@ -103,6 +104,9 @@ describe('MediaEditor Epics', () => {
                         break;
                     case ADDING_MEDIA:
                         expect(a.adding).toEqual(false);
+                        break;
+                    case SELECT_ITEM:
+                        expect(a.id.length).toEqual(36);
                         break;
                     case LOAD_MEDIA:
                         expect(a.mediaType).toEqual(type);
