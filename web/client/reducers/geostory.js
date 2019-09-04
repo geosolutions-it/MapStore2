@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
-import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
+import { get, isString, isNumber, findIndex, toPath, isObject, isArray } from "lodash";
+import { set, unset, arrayDelete, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
@@ -182,8 +182,14 @@ export default (state = INITIAL_STATE, action) => {
         }
         case REMOVE: {
             const { path: rawPath } = action;
-            let { element: newElement } = action;
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
+            let containerPath = [...path];
+            const lastElement = containerPath.pop();
+            const container = get(state, containerPath);
+            if (isArray(container)) {
+                return set(containerPath, [...container.slice(0, lastElement), ...container.slice(lastElement + 1)], state);
+            }
+            // object
             return unset(path, state);
         }
         default:
