@@ -62,7 +62,7 @@ export const SAMPLE_HTML = "<p>insert text here...</p>";
  * @prop {string} align one of 'center', 'left' or 'right'
  * @prop {string} size one of 'full', 'large', 'medium' or 'small'
  */
-export const getClassNameFromProps = ({ theme = 'bright', align = 'center', size = 'large' }) => {
+export const getClassNameFromProps = ({ theme = 'bright', align = 'center', size = 'full' }) => {
     const themeClassName = ` ms-${theme}`;
     const alignClassName = ` ms-align-${align}`;
     const sizeClassName = ` ms-size-${size}`;
@@ -101,7 +101,13 @@ export const getDefaultSectionTemplate = (type) => {
                         html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`, // TODO I18N
                         size: 'large',
                         align: 'center',
-                        theme: 'bright'
+                        theme: 'bright',
+                        background: {
+                            fit: 'cover',
+                            theme: 'bright',
+                            size: 'full',
+                            align: 'center'
+                        }
                     }
                 ]
             };
@@ -114,7 +120,6 @@ export const getDefaultSectionTemplate = (type) => {
                     {
                         id: uuid(),
                         type: ContentTypes.COLUMN,
-                        size: 'full',
                         contents: [{
                             id: uuid(),
                             type: ContentTypes.TEXT,
@@ -157,11 +162,14 @@ export const getDefaultSectionTemplate = (type) => {
                     html: SAMPLE_HTML
                 }],
                 background: {
-                    type: "image",
-                    fit: 'cover'
+                    fit: 'cover',
+                    theme: 'bright',
+                    size: 'full',
+                    align: 'center'
                 },
                 align: 'left',
-                size: 'medium'
+                size: 'small',
+                theme: 'bright'
             };
         }
         case ContentTypes.TEXT: {

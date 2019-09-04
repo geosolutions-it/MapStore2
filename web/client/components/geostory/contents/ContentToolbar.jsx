@@ -11,7 +11,6 @@ import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
 import Message from '../../I18N/Message';
-// import {ContentTypes} from '../../../utils/GeoStoryUtils';
 
 const toolButtons = {
     size: ({ size, update = () => {} }) => ({
@@ -55,12 +54,13 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('align', selected)}/>
     }),
-    theme: ({ theme, update = () => {} }) => ({
+    theme: ({ theme, update = () => {}, fit, themeOptions, size }) => ({
         Element: () => <ToolbarDropdownButton
             value={theme}
             glyph="dropper"
             tooltipId="geostory.contentToolbar.contentTheme"
-            options={[{
+            disabled={fit === 'cover' && size === 'full'}
+            options={themeOptions || [{
                 value: 'bright',
                 label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
             }, {

@@ -13,6 +13,9 @@ import stickySupport from '../../../misc/enhancers/stickySupport';
 import Media from '../../media/index';
 import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
 import ContentToolbar from '../../contents/ContentToolbar';
+import Message from '../../../I18N/Message';
+import { Portal } from 'react-overlays';
+import pattern from './patterns/background.svg';
 
 /**
  * Background.
@@ -36,20 +39,39 @@ class Background extends Component {
         editMedia: PropTypes.func,
         update: PropTypes.func,
         remove: PropTypes.func,
-        type: PropTypes.oneOf(lists.MediaTypes)
+        type: PropTypes.oneOf(lists.MediaTypes),
+        disableToolbarPortal: PropTypes.bool,
+        backgroundPlaceholder: PropTypes.object,
+        src: PropTypes.string
     };
 
     static defaultProps = {
         height: 0,
-        type: "image",
-        size: "full",
+        size: 'full',
         width: 0,
-        style: {}
+        style: {},
+        backgroundPlaceholder: {
+            background: `url(${pattern})`,
+            backgroundSize: '256px auto'
+        }
     };
-
 
     render() {
         const MediaType = Media[this.props.type];
+        const parentNode = !this.props.disableToolbarPortal && this.refs && this.refs.div && this.refs.div.parentNode;
+        const toolbar = (
+            <ContentToolbar
+                {...this.props}
+                themeOptions={[{
+                    value: 'bright',
+                    label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
+                }, {
+                    value: 'dark',
+                    label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
+                }]}
+                tools={this.props.tools && this.props.tools[this.props.type] || [ 'editMedia' ]}
+                />
+        );
         return (
             <div
                 ref="div"
@@ -57,13 +79,23 @@ class Background extends Component {
                 style={{ ...this.props.style }}>
                 <div
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
-                    style={{ height: this.props.height }}>
+                    style={{
+                        height: this.props.height,
+                        ...(!MediaType
+                            ? this.props.backgroundPlaceholder
+                            : {})
+                    }}>
                     {MediaType && <MediaType { ...this.props } descriptionEnabled={false}/>}
-                { this.props.mode === Modes.EDIT &&
-                <ContentToolbar
-                    {...this.props}
-                    tools={this.props.tools && this.props.tools[this.props.type]}
-                    />}
+                    { this.props.mode === Modes.EDIT &&
+                    parentNode
+                    ? (
+                        <Portal
+                            container={parentNode}>
+                            {toolbar}
+                        </Portal>
+                    )
+                    : toolbar
+                    }
                 </div>
             </div>
         );

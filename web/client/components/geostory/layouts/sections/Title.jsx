@@ -12,6 +12,8 @@ import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager'
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
+import titlePattern from './patterns/title.svg';
+import coverPattern from './patterns/cover.svg';
 
 /**
  * Paragraph Section Type.
@@ -54,8 +56,12 @@ export default backgroundPropWithHandler(({
                 editMedia={editMedia}
                 remove={remove}
                 width={viewWidth}
+                backgroundPlaceholder={{
+                    background: `url(${cover ? coverPattern : titlePattern })`,
+                    backgroundSize: '64px auto'
+                }}
                 tools={{
-                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
+                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
                 }}
                 height={height >= viewHeight
                     ? viewHeight

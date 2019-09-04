@@ -12,6 +12,8 @@ import Background from './Background';
 
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
+import pattern from './patterns/immersive.svg';
+
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -36,9 +38,9 @@ const Immersive = ({
         <Background
             { ...background }
             mode={mode}
-
+            disableToolbarPortal
             tools={{
-                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
+                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
@@ -51,10 +53,14 @@ const Immersive = ({
             backgroundId={background.id}
             key={background.id}
             width={viewWidth}
-            height={viewHeight}/>
-        <SectionContents
+            height={viewHeight}
+            backgroundPlaceholder={{
+                background: `url(${pattern})`,
+                backgroundSize: '400px auto'
+            }}/>
+         <SectionContents
             tools={{
-                [ContentTypes.COLUMN]: ['size', 'align']
+                [ContentTypes.COLUMN]: ['size', 'align', 'theme']
             }}
             className="ms-section-contents"
             contents={contents}

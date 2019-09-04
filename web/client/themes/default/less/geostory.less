@@ -1,6 +1,7 @@
 @ms-story-bg: @ms2-color-background;
 @ms-story-bg-grey: @ms2-color-shade-lighter;
 @ms-story-highlight: lighten(@ms2-color-primary, 20%);
+@ms-story-text: @ms2-color-text;
 
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
@@ -11,6 +12,7 @@
 @ms-story-font-size-h4: floor((@ms-story-font-size-base * 1.4));
 @ms-story-font-size-h5: @ms-story-font-size-base;
 @ms-story-font-size-h6: floor((@ms-story-font-size-base * 0.85));
+@ms-story-font-size-caption: 11px;
 @ms-story-size-full: 100%;
 @ms-story-size-large: 85%;
 @ms-story-size-medium: 60%;
@@ -118,6 +120,15 @@
         position: relative;
         z-index: 1;
         background-color: @ms-story-bg;
+        + .ms-section {
+            border-top: 1px solid @ms-story-bg-grey;
+        }
+        & > div > .ms-content-toolbar {
+            position: absolute;
+            margin: 8px;
+            top: 0;
+            .shadow-far();
+        }
         /*
         This class combines position sticky with height 0 and overflow-y visible
         to provide a fixed background inside the section.
@@ -139,8 +150,9 @@
                 background-color: @ms-story-bg-grey;
                 .ms-content-toolbar {
                     position: absolute;
-                    padding: 8px;
+                    margin: 8px;
                     top: 0;
+                    .shadow-far();
                 }
                 /* alignment of content */
                 &.ms-align-center .ms-media { .ms-story-align-center(); }
@@ -152,6 +164,14 @@
                 &.ms-size-large .ms-media { width: @ms-story-size-large; }
                 &.ms-size-medium .ms-media { width: @ms-story-size-medium; }
                 &.ms-size-small .ms-media { width: @ms-story-size-small; }
+
+                /* themes of column container */
+                &.ms-bright {
+                    background-color: @ms-story-bg-grey;
+                }
+                &.ms-dark {
+                    background-color: contrast(@ms-story-bg);
+                }
 
             }
         }
@@ -170,18 +190,28 @@
             height: 100%;
 
             .ms-column-contents{
-                .add-bar button {
-                    color: black;
+                .add-bar {
+                    background-color: transparent;
+                    border: none;
+                    button {
+                        color: contrast(@ms-story-bg);
+                    }
                 }
             }
         }
 
         .add-bar {
             position: relative;
-            width: 100%;
             background-color: @ms-story-bg;
-            border-bottom: 1px solid @ms-story-bg-grey;
             text-align: center;
+            border-top: 1px solid @ms-story-bg-grey;
+            border-right: 1px solid @ms-story-bg-grey;
+            border-left: 1px solid @ms-story-bg-grey;
+            width: @square-btn-medium-size + 2;
+            border-top-left-radius: 50%;
+            margin-left: 50%;
+            transform: translateX(-50%);
+            border-top-right-radius: 50%;
             .btn {
                 /* override default style of bootstrap */
                 .square-button-md();
@@ -207,7 +237,13 @@
                 display: flex;
                 margin: auto;
                 align-self: center;
-                padding: 32px;
+                padding: 64px;
+            }
+            /* floating add section button */
+            & > .add-bar {
+                position: absolute;
+                top: auto;
+                bottom: 0;
             }
             .ms-content-text {
                 display: flex;
@@ -216,6 +252,8 @@
                     position: absolute;
                     transform: translate(-@square-btn-medium-size / 2, -60%);
                     padding: 0;
+                    z-index: 2;
+                    .shadow-far();
                 }
                 /* text on full size should fill all the width of container */
                 &.ms-size-full {
@@ -236,6 +274,26 @@
                 &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
                 &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
                 &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
+
+                /* themes of text contents */
+                &.ms-bright .ms-content-body > *:not(.ms-content-toolbar) {
+                    color: contrast(@ms-story-bg);
+                    background-color: fade(@ms-story-bg, 75%);
+                    .shadow-far();
+                }
+                &.ms-bright-text .ms-content-body > *:not(.ms-content-toolbar) {
+                    color: @ms-story-bg;
+                    background-color: transparent;
+                }
+                &.ms-dark .ms-content-body > *:not(.ms-content-toolbar) {
+                    color: @ms-story-bg;
+                    background-color: fade(contrast(@ms-story-bg), 75%);
+                    .shadow-far();
+                }
+                &.ms-dark-text .ms-content-body > *:not(.ms-content-toolbar) {
+                    color: contrast(@ms-story-bg);
+                    background-color: transparent;
+                }
             }
         }
 
@@ -252,17 +310,23 @@
         }
         // overrides and specific styles for immersive section layout
         &.ms-section-immersive {
+            /* floating add section button */
+            & > .add-bar {
+                position: absolute;
+                top: auto;
+                bottom: 0;
+            }
             // column contents overrides
             .ms-content-column {
                     display: flex; // align vertically the content
-                    pointer-events: none; // pass pointer events to background (this div takes full width and eight)
+                    pointer-events: none; // pass pointer events to background (this div takes full width and height)
+                    padding: 64px 24px;
+                    padding-top: 164px;
                 &>.ms-content-body {
                     // column toolbar
                     &>.ms-content-toolbar {
                         z-index: 2;
                     }
-                    // the background in this case is only of the column
-                    background-color: @ms-story-bg;
                     // override background of paragraph (or title) content.
                     .ms-content-body {
                         background-color: transparent;
@@ -287,6 +351,32 @@
                         }
                     }
                 }
+                /* themes of column container */
+                &.ms-bright > .ms-content-body {
+                    color: contrast(@ms-story-bg);
+                    background-color: fade(@ms-story-bg, 75%);
+                    .shadow-far();
+                }
+                &.ms-bright-text > .ms-content-body {
+                    color: @ms-story-bg;
+                    background-color: transparent;
+                }
+                &.ms-dark > .ms-content-body {
+                    color: @ms-story-bg;
+                    background-color: fade(contrast(@ms-story-bg), 75%);
+                    .shadow-far();
+                    .add-bar button {
+                        color: @ms-story-bg;
+                    }
+                }
+                &.ms-dark-text > .ms-content-body {
+                    color: contrast(@ms-story-bg);
+                    background-color: transparent;
+                }
+
+                .ms-content-media {
+                    padding: 16px;
+                }
             }
         }
     }
@@ -304,7 +394,7 @@
         */
         .ms-content-body > * {
             pointer-events: auto;
-            position: relative; /* needed to set correct position of add bar */
+            position: relative; /* sets the position of the add bar overlay relative to the button */
         }
         /* this styles applies to all content text of a cascade story */
         &.ms-content-text {
@@ -394,41 +484,10 @@
                 }
 
                 /* padding for the first child of content body of text content */
-                & > * {
+                & > *:not(.ms-content-toolbar) {
                     padding: 16px;
                 }
             }
-
-            /* themes of text contents */
-            &.ms-bright .ms-content-body > * {
-                color: contrast(@ms-story-bg);
-                background-color: fade(@ms-story-bg, 75%);
-                .shadow-far();
-            }
-            &.ms-bright-text .ms-content-body > * {
-                color: @ms-story-bg;
-                background-color: transparent;
-            }
-            &.ms-dark .ms-content-body > * {
-                color: @ms-story-bg;
-                background-color: fade(contrast(@ms-story-bg), 75%);
-                .shadow-far();
-            }
-            &.ms-dark-text .ms-content-body > * {
-                color: contrast(@ms-story-bg);
-                background-color: transparent;
-            }
-        }
-        .ms-content-image {
-            .ms-content-toolbar {
-                    position: absolute;
-                    padding: 8px;
-                    z-index: 2;
-                    top: 0;
-                    &>.btn-group {
-                        .shadow-far();
-                    }
-                }
         }
 
         /* size of content */
@@ -441,7 +500,6 @@
         &.ms-align-center { .ms-story-align-center(); }
         &.ms-align-left { .ms-story-align-left(); }
         &.ms-align-right { .ms-story-align-right(); }
-
     }
 
 
@@ -459,16 +517,30 @@
                 width: 100%;
                 height: 100%;
             }
-            & .ms-media-credits {
+            .ms-media-credits {
                 transform: translate(0, -100%);
                 position: absolute;
-                left: 0;
-                background-color: rgba(255, 255, 255, 0.75);
-                color: #333333;
-                padding: 0 4px;
-                padding-bottom: 2px;
-                font-size: 12px;
-                max-width: 100%;
+                right: 0;
+                max-width: ~"calc(50% - @{square-btn-medium-size})";
+                > small {
+                    display: block;
+                    margin: 4px;
+                    padding: 4px;
+                    background-color: fade(@ms-story-bg, 75%);
+                    color: contrast(@ms-story-bg);
+                    .shadow-soft();
+                    font-size: @ms-story-font-size-caption;
+                }
+            }
+            .ms-media-description {
+                border-left: 2px solid @ms-story-bg-grey;
+                padding-left: 8px;
+                margin-top: 4px;
+                > small {
+                    padding: 8px 0;
+                    font-style: italic;
+                    font-size: @ms-story-font-size-caption;
+                }
             }
         }
     }
