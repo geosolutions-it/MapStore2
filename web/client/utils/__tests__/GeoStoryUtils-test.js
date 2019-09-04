@@ -24,7 +24,7 @@ import {
 } from "../GeoStoryUtils";
 
 
-describe("GeoStory", () => {
+describe("GeoStory Utils", () => {
     beforeEach( () => {
 
     });
@@ -34,7 +34,7 @@ describe("GeoStory", () => {
     });
     it('test getClassNameFromProps class creator', () => {
         let classes = getClassNameFromProps({}); // defaults
-        expect(classes).toBe(" ms-bright ms-align-center ms-size-large");
+        expect(classes).toBe(" ms-bright ms-align-center ms-size-full");
 
         classes = getClassNameFromProps({
             theme: "dark",
@@ -133,6 +133,12 @@ describe("GeoStory", () => {
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
+            const background = data.contents[0].background;
+            expect(background.theme).toBe("bright");
+            expect(background.fit).toBe("cover");
+            expect(background.size).toBe("full");
+            expect(background.align).toBe("center");
+
         });
         it("SectionTypes.PARAGRAPH", () => {
             const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH);
@@ -163,7 +169,7 @@ describe("GeoStory", () => {
             expect(content.id).toExist();
             expect(content.id.length).toBe(uuid().length);
             expect(content.type).toBe(ContentTypes.COLUMN);
-            expect(content.size).toBe("medium");
+            expect(content.size).toBe("small");
             expect(content.align).toBe("left");
             const textContent = content.contents[0];
             expect(textContent.type).toBe(ContentTypes.TEXT);
@@ -199,7 +205,7 @@ describe("GeoStory", () => {
             const data = getDefaultSectionTemplate(ContentTypes.COLUMN);
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.COLUMN);
-            expect(data.size).toBe("medium");
+            expect(data.size).toBe("small");
             expect(data.align).toBe("left");
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];

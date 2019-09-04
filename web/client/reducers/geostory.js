@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, toPath, isObject, isArray } from "lodash";
-import { set, unset, arrayDelete, arrayUpdate } from '../utils/ImmutableUtils';
+import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
