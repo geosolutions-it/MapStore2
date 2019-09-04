@@ -91,15 +91,14 @@ describe('Immersive component', () => {
         // column content should have
         ReactDOM.render(<Immersive mode={Modes.EDIT} contents={CONTENTS} />, document.getElementById("container"));
 
-        // background tools should have edit, fullscreen, resize, align, delete
+        // background tools should have edit, fullscreen, resize and align
         const backgroundToolbar = document.querySelector('.ms-section-background .ms-content-toolbar .btn-group');
         expect(backgroundToolbar).toExist();
-        expect(backgroundToolbar.querySelectorAll('button').length).toBe(5);
+        expect(backgroundToolbar.querySelectorAll('button').length).toBe(4);
         expect(backgroundToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
         expect(backgroundToolbar.querySelector('button .glyphicon-1-full-screen')).toExist(); // align tool
         expect(backgroundToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(backgroundToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
-        expect(backgroundToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
 
         // column should have algin, and resize tools
         const columnToolbar = document.querySelector('.ms-section-contents .ms-content-toolbar .btn-group');

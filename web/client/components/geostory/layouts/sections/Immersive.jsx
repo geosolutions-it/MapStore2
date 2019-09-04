@@ -38,7 +38,7 @@ const Immersive = ({
             mode={mode}
 
             tools={{
-                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'remove']
+                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"

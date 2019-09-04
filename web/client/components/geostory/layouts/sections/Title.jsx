@@ -29,6 +29,7 @@ export default backgroundPropWithHandler(({
     viewHeight,
     add = () => {},
     update = () => {},
+    remove = () => {},
     updateBackground = () => {},
     editMedia = () => {}
 }) => (
@@ -51,6 +52,7 @@ export default backgroundPropWithHandler(({
                 update={updateBackground}
                 add={add}
                 editMedia={editMedia}
+                remove={remove}
                 width={viewWidth}
                 tools={{
                     [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
@@ -65,12 +67,13 @@ export default backgroundPropWithHandler(({
             mode={mode}
             add={add}
             update={update}
+            remove={remove}
             sectionId={id}
             contentProps={{
                 contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
             }}
             tools={{
-                [ContentTypes.TEXT]: ['size', 'align', 'theme', 'delete']
+                [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']
             }}
         />
         {mode === Modes.EDIT && <AddBar
