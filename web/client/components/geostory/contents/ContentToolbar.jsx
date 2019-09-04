@@ -91,6 +91,15 @@ const toolButtons = {
         onClick: () => {
             editMedia({path});
         }
+    }),
+    // remove content
+    remove: ({ path, remove = () => { } }) => ({
+        glyph: "trash",
+        visible: true,
+        tooltipId: "geostory.contentToolbar.remove",
+        onClick: () => {
+            remove(path);
+        }
     })
 };
 

@@ -70,8 +70,7 @@ export default backgroundPropWithHandler(({
                 contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
             }}
             tools={{
-                [ContentTypes.TEXT]: ['size', 'align', 'theme'],
-                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align']
+                [ContentTypes.TEXT]: ['size', 'align', 'theme', 'delete']
             }}
         />
         {mode === Modes.EDIT && <AddBar

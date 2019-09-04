@@ -35,6 +35,7 @@ class Background extends Component {
         add: PropTypes.func,
         editMedia: PropTypes.func,
         update: PropTypes.func,
+        remove: PropTypes.func,
         type: PropTypes.oneOf(lists.MediaTypes)
     };
 
@@ -58,15 +59,12 @@ class Background extends Component {
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
                     style={{ height: this.props.height }}>
                     {MediaType && <MediaType { ...this.props } descriptionEnabled={false}/>}
-                >
                 { this.props.mode === Modes.EDIT &&
                 <ContentToolbar
                     {...this.props}
                     tools={this.props.tools && this.props.tools[this.props.type]}
                     />}
                 </div>
-
-
             </div>
         );
     }

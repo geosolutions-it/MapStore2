@@ -46,7 +46,9 @@ export default ({
         mode,
         editMedia = () => {},
         add = () => {},
-        update= () => {}}) =>
+        update = () => {},
+        remove = () => {}
+    }) =>
     (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
             const content =
@@ -60,6 +62,7 @@ export default ({
                     // restructure the path to give it the correct scope
                     add={(path, ...args) => add(`contents[{"id": "${id}"}].` + path, ...args)}
                     update={(path, ...args) => update(`contents[{"id": "${id}"}].` + path, ...args)}
+                    remove={(path, ...args) => remove(`contents[{"id": "${id}"}]` + (path ? "." + path : ""), ...args)}
                     {...contentProps}
                     {...props}
                     tools={tools && tools[props.type]} />)];

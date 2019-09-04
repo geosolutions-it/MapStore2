@@ -8,6 +8,7 @@
 
 const {get, findIndex} = require('lodash');
 const set = require('lodash/fp/set');
+const unset = require('lodash/fp/unset');
 const compose = require('lodash/fp/compose');
 
 /**
@@ -78,14 +79,24 @@ const arrayDelete = (path, condition, object) => {
 };
 module.exports = {
     /**
-     * Set of lodash fp
+     * Set of lodash fp. **NOTE:** This function is curried, so partial applications will return a function that takes the missing parameters
      * @param {string} path the path
      * @param {any} value the value to set
+     * @param {any} object the object to use.
      * @memberof utils.ImmutableUtils
      * @example
-     * set('a.b.c',2, {}); // returns {a: {b: {c: 2}}});
+     * set('a.b.c',2, {}, obj); // returns {a: {b: {c: 2}}});
      */
     set,
+    /**
+     * Unset of lodash fp. **NOTE:** This function is curried, so partial applications will return a function that takes the missing parameters
+     * @param {string} path the path
+     * @memberof utils.ImmutableUtil
+     * @param {any} object the object to use.
+     * @example
+     * set('a.b.c',2, {}, obj); // returns {a: {b: {c: 2}}});
+     */
+    unset,
     /**
      * compose of lodash fp. Allow to compose functions with currying.
      * Allows to write something like `set(a, b, set(c, d, set(e, f, state)))`

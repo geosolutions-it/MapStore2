@@ -1872,7 +1872,8 @@
                 "darkTextThemeLabel": "Dark text",
                 "cover": "Decken Sie den Behälterraum ab",
                 "fit": "Den Behälterraum montieren",
-                "editMedia": "Ändern Sie die Medienquelle"
+                "editMedia": "Ändern Sie die Medienquelle",
+                "remove": "Entfernen"
             },
             "errors": {
                 "loading": {

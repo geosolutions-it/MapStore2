@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
-import { set, arrayUpdate } from '../utils/ImmutableUtils';
+import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
@@ -14,7 +14,8 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     SET_CURRENT_STORY,
-    UPDATE
+    UPDATE,
+    REMOVE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
@@ -178,6 +179,12 @@ export default (state = INITIAL_STATE, action) => {
                 newElement = {...oldElement, ...newElement};
             }
             return set(path, newElement, state);
+        }
+        case REMOVE: {
+            const { path: rawPath } = action;
+            let { element: newElement } = action;
+            const path = getEffectivePath(`currentStory.${rawPath}`, state);
+            return unset(path, state);
         }
         default:
             return state;

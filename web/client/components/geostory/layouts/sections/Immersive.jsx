@@ -22,6 +22,7 @@ const Immersive = ({
     onVisibilityChange = () => { },
     update = () => {},
     updateBackground = () => {},
+    remove = () => {},
     id,
     background = {},
     path,
@@ -37,7 +38,7 @@ const Immersive = ({
             mode={mode}
 
             tools={{
-                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align']
+                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'remove']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
@@ -45,6 +46,7 @@ const Immersive = ({
             editMedia={editMedia}
             path={path}
             update={updateBackground}
+            remove={remove} // ?
             sectionId={id}
             backgroundId={background.id}
             key={background.id}
@@ -59,6 +61,7 @@ const Immersive = ({
             mode={mode}
             add={add}
             update={update}
+            remove={remove}
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}

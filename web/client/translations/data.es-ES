@@ -1872,7 +1872,8 @@
                 "darkTextThemeLabel": "Texto oscuro",
                 "cover": "Cubra el espacio del contenedor",
                 "fit": "Ajustar el espacio del contenedor",
-                "editMedia": "Cambiar fuente de medios"
+                "editMedia": "Cambiar fuente de medios",
+                "remove": "Eliminar"
             },
             "errors": {
                 "loading": {

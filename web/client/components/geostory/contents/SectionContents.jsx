@@ -22,7 +22,8 @@ export default compose(
         // NOTE: adds the section initial path to content. The Contents adds contents[...] on it's own for inner add buttons
         editMedia: ({ editMedia = () => { }, sectionId }) => ({path}, ...args) => editMedia({path: `sections[{"id": "${sectionId}"}].` + path}, ...args),
         add: ({ add = () => { }, sectionId }) => (path, ...args) => add(`sections[{"id": "${sectionId}"}].` + path, ...args),
-        update: ({ update = () => { }, sectionId }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].` + path, ...args)
+        update: ({ update = () => { }, sectionId }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].` + path, ...args),
+        remove: ({ remove = () => { }, sectionId }) => (path, ...args) => remove(`sections[{"id": "${sectionId}"}].` + path, ...args)
     }),
     setDisplayName("SectionContents")
 )(Contents);

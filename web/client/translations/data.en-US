@@ -1873,7 +1873,8 @@
                 "darkTextThemeLabel": "Dark text",
                 "cover": "Cover the container space",
                 "fit": "Fit the container space",
-                "editMedia": "Change media source"
+                "editMedia": "Change media source",
+                "remove": "Remove"
             },
             "errors": {
                 "loading": {

@@ -23,6 +23,7 @@ export default ({
     add = () => {},
     update= () => {},
     editMedia= () => {},
+    remove = () => {},
     viewWidth,
     viewHeight
 }) => (
@@ -35,6 +36,7 @@ export default ({
             add={add}
             editMedia={editMedia}
             update={update}
+            remove={remove}
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}

@@ -29,7 +29,8 @@ export default ({
     mode,
     add = () => {},
     editMedia = () => {},
-    update= () => {}
+    update= () => {},
+    remove = () => {}
 }) => (
         <Contents
             className="ms-column-contents"
@@ -39,11 +40,12 @@ export default ({
             add={add}
             editMedia={editMedia}
             update={update}
+            remove={remove}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
             tools={{
-                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align'],
-                [MediaTypes.VIDEO]: ['editMedia'] // TODO change this list for video
+                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
+                [MediaTypes.VIDEO]: ['editMedia', 'remove'] // TODO change this list for video
             }}
             addButtons={[{
                 glyph: 'sheet',

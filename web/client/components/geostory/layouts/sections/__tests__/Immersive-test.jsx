@@ -91,14 +91,15 @@ describe('Immersive component', () => {
         // column content should have
         ReactDOM.render(<Immersive mode={Modes.EDIT} contents={CONTENTS} />, document.getElementById("container"));
 
-        // background tools should have edit, fullscreen, resize and align
+        // background tools should have edit, fullscreen, resize, align, delete
         const backgroundToolbar = document.querySelector('.ms-section-background .ms-content-toolbar .btn-group');
         expect(backgroundToolbar).toExist();
-        expect(backgroundToolbar.querySelectorAll('button').length).toBe(4);
+        expect(backgroundToolbar.querySelectorAll('button').length).toBe(5);
         expect(backgroundToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
         expect(backgroundToolbar.querySelector('button .glyphicon-1-full-screen')).toExist(); // align tool
         expect(backgroundToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(backgroundToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
 
         // column should have algin, and resize tools
         const columnToolbar = document.querySelector('.ms-section-contents .ms-content-toolbar .btn-group');
@@ -110,9 +111,10 @@ describe('Immersive component', () => {
         // inner media and image contents must have edit, resize and align tools
         const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');
         expect(innerMediaToolbar).toExist();
-        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(3);
+        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(4);
         expect(innerMediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(innerMediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
     });
 });

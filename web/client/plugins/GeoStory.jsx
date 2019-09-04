@@ -10,7 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {createPlugin} from '../utils/PluginsUtils';
-import { add, update } from '../actions/geostory';
+import { add, update, remove } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
 import { currentStorySelector, modeSelector } from '../selectors/geostory';
@@ -46,6 +46,7 @@ export default createPlugin("GeoStory", {
         }), {
             add,
             update,
+            remove,
             editMedia
         },
     )(GeoStory),
