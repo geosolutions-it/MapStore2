@@ -7,17 +7,19 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, isObject} from 'lodash';
+import {isNaN, isString, isNil, isObject, lastIndexOf} from 'lodash';
 
 import axios from '../libs/ajax';
 
 import {
     ADD,
+    REMOVE,
     LOAD_GEOSTORY,
     loadingGeostory,
     loadGeostoryError,
     setCurrentStory,
-    update
+    update,
+    remove
 } from '../actions/geostory';
 import {
     show,
@@ -29,10 +31,11 @@ import {
 import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
-import { resourceIdSelectorCreator } from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
 
 import { wrapStartStop } from '../observables/epics';
 import { ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
+import { getEffectivePath } from '../reducers/geostory';
 
 
 /**
@@ -147,3 +150,24 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
             ))
         );
+
+/**
+ * Removes containers that are empty after a REMOVE action from GeoStory.
+ * In case of nested contents, it could call recursively until all the empty containers are empty
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store redux store
+ * @returns {Observable} a stream that emits remove action for the container, if empty.
+ */
+export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
+    action$.ofType(REMOVE).switchMap(({path: rawPath}) => {
+        const effectivePath = getEffectivePath(rawPath, currentStorySelector(getState()));
+        const containerIndex = lastIndexOf(effectivePath, "contents");
+        if (containerIndex > 0) {
+            const containerPath = effectivePath.splice(0, containerIndex);
+            const container = createPathSelector(containerPath.join('.'))(getState());
+            if (container && container.contents && container.contents.length === 0) {
+                return Observable.of(remove(containerPath.join('.')));
+            }
+        }
+        return Observable.empty();
+    });

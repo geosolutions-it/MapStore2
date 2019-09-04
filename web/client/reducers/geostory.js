@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, toPath, isObject, isArray } from "lodash";
-import { set, unset, arrayDelete, arrayUpdate } from '../utils/ImmutableUtils';
+import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
@@ -184,9 +184,13 @@ export default (state = INITIAL_STATE, action) => {
             const { path: rawPath } = action;
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
             let containerPath = [...path];
-            const lastElement = containerPath.pop();
+            let lastElement = containerPath.pop();
             const container = get(state, containerPath);
             if (isArray(container)) {
+                if (isString(lastElement)) {
+                    // path sometimes can not be converted into numbers (e.g. when recoursive remove of containers)
+                    lastElement = parseInt(lastElement, 10);
+                }
                 return set(containerPath, [...container.slice(0, lastElement), ...container.slice(lastElement + 1)], state);
             }
             // object

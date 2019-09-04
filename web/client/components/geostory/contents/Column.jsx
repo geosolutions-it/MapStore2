@@ -44,8 +44,9 @@ export default ({
             viewWidth={viewWidth}
             viewHeight={viewHeight}
             tools={{
+                [ContentTypes.TEXT]: ['remove'],
                 [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
-                [MediaTypes.VIDEO]: ['editMedia', 'remove', 'remove'] // TODO change this list for video
+                [MediaTypes.VIDEO]: ['editMedia', 'remove'] // TODO change this list for video
             }}
             addButtons={[{
                 glyph: 'sheet',
