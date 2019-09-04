@@ -29,6 +29,7 @@ import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
 import { resourceIdSelectorCreator } from '../selectors/geostory';
+import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
 import { ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
@@ -95,8 +96,9 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
+                            const type = mediaTypeSelector(state);
                             return Observable.of(
-                                update(`${path}.resourceId`, resource.id )
+                                update(`${path}`, {resourceId: resource.id, type}, "merge" )
                                 );
                         })
                         .takeUntil(action$.ofType(HIDE, ADD))
