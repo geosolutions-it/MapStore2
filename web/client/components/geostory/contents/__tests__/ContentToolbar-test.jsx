@@ -94,4 +94,38 @@ describe('ContentToolbar component', () => {
         expect(buttons.length).toEqual(1);
         ReactTestUtils.Simulate.click(buttons[0]);
     });
+    describe('tools', () => {
+        // TODO: align, theme, size...
+        it(`remove`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["remove"]}
+                fit="contain"
+                path="TEST_PATH"
+                remove={(path) => {
+                    expect(path).toEqual("TEST_PATH");
+                    done();
+                }}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toExist();
+            expect(buttons.length).toEqual(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+        });
+        it(`editMedia`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["editMedia"]}
+                fit="contain"
+                path="TEST_PATH"
+                editMedia={({path}) => {
+                    expect(path).toEqual("TEST_PATH");
+                    done();
+                }}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toExist();
+            expect(buttons.length).toEqual(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+        });
+    });
+
 });

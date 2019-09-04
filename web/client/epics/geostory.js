@@ -171,11 +171,13 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
  */
 export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
     action$.ofType(REMOVE).switchMap(({path: rawPath}) => {
+        // find out the lower container (has contents property) in the path
         const effectivePath = getEffectivePath(rawPath, currentStorySelector(getState()));
         const containerIndex = lastIndexOf(effectivePath, "contents");
         if (containerIndex > 0) {
             const containerPath = effectivePath.splice(0, containerIndex);
             const container = createPathSelector(containerPath.join('.'))(getState());
+            // if empty contents, remove it
             if (container && container.contents && container.contents.length === 0) {
                 return Observable.of(remove(containerPath.join('.')));
             }

@@ -13,7 +13,8 @@ import {
     editResource,
     setCurrentStory,
     setEditing,
-    update
+    update,
+    remove
 } from '../../actions/geostory';
 import {
     currentStorySelector,
@@ -121,5 +122,35 @@ describe('geostory reducer', () => {
             },
             editResource("id", "image", {title: "title"}))})
         ).toEqual([{id: "id", type: "image", data: {title: "title"}}]);
+    });
+    describe('remove', () => {
+        const STATE_STORY = geostory(undefined, setCurrentStory(TEST_STORY));
+        it('as entry', () => {
+            const SECTION_ID = TEST_STORY.sections[0].id;
+            const CONTENT_ID = TEST_STORY.sections[0].contents[0].id;
+            const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}].html`;
+            const STATE = { geostory: geostory(STATE_STORY, remove(pathToContentHtml)) };
+            expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].html).toNotExist();
+        });
+        it('as array index', () => {
+            const SECTION_ID = TEST_STORY.sections[1].id;
+            const CONTENT_ID = TEST_STORY.sections[1].contents[0].id;
+            const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}]`;
+            const STATE = { geostory: geostory(STATE_STORY, remove(pathToContentHtml)) };
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[1]).toNotExist(); // removes only the item at index
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toExist();
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents.length).toBe(1);
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].id).toBe("col2"); // 2nd element of the array shifted in first position
+        });
+        it('as array index for sub contents', () => {
+            const SECTION_ID = TEST_STORY.sections[1].id;
+            const CONTENT_ID = TEST_STORY.sections[1].contents[0].id;
+            const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}].contents[0]`;
+            const STATE = { geostory: geostory(STATE_STORY, remove(pathToContentHtml)) };
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[1]).toExist(); // removes only the item at index
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toExist();
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].contents.length).toBe(1);
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].contents[0].type).toBe("media"); // 2nd element of the array shifted in first position
+        });
     });
 });
