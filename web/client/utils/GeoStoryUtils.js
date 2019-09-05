@@ -169,7 +169,6 @@ export const getDefaultSectionTemplate = (type) => {
                     html: SAMPLE_HTML
                 }],
                 background: {
-                    type: "image",
                     fit: 'cover',
                     size: 'full',
                     align: 'center',

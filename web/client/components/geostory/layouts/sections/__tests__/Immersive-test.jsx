@@ -94,16 +94,17 @@ describe('Immersive component', () => {
         // background tools should have edit, fullscreen, resize and align
         const backgroundToolbar = document.querySelector('.ms-section-background .ms-content-toolbar .btn-group');
         expect(backgroundToolbar).toExist();
-        expect(backgroundToolbar.querySelectorAll('button').length).toBe(4);
+        expect(backgroundToolbar.querySelectorAll('button').length).toBe(5);
         expect(backgroundToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
         expect(backgroundToolbar.querySelector('button .glyphicon-1-full-screen')).toExist(); // align tool
         expect(backgroundToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(backgroundToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
         // column should have algin, and resize tools
         const columnToolbar = document.querySelector('.ms-section-contents .ms-content-toolbar .btn-group');
         expect(columnToolbar).toExist();
-        expect(columnToolbar.querySelectorAll('button').length).toBe(2);
+        expect(columnToolbar.querySelectorAll('button').length).toBe(3);
         expect(columnToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
 

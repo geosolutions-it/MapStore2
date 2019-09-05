@@ -15,7 +15,7 @@ import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryU
 import ContentToolbar from '../../contents/ContentToolbar';
 import Message from '../../../I18N/Message';
 import { Portal } from 'react-overlays';
-import pattern from './patterns/background.svg';
+import pattern from './patterns/grid.svg';
 
 /**
  * Background.
@@ -86,7 +86,7 @@ class Background extends Component {
                             : {})
                     }}>
                     {MediaType && <MediaType { ...this.props } descriptionEnabled={false}/>}
-                    { this.props.mode === Modes.EDIT &&
+                    { this.props.mode === Modes.EDIT && (
                     parentNode
                     ? (
                         <Portal
@@ -94,8 +94,7 @@ class Background extends Component {
                             {toolbar}
                         </Portal>
                     )
-                    : toolbar
-                    }
+                    : toolbar)}
                 </div>
             </div>
         );

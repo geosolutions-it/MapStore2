@@ -12,7 +12,7 @@ import Background from './Background';
 
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
-import pattern from './patterns/immersive.svg';
+import pattern from './patterns/world.svg';
 
 /**
  * Paragraph Section Type.
@@ -56,7 +56,7 @@ const Immersive = ({
             height={viewHeight}
             backgroundPlaceholder={{
                 background: `url(${pattern})`,
-                backgroundSize: '400px auto'
+                backgroundSize: '600px auto'
             }}/>
          <SectionContents
             tools={{

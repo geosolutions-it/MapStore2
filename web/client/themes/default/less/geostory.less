@@ -127,7 +127,7 @@
             position: absolute;
             margin: 8px;
             top: 0;
-            .shadow-far();
+            .shadow-soft();
         }
         /*
         This class combines position sticky with height 0 and overflow-y visible
@@ -152,7 +152,7 @@
                     position: absolute;
                     margin: 8px;
                     top: 0;
-                    .shadow-far();
+                    .shadow-soft();
                 }
                 /* alignment of content */
                 &.ms-align-center .ms-media { .ms-story-align-center(); }
@@ -189,12 +189,21 @@
             z-index: 1;
             height: 100%;
 
-            .ms-column-contents{
+            .ms-column-contents {
                 .add-bar {
                     background-color: transparent;
                     border: none;
                     button {
                         color: contrast(@ms-story-bg);
+                    }
+                }
+                .ms-content-toolbar {
+                    display: flex;
+                    padding: 0 16px;
+                    padding-top: @square-btn-medium-size / 2; 
+                    .btn-group {
+                        margin-right: 0;
+                        margin-left: auto;
                     }
                 }
             }
@@ -253,7 +262,7 @@
                     transform: translate(-@square-btn-medium-size / 2, -60%);
                     padding: 0;
                     z-index: 2;
-                    .shadow-far();
+                    .shadow-soft();
                 }
                 /* text on full size should fill all the width of container */
                 &.ms-size-full {
@@ -323,19 +332,16 @@
                     padding: 64px 24px;
                     padding-top: 164px;
                 &>.ms-content-body {
-                    // column toolbar
-                    &>.ms-content-toolbar {
-                        z-index: 2;
-                    }
                     // override background of paragraph (or title) content.
                     .ms-content-body {
                         background-color: transparent;
                     }
                     &>.ms-content-toolbar {
                         position: absolute;
+                        z-index: 2;
                         transform: translate(-@square-btn-medium-size / 2, -60%);
                         padding: 0;
-                        .shadow-far();
+                        .shadow-soft();
                     }
                     pointer-events: auto; // reset pointer-events: none of the body
                     width: 100%;
@@ -374,8 +380,11 @@
                     background-color: transparent;
                 }
 
-                .ms-content-media {
+                .ms-media {
                     padding: 16px;
+                }
+                .ms-media-credits {
+                    right: 16px;
                 }
             }
         }

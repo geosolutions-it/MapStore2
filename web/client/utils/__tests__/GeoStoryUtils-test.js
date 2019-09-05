@@ -178,7 +178,7 @@ describe("GeoStory Utils", () => {
             expect(textContent.id.length).toBe(uuid().length);
             expect(textContent.resourceId).toNotExist();
             const background = content.background;
-            expect(background.type).toBe(MediaTypes.IMAGE);
+            expect(background.type).toBe(undefined);
             expect(background.size).toBe("full");
             expect(background.fit).toBe("cover");
             expect(background.theme).toBe("bright");
@@ -214,7 +214,7 @@ describe("GeoStory Utils", () => {
             expect(content.html).toBe(SAMPLE_HTML);
             expect(content.type).toBe(ContentTypes.TEXT);
             const background = data.background;
-            expect(background.type).toBe(MediaTypes.IMAGE);
+            expect(background.type).toBe(undefined);
             expect(background.size).toBe("full");
             expect(background.fit).toBe("cover");
             expect(background.theme).toBe("bright");
