@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET,
+const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, UPDATE_LAYER, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET,
     ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES, TOGGLE_COLLAPSE, TOGGLE_COLLAPSE_ALL, TOGGLE_TRAY, toggleCollapse} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
@@ -102,6 +102,16 @@ function widgetsReducer(state = emptyState, action) {
                 ), {
                     id: action.id
                 }, state);
+        case UPDATE_LAYER: {
+            if (action.layer) {
+                const widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
+                if (widgets) {
+                    return set(`containers[${DEFAULT_TARGET}].widgets`,
+                        widgets.map(w => get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w), state);
+                }
+            }
+            return state;
+        }
         case DELETE:
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id

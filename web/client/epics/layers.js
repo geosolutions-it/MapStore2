@@ -8,8 +8,9 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams} = require('../actions/layers');
-const {getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
+const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, CHANGE_LAYER_PROPERTIES, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams } = require('../actions/layers');
+const { updateWidgetLayer } = require('../actions/widgets');
+const {getLayerFromId, getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
 
 const { setControlProperty } = require('../actions/controls');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
@@ -18,7 +19,7 @@ const LayersUtils = require('../utils/LayersUtils');
 
 
 const assign = require('object-assign');
-const {isArray, head} = require('lodash');
+const {has, isArray, head} = require('lodash');
 
 const getUpdates = (updates, options) => {
     return Object.keys(options).filter((opt) => options[opt]).reduce((previous, current) => {
@@ -148,8 +149,25 @@ const updateSettingsParamsEpic = (action$, store) =>
             );
         });
 
+/**
+ * Triggers updates of the layer property of widgets on layerFilter change
+ * @memberof epics.layers
+ * @param {external:Observable} action$ manages `CHANGE_LAYER_PROPERTIES`
+ * @return {external:Observable}
+ */
+const changeLayerPropertiesEpic = (action$, store) =>
+    action$.ofType(CHANGE_LAYER_PROPERTIES)
+        .switchMap(({layer, newProperties}) => {
+            const state = store.getState();
+            const flatLayer = getLayerFromId(state, layer);
+            return Rx.Observable.of(
+                ...(has(newProperties, "layerFilter") && flatLayer ? [updateWidgetLayer(flatLayer)] : [])
+            );
+        });
+
 module.exports = {
     refresh,
     updateDimension,
-    updateSettingsParamsEpic
+    updateSettingsParamsEpic,
+    changeLayerPropertiesEpic
 };
