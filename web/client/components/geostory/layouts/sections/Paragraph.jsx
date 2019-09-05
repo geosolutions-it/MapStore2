@@ -28,7 +28,9 @@ export default ({
     viewHeight
 }) => (
     <section
-        className="ms-section ms-section-paragraph">
+        className="ms-section ms-section-paragraph"
+        id={id}
+    >
         <SectionContents
             className="ms-section-contents"
             contents={contents}

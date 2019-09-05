@@ -83,6 +83,20 @@ export const isMediaSection = (element) => element.type === SectionTypes.PARAGRA
     element.contents[0].contents[0].type === ContentTypes.MEDIA;
 
 /**
+ * utility function that scrolls the view to the element
+ * if it finds an element and autoscroll is enabled
+ * @param {string} id id of the dom element
+ * @param {object} autoscrollOptions options used to the scroll action
+ */
+export const autoScrollToNewElement = ({id, autoScrollOptions = {behavior: "auto", block: "nearest", inline: "start"}} = {}) => {
+    const element = document.getElementById(id);
+    if (element) {
+        // trying behaviour smooth it does not scroll
+        element.scrollIntoView(autoScrollOptions);
+    }
+};
+
+/**
  * Creates a default template for the given type
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)
  * @return {object} the template object of the content/section
@@ -91,6 +105,7 @@ export const getDefaultSectionTemplate = (type) => {
     switch (type) {
         case SectionTypes.TITLE:
             return {
+                id: uuid(),
                 type: SectionTypes.TITLE,
                 title: 'Title Section', // TODO I18N
                 cover: false,

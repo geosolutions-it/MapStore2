@@ -8,6 +8,7 @@
 
 import { Observable } from 'rxjs';
 import {isNaN, isString, isNil, isObject, lastIndexOf} from 'lodash';
+import { timer } from 'rxjs/observable/timer';
 
 import axios from '../libs/ajax';
 import {
@@ -34,7 +35,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } f
 import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
+import { autoScrollToNewElement, ContentTypes, isMediaSection, MediaTypes } from '../utils/GeoStoryUtils';
 import { getEffectivePath } from '../reducers/geostory';
 
 
@@ -80,6 +81,30 @@ export const openMediaEditorForNewMedia = action$ =>
                         .takeUntil(action$.ofType(EDIT_MEDIA))
                 );
         });
+
+
+/**
+ * side effect to scroll to new sections
+ * @param {*} action$
+ */
+export const autoScrollToNewElementEpic = action$ =>
+    action$.ofType(ADD)
+    .switchMap(({element}) => {
+        return Observable.of(element)
+            .switchMap(() => {
+                if (!document.getElementById(element.id)) {
+                    const err = new Error("Item not mounted yet");
+                    throw err;
+                } else {
+                    autoScrollToNewElement({
+                        id: element.id
+                    });
+                    return Observable.empty();
+                }
+            })
+            .retryWhen(errors => !document.getElementById(element.id) ? errors.delay(100) : Observable.empty());
+    });
+
 
 /**
  * opens the media editor with current media as the selected one

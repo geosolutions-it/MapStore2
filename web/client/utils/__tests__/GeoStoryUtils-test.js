@@ -120,7 +120,8 @@ describe("GeoStory Utils", () => {
         });
         it("SectionTypes.TITLE", () => {
             const data = getDefaultSectionTemplate(SectionTypes.TITLE);
-            expect(data.id).toNotExist();
+            expect(data.id).toExist();
+            expect(data.id.length).toBe(uuid().length);
             expect(data.type).toBe(SectionTypes.TITLE);
             expect(data.title).toBe("Title Section");
             expect(data.cover).toBe(false);

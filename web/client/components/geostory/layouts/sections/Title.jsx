@@ -36,7 +36,9 @@ export default backgroundPropWithHandler(({
     editMedia = () => {}
 }) => (
     <section
-        className="ms-section ms-section-title">
+        className="ms-section ms-section-title"
+        id={id}
+    >
         <ContainerDimensions>
             {({ height }) =>
             // when section height is less then the view height

@@ -6,17 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
+
 import SectionContents from '../../contents/SectionContents';
 import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
-
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
 
 /**
- * Paragraph Section Type.
- * Paragraph is a page block that expands for all it's height
+ * Immersive Section Type
  */
 const Immersive = ({
     add = () => {},
@@ -34,7 +33,9 @@ const Immersive = ({
     viewHeight
 }) => (
     <section
-        className="ms-section ms-section-immersive">
+        className="ms-section ms-section-immersive"
+        id={id}
+    >
         <Background
             { ...background }
             mode={mode}

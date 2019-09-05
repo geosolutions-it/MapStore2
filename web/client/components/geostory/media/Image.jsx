@@ -31,6 +31,7 @@ class Image extends Component {
 
     static propTypes = {
         src: PropTypes.string,
+        id: PropTypes.string,
         fit: PropTypes.string,
         description: PropTypes.string,
         descriptionEnabled: PropTypes.bool,
@@ -53,6 +54,7 @@ class Image extends Component {
 
     render() {
         const {
+            id,
             src,
             fit = 'cover',
             enableFullscreen,
@@ -64,6 +66,7 @@ class Image extends Component {
         } = this.props;
         return (
             <div
+                id={id}
                 className="ms-media ms-media-image">
                 {src && <img
                     ref={node => { this._node = node; }}

@@ -10,9 +10,10 @@ import editableText from './enhancers/editableText';
 import { withHandlers, compose, branch} from 'recompose';
 import { Modes } from '../../../utils/GeoStoryUtils';
 
-const Text = ({ toggleEditing = () => {}, html }) => {
+const Text = ({ id, toggleEditing = () => {}, html }) => {
     return (
         <div
+            id={id}
             onClick={() => toggleEditing(true, html)}
             dangerouslySetInnerHTML={{ __html: html }} />
     );
