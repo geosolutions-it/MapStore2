@@ -9,7 +9,7 @@ const {getLocalizedProp} = require('../utils/LocaleUtils');
 
 const crossLayerFilterSelector = state => get(state, "queryform.crossLayerFilter");
 // TODO we should also check if the layer are from the same source to allow cross layer filtering
-const availableCrossLayerFilterLayersSelector = state =>(layersSelector(state) || []).filter(({type} = {}) => type === "wms").map(({title, ...layer}) => ({...layer, title: getLocalizedProp(currentLocaleSelector(state), title)}));
+const availableCrossLayerFilterLayersSelector = state =>(layersSelector(state) || []).filter(({type, group} = {}) => type === "wms" && group !== "background").map(({title, ...layer}) => ({...layer, title: getLocalizedProp(currentLocaleSelector(state), title)}));
 const spatialFieldGeomSelector = state => get(state, "queryform.spatialField.geometry");
 const spatialFieldSelector = state => get(state, "queryform.spatialField");
 const attributePanelExpandedSelector = state => get(state, "queryform.attributePanelExpanded");
