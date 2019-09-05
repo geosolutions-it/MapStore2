@@ -66,6 +66,7 @@ const Immersive = ({
             contents={contents}
             mode={mode}
             add={add}
+            editMedia={editMedia}
             update={update}
             remove={remove}
             sectionId={id}
