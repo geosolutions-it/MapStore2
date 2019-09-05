@@ -347,20 +347,22 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
-    // TODO: @MV88, please fix this
-    it.skip('editMediaForBackgroundEpic showing media and updating story', (done) => {
+    it('editMediaForBackgroundEpic showing media and updating story', (done) => {
         const NUM_ACTIONS = 3;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostory"}),
-            chooseMedia({id: "geostory"})
+            chooseMedia({id: "resourceId"})
         ], (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(a => {
                 switch (a.type) {
                     case UPDATE:
-                        expect(a.element).toEqual("geostory");
-                        expect(a.mode).toEqual("replace");
-                        expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}].resourceId`);
+                        expect(a.element).toEqual({
+                            resourceId: "resourceId",
+                            type: "image"
+                        });
+                        expect(a.mode).toEqual("merge");
+                        expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
                         break;
                     case SHOW:
                         expect(a.owner).toEqual("geostory");
@@ -383,6 +385,11 @@ describe('Geostory Epics', () => {
                             resourceId: "resource_id"
                         }]
                     }]
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
                 }
             }
         });
