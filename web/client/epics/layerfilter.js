@@ -64,7 +64,7 @@ module.exports = {
             const searchUrl = layer && layer.search && layer.search.url;
             return Rx.Observable.of(
                 featureTypeSelected(searchUrl || url, name),
-                // Load the filter from the layer i f it exist
+                // Load the filter from the layer if it exist
                 loadFilter(layerFilter),
                 initLayerFilter(layerFilter),
                 setControlProperty('queryPanel', "enabled", true)
