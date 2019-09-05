@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Observable } from 'rxjs';
+import { isNil } from 'lodash';
 import uuid from 'uuid';
 
 import { addResource, editResource } from '../../actions/geostory';
@@ -74,7 +75,7 @@ export default {
      */
     load: ({mediaType}, store) => {
         const resources = resourcesSelector(store.getState())
-            .filter(({ type }) => type === mediaType);
+            .filter(({ type }) => !isNil(mediaType) ? type === mediaType : true);
         return Observable.of({
             resources,
             totalCount: resources.length

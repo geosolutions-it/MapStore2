@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { lists, Modes, StoryTypes, SectionTypes} from '../../../../utils/GeoStoryUtils';
+import { lists, Modes, StoryTypes, SectionTypes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
 import Immersive from './Immersive';
 import Paragraph from './Paragraph';
 import Title from './Title';
@@ -16,6 +16,7 @@ import Title from './Title';
 const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
     [SectionTypes.PARAGRAPH]: Paragraph,
+    [SectionTemplates.MEDIA]: Paragraph,
     [SectionTypes.TITLE]: Title,
     UNKNOWN: ({type}) => <div className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
@@ -32,6 +33,8 @@ class Section extends React.Component {
         storyType: PropTypes.oneOf(lists.StoryTypes),
         add: PropTypes.func,
         update: PropTypes.func,
+        editMedia: PropTypes.func,
+        remove: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
@@ -44,6 +47,8 @@ class Section extends React.Component {
         id: '',
         add: () => {},
         update: () => {},
+        editMedia: () => {},
+        remove: () => {},
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
@@ -61,6 +66,8 @@ class Section extends React.Component {
                 id={this.props.id}
                 add={this.props.add}
                 update={this.props.update}
+                editMedia={this.props.editMedia}
+                remove={this.props.remove}
                 mode={this.props.mode}
                 cover={this.props.cover}
                 contents={this.props.contents}

@@ -13,6 +13,7 @@ import {
     hide, HIDE,
     loadMedia, LOAD_MEDIA,
     loadMediaSuccess, LOAD_MEDIA_SUCCESS,
+    editMedia, EDIT_MEDIA,
     saveMedia, SAVE_MEDIA,
     saveMediaSuccess, SAVE_MEDIA_SUCCESS,
     selectItem, SELECT_ITEM,
@@ -52,6 +53,14 @@ describe('mediaEditor actions', () => {
         expect(action.sourceId).toEqual(sourceId);
         expect(action.resultData).toEqual(resultData);
         expect(action.type).toEqual(LOAD_MEDIA_SUCCESS);
+    });
+    it('editMedia', () => {
+        const path = "sections[0]contents[0]";
+        const owner = "geostory";
+        const action = editMedia({path, owner});
+        expect(action.path).toEqual(path);
+        expect(action.owner).toEqual(owner);
+        expect(action.type).toEqual(EDIT_MEDIA);
     });
     it('saveMedia', () => {
         const data = {};

@@ -53,7 +53,7 @@ describe('ContentWrapper component', () => {
     it('test classes generated from default props', () => {
         const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
         const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
-        const DEFAULT_SIZE_CLASS_NAME = 'ms-size-large';
+        const DEFAULT_SIZE_CLASS_NAME = 'ms-size-full';
         ReactDOM.render(<ContentWrapper type="text"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
@@ -64,7 +64,7 @@ describe('ContentWrapper component', () => {
         const THEME = 'dark';
         const THEME_CLASS_NAME = `ms-${THEME}`;
         const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
-        const DEFAULT_SIZE_CLASS_NAME = 'ms-size-large';
+        const DEFAULT_SIZE_CLASS_NAME = 'ms-size-full';
         ReactDOM.render(<ContentWrapper type="text" theme={THEME}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
@@ -75,7 +75,7 @@ describe('ContentWrapper component', () => {
         const ALIGN = 'right';
         const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
         const ALIGN_CLASS_NAME = `ms-align-${ALIGN}`;
-        const DEFAULT_SIZE_CLASS_NAME = 'ms-size-large';
+        const DEFAULT_SIZE_CLASS_NAME = 'ms-size-full';
         ReactDOM.render(<ContentWrapper type="text" align={ALIGN}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
@@ -88,6 +88,16 @@ describe('ContentWrapper component', () => {
         const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
         const SIZE_CLASS_NAME = `ms-size-${SIZE}`;
         ReactDOM.render(<ContentWrapper type="text" size={SIZE}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-content');
+        expect(el).toExist();
+        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
+    });
+    it('test classes generated from size prop', () => {
+        const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
+        const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
+        const SIZE_CLASS_NAME = 'ms-size-full';
+        ReactDOM.render(<ContentWrapper type="text"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
         expect(el).toExist();

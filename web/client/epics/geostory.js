@@ -7,37 +7,128 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, isObject} from 'lodash';
+import {isNaN, isString, isNil, isObject, lastIndexOf} from 'lodash';
 
 import axios from '../libs/ajax';
-
 import {
     ADD,
+    REMOVE,
     LOAD_GEOSTORY,
     loadingGeostory,
     loadGeostoryError,
     setCurrentStory,
-    update
+    update,
+    remove
 } from '../actions/geostory';
-import { show, HIDE, CHOOSE_MEDIA } from '../actions/mediaEditor';
+import {
+    show,
+    HIDE,
+    EDIT_MEDIA,
+    CHOOSE_MEDIA,
+    selectItem
+} from '../actions/mediaEditor';
 import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
+import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { ContentTypes } from '../utils/GeoStoryUtils';
+import { autoScrollToNewElement, ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
+import { getEffectivePath } from '../reducers/geostory';
 
+
+/**
+ * opens the media editor for new image with content type media is passed
+ * then it waits for chose media for updating the resourceId
+ * @param {*} action$
+ */
 export const openMediaEditorForNewMedia = action$ =>
     action$.ofType(ADD)
-        .filter(({ element }) => element.type === ContentTypes.MEDIA)
+        .filter(({ element = {} }) => {
+            const isMediaContent = element.type === ContentTypes.MEDIA;
+            return isMediaContent || isMediaSection(element);
+        })
         .switchMap(({path: arrayPath, element}) => {
-            return Observable.of(show('geostory'))
+            return Observable.of(
+                    show('geostory') // open mediaEditor
+                )
+                .merge(
+                    action$.ofType(CHOOSE_MEDIA, HIDE)
+                        .switchMap( ({type, resource = {}}) => {
+                            let mediaPath = "";
+                            if (isMediaSection(element) && arrayPath === "sections") {
+                                mediaPath = ".contents[0].contents[0]";
+                            }
+                            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
+                            // if HIDE then update only the type but not the resource, this allows to use placeholder
+                            return type === HIDE ?
+                                Observable.of(
+                                    update(
+                                        path,
+                                        { type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        "merge" )
+                                    ) :
+                                Observable.of(
+                                    update(
+                                        path,
+                                        { resourceId: resource.id, type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        "merge"
+                                    )
+                                );
+                        })
+                        .takeUntil(action$.ofType(EDIT_MEDIA))
+                );
+        });
+
+
+/**
+ * side effect to scroll to new sections
+ * @param {*} action$
+ */
+export const autoScrollToNewElementEpic = action$ =>
+    action$.ofType(ADD)
+    .switchMap(({element}) => {
+        return Observable.of(element)
+            .switchMap(() => {
+                if (!document.getElementById(element.id)) {
+                    const err = new Error("Item not mounted yet");
+                    throw err;
+                } else {
+                    autoScrollToNewElement({
+                        id: element.id
+                    });
+                    return Observable.empty();
+                }
+            })
+            .retryWhen(errors => !document.getElementById(element.id) ? errors.delay(100) : Observable.empty());
+    });
+
+
+/**
+ * opens the media editor with current media as the selected one
+ * then it updates the resourceId reference of that content
+ * @param {*} action$
+ * @param {*} store
+ */
+export const editMediaForBackgroundEpic = (action$, store) =>
+    action$.ofType(EDIT_MEDIA)
+        .switchMap(({path, owner}) => {
+            const state = store.getState();
+            const resourceId = resourceIdSelectorCreator(path)(state);
+            return Observable.of(
+                    show(owner), // open mediaEditor
+                    selectItem(resourceId)
+                )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
-                            return Observable.of(update(`${arrayPath}[{"id":"${element.id}"}].resourceId`, resource.id ));
+                            const type = mediaTypeSelector(state);
+                            return Observable.of(
+                                update(`${path}`, {resourceId: resource.id, type}, "merge" )
+                                );
                         })
-                        .takeUntil(action$.ofType(HIDE))
+                        .takeUntil(action$.ofType(HIDE, ADD))
                 );
         });
 /**
@@ -51,11 +142,11 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
         .ofType(LOAD_GEOSTORY)
         .switchMap( ({id}) =>
             Observable.defer(() => {
-                if (isNaN(parseInt(id, 10))) {
-                    return axios.get(`${id}.json`);
+                if (id && isNaN(parseInt(id, 10))) {
+                    return axios.get(`configs/${id}.json`);
                 }
                 // TODO manage load process from external api
-                return axios.get(`sampleStory.json`);
+                return axios.get(`configs/sampleStory.json`);
             })
             .map(({ data }) => {
                 if (isObject(data)) {
@@ -94,3 +185,26 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
             ))
         );
+
+/**
+ * Removes containers that are empty after a REMOVE action from GeoStory.
+ * In case of nested contents, it could call recursively until all the empty containers are empty
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store redux store
+ * @returns {Observable} a stream that emits remove action for the container, if empty.
+ */
+export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
+    action$.ofType(REMOVE).switchMap(({path: rawPath}) => {
+        // find out the lower container (has contents property) in the path
+        const effectivePath = getEffectivePath(rawPath, currentStorySelector(getState()));
+        const containerIndex = lastIndexOf(effectivePath, "contents");
+        if (containerIndex > 0) {
+            const containerPath = effectivePath.splice(0, containerIndex);
+            const container = createPathSelector(containerPath.join('.'))(getState());
+            // if empty contents, remove it
+            if (container && container.contents && container.contents.length === 0) {
+                return Observable.of(remove(containerPath.join('.')));
+            }
+        }
+        return Observable.empty();
+    });

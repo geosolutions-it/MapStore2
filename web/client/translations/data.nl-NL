@@ -1602,6 +1602,7 @@
             "addTitleSection": "Add Title Section",
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
+            "addMediaSection": "Add Media Section",
             "addImmersiveContent": "Add Immersive Content",
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
@@ -1620,7 +1621,10 @@
                 "brightThemeLabel": "Bright",
                 "brightTextThemeLabel": "Bright text",
                 "darkThemeLabel": "Dark",
-                "darkTextThemeLabel": "Dark text"
+                "darkTextThemeLabel": "Dark text",
+                "cover": "Cover the container space",
+                "fit": "Fit the container space",
+                "editMedia": "Change media source"
             },
             "errors": {
                 "loading": {

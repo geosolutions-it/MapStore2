@@ -8,18 +8,37 @@
 import React from "react";
 import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
-import { backgroundProp } from './enhancers/immersiveBackgroundManager';
+import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
+import titlePattern from './patterns/dots.png';
+import coverPattern from './patterns/grid.svg';
 
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundProp(({ id, background = {}, contents = [], add = () => {}, update = () => {}, mode, cover, viewWidth, viewHeight }) => (
+export default backgroundPropWithHandler(({
+    id,
+    background = {},
+    contents = [],
+    mode,
+    contentId,
+    path,
+    cover,
+    viewWidth,
+    viewHeight,
+    add = () => {},
+    update = () => {},
+    remove = () => {},
+    updateBackground = () => {},
+    editMedia = () => {}
+}) => (
     <section
-        className="ms-section ms-section-title">
+        className="ms-section ms-section-title"
+        id={id}
+    >
         <ContainerDimensions>
             {({ height }) =>
             // when section height is less then the view height
@@ -31,7 +50,21 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                 // selector used by sticky polyfill to detect scroll events
                 scrollContainerSelector="#ms-sections-container"
                 key={background.id}
+                mode={mode}
+                id={contentId}
+                path={path}
+                update={updateBackground}
+                add={add}
+                editMedia={editMedia}
+                remove={remove}
                 width={viewWidth}
+                backgroundPlaceholder={{
+                    background: `url(${cover ? coverPattern : titlePattern })`,
+                    backgroundSize: `${cover ? 64 : 600 }px auto`
+                }}
+                tools={{
+                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                }}
                 height={height >= viewHeight
                     ? viewHeight
                     : height}/>}
@@ -42,12 +75,13 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
             mode={mode}
             add={add}
             update={update}
+            remove={remove}
             sectionId={id}
             contentProps={{
                 contentWrapperStyle: cover ? { minHeight: viewHeight } : {}
             }}
             tools={{
-                [ContentTypes.TEXT]: ['size', 'align', 'theme']
+                [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']
             }}
         />
         {mode === Modes.EDIT && <AddBar
@@ -73,6 +107,13 @@ export default backgroundProp(({ id, background = {}, contents = [], add = () =>
                 onClick: () => {
                     // TODO: add
                     add('sections', id, SectionTypes.IMMERSIVE);
+                }
+            },
+            {
+                glyph: 'picture',
+                tooltipId: 'geostory.addMediaSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTemplates.MEDIA);
                 }
             }]}/>}
     </section>

@@ -9,6 +9,7 @@
 export const ADDING_MEDIA = "MEDIA_EDITOR:ADDING_MEDIA";
 export const CHOOSE_MEDIA = "MEDIA_EDITOR:CHOOSE_MEDIA";
 export const EDITING_MEDIA = "MEDIA_EDITOR:EDITING_MEDIA";
+export const EDIT_MEDIA = "GEOSTORY:EDIT_MEDIA";
 export const LOAD_MEDIA = "MEDIA_EDITOR:LOAD_MEDIA";
 export const LOAD_MEDIA_SUCCESS = "MEDIA_EDITOR:LOAD_MEDIA_SUCCESS";
 export const HIDE = "MEDIA_EDITOR:HIDE";
@@ -57,7 +58,7 @@ export const saveMedia = ({type, source, data}) => ({ type: SAVE_MEDIA, mediaTyp
 export const saveMediaSuccess = ({ mediaType, source, data, id }) => ({ type: SAVE_MEDIA_SUCCESS, mediaType, source, data, id });
 /**
  * select item
- * @param {*} id
+ * @param {string} id of the resource
  */
 export const selectItem = (id) => ({ type: SELECT_ITEM, id});
 // RESOURCE FORMAT DRAFT :
@@ -85,3 +86,15 @@ export const setEditingMedia = (editing) => ({ type: EDITING_MEDIA, editing });
  * @param {*} owner
  */
 export const show = (owner) => ({type: SHOW, owner});
+
+/**
+ * edit media reference for resource media
+ * @prop {object} options
+ * @prop {string} options.path path to the element
+ * @prop {string} options.owner of the media editor
+ */
+export const editMedia = ({path, owner = "geostory"}) => ({
+    type: EDIT_MEDIA,
+    path,
+    owner
+});

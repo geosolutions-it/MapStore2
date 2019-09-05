@@ -39,13 +39,15 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS}/>, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
         const img = el.querySelector('img');
         expect(img).toExist();
         expect(img.getAttribute('src')).toBe(IMAGE_SRC);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
     it('Title rendering cover set to true', () => {
         const VIEW_HEIGHT = 500;
@@ -56,7 +58,7 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover />, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
@@ -68,6 +70,8 @@ describe('Title component', () => {
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
     });
 
     it('Title rendering cover set to false', () => {
@@ -79,7 +83,7 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false} />, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();

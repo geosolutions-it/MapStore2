@@ -22,6 +22,7 @@ export default ({
     resources,
     saveState,
     selectedItem,
+    mediaActive = "image",
     selectItem = () => {},
     setAddingMedia = () => {},
     setEditingMedia = () => {},
@@ -34,7 +35,8 @@ export default ({
                     btnDefaultProps={{ bsSize: 'sm' }}
                     buttons={[{
                         text: <Message msgId= "mediaEditor.images"/>,
-                        active: true
+                        active: mediaActive === "image",
+                        bsStyle: mediaActive === "image" ? "success" : "primary"
                     }, {
                         text: <Message msgId= "mediaEditor.videos"/>
                     }]} />

@@ -90,26 +90,81 @@ describe('Contents component', () => {
         ReactTestUtils.Simulate.click(document.querySelector('.add-bar button'));
         ReactTestUtils.Simulate.click(document.querySelector('#test-button'));
     });
-    it('modify handlers for content component', done => {
-        const TEST_NEW_CONTENT = "TEST_SECTION";
-        const TEST_VALUE = "TEST_VALUE";
-        const DummyContentComponent = createSink(({ add, update }) => {
-            add('contents', "position", TEST_NEW_CONTENT);
-            update('entry', TEST_VALUE);
+    describe('modify handlers for content component', () => {
+        it('add', done => {
+            const TEST_NEW_CONTENT = "TEST_SECTION";
+            const DummyContentComponent = createSink(({ add }) => {
+                add('contents', "position", TEST_NEW_CONTENT);
+            });
+            ReactDOM.render(<Contents
+                add={(path, position, v) => {
+                    expect(path).toBe(`contents[{"id": "${CONTENTS[0].id}"}].contents`);
+                    expect(position).toBe("position");
+                    expect(v).toBe(TEST_NEW_CONTENT);
+                    done();
+                }}
+                className="CONTENTS_CLASS_NAME"
+                contents={CONTENTS}
+                ContentComponent={DummyContentComponent}
+            />, document.getElementById("container"));
+            const container = document.getElementById('container');
+            const el = container.querySelector('CONTENTS_CLASS_NAME');
+            expect(el).toExist();
         });
-        ReactDOM.render(<Contents
-            add={(path, position, v) => {
-                expect(path).toBe(`contents[{"id": "${CONTENTS[0].id}"}].contents`);
-                expect(position).toBe("position");
-                expect(v).toBe(TEST_NEW_CONTENT);
-                done();
-            }}
-            className="CONTENTS_CLASS_NAME"
-            contents={CONTENTS}
-            ContentComponent={DummyContentComponent}
-        />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('CONTENTS_CLASS_NAME');
-        expect(el).toExist();
+        it('update', done => {
+            const TEST_NEW_CONTENT = "TEST_SECTION";
+            const TEST_VALUE = "TEST_VALUE";
+            const DummyContentComponent = createSink(({ add, update }) => {
+                add('contents', "position", TEST_NEW_CONTENT);
+                update('entry', TEST_VALUE);
+            });
+            ReactDOM.render(<Contents
+                update={(path, v) => {
+                    expect(path).toBe(`contents[{"id": "${CONTENTS[0].id}"}].entry`);
+                    expect(v).toBe(TEST_VALUE);
+                    done();
+                }}
+                className="CONTENTS_CLASS_NAME"
+                contents={CONTENTS}
+                ContentComponent={DummyContentComponent}
+            />, document.getElementById("container"));
+            const container = document.getElementById('container');
+            const el = container.querySelector('CONTENTS_CLASS_NAME');
+            expect(el).toExist();
+        });
+        it('remove (without path, calls the remove of itself path)', done => {
+            const DummyContentComponent = createSink(({ remove }) => {
+                remove();
+            });
+            ReactDOM.render(<Contents
+                remove={(path) => {
+                    expect(path).toBe(`contents[{"id": "${CONTENTS[0].id}"}]`);
+                    done();
+                }}
+                className="CONTENTS_CLASS_NAME"
+                contents={CONTENTS}
+                ContentComponent={DummyContentComponent}
+            />, document.getElementById("container"));
+            const container = document.getElementById('container');
+            const el = container.querySelector('CONTENTS_CLASS_NAME');
+            expect(el).toExist();
+        });
+        it('remove (with path, for sub-pieces)', done => {
+            const DummyContentComponent = createSink(({ remove }) => {
+                remove("entry");
+            });
+            ReactDOM.render(<Contents
+                remove={(path) => {
+                    expect(path).toBe(`contents[{"id": "${CONTENTS[0].id}"}].entry`);
+                    done();
+                }}
+                className="CONTENTS_CLASS_NAME"
+                contents={CONTENTS}
+                ContentComponent={DummyContentComponent}
+            />, document.getElementById("container"));
+            const container = document.getElementById('container');
+            const el = container.querySelector('CONTENTS_CLASS_NAME');
+            expect(el).toExist();
+        });
     });
 });

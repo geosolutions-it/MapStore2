@@ -32,7 +32,9 @@ export default ({
     mode = Modes.VIEW,
     sections = [],
     add = () => {},
-    update = () => {}
+    editMedia = () => {},
+    update = () => {},
+    remove = () => {}
 }) => (<BorderLayout className="ms-cascade-story">
     <ContainerDimensions sections={sections}>
         {({ width, height }) =>
@@ -44,7 +46,9 @@ export default ({
                             return (
                                 <Section
                                     add={add}
+                                    editMedia={editMedia}
                                     update={update}
+                                    remove={remove}
                                     key={sectionId}
                                     id={sectionId}
                                     viewHeight={height}

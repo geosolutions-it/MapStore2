@@ -45,10 +45,6 @@ module.exports = {
         component: require('./pages/RulesManager')
     }, {
         name: "geostory",
-        path: "/geostory",
-        component: require('./pages/GeoStory')
-    }, {
-        name: "geostory",
         path: "/geostory/:gid",
         component: require('./pages/GeoStory')
     }],

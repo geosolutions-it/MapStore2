@@ -6,7 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { set, compose } from '../utils/ImmutableUtils';
-import { ADDING_MEDIA, CHOOSE_MEDIA, EDITING_MEDIA, HIDE, LOAD_MEDIA_SUCCESS, SELECT_ITEM, SHOW} from '../actions/mediaEditor';
+import {
+    ADDING_MEDIA,
+    CHOOSE_MEDIA,
+    EDITING_MEDIA,
+    HIDE,
+    LOAD_MEDIA_SUCCESS,
+    SELECT_ITEM,
+    SHOW
+} from '../actions/mediaEditor';
 
 export const DEFAULT_STATE = {
     open: false,
@@ -33,7 +41,10 @@ export const DEFAULT_STATE = {
 export default (state = DEFAULT_STATE, action) => {
     switch (action.type) {
         case ADDING_MEDIA: {
-            return set('saveState.addingMedia', action.adding, state);
+            return compose(
+                set('saveState.addingMedia', action.adding),
+                set('selected', "")
+                )(state);
         }
         case EDITING_MEDIA: {
             return compose(
@@ -48,6 +59,9 @@ export default (state = DEFAULT_STATE, action) => {
             return compose(
                 set('open', false),
                 set('owner', undefined),
+                set('selected', ""),
+                set('saveState.addingMedia', false),
+                set('saveState.editing', false),
                 set('settings', state.stashedSettings || state.settings), // restore defaults
                 set('stashedSettings', undefined)
             )(state);

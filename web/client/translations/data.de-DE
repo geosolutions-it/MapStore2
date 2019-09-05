@@ -1850,6 +1850,7 @@
             "addTitleSection": "Titelabschnitt hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
+            "addMediaSection": "Medienabschnitt hinzufügen",
             "addImmersiveContent": "Füge immersiven Inhalt hinzu",
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
@@ -1868,7 +1869,11 @@
                 "brightThemeLabel": "Hell",
                 "brightTextThemeLabel": "Heller text",
                 "darkThemeLabel": "Dunkel",
-                "darkTextThemeLabel": "Dark text"
+                "darkTextThemeLabel": "Dark text",
+                "cover": "Decken Sie den Behälterraum ab",
+                "fit": "Den Behälterraum montieren",
+                "editMedia": "Ändern Sie die Medienquelle",
+                "remove": "Entfernen"
             },
             "errors": {
                 "loading": {

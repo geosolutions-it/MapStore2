@@ -13,7 +13,7 @@ import Content from './Content';
 import Column from './Column';
 import { ContentTypes } from '../../../utils/GeoStoryUtils';
 
-// wrap enhancer
+// wrap enhancer, TODO externalize
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
 
 const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]

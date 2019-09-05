@@ -7,7 +7,8 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
+
 import SectionContents from "../../contents/SectionContents";
 
 
@@ -15,16 +16,32 @@ import SectionContents from "../../contents/SectionContents";
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidth, viewHeight }) => (
+export default ({
+    id,
+    contents,
+    mode,
+    add = () => {},
+    update= () => {},
+    editMedia= () => {},
+    remove = () => {},
+    viewWidth,
+    viewHeight
+}) => (
     <section
-        className="ms-section ms-section-paragraph">
+        className="ms-section ms-section-paragraph"
+        id={id}
+    >
         <SectionContents
             className="ms-section-contents"
             contents={contents}
             mode={mode}
             add={add}
+            editMedia={editMedia}
             update={update}
+            remove={remove}
             sectionId={id}
+            viewWidth={viewWidth}
+            viewHeight={viewHeight}
             />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
@@ -49,6 +66,14 @@ export default ({ id, contents, mode, add = () => {}, update= () => {}, viewWidt
                 onClick: () => {
                     add(`sections`, id, SectionTypes.IMMERSIVE);
                 }
-            }]}/>}
+            },
+            {
+                glyph: 'picture',
+                tooltipId: 'geostory.addMediaSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTemplates.MEDIA);
+                }
+            }]}
+        />}
     </section>
 );

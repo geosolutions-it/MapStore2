@@ -55,12 +55,13 @@ describe('ContentToolbar component', () => {
             aTag: ["bright", "bright-text", "dark", "dark-text"]
         }];
     testItems.forEach(tool => {
-        it(`ContentToolbar rendering ${tool.name} item and click event`, () => {
+        it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={[tool.name]}
                 update={(t, selected) => {
                     expect(t).toEqual(tool.name);
                     expect(includes(tool.aTag, selected)).toEqual(true);
+                    done();
                 }}
             />, document.getElementById("container"));
             const buttons = document.getElementsByTagName('button');
@@ -78,6 +79,53 @@ describe('ContentToolbar component', () => {
             });
         });
     });
+    it(`ContentToolbar rendering fit item and handling click event`, (done) => {
+        ReactDOM.render(<ContentToolbar
+            tools={["fit"]}
+            fit="contain"
+            update={(t, fitValue) => {
+                expect(t).toEqual("fit");
+                expect(fitValue).toEqual("cover");
+                done();
+            }}
+        />, document.getElementById("container"));
+        const buttons = document.getElementsByTagName('button');
+        expect(buttons).toExist();
+        expect(buttons.length).toEqual(1);
+        ReactTestUtils.Simulate.click(buttons[0]);
+    });
+    describe('tools', () => {
+        // TODO: align, theme, size...
+        it(`remove`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["remove"]}
+                fit="contain"
+                path="TEST_PATH"
+                remove={(path) => {
+                    expect(path).toEqual("TEST_PATH");
+                    done();
+                }}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toExist();
+            expect(buttons.length).toEqual(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+        });
+        it(`editMedia`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["editMedia"]}
+                fit="contain"
+                path="TEST_PATH"
+                editMedia={({path}) => {
+                    expect(path).toEqual("TEST_PATH");
+                    done();
+                }}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toExist();
+            expect(buttons.length).toEqual(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+        });
+    });
+
 });
-
-

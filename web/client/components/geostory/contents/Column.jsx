@@ -9,7 +9,7 @@ import React from "react";
 import ContentBase from './Content';
 import Contents from './Contents';
 import ContentWrapper from './ContentWrapper';
-import { ContentTypes } from '../../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
 
 import { nest, compose, setDisplayName } from "recompose";
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
@@ -22,20 +22,38 @@ const ColumnContent = compose(
  * Column is a like a Paragraph section, but as content.
  * has (sub) contents to render like a page.
  */
-export default ({ id, contents = [], mode, add = () => {}, update= () => {} }) => (
-
+export default ({
+    viewWidth,
+    viewHeight,
+    contents = [],
+    mode,
+    add = () => {},
+    editMedia = () => {},
+    update= () => {},
+    remove = () => {}
+}) => (
         <Contents
             className="ms-column-contents"
-        ContentComponent={ColumnContent}
+            ContentComponent={ColumnContent}
             contents={contents}
             mode={mode}
             add={add}
+            editMedia={editMedia}
             update={update}
+            remove={remove}
+            viewWidth={viewWidth}
+            viewHeight={viewHeight}
+            tools={{
+                [ContentTypes.TEXT]: ['remove'],
+                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
+                [MediaTypes.VIDEO]: ['editMedia', 'remove'] // TODO change this list for video
+            }}
             addButtons={[{
                 glyph: 'sheet',
                 tooltipId: 'geostory.addTextContent',
                 template: ContentTypes.TEXT
-            }, {
+            },
+            {
                 glyph: 'picture',
                 tooltipId: 'geostory.addMediaContent',
                 template: ContentTypes.MEDIA

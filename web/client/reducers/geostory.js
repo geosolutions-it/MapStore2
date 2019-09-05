@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, toPath, isObject } from "lodash";
-import { set, arrayUpdate } from '../utils/ImmutableUtils';
+import { get, isString, isNumber, findIndex, toPath, isObject, isArray } from "lodash";
+import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
     ADD,
@@ -14,7 +14,8 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     SET_CURRENT_STORY,
-    UPDATE
+    UPDATE,
+    REMOVE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
@@ -27,7 +28,7 @@ let INITIAL_STATE = {
  * @param {string|string[]} rawPath path to transform in real path
  * @param {object} state the state to check to inspect the tree and get the real path
  */
-const getEffectivePath = (rawPath, state) => {
+export const getEffectivePath = (rawPath, state) => {
     const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`
     // use curly brackets elements as predicates of findIndex to get the correct index.
     return rawPathArray.reduce( (path, current) => {
@@ -178,6 +179,22 @@ export default (state = INITIAL_STATE, action) => {
                 newElement = {...oldElement, ...newElement};
             }
             return set(path, newElement, state);
+        }
+        case REMOVE: {
+            const { path: rawPath } = action;
+            const path = getEffectivePath(`currentStory.${rawPath}`, state);
+            let containerPath = [...path];
+            let lastElement = containerPath.pop();
+            const container = get(state, containerPath);
+            if (isArray(container)) {
+                if (isString(lastElement)) {
+                    // path sometimes can not be converted into numbers (e.g. when recursive remove of containers)
+                    lastElement = parseInt(lastElement, 10);
+                }
+                return set(containerPath, [...container.slice(0, lastElement), ...container.slice(lastElement + 1)], state);
+            }
+            // object
+            return unset(path, state);
         }
         default:
             return state;

@@ -16,7 +16,7 @@ const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
 import { ContentTypes } from '../../../../utils/GeoStoryUtils';
 
 const TestScrollableContainer = ({ children, height }) => <div id={SCROLLABLE_CONTAINER_ID} style={{ height, overflowY: "auto" }} >{children}</div>;
-describe('Content (Container) component', () => {
+describe('Section Content (Container) component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -51,7 +51,7 @@ describe('Content (Container) component', () => {
         expect(el).toExist();
         expect(container.querySelector('#SOMETHING')).toExist();
     });
-    it('content has intersection observer', (done) => {
+    it('Content has intersection observer', (done) => {
         const ID_1 = "ID_1";
         const ID_2 = "ID_2";
         ReactDOM.render((<TestScrollableContainer height="100">

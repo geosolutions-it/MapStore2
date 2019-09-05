@@ -19,6 +19,7 @@ export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const UPDATE = "GEOSTORY:UPDATE";
+export const REMOVE = "GEOSTORY:REMOVE";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -79,4 +80,9 @@ export const update = (path, element, mode = "replace") => ({
     path,
     element,
     mode
+});
+
+export const remove = (path) => ({
+    type: REMOVE,
+    path
 });
