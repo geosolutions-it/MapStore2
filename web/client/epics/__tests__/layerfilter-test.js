@@ -19,11 +19,32 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         const state = {layers: {
-            flat: [{id: "topp:states__5", name: "topp:states", nativeCrs: "EPSG:4326"}],
+            flat: [{id: "topp:states__5", name: "topp:states", nativeCrs: "EPSG:4326", search: {url: "searchUrl"}, url: "url"}],
             selected: ["topp:states__5"]}
         };
         testEpic(handleLayerFilterPanel, 6, action, (actions) => {
             expect(actions[0].type).toBe("FEATURE_TYPE_SELECTED");
+            expect(actions[0].url).toBe("searchUrl");
+            expect(actions[1].type).toBe("QUERYFORM:LOAD_FILTER");
+            expect(actions[2].type).toBe("LAYER_FILTER:INIT_LAYER_FILTER");
+            expect(actions[3].type).toBe("SET_CONTROL_PROPERTY");
+            expect(actions[4].type).toBe("QUERY:TOGGLE_LAYER_FILTER");
+            expect(actions[5].type).toBe("CHANGE_LAYER_PROPERTIES");
+            done();
+
+        }, state);
+    });
+    it("handleLayerFilterPanel is correctly initiated and react to QUERY_FORM_SEARCH, no search url", (done) => {
+        let action = [openQueryBuilder(), {type: QUERY_FORM_SEARCH}];
+
+        // State need a selected layers
+        const state = {layers: {
+            flat: [{id: "topp:states__5", name: "topp:states", nativeCrs: "EPSG:4326", url: "url"}],
+            selected: ["topp:states__5"]}
+        };
+        testEpic(handleLayerFilterPanel, 6, action, (actions) => {
+            expect(actions[0].type).toBe("FEATURE_TYPE_SELECTED");
+            expect(actions[0].url).toBe("url");
             expect(actions[1].type).toBe("QUERYFORM:LOAD_FILTER");
             expect(actions[2].type).toBe("LAYER_FILTER:INIT_LAYER_FILTER");
             expect(actions[3].type).toBe("SET_CONTROL_PROPERTY");
