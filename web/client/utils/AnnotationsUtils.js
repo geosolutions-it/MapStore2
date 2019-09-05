@@ -100,6 +100,10 @@ const getDashArrayFromStyle = dashArray => {
     return isString(dashArray) && dashArray || isArray(dashArray) && dashArray.join(" ");
 };
 
+const hasOutline = (style) => {
+    return style.color && style.opacity && style.weight;
+};
+
 const annStyleToOlStyle = (type, tempStyle, label = "") => {
     let style = tempStyle && tempStyle[type] ? tempStyle[type] : tempStyle;
     const s = style;
@@ -125,6 +129,11 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "strokeDashstyle": dashArray
             };
         case "Text":
+            const outline = hasOutline(s) ? {
+                "labelOutlineColor": rgbaTorgb(s.color),
+                "labelOutlineOpacity": s.opacity,
+                "labelOutlineWidth": s.weight
+            } : {};
             return {
                 "fontStyle": s.fontStyle,
                 "fontSize": s.fontSize,   // in mapfish is in px
@@ -134,14 +143,12 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
                 "fontColor": rgbaTorgb(s.fillColor),
                 "fontOpacity": s.fillOpacity,
                 "label": label,
-                "labelOutlineColor": rgbaTorgb(s.color),
-                "labelOutlineOpacity": s.opacity,
-                "labelOutlineWidth": s.weight,
                 "stroke": true,
                 "strokeColor": rgbaTorgb(s.color),
                 "strokeOpacity": s.opacity,
                 "strokeWidth": s.weight,
-                "strokeDashstyle": dashArray
+                "strokeDashstyle": dashArray,
+                ...outline
             };
         case "Point":
         case "MultiPoint": {

@@ -76,7 +76,7 @@ class MeasureDialog extends React.Component {
             style={this.props.style}>
                 <MeasureComponent id="measure-panel" {...this.props}/>
             </DockablePanel>
-        : (<Dialog id="measure">
+        : (<Dialog id="measure-dialog">
             <div key="header" role="header">
                 <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
                 <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
