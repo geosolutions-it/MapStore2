@@ -8,7 +8,6 @@
 
 import { Observable } from 'rxjs';
 import {isNaN, isString, isNil, isObject, lastIndexOf} from 'lodash';
-import { timer } from 'rxjs/observable/timer';
 
 import axios from '../libs/ajax';
 import {
@@ -35,7 +34,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } f
 import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { autoScrollToNewElement, ContentTypes, isMediaSection, MediaTypes } from '../utils/GeoStoryUtils';
+import { autoScrollToNewElement, ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
 import { getEffectivePath } from '../reducers/geostory';
 
 
