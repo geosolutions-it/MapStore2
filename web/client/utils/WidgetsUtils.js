@@ -47,14 +47,14 @@ const getConnectionList = (widgets = []) => {
 };
 
 /**
- * it checks if a number is higher of 10k and it returns a shortened version of it
+ * it checks if a number is higher than threshold and returns a shortened version of it
  * @param {number} label to parse
  * @param {number} threshold threshold to check if it needs to be rounded
  * @param {number} decimals number of decimal to use when rounding
  * @return the shortened number plus a suffix or the label is a string is passed
 */
-const shortenLabel = (label, threshold = 10000, decimals = 1)=> {
-    if (!isNumber(label) || isNumber(label) && label.toString().length < 7) {
+const shortenLabel = (label, threshold = 1000, decimals = 1) => {
+    if (!isNumber(label)) {
         return label;
     }
     let unit;

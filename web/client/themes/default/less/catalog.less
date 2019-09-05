@@ -52,8 +52,19 @@
             text-align: justify;
         }
     }
+
+    .catalog-results.loading {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        & > * {
+            margin: auto;
+        }
+    }
     /* needed to avoid an error with Firefox where the width was not properly calculated #3824 */
     .ms2-border-layout-body.catalog {
+        position: relative;
         display: block !important;
     }
 }

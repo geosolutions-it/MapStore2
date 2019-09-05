@@ -20,6 +20,7 @@ const Message = require("../I18N/Message");
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const RecordGrid = require("./RecordGrid");
 const SwitchPanel = require("../misc/switch/SwitchPanel");
+const Loader = require('../misc/Loader');
 
 require('react-select/dist/react-select.css');
 require('react-quill/dist/quill.snow.css');
@@ -186,8 +187,9 @@ class Catalog extends React.Component {
     };
 
     renderLoading = () => {
-        return this.props.loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null;
-    };
+        return (<div className="catalog-results loading"><Loader size="176" /></div>);
+    }
+
     renderSaving = () => {
         return this.props.saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     };
@@ -210,7 +212,6 @@ class Catalog extends React.Component {
                 onSelect={this.handlePage} />
             <div className="push-right">
                 <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
-                {this.renderLoading()}
             </div>
         </div>);
         }
@@ -270,8 +271,8 @@ class Catalog extends React.Component {
         if (this.props.mode === "view" ) {
             if (this.props.includeSearchButton) {
                 buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText})}
-                            className={this.props.buttonClassName} key="catalog_search_button" disabled={!this.isValidServiceSelected()}>
-                            {this.renderLoading()} <Message msgId="catalog.search"/>
+                            className={this.props.buttonClassName} key="catalog_search_button" disabled={this.props.loading || !this.isValidServiceSelected()}>
+                             <Message msgId="catalog.search"/>
                         </Button>);
             }
             if (this.props.includeResetButton) {
@@ -314,11 +315,13 @@ class Catalog extends React.Component {
     renderFormats = () => {
         return this.props.formats.map((format) => <option value={format.name} key={format.name}>{format.label}</option>);
     };
+
     getServices = () => {
         return Object.keys(this.props.services).map(s => {
             return assign({}, this.props.services[s], {label: this.props.services[s].title, value: s});
         });
     };
+
     render() {
         const showTemplate = !isNil(this.props.newService.showTemplate) ? this.props.newService.showTemplate : false;
         return (
@@ -359,9 +362,7 @@ class Catalog extends React.Component {
                                 </FormGroup>
                             </Form>)}
                     footer={this.renderPagination()}>
-                            <div>
-                                {this.renderResult()}
-                            </div>
+                                { this.props.loading ? this.renderLoading() : this.renderResult() }
                         </BorderLayout>
             ) : (
                 <BorderLayout
@@ -498,7 +499,7 @@ class Catalog extends React.Component {
     search = ({services, selectedService, start = 1, searchText = ""} = {}) => {
         const url = services[selectedService].url;
         const type = services[selectedService].type;
-        this.props.onSearch(type, url, start, this.props.pageSize, searchText || "");
+        this.props.onSearch({format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || ""});
     };
 
     isViewMode = (mode) => {

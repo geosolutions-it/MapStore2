@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var GrabMap = require('../GrabMap');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import GrabMap from '../GrabMap';
 
 describe("the OL GrabMap component", () => {
     beforeEach((done) => {
@@ -27,11 +27,6 @@ describe("the OL GrabMap component", () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
-    /* it('component update', () => {
-        let tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
-        expect(tb).toExist();
-        tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
-    });*/
     it('component snapshot img creation', (done) => {
         let layers = [{
             "source": "mapquest",

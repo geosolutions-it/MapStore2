@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 https://gs-stable.geo-solutions.it/geoserver/schemas/csw/2.0.2/record.xsd">
+  <csw:SearchStatus timestamp="2019-08-13T16:03:43.292Z"/>
+  <csw:SearchResults numberOfRecordsMatched="1" numberOfRecordsReturned="1" nextRecord="0" elementSet="full">
+    <csw:Record>
+      <dc:identifier>gs:us_states</dc:identifier>
+      <dc:creator>GeoServer Catalog</dc:creator>
+      <dc:subject>features</dc:subject>
+      <dc:subject>states</dc:subject>
+      <dct:references scheme="OGC:WMS">https://sample.server/geoserver/wms?service=WMS&amp;request=GetMap&amp;layers=gs:us_states</dct:references>
+      <dc:title>States of US</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+        <ows:LowerCorner>24.955967 -124.73142200000001</ows:LowerCorner>
+        <ows:UpperCorner>49.371735 -66.969849</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>

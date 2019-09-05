@@ -6,25 +6,39 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {round, isEqual, dropRight, pick} = require('lodash');
-const assign = require('object-assign');
-const ol = require('openlayers');
+import React from 'react';
+import PropTypes from 'prop-types';
+import round from 'lodash/round';
+import isEqual from 'lodash/isEqual';
+import dropRight from 'lodash/dropRight';
+import pick from 'lodash/pick';
 
-const wgs84Sphere = new ol.Sphere(6378137);
-const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
-const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
-const {set} = require('../../../utils/ImmutableUtils');
-const {startEndPolylineStyle} = require('./VectorStyle');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const {createOLGeometry} = require('../../../utils/openlayers/DrawUtils');
+import assign from 'object-assign';
+
+import {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} from '../../../utils/CoordinatesUtils';
+import {convertUom, getFormattedBearingValue} from '../../../utils/MeasureUtils';
+import {set} from '../../../utils/ImmutableUtils';
+import {startEndPolylineStyle} from './VectorStyle';
+import {getMessageById} from '../../../utils/LocaleUtils';
+import {createOLGeometry} from '../../../utils/openlayers/DrawUtils';
+
+import {Polygon, LineString} from 'ol/geom';
+import Overlay from 'ol/Overlay';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import Feature from 'ol/Feature';
+import {Stroke, Fill, Style} from 'ol/style';
+import CircleStyle from 'ol/style/Circle';
+import Draw from 'ol/interaction/Draw';
+import GeoJSON from 'ol/format/GeoJSON';
+import {unByKey} from 'ol/Observable';
+import {getArea} from 'ol/sphere';
 
 const getProjectionCode = (olMap) => {
     return olMap.getView().getProjection().getCode();
 };
 
-class MeasurementSupport extends React.Component {
+export default class MeasurementSupport extends React.Component {
     static propTypes = {
         startEndPoint: PropTypes.object,
         map: PropTypes.object,
@@ -112,15 +126,15 @@ class MeasurementSupport extends React.Component {
 
             let geom = this.source.getFeatures()[0].getGeometry();
             let output;
-            if (geom instanceof ol.geom.Polygon) {
+            if (geom instanceof Polygon) {
                 output = this.formatArea(geom, props);
                 this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
-            } else if (geom instanceof ol.geom.LineString) {
+            } else if (geom instanceof LineString) {
                 output = this.formatLength(geom, props);
                 this.tooltipCoord = geom.getLastCoordinate();
             }
             this.measureTooltipElement.innerHTML = output;
-            this.measureTooltip = new ol.Overlay({
+            this.measureTooltip = new Overlay({
                 element: this.measureTooltipElement,
                 offset: [0, -7],
                 positioning: 'bottom-center'
@@ -144,10 +158,10 @@ class MeasurementSupport extends React.Component {
             let ft = set("geometry.coordinates", newCoords, features[0]);
             featuresToReplace = [ft];
         }
-        this.source = new ol.source.Vector();
+        this.source = new VectorSource();
         featuresToReplace.forEach((geoJSON) => {
             let geometry = reprojectGeoJson(geoJSON, "EPSG:4326", getProjectionCode(this.props.map)).geometry;
-            const feature = new ol.Feature({
+            const feature = new Feature({
                 geometry: createOLGeometry(geometry)
             });
             this.source.addFeature(feature);
@@ -168,19 +182,19 @@ class MeasurementSupport extends React.Component {
             this.removeDrawInteraction();
         }
         // create a layer to draw on
-        this.source = new ol.source.Vector();
+        this.source = new VectorSource();
         let styles = [
-            new ol.style.Style({
-            fill: new ol.style.Fill({
+            new Style({
+            fill: new Fill({
                 color: 'rgba(255, 255, 255, 0.2)'
             }),
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#ffcc33',
                 width: 2
             }),
-            image: new ol.style.Circle({
+            image: new CircleStyle({
                 radius: 7,
-                fill: new ol.style.Fill({
+                fill: new Fill({
                     color: '#ffcc33'
                 })
             })
@@ -193,7 +207,7 @@ class MeasurementSupport extends React.Component {
             startEndPointStyles = startEndPolylineStyle(options.startPointOptions, options.endPointOptions);
         }
 
-        vector = new ol.layer.Vector({
+        vector = new VectorLayer({
             source: this.source,
             zIndex: 1000000,
             style: [...styles, ...startEndPointStyles]
@@ -207,38 +221,38 @@ class MeasurementSupport extends React.Component {
             geometryType = newProps.measurement.geomType;
         }
         // create an interaction to draw with
-        draw = new ol.interaction.Draw({
+        draw = new Draw({
             source: this.source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: new ol.style.Style({
-                fill: new ol.style.Fill({
+            style: new Style({
+                fill: new Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
                 }),
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: 'rgba(0, 0, 0, 0.5)',
                     lineDash: [10, 10],
                     width: 2
                 }),
-                image: new ol.style.Circle({
+                image: new CircleStyle({
                     radius: 5,
-                    stroke: new ol.style.Stroke({
+                    stroke: new Stroke({
                         color: 'rgba(0, 0, 0, 0.7)'
                     }),
-                    fill: new ol.style.Fill({
+                    fill: new Fill({
                         color: 'rgba(255, 255, 255, 0.2)'
                     })
                 })
             })
         });
 
-        this.clickListener = this.props.map.on('click', () => this.updateMeasurementResults(this.props), this);
+        this.clickListener = this.props.map.on('click', () => this.updateMeasurementResults(this.props));
         if (this.props.updateOnMouseMove) {
-            this.props.map.on('pointermove', () => this.updateMeasurementResults(this.props), this);
+            this.props.map.on('pointermove', () => this.updateMeasurementResults(this.props));
         }
 
-        this.props.map.on('pointermove', this.pointerMoveHandler, this);
+        this.props.map.on('pointermove', (evt) => this.pointerMoveHandler(evt));
 
-        draw.on('drawstart', function(evt) {
+        draw.on('drawstart', (evt) => {
             // preserve the sketch feature of the draw controller
             // to update length/area on drawing a new vertex
             this.sketchFeature = evt.feature;
@@ -256,10 +270,10 @@ class MeasurementSupport extends React.Component {
             this.listener = this.sketchFeature.getGeometry().on('change', (e) => {
                 let geom = e.target;
                 let output;
-                if (geom instanceof ol.geom.Polygon) {
+                if (geom instanceof Polygon) {
                     output = this.formatArea(geom, this.props);
                     this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
-                } else if (geom instanceof ol.geom.LineString) {
+                } else if (geom instanceof LineString) {
                     output = this.formatLength(geom, this.props);
                     this.tooltipCoord = geom.getLastCoordinate();
                 }
@@ -267,12 +281,12 @@ class MeasurementSupport extends React.Component {
                     this.measureTooltipElement.innerHTML = output;
                     this.measureTooltip.setPosition(this.tooltipCoord);
                 }
-            }, this);
+            });
             this.props.resetGeometry();
-        }, this);
-        draw.on('drawend', function(evt) {
+        });
+        draw.on('drawend', (evt) => {
             this.drawing = false;
-            const geojsonFormat = new ol.format.GeoJSON();
+            const geojsonFormat = new GeoJSON();
             let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(evt.feature.clone()), getProjectionCode(this.props.map), "EPSG:4326");
             this.props.changeGeometry(newFeature);
             if (this.props.measurement.lineMeasureEnabled) {
@@ -284,9 +298,9 @@ class MeasurementSupport extends React.Component {
             if (this.props.measurement.showLabel) {
                 this.measureTooltipElement.className = 'tooltip tooltip-static';
                 this.measureTooltip.setOffset([0, -7]);
-                ol.Observable.unByKey(this.listener);
+                unByKey(this.listener);
             }
-        }, this);
+        });
 
         this.props.map.addInteraction(draw);
         if (this.props.measurement.showLabel) {
@@ -307,7 +321,7 @@ class MeasurementSupport extends React.Component {
             this.props.map.removeLayer(this.measureLayer);
             this.sketchFeature = null;
             this.props.map.un('click', () => this.updateMeasurementResults(this.props), this);
-            ol.Observable.unByKey(this.clickListener);
+            unByKey(this.clickListener);
             if (this.props.updateOnMouseMove) {
                 this.props.map.un('pointermove', () => this.updateMeasurementResults(this.props), this);
             }
@@ -327,9 +341,9 @@ class MeasurementSupport extends React.Component {
 
         if (this.sketchFeature && this.drawing) {
             let geom = (this.sketchFeature.getGeometry());
-            if (geom instanceof ol.geom.Polygon) {
+            if (geom instanceof Polygon) {
                 helpMsg = this.continuePolygonMsg;
-            } else if (geom instanceof ol.geom.LineString) {
+            } else if (geom instanceof LineString) {
                 helpMsg = this.continueLineMsg;
             }
         }
@@ -369,7 +383,7 @@ class MeasurementSupport extends React.Component {
                 this.drawInteraction.finishDrawing();
             }
         }
-        const geojsonFormat = new ol.format.GeoJSON();
+        const geojsonFormat = new GeoJSON();
         let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), getProjectionCode(props.map), "EPSG:4326");
 
         // it will no longer create 100 points for arcs to put in the state
@@ -404,8 +418,8 @@ class MeasurementSupport extends React.Component {
 
     calculateGeodesicArea = (coordinates) => {
         if (coordinates.length >= 4 ) {
-            let reprojectedCoordinatesIn4326 = this.reprojectedCoordinatesIn4326(coordinates);
-            return Math.abs(wgs84Sphere.geodesicArea(reprojectedCoordinatesIn4326));
+            const reprojectedCoordinatesIn4326 = this.reprojectedCoordinatesIn4326(coordinates);
+            return Math.abs(getArea(new Polygon([reprojectedCoordinatesIn4326]), { projection: 'EPSG:4326' }));
         }
         return 0;
     };
@@ -417,7 +431,7 @@ class MeasurementSupport extends React.Component {
         this.removeHelpTooltip();
         this.helpTooltipElement = document.createElement('div');
         this.helpTooltipElement.className = 'tooltip hidden';
-        this.helpTooltip = new ol.Overlay({
+        this.helpTooltip = new Overlay({
             element: this.helpTooltipElement,
             offset: [15, 0],
             positioning: 'center-left'
@@ -431,7 +445,7 @@ class MeasurementSupport extends React.Component {
         this.removeMeasureTooltips();
         this.measureTooltipElement = document.createElement('div');
         this.measureTooltipElement.className = 'tooltip tooltip-measure';
-        this.measureTooltip = new ol.Overlay({
+        this.measureTooltip = new Overlay({
             element: this.measureTooltipElement,
             offset: [0, -15],
             positioning: 'bottom-center'
@@ -488,5 +502,3 @@ class MeasurementSupport extends React.Component {
         }
     }
 }
-
-module.exports = MeasurementSupport;

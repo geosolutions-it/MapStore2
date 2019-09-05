@@ -8,6 +8,7 @@
 
 const Rx = require('rxjs');
 const {saveAs} = require('file-saver');
+const {get} = require('lodash');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/controls');
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
@@ -320,7 +321,7 @@ module.exports = (viewer) => ({
             const feature = state.annotations.editing;
             const type = state.annotations.featureType;
             const defaultTextAnnotation = state.annotations.defaultTextAnnotation;
-            const multiGeom = state.annotations.config.multiGeometry;
+            const multiGeom = get(state, 'annotations.config.multiGeometry');
             const drawOptions = {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeom,

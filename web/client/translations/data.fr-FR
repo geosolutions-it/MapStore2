@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des tableaux de bord"
             },
             "maps": {
-                "title": "Cartes ({count})"
+                "title": "Cartes ({count})",
+                "noMapAvailable": "Aucune carte disponible",
+                "createNewOne": "Créer un nouveau"
             }
         },
         "map": {
@@ -600,13 +602,22 @@
             "s_wfs_props_label" : "WFS accessoires du service",
             "s_wfs_opt_props_label" : "Supports optionnels",
             "s_result_props_label": "Propriétés d'affichage des résultats",
-            "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5",
+            "s_priority_info": "Utilisé pour trier les résultats de recherche, valeurs inférieures en premier. Les résultats Nominatim ont priorité = 5",
             "serviceslistempty": "Aucun service personnalisé n'a été défini",
             "service_missing": "Le service {serviceType} n'est pas configuré",
             "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur: {message}",
             "errors": {
                 "nonQueriableLayers": "La couche fournie dans l'URL n'est ni interrogeable ni visible sur la carte",
                 "serverError": "Le serveur a renvoyé une erreur lors de l'exécution de la demande GetFeatureInfo. Vérifiez si les paramètres sont corrects"
+            },
+            "s_launch_info_panel": {
+                "label": "Lancer le panneau d'information",
+                "no_info": "Pas d'info",
+                "all_layers": "Toutes les couches",
+                "single_layer": "Une seule couche",
+                "no_info_description": "Le panneau d'identification n'apparaîtra pas dans la recherche",
+                "all_layers_description": "Le panneau Identifier affichera des informations sur toutes les couches visibles sur la carte.",
+                "single_layer_description": "Le panneau Identify apparaîtra avec les données déjà disponibles via la recherche WFS"
             }
         },
         "draw": {
@@ -1129,6 +1140,8 @@
             "advancedSettings": "Réglages avancés",
             "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Erreur",
+                "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . S'il vous plaît vérifier la requête param url",
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
                 "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",

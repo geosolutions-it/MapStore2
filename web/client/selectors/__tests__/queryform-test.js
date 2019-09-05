@@ -8,6 +8,7 @@
 
 const expect = require('expect');
 const {
+    availableCrossLayerFilterLayersSelector,
     spatialFieldSelector,
     spatialFieldGeomSelector,
     spatialFieldGeomTypeSelector,
@@ -132,5 +133,16 @@ describe('Test queryform selectors', () => {
         const appliedFilter = appliedFilterSelector(initialState);
         expect(appliedFilter).toExist();
         expect(appliedFilter.id).toBe(2);
+    });
+    it(' 10) - availableCrossLayerFilterLayersSelector', () => {
+        const layers = availableCrossLayerFilterLayersSelector({layers: [
+            {type: "wms", group: "group name"},
+            {type: "csw", group: "group name"},
+            {type: "wms", group: "background"}]
+        });
+        expect(layers).toExist();
+        expect(layers.length).toBe(1);
+        expect(layers[0].group).toBe("group name");
+        expect(layers[0].type).toBe("wms");
     });
 });

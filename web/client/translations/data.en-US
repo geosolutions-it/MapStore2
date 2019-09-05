@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "There was an error loading dashboards"
             },
             "maps": {
-                "title": "Maps ({count})"
+                "title": "Maps ({count})",
+                "noMapAvailable": "No map available",
+                "createNewOne": "Create a new one"
             }
         },
         "map": {
@@ -600,13 +602,22 @@
             "s_wfs_props_label" : "WFS service props",
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",
-            "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
+            "s_priority_info": "Used to sort search results, lower values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined",
             "service_missing": "{serviceType} service is not configured",
             "generic_error": "An error occurred during search. Error details: {message}",
             "errors": {
                 "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
                 "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            },
+            "s_launch_info_panel": {
+                "label": "Launch Info panel",
+                "no_info": "No Info",
+                "all_layers": "All Layers",
+                "single_layer": "Search Layer",
+                "no_info_description": "Identify panel will not show up on search",
+                "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
+                "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
             }
         },
         "draw": {
@@ -1130,6 +1141,8 @@
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",

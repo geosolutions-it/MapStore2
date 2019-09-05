@@ -27,9 +27,9 @@ const {
 } = require('../../actions/search');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const {CHANGE_MAP_VIEW, ZOOM_TO_POINT} = require('../../actions/map');
+const {ZOOM_TO_EXTENT, ZOOM_TO_POINT} = require('../../actions/map');
 const {UPDATE_ADDITIONAL_LAYER} = require('../../actions/additionallayers');
-const {searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, getFirstCoord } = require('../search');
+const {searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic } = require('../search');
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -127,8 +127,87 @@ describe('search Epics', () => {
         let actions = store.getActions();
         expect(actions.length).toBe(4);
         expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
-        expect(actions[2].type).toBe(CHANGE_MAP_VIEW);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
         expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+    });
+
+
+    it('produces the selectSearchItem epic and GFI for all layers', () => {
+        let action = selectSearchItem({
+            "type": "Feature",
+            "bbox": [125, 10, 126, 11],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [125.6, 10.1]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            },
+            "__SERVICE__": {
+                launchInfoPanel: "all_layers",
+                options: {
+                    typeName: "gs:layername"
+                }
+            }
+        }, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+
+        store.dispatch( action );
+
+        let actions = store.getActions();
+        expect(actions.length).toBe(6);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(FEATURE_INFO_CLICK);
+        expect(actions[2].filterNameList).toEqual([]);
+        expect(actions[3].type).toBe(SHOW_MAPINFO_MARKER);
+        expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[5].type).toBe(TEXT_SEARCH_ADD_MARKER);
+    });
+
+
+    it('produces the selectSearchItem epic and GFI for for single layer', () => {
+        let action = selectSearchItem({
+            "id": "Feature_1",
+            "type": "Feature",
+            "bbox": [125, 10, 126, 11],
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[100, 10], [100, 20]]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            },
+            "__SERVICE__": {
+                launchInfoPanel: "single_layer",
+                options: {
+                    typeName: "gs:layername"
+                }
+            }
+        }, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+
+        store.dispatch( action );
+
+        let actions = store.getActions();
+        expect(actions.length).toBe(6);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(FEATURE_INFO_CLICK);
+        expect(actions[2].itemId).toEqual("Feature_1");
+        expect(actions[2].filterNameList).toEqual(["gs:layername"]);
+        expect(actions[2].overrideParams).toEqual({"gs:layername": {info_format: "application/json"}});
+        expect(actions[3].type).toBe(SHOW_MAPINFO_MARKER);
+        expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[5].type).toBe(TEXT_SEARCH_ADD_MARKER);
     });
 
     it('searchItemSelected epic with nested services', () => {
@@ -144,12 +223,16 @@ describe('search Epics', () => {
 
         let actions = store.getActions();
         expect(actions.length).toBe(6);
-        let expectedActions = [CHANGE_MAP_VIEW, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
+        let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
         let actionsType = actions.map(a => a.type);
 
         expectedActions.forEach((a) => {
             expect(actionsType.indexOf(a)).toNotBe(-1);
         });
+
+        const zoomToExtentAction = actions.find(m => m.type === ZOOM_TO_EXTENT);
+        expect(zoomToExtentAction.maxZoom).toExist();
+        expect(zoomToExtentAction.extent.length).toEqual(4);
 
         let testSearchNestedServicesSelectedAction = actions.filter(m => m.type === TEXT_SEARCH_NESTED_SERVICES_SELECTED)[0];
         expect(testSearchNestedServicesSelectedAction.services[0]).toEqual({
@@ -372,13 +455,5 @@ describe('search Epics', () => {
             done();
         }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, queryable: true, type: "wms"}]}});
     });
-    it('testing getFirstCoord', () => {
-        expect(getFirstCoord()).toBe(null);
-        expect(getFirstCoord({type: "Point", coordinates: [2, 2]})).toEqual([2, 2]);
-        expect(getFirstCoord({type: "LineString", coordinates: [[2, 2], [3, 3]]})).toEqual([2, 2]);
-        expect(getFirstCoord({type: "Polygon", coordinates: [[[2, 2], [3, 3], [5, 5], [2, 2]]]})).toEqual([2, 2]);
-        expect(getFirstCoord({type: "MultiPoint", coordinates: [[1, 2], [3, 3]]})).toEqual([1, 2]);
-        expect(getFirstCoord({type: "MultiLineString", coordinates: [[[2, 2], [3, 3]], [[5, 5], [2, 2]]]})).toEqual([2, 2]);
-        expect(getFirstCoord({type: "MultiPolygon", coordinates: [[[[2, 2], [3, 3], [5, 5], [2, 2]], [[2, 2], [3, 3], [5, 5], [2, 2]]]]})).toEqual([2, 2]);
-    });
+
 });

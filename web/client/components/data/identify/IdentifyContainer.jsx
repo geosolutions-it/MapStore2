@@ -113,17 +113,25 @@ module.exports = props => {
                             <Col key="tools" xs={12}>
                                 <Toolbar
                                     btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                    buttons={toolButtons}/>
+                                    buttons={toolButtons}
+                                    transitionProps={null
+                                        /* transitions was causing a bad rendering of toolbar present in the identify panel
+                                         * for this reason they ahve been disabled
+                                        */
+                                      }/>
                             </Col>
                         <div key="navigation" style={{
                                 zIndex: 1,
                                 position: "absolute",
                                 right: 0,
+                                top: 0,
                                 margin: "0 10px"
                             }}>
                                 <Toolbar
                                     btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                    buttons={getNavigationButtons(props)} />
+                                    buttons={getNavigationButtons(props)}
+                                    transitionProps={null /* same here */}
+                                     />
                         </div>
                     </Row>
                 ].filter(headRow => headRow)}>

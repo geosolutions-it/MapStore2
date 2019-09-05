@@ -26,10 +26,7 @@ const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer')
 
 const {routerReducer, routerMiddleware} = require('react-router-redux');
 const routerCreateHistory = require('history/createHashHistory').default;
-const history = routerCreateHistory();
 
-// Build the middleware for intercepting and dispatching navigation actions
-const reduxRouterMiddleware = routerMiddleware(history);
 const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
 const timeManagerEpics = require('../epics/dimension');
@@ -91,7 +88,17 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
             setTimeout(() => {storeOpts.onPersist(); }, 0);
         }
     }
-    store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware, reduxRouterMiddleware], enhancer);
+
+    let middlewares = [epicMiddleware];
+    if (!storeOpts.noRouter) {
+        const history = routerCreateHistory();
+
+        // Build the middleware for intercepting and dispatching navigation actions
+        const reduxRouterMiddleware = routerMiddleware(history);
+        middlewares = [...middlewares, reduxRouterMiddleware];
+    }
+
+    store = DebugUtils.createDebugStore(rootReducer, defaultState, middlewares, enhancer);
     if (storeOpts && storeOpts.persist) {
         const persisted = {};
         store.subscribe(() => {

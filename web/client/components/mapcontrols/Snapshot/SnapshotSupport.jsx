@@ -7,5 +7,6 @@
  */
 
 module.exports = (mapType) => {
-    return require('../../map/' + mapType + '/SnapshotSupport');
+    const SnapshotSupport = require('../../map/' + mapType + '/SnapshotSupport');
+    return SnapshotSupport.default || SnapshotSupport;
 };

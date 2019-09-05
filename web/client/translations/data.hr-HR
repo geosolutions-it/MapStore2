@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "Došlo je do greške prilikom učitavanja kontrolnih ploča"
             },
             "maps": {
-                "title": "Karte ({count})"
+                "title": "Karte ({count})",
+                "noMapAvailable": "Karta nije dostupna",
+                "createNewOne": "Izradite novi"
             }
         },
         "map": {
@@ -600,13 +602,22 @@
             "s_wfs_props_label" : "Svojstva WFS servisa",
             "s_wfs_opt_props_label" : "Dodatna svojstva",
             "s_result_props_label": "Svojstva prikaza rezultata",
-            "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
+            "s_priority_info": "Koristi se za sortiranje rezultata pretrage, prvo niže vrijednosti. Nominatim razultati imaju prednost = 5",
             "serviceslistempty": "Nije definiran niti jedan servis",
             "service_missing": "{serviceType} servis nije konfiguriran",
             "generic_error": "Došlo je do greške prilikom pretrage. Detalji greške: {message}",
             "errors": {
                 "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
                 "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            },
+            "s_launch_info_panel": {
+                "label": "Launch Info panel",
+                "no_info": "No Info",
+                "all_layers": "All Layers",
+                "single_layer": "Search Layer",
+                "no_info_description": "Identify panel will not show up on search",
+                "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
+                "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
             }
         },
         "draw": {
@@ -1130,6 +1141,8 @@
             "advancedSettings": "Napredne mogućnosti",
             "templateMetadataAvailable": "Metapodaci distupni iz Dublin Core formata: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
                 "duplicatedServiceTitle": "Servis sa tim naslovom već postoji. Molim, promijenite naslov",

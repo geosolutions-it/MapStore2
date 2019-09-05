@@ -220,7 +220,10 @@ function mapInfo(state = initState, action) {
     case FEATURE_INFO_CLICK: {
         return assign({}, state, {
             clickPoint: action.point,
-            clickLayer: action.layer || null
+            clickLayer: action.layer || null,
+            itemId: action.itemId || null,
+            overrideParams: action.overrideParams || null,
+            filterNameList: action.filterNameList || null
         });
     }
     case CHANGE_MAPINFO_FORMAT: {

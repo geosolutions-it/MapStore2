@@ -36,14 +36,14 @@ class ServicesList extends React.Component {
 
     getOptions = () => {
         if (this.props.services.length === 0) {
-            return (<div className="search-serivce-name">
+            return (<div className="search-service-name">
             <Message msgId="search.serviceslistempty"/>
                 </div>);
         }
         return this.props.services.map((s, idx) => {
             return (
                 <div className="search-service-item" key={idx}>
-                    <span className="search-serivce-name">
+                    <span className="search-service-name">
                         {s.name}
                     </span>
                     <ConfirmButton className="list-remove-btn" onConfirm={() => this.remove(idx)} text={<Glyphicon glyph="remove-circle" />} confirming={{className: "text-warning list-remove-btn", text: <Message msgId="search.confirmremove" />}}/>

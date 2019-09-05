@@ -7,15 +7,15 @@
  */
 
 const expect = require('expect');
-const {INIT_CATALOG} = require('../../actions/catalog');
-const {SET_CONTROL_PROPERTY, setControlProperty} = require('../../actions/controls');
-const { loginSuccess, logout, logoutWithReload} = require('../../actions/security');
-const { initCatalogOnLoginOutEpic, promtLoginOnMapError, reloadMapConfig} = require('../login');
-const {configureError} = require('../../actions/config');
-const {dashboardLoadError} = require('../../actions/dashboard');
-const {FEEDBACK_MASK_LOADING} = require('../../actions/feedbackMask');
+const { INIT_CATALOG } = require('../../actions/catalog');
+const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/controls');
+const { loginSuccess, logout, logoutWithReload } = require('../../actions/security');
+const { initCatalogOnLoginOutEpic, promtLoginOnMapError, reloadMapConfig } = require('../login');
+const { configureError } = require('../../actions/config');
+const { dashboardLoadError } = require('../../actions/dashboard');
+const { FEEDBACK_MASK_LOADING } = require('../../actions/feedbackMask');
 
-const {testEpic} = require('./epicTestUtils');
+const { testEpic } = require('./epicTestUtils');
 
 describe('login Epics', () => {
     it('init catalog on login', (done) => {
@@ -42,6 +42,21 @@ describe('login Epics', () => {
         testEpic(reloadMapConfig, 0, logoutWithReload(), epicResult, {});
     });
 
+    it('reload new map config on logout', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            done();
+        };
+        const state = {
+            routing: {
+                location: {
+                    pathname: "/viewer/openlayers/new"
+                }
+            }
+        };
+        testEpic(reloadMapConfig, 1, logout(null), epicResult, state);
+    });
+
     it('init catalog on logout', (done) => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
@@ -54,8 +69,8 @@ describe('login Epics', () => {
 
     it('it prompts login on accessing  non-public map', (done) => {
         const e = {
-                status: 403
-            };
+            status: 403
+        };
         const epicResult = actions => {
             expect(actions.length).toBe(1);
             const action = actions[0];
@@ -78,13 +93,13 @@ describe('login Epics', () => {
                 expect(setControlAction.property).toBe('enabled');
 
                 const feedbackAction = actions[1];
-                expect( feedbackAction.type).toBe(FEEDBACK_MASK_LOADING);
+                expect(feedbackAction.type).toBe(FEEDBACK_MASK_LOADING);
 
                 const pushAction = actions[2];
-                expect( pushAction.type).toBe('@@router/CALL_HISTORY_METHOD');
-                expect( pushAction.payload).toEqual({ method: 'push', args: [ '/' ] });
+                expect(pushAction.type).toBe('@@router/CALL_HISTORY_METHOD');
+                expect(pushAction.payload).toEqual({ method: 'push', args: ['/'] });
 
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();

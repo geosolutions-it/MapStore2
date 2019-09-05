@@ -192,6 +192,7 @@
             "web/client/utils/LocaleUtils.js",
             "web/client/utils/PluginsUtils.js",
             "web/client/utils/PrintUtils.js",
+            "web/client/utils/openlayers/DrawSupportUtils.js",
             "web/client/utils/ogc/Filter/FilterBuilder.js",
             "web/client/utils/ogc/WFS/RequestBuilder.js",
             "web/client/utils/ogc/WFST/RequestBuilder.js",

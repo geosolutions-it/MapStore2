@@ -139,7 +139,7 @@ describe('identify Epics', () => {
                 }]
             }
         };
-        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}})];
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5")];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
                 expect(a0).toExist();
@@ -153,6 +153,8 @@ describe('identify Epics', () => {
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
+                expect(a2.data.features).toExist();
+                expect(a2.data.features.length).toBe(1);
                 expect(a2.requestParams).toExist();
                 expect(a2.reqId).toExist();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
@@ -160,7 +162,10 @@ describe('identify Epics', () => {
             } catch (ex) {
                 done(ex);
             }
-        }, state);
+        }, {...state, mapInfo: {
+            ...state.mapInfo,
+            itemId: "province_view.5"
+        }});
     });
     it('getFeatureInfoOnFeatureInfoClick with multiSelection', (done) => {
         // remove previous hook
@@ -539,27 +544,35 @@ describe('identify Epics', () => {
 
         testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
     });
-    it('featureInfoClickOnHighligh', (done) => {
-        const sentActions = toggleHighlightFeature(true);
 
+    it('featureInfoClickOnHighligh with layer', (done) => {
+        const sentActions = toggleHighlightFeature(true);
+        const NUM_ACTIONS = 2;
         const expectedAction = actions => {
-            expect(actions.length).toBe(1);
+            expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
                     case FEATURE_INFO_CLICK:
-                        done();
+                        expect(action.point).toEqual({latlng: {lng: -110.05255, lat: 46.67685}});
+                        break;
+                    case SHOW_MAPINFO_MARKER:
                         break;
                     default:
                         expect(true).toBe(false);
                 }
             });
+            done();
         };
 
-        testEpic(featureInfoClickOnHighligh, 1, sentActions, expectedAction, {
+        testEpic(featureInfoClickOnHighligh, NUM_ACTIONS, sentActions, expectedAction, {
             mapInfo: {
                 clickPoint: {
-                    "dummy": "point"
-                }
+                    "latlng": {
+                        lng: -110.05255,
+                        lat: 46.67685
+                    }
+                },
+                clickLayer: "gs:us_states"
             }
         });
     });
@@ -578,7 +591,8 @@ describe('identify Epics', () => {
             NUMBER_OF_ACTIONS,
             setControlProperties('metadataexplorer', "enabled", true),
             callback,
-            state);
+            state
+        );
     });
 
     it('disable metadataexplorer should not affect mapinfo', (done) => {
@@ -595,4 +609,5 @@ describe('identify Epics', () => {
             callback,
             state);
     });
+
 });

@@ -8,14 +8,15 @@
 
 import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
+import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
-import {head} from 'lodash';
+import { sortBy, isNil } from 'lodash';
 
 import { queryableLayersSelector, getLayerFromName } from '../selectors/layers';
 
 import { updateAdditionalLayer } from '../actions/additionallayers';
 import { showMapinfoMarker, featureInfoClick} from '../actions/mapInfo';
-import { changeMapView, zoomToPoint} from '../actions/map';
+import { zoomToExtent, zoomToPoint} from '../actions/map';
 import {
     SEARCH_LAYER_WITH_FILTER,
     TEXT_SEARCH_STARTED,
@@ -35,13 +36,12 @@ import {
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import mapUtils from '../utils/MapUtils';
 import {defaultIconStyle} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
-import {sortBy} from 'lodash';
+
 
 /**
  * Gets every `TEXT_SEARCH_STARTED` event.
@@ -57,7 +57,7 @@ export const searchEpic = action$ =>
     .switchMap( action =>
          // create a stream of streams from array
         Rx.Observable.from(
-            (action.services || [ {type: "nominatim"} ])
+            (action.services || [ {type: "nominatim", priority: 5} ])
              // Create an stream for each Service
             .map((service) => {
                 const serviceInstance = API.Utils.getService(service.type);
@@ -81,7 +81,7 @@ export const searchEpic = action$ =>
         )// from
         // merge all results from the streams
         .mergeAll()
-        .scan( (oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
+        .scan((oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
          // limit the number of results returned from all services to maxResults
         .map((results) => searchResultLoaded(results.slice(0, action.maxResults || 15), false))
         .startWith(searchTextLoading(true))
@@ -122,27 +122,36 @@ export const searchItemSelected = action$ =>
                 }
                 return Rx.Observable.of(action.item);
             }).concatMap((item) => {
+                // check if the service has been configured to start a GetFeatureInfo request based on the item selected
+                // if so, then do it with a point inside the geometry
                 let bbox = item.bbox || item.properties.bbox || toBbox(item);
-                let mapSize = action.mapConfig.size;
-
-                // zoom by the max. extent defined in the map's config
-                let newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", action.mapConfig.projection), mapSize, 0, 21, null);
-
-                // center by the max. extent defined in the map's config
-                let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
                 let actions = [
-                    changeMapView(newCenter, newZoom, {
-                        bounds: {
-                            minx: bbox[0],
-                            miny: bbox[1],
-                            maxx: bbox[2],
-                            maxy: bbox[3]
-                        },
-                        crs: "EPSG:4326",
-                        rotation: 0
-                    }, action.mapConfig.size, null, action.mapConfig.projection),
+                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
                     addMarker(item)
                 ];
+                if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
+                    let coord = pointOnSurface(item).geometry.coordinates;
+                    const latlng = { lng: coord[0], lat: coord[1] };
+                    const typeName = item.__SERVICE__.options.typeName;
+                    if (coord) {
+                        let itemId = null;
+                        let filterNameList = [];
+                        let overrideParams = {};
+                        if (item.__SERVICE__.launchInfoPanel === "single_layer") {
+                            /* take info from the item selected and restrict feature info to this layer
+                             * and force info_format to application/json for allowing
+                             * filtering results later on (identify epic) */
+                            filterNameList = [typeName];
+                            itemId = item.id;
+                            overrideParams = {[item.__SERVICE__.options.typeName]: {info_format: "application/json"}};
+                        }
+                        return [
+                            featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
+                            showMapinfoMarker(),
+                            ...actions
+                        ];
+                    }
+                }
                 return actions;
             });
 
@@ -203,16 +212,6 @@ export const zoomAndAddPointEpic = (action$, store) =>
         });
 
 
-export const getFirstCoord = (geometry = {}) => {
-    switch (geometry && geometry.type) {
-        case "Point": return geometry.coordinates;
-        case "LineString": case "MultiPoint": return head(geometry.coordinates);
-        case "Polygon": case "MultiLineString": return head(head(geometry.coordinates));
-        case "MultiPolygon": return head(head(head(geometry.coordinates)));
-        default: return null;
-    }
-};
-
 /**
  * Gets every `SEARCH_WITH_FILTER` event.
  * Triggers a GetFeature with a subsequent getFeatureInfo with a point taken from geometry of first feature retrieved
@@ -239,8 +238,8 @@ export const searchOnStartEpic = (action$, store) =>
                     })
                     .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
-                .switchMap(({geometry, typeName}) => {
-                    let coord = getFirstCoord(geometry);
+                .switchMap(({ type, geometry, typeName }) => {
+                    let coord = pointOnSurface({ type, geometry }).geometry.coordinates;
                     const latlng = {lng: coord[0], lat: coord[1] };
 
                     if (coord) { // trigger get feature info

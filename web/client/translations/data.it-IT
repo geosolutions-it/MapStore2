@@ -306,7 +306,9 @@
                 "errorLoadingDashboards": "C'è stato un errore caricando le dashboards"
             },
             "maps": {
-                "title": "Mappe ({count})"
+                "title": "Mappe ({count})",
+                "noMapAvailable": "Nessuna mappa disponibile",
+                "createNewOne": "Creane una nuova"
             }
         },
         "map": {
@@ -607,6 +609,15 @@
             "errors": {
                 "nonQueriableLayers": "Il layer indicato nell'url non è queriable o non è visibile in mappa",
                 "serverError": "Il server ha ritornato un errore durante la richiesta GetFeatureInfo. Controlla se i parametri sono corretti"
+            },
+            "s_launch_info_panel": {
+                "label": "Avvia ricerca per feature",
+                "no_info": "Non cercare",
+                "all_layers": "Tutti i livelli",
+                "single_layer": "Singolo livello",
+                "no_info_description": "Il pannello Informazioni Sulle Feature non comparirà",
+                "all_layers_description": "Il pannello Informazioni Sulle Feature mostrerà informazioni di tutti i layer presenti in mappa",
+                "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà i dati disponibili relativi all'elemento selezionato"
             }
         },
         "draw": {
@@ -1129,6 +1140,8 @@
             "advancedSettings": "Impostazioni avanzante",
             "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Errore",
+                "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
                 "duplicatedServiceTitle": "Un servizio con quel titolo esiste già, Per favore cambia titolo",

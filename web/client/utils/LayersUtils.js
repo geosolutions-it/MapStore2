@@ -510,7 +510,8 @@ const LayersUtils = {
     */
     findGeoServerName: ({url, regexRule}) => {
         const regex = regexRule || LayersUtils.getRegGeoserverRule();
-        return regex.test(url) && url.match(regex)[0] || null;
+        const location = isArray(url) ? url[0] : url;
+        return regex.test(location) && location.match(regex)[0] || null;
     },
     /**
      * This method search for a /geoserver/  string inside the url
@@ -519,7 +520,7 @@ const LayersUtils = {
     */
     getCapabilitiesUrl: (layer) => {
         const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
-        let reqUrl = layer.url;
+        let reqUrl = isArray(layer.url) ? layer.url[0] : layer.url;
         if (!!matchedGeoServerName) {
             let urlParts = reqUrl.split(matchedGeoServerName);
             if (urlParts.length === 2) {

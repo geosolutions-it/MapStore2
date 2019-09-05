@@ -165,7 +165,9 @@
                 "cfg": {
                     "activateMetedataTool": false,
                     "activateMapTitle": false,
-                    "activateSortLayer": false
+                    "activateSortLayer": false,
+                    "activateLayerFilterTool": false,
+                    "activateQueryTool": false
                 }
             }, "AddGroup", {
                 "name": "TOCItemsSettings",
@@ -296,7 +298,12 @@
             "AddGroup",
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
-                "name": "Measure"
+                "name": "Measure",
+                "cfg": {
+                  "defaultOptions": {
+                    "showAddAsAnnotation": true
+                  }
+                }
             }, "Print", "MapImport", "MapExport", {
                 "name": "Settings",
                 "cfg": {
@@ -381,7 +388,8 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets", "WidgetsTray",
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "WidgetsTray",
             "Timeline",
             "Playback",
             "FeedbackMask",

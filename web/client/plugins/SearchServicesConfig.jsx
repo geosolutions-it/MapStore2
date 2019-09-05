@@ -17,8 +17,6 @@ const {isEqual} = require('lodash');
 const {toggleControl} = require('../actions/controls');
 const {setSearchConfigProp, updateService, restServiceConfig} = require('../actions/searchconfig');
 
-require('../components/mapcontrols/searchservicesconfig/SearchServices.css');
-
 const ServiceList = require('../components/mapcontrols/searchservicesconfig/ServicesList.jsx');
 const WFSServiceProps = require('../components/mapcontrols/searchservicesconfig/WFSServiceProps.jsx');
 const ResultsProps = require('../components/mapcontrols/searchservicesconfig/ResultsProps.jsx');
@@ -145,7 +143,7 @@ class SearchServicesConfigPanel extends React.Component {
     };
 
     render() {
-        const {enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}} = this.props;
+        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}} = this.props;
         const Section = pages && pages[page] || null;
         return enabled ? (
             <Portal>
@@ -158,7 +156,11 @@ class SearchServicesConfigPanel extends React.Component {
                             }
                     </span>
                     <div role="body" className="services-config-editor">
-                        <Section.Element services={textSearchConfig.services} override={textSearchConfig.override} onPropertyChange={onPropertyChange} service={service}/>
+                        <Section.Element
+                            services={textSearchConfig.services}
+                            override={textSearchConfig.override}
+                            onPropertyChange={onPropertyChange}
+                            service={service}/>
                     </div>
                     {this.renderFooter()}
                 </Dialog>

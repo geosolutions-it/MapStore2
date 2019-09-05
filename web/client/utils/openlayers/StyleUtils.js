@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const assign = require('object-assign');
-const ol = require('openlayers');
+import assign from 'object-assign';
+import {Style, Stroke, Fill} from 'ol/style';
+import CircleStyle from 'ol/style/Circle';
 
 const getColor = function(color) {
     return `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
@@ -29,18 +30,18 @@ const toVectorStyle = function(layer, style) {
             color: getColor(style.color),
             fillColor: getColor(style.fill)
         };
-        let stroke = new ol.style.Stroke({
+        let stroke = new Stroke({
             color: getColor(style.color),
             width: style.width
         });
-        let fill = new ol.style.Fill({
+        let fill = new Fill({
             color: getColor(style.fill)
         });
         switch (getGeomType(layer)) {
         case 'Polygon':
         case 'MultiPolygon': {
             // TODO clear this, it goes in maximum call stack size exceeded
-            newLayer.nativeStyle = new ol.style.Style({
+            newLayer.nativeStyle = new Style({
                 stroke: stroke,
                 fill: fill
             });
@@ -50,7 +51,7 @@ const toVectorStyle = function(layer, style) {
         case 'LineString':
             {
                 // TODO clear this, it goes in maximum call stack size exceeded
-                newLayer.nativeStyle = new ol.style.Style({
+                newLayer.nativeStyle = new Style({
                     stroke: stroke
                 });
                 break;
@@ -58,8 +59,8 @@ const toVectorStyle = function(layer, style) {
         case 'Point':
         case 'MultiPoint': {
             // TODO clear this, it goes in maximum call stack size exceeded
-            newLayer.nativeStyle = new ol.style.Style({
-                image: new ol.style.Circle({
+            newLayer.nativeStyle = new Style({
+                image: new CircleStyle({
                     radius: style.radius,
                     fill: fill,
                     stroke: stroke
@@ -68,11 +69,11 @@ const toVectorStyle = function(layer, style) {
         }
         case 'GeometryCollection': {
             // TODO clear this, it goes in maximum call stack size exceeded
-            newLayer.nativeStyle = new ol.style.Style({
+            newLayer.nativeStyle = new Style({
                 radius: style.radius,
                 stroke: stroke,
                 fill: fill,
-                image: new ol.style.Circle({
+                image: new CircleStyle({
                     radius: style.radius,
                     fill: fill,
                     stroke: stroke
@@ -88,4 +89,4 @@ const toVectorStyle = function(layer, style) {
     return newLayer;
 };
 
-module.exports = toVectorStyle;
+export default toVectorStyle;

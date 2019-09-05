@@ -16,12 +16,12 @@ const {isNil, find} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
-    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE,
+    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
     setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
     mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory,
-    mapUpdating, savingMap, mapCreated, mapError
+    mapUpdating, savingMap, mapCreated, mapError, loadMaps
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
@@ -30,7 +30,9 @@ const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
-    mapDetailsUriFromIdSelector
+    mapDetailsUriFromIdSelector,
+    searchTextSelector,
+    searchParamsSelector
 } = require('../selectors/maps');
 
 const {
@@ -186,6 +188,14 @@ const loadMapsEpic = (action$) =>
         );
 
     });
+
+const reloadMapsEpic = (action$, { getState = () => { } }) =>
+    action$.ofType(MAP_DELETED)
+        .delay(1000)
+        .switchMap(() => Rx.Observable.of(loadMaps(false,
+            searchTextSelector(getState()),
+            searchParamsSelector(getState())
+        )));
 
 const getMapsResourcesByCategoryEpic = (action$) =>
     action$.ofType(MAPS_GET_MAP_RESOURCES_BY_CATEGORY)
@@ -357,5 +367,6 @@ module.exports = {
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic,
-    mapSaveMapResourceEpic
+    mapSaveMapResourceEpic,
+    reloadMapsEpic
 };
