@@ -82,9 +82,10 @@ Main reason of this choice is to allow easier overrides of styles in custom proj
 
 ## Add New Theme
 
-To add a new theme:
+To add a new theme:     
+
 1. create a new folder in the themes folder with the name of your theme
-1. create less files in the folder (at least `theme.less`, the main file, and `variables.less`, to customize standard variables)
+1. create less files in the folder (at least `theme.less`, as the main file, and `variables.less`, to customize standard variables)
 1. add the new theme to the [index file](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/themes/index.js), with the id corresponding to the theme folder name
 
 You can then switch your application to use the theme adding a new section in the `appConfig.js` file:
