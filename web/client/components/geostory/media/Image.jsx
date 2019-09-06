@@ -75,7 +75,7 @@ class Image extends Component {
                     style={{
                         objectFit: fit,
                         // polyfill ie11
-                        fontFamily: `object-fit: ${fit};`,
+                        fontFamily: `object-fit: ${fit}`,
                         cursor: enableFullscreen ? 'pointer' : 'default'
                     }}/>}
                 {credits && <div className="ms-media-credits">

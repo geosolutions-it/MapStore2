@@ -86,13 +86,13 @@ export const isMediaSection = (element) => element.type === SectionTypes.PARAGRA
  * utility function that scrolls the view to the element
  * if it finds an element and autoscroll is enabled
  * @param {string} id id of the dom element
- * @param {object} autoscrollOptions options used to the scroll action
+ * @param {object} scrollOptions options used to the scroll action
  */
-export const autoScrollToNewElement = ({id, autoScrollOptions = {behavior: "auto", block: "nearest", inline: "start"}} = {}) => {
+export const scrollToContent = (id, scrollOptions = {behavior: "auto", block: "nearest", inline: "start"}) => {
     const element = document.getElementById(id);
     if (element) {
         // trying behaviour smooth it does not scroll
-        element.scrollIntoView(autoScrollOptions);
+        element.scrollIntoView(scrollOptions);
     }
 };
 
