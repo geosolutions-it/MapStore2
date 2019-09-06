@@ -81,8 +81,7 @@ describe("GeoStory Utils", () => {
         expect(images.length).toBe(5);
         expect(container.clientTop).toBe(0);
         scrollToContent(SAMPLE_ID + 4);
-        expect(container.clientHeight).toBe(container.scrollHeight);
-        expect(container.clientHeight).toBeGreaterThan(0);
+        expect(container.scrollHeight).toBeGreaterThan(0);
     });
     it('test getClassNameFromProps class creator', () => {
         let classes = getClassNameFromProps({}); // defaults

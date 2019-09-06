@@ -98,7 +98,7 @@ describe('Geostory Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const container = document.getElementById('container');
             expect(container).toExist();
-            expect(container.clientHeight).toBe(container.scrollHeight);
+            expect(container.scrollHeight).toBeGreaterThan(0);
             done();
         }, {
             geostory: {}
@@ -151,8 +151,7 @@ describe('Geostory Epics', () => {
         ], (actions) => {
             expect(actions.length).toBe(1);
             setTimeout(() => {
-                expect(container.clientHeight).toBe(container.scrollHeight);
-                expect(container.clientHeight).toBeGreaterThan(0);
+                expect(container.scrollHeight).toBeGreaterThan(0);
                 done();
             }, 500);
         }, {
