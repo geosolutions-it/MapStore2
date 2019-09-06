@@ -19,7 +19,7 @@ import {
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
-    mode: 'edit'
+    mode: 'edit' // TODO: change in to Modes.VIEW
 };
 
 /**

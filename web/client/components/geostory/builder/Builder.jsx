@@ -65,18 +65,21 @@ class Builder extends React.Component {
                             }}
                             buttons={[
                                 {
-                                    glyph: 'trash'
+                                    glyph: 'trash',
+                                    disabled: true
                                 },
                                 {
                                     glyph: 'eye-open',
                                     onClick: () => this.props.setEditing(this.props.mode === Modes.VIEW)
                                 },
                                 {
-                                    glyph: 'cog'
+                                    glyph: 'cog',
+                                    disabled: true
 
                                 },
                                 {
-                                    glyph: 'list-alt'
+                                    glyph: 'list-alt',
+                                    disabled: true
                                 }
                             ]}/>
                     </div>

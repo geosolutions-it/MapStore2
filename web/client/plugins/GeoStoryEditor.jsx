@@ -24,7 +24,7 @@ const GeoStoryEditor = ({
     mode = Modes.VIEW,
     setEditingMode = () => {},
     story = {}
-}) => (<div
+}) => (mode === Modes.EDIT ? <div
     key="left-column"
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
@@ -33,8 +33,7 @@ const GeoStoryEditor = ({
         mode={mode}
         setEditing={setEditingMode}
         />
-</div>
-);
+</div> : null);
 /**
  * Plugin for GeoStory side panel editor
  * @name GeoStoryEditor

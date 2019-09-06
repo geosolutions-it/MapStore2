@@ -1,0 +1,83 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import React from 'react';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import {ButtonToolbar} from 'react-bootstrap';
+
+export default ({
+    scrollTo = () => {},
+    setEditing = () => {},
+    story,
+    currentSectionId,
+    progress = 0 // current page progress (current page + 1/totPages)
+}) => (<div
+    style={{
+        position: 'relative',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+    }}>
+    <div
+        key="progress-bar"
+        style={{ backgroundColor: '#ddd', height: 4 }}>
+        <div style={{
+            backgroundColor: '#078aa3',
+            height: 4,
+            width: `${progress * 100}%`,
+            transition: 'width 0.3s'
+        }} ></div>
+    </div>
+    <div
+        style={{
+            padding: 4,
+            display: 'flex',
+            backgroundColor: '#ffffff',
+            borderBottom: '1px solid #ddd'
+        }}>
+        <Toolbar
+            btnDefaultProps={{
+                className: 'square-button-md no-border',
+                bsStyle: 'default',
+                tooltipPosition: 'bottom'
+            }}
+            buttons={[
+                {
+                    glyph: 'pencil',
+                    tooltip: 'Edit story',
+                    onClick: () => setEditing(true)
+                }
+            ]} />
+        <div style={{ flex: 1, display: 'flex' }}>
+            <ButtonToolbar
+                style={{ marginRight: 0, marginLeft: 'auto' }}>
+                {<Toolbar
+                    btnDefaultProps={{
+                        bsSize: 'xs',
+                        style: {
+                            marginRight: 4
+                        }
+                    }}
+                    buttons={
+                        story.sections && story.sections.map((section = {}) => {
+                            const selected = currentSectionId === section.id;
+                            return {
+                                text: section.title || section.type || "No Title",
+                                bsStyle: selected ? 'primary' : 'default',
+                                className: selected ? '' : 'btn-tray',
+                                onClick: selected ? () => { } : scrollTo(section.id, { behavior: "smooth" })
+                            };
+                        })} />
+                }
+            </ButtonToolbar>
+        </div>
+    </div>
+</div>);
