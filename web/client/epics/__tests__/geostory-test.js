@@ -43,7 +43,7 @@ import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { ContentTypes, MediaTypes } from '../../utils/GeoStoryUtils';
 
 let mockAxios;
-describe.only('Geostory Epics', () => {
+describe('Geostory Epics', () => {
     beforeEach(done => {
         mockAxios = new MockAdapter(axios);
         setTimeout(done);
