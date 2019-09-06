@@ -1,0 +1,120 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import expect from 'expect';
+import Immersive from '../Immersive';
+
+// TODO: externalize
+import {setObservableConfig} from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+setObservableConfig(rxjsConfig);
+
+import { Modes } from '../../../../../utils/GeoStoryUtils';
+
+const IMAGE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+const CONTENTS = [
+    {
+        id: '000',
+        type: 'column',
+        background: {
+            type: 'image',
+            src: IMAGE_SRC
+        },
+        contents: [{
+            type: 'text',
+            html: '<p>column</p>'
+
+        }]
+    },
+    {
+        id: '001',
+        type: 'column',
+        background: {
+            type: 'image',
+            src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+        },
+        contents: [{
+            type: 'image',
+            src: IMAGE_SRC
+
+        }]
+    }
+];
+
+describe('Immersive component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+    it('Immersive rendering with defaults', () => {
+        ReactDOM.render(<Immersive />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-immersive');
+        expect(el).toExist();
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toNotExist();
+    });
+    it('Immersive rendering in edit mode ', () => {
+        ReactDOM.render(<Immersive mode="edit"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-immersive');
+        expect(el).toExist();
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+    });
+
+    it('Immersive background rendering (image)', () => {
+
+        ReactDOM.render(<Immersive contents={CONTENTS} mode="edit"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-immersive');
+        expect(el).toExist();
+        const img = el.querySelector('img');
+        expect(img).toExist();
+        expect(img.getAttribute('src')).toBe(IMAGE_SRC);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+    });
+    it('Check contents and background tools', () => {
+        // column content should have
+        ReactDOM.render(<Immersive mode={Modes.EDIT} contents={CONTENTS} />, document.getElementById("container"));
+
+        // background tools should have edit, fullscreen, resize and align
+        const backgroundToolbar = document.querySelector('.ms-section-background .ms-content-toolbar .btn-group');
+        expect(backgroundToolbar).toExist();
+        expect(backgroundToolbar.querySelectorAll('button').length).toBe(5);
+        expect(backgroundToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-1-full-screen')).toExist(); // align tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
+
+        // column should have algin, and resize tools
+        const columnToolbar = document.querySelector('.ms-section-contents .ms-content-toolbar .btn-group');
+        expect(columnToolbar).toExist();
+        expect(columnToolbar.querySelectorAll('button').length).toBe(3);
+        expect(columnToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
+        expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+
+        // inner media and image contents must have edit, resize and align tools
+        const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');
+        expect(innerMediaToolbar).toExist();
+        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(4);
+        expect(innerMediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
+        expect(innerMediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
+        expect(innerMediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(innerMediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
+    });
+});

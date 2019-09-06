@@ -1859,6 +1859,68 @@
             "missingconfig": "El administrador de reglas pierde la configuración. ¡Acceso denegado!",
             "selectworkspace": "Debe seleccionar el espacio de trabajo para habilitar opciones avanzadas."
         },
+        "geostory": {
+            "addTitleSection": "Agregar sección de título",
+            "addParagraphSection": "Agregar sección de párrafo",
+            "addImmersiveSection": "Añadir sección inmersiva",
+            "addMediaSection": "Agregar sección de multimedia",
+            "addImmersiveContent": "Añadir contenido inmersivo",
+            "addTextContent": "Agregar contenido de texto",
+            "addMediaContent": "Agregar contenido multimedia",
+            "zoomToContent": "Zoom al contenido",
+            "contentToolbar": {
+                "contentSize": "Cambiar tamaño",
+                "smallSizeLabel": "Pequeña",
+                "mediumSizeLabel": "Medio",
+                "largeSizeLabel": "Grande",
+                "fullSizeLabel": "Completo",
+                "contentAlign": "Alinear contenido",
+                "leftAlignLabel": "Izquierda",
+                "centerAlignLabel": "Centrar",
+                "rightAlignLabel": "Derecha",
+                "contentTheme": "Cambiar tema de campo",
+                "brightThemeLabel": "Brillante",
+                "brightTextThemeLabel": "Texto brillante",
+                "darkThemeLabel": "Oscuro",
+                "darkTextThemeLabel": "Texto oscuro",
+                "cover": "Cubra el espacio del contenedor",
+                "fit": "Ajustar el espacio del contenedor",
+                "editMedia": "Cambiar fuente de medios",
+                "remove": "Eliminar"
+            },
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Error desconocido",
+                    "pleaseLogin": "Por favor Iniciar sesión",
+                    "geostoryNotAccessible": "Esta historia no es accesible",
+                    "geostoryDoesNotExist": "Esta historia no existe"
+                }
+            }
+        },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Imágenes",
+            "videos": "Videos",
+            "preview": "Avance",
+            "apply": "Aplicar",
+            "imagePicker": {
+                "add": "Añadir",
+                "back": "Atrás",
+                "save": "Salvar",
+                "edit": "Editar",
+                "sourcePlaceholder": "Ingrese una fuente",
+                "source": "Fuente",
+                "titlePlaceholder": "Ingrese un título",
+                "title": "Título",
+                "altTextPlaceholder": "Ingrese un texto alternativo",
+                "altText": "Texto alternativo",
+                "descriptionPlaceholder": "Ingrese una descripción",
+                "description": "Descripción",
+                "creditsPlaceholder": "Ingrese créditos",
+                "credits": "Créditos"
+            }
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Atrás",

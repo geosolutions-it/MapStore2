@@ -1618,6 +1618,67 @@
             "deleteButton": "Wissen",
             "cancelButton": "Annuleren"
         },
+        "geostory": {
+            "addTitleSection": "Add Title Section",
+            "addParagraphSection": "Add Paragraph Section",
+            "addImmersiveSection": "Add Immersive Section",
+            "addMediaSection": "Add Media Section",
+            "addImmersiveContent": "Add Immersive Content",
+            "addTextContent": "Add Text Content",
+            "addMediaContent": "Add Media Content",
+            "zoomToContent": "Zoom to content",
+            "contentToolbar": {
+                "contentSize": "Change size",
+                "smallSizeLabel": "Small",
+                "mediumSizeLabel": "Medium",
+                "largeSizeLabel": "Large",
+                "fullSizeLabel": "Full",
+                "contentAlign": "Align content",
+                "leftAlignLabel": "Left",
+                "centerAlignLabel": "Center",
+                "rightAlignLabel": "Right",
+                "contentTheme": "Change field theme",
+                "brightThemeLabel": "Bright",
+                "brightTextThemeLabel": "Bright text",
+                "darkThemeLabel": "Dark",
+                "darkTextThemeLabel": "Dark text",
+                "cover": "Cover the container space",
+                "fit": "Fit the container space",
+                "editMedia": "Change media source"
+            },
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "pleaseLogin": "Please login",
+                    "geostoryNotAccessible": "This story is not accessible",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
+            }
+        },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Images",
+            "videos": "Videos",
+            "preview": "Preview",
+            "apply": "Apply",
+            "imagePicker": {
+                "add": "Add",
+                "back": "Back",
+                "save": "Save",
+                "edit": "Edit",
+                "sourcePlaceholder": "Enter a source",
+                "source": "Source",
+                "titlePlaceholder": "Enter a title",
+                "title": "Title",
+                "altTextPlaceholder": "Enter an alternative text",
+                "altText": "Alternative text",
+                "descriptionPlaceholder": "Enter a description",
+                "description": "Description",
+                "creditsPlaceholder": "Enter credits",
+                "credits": "Credits"
+            }
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Vorige",

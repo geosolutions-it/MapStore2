@@ -28,7 +28,7 @@ class SideGrid extends React.Component {
         onItemClick: PropTypes.func,
         colProps: PropTypes.object,
         items: PropTypes.array,
-        cardComponent: PropTypes.element,
+        cardComponent: PropTypes.oneOfType(PropTypes.func, PropTypes.elementType),
         className: PropTypes.string
     };
 

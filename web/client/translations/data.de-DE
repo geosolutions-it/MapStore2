@@ -1859,6 +1859,68 @@
             "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
             "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
+        "geostory": {
+            "addTitleSection": "Titelabschnitt hinzufügen",
+            "addParagraphSection": "Absatzabschnitt hinzufügen",
+            "addImmersiveSection": "Immersive Section hinzufügen",
+            "addMediaSection": "Medienabschnitt hinzufügen",
+            "addImmersiveContent": "Füge immersiven Inhalt hinzu",
+            "addTextContent": "Textinhalt hinzufügen",
+            "addMediaContent": "Medieninhalt hinzufügen",
+            "zoomToContent": "Zum Inhalt zoomen",
+            "contentToolbar": {
+                "contentSize": "Größe ändern",
+                "smallSizeLabel": "Klein",
+                "mediumSizeLabel": "Mittel",
+                "largeSizeLabel": "Groß",
+                "fullSizeLabel": "Voll",
+                "contentAlign": "Inhalt ausrichten",
+                "leftAlignLabel": "Links",
+                "centerAlignLabel": "Center",
+                "rightAlignLabel": "Rechten",
+                "contentTheme": "Feldthema ändern",
+                "brightThemeLabel": "Hell",
+                "brightTextThemeLabel": "Heller text",
+                "darkThemeLabel": "Dunkel",
+                "darkTextThemeLabel": "Dark text",
+                "cover": "Decken Sie den Behälterraum ab",
+                "fit": "Den Behälterraum montieren",
+                "editMedia": "Ändern Sie die Medienquelle",
+                "remove": "Entfernen"
+            },
+            "errors": {
+                "loading": {
+                    "title": "Error",
+                    "unknownError": "Unbekannter Fehler",
+                    "pleaseLogin": "Bitte loggen Sie sich ein",
+                    "geostoryNotAccessible": "Diese Geschichte ist nicht zugänglich",
+                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                }
+            }
+        },
+        "mediaEditor": {
+            "modalTitle": "Medien",
+            "images": "Bilder",
+            "videos": "Videos",
+            "preview": "Vorschau",
+            "apply": "Sich bewerben",
+            "imagePicker": {
+                "add": "Hinzufügen",
+                "back": "Zurück",
+                "save": "Sparen",
+                "edit": "Bearbeiten",
+                "sourcePlaceholder": "Geben Sie eine Quelle ein",
+                "source": "Quelle",
+                "titlePlaceholder": "Geben Sie einen Titel ein",
+                "title": "Titel",
+                "altTextPlaceholder": "Geben Sie einen alternativen Text ein",
+                "altText": "Alternative text",
+                "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
+                "description": "Beschreibung",
+                "creditsPlaceholder": "Geben Sie Credits ein",
+                "credits": "Credits"
+            }
+        },
         "tutorial": {
             "title": "Anleitung",
             "back": "zurück",

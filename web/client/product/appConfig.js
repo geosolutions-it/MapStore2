@@ -43,6 +43,10 @@ module.exports = {
         name: "rulesmanager",
         path: "/rules-manager",
         component: require('./pages/RulesManager')
+    }, {
+        name: "geostory",
+        path: "/geostory/:gid",
+        component: require('./pages/GeoStory')
     }],
     initialState: {
         defaultState: {

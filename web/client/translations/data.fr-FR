@@ -1859,6 +1859,68 @@
             "missingconfig": "Le gestionnaire de règles n'est pas configuré. Accès refusé!",
             "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées."
         },
+        "geostory": {
+            "addTitleSection": "Ajouter une section de titre",
+            "addParagraphSection": "Ajouter une section de paragraphe",
+            "addImmersiveSection": "Ajouter une section immersive",
+            "addMediaSection": "Ajouter une section multimédia",
+            "addImmersiveContent": "Ajouter du contenu immersif",
+            "addTextContent": "Ajouter du contenu texte",
+            "addMediaContent": "Ajouter du contenu multimédia",
+            "zoomToContent": "Zoom sur le contenu",
+            "contentToolbar": {
+                "contentSize": "Changer la taille",
+                "smallSizeLabel": "Petit",
+                "mediumSizeLabel": "Moyen",
+                "largeSizeLabel": "Large",
+                "fullSizeLabel": "Plein",
+                "contentAlign": "Aligner le contenu",
+                "leftAlignLabel": "Gauche",
+                "centerAlignLabel": "Centre",
+                "rightAlignLabel": "Droite",
+                "contentTheme": "Changer de thème de champ",
+                "brightThemeLabel": "Brillant",
+                "brightTextThemeLabel": "Texte clair",
+                "darkThemeLabel": "Sombre",
+                "darkTextThemeLabel": "Texte sombre",
+                "cover": "Couvrir l'espace conteneur",
+                "fit": "Adapter l'espace conteneur",
+                "editMedia": "Changer de source média",
+                "remove": "Supprimer"
+            },
+            "errors": {
+                "loading": {
+                    "title": "Erreur",
+                    "unknownError": "Erreur inconnue",
+                    "pleaseLogin": "Veuillez vous connecter",
+                    "geostoryNotAccessible": "Cette histoire n'est pas accessible",
+                    "geostoryDoesNotExist": "Cette histoire n'existe pas"
+                }
+            }
+        },
+        "mediaEditor": {
+            "modalTitle": "Médias",
+            "images": "Images",
+            "videos": "Vidéos",
+            "preview": "Aperçu",
+            "apply": "Appliquer",
+            "imagePicker": {
+                "add": "Ajouter",
+                "back": "Retour",
+                "save": "Sauver",
+                "edit": "Modifier",
+                "sourcePlaceholder": "Entrez une source",
+                "source": "Source",
+                "titlePlaceholder": "Entrez un titre",
+                "title": "Titre",
+                "altTextPlaceholder": "Entrez un texte alternatif",
+                "altText": "Texte alternatif",
+                "descriptionPlaceholder": "Entrez une description",
+                "description": "Description",
+                "creditsPlaceholder": "Entrez des crédits",
+                "credits": "Crédits"
+            }
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",
