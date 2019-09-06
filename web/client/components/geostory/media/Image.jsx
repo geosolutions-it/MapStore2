@@ -57,7 +57,7 @@ class Image extends Component {
             id,
             src,
             fit = 'cover',
-            enableFullscreen,
+            enableFullscreen = true,
             fullscreen,
             onClick,
             description,
