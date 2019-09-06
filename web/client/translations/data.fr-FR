@@ -1888,6 +1888,30 @@
                 "editMedia": "Changer de source média",
                 "remove": "Supprimer"
             },
+            "builder": {
+                "delete": "Supprimer la section sélectionnée",
+                "preview": "Afficher l'aperçu",
+                "edit": "Modifier l'histoire",
+                "hide": "Masquer l'aperçu dans les cartes",
+                "show": "Afficher l'aperçu en cartes",
+                "fullscreen": "Afficher l'aperçu en plein écran",
+                "settings": {
+                    "tooltip": "Réglages",
+                    "back": "Retour au constructeur",
+                    "save": "Enregistrer les paramètres",
+                    "headerTitle" : "Paramètres de l'histoire",
+                    "title" : "Titre",
+                    "titlePlaceholder" : "Entrez le titre",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Entrez le logo source (format d'image)",
+                    "autoplay" : "Lecture automatique",
+                    "enableAutoplay" : "Activer la lecture automatique",
+                    "autoplayInterval" : "Intervalle de lecture automatique (secondes)",
+                    "autoplayIntervalPlaceholder" : "Activer l'intervalle de lecture automatique",
+                    "navbar" : "Barre de navigation",
+                    "showNavbar" : "Afficher la barre de navigation"
+                }
+            },
             "errors": {
                 "loading": {
                     "title": "Erreur",

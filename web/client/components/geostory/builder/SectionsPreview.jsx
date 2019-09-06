@@ -49,7 +49,8 @@ const sectionToItem = ({
     contents,
     type,
     title,
-    id
+    id,
+    cardPreviewEnabled = false
 }) => {
     return {
         id: id,
@@ -91,11 +92,11 @@ const sectionToItem = ({
                                 ]} />,
                             title: capitalize(content.type),
                             description: `type: ${content.type}`,
-                            body: (
+                            body: cardPreviewEnabled ? (
                                 <ContainerDimensions>
                                     <Preview content={content} />
                                 </ContainerDimensions>
-                            )
+                            ) : null
                         };
                     })} />
             </div>
@@ -111,10 +112,10 @@ const sectionToItem = ({
  * @SectionsPreview
  * @param {object[]} [sections=[]] Array of sections to display
  */
-export default ({ sections = [] }) => (<SideGrid
+export default ({ sections = [], cardPreviewEnabled }) => (<SideGrid
     containerId="ms-story-builder"
     cardComponent={SideCard}
     size="sm"
     items={
-        sections.map(sectionToItem)
+        sections.map(s => ({...s, cardPreviewEnabled})).map(sectionToItem)
 } />);

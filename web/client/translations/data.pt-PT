@@ -1845,6 +1845,30 @@
                 "fit": "Fit the container space",
                 "editMedia": "Change media source"
             },
+            "builder": {
+                "delete": "Remove selected section",
+                "preview": "Show preview",
+                "edit": "Edit story",
+                "hide": "Hide preview in cards",
+                "show": "Show preview in cards",
+                "fullscreen": "Show preview in fullscreen",
+                "settings": {
+                    "tooltip": "Settings",
+                    "back": "Back to builder",
+                    "save": "Save settings",
+                    "headerTitle" : "Story Settings",
+                    "title" : "Title",
+                    "titlePlaceholder" : "Enter Title",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Enter logo src (image format)",
+                    "autoplay" : "Autoplay",
+                    "enableAutoplay" : "Enable autoplay",
+                    "autoplayInterval" : "Autoplay interval (seconds)",
+                    "autoplayIntervalPlaceholder" : "Enable autoplay interval",
+                    "navbar" : "Navbar,
+                    "showNavbar" : "Show navbar"
+                }
+            },
             "errors": {
                 "loading": {
                     "title": "Error",

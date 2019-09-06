@@ -9,20 +9,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { createPlugin } from '../utils/PluginsUtils';
 
 import {
     currentStorySelector,
+    cardPreviewEnabledSelector,
     modeSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
+import { setEditing, toggleCardPreview } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
 import { Modes } from '../utils/GeoStoryUtils';
-import { setEditing } from '../actions/geostory';
+import { createPlugin } from '../utils/PluginsUtils';
 const GeoStoryEditor = ({
     mode = Modes.VIEW,
     setEditingMode = () => {},
+    onToggleCardPreview = () => {},
+    cardPreviewEnabled,
     story = {}
 }) => (<div
     key="left-column"
@@ -32,6 +35,8 @@ const GeoStoryEditor = ({
         story={story}
         mode={mode}
         setEditing={setEditingMode}
+        cardPreviewEnabled={cardPreviewEnabled}
+        onToggleCardPreview={onToggleCardPreview}
         />
 </div>
 );
@@ -43,10 +48,12 @@ const GeoStoryEditor = ({
 export default createPlugin('GeoStoryEditor', {
     component: connect(
         createStructuredSelector({
+            cardPreviewEnabled: cardPreviewEnabledSelector,
             mode: modeSelector,
             story: currentStorySelector
         }), {
-            setEditingMode: setEditing
+            setEditingMode: setEditing,
+            onToggleCardPreview: toggleCardPreview
         }
     )(GeoStoryEditor),
     reducers: {

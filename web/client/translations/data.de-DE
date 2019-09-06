@@ -1888,6 +1888,30 @@
                 "editMedia": "Ändern Sie die Medienquelle",
                 "remove": "Entfernen"
             },
+            "builder": {
+                "delete": "Ausgewählten Abschnitt entfernen",
+                "preview": "Vorschau zeigen",
+                "edit": "Bearbeiten Sie die Geschichte",
+                "hide": "Vorschau in Karten ausblenden",
+                "show": "Vorschau in Karten anzeigen",
+                "fullscreen": "Vorschau im Vollbild anzeigen",
+                "settings": {
+                    "tooltip": "die Einstellungen",
+                    "back": "Zurück zum Baumeister",
+                    "save": "Einstellungen speichern",
+                    "headerTitle" : "Story-Einstellungen",
+                    "title" : "Titel",
+                    "titlePlaceholder" : "Titel eingeben",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Logoquelle eingeben (Bildformat)",
+                    "autoplay" : "Automatisches Abspielen",
+                    "enableAutoplay" : "Aktivieren Sie die automatische Wiedergabe",
+                    "autoplayInterval" : "Autoplay-Intervall (Sekunden)",
+                    "autoplayIntervalPlaceholder" : "Aktivieren Sie das Autoplay-Intervall",
+                    "navbar" : "Navbar",
+                    "showNavbar" : "Navigationsleiste anzeigen"
+                }
+            },
             "errors": {
                 "loading": {
                     "title": "Error",

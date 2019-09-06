@@ -1888,6 +1888,30 @@
                 "editMedia": "Cambia la sorgente del media",
                 "remove": "Elimina"
             },
+            "builder": {
+                "delete": "Elimina la sezione selezionata",
+                "preview": "Mostra anteprima storia",
+                "edit": "Modifica la storia",
+                "hide": "Nascondi le anteprime nell'editor",
+                "show": "Mostra le anteprime nell'editor",
+                "fullscreen": "Mostra antemprima a schermo pieno",
+                "settings": {
+                    "tooltip": "Impostazioni",
+                    "back": "Torna all'editor",
+                    "save": "Salva impostazioni",
+                    "headerTitle" : "Impostazioni della storia",
+                    "title" : "Titolo",
+                    "titlePlaceholder" : "Inserisci titolo",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Inserisci sorgente del logo (formato immagine)",
+                    "autoplay" : "Autoplay",
+                    "enableAutoplay" : "Abilita Autoplay",
+                    "autoplayInterval" : "Intervallo dell'autoplay (secondi)",
+                    "autoplayIntervalPlaceholder" : "Abilita l'intervallo dell'autoplay",
+                    "navbar" : "Barra di navigazione",
+                    "showNavbar" : "Mostra barra di navigazione"
+                }
+            },
             "errors": {
                 "loading": {
                     "title": "Errore",

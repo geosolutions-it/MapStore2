@@ -35,5 +35,16 @@ describe('SectionsPreview component', () => {
         expect(el).toExist();
         // empty view when no session
         expect(el.querySelectorAll('.items-list > div').length).toBe(6); // 2 + 2 (first inner) + 2 (second inner)
+        expect(el.querySelectorAll('.ms-section-preview').length).toBe(2); // 2 sections
+    });
+
+    it('SectionsPreview rendering with sections, preview disabled', () => {
+        ReactDOM.render(<SectionsPreview sections={STORY.sections} cardPreviewEnabled={false}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.msSideGrid');
+        expect(el).toExist();
+        // empty view when no session
+        expect(el.querySelectorAll('.items-list > div').length).toBe(6); // 2 + 2 (first inner) + 2 (second inner)
+        expect(el.querySelectorAll('.ms-section-preview').length).toBe(0); // 2 sections but preview disabled
     });
 });
