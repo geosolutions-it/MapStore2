@@ -46,15 +46,27 @@ describe('Image component', () => {
         expect(image).toExist();
         expect(image.style.objectFit).toBe('cover');
     });
-    it('Image rendering with enable fullscreen preview', () => {
+    it('Image rendering with enabled fullscreen preview', () => {
         ReactDOM.render(<Image
             src={SAMPLE_SRC}
-            enableFullscreen/>, document.getElementById("container"));
+            />, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
         expect(image).toExist();
         expect(image.style.objectFit).toBe('cover');
         ReactTestUtils.Simulate.click(image);
         expect(document.querySelector('.ReactModalPortal')).toExist();
+    });
+    it('Image rendering with disabled fullscreen preview', () => {
+        ReactDOM.render(<Image
+            src={SAMPLE_SRC}
+            enableFullscreen={false}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const image = container.querySelector('.ms-media-image > img');
+        expect(image).toExist();
+        expect(image.style.objectFit).toBe('cover');
+        ReactTestUtils.Simulate.click(image);
+        expect(document.querySelector('.ReactModalPortal')).toNotExist();
     });
 });

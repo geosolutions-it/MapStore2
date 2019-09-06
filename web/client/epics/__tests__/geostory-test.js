@@ -7,12 +7,15 @@
 */
 
 import expect from 'expect';
-import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
+import React from 'react';
+import ReactDOM from 'react-dom';
 import MockAdapter from 'axios-mock-adapter';
 
+import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';
 
 import {
+    scrollToContentEpic,
     loadGeostoryEpic,
     openMediaEditorForNewMedia,
     editMediaForBackgroundEpic,
@@ -36,7 +39,7 @@ import {
     editMedia
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
+import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { ContentTypes, MediaTypes } from '../../utils/GeoStoryUtils';
 
 let mockAxios;
@@ -49,6 +52,111 @@ describe('Geostory Epics', () => {
     afterEach(done => {
         mockAxios.restore();
         setTimeout(done);
+    });
+    it('test scrollToContentEpic, with img mounted', (done) => {
+        const NUM_ACTIONS = 0;
+        const SAMPLE_ID = "res_img";
+        const SAMPLE_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+        document.body.innerHTML = '<div id="container"></div>';
+
+        ReactDOM.render(
+            <div id="img-container">
+                <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 0}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 1}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 2}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 3}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 4}
+                    src={SAMPLE_SRC}
+                />
+            </div>, document.getElementById("container"));
+        testEpic(scrollToContentEpic, NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: SAMPLE_ID + 4})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const container = document.getElementById('container');
+            expect(container).toExist();
+            expect(container.scrollHeight).toBeGreaterThan(0);
+            done();
+        }, {
+            geostory: {}
+        });
+    });
+    it('test scrollToContentEpic, with img mounted after a delay', (done) => {
+        const NUM_ACTIONS = 1;
+        const SAMPLE_ID = "res_img";
+        const SAMPLE_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+        const DELAY = 400;
+        let container = null;
+        setTimeout(() => {
+            document.body.innerHTML = '<div id="container"></div>';
+            container = ReactDOM.render(
+                <div id="img-container">
+                    <img
+                        width= {500}
+                        height= {500}
+                        id={SAMPLE_ID + 0}
+                        src={SAMPLE_SRC}
+                    />
+                    <img
+                        width= {500}
+                        height= {500}
+                        id={SAMPLE_ID + 1}
+                        src={SAMPLE_SRC}
+                    />
+                    <img
+                        width= {500}
+                        height= {500}
+                        id={SAMPLE_ID + 2}
+                        src={SAMPLE_SRC}
+                    />
+                    <img
+                        width= {500}
+                        height= {500}
+                        id={SAMPLE_ID + 3}
+                        src={SAMPLE_SRC}
+                    />
+                    <img
+                        width= {500}
+                        height= {500}
+                        id={SAMPLE_ID + 4}
+                        src={SAMPLE_SRC}
+                    />
+                </div>, document.getElementById("container"));
+        }, DELAY);
+        testEpic(addTimeoutEpic(scrollToContentEpic, 100), NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: SAMPLE_ID + 4})
+        ], (actions) => {
+            expect(actions.length).toBe(1);
+            setTimeout(() => {
+                expect(container.scrollHeight).toBeGreaterThan(0);
+                done();
+            }, 500);
+        }, {
+            geostory: {}
+        });
     });
     it('loadGeostoryEpic loading one sample story', (done) => {
         const NUM_ACTIONS = 3;

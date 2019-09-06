@@ -85,7 +85,7 @@ class Background extends Component {
                             ? this.props.backgroundPlaceholder
                             : {})
                     }}>
-                    {MediaType && <MediaType { ...this.props } descriptionEnabled={false}/>}
+                    {MediaType && <MediaType { ...this.props } enableFullscreen={false} descriptionEnabled={false}/>}
                     { this.props.mode === Modes.EDIT && (
                     parentNode
                     ? (

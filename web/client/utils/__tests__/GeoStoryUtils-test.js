@@ -6,10 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from"expect";
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import { values, isArray } from "lodash";
 import uuid from 'uuid';
 
 import {
+    scrollToContent,
     getClassNameFromProps,
     StoryTypes,
     SectionTypes,
@@ -25,12 +29,59 @@ import {
 
 
 describe("GeoStory Utils", () => {
-    beforeEach( () => {
-
+    beforeEach( (done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
     });
     afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = "";
         setTimeout(done);
+    });
+    it('test scrollToContent with image content', () => {
+        const SAMPLE_ID = "res_img";
+        const SAMPLE_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+        ReactDOM.render(
+            <div id="img-container">
+                <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 0}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 1}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 2}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 3}
+                    src={SAMPLE_SRC}
+                />
+                 <img
+                    width= {500}
+                    height= {500}
+                    id={SAMPLE_ID + 4}
+                    src={SAMPLE_SRC}
+                />
+            </div>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toExist();
+        const images = container.querySelectorAll('img');
+        expect(images).toExist();
+        expect(images.length).toBe(5);
+        expect(container.clientTop).toBe(0);
+        scrollToContent(SAMPLE_ID + 4);
+        expect(container.scrollHeight).toBeGreaterThan(0);
     });
     it('test getClassNameFromProps class creator', () => {
         let classes = getClassNameFromProps({}); // defaults
