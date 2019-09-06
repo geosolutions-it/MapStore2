@@ -1865,7 +1865,7 @@
                     "enableAutoplay" : "Enable autoplay",
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
-                    "navbar" : "Navbar,
+                    "navbar" : "Navbar",
                     "showNavbar" : "Show navbar"
                 }
             },
