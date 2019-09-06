@@ -34,7 +34,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } f
 import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { autoScrollToNewElement, ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
 import { getEffectivePath } from '../reducers/geostory';
 
 
@@ -84,9 +84,10 @@ export const openMediaEditorForNewMedia = action$ =>
 
 /**
  * side effect to scroll to new sections
+ * it tries for max 10 times with an interval of 200 ms between each
  * @param {*} action$
  */
-export const autoScrollToNewElementEpic = action$ =>
+export const scrollToContentEpic = action$ =>
     action$.ofType(ADD)
     .switchMap(({element}) => {
         return Observable.of(element)
@@ -95,13 +96,11 @@ export const autoScrollToNewElementEpic = action$ =>
                     const err = new Error("Item not mounted yet");
                     throw err;
                 } else {
-                    autoScrollToNewElement({
-                        id: element.id
-                    });
+                    scrollToContent(element.id);
                     return Observable.empty();
                 }
             })
-            .retryWhen(errors => !document.getElementById(element.id) ? errors.delay(100) : Observable.empty());
+            .retryWhen(errors => errors.delay(200).take(10));
     });
 
 

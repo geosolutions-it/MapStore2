@@ -21,3 +21,5 @@ web/docs
 .classpath
 .project
 .settings/
+debug.log
+.vscode/settings.json
