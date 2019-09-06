@@ -37,7 +37,7 @@ describe('GeoStoryEditor Plugin', () => {
     });
     it('Hide GeoStoryNavigation plugin in edit mode', () => {
         const { Plugin } = getPluginForTest(GeoStoryNavigation, stateMocker(setEditing(true)));
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactDOM.render(<Plugin mode={Modes.EDIT} />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-geostory-navigation').length).toBe(0);
     });
 });

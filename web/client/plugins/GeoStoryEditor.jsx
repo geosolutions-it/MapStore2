@@ -29,6 +29,12 @@ const GeoStoryEditor = ({
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
+        scrollTo={(id, options = { behavior: "smooth" }) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView(options);
+            }
+        }}
         story={story}
         mode={mode}
         setEditing={setEditingMode}

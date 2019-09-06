@@ -45,6 +45,7 @@ describe('Contents component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.CONTENTS_CLASS_NAME');
         expect(el).toExist();
+        expect(container.querySelector(`${CONTENTS[0].id}`)).toNotExist(); // the id must be applied to the wrapper, not to the content ( to support scroll )
     });
     it('do nor render add-bar in edit mode if addButtons are not present', () => {
         ReactDOM.render(<Contents

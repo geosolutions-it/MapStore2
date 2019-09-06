@@ -28,7 +28,7 @@ const GeoStoryNavigation = ({
     className="ms-geostory-navigation"
     style={{width: "100%", position: 'relative' }}>
     <Navigation
-            scrollTo={(id, options) => () => {
+            scrollTo={(id, options = { behavior: "smooth" }) => () => {
                 const element = document.getElementById(id);
                 if (element) {
                     element.scrollIntoView(options);
