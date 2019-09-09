@@ -1847,6 +1847,8 @@
             },
             "builder": {
                 "defaults": {
+                    "htmlTitle": "<h1 style='text-align:center'>Insert title</h1><p style='text-align:center'><em>sub title</em></p>",
+                    "htmlSample": "<p>Inser text here...</p>",
                     "titleTitle": "Title Section",
                     "titleParagraph": "Paragraph Section",
                     "titleImmersive": "Immersive Section",

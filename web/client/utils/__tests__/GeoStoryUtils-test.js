@@ -22,6 +22,7 @@ import {
     MediaTypes,
     Modes,
     isMediaSection,
+    localizeElement,
     lists,
     getDefaultSectionTemplate
 } from "../GeoStoryUtils";
@@ -155,6 +156,32 @@ describe("GeoStory Utils", () => {
             SectionTypes: values(SectionTypes),
             MediaTypes: values(MediaTypes),
             Modes: values(Modes)
+        });
+    });
+    it("test localizeElement", () => {
+        expect(localizeElement(
+            {
+                title: "geostory.builder.title",
+                size: "large"
+            },
+            {geostory: {builder: {title: "localized title"}}})
+        ).toEqual({
+            title: "localized title"
+        });
+
+        expect(localizeElement(
+            {title: "geostory.builder.title",
+        contents: [{
+            align: "left",
+            html: "geostory.builder.html"
+        }]},
+            {geostory: {builder: {title: "localized title", html: "Html localized"}}})
+        ).toEqual({
+            title: "localized title",
+            contents: [{
+                align: "left",
+                html: "Html localized"
+            }]
         });
     });
     describe("getDefaultSectionTemplate", () => {
