@@ -1891,6 +1891,8 @@
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",
+                    "htmlTitle": "<h1 style='text-align:center'>Inserisci Titolo</h1><p style='text-align:center'><em>sottotitolo</em></p>",
+                    "htmlSample": "<p>Inserisci del testo qui...</p>",
                     "titleParagraph": "Sezione Paragrafo",
                     "titleImmersive": "Sezione Immersiva",
                     "titleMedia": "Sezione Media",
@@ -1933,6 +1935,7 @@
             "modalTitle": "Media",
             "images": "Immagini",
             "videos": "Video",
+            "maps": "Mappe",
             "preview": "Anteprima",
             "apply": "Applica",
             "imagePicker": {

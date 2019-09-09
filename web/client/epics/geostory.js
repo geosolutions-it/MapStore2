@@ -30,11 +30,12 @@ import {
 import { error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
+import { currentMessagesSelector } from '../selectors/locale';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
 import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, localizeElement } from '../utils/GeoStoryUtils';
 import { getEffectivePath } from '../reducers/geostory';
 
 
@@ -81,6 +82,24 @@ export const openMediaEditorForNewMedia = action$ =>
                 );
         });
 
+
+/**
+ * it localizes the new template element being added
+ * @param {} action$
+ */
+export const localizeTemplateEpic = (action$, store) =>
+    action$.ofType(ADD)
+    .switchMap(({element}) => {
+        const messages = currentMessagesSelector(store.getState());
+        const propsLocalized = localizeElement(element, messages);
+        return Observable.of(
+                update(
+                    `sections[{"id": "${element.id}"}]`,
+                    propsLocalized,
+                    "merge"
+                )
+            );
+    });
 
 /**
  * side effect to scroll to new sections

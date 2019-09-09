@@ -11,9 +11,9 @@
  */
 
 
-import { values, isArray } from "lodash";
+import { values, isArray, isString } from "lodash";
 import uuid from 'uuid';
-
+import { getMessageById } from './LocaleUtils';
 
 // Allowed StoryTypes
 export const StoryTypes = {
@@ -54,7 +54,6 @@ export const lists = {
     Modes: values(Modes)
 };
 
-export const SAMPLE_HTML = "<p>insert text here...</p>"; // TODO I18N
 
 /**
  * Return a class name from props of a content
@@ -96,6 +95,33 @@ export const scrollToContent = (id, scrollOptions) => {
 };
 
 /**
+ * generates a localized object for string that matches a particular path in locales messages
+ * @param {*} obj the object to scan for localize strings
+ * @param {*} messages the messages localized
+ */
+export const localizeElement = (obj, messages) => {
+    const keys = Object.keys(obj);
+    return keys.reduce((p, c) => {
+        if (isString(obj[c]) && obj[c].indexOf("geostory.builder") !== -1) {
+            return {
+                ...p,
+                [c]: getMessageById(messages, obj[c])
+            };
+        }
+        if (isArray(obj[c])) {
+            const el = localizeElement(obj[c][0], messages);
+            return {
+                ...p,
+                [c]: [{
+                    ...obj[c][0],
+                    ...el
+            }]};
+        }
+        return p;
+    }, {});
+};
+
+/**
  * Creates a default template for the given type
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)
  * @return {object} the template object of the content/section
@@ -112,7 +138,7 @@ export const getDefaultSectionTemplate = (type) => {
                     {
                         id: uuid(),
                         type: ContentTypes.TEXT,
-                        html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`, // TODO I18N
+                        html: 'geostory.builder.defaults.htmlTitle',
                         size: 'large',
                         align: 'center',
                         theme: 'bright',
@@ -139,7 +165,7 @@ export const getDefaultSectionTemplate = (type) => {
                         contents: [{
                             id: uuid(),
                             type: ContentTypes.TEXT,
-                            html: SAMPLE_HTML
+                            html: "geostory.builder.defaults.htmlSample"
                         }]
                     }
                 ]
@@ -180,7 +206,7 @@ export const getDefaultSectionTemplate = (type) => {
                 contents: [{
                     id: uuid(),
                     type: ContentTypes.TEXT,
-                    html: SAMPLE_HTML
+                    html: "geostory.builder.defaults.htmlSample"
                 }],
                 background: {
                     fit: 'cover',
@@ -194,7 +220,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: ContentTypes.TEXT,
-                html: SAMPLE_HTML
+                html: "geostory.builder.defaults.htmlSample"
             };
         }
         default:

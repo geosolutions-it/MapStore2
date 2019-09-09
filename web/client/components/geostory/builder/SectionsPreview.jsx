@@ -10,7 +10,6 @@ import { capitalize } from "lodash";
 import ContainerDimensions from 'react-container-dimensions';
 import { Glyphicon } from 'react-bootstrap';
 import Toolbar from '../../misc/toolbar/Toolbar';
-import Message from '../../I18N/Message';
 
 import SideGrid from '../../misc/cardgrids/SideGrid';
 import SideCard from '../../misc/cardgrids/SideCard';
@@ -66,7 +65,7 @@ const sectionToItem = ({cardPreviewEnabled = false}) => ({
                     tooltipId: "geostory.zoomToContent"
                 }
             ]} />,
-        title: <Message msgId={title}/>,
+        title,
         description: `type: ${type}`,
 
         body: contents
