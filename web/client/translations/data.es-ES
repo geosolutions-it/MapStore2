@@ -1889,6 +1889,13 @@
                 "remove": "Eliminar"
             },
             "builder": {
+                "defaults": {
+                    "titleTitle": "Sección de título",
+                    "titleParagraph": "Sección de párrafo",
+                    "titleImmersive": "Sección inmersiva",
+                    "titleMedia": "Sección de multimedia",
+                    "titleUnknown": "UNKNOWN"
+                },
                 "delete": "Eliminar la sección seleccionada",
                 "preview": "Mostrar vista previa",
                 "edit": "Editar historia",

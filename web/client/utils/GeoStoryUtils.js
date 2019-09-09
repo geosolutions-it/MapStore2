@@ -54,7 +54,7 @@ export const lists = {
     Modes: values(Modes)
 };
 
-export const SAMPLE_HTML = "<p>insert text here...</p>";
+export const SAMPLE_HTML = "<p>insert text here...</p>"; // TODO I18N
 
 /**
  * Return a class name from props of a content
@@ -106,7 +106,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.TITLE,
-                title: 'Title Section', // TODO I18N
+                title: 'geostory.builder.defaults.titleTitle',
                 cover: false,
                 contents: [
                     {
@@ -129,7 +129,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.PARAGRAPH,
-                title: 'Paragraph Section', // TODO I18N
+                title: 'geostory.builder.defaults.titleParagraph',
                 contents: [
                     {
                         id: uuid(),
@@ -148,14 +148,14 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.IMMERSIVE,
-                title: "Immersive Section", // TODO I18N
+                title: "geostory.builder.defaults.titleImmersive",
                 contents: [getDefaultSectionTemplate(ContentTypes.COLUMN)]
             };
         case SectionTemplates.MEDIA: {
             return {
                 id: uuid(),
                 type: SectionTypes.PARAGRAPH,
-                title: 'Media Section', // TODO I18N
+                title: 'geostory.builder.defaults.titleMedia',
                 contents: [
                     {
                         id: uuid(),
@@ -201,7 +201,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type,
-                title: "UNKNOWN" // TODO I18N
+                title: "geostory.builder.defaults.titleUnknown"
             };
     }
 };

@@ -39,7 +39,7 @@ describe('Builder component', () => {
         // empty view when no session
         expect(el.querySelector('.empty-state-container')).toNotExist();
         expect(el.querySelector('.mapstore-side-preview')).toExist();
-        expect(el.querySelectorAll('.ms-section-preview').length).toBe(2); // 2 sections but preview disabled
+        expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(4); // 2 sections but preview disabled
 
     });
     it('Builder rendering with sections, preview disabled', () => {
@@ -50,6 +50,6 @@ describe('Builder component', () => {
         // empty view when no session
         expect(el.querySelector('.empty-state-container')).toNotExist();
         expect(el.querySelector('.mapstore-side-preview')).toExist();
-        expect(el.querySelectorAll('.ms-section-preview').length).toBe(0); // 2 sections but preview disabled
+        expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(0); // 2 sections but preview disabled
     });
 });

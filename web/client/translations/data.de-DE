@@ -1889,6 +1889,13 @@
                 "remove": "Entfernen"
             },
             "builder": {
+                "defaults": {
+                    "titleTitle": "Titelbereich",
+                    "titleParagraph": "Absatz Abschnitt",
+                    "titleImmersive": "Immersive Section",
+                    "titleMedia": "Medienbereich",
+                    "titleUnknown": "UNKNOWN"
+                },
                 "delete": "Ausgewählten Abschnitt entfernen",
                 "preview": "Vorschau zeigen",
                 "edit": "Bearbeiten Sie die Geschichte",

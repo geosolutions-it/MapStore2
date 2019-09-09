@@ -1647,6 +1647,13 @@
                 "editMedia": "Change media source"
             },
             "builder": {
+                "defaults": {
+                    "titleTitle": "Title Section",
+                    "titleParagraph": "Paragraph Section",
+                    "titleImmersive": "Immersive Section",
+                    "titleMedia": "Media Section",
+                    "titleUnknown": "UNKNOWN"
+                },
                 "delete": "Remove selected section",
                 "preview": "Show preview",
                 "edit": "Edit story",

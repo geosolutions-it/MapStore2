@@ -10,6 +10,7 @@ import { capitalize } from "lodash";
 import ContainerDimensions from 'react-container-dimensions';
 import { Glyphicon } from 'react-bootstrap';
 import Toolbar from '../../misc/toolbar/Toolbar';
+import Message from '../../I18N/Message';
 
 import SideGrid from '../../misc/cardgrids/SideGrid';
 import SideCard from '../../misc/cardgrids/SideCard';
@@ -45,12 +46,11 @@ const Preview = ({ width } = {}) => {
  * Transforms a geostory section into a SideGrid item.
  * @param {object} section the section to transform
  */
-const sectionToItem = ({
+const sectionToItem = ({cardPreviewEnabled = false}) => ({
     contents,
     type,
     title,
-    id,
-    cardPreviewEnabled = false
+    id
 }) => {
     return {
         id: id,
@@ -66,7 +66,7 @@ const sectionToItem = ({
                     tooltipId: "geostory.zoomToContent"
                 }
             ]} />,
-        title: title,
+        title: <Message msgId={title}/>,
         description: `type: ${type}`,
 
         body: contents
@@ -117,5 +117,5 @@ export default ({ sections = [], cardPreviewEnabled }) => (<SideGrid
     cardComponent={SideCard}
     size="sm"
     items={
-        sections.map(s => ({...s, cardPreviewEnabled})).map(sectionToItem)
+        sections.map(sectionToItem({cardPreviewEnabled }))
 } />);
