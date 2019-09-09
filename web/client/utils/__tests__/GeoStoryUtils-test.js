@@ -167,14 +167,14 @@ describe("GeoStory Utils", () => {
             const data = getDefaultSectionTemplate(wrongType);
             expect(data.id).toExist();
             expect(data.type).toBe(wrongType);
-            expect(data.title).toBe("UNKNOWN");
+            expect(data.title).toBe("geostory.builder.defaults.titleUnknown");
         });
         it("SectionTypes.TITLE", () => {
             const data = getDefaultSectionTemplate(SectionTypes.TITLE);
             expect(data.id).toExist();
             expect(data.id.length).toBe(uuid().length);
             expect(data.type).toBe(SectionTypes.TITLE);
-            expect(data.title).toBe("Title Section");
+            expect(data.title).toBe("geostory.builder.defaults.titleTitle");
             expect(data.cover).toBe(false);
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];
@@ -196,7 +196,7 @@ describe("GeoStory Utils", () => {
             const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH);
             expect(data.id).toExist();
             expect(data.type).toBe(SectionTypes.PARAGRAPH);
-            expect(data.title).toBe("Paragraph Section");
+            expect(data.title).toBe("geostory.builder.defaults.titleParagraph");
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];
             expect(content.id).toExist();
@@ -215,7 +215,7 @@ describe("GeoStory Utils", () => {
             const data = getDefaultSectionTemplate(SectionTypes.IMMERSIVE);
             expect(data.id).toExist();
             expect(data.type).toBe(SectionTypes.IMMERSIVE);
-            expect(data.title).toBe("Immersive Section");
+            expect(data.title).toBe("geostory.builder.defaults.titleImmersive");
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];
             expect(content.id).toExist();
@@ -240,7 +240,7 @@ describe("GeoStory Utils", () => {
             const data = getDefaultSectionTemplate(SectionTemplates.MEDIA);
             expect(data.id).toExist();
             expect(data.type).toBe(SectionTypes.PARAGRAPH);
-            expect(data.title).toBe("Media Section");
+            expect(data.title).toBe("geostory.builder.defaults.titleMedia");
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];
             expect(content.id).toExist();
