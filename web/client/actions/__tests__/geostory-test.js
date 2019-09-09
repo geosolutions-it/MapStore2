@@ -12,6 +12,7 @@ import {
     CHANGE_MODE, setEditing,
     SET_CURRENT_STORY, setCurrentStory,
     UPDATE, update,
+    UPDATE_CURRENT_PAGE, updateCurrentPage,
     LOAD_GEOSTORY, loadGeostory,
     LOADING_GEOSTORY, loadingGeostory,
     LOAD_GEOSTORY_ERROR, loadGeostoryError,
@@ -88,5 +89,11 @@ describe('test geostory action creators', () => {
         expect(action.path).toBe(PATH);
         expect(action.element).toBe(SECTION);
         expect(action.mode).toBe('replace');
+    });
+    it('updateCurrentPage', () => {
+        const retVal = updateCurrentPage({sectionId: "TEST"});
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(UPDATE_CURRENT_PAGE);
+        expect(retVal.sectionId).toBe('TEST');
     });
 });
