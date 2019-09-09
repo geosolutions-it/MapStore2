@@ -42,7 +42,7 @@ describe('Builder component', () => {
         expect(el.querySelectorAll('.ms-section-preview').length).toBe(2); // 2 sections but preview disabled
 
     });
-    it.only('Builder rendering with sections, preview disabled', () => {
+    it('Builder rendering with sections, preview disabled', () => {
         ReactDOM.render(<Builder story={STORY} cardPreviewEnabled={false}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');

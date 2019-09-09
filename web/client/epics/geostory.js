@@ -96,7 +96,7 @@ export const scrollToContentEpic = action$ =>
                     const err = new Error("Item not mounted yet");
                     throw err;
                 } else {
-                    scrollToContent(element.id);
+                    scrollToContent(element.id, {behavior: "smooth"});
                     return Observable.empty();
                 }
             })
