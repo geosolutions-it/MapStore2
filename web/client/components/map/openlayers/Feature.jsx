@@ -85,15 +85,7 @@ export default class Feature extends React.Component {
                     // reproject features from featureCrs
                     dataProjection: props.featuresCrs
                 });
-            this._feature.map(f => {
-                let newF = f;
-                if (f.getProperties().isCircle) {
-                    newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857', props.featuresCrs);
-                    newF.setGeometry(newF.getGeometry().transform(props.crs || 'EPSG:3857', props.featuresCrs));
-                }
-                return newF;
-            }).forEach(
-                (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+            this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
 
             if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => {
