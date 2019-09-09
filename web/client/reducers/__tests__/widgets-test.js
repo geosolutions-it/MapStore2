@@ -11,6 +11,7 @@ const {
     changeEditorSetting,
     onEditorChange,
     insertWidget,
+    updateWidgetLayer,
     deleteWidget,
     changeLayout,
     clearWidgets,
@@ -70,6 +71,50 @@ describe('Test the widgets reducer', () => {
     it('insertWidget', () => {
         const state = widgets(undefined, insertWidget({id: "1"}));
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
+    });
+    it('updateWidgetLayers', () => {
+        const targetLayer = {
+            name: "layer2",
+            id: "2",
+            visibility: true
+        };
+        const state = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [{
+                        id: "widget1",
+                        layer: {
+                            visibility: false,
+                            name: "layer",
+                            id: "1"
+                        }
+                    }, {
+                        id: "widget2",
+                        layer: Object.assign({}, targetLayer)
+                    }, {
+                        id: "widget3",
+                        layer: {
+                            visibility: false,
+                            name: "layer3",
+                            id: "3"
+                        }
+                    }, {
+                        id: "widget4",
+                        layer: Object.assign({}, targetLayer)
+                    }]
+                }
+            }
+        };
+
+        const newTargetLayer = Object.assign({}, targetLayer, {visibility: false});
+        const newState = widgets(state, updateWidgetLayer(newTargetLayer));
+
+        const widgetObjects = newState.containers[DEFAULT_TARGET].widgets;
+        expect(widgetObjects.length).toBe(4);
+        expect(widgetObjects[0].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[0].layer);
+        expect(widgetObjects[1].layer).toEqual(newTargetLayer);
+        expect(widgetObjects[2].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[2].layer);
+        expect(widgetObjects[3].layer).toEqual(newTargetLayer);
     });
     it('deleteWidget', () => {
         const state = {

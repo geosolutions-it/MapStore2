@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams} = require('../actions/layers');
+const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams } = require('../actions/layers');
 const {getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
 
 const { setControlProperty } = require('../actions/controls');
