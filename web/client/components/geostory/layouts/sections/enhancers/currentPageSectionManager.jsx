@@ -15,10 +15,10 @@ import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 
 /**
- * Transforms the intersection events stream into sectionID property.
+ * Handles the intersection event stream into calls to `updateCurrentPage`, when the current section changes.
  * @param {stream} intersection$ the stream of intersection event calls
  */
-const createSectionIdStream = (intersection$, props$) =>
+const createCurrentPageUpdateStream = (intersection$, props$) =>
     intersection$
         // create a map with the latest states of each intersection event
         .scan((visibleItems = {}, { id, visible, entry }) => ({
@@ -53,7 +53,7 @@ export default compose(
         const { handler: onVisibilityChange, stream: intersection$ } = createEventHandler();
         return Observable.combineLatest(
             props$, // rendering properties stream
-            createSectionIdStream(intersection$, props$) // generates updateCurrentPage calls when section is updated by calling updateCurrentPage
+            createCurrentPageUpdateStream(intersection$, props$) // generates updateCurrentPage calls when section is updated by calling updateCurrentPage
                 .startWith({}), // emit first event from all the streams to allow first rendering
             // HERE WE CAN PLACE EVERY OTHER INTERSECTION EVENT STREAM HANDLER
             (...propsParts) => ({
