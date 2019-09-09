@@ -23,7 +23,6 @@ import {
     Modes,
     isMediaSection,
     lists,
-    SAMPLE_HTML,
     getDefaultSectionTemplate
 } from "../GeoStoryUtils";
 
@@ -158,9 +157,6 @@ describe("GeoStory Utils", () => {
             Modes: values(Modes)
         });
     });
-    it("test SAMPLE_HTML", () => {
-        expect(SAMPLE_HTML).toBe("<p>insert text here...</p>");
-    });
     describe("getDefaultSectionTemplate", () => {
         it("default", () => {
             const wrongType = "beda";
@@ -181,7 +177,7 @@ describe("GeoStory Utils", () => {
             expect(content.id).toExist();
             expect(content.id.length).toBe(uuid().length);
             expect(content.type).toBe(ContentTypes.TEXT);
-            expect(content.html).toBe(`<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`);
+            expect(content.html).toBe("geostory.builder.defaults.htmlTitle");
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
@@ -206,7 +202,7 @@ describe("GeoStory Utils", () => {
             expect(content.align).toBe("center");
             const textContent = content.contents[0];
             expect(textContent.type).toBe(ContentTypes.TEXT);
-            expect(textContent.html).toBe(SAMPLE_HTML);
+            expect(textContent.html).toBe("geostory.builder.defaults.htmlSample");
             expect(textContent.id).toExist();
             expect(textContent.id.length).toBe(uuid().length);
             expect(textContent.resourceId).toNotExist();
@@ -225,7 +221,7 @@ describe("GeoStory Utils", () => {
             expect(content.align).toBe("left");
             const textContent = content.contents[0];
             expect(textContent.type).toBe(ContentTypes.TEXT);
-            expect(textContent.html).toBe(SAMPLE_HTML);
+            expect(textContent.html).toBe("geostory.builder.defaults.htmlSample");
             expect(textContent.id).toExist();
             expect(textContent.id.length).toBe(uuid().length);
             expect(textContent.resourceId).toNotExist();
@@ -263,7 +259,7 @@ describe("GeoStory Utils", () => {
             const content = data.contents[0];
             expect(content.id).toExist();
             expect(content.id.length).toBe(uuid().length);
-            expect(content.html).toBe(SAMPLE_HTML);
+            expect(content.html).toBe("geostory.builder.defaults.htmlSample");
             expect(content.type).toBe(ContentTypes.TEXT);
             const background = data.background;
             expect(background.type).toBe(undefined);
@@ -277,7 +273,7 @@ describe("GeoStory Utils", () => {
             const data = getDefaultSectionTemplate(ContentTypes.TEXT);
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.TEXT);
-            expect(data.html).toBe(SAMPLE_HTML);
+            expect(data.html).toBe("geostory.builder.defaults.htmlSample");
         });
     });
 });
