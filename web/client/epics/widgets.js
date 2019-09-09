@@ -1,11 +1,13 @@
 const Rx = require('rxjs');
-const { get, isEqual, omit } = require('lodash');
+const { has, get, isEqual, omit } = require('lodash');
 const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
-    onEditorChange, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
+    onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
+const { CHANGE_LAYER_PROPERTIES } = require('../actions/layers');
+const { getLayerFromId } = require('../selectors/layers');
 const { pathnameSelector } = require('../selectors/routing');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const { DASHBOARD_LOADED } = require('../actions/dashboard');
@@ -159,5 +161,20 @@ module.exports = {
                     }
                 });
             })
-            .filter( () => false)
+            .filter( () => false),
+    /**
+     * Triggers updates of the layer property of widgets on layerFilter change
+     * @memberof epics.widgets
+     * @param {external:Observable} action$ manages `CHANGE_LAYER_PROPERTIES`
+     * @return {external:Observable}
+     */
+    updateLayerOnLayerPropertiesChange: (action$, store) =>
+        action$.ofType(CHANGE_LAYER_PROPERTIES)
+            .switchMap(({layer, newProperties}) => {
+                const state = store.getState();
+                const flatLayer = getLayerFromId(state, layer);
+                return Rx.Observable.of(
+                    ...(has(newProperties, "layerFilter") && flatLayer ? [updateWidgetLayer(flatLayer)] : [])
+                );
+            })
 };
