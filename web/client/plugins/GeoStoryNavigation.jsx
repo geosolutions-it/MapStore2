@@ -10,10 +10,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
-import { Modes } from '../utils/GeoStoryUtils';
+import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
 import {
     currentStorySelector,
+    currentPageSelector,
     modeSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
@@ -21,6 +22,7 @@ import Navigation from '../components/geostory/navigation/Navigation';
 
 const GeoStoryNavigation = ({
     mode = Modes.VIEW,
+    currentPage,
     setEditingMode = () => { },
     story = {}
 }) => (mode === Modes.VIEW ? <div
@@ -28,11 +30,9 @@ const GeoStoryNavigation = ({
     className="ms-geostory-navigation"
     style={{width: "100%", position: 'relative' }}>
     <Navigation
+            currentPage={currentPage}
             scrollTo={(id, options = { behavior: "smooth" }) => () => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView(options);
-                }
+                scrollToContent(id, options);
             }}
         story={story}
         setEditing={setEditingMode} />
@@ -46,6 +46,7 @@ export default createPlugin('GeoStoryNavigation', {
     component: connect(
         createStructuredSelector({
             mode: modeSelector,
+            currentPage: currentPageSelector,
             story: currentStorySelector
         }), {
         setEditingMode: setEditing

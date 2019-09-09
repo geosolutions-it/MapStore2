@@ -51,5 +51,13 @@ describe('GeoStory Navigation component', () => {
         expect(spyScrollTo).toHaveBeenCalled();
         expect(spyScrollTo.calls[0].arguments[0]).toBe(STORY.sections[0].id);
     });
+    it('current section page is highlighted', () => {
+        const SELECTED_ID = STORY.sections[0].id;
+        const EL_ID = `ms-geostory-nav-${SELECTED_ID}`;
+        ReactDOM.render(<Navigation currentPage={{ sectionId: SELECTED_ID}} story={STORY} />, document.getElementById("container"));
+        const selectedElement = document.getElementById(EL_ID);
+        expect(selectedElement).toExist();
+        expect(selectedElement.className.indexOf('primary')).toBeGreaterThan(0);
+    });
 
 });

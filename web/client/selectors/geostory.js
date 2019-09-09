@@ -18,6 +18,12 @@ export const createPathSelector = path => state => get(state, getEffectivePath(`
  * @returns {object} the object the represents the state
  */
 export const currentStorySelector = state => get(state, 'geostory.currentStory');
+
+/**
+ * gets the current story page information (sectionId)
+ * @param {object} state the application state
+ */
+export const currentPageSelector = state => get(state, 'geostory.currentPage');
 /**
  * gets the current mode (view, edit) from the state
  * @returns {string} current status of autoScroll after creation

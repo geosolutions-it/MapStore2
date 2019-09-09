@@ -14,7 +14,7 @@ export default ({
     scrollTo = () => {},
     setEditing = () => {},
     story = {},
-    currentSectionId,
+    currentPage,
     progress = 0 // current page progress (current page + 1/totPages)
 }) => (<div
     className="ms-geostory-navigation-bar"
@@ -69,8 +69,9 @@ export default ({
                     }}
                     buttons={
                         story.sections && story.sections.map((section = {}) => {
-                            const selected = currentSectionId === section.id;
+                            const selected = (currentPage && currentPage.sectionId === section.id);
                             return {
+                                id: `ms-geostory-nav-${section.id}`,
                                 text: section.title || section.type || "No Title",
                                 bsStyle: selected ? 'primary' : 'default',
                                 className: selected ? '' : 'btn-tray',

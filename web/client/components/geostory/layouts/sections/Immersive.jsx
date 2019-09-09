@@ -29,12 +29,14 @@ const Immersive = ({
     path,
     contents = [],
     mode,
+    inViewRef,
     viewWidth,
     viewHeight
 }) => (
     <section
         className="ms-section ms-section-immersive"
         id={id}
+        ref={inViewRef}
     >
         <Background
             { ...background }

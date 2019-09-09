@@ -20,6 +20,9 @@ import geostory from '../reducers/geostory';
 import Builder from '../components/geostory/builder/Builder';
 import { Modes } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
+import { scrollToContent } from '../utils/GeoStoryUtils';
+
+
 const GeoStoryEditor = ({
     mode = Modes.VIEW,
     setEditingMode = () => {},
@@ -30,10 +33,7 @@ const GeoStoryEditor = ({
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
         scrollTo={(id, options = { behavior: "smooth" }) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView(options);
-            }
+            scrollToContent(id, options);
         }}
         story={story}
         mode={mode}
