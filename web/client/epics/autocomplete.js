@@ -14,7 +14,7 @@ const {getWpsPayload} = require('../utils/ogc/WPS/autocomplete');
 const {isArray, startsWith} = require('lodash');
 const {error} = require('../actions/notifications');
 const {typeNameSelector} = require('../selectors/query');
-const {maxFeaturesWPSSelector} = require('../selectors/queryform');
+const {maxFeaturesWPSSelector, appliedFilterSelector, storedFilterSelector} = require('../selectors/queryform');
 const {getParsedUrl} = require('../utils/ConfigUtils');
 const {authkeyParamNameSelector} = require('../selectors/catalog');
 
@@ -67,6 +67,7 @@ module.exports = {
                 const data = getWpsPayload({
                         attribute: filterField.attribute,
                         layerName: typeNameSelector(state),
+                        layerFilter: appliedFilterSelector(state) || storedFilterSelector(state),
                         maxFeatures: maxFeaturesWPS,
                         startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
                         value: action.fieldValue

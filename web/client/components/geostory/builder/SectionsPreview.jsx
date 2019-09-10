@@ -45,7 +45,7 @@ const Preview = ({ width } = {}) => {
  * Transforms a geostory section into a SideGrid item.
  * @param {object} section the section to transform
  */
-const sectionToItem = ({cardPreviewEnabled = false}) => ({
+const sectionToItem = ({scrollTo, cardPreviewEnabled = false}) => ({
     contents,
     type,
     title,
@@ -60,6 +60,7 @@ const sectionToItem = ({cardPreviewEnabled = false}) => ({
             }}
             buttons={[
                 {
+                    onClick: () => scrollTo(id),
                     glyph: 'zoom-to',
                     visible: contents && contents.length === 1,
                     tooltipId: "geostory.zoomToContent"
@@ -86,7 +87,8 @@ const sectionToItem = ({cardPreviewEnabled = false}) => ({
                                 buttons={[
                                     {
                                         glyph: 'zoom-to',
-                                        tooltipId: "geostory.zoomToContent"
+                                        tooltipId: "geostory.zoomToContent",
+                                        onClick: () => scrollTo(content.id)
                                     }
                                 ]} />,
                             title: capitalize(content.type),
@@ -111,10 +113,10 @@ const sectionToItem = ({cardPreviewEnabled = false}) => ({
  * @SectionsPreview
  * @param {object[]} [sections=[]] Array of sections to display
  */
-export default ({ sections = [], cardPreviewEnabled }) => (<SideGrid
+export default ({ sections = [], scrollTo, cardPreviewEnabled }) => (<SideGrid
     containerId="ms-story-builder"
     cardComponent={SideCard}
     size="sm"
     items={
-        sections.map(sectionToItem({cardPreviewEnabled }))
+        sections.map(sectionToItem({cardPreviewEnabled, scrollTo }))
 } />);

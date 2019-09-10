@@ -29,6 +29,7 @@ export default backgroundPropWithHandler(({
     cover,
     viewWidth,
     viewHeight,
+    inViewRef,
     add = () => {},
     update = () => {},
     remove = () => {},
@@ -36,6 +37,7 @@ export default backgroundPropWithHandler(({
     editMedia = () => {}
 }) => (
     <section
+        ref={inViewRef}
         className="ms-section ms-section-title"
         id={id}
     >

@@ -15,7 +15,8 @@ import {
     setEditing,
     update,
     remove,
-    toggleCardPreview
+    toggleCardPreview,
+    updateCurrentPage
 } from '../../actions/geostory';
 import {
     cardPreviewEnabledSelector,
@@ -23,7 +24,8 @@ import {
     modeSelector,
     sectionsSelector,
     sectionAtIndexSelectorCreator,
-    resourcesSelector
+    resourcesSelector,
+    currentPageSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 
@@ -111,6 +113,12 @@ describe('geostory reducer', () => {
             expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].html).toBe(TEST_CONTENT);
             expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].newProp).toBe("PROP");
         });
+    });
+    it('geostory updateCurrentPage', () => {
+        const action = updateCurrentPage({sectionId: "ID"});
+        const state = geostory( undefined, action);
+        const currentPage = currentPageSelector({geostory: state});
+        expect(currentPage.sectionId).toBe("ID");
     });
     it('ADD_RESOURCE', () => {
         expect(

@@ -47,6 +47,7 @@ module.exports = {
         FullScreenPlugin: require('../plugins/FullScreen'),
         GeoStoryPlugin: require('../plugins/GeoStory').default,
         GeoStoryEditorPlugin: require('../plugins/GeoStoryEditor').default,
+        GeoStoryNavigationPlugin: require('../plugins/GeoStoryNavigation').default,
         GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher'),
         GoFull: require('../plugins/GoFull'),
         GridContainerPlugin: require('../plugins/GridContainer'),

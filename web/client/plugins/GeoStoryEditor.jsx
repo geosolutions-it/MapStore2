@@ -21,25 +21,30 @@ import { setEditing, toggleCardPreview } from '../actions/geostory';
 import Builder from '../components/geostory/builder/Builder';
 import { Modes } from '../utils/GeoStoryUtils';
 import { createPlugin } from '../utils/PluginsUtils';
+import { scrollToContent } from '../utils/GeoStoryUtils';
+
+
 const GeoStoryEditor = ({
     mode = Modes.VIEW,
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
     cardPreviewEnabled,
     story = {}
-}) => (<div
+}) => (mode === Modes.EDIT ? <div
     key="left-column"
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
+        scrollTo={(id, options = { behavior: "smooth" }) => {
+            scrollToContent(id, options);
+        }}
         story={story}
         mode={mode}
         setEditing={setEditingMode}
         cardPreviewEnabled={cardPreviewEnabled}
         onToggleCardPreview={onToggleCardPreview}
         />
-</div>
-);
+</div> : null);
 /**
  * Plugin for GeoStory side panel editor
  * @name GeoStoryEditor

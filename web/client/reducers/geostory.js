@@ -16,11 +16,12 @@ import {
     SET_CURRENT_STORY,
     TOGGLE_CARD_PREVIEW,
     UPDATE,
+    UPDATE_CURRENT_PAGE,
     REMOVE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
-    mode: 'edit',
+    mode: 'edit', // TODO: change in to Modes.VIEW
     cardPreviewEnabled: true
 };
 
@@ -200,6 +201,10 @@ export default (state = INITIAL_STATE, action) => {
                 newElement = {...oldElement, ...newElement};
             }
             return set(path, newElement, state);
+        }
+        case UPDATE_CURRENT_PAGE: {
+            const {type, ...currentPage} = action;
+            return set('currentPage', currentPage, state); // maybe a merge is better
         }
         default:
             return state;

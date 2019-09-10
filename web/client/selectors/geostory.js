@@ -23,10 +23,10 @@ export const cardPreviewEnabledSelector = state => get(state, "geostory.cardPrev
  */
 export const currentStorySelector = state => get(state, "geostory.currentStory");
 /**
- * gets the current mode (view, edit) from the state
- * @returns {string} current status of autoScroll after creation
+ * gets the current story page information (sectionId)
+ * @param {object} state the application state
  */
-export const autoScrollSelector = state => get(state, "geostory.autoScroll", false);
+export const currentPageSelector = state => get(state, 'geostory.currentPage');
 /**
  * gets the current mode (view, edit) from the state
  * @returns {string} current mode. One of "view" / "edit"

@@ -42,10 +42,11 @@ class Builder extends React.Component {
     static propTypes = {
         story: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
-        setEditing: PropTypes.func,
         onToggleCardPreview: PropTypes.func,
         cardSelected: PropTypes.string,
-        cardPreviewEnabled: PropTypes.bool
+        cardPreviewEnabled: PropTypes.bool,
+        scrollTo: PropTypes.func,
+        setEditing: PropTypes.func
     };
 
     static defaultProps = {
@@ -61,6 +62,7 @@ class Builder extends React.Component {
         const {
             cardSelected,
             story,
+            scrollTo,
             setEditing,
             mode,
             cardPreviewEnabled,
@@ -103,6 +105,7 @@ class Builder extends React.Component {
                     </div>
                 }>
             <Previews
+                scrollTo={scrollTo}
                 cardPreviewEnabled={cardPreviewEnabled}
                 sections={story && story.sections}
                 />

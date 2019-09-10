@@ -18,7 +18,6 @@ import {
     resourcesSelector,
     resourceByIdSelectorCreator,
     resourceIdSelectorCreator
-
 } from "../geostory";
 
 describe('geostory selectors', () => { // TODO: check default

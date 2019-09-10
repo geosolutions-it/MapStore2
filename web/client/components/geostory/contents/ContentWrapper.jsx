@@ -17,6 +17,7 @@ import { Modes, getClassNameFromProps } from "../../../utils/GeoStoryUtils";
  */
 export default ({ id, inViewRef, children, type, contentWrapperStyle, mode, ...props }) =>
 (<div
+    id={id}
     ref={inViewRef}
     style={contentWrapperStyle}
     className={`ms-content ms-content-${type}${getClassNameFromProps(props)}`}>
