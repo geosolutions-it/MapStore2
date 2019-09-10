@@ -20,6 +20,7 @@ const {connect} = require('react-redux');
 const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSelectorMenu');
 const {projectionDefsSelector, projectionSelector} = require('../selectors/map');
 const {bottomPanelOpenSelector} = require('../selectors/maplayout');
+const {measureSelector} = require('../selectors/controls');
 const {crsInputValueSelector} = require('../selectors/crsselector');
 const {currentBackgroundSelector} = require('../selectors/layers');
 const{modeSelector} = require('../selectors/featuregrid');
@@ -121,13 +122,14 @@ const crsSelector = connect(
             modeSelector,
             isCesium,
             bottomPanelOpenSelector,
-                ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel) => ({
+            measureSelector,
+                ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled) => ({
                     currentRole,
                     currentBackground,
                     selected,
                     projectionDefs,
                     value,
-                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel
+                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled
                 })
             ), {
                 typeInput: setInputValue,
