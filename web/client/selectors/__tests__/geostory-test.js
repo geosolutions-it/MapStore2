@@ -9,6 +9,7 @@ import expect from 'expect';
 
 import {
     modeSelector,
+    cardPreviewEnabledSelector,
     createPathSelector,
     currentStorySelector,
     sectionsSelector,
@@ -17,10 +18,10 @@ import {
     resourcesSelector,
     resourceByIdSelectorCreator,
     resourceIdSelectorCreator
-
 } from "../geostory";
 
 describe('geostory selectors', () => { // TODO: check default
+    it('cardPreviewEnabledSelector', () => { expect(cardPreviewEnabledSelector({geostory: {cardPreviewEnabled: false}})).toEqual(false); });
     it('currentStorySelector', () => { expect(currentStorySelector({geostory: {currentStory: {}}})).toEqual({}); });
     it('createPathSelector', () => {
         const path = 'sections[{"id": "section_id"}].contents[{"id": "content_id"}]';

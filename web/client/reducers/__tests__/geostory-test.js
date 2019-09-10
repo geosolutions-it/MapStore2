@@ -14,10 +14,12 @@ import {
     setCurrentStory,
     setEditing,
     update,
-    updateCurrentPage,
-    remove
+    remove,
+    toggleCardPreview,
+    updateCurrentPage
 } from '../../actions/geostory';
 import {
+    cardPreviewEnabledSelector,
     currentStorySelector,
     modeSelector,
     sectionsSelector,
@@ -130,6 +132,14 @@ describe('geostory reducer', () => {
             },
             editResource("id", "image", {title: "title"}))})
         ).toEqual([{id: "id", type: "image", data: {title: "title"}}]);
+    });
+    it('TOGGLE_CARD_PREVIEW', () => {
+        expect(
+            cardPreviewEnabledSelector({ geostory: geostory({
+                cardPreviewEnabled: false
+            },
+            toggleCardPreview())})
+        ).toEqual(true);
     });
     describe('remove', () => {
         const STATE_STORY = geostory(undefined, setCurrentStory(TEST_STORY));

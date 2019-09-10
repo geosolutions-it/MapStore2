@@ -14,11 +14,14 @@ import {getEffectivePath} from '../reducers/geostory';
  */
 export const createPathSelector = path => state => get(state, getEffectivePath(`geostory.currentStory.${path}`, state), "");
 /**
+ * return the current status of cardPreview, if true, the preview will appear in the builder
+ */
+export const cardPreviewEnabledSelector = state => get(state, "geostory.cardPreviewEnabled", false);
+/**
  * gets the currentStory from the state
  * @returns {object} the object the represents the state
  */
-export const currentStorySelector = state => get(state, 'geostory.currentStory');
-
+export const currentStorySelector = state => get(state, "geostory.currentStory");
 /**
  * gets the current story page information (sectionId)
  * @param {object} state the application state
@@ -26,14 +29,9 @@ export const currentStorySelector = state => get(state, 'geostory.currentStory')
 export const currentPageSelector = state => get(state, 'geostory.currentPage');
 /**
  * gets the current mode (view, edit) from the state
- * @returns {string} current status of autoScroll after creation
+ * @returns {string} current mode. One of "view" / "edit"
  */
-export const autoScrollSelector = state => get(state, 'geostory.autoScroll', false);
-/**
- * gets the current mode (view, edit) from the state
- * @returns {string} current mode. One of 'view' / 'edit'
- */
-export const modeSelector = state => get(state, 'geostory.mode');
+export const modeSelector = state => get(state, "geostory.mode");
 /**
  * gets the sections array of the current story
  */

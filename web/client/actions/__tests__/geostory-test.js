@@ -16,7 +16,9 @@ import {
     LOAD_GEOSTORY, loadGeostory,
     LOADING_GEOSTORY, loadingGeostory,
     LOAD_GEOSTORY_ERROR, loadGeostoryError,
-    editResource, EDIT_RESOURCE
+    editResource, EDIT_RESOURCE,
+    remove, REMOVE,
+    toggleCardPreview, TOGGLE_CARD_PREVIEW
 } from '../geostory';
 const { Modes } = require('../../utils/GeoStoryUtils');
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
@@ -80,6 +82,16 @@ describe('test geostory action creators', () => {
         const action = loadGeostoryError(error);
         expect(action.type).toBe(LOAD_GEOSTORY_ERROR);
         expect(action.error).toEqual(error);
+    });
+    it('remove', () => {
+        const PATH = 'sections';
+        const action = remove(PATH);
+        expect(action.type).toBe(REMOVE);
+        expect(action.path).toBe(PATH);
+    });
+    it('toggleCardPreview', () => {
+        const action = toggleCardPreview();
+        expect(action.type).toBe(TOGGLE_CARD_PREVIEW);
     });
     it('update', () => {
         const PATH = 'sections';

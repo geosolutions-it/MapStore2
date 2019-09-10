@@ -147,7 +147,7 @@ const LocaleUtils = {
         return message || msgId;
     },
     /**
-     * Registre a parser to translate error services
+     * Register a parser to translate error services
      * @param type {string} name of the service
      * @param parser {object} custom parser of the service
      */

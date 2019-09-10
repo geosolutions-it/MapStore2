@@ -39,5 +39,17 @@ describe('Builder component', () => {
         // empty view when no session
         expect(el.querySelector('.empty-state-container')).toNotExist();
         expect(el.querySelector('.mapstore-side-preview')).toExist();
+        expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(4); // 2 sections but preview disabled
+
+    });
+    it('Builder rendering with sections, preview disabled', () => {
+        ReactDOM.render(<Builder story={STORY} cardPreviewEnabled={false}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.msSideGrid');
+        expect(el).toExist();
+        // empty view when no session
+        expect(el.querySelector('.empty-state-container')).toNotExist();
+        expect(el.querySelector('.mapstore-side-preview')).toExist();
+        expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(0); // 2 sections but preview disabled
     });
 });

@@ -11,9 +11,9 @@
  */
 
 
-import { values, isArray } from "lodash";
+import { values, isArray, isString } from "lodash";
 import uuid from 'uuid';
-
+import { getMessageById } from './LocaleUtils';
 
 // Allowed StoryTypes
 export const StoryTypes = {
@@ -54,7 +54,6 @@ export const lists = {
     Modes: values(Modes)
 };
 
-export const SAMPLE_HTML = "<p>insert text here...</p>";
 
 /**
  * Return a class name from props of a content
@@ -84,16 +83,42 @@ export const isMediaSection = (element) => element.type === SectionTypes.PARAGRA
 
 /**
  * utility function that scrolls the view to the element
- * if it finds an element and autoscroll is enabled
  * @param {string} id id of the dom element
- * @param {object} scrollOptions options used to the scroll action
+ * @param {object|boolean} scrollOptions options used to the scroll action
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
  */
-export const scrollToContent = (id, scrollOptions = {behavior: "auto", block: "nearest", inline: "start"}) => {
+export const scrollToContent = (id, scrollOptions) => {
     const element = document.getElementById(id);
     if (element) {
-        // trying behaviour smooth it does not scroll
         element.scrollIntoView(scrollOptions);
     }
+};
+
+/**
+ * generates a localized object for string that matches a particular path in locales messages
+ * @param {*} obj the object to scan for localize strings
+ * @param {*} messages the messages localized
+ */
+export const localizeElement = (obj, messages) => {
+    const keys = Object.keys(obj);
+    return keys.reduce((p, c) => {
+        if (isString(obj[c]) && obj[c].indexOf("geostory.builder") !== -1) {
+            return {
+                ...p,
+                [c]: getMessageById(messages, obj[c])
+            };
+        }
+        if (isArray(obj[c])) {
+            const el = localizeElement(obj[c][0], messages);
+            return {
+                ...p,
+                [c]: [{
+                    ...obj[c][0],
+                    ...el
+            }]};
+        }
+        return p;
+    }, {});
 };
 
 /**
@@ -107,13 +132,13 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.TITLE,
-                title: 'Title Section', // TODO I18N
+                title: 'geostory.builder.defaults.titleTitle',
                 cover: false,
                 contents: [
                     {
                         id: uuid(),
                         type: ContentTypes.TEXT,
-                        html: `<h1 style="text-align:center;">Insert Title</h1><p style="text-align:center;"><em>sub title</em></p>`, // TODO I18N
+                        html: 'geostory.builder.defaults.htmlTitle',
                         size: 'large',
                         align: 'center',
                         theme: 'bright',
@@ -130,7 +155,7 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.PARAGRAPH,
-                title: 'Paragraph Section', // TODO I18N
+                title: 'geostory.builder.defaults.titleParagraph',
                 contents: [
                     {
                         id: uuid(),
@@ -140,7 +165,7 @@ export const getDefaultSectionTemplate = (type) => {
                         contents: [{
                             id: uuid(),
                             type: ContentTypes.TEXT,
-                            html: SAMPLE_HTML
+                            html: "geostory.builder.defaults.htmlSample"
                         }]
                     }
                 ]
@@ -149,14 +174,14 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: SectionTypes.IMMERSIVE,
-                title: "Immersive Section", // TODO I18N
+                title: "geostory.builder.defaults.titleImmersive",
                 contents: [getDefaultSectionTemplate(ContentTypes.COLUMN)]
             };
         case SectionTemplates.MEDIA: {
             return {
                 id: uuid(),
                 type: SectionTypes.PARAGRAPH,
-                title: 'Media Section', // TODO I18N
+                title: 'geostory.builder.defaults.titleMedia',
                 contents: [
                     {
                         id: uuid(),
@@ -181,7 +206,7 @@ export const getDefaultSectionTemplate = (type) => {
                 contents: [{
                     id: uuid(),
                     type: ContentTypes.TEXT,
-                    html: SAMPLE_HTML
+                    html: "geostory.builder.defaults.htmlSample"
                 }],
                 background: {
                     fit: 'cover',
@@ -195,14 +220,14 @@ export const getDefaultSectionTemplate = (type) => {
             return {
                 id: uuid(),
                 type: ContentTypes.TEXT,
-                html: SAMPLE_HTML
+                html: "geostory.builder.defaults.htmlSample"
             };
         }
         default:
             return {
                 id: uuid(),
                 type,
-                title: "UNKNOWN" // TODO I18N
+                title: "geostory.builder.defaults.titleUnknown"
             };
     }
 };

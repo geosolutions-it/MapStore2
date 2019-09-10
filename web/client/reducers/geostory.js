@@ -14,13 +14,15 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     SET_CURRENT_STORY,
+    TOGGLE_CARD_PREVIEW,
     UPDATE,
     UPDATE_CURRENT_PAGE,
     REMOVE
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
-    mode: 'edit' // TODO: change in to Modes.VIEW
+    mode: 'edit', // TODO: change in to Modes.VIEW
+    cardPreviewEnabled: true
 };
 
 /**
@@ -168,23 +170,6 @@ export default (state = INITIAL_STATE, action) => {
             const newState = arrayUpdate("currentStory.resources", {id, type, data}, {id}, state);
             return newState;
         }
-        case SET_CURRENT_STORY: {
-            return set('currentStory', action.story, state);
-        }
-        case UPDATE: {
-            const { path: rawPath, mode } = action;
-            let { element: newElement } = action;
-            const path = getEffectivePath(`currentStory.${rawPath}`, state);
-            const oldElement = get(state, path);
-            if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
-                newElement = {...oldElement, ...newElement};
-            }
-            return set(path, newElement, state);
-        }
-        case UPDATE_CURRENT_PAGE: {
-            const {type, ...currentPage} = action;
-            return set('currentPage', currentPage, state); // maybe a merge is better
-        }
         case REMOVE: {
             const { path: rawPath } = action;
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
@@ -200,6 +185,26 @@ export default (state = INITIAL_STATE, action) => {
             }
             // object
             return unset(path, state);
+        }
+        case SET_CURRENT_STORY: {
+            return set('currentStory', action.story, state);
+        }
+        case TOGGLE_CARD_PREVIEW: {
+            return set('cardPreviewEnabled', !state.cardPreviewEnabled, state);
+        }
+        case UPDATE: {
+            const { path: rawPath, mode } = action;
+            let { element: newElement } = action;
+            const path = getEffectivePath(`currentStory.${rawPath}`, state);
+            const oldElement = get(state, path);
+            if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
+                newElement = {...oldElement, ...newElement};
+            }
+            return set(path, newElement, state);
+        }
+        case UPDATE_CURRENT_PAGE: {
+            const {type, ...currentPage} = action;
+            return set('currentPage', currentPage, state); // maybe a merge is better
         }
         default:
             return state;

@@ -42,17 +42,32 @@ class Builder extends React.Component {
     static propTypes = {
         story: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
+        onToggleCardPreview: PropTypes.func,
+        cardSelected: PropTypes.string,
+        cardPreviewEnabled: PropTypes.bool,
         scrollTo: PropTypes.func,
         setEditing: PropTypes.func
     };
 
     static defaultProps = {
         mode: Modes.VIEW,
+        cardSelected: "",
         setEditing: () => {},
-        story: {}
+        onToggleCardPreview: () => {},
+        story: {},
+        cardPreviewEnabled: true
     };
 
     render() {
+        const {
+            cardSelected,
+            story,
+            scrollTo,
+            setEditing,
+            mode,
+            cardPreviewEnabled,
+            onToggleCardPreview
+        } = this.props;
         return (<BorderLayout
                 className="ms-geostory-builder"
                 header={
@@ -61,33 +76,38 @@ class Builder extends React.Component {
                         >
                         <Toolbar
                             btnDefaultProps={{
-                                className: 'square-button-md',
-                                bsStyle: 'primary'
+                                className: "square-button-md",
+                                bsStyle: "primary"
                             }}
                             buttons={[
                                 {
-                                    glyph: 'trash',
-                                    disabled: true
+                                    tooltipId: "geostory.builder.delete",
+                                    glyph: "trash",
+                                    disabled: !cardSelected
                                 },
                                 {
-                                    glyph: 'eye-open',
-                                    onClick: () => this.props.setEditing(this.props.mode === Modes.VIEW)
+                                    tooltipId: "geostory.builder.preview",
+                                    glyph: "eye-open",
+                                    onClick: () => setEditing(mode === Modes.VIEW)
                                 },
                                 {
-                                    glyph: 'cog',
-                                    disabled: true
+                                    tooltipId: "geostory.builder.settings.tooltip",
+                                    glyph: "cog"
 
                                 },
                                 {
-                                    glyph: 'list-alt',
-                                    disabled: true
+                                    tooltipId: `geostory.builder.${cardPreviewEnabled ? "hide" : "show"}`,
+                                    glyph: "list-alt",
+                                    bsStyle: cardPreviewEnabled ? "success" : "primary",
+                                    onClick: () => onToggleCardPreview()
                                 }
                             ]}/>
                     </div>
                 }>
             <Previews
-                scrollTo={this.props.scrollTo}
-                sections={this.props.story && this.props.story.sections}
+                scrollTo={scrollTo}
+                cardPreviewEnabled={cardPreviewEnabled}
+                sections={story && story.sections}
                 />
             </BorderLayout>
         );
