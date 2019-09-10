@@ -170,19 +170,31 @@ describe("GeoStory Utils", () => {
         });
 
         expect(localizeElement(
-            {title: "geostory.builder.title",
-        contents: [{
-            align: "left",
-            html: "geostory.builder.html"
-        }]},
-            {geostory: {builder: {title: "localized title", html: "Html localized"}}})
-        ).toEqual({
+            {
+                title: "geostory.builder.title",
+                contents: [{
+                    align: "left",
+                    html: "geostory.builder.html"
+                },
+                {
+                    align: "right",
+                    html: "geostory.builder.html"
+                }]
+            },
+            {
+                geostory: {builder: {title: "localized title", html: "Html localized"}}
+            }
+        )).toEqual({
             title: "localized title",
             contents: [{
                 align: "left",
                 html: "Html localized"
+            }, {
+                align: "right",
+                html: "Html localized"
             }]
         });
+
     });
     describe("getDefaultSectionTemplate", () => {
         it("default", () => {
