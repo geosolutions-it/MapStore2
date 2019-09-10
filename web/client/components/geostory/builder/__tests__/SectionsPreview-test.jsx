@@ -34,8 +34,8 @@ describe('SectionsPreview component', () => {
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
         // empty view when no session
-        expect(el.querySelectorAll('.items-list > div').length).toBe(6); // 2 + 2 (first inner) + 2 (second inner)
-        expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(4);
+        expect(el.querySelectorAll('.items-list > div').length).toBe(8); // 2 + 2 (first inner) + 2 (second inner) + 2 (title)
+        expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(5);
     });
 
     it('SectionsPreview rendering with sections, preview disabled', () => {
@@ -44,7 +44,7 @@ describe('SectionsPreview component', () => {
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
         // empty view when no session
-        expect(el.querySelectorAll('.items-list > div').length).toBe(6); // 2 + 2 (first inner) + 2 (second inner)
+        expect(el.querySelectorAll('.items-list > div').length).toBe(8); // 2 + 2 (first inner) + 2 (second inner) + 2 (title)
         expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(0);
     });
 });

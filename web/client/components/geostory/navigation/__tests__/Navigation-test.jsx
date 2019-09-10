@@ -46,7 +46,7 @@ describe('GeoStory Navigation component', () => {
         };
         const spyScrollTo = expect.spyOn(actions, 'scrollTo');
         ReactDOM.render(<Navigation story={STORY} scrollTo={actions.scrollTo} />, document.getElementById("container"));
-        expect(document.querySelectorAll('.btn-tray').length).toBe(2);
+        expect(document.querySelectorAll('.btn-tray').length).toBe(3);
         ReactTestUtils.Simulate.click(document.querySelector('.btn-tray')); // <-- trigger
         expect(spyScrollTo).toHaveBeenCalled();
         expect(spyScrollTo.calls[0].arguments[0]).toBe(STORY.sections[0].id);
