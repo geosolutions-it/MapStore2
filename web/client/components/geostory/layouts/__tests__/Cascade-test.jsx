@@ -26,18 +26,18 @@ describe('Cascade component', () => {
         ReactDOM.render(<Cascade />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-cascade-story')).toExist();
-
+        expect(container.querySelector('.add-bar')).toExist(); // present if no sections are passe
     });
     it('Cascade rendering with unknown type', () => {
         ReactDOM.render(<Cascade type="SOME_UNKNOWN_TYPE" />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-cascade-story')).toExist();
-
     });
     it('Cascade rendering with of known section (paragraph)', () => {
         ReactDOM.render(<Cascade {...STORY} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-cascade-story');
         expect(el.querySelector('.ms-section-paragraph > .ms-section-contents')).toExist();
+        expect(el.querySelector('.add-bar')).toNotExist();
     });
 });

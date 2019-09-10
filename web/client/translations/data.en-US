@@ -1869,6 +1869,8 @@
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
             "zoomToContent": "Zoom to content",
+            "emptyTitle": "This story is empty",
+            "emptyDescription": "Start creating an awesome geostory by adding new content",
             "contentToolbar": {
                 "contentSize": "Change size",
                 "smallSizeLabel": "Small",
