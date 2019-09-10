@@ -10,6 +10,15 @@ import React from 'react';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import {ButtonToolbar} from 'react-bootstrap';
 
+/**
+ * Navigation Bar for view mode of GeoStory
+ * Contains the button to switch to edit mode and the navigation menu.
+ * @prop {function} scrollTo handler to scroll to a particular section or id. Gets id of the HTML element as first argument and scroll options as second. See {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView}
+ * @prop {function} setEditing hadler to set edit/view mode. Takes the `editing` flag as argument.
+ * @prop {object} story the current story to navigate
+ * @prop {object} currentPage contains current `sectionId`
+ * @prop {number} progress current progress of the page (from 0 to 1)
+ */
 export default ({
     scrollTo = () => {},
     setEditing = () => {},
