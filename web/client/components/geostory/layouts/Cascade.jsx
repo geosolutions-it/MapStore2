@@ -8,6 +8,7 @@
 import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
 import emptyState from '../../misc/enhancers/emptyState';
+import currentPageSectionManager from './sections/enhancers/currentPageSectionManager';
 
 // Apply Empty Icon for empty state - TODO: improve look and feel
 const ContainerDimensions = emptyState(
@@ -26,12 +27,14 @@ const ContainerDimensions = emptyState(
 )(ContainerDimensionsBase);
 import BorderLayout from '../../layout/BorderLayout';
 import Section from './sections/Section';
-const {Modes} = require('../../../utils/GeoStoryUtils');
 
-export default ({
+import {Modes} from '../../../utils/GeoStoryUtils';
+
+const Cascade = ({
     mode = Modes.VIEW,
     sections = [],
     add = () => {},
+    onVisibilityChange = () => {},
     editMedia = () => {},
     update = () => {},
     remove = () => {}
@@ -45,6 +48,7 @@ export default ({
                         sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                             return (
                                 <Section
+                                    onVisibilityChange={onVisibilityChange}
                                     add={add}
                                     editMedia={editMedia}
                                     update={update}
@@ -64,3 +68,5 @@ export default ({
             </div>}
     </ContainerDimensions>
 </BorderLayout>);
+
+export default currentPageSectionManager(Cascade);

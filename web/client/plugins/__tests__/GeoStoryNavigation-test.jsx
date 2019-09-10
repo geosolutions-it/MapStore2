@@ -9,15 +9,17 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import GeoStoryEditor from '../GeoStoryEditor';
+import GeoStoryNavigation from '../GeoStoryNavigation';
 import { getPluginForTest } from './pluginsTestUtils';
 import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
+import { Modes } from '../../utils/GeoStoryUtils';
+
 
 import geostory from '../../reducers/geostory';
 import { setEditing } from '../../actions/geostory';
 
 describe('GeoStoryEditor Plugin', () => {
-    const stateMocker = createStateMocker({geostory});
+    const stateMocker = createStateMocker({ geostory });
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -28,14 +30,14 @@ describe('GeoStoryEditor Plugin', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('Shows GeoStoryEditor plugin hidden in view mode', () => {
-        const { Plugin } = getPluginForTest(GeoStoryEditor, stateMocker(setEditing(false)));
+    it('Shows GeoStoryNavigation plugin shows in view mode', () => {
+        const { Plugin } = getPluginForTest(GeoStoryNavigation, stateMocker(setEditing(false)));
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementsByClassName('ms-geostory-editor').length).toBe(0);
+        expect(document.getElementsByClassName('ms-geostory-navigation').length).toBe(1);
     });
-    it('Hide GeoStoryEditor plugin visible in edit mode', () => {
-        const { Plugin } = getPluginForTest(GeoStoryEditor, stateMocker(setEditing(true)));
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementsByClassName('ms-geostory-editor').length).toBe(1);
+    it('Hide GeoStoryNavigation plugin in edit mode', () => {
+        const { Plugin } = getPluginForTest(GeoStoryNavigation, stateMocker(setEditing(true)));
+        ReactDOM.render(<Plugin mode={Modes.EDIT} />, document.getElementById("container"));
+        expect(document.getElementsByClassName('ms-geostory-navigation').length).toBe(0);
     });
 });

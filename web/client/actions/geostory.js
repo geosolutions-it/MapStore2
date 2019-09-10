@@ -19,6 +19,7 @@ export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const UPDATE = "GEOSTORY:UPDATE";
+export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 export const REMOVE = "GEOSTORY:REMOVE";
 
 /**
@@ -80,6 +81,15 @@ export const update = (path, element, mode = "replace") => ({
     path,
     element,
     mode
+});
+
+/**
+ * updates the current page with current value of sectionId (future can be extended adding other info about current content).
+ * @param {object} param0 current page information. Contains `sectionId`
+ */
+export const updateCurrentPage = ({sectionId}) => ({
+    type: UPDATE_CURRENT_PAGE,
+    sectionId
 });
 
 export const remove = (path) => ({

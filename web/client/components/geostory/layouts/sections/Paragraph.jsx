@@ -24,12 +24,14 @@ export default ({
     update= () => {},
     editMedia= () => {},
     remove = () => {},
+    inViewRef,
     viewWidth,
     viewHeight
 }) => (
     <section
         className="ms-section ms-section-paragraph"
         id={id}
+            ref={inViewRef}
     >
         <SectionContents
             className="ms-section-contents"

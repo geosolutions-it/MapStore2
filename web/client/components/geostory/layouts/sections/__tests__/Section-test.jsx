@@ -11,6 +11,8 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Section from '../Section';
 import STORY from 'json-loader!../../../../../test-resources/geostory/sampleStory_1.json';
+import { lists } from '../../../../../utils/GeoStoryUtils';
+
 
 describe('Section component', () => {
     beforeEach((done) => {
@@ -41,5 +43,23 @@ describe('Section component', () => {
         expect(el).toExist();
         expect(container.querySelector('.ms-section-unknown')).toNotExist();
         expect(el.querySelector('.ms-section-contents')).toExist();
+    });
+    describe('every section type supports onVisibilityChange', () => {
+        lists.SectionTypes.forEach((type) => {
+            it(`${type}`, done => {
+                ReactDOM.render(<Section
+                    type={type}
+                    id={`test-${type}-section`}
+                    onVisibilityChange={({id, visible, entry}) => {
+                        expect(id).toBe(`test-${type}-section`);
+                        expect(visible).toBe(true);
+                        expect(entry).toExist();
+                        expect(entry.intersectionRatio).toExist();
+                        done();
+                    }}
+                />, document.getElementById("container"));
+            });
+        });
+
     });
 });

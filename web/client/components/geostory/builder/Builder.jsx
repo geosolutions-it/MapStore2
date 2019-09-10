@@ -42,6 +42,7 @@ class Builder extends React.Component {
     static propTypes = {
         story: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
+        scrollTo: PropTypes.func,
         setEditing: PropTypes.func
     };
 
@@ -65,23 +66,27 @@ class Builder extends React.Component {
                             }}
                             buttons={[
                                 {
-                                    glyph: 'trash'
+                                    glyph: 'trash',
+                                    disabled: true
                                 },
                                 {
                                     glyph: 'eye-open',
                                     onClick: () => this.props.setEditing(this.props.mode === Modes.VIEW)
                                 },
                                 {
-                                    glyph: 'cog'
+                                    glyph: 'cog',
+                                    disabled: true
 
                                 },
                                 {
-                                    glyph: 'list-alt'
+                                    glyph: 'list-alt',
+                                    disabled: true
                                 }
                             ]}/>
                     </div>
                 }>
             <Previews
+                scrollTo={this.props.scrollTo}
                 sections={this.props.story && this.props.story.sections}
                 />
             </BorderLayout>

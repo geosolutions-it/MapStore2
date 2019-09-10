@@ -20,21 +20,26 @@ import geostory from '../reducers/geostory';
 import Builder from '../components/geostory/builder/Builder';
 import { Modes } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
+import { scrollToContent } from '../utils/GeoStoryUtils';
+
+
 const GeoStoryEditor = ({
     mode = Modes.VIEW,
     setEditingMode = () => {},
     story = {}
-}) => (<div
+}) => (mode === Modes.EDIT ? <div
     key="left-column"
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
+        scrollTo={(id, options = { behavior: "smooth" }) => {
+            scrollToContent(id, options);
+        }}
         story={story}
         mode={mode}
         setEditing={setEditingMode}
         />
-</div>
-);
+</div> : null);
 /**
  * Plugin for GeoStory side panel editor
  * @name GeoStoryEditor
