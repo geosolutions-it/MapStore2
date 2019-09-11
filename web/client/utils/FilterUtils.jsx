@@ -965,13 +965,20 @@ const FilterUtils = {
      @return a spatial filter with coordinates reprojected to nativeCrs
     */
     reprojectFilterInNativeCrs: (filter, nativeCrs) => {
-        let newCoords = CoordinatesUtils.reprojectGeoJson(filter.spatialField.geometry, filter.spatialField.geometry.projection || "EPSG:3857", nativeCrs).coordinates;
+        const srcProjection = filter.spatialField.geometry.projection;
+        const center = filter.spatialField.geometry.center;
+        const radius = filter.spatialField.geometry.radius;
+        const newCoords = CoordinatesUtils.reprojectGeoJson(filter.spatialField.geometry, filter.spatialField.geometry.projection || "EPSG:3857", nativeCrs).coordinates;
+        const newCenter = center && (({x, y}) => [x, y])(CoordinatesUtils.reproject(center, srcProjection, nativeCrs));
+        const newRadius = radius && CoordinatesUtils.reproject([radius, 0.0], srcProjection, nativeCrs).x;
         return {
             ...filter,
             spatialField: {
                 ...filter.spatialField,
                 geometry: {
                     ...filter.spatialField.geometry,
+                    center: newCenter,
+                    radius: newRadius,
                     coordinates: newCoords,
                     projection: nativeCrs
                 }
