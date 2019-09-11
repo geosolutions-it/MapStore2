@@ -588,11 +588,13 @@
             }
           },
           "Login",
+          "BurgerMenu",
           "Language",
           "NavMenu",
           "Attribution",
           "Home",
           "GeoStory",
+          "GeoStorySave",
           "MediaEditor",
           {
             "name": "GeoStoryEditor",

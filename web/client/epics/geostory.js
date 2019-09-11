@@ -7,27 +7,42 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, isObject, lastIndexOf} from 'lodash';
+import {isNaN, isString, isNil, lastIndexOf} from 'lodash';
+import { push } from 'react-router-redux';
 
 import axios from '../libs/ajax';
+
+const {
+    createResource,
+    updateResource,
+    getResource
+} = require('../api/persistence');
+
 import {
     ADD,
     REMOVE,
     LOAD_GEOSTORY,
+    loadGeostory,
     loadingGeostory,
     loadGeostoryError,
     setCurrentStory,
+    saveGeoStoryError,
+    storySaved,
+    setControl,
+    setResource,
     update,
-    remove
+    remove,
+    SAVE
 } from '../actions/geostory';
+
 import {
-    show,
+    show as showMediaEditor,
     HIDE,
     EDIT_MEDIA,
     CHOOSE_MEDIA,
     selectItem
 } from '../actions/mediaEditor';
-import { error } from '../actions/notifications';
+import { show, error } from '../actions/notifications';
 
 import { isLoggedIn } from '../selectors/security';
 import { currentMessagesSelector } from '../selectors/locale';
@@ -35,7 +50,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } f
 import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, localizeElement } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, localizeElement, Controls } from '../utils/GeoStoryUtils';
 import { getEffectivePath } from '../reducers/geostory';
 
 
@@ -52,7 +67,7 @@ export const openMediaEditorForNewMedia = action$ =>
         })
         .switchMap(({path: arrayPath, element}) => {
             return Observable.of(
-                    show('geostory') // open mediaEditor
+                    showMediaEditor('geostory') // open mediaEditor
                 )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA, HIDE)
@@ -106,6 +121,33 @@ export const localizeTemplateEpic = (action$, store) =>
             );
     });
 
+export const saveGeoStoryResource = action$ => action$
+        .ofType(SAVE)
+        // delay is for speed up tests, not part of the SAVE action
+        .exhaustMap(({ resource, delay = 1000 } = {}) =>
+            (!resource.id ? createResource(resource) : updateResource(resource))
+                .switchMap(rid => Observable.of(
+                    storySaved(rid),
+                    setControl(Controls.SHOW_SAVE, false),
+                    !resource.id
+                        ? push(`/geostory/${rid}`)
+                        : loadGeostory(rid),
+                ).merge(
+                    Observable.of(show({
+                        id: "STORY_SAVE_SUCCESS",
+                        title: "geostory.saveDialog.saveSuccessTitle",
+                        message: "geostory.saveDialog.saveSuccessMessage"
+                    })).delay(!resource.id ? delay : 0) // delay to allow loading
+                )
+                )
+                .let(wrapStartStop(
+                    loadingGeostory(true, "loading"),
+                    loadingGeostory(false, "loading")
+                ))
+                .catch(
+                    ({ status, statusText, data, message, ...other } = {}) => Observable.of(saveGeoStoryError(status ? { status, statusText, data } : message || other), loadingGeostory(false, "loading"))
+                )
+        );
 /**
  * side effect to scroll to new sections
  * it tries for max 10 times with an interval of 200 ms between each
@@ -140,7 +182,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
             const state = store.getState();
             const resourceId = resourceIdSelectorCreator(path)(state);
             return Observable.of(
-                    show(owner), // open mediaEditor
+                    showMediaEditor(owner), // open mediaEditor
                     selectItem(resourceId)
                 )
                 .merge(
@@ -166,20 +208,19 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
         .switchMap( ({id}) =>
             Observable.defer(() => {
                 if (id && isNaN(parseInt(id, 10))) {
-                    return axios.get(`configs/${id}.json`);
+                    return axios.get(`configs/${id}.json`)
+                        // not return anything else that data in this case
+                        // to match with data/resource object structure of getResource
+                        .then(({data}) => ({data}));
                 }
-                // TODO manage load process from external api
-                return axios.get(`configs/sampleStory.json`);
+                return getResource(id);
             })
-            .map(({ data }) => {
-                if (isObject(data)) {
-                    return setCurrentStory(data);
-                }
-                if (isString(data)) {
-                    return setCurrentStory(JSON.parse(data));
-                }
-                return setCurrentStory({});
-            })
+            .switchMap(({ data, ...resource }) =>
+                Observable.of(
+                    setCurrentStory(isString(data) ? JSON.parse(data) : data),
+                    setResource(resource)
+                )
+            )
             // adds loading status to the start and to the end of the stream and handles exceptions
             .let(wrapStartStop(
                 loadingGeostory(true, "loading"),
