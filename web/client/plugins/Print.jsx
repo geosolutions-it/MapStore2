@@ -30,7 +30,7 @@ const assign = require('object-assign');
 
 const {head} = require('lodash');
 
-const {scalesSelector} = require('../selectors/map');
+const {projectionSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {mapTypeSelector} = require('../selectors/maptype');
 
@@ -137,7 +137,7 @@ module.exports = {
                         mapPreviewOptions: PropTypes.object,
                         syncMapPreview: PropTypes.bool,
                         useFixedScales: PropTypes.bool,
-                        scales: PropTypes.array,
+                        projection: PropTypes.string,
                         ignoreLayers: PropTypes.array,
                         defaultBackground: PropTypes.string,
                         closeGlyph: PropTypes.string,
@@ -189,7 +189,7 @@ module.exports = {
                         },
                         syncMapPreview: true,
                         useFixedScales: false,
-                        scales: [],
+                        projection: "EPSG:900913",
                         ignoreLayers: ["google", "bing"],
                         defaultBackground: "osm",
                         closeGlyph: "1-close",
@@ -383,10 +383,18 @@ module.exports = {
                                 this.props.configurePrintMap(newMap.center, mapZoom, scaleZoom, scales[scaleZoom],
                                     this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
                             } else {
-                                this.props.configurePrintMap(newMap.center, newMap.zoom, newMap.zoom, this.props.scales[newMap.zoom],
+                                const scales = this.computeScales();
+                                this.props.configurePrintMap(newMap.center, newMap.zoom, newMap.zoom, scales[newMap.zoom],
                                     this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
                             }
                         }
+                    };
+
+                    computeScales = () => {
+                        const resolutions = MapUtils.getResolutions();
+                        const units = CoordinatesUtils.getUnits(this.props.projection);
+                        const dpm = 96 * (100 / 2.54);
+                        return resolutions.map((resolution) => resolution * dpm * (units === 'degrees' ? 111194.87428468118 : 1));
                     };
 
                     print = () => {
@@ -405,11 +413,11 @@ module.exports = {
                     (state) => state.print && state.print.error,
                     mapSelector,
                     layersSelector,
-                    scalesSelector,
+                    projectionSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
                     mapTypeSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, projection, usePreview, currentLocale, mapType) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -417,7 +425,7 @@ module.exports = {
                     error,
                     map,
                     layers: layers.filter(l => !l.loadingError),
-                    scales,
+                    projection,
                     usePreview,
                     currentLocale,
                     mapType
