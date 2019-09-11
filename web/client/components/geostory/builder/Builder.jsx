@@ -11,24 +11,9 @@ import PropTypes from 'prop-types';
 
 import BorderLayout from '../../layout/BorderLayout';
 import SectionsPreview from './SectionsPreview';
-import emptyState from '../../misc/enhancers/emptyState';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
 import { lists, Modes } from'../../../utils/GeoStoryUtils';
-const Previews = emptyState(
-    ({ sections = [] }) => sections.length === 0,
-    () => ({
-        style: { height: "100%" },
-        mainViewStyle: {
-            position: "absolute",
-            top: "50%",
-            width: "100%",
-            transform: "translateY(-50%)"
-        },
-        // TODO: localize
-        title: "NO CONTENT"
-    })
-)(SectionsPreview);
 
 /**
  * Base Component that shows basic editing tools and SlidesPreview
@@ -104,7 +89,7 @@ class Builder extends React.Component {
                             ]}/>
                     </div>
                 }>
-            <Previews
+            <SectionsPreview
                 scrollTo={scrollTo}
                 cardPreviewEnabled={cardPreviewEnabled}
                 sections={story && story.sections}

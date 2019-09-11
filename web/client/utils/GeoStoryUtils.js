@@ -109,13 +109,14 @@ export const localizeElement = (obj, messages) => {
             };
         }
         if (isArray(obj[c])) {
-            const el = localizeElement(obj[c][0], messages);
+            // const el = localizeElement(obj[c][0], messages);
+            const elements = obj[c].map(el => ({...el, ...localizeElement(el, messages)}));
             return {
                 ...p,
-                [c]: [{
-                    ...obj[c][0],
-                    ...el
-            }]};
+                [c]: [
+                    // ...obj[c][0],
+                    ...elements
+                ]};
         }
         return p;
     }, {});

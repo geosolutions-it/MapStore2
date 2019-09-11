@@ -89,12 +89,17 @@ export const openMediaEditorForNewMedia = action$ =>
  */
 export const localizeTemplateEpic = (action$, store) =>
     action$.ofType(ADD)
-    .switchMap(({element}) => {
+    .switchMap(({element, path}) => {
         const messages = currentMessagesSelector(store.getState());
         const propsLocalized = localizeElement(element, messages);
+        let elPath = `sections[{"id": "${element.id}"}]`;
+        if (element.type === ContentTypes.COLUMN) {
+            const currentContents = createPathSelector(path)(store.getState());
+            elPath = `${path}[${currentContents.length - 1}]`;
+        }
         return Observable.of(
                 update(
-                    `sections[{"id": "${element.id}"}]`,
+                    elPath,
                     propsLocalized,
                     "merge"
                 )
