@@ -11,13 +11,15 @@ const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 const {
     clearWidgetsOnLocationChange,
     alignDependenciesToWidgets,
-    toggleWidgetConnectFlow
+    toggleWidgetConnectFlow,
+    updateLayerOnLayerPropertiesChange
 } = require('../widgets');
 const {
     CLEAR_WIDGETS,
     insertWidget,
     toggleConnection,
     selectWidget,
+    UPDATE_LAYER,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
     LOAD_DEPENDENCIES,
@@ -30,7 +32,12 @@ const {
 const {
     configureMap
 } = require('../../actions/config');
+const {
+    changeLayerProperties
+} = require('../../actions/layers');
 const { LOCATION_CHANGE } = require('react-router-redux');
+const { ActionsObservable } = require('redux-observable');
+const Rx = require('rxjs');
 
 describe('widgets Epics', () => {
     it('clearWidgetsOnLocationChange triggers CLEAR_WIDGETS on LOCATION_CHANGE', (done) => {
@@ -299,5 +306,63 @@ describe('widgets Epics', () => {
             )],
             checkActions,
             {});
+    });
+    it('changeLayerPropertiesEpic triggers updateWidgetLayer on filterLayer change', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "1",
+                name: "layer"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLayerPropertiesChange,
+            1,
+            [changeLayerProperties(
+                "1",
+                {layerFilter: {rowId: 1567705038414}}
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        filterLayer: {rowId: 1567705038414}
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('changeLayerPropertiesEpic does not triger updateWidgetLayer on visibility change', (done) => {
+        const action = changeLayerProperties("1", {visibility: false});
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer"
+                }, {
+                    id: "2",
+                    name: "layer2",
+                    filterLayer: {rowId: 1567705038414}
+                }, {
+                    id: "3",
+                    name: "layer3"
+                }]
+            }
+        };
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        updateLayerOnLayerPropertiesChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+                                          .toArray()
+                                          .subscribe(checkActions);
     });
 });
