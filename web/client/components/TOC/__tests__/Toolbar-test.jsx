@@ -387,7 +387,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(3);
+        expect(btn.length).toBe(4);
     });
 
     it('add group max depth reached', () => {
@@ -405,7 +405,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(2);
+        expect(btn.length).toBe(3);
     });
 
     it('group multiple selections', () => {
