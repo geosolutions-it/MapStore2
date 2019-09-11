@@ -116,21 +116,19 @@ In *Edit mode*, you can delete existing features following these steps:
 Quick Filtering
 -------------------
 
-The [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) Attribute Table allows you to quickly filter the table records(features) by using the  
-filter field located at the top of each table column. 
+The [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) Attribute Table allows you to quickly filter the table records (features) by using the filter field located at the top of each column. 
 
 <p><img src="../img/attribute-table-quick-filter.jpg" style="max-width:620px;"/></p>
 
-To use the attribute table quick filters, just type in anything in the filter fields located at the top of each column  
-
-For example to filter **Arizona State** type in **arizona** in the filter field located on **state_name** column
+To use quick filters, just type in the filter text in the filter fields located at the top of any column to be filtered.
+For example to filter **Arizona State** type in **arizona** in the filter field located on **state_name** column.
 <p><img src="../img/attribute-table-quick-filter-1.jpg" style="max-width:620px;"/></p>
 
 !!! note
     We have got **one** item and since the map is by default synchronized with the **attribute table**, only the **Arizona** state is visible.
 
 
-### Operator based filtering
+### Operator based quick filtering
 Quick filters allow you to filter records in the Attribute Table by using comparison operators (the operators must precede the filter text): operator can be used for all data type including float and date types.
 
 <p><img src="../img/attribute-table-quick-filter-2.jpg" style="max-width:620px;"/></p>
@@ -146,10 +144,10 @@ So far the operators allowed are as follows
 
 Examples;
 
-* States with **persons >= 4,000,000**
+* Filtering states with **persons >= 4,000,000**
 <p><img src="../img/attribute-table-quick-filter-3.jpg" style="max-width:620px;"/></p>
 
-* States with male population **Male < 2000,0000**
+* Filtering states with male population **Male < 2000,0000**
 <p><img src="../img/attribute-table-quick-filter-4.jpg" style="max-width:620px;"/></p>
 
 !!! note
