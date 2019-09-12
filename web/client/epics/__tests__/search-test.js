@@ -24,7 +24,7 @@ const {
     TEXT_SEARCH_ERROR,
     zoomAndAddPoint, ZOOM_ADD_POINT
 } = require('../../actions/search');
-const {CHANGE_MAP_VIEW, ZOOM_TO_POINT} = require('../../actions/map');
+const {ZOOM_TO_EXTENT, ZOOM_TO_POINT} = require('../../actions/map');
 const {UPDATE_ADDITIONAL_LAYER} = require('../../actions/additionallayers');
 const {searchEpic, searchItemSelected, zoomAndAddPointEpic } = require('../search');
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic);
@@ -124,7 +124,7 @@ describe('search Epics', () => {
         let actions = store.getActions();
         expect(actions.length).toBe(4);
         expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
-        expect(actions[2].type).toBe(CHANGE_MAP_VIEW);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
         expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
     });
 
@@ -141,12 +141,16 @@ describe('search Epics', () => {
 
         let actions = store.getActions();
         expect(actions.length).toBe(6);
-        let expectedActions = [CHANGE_MAP_VIEW, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
+        let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
         let actionsType = actions.map(a => a.type);
 
         expectedActions.forEach((a) => {
             expect(actionsType.indexOf(a)).toNotBe(-1);
         });
+
+        const zoomToExtentAction = actions.find(m => m.type === ZOOM_TO_EXTENT);
+        expect(zoomToExtentAction.maxZoom).toExist();
+        expect(zoomToExtentAction.extent.length).toEqual(4);
 
         let testSearchNestedServicesSelectedAction = actions.filter(m => m.type === TEXT_SEARCH_NESTED_SERVICES_SELECTED)[0];
         expect(testSearchNestedServicesSelectedAction.services[0]).toEqual({

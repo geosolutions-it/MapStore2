@@ -6,38 +6,33 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {TEXT_SEARCH_STARTED,
+import * as Rx from 'rxjs';
+import toBbox from 'turf-bbox';
+import assign from 'object-assign';
+import { sortBy} from 'lodash';
+import { updateAdditionalLayer } from '../actions/additionallayers';
+import { zoomToExtent, zoomToPoint} from '../actions/map';
+import {
+    TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
     ZOOM_ADD_POINT,
+    resultsPurge,
     searchTextLoading,
     searchResultLoaded,
     searchResultError,
     addMarker,
     selectNestedService,
-    searchTextChanged,
-    resultsPurge
-} = require('../actions/search');
-const {defaultIconStyle} = require('../utils/SearchUtils');
+	searchTextChanged
+} from '../actions/search';
 
-const {
-    updateAdditionalLayer
-} = require('../actions/additionallayers');
-const {
-    zoomToPoint
-} = require('../actions/map');
+import CoordinatesUtils from '../utils/CoordinatesUtils';
+import {defaultIconStyle} from '../utils/SearchUtils';
+import {generateTemplateString} from '../utils/TemplateUtils';
 
-const mapUtils = require('../utils/MapUtils');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const Rx = require('rxjs');
-const {API} = require('../api/searchText');
-const {changeMapView} = require('../actions/map');
-const toBbox = require('turf-bbox');
-const {generateTemplateString} = require('../utils/TemplateUtils');
-const assign = require('object-assign');
+import {API} from '../api/searchText';
 
-const {sortBy} = require('lodash');
 
 /**
  * Gets every `TEXT_SEARCH_STARTED` event.
@@ -119,24 +114,8 @@ const searchItemSelected = action$ =>
                 return Rx.Observable.of(action.item);
             }).concatMap((item) => {
                 let bbox = item.bbox || item.properties.bbox || toBbox(item);
-                let mapSize = action.mapConfig.size;
-
-                // zoom by the max. extent defined in the map's config
-                let newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", action.mapConfig.projection), mapSize, 0, 21, null);
-
-                // center by the max. extent defined in the map's config
-                let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
                 let actions = [
-                    changeMapView(newCenter, newZoom, {
-                        bounds: {
-                            minx: bbox[0],
-                            miny: bbox[1],
-                            maxx: bbox[2],
-                            maxy: bbox[3]
-                        },
-                        crs: "EPSG:4326",
-                        rotation: 0
-                    }, action.mapConfig.size, null, action.mapConfig.projection),
+                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
                     addMarker(item)
                 ];
                 return actions;
