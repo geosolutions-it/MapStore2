@@ -33,6 +33,7 @@ class General extends React.Component {
         showTooltipOptions: PropTypes.bool,
         allowNew: PropTypes.bool
     };
+
     static contextTypes = {
         messages: PropTypes.object
     };
@@ -45,7 +46,6 @@ class General extends React.Component {
         pluginCfg: {},
         allowNew: false
     };
-
 
     getLabelName = (groupLable = "") => {
         return groupLable.replace(/\./g, '/').replace(/\${dot}/g, '.');
@@ -72,12 +72,14 @@ class General extends React.Component {
             <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
             <form ref="settings">
                 <FormGroup>
-                    <ControlLabel><Message msgId="layerProperties.title" /></ControlLabel>
+                    <ControlLabel>
+                        <Message msgId="layerProperties.title" />
+                    </ControlLabel>
                     <FormControl
-                        value={translations.default || ""}
+                        defaultValue={translations.default || ""}
                         key="title"
                         type="text"
-                        onChange={this.updateTranslation.bind(null, 'default')}/>
+                        onBlur={this.updateTranslation.bind(null, 'default')}/>
                 </FormGroup>
                 {hideTitleTranslations || (<FormGroup>
                     <ControlLabel><Message msgId="layerProperties.titleTranslations" /></ControlLabel>
@@ -92,31 +94,31 @@ class General extends React.Component {
                             <InputGroup.Addon><img src={flagImgSrc} alt={locales[a].description}/></InputGroup.Addon>
                             <FormControl
                                 placeholder={locales[a].description}
-                                value={translations[locales[a].code] ? translations[locales[a].code] : ''}
+                                defaultValue={translations[locales[a].code] || ''}
                                 type="text"
-                                onChange={this.updateTranslation.bind(null, locales[a].code)}/>
+                                onBlur={this.updateTranslation.bind(null, locales[a].code)}/>
                     </InputGroup>) : null; }
                     )}
                 </FormGroup>)}
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
                     <FormControl
-                        value={this.props.element.name || ""}
+                        defaultValue={this.props.element.name || ''}
                         key="name"
                         type="text"
                         disabled
-                        onChange={this.updateEntry.bind(null, "name")}/>
+                        onBlur={this.updateEntry.bind(null, "name")}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                     {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle"/> :
                     <FormControl
-                        value={this.props.element.description || ""}
+                        defaultValue={this.props.element.description || ''}
                         key="description"
                         rows="2"
                         componentClass="textarea"
                         style={{ resize: "vertical", minHeight: "33px" }}
-                        onChange={this.updateEntry.bind(null, "description")}/>}
+                        onBlur={this.updateEntry.bind(null, "description")}/>}
                 </FormGroup>
                 { this.props.nodeType === 'layers' ?
                 <div>
@@ -184,17 +186,14 @@ class General extends React.Component {
         );
     }
 
-    updateEntry = (key, event) => {
-        let value = event.target.value;
-        this.props.onChange(key, value);
-    };
+    updateEntry = (key, event) => this.props.onChange(key, event.target.value);
 
     updateTranslation = (key, event) => {
-        if (key === 'default' && isString(this.props.element.title)) {
-            this.props.onChange('title', event.target.value);
-        } else {
-            this.props.onChange('title', assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value}));
-        }
+        const title = (key === 'default' && isString(this.props.element.title))
+            ? event.target.value
+            : assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value});
+
+        this.props.onChange('title', title);
     };
 }
 
