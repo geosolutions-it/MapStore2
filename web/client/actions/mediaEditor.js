@@ -15,6 +15,8 @@ export const LOAD_MEDIA_SUCCESS = "MEDIA_EDITOR:LOAD_MEDIA_SUCCESS";
 export const HIDE = "MEDIA_EDITOR:HIDE";
 export const SAVE_MEDIA = "MEDIA_EDITOR:SAVE_MEDIA";
 export const SAVE_MEDIA_SUCCESS = "MEDIA_EDITOR:SAVE_MEDIA_SUCCESS";
+export const SET_MEDIA_TYPE = "MEDIA_EDITOR:SET_MEDIA_TYPE";
+export const SET_MEDIA_SERVICE = "MEDIA_EDITOR:SET_MEDIA_SERVICE";
 export const SELECT_ITEM = "MEDIA_EDITOR:SELECT_ITEM";
 export const SHOW = "MEDIA_EDITOR:SHOW";
 
@@ -44,7 +46,10 @@ export const loadMedia = (params, mediaType, sourceId) => ({ type: LOAD_MEDIA, p
 export const loadMediaSuccess = ({mediaType, sourceId, params, resultData}) => ({ type: LOAD_MEDIA_SUCCESS, mediaType, sourceId, params, resultData });
 /**
  * Select item in the current media type/source list
- * @param {string} id the ID of the item selected
+ * @param {object} options
+ * @param {object} options.type
+ * @param {object} options.source
+ * @param {object} options.data
  */
 export const saveMedia = ({type, source, data}) => ({ type: SAVE_MEDIA, mediaType: type, source, data });
 /**
@@ -76,6 +81,16 @@ export const selectItem = (id) => ({ type: SELECT_ITEM, id});
  * @param {boolean} adding
  */
 export const setAddingMedia = (adding) => ({ type: ADDING_MEDIA, adding });
+/**
+ * set the media service
+ * @param {string} service id of the service
+ */
+export const setMediaService = (service) => ({ type: SET_MEDIA_SERVICE, id: service ? service.value : null });
+/**
+ * change the media type in the media editor
+ * @param {string} mediaType type of the media, can be one of "image", "video" or "map"
+ */
+export const setMediaType = (mediaType) => ({ type: SET_MEDIA_TYPE, mediaType });
 /**
  * editing media
  * @param {boolean} editing

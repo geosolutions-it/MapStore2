@@ -12,6 +12,8 @@ import {
     EDITING_MEDIA,
     HIDE,
     LOAD_MEDIA_SUCCESS,
+    SET_MEDIA_TYPE,
+    SET_MEDIA_SERVICE,
     SELECT_ITEM,
     SHOW
 } from '../actions/mediaEditor';
@@ -21,18 +23,34 @@ export const DEFAULT_STATE = {
     // contains local data (path for data is mediaType, sourceId, e.g. data: {image : { geostory: { resultData: {...}, params: {...}}})
     data: {},
     settings: {
-        mediaType: 'image', // current selected media type
-        sourceId: 'geostory', // current selected service
+        mediaType: "image", // current selected media type
+        sourceId: "geostory", // current selected service
         // available media types
         mediaTypes: {
             image: {
-                sources: ['geostory'] // services for the selected media type
+                defaultSource: "geostory", // source selected when this media is selected
+                sources: ["geostory"] // services for the selected media type
+            },
+            video: {
+                defaultSource: "geostory",
+                sources: ["geostory"]
+            },
+            map: {
+                defaultSource: "geostore",
+                sources: ["geostory", "geostore"]
             }
         },
-        // all media sources available, with their type
+        // all media sources available, with their type and other parameters
         sources: {
             geostory: {
-                type: 'geostory'
+                name: "Currently Used", // shown in in the UI,  TODO: localize?
+                type: "geostory" // determines the type related to the API
+            },
+            geostore: {
+                name: "Geostore",
+                type: "geostore",
+                url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
+                categoryWhitelist: ["MAP"]
             }
         }
     }
@@ -72,6 +90,15 @@ export default (state = DEFAULT_STATE, action) => {
         }
         case SELECT_ITEM: {
             return set('selected', action.id, state);
+        }
+        case SET_MEDIA_TYPE: {
+            return compose(
+                set('settings.sourceId', state.settings.mediaTypes[action.mediaType].defaultSource), // reset sourceId to default when media type changes
+                set('settings.mediaType', action.mediaType)
+                )(state);
+        }
+        case SET_MEDIA_SERVICE: {
+            return set('settings.sourceId', action.id, state);
         }
         case SHOW:
             // setup media editor settings
