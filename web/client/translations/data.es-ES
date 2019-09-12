@@ -1868,6 +1868,8 @@
             "addTextContent": "Agregar contenido de texto",
             "addMediaContent": "Agregar contenido multimedia",
             "zoomToContent": "Zoom al contenido",
+            "emptyTitle": "This story is empty",
+            "emptyDescription": "Start creating an awesome geostory by adding new content",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
                 "smallSizeLabel": "Pequeña",
@@ -1887,6 +1889,39 @@
                 "fit": "Ajustar el espacio del contenedor",
                 "editMedia": "Cambiar fuente de medios",
                 "remove": "Eliminar"
+            },
+            "builder": {
+                "defaults": {
+                    "htmlTitle": "<h1 style='text-align:center'>Insertar título</h1><p style='text-align:center'><em>subtítulo</em></p>",
+                    "htmlSample": "<p>insertar texto aquí...</p>",
+                    "titleTitle": "Sección de título",
+                    "titleParagraph": "Sección de párrafo",
+                    "titleImmersive": "Sección inmersiva",
+                    "titleMedia": "Sección de multimedia",
+                    "titleUnknown": "UNKNOWN"
+                },
+                "delete": "Eliminar la sección seleccionada",
+                "preview": "Mostrar vista previa",
+                "edit": "Editar historia",
+                "hide": "Ocultar vista previa en tarjetas",
+                "show": "Mostrar vista previa en tarjetas",
+                "fullscreen": "Mostrar vista previa en pantalla completa",
+                "settings": {
+                    "tooltip": "Configuraciones",
+                    "back": "Volver al constructor",
+                    "save": "Guardar ajustes",
+                    "headerTitle" : "Configuración de la historia",
+                    "title" : "Titulo",
+                    "titlePlaceholder" : "Ingrese título",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Ingrese la fuente del logotipo (formato de imagen)",
+                    "autoplay" : "Auto-reproducción",
+                    "enableAutoplay" : "Habilitar reproducción automática",
+                    "autoplayInterval" : "Intervalo de reproducción automática (segundos)",
+                    "autoplayIntervalPlaceholder" : "Habilitar intervalo de reproducción automática",
+                    "navbar" : "Barra de navegación",
+                    "showNavbar" : "Mostrar barra de navegación"
+                }
             },
             "errors": {
                 "loading": {

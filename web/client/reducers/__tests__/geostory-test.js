@@ -14,14 +14,18 @@ import {
     setCurrentStory,
     setEditing,
     update,
-    remove
+    remove,
+    toggleCardPreview,
+    updateCurrentPage
 } from '../../actions/geostory';
 import {
+    cardPreviewEnabledSelector,
     currentStorySelector,
     modeSelector,
     sectionsSelector,
     sectionAtIndexSelectorCreator,
-    resourcesSelector
+    resourcesSelector,
+    currentPageSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 
@@ -110,6 +114,12 @@ describe('geostory reducer', () => {
             expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].newProp).toBe("PROP");
         });
     });
+    it('geostory updateCurrentPage', () => {
+        const action = updateCurrentPage({sectionId: "ID"});
+        const state = geostory( undefined, action);
+        const currentPage = currentPageSelector({geostory: state});
+        expect(currentPage.sectionId).toBe("ID");
+    });
     it('ADD_RESOURCE', () => {
         expect(
             resourcesSelector({ geostory: geostory({}, addResource("id", "image", {}))})
@@ -122,6 +132,14 @@ describe('geostory reducer', () => {
             },
             editResource("id", "image", {title: "title"}))})
         ).toEqual([{id: "id", type: "image", data: {title: "title"}}]);
+    });
+    it('TOGGLE_CARD_PREVIEW', () => {
+        expect(
+            cardPreviewEnabledSelector({ geostory: geostory({
+                cardPreviewEnabled: false
+            },
+            toggleCardPreview())})
+        ).toEqual(true);
     });
     describe('remove', () => {
         const STATE_STORY = geostory(undefined, setCurrentStory(TEST_STORY));

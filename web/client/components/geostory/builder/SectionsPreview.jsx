@@ -45,7 +45,7 @@ const Preview = ({ width } = {}) => {
  * Transforms a geostory section into a SideGrid item.
  * @param {object} section the section to transform
  */
-const sectionToItem = ({
+const sectionToItem = ({scrollTo, cardPreviewEnabled = false}) => ({
     contents,
     type,
     title,
@@ -60,12 +60,13 @@ const sectionToItem = ({
             }}
             buttons={[
                 {
+                    onClick: () => scrollTo(id),
                     glyph: 'zoom-to',
                     visible: contents && contents.length === 1,
                     tooltipId: "geostory.zoomToContent"
                 }
             ]} />,
-        title: title,
+        title,
         description: `type: ${type}`,
 
         body: contents
@@ -86,16 +87,17 @@ const sectionToItem = ({
                                 buttons={[
                                     {
                                         glyph: 'zoom-to',
-                                        tooltipId: "geostory.zoomToContent"
+                                        tooltipId: "geostory.zoomToContent",
+                                        onClick: () => scrollTo(content.id)
                                     }
                                 ]} />,
                             title: capitalize(content.type),
                             description: `type: ${content.type}`,
-                            body: (
+                            body: cardPreviewEnabled ? (
                                 <ContainerDimensions>
                                     <Preview content={content} />
                                 </ContainerDimensions>
-                            )
+                            ) : null
                         };
                     })} />
             </div>
@@ -111,10 +113,10 @@ const sectionToItem = ({
  * @SectionsPreview
  * @param {object[]} [sections=[]] Array of sections to display
  */
-export default ({ sections = [] }) => (<SideGrid
+export default ({ sections = [], scrollTo, cardPreviewEnabled }) => (<SideGrid
     containerId="ms-story-builder"
     cardComponent={SideCard}
     size="sm"
     items={
-        sections.map(sectionToItem)
+        sections.map(sectionToItem({cardPreviewEnabled, scrollTo }))
 } />);

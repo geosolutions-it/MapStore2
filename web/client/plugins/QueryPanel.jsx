@@ -123,7 +123,8 @@ const SmartQueryForm = connect((state) => {
         allowEmptyFilter: true,
         emptyFilterWarning: true,
         maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height,
-        zoom: (mapSelector(state) || {}).zoom
+        zoom: (mapSelector(state) || {}).zoom,
+        projection: (mapSelector(state) || {}).projection
     };
 }, dispatch => {
     return {

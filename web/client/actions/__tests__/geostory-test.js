@@ -12,10 +12,13 @@ import {
     CHANGE_MODE, setEditing,
     SET_CURRENT_STORY, setCurrentStory,
     UPDATE, update,
+    UPDATE_CURRENT_PAGE, updateCurrentPage,
     LOAD_GEOSTORY, loadGeostory,
     LOADING_GEOSTORY, loadingGeostory,
     LOAD_GEOSTORY_ERROR, loadGeostoryError,
-    editResource, EDIT_RESOURCE
+    editResource, EDIT_RESOURCE,
+    remove, REMOVE,
+    toggleCardPreview, TOGGLE_CARD_PREVIEW
 } from '../geostory';
 const { Modes } = require('../../utils/GeoStoryUtils');
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
@@ -80,6 +83,16 @@ describe('test geostory action creators', () => {
         expect(action.type).toBe(LOAD_GEOSTORY_ERROR);
         expect(action.error).toEqual(error);
     });
+    it('remove', () => {
+        const PATH = 'sections';
+        const action = remove(PATH);
+        expect(action.type).toBe(REMOVE);
+        expect(action.path).toBe(PATH);
+    });
+    it('toggleCardPreview', () => {
+        const action = toggleCardPreview();
+        expect(action.type).toBe(TOGGLE_CARD_PREVIEW);
+    });
     it('update', () => {
         const PATH = 'sections';
         const SECTION = { type: 'dummy' };
@@ -88,5 +101,11 @@ describe('test geostory action creators', () => {
         expect(action.path).toBe(PATH);
         expect(action.element).toBe(SECTION);
         expect(action.mode).toBe('replace');
+    });
+    it('updateCurrentPage', () => {
+        const retVal = updateCurrentPage({sectionId: "TEST"});
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(UPDATE_CURRENT_PAGE);
+        expect(retVal.sectionId).toBe('TEST');
     });
 });

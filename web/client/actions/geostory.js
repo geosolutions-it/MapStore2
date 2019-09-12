@@ -17,9 +17,11 @@ export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
-export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
-export const UPDATE = "GEOSTORY:UPDATE";
 export const REMOVE = "GEOSTORY:REMOVE";
+export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
+export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
+export const UPDATE = "GEOSTORY:UPDATE";
+export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -65,10 +67,22 @@ export const loadingGeostory = (value = false, name = "loading") => ({ type: LOA
  */
 export const loadGeostoryError = (error) => ({ type: LOAD_GEOSTORY_ERROR, error});
 /**
+ * removes a content from a story
+ * @param {string} path
+ */
+export const remove = (path) => ({
+    type: REMOVE,
+    path
+});
+/**
  * Sets the current story for editor/viewer
  * @param {object} story the story object
 */
 export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
+/**
+ * Turn on/off preview in cards.
+*/
+export const toggleCardPreview = () => ({ type: TOGGLE_CARD_PREVIEW});
 /**
  * Updates a value or an object in the current Story. Useful to update contents, settings and so on.
  * @param {string} path the path of the element to modify. It can contain path like this `sections[{id: "abc"}].contents[{id: "def"}]` to resolve the predicate between brackets.
@@ -81,8 +95,11 @@ export const update = (path, element, mode = "replace") => ({
     element,
     mode
 });
-
-export const remove = (path) => ({
-    type: REMOVE,
-    path
+/**
+ * updates the current page with current value of sectionId (future can be extended adding other info about current content).
+ * @param {object} param0 current page information. Contains `sectionId`
+ */
+export const updateCurrentPage = ({sectionId}) => ({
+    type: UPDATE_CURRENT_PAGE,
+    sectionId
 });

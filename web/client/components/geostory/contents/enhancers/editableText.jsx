@@ -56,7 +56,7 @@ export default compose(
                 placeholder,
                 toolbarStyle,
                 toolbar: {
-                    options: ['fontFamily', 'blockType', 'inline', 'textAlign', 'colorPicker', 'remove'],
+                    options: ['fontFamily', 'blockType', 'inline', 'textAlign', 'colorPicker', 'link', 'remove'],
                     fontFamily: {
                         options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
                         className: undefined,

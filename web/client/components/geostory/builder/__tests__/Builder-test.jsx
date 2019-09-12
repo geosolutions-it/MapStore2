@@ -28,16 +28,22 @@ describe('Builder component', () => {
         const el = container.querySelector('.ms-geostory-builder');
         expect(el).toExist();
         expect(el.querySelectorAll('button').length).toBe(4);
-        // empty view when no session
-        expect(el.querySelector('.empty-state-container')).toExist();
     });
     it('Builder rendering with sections', () => {
         ReactDOM.render(<Builder story={STORY} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-geostory-builder');
         expect(el).toExist();
-        // empty view when no session
-        expect(el.querySelector('.empty-state-container')).toNotExist();
         expect(el.querySelector('.mapstore-side-preview')).toExist();
+        expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(5); // 3 sections + 2 columns with preview enabled
+
+    });
+    it('Builder rendering with sections, preview disabled', () => {
+        ReactDOM.render(<Builder story={STORY} cardPreviewEnabled={false}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.msSideGrid');
+        expect(el).toExist();
+        expect(el.querySelector('.mapstore-side-preview')).toExist();
+        expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(0); // 3 sections + 2 columns with preview disabled
     });
 });
