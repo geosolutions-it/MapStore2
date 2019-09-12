@@ -24,6 +24,7 @@ class GeometryDetails extends React.Component {
         onShowPanel: PropTypes.func,
         onChangeDrawingStatus: PropTypes.func,
         zoom: PropTypes.number,
+        projection: PropTypes.string,
         enableGeodesic: PropTypes.bool
     };
 
@@ -85,8 +86,8 @@ class GeometryDetails extends React.Component {
         if (drawStatus === 'replace') {
             this.tempCircle[name] = parseFloat(value);
         }
-        let center = !this.props.useMapProjection && !isNaN(parseFloat(this.tempCircle.x)) && !isNaN(parseFloat(this.tempCircle.y)) ?
-            CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
+        let center = !isNaN(parseFloat(this.tempCircle.x)) && !isNaN(parseFloat(this.tempCircle.y)) ?
+            CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.projection) : [this.tempCircle.x, this.tempCircle.y];
 
         center = center.x === undefined ? {x: center[0], y: center[1]} : center;
         const validateCenter = {x: !isNaN(center.x) ? center.x : 0, y: !isNaN(center.y) ? center.y : 0};
@@ -98,6 +99,7 @@ class GeometryDetails extends React.Component {
             radius: !isNaN(this.tempCircle.radius) ? this.tempCircle.radius : 0,
             projection: this.props.geometry.projection
         };
+
 
         this.props.onChangeDrawingStatus(drawStatus, undefined, "queryform", [geometry], {geodesic: this.props.enableGeodesic});
     };
@@ -118,7 +120,7 @@ class GeometryDetails extends React.Component {
     getStep = (zoom = 1) => Math.min(1 / Math.pow(10, Math.ceil(Math.min(zoom, 21) / 3) - 2), 1);
     getStepCircle = (zoom, name) => {
         const step = this.getStep(zoom);
-        return name === 'radius' && step * 10000 || step;
+        return (name === 'radius' && !this.isWGS84() && step * 10000) || step;
     };
     getBBOXDimensions = (geometry) => {
         const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
@@ -137,16 +139,13 @@ class GeometryDetails extends React.Component {
     };
     getCircleDimensions = (geometry) => {
         // Show the center coordinates in 4326
-        let center = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
-            CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326') : geometry.center;
-
-        // If point isn't reprojected, it's an array cast to object.
-        center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
+        const center = CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326');
+        const radius = CoordinatesUtils.reproject([geometry.radius, 0.0], geometry.projection, this.props.projection).x;
 
         return {
             x: center.x,
             y: center.y,
-            radius: geometry.radius
+            radius: radius
         };
     };
     renderCoordinateField = (value, name) => {
@@ -169,7 +168,7 @@ class GeometryDetails extends React.Component {
                 type="number"
                 id={"queryform_circle_" + name}
                 defaultValue={this.roundValue(value, !this.isWGS84() || name === 'radius' ? 100 : 1000000)}
-                step={!this.isWGS84() ? 1 : this.getStepCircle(this.props.zoom, name)}
+                step={this.getStepCircle(this.props.zoom, name)}
                 onChange={(evt) => this.onUpdateCircle(evt.target.value, name)}/>
         );
     };
@@ -306,7 +305,7 @@ class GeometryDetails extends React.Component {
             </SwitchPanel>
         );
     }
-    isWGS84 = () => (this.props.geometry || {}).projection === 'EPSG:4326' || !this.props.useMapProjection;
+    isWGS84 = () => this.props.projection === 'EPSG:4326';
     roundValue = (val, prec = 1000000) => Math.round(val * prec) / prec;
     resetGeom = () => {
         if (this.props.type === "BBOX") {
