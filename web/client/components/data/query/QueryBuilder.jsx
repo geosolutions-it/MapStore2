@@ -64,6 +64,7 @@ class QueryBuilder extends React.Component {
         emptyFilterWarning: PropTypes.bool,
         header: PropTypes.node,
         zoom: PropTypes.number,
+        projection: PropTypes.string,
         toolsOptions: PropTypes.object,
         appliedFilter: PropTypes.object,
         storedFilter: PropTypes.object,
@@ -195,7 +196,8 @@ class QueryBuilder extends React.Component {
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}
-                        zoom={this.props.zoom}/>}
+                        zoom={this.props.zoom}
+                        projection={this.props.projection}/>}
                 {this.props.toolsOptions.hideCrossLayer ? null : <CrossLayerFilter
                         spatialOperations={this.props.spatialOperations}
                         crossLayerExpanded={this.props.crossLayerExpanded}

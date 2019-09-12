@@ -33,7 +33,8 @@ class SpatialFilter extends React.Component {
         showDetailsPanel: PropTypes.bool,
         withContainer: PropTypes.bool,
         actions: PropTypes.object,
-        zoom: PropTypes.number
+        zoom: PropTypes.number,
+        projection: PropTypes.string
     };
 
     static contextTypes = {
@@ -277,7 +278,8 @@ class SpatialFilter extends React.Component {
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
                 onChangeDrawingStatus={this.changeDrawingStatus}
-                zoom={this.props.zoom}/>)
+                zoom={this.props.zoom}
+                projection={this.props.projection}/>)
          :
             <span/>
         ;
