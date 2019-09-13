@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 
 import expect from 'expect';
 import Content from '../Content';
-import { ContentTypes } from '../../../../utils/GeoStoryUtils';
+import { ContentTypes, EMPTY_CONTENT } from '../../../../utils/GeoStoryUtils';
 
 describe('Content component', () => {
     beforeEach((done) => {
@@ -33,6 +33,20 @@ describe('Content component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('#SOME_TEXT'); // TODO: it should be content-text
         expect(el).toExist();
+    });
+    it('Content rendering placeholder for title', () => {
+        ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} sectionType="title"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const h1 = container.querySelector('h1');
+        expect(h1).toExist();
+        expect(h1.innerText).toBe("geostory.builder.defaults.htmlTitlePlaceholder");
+    });
+    it('Content rendering placeholder for paragraph', () => {
+        ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} sectionType="paragraph"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const h1 = container.querySelector('h1');
+        expect(h1).toExist();
+        expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
     });
 
 });

@@ -29,13 +29,14 @@ export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
  * @param {string} path path where to add the element. It can contain path like this `sections[{id: "abc"}].contents[{id: "def"}]` to resolve the predicate between brackets.
  * @param {string|number} [position] the ID or the index of the section where to place the section (if not present the section will be appended at the end)
  * @param {string|object} element the object to add or the template to apply. can be a section, a content or whatever. If it is a string, it will be transformed in the content template with the provided name.
+ * @param {function} localize used to localize new content
  */
-export const add = (path, position, element) => ({
+export const add = (path, position, element, localize) => ({
     type: ADD,
     id: element && element.id || uuid(), // automatically assign an ID
     path,
     position,
-    element: isString(element) && getDefaultSectionTemplate(element) || element
+    element: isString(element) && getDefaultSectionTemplate(element, localize) || element
 });
 /**
  * Adds a resource to the current story

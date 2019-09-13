@@ -22,7 +22,6 @@ import {
     MediaTypes,
     Modes,
     isMediaSection,
-    localizeElement,
     lists,
     getDefaultSectionTemplate
 } from "../GeoStoryUtils";
@@ -158,54 +157,16 @@ describe("GeoStory Utils", () => {
             Modes: values(Modes)
         });
     });
-    it("test localizeElement", () => {
-        expect(localizeElement(
-            {
-                title: "geostory.builder.title",
-                size: "large"
-            },
-            {geostory: {builder: {title: "localized title"}}})
-        ).toEqual({
-            title: "localized title"
-        });
-
-        expect(localizeElement(
-            {
-                title: "geostory.builder.title",
-                contents: [{
-                    align: "left",
-                    html: "geostory.builder.html"
-                },
-                {
-                    align: "right",
-                    html: "geostory.builder.html"
-                }]
-            },
-            {
-                geostory: {builder: {title: "localized title", html: "Html localized"}}
-            }
-        )).toEqual({
-            title: "localized title",
-            contents: [{
-                align: "left",
-                html: "Html localized"
-            }, {
-                align: "right",
-                html: "Html localized"
-            }]
-        });
-
-    });
     describe("getDefaultSectionTemplate", () => {
         it("default", () => {
             const wrongType = "beda";
-            const data = getDefaultSectionTemplate(wrongType);
+            const data = getDefaultSectionTemplate(wrongType, i => i);
             expect(data.id).toExist();
             expect(data.type).toBe(wrongType);
             expect(data.title).toBe("geostory.builder.defaults.titleUnknown");
         });
         it("SectionTypes.TITLE", () => {
-            const data = getDefaultSectionTemplate(SectionTypes.TITLE);
+            const data = getDefaultSectionTemplate(SectionTypes.TITLE, i => i);
             expect(data.id).toExist();
             expect(data.id.length).toBe(uuid().length);
             expect(data.type).toBe(SectionTypes.TITLE);
@@ -216,7 +177,6 @@ describe("GeoStory Utils", () => {
             expect(content.id).toExist();
             expect(content.id.length).toBe(uuid().length);
             expect(content.type).toBe(ContentTypes.TEXT);
-            expect(content.html).toBe("geostory.builder.defaults.htmlTitle");
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
@@ -228,7 +188,7 @@ describe("GeoStory Utils", () => {
 
         });
         it("SectionTypes.PARAGRAPH", () => {
-            const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH);
+            const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH, i => i);
             expect(data.id).toExist();
             expect(data.type).toBe(SectionTypes.PARAGRAPH);
             expect(data.title).toBe("geostory.builder.defaults.titleParagraph");
@@ -241,13 +201,12 @@ describe("GeoStory Utils", () => {
             expect(content.align).toBe("center");
             const textContent = content.contents[0];
             expect(textContent.type).toBe(ContentTypes.TEXT);
-            expect(textContent.html).toBe("geostory.builder.defaults.htmlSample");
             expect(textContent.id).toExist();
             expect(textContent.id.length).toBe(uuid().length);
             expect(textContent.resourceId).toNotExist();
         });
         it("SectionTypes.IMMERSIVE", () => {
-            const data = getDefaultSectionTemplate(SectionTypes.IMMERSIVE);
+            const data = getDefaultSectionTemplate(SectionTypes.IMMERSIVE, i => i);
             expect(data.id).toExist();
             expect(data.type).toBe(SectionTypes.IMMERSIVE);
             expect(data.title).toBe("geostory.builder.defaults.titleImmersive");
@@ -260,7 +219,6 @@ describe("GeoStory Utils", () => {
             expect(content.align).toBe("left");
             const textContent = content.contents[0];
             expect(textContent.type).toBe(ContentTypes.TEXT);
-            expect(textContent.html).toBe("geostory.builder.defaults.htmlSample");
             expect(textContent.id).toExist();
             expect(textContent.id.length).toBe(uuid().length);
             expect(textContent.resourceId).toNotExist();
@@ -272,7 +230,7 @@ describe("GeoStory Utils", () => {
             expect(background.align).toBe("center");
         });
         it("SectionTemplates.MEDIA", () => {
-            const data = getDefaultSectionTemplate(SectionTemplates.MEDIA);
+            const data = getDefaultSectionTemplate(SectionTemplates.MEDIA, i => i);
             expect(data.id).toExist();
             expect(data.type).toBe(SectionTypes.PARAGRAPH);
             expect(data.title).toBe("geostory.builder.defaults.titleMedia");
@@ -289,7 +247,7 @@ describe("GeoStory Utils", () => {
             expect(mediaContent.resourceId).toNotExist();
         });
         it("ContentTypes.COLUMN", () => {
-            const data = getDefaultSectionTemplate(ContentTypes.COLUMN);
+            const data = getDefaultSectionTemplate(ContentTypes.COLUMN, i => i);
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.COLUMN);
             expect(data.size).toBe("small");
@@ -298,7 +256,6 @@ describe("GeoStory Utils", () => {
             const content = data.contents[0];
             expect(content.id).toExist();
             expect(content.id.length).toBe(uuid().length);
-            expect(content.html).toBe("geostory.builder.defaults.htmlSample");
             expect(content.type).toBe(ContentTypes.TEXT);
             const background = data.background;
             expect(background.type).toBe(undefined);
@@ -309,10 +266,9 @@ describe("GeoStory Utils", () => {
         });
 
         it("ContentTypes.TEXT", () => {
-            const data = getDefaultSectionTemplate(ContentTypes.TEXT);
+            const data = getDefaultSectionTemplate(ContentTypes.TEXT, i => i);
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.TEXT);
-            expect(data.html).toBe("geostory.builder.defaults.htmlSample");
         });
     });
 });

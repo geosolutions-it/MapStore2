@@ -1892,8 +1892,8 @@
             },
             "builder": {
                 "defaults": {
-                    "htmlTitle": "<h1 style='text-align:center'>Titel einfügen</h1><p style='text-align:center'><em>Untertitel</em></p>",
-                    "htmlSample": "<p>Text hier einfügen...</p>",
+                    "htmlTitlePlaceholder": "Titel einfügen",
+                    "htmlPlaceholder": "Text hier einfügen...",
                     "titleTitle": "Titelbereich",
                     "titleParagraph": "Absatz Abschnitt",
                     "titleImmersive": "Immersive Section",

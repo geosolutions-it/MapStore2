@@ -26,6 +26,7 @@ export default backgroundPropWithHandler(({
     mode,
     contentId,
     path,
+    sectionType,
     cover,
     viewWidth,
     viewHeight,
@@ -76,6 +77,7 @@ export default backgroundPropWithHandler(({
             contents={contents}
             mode={mode}
             add={add}
+            sectionType={sectionType}
             update={update}
             remove={remove}
             sectionId={id}

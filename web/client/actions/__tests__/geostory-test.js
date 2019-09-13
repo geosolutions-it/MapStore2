@@ -42,7 +42,8 @@ describe('test geostory action creators', () => {
         const PATH = 'sections';
         const POSITION = 0;
         const SECTION = { type: 'dummy' };
-        const action = add(PATH, POSITION, SECTION);
+        const LOCALIZE = i => i;
+        const action = add(PATH, POSITION, SECTION, LOCALIZE);
         expect(action.type).toBe(ADD);
         expect(action.path).toBe(PATH);
         expect(action.position).toBe(POSITION);

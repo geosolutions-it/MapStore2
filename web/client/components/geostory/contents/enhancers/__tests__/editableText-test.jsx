@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 import expect from 'expect';
 import editableText from '../editableText';
+import { EMPTY_CONTENT } from '../../../../../utils/GeoStoryUtils';
 
 describe('editableText enhancer', () => {
     let check;
@@ -57,6 +58,29 @@ describe('editableText enhancer', () => {
                 props.toggleEditing(true, '<p>test</p>');
             } else if (spy.calls.length > 0) {
                 expect(spy.calls[0].arguments[0].indexOf('<p>test</p>')).toBeGreaterThanOrEqualTo(0);
+                done();
+            }
+
+            check = setInterval(() => {
+                const isFocus = document.activeElement && document.activeElement.contentEditable && document.activeElement.className.indexOf("DraftEditor") >= 0;
+                if (document.querySelector('.ms-text-editor-wrapper') && isFocus) {
+                    clearInterval(check);
+                    document.activeElement.blur();
+                }
+            }, 20);
+        }));
+        ReactDOM.render(<Sink save={actions.save} />, document.getElementById("container"));
+    });
+    it('when editor is called on blur with empty content', (done) => {
+        const actions = {
+            save: () => {}
+        };
+        const spy = expect.spyOn(actions, 'save');
+        const Sink = editableText(createSink(props => {
+            if (!check) {
+                props.toggleEditing(true, EMPTY_CONTENT);
+            } else if (spy.calls.length > 0) {
+                expect(spy.calls[0].arguments[0].indexOf(EMPTY_CONTENT)).toBeGreaterThanOrEqualTo(0);
                 done();
             }
 
