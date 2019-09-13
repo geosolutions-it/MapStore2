@@ -100,7 +100,7 @@ export const scrollToContent = (id, scrollOptions) => {
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)
  * @return {object} the template object of the content/section
  */
-export const getDefaultSectionTemplate = (type, localize) => {
+export const getDefaultSectionTemplate = (type, localize = i => i) => {
     switch (type) {
         case SectionTypes.TITLE:
             return {
