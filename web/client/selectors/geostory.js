@@ -42,13 +42,15 @@ export const modeSelector = state => get(state, "geostory.mode");
 export const controlSelectorCreator = control => state => get(state, `geostory.controls.${control}`);
 
 /**
- * Gets the state of the save dialog
+ * Gets the state of the save dialog ("save" or "saveAs" values typically identify what window is open)
  * @param {object} state the application state
  */
-export const isSaveDialogOpen = state => controlSelectorCreator(Controls.SHOW_SAVE)(state);
+export const saveDialogSelector = state => controlSelectorCreator(Controls.SHOW_SAVE)(state);
 
 /**
  * Gets the resource for geostory (contains authorization and other useful information)
+ * **NOTE** don't confuse this with the story resources. This is the single resource
+ * of the whole geostory, containing permissions, id, and so on (e.g. the GeoStore resource)
  * @param {object} state application state
  */
 export const resourceSelector = state => get(state, 'geostory.resource');

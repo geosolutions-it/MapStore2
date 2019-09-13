@@ -8,6 +8,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose, withProps } from 'recompose';
+// TODO: externalize
+import { setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+setObservableConfig(rxjsConfig);
+
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 import Message from '../components/I18N/Message';
@@ -19,7 +24,7 @@ import { Controls } from '../utils/GeoStoryUtils';
 import { userSelector, isLoggedIn } from '../selectors/security';
 
 import {
-    isSaveDialogOpen,
+    saveDialogSelector,
     currentStorySelector,
     resourceSelector,
     loadingSelector,
@@ -27,6 +32,7 @@ import {
 } from '../selectors/geostory';
 import { saveStory, setControl } from '../actions/geostory';
 import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
+import geostory from '../reducers/geostory';
 
 /**
  * Save dialog component enhanced for GeoStory
@@ -57,11 +63,12 @@ const SaveBaseDialog = compose(
 export const GeoStorySave = createPlugin('GeoStorySave', {
     component: compose(
         connect(createSelector(
-            isSaveDialogOpen,
+            saveDialogSelector,
             resourceSelector,
             (showSave, resource) => ({ show: showSave === "save", resource })
         ))
     )(SaveBaseDialog),
+    reducers: { geostory },
     containers: {
         BurgerMenu: {
             name: 'geoStorySave',
@@ -89,10 +96,11 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
 export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
     component: compose(
             connect(createSelector(
-                isSaveDialogOpen,
+                saveDialogSelector,
                 (showSave) => ({ show: showSave === "saveAs" })
             ))
         )(SaveBaseDialog),
+    reducers: { geostory },
     containers: {
         BurgerMenu: {
             name: 'geoStorySaveAs',

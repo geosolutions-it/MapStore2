@@ -32,7 +32,8 @@ import {
     setResource,
     update,
     remove,
-    SAVE
+    SAVE,
+    geostoryLoaded
 } from '../actions/geostory';
 
 import {
@@ -123,7 +124,10 @@ export const localizeTemplateEpic = (action$, store) =>
                 )
             );
     });
-
+/**
+ * Epic that handles the save story workflow. It uses persistance
+ * @param {Observable} action$ stream of redux action
+ */
 export const saveGeoStoryResource = action$ => action$
         .ofType(SAVE)
         // delay is for speed up tests, not part of the SAVE action
@@ -138,8 +142,8 @@ export const saveGeoStoryResource = action$ => action$
                 ).merge(
                     Observable.of(show({
                         id: "STORY_SAVE_SUCCESS",
-                        title: "geostory.saveDialog.saveSuccessTitle",
-                        message: "geostory.saveDialog.saveSuccessMessage"
+                        title: "saveDialog.saveSuccessTitle",
+                        message: "saveDialog.saveSuccessMessage"
                     })).delay(!resource.id ? delay : 0) // delay to allow loading
                 )
                 )
@@ -218,8 +222,15 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return getResource(id);
             })
+            .filter(({data}) => {
+                if (!data) {
+                    throw Error("Wrong data format");
+                }
+                return true;
+            })
             .switchMap(({ data, ...resource }) =>
                 Observable.of(
+                    geostoryLoaded(id),
                     setCurrentStory(isString(data) ? JSON.parse(data) : data),
                     setResource(resource)
                 )
@@ -252,11 +263,15 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
             ))
         );
+/**
+ * Triggers reload of last loaded story when user login-logout
+ * @param {Observable} action$ the stream of redux actions
+ */
 export const reloadGeoStoryOnLoginLogout = (action$) =>
     action$.ofType(LOAD_GEOSTORY).switchMap(
         ({ id }) => action$
             .ofType(LOGIN_SUCCESS, LOGOUT)
-            .switchMap(() => Observable.of(loadGeostory(id)).delay(1000))
+            .switchMap(() => Observable.of(loadGeostory(id)).delay(500))
             .takeUntil(action$.ofType(LOCATION_CHANGE))
     );
 

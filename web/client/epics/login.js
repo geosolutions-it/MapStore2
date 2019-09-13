@@ -7,6 +7,8 @@
  */
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
 const {DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
+const { LOAD_GEOSTORY_ERROR } = require('../actions/geostory');
+
 const {loadMapConfig, configureError, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
 const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
@@ -64,8 +66,8 @@ const reloadMapConfig = (action$, store) =>
             return Rx.Observable.of(configureError(e));
         });
 
-const promtLoginOnMapError = (actions$, store) =>
-    actions$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR)
+const promptLoginOnMapError = (actions$, store) =>
+    actions$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR)
     .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
     .switchMap(() => {
         return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
@@ -92,6 +94,6 @@ const initCatalogOnLoginOutEpic = (action$) =>
 module.exports = {
     refreshTokenEpic,
     reloadMapConfig,
-    promtLoginOnMapError,
+    promptLoginOnMapError,
     initCatalogOnLoginOutEpic
 };

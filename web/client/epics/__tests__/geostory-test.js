@@ -15,6 +15,8 @@ import { CALL_HISTORY_METHOD } from 'react-router-redux';
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';
 
+import { logout, loginSuccess } from '../../actions/security';
+
 import {
     scrollToContentEpic,
     loadGeostoryEpic,
@@ -22,7 +24,8 @@ import {
     openMediaEditorForNewMedia,
     editMediaForBackgroundEpic,
     cleanUpEmptyStoryContainers,
-    saveGeoStoryResource
+    saveGeoStoryResource,
+    reloadGeoStoryOnLoginLogout
 } from '../geostory';
 import {
     LOADING_GEOSTORY,
@@ -34,10 +37,10 @@ import {
     remove,
     REMOVE,
     saveStory,
-    LOAD_GEOSTORY,
     SET_CONTROL,
     SAVED,
-    SET_RESOURCE
+    SET_RESOURCE,
+    GEOSTORY_LOADED
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -223,6 +226,10 @@ describe('Geostory Epics', () => {
                         expect(a.resource).toExist(); // TODO: test values
                         break;
                     }
+                    case GEOSTORY_LOADED: {
+                        expect(a.id).toExist();
+                        break;
+                    }
                     default: expect(true).toBe(false);
                         break;
                 }
@@ -247,7 +254,7 @@ describe('Geostory Epics', () => {
                         expect(a.story).toEqual({});
                         break;
                     case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryDoesNotExist");
+                        expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryDoesNotExist");
                         break;
                     case SHOW_NOTIFICATION:
                         expect(a.message).toEqual("geostory.errors.loading.geostoryDoesNotExist");
@@ -359,7 +366,7 @@ describe('Geostory Epics', () => {
      * with firefox it works but i have some problems of stability
     */
     it.skip('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
-        const NUM_ACTIONS = 5;
+        const NUM_ACTIONS = 6;
         mockAxios.onGet().reply(200, `{"description":"Sample story with 1 paragraph and 1 immersive section, two columns","type":"cascade","sections":[{"type":"paragraph","id":"SomeID","title":"Abstract","contents":[{"id":"SomeID","type":'text',"background":{},"html":"<p>this is some html content</p>"}]}]}`);
         testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("StoryWithError"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -388,7 +395,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('loadGeostoryEpic loading a bad story format', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         mockAxios.onGet().reply(200, false);
         testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -402,6 +409,8 @@ describe('Geostory Epics', () => {
                         expect(a.story).toEqual({});
                         break;
                     case LOAD_GEOSTORY_ERROR:
+                        break;
+                    case SHOW_NOTIFICATION:
                         break;
                     default: expect(true).toBe(false);
                         break;
@@ -636,6 +645,19 @@ describe('Geostory Epics', () => {
                     }
                 });
         });
+    });
+    describe('reloadGeoStoryOnLoginLogout', () => {
+        it('on login', done => {
+            testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), loginSuccess()], () => {
+                done();
+            });
+        });
+        it('on logout', done => {
+            testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), logout()], () => {
+                done();
+            });
+        });
+
     });
     describe('cleanUpEmptyStoryContainers', () => {
         it('do not trigger when container has content', done => {

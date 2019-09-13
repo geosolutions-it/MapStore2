@@ -14,6 +14,7 @@ export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
+export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
@@ -60,6 +61,12 @@ export const editResource = ( id, mediaType, data ) => ({type: EDIT_RESOURCE, id
  * @param {string} id the story name of .json file
  */
 export const loadGeostory = (id) => ({ type: LOAD_GEOSTORY, id});
+
+/**
+ * GeoStory Loaded event
+ * @param {string} id the story name of .json file
+ */
+export const geostoryLoaded = (id) => ({ type: GEOSTORY_LOADED, id });
 /**
  * Loading status of geostory
  * @param {boolean} value the status of the loading process
@@ -97,7 +104,9 @@ export const saveGeoStoryError = error => ({type: SAVE_ERROR, error});
  */
 export const setControl = (control, value) => ({ type: SET_CONTROL, control, value });
 /**
- * Sets the resource for GeoStorySave plugin content
+ * Sets the resource for GeoStorySave plugin content.
+ * **NOTE**: Don't confuse this from the resources of the story content. This contains permission and
+ * basic properties **of the remote resource of the whole story (e.g. geostore resource)**
  * specific of GeoStory.
  * @param {object} resource the original resource saved. contains all edit options (canSave, canEdit...)
  */

@@ -595,6 +595,7 @@
           "Home",
           "GeoStory",
           "GeoStorySave",
+          "GeoStorySaveAs",
           "MediaEditor",
           {
             "name": "GeoStoryEditor",

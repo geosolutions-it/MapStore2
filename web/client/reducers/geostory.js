@@ -14,7 +14,6 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
-    LOAD_GEOSTORY,
     SET_CURRENT_STORY,
     TOGGLE_CARD_PREVIEW,
     UPDATE,
@@ -101,6 +100,7 @@ const getIndexToInsert = (array, position) => {
  * {
  *     "mode": "edit", // 'edit' or 'view',
  *     "currentStory": {
+ *      "resources": [] // resources (media) of the story
  *     // sections
  *     "sections": [
  *       {
@@ -139,7 +139,7 @@ const getIndexToInsert = (array, position) => {
  *       }
  *     ]
  *   },
- *   "resource": {} // original resource of the story. Contains access info
+ *   "resource": {} // original resource of the story. Contains access info (id, canSave, canDelete...)
  *   "loading": true,
  *   "loadingFlags": {} // contains specific loading entries (saving, loading...)
  *   "errors": {} // contains errors if happened
@@ -209,6 +209,10 @@ export default (state = INITIAL_STATE, action) => {
             const {control, value} = action;
             return set(`controls.${control}`, value, state);
         }
+        /**
+         * **NOTE** this is the resource that contains the whole story (e.g. GeoStore).
+         * It contains permissions and so on. Don't confuse with story resources (media).
+         */
         case SET_RESOURCE: {
             const { resource } = action;
             return set(`resource`, resource, state);

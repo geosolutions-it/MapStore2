@@ -12,11 +12,16 @@ import {
     addResource,
     editResource,
     setCurrentStory,
+    loadingGeostory,
     setEditing,
     update,
     remove,
     toggleCardPreview,
-    updateCurrentPage
+    updateCurrentPage,
+    setControl,
+    setResource,
+    saveGeoStoryError,
+    storySaved
 } from '../../actions/geostory';
 import {
     cardPreviewEnabledSelector,
@@ -24,13 +29,17 @@ import {
     modeSelector,
     sectionsSelector,
     sectionAtIndexSelectorCreator,
+    resourceSelector,
     resourcesSelector,
-    currentPageSelector
+    currentPageSelector,
+    loadingSelector,
+    controlSelectorCreator,
+    errorsSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 
 import geostory from '../../reducers/geostory';
-import { Modes, lists, getDefaultSectionTemplate } from '../../utils/GeoStoryUtils';
+import { Modes, lists, getDefaultSectionTemplate, Controls } from '../../utils/GeoStoryUtils';
 
 describe('geostory reducer', () => {
     it('setEditing sets mode', () => {
@@ -169,6 +178,45 @@ describe('geostory reducer', () => {
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toExist();
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].contents.length).toBe(1);
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].contents[0].type).toBe("media"); // 2nd element of the array shifted in first position
+        });
+    });
+    it('save (storySaved and saveGeoStoryError)', () => {
+        // check errors handling for save and save error events
+        const SAMPLE_ERROR = { my: "error" };
+        const STATE_1 = geostory(undefined, saveGeoStoryError(SAMPLE_ERROR));
+        expect(errorsSelector({ geostory: STATE_1 }).save[0]).toBe(SAMPLE_ERROR);
+        const STATE_2 = geostory(STATE_1, storySaved(1234));
+        expect(errorsSelector({ geostory: STATE_2 }).save).toBeFalsy();
+    });
+    it('loadingGeostory', () => {
+        const action = loadingGeostory(true, "saving");
+        const state = geostory(undefined, action);
+        expect(state).toExist();
+        expect(loadingSelector({geostory: state})).toBe(true);
+        expect(state.loading).toBe(true);
+        expect(state.loadFlags.saving).toBe(true);
+    });
+    // note: this is the GeoSore resource, with permissions, id and so on.
+    it('setResource', () => {
+        const SAMPLE_RESOURCE = {
+            canEdit: true,
+            canDelete: true
+        };
+        expect(
+            resourceSelector({
+                geostory: geostory(undefined, setResource(SAMPLE_RESOURCE))
+            })
+        ).toBe(SAMPLE_RESOURCE);
+    });
+    describe('setControl', () => {
+        Object.keys(Controls).forEach(k => {
+            const CONTROL = Controls[k];
+            it(CONTROL, () => {
+                const controlState = controlSelectorCreator(CONTROL)({
+                    geostory: geostory(undefined, setControl(CONTROL, true))
+                });
+                expect(controlState).toBeTruthy();
+            });
         });
     });
 });
