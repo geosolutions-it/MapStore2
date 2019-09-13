@@ -86,7 +86,7 @@ class LoginModal extends React.Component {
     };
 
     render() {
-        return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
+        return (<Modal {...this.props.options} show={this.props.show} onHide={this.handleOnHide}>
             <Modal.Header key="passwordChange" closeButton>
               <Modal.Title><Message msgId="user.login"/></Modal.Title>
             </Modal.Header>
@@ -97,6 +97,13 @@ class LoginModal extends React.Component {
                 {this.getFooter()}
             </Modal.Footer>
         </Modal>);
+    }
+
+    handleOnHide = (event) => {
+        if (event) {
+            // onHide coming from header closeButton
+            this.props.onClose();
+        }
     }
 
     loginSubmit = () => {
