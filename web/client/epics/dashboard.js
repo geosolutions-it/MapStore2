@@ -187,8 +187,8 @@ module.exports = {
                     ).merge(
                         Rx.Observable.of(show({
                                 id: "DASHBOARD_SAVE_SUCCESS",
-                                title: "dashboard.saveDialog.saveSuccessTitle",
-                                message: "dashboard.saveDialog.saveSuccessMessage"
+                                title: "saveDialog.saveSuccessTitle",
+                                message: "saveDialog.saveSuccessMessage"
                         })).delay(!resource.id ? 1000 : 0) // delay to allow loading
                     )
                 )
