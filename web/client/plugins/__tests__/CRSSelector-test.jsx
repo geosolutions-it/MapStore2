@@ -29,7 +29,7 @@ describe('CRSSelector Plugin', () => {
 
         ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-prj-selector').length).toBe(1);
-    })
+    });
 
     it('CRSSelector is not rendered when Measure Panel is enabled', () => {
         const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
@@ -48,7 +48,7 @@ describe('CRSSelector Plugin', () => {
 
         ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-prj-selector').length).toBe(0);
-    })
+    });
 
     it('CRSSelector is not rendered when Query Panel is enabled', () => {
         const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
@@ -67,5 +67,5 @@ describe('CRSSelector Plugin', () => {
 
         ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-prj-selector').length).toBe(0);
-    })
-})
+    });
+});
