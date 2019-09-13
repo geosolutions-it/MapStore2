@@ -238,7 +238,7 @@ module.exports = (viewer) => ({
                 const feature = state.annotations.editing;
                 const drawing = state.annotations.drawing;
                 const type = state.annotations.featureType;
-                const multiGeom = state.annotations.config.multiGeometry;
+                const multiGeom = get(state, 'annotations.config.multiGeometry');
                 const drawOptions = {
                     featureProjection: "EPSG:4326",
                     stopAfterDrawing: !multiGeom,
