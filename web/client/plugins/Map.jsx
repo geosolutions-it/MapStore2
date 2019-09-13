@@ -19,7 +19,7 @@ require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {errorLoadingFont} = require('../actions/map');
+const {errorLoadingFont, setMapResolutions} = require('../actions/map');
 
 const {isString} = require('lodash');
 let plugins;
@@ -196,6 +196,7 @@ class MapPlugin extends React.Component {
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
         onFontError: PropTypes.func,
+        onResolutionsChange: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
         securityToken: PropTypes.string,
@@ -236,7 +237,8 @@ class MapPlugin extends React.Component {
         additionalLayers: [],
         shouldLoadFont: false,
         elevationEnabled: false,
-        onFontError: () => {}
+        onFontError: () => {},
+        onResolutionsChange: () => {}
     };
     state = {
         canRender: true
@@ -352,7 +354,8 @@ class MapPlugin extends React.Component {
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
                     mapOptions={assign({}, mapOptions, this.getMapOptions())}
-                    zoomControl={this.props.zoomControl}>
+                    zoomControl={this.props.zoomControl}
+                    onResolutionsChange={this.props.onResolutionsChange}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
                 </plugins.Map>
@@ -420,7 +423,8 @@ const selector = createSelector(
 );
 module.exports = {
     MapPlugin: connect(selector, {
-        onFontError: errorLoadingFont
+        onFontError: errorLoadingFont,
+        onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
         draw: require('../reducers/draw'),
