@@ -8,7 +8,7 @@
 
 import { Observable } from 'rxjs';
 import {isNaN, isString, isNil, lastIndexOf} from 'lodash';
-import { push } from 'react-router-redux';
+import { push, LOCATION_CHANGE } from 'react-router-redux';
 
 import axios from '../libs/ajax';
 
@@ -43,6 +43,9 @@ import {
     selectItem
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
+
+import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
+
 
 import { isLoggedIn } from '../selectors/security';
 import { currentMessagesSelector } from '../selectors/locale';
@@ -249,6 +252,13 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
             ))
         );
+export const reloadGeoStoryOnLoginLogout = (action$) =>
+    action$.ofType(LOAD_GEOSTORY).switchMap(
+        ({ id }) => action$
+            .ofType(LOGIN_SUCCESS, LOGOUT)
+            .switchMap(() => Observable.of(loadGeostory(id)).delay(1000))
+            .takeUntil(action$.ofType(LOCATION_CHANGE))
+    );
 
 /**
  * Removes containers that are empty after a REMOVE action from GeoStory.

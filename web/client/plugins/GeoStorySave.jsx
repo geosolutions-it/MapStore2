@@ -16,7 +16,7 @@ import {Glyphicon} from 'react-bootstrap';
 
 import { Controls } from '../utils/GeoStoryUtils';
 
-import { userSelector } from '../selectors/security';
+import { userSelector, isLoggedIn } from '../selectors/security';
 
 import {
     isSaveDialogOpen,
@@ -32,15 +32,13 @@ import handleSaveModal from '../components/resources/modals/enhancers/handleSave
  * Save dialog component enhanced for GeoStory
  *
  */
-const SaveDialog = compose(
+const SaveBaseDialog = compose(
     connect(createSelector(
-        isSaveDialogOpen,
-        resourceSelector,
         currentStorySelector,
         userSelector,
         loadingSelector,
         saveErrorSelector,
-        (show, resource, data, user, loading, errors) => ({ show, resource, data, user, loading, errors })
+        (data, user, loading, errors) => ({ data, user, loading, errors })
     ), {
             onClose: () => setControl(Controls.SHOW_SAVE, false),
             onSave: saveStory
@@ -52,21 +50,65 @@ const SaveDialog = compose(
 )(require('../components/resources/modals/Save'));
 
 /**
- * Plugin for GeoStory top panel for navigation
- * @name GeoStoryNavigation
+ * Plugin for GeoStory Save
+ * @name GeoStorySave
  * @memberof plugins
  */
-export default createPlugin('GeoStorySave', {
-    component: SaveDialog,
+export const GeoStorySave = createPlugin('GeoStorySave', {
+    component: compose(
+        connect(createSelector(
+            isSaveDialogOpen,
+            resourceSelector,
+            (showSave, resource) => ({ show: showSave === "save", resource })
+        ))
+    )(SaveBaseDialog),
     containers: {
         BurgerMenu: {
             name: 'geoStorySave',
+            selector: createSelector(
+                isLoggedIn,
+                resourceSelector,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && (!id || id && canEdit) ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            ),
             position: 1,
             text: <Message msgId="save" />,
             icon: <Glyphicon glyph="floppy-open" />,
-            action: setControl.bind(null, Controls.SHOW_SAVE, true),
-            priority: 2,
+            action: setControl.bind(null, Controls.SHOW_SAVE, "save"),
+            priority: 1,
             doNotHide: true
         }
-    },
+    }
+});
+/**
+ * Plugin for GeoStory SaveAs functionality
+ * @name GeoStorySaveAs
+ * @memberof plugins
+ */
+export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
+    component: compose(
+            connect(createSelector(
+                isSaveDialogOpen,
+                (showSave) => ({ show: showSave === "saveAs" })
+            ))
+        )(SaveBaseDialog),
+    containers: {
+        BurgerMenu: {
+            name: 'geoStorySaveAs',
+            selector: createSelector(
+                isLoggedIn,
+                resourceSelector,
+                (loggedIn, {id} = {}) => ({
+                    style: loggedIn && id ? {} : { display: "none" }// save as is present only if the resource already exists and you can save
+                })
+            ),
+            position: 2,
+            text: <Message msgId="saveAs" />,
+            icon: <Glyphicon glyph="floppy-open" />,
+            action: setControl.bind(null, Controls.SHOW_SAVE, "saveAs"),
+            priority: 1,
+            doNotHide: true
+        }
+    }
 });

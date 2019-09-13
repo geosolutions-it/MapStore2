@@ -1586,18 +1586,6 @@
         },
         "dashboard": {
             "loadingSpinner": "Loading Dashboard",
-            "saveDialog": {
-                "title": "Edit dashboard properties",
-                "name": "Name",
-                "description": "Description",
-                "namePlaceholder": "Type a name...",
-                "descriptionPlaceholder": "Type a description...",
-                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
-                "close": "Close",
-                "cancel": "Cancel",
-                "saveSuccessTitle": "Success",
-                "saveSuccessMessage": "Dashboard saved successfully"
-            },
             "errors":{
                 "loading": {
                     "title": "Error loading dashboard",
@@ -1861,6 +1849,7 @@
             "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "geostory": {
+            "loadingSpinner": "Loading Story",
             "addTitleSection": "Add Title Section",
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
@@ -1929,10 +1918,23 @@
                     "title": "Error",
                     "unknownError": "Unknown error",
                     "pleaseLogin": "Please login",
-                    "geostoryNotAccessible": "This story is not accessible",
+                    "notAccessible": "This story is not accessible",
+                    "geostoryNotAccessible": "You don't have permission to access this story. Please contact the resource owner",
                     "geostoryDoesNotExist": "This story does not exist"
                 }
             }
+        },
+        "saveDialog": {
+            "title": "Edit properties",
+            "name": "Name",
+            "description": "Description",
+            "namePlaceholder": "Type a name...",
+            "descriptionPlaceholder": "Type a description...",
+            "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+            "close": "Close",
+            "cancel": "Cancel",
+            "saveSuccessTitle": "Success",
+            "saveSuccessMessage": "Saved successfully"
         },
         "mediaEditor": {
             "modalTitle": "Media",
