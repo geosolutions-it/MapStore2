@@ -44,6 +44,7 @@ describe('GeometryDetails', () => {
         const geometryDetails = ReactDOM.render(
             <GeometryDetails
                 geometry={geometry}
+                projection="EPSG:900913"
                 type={type}/>,
             document.getElementById("container")
         );
@@ -68,7 +69,8 @@ describe('GeometryDetails', () => {
 
         expect(pb.childNodes.length).toBe(1);
     });
-    it('Test GeometryDetails endDrawing with 900913', (done) => {
+
+    it('Test GeometryDetails endDrawing with 900913 and 900913', (done) => {
 
         let geometry = {
             center: {
@@ -85,25 +87,27 @@ describe('GeometryDetails', () => {
         const actions = {
             onChangeDrawingStatus: (drawStatus, notDef, owner, geom) => {
                 expect(drawStatus).toBe('endDrawing');
-                expect(geom).toEqual([{
-                    type: 'Polygon',
-                    center: { x: -1761074.34, y: 5852757.63 },
-                    coordinates: [ -1761074.34, 5852757.63],
-                    radius: 836584,
-                    projection: 'EPSG:900913'
-                }]);
+                expect(geom[0]).toExist();
+                expect(geom[0].type).toBe('Polygon');
+                expect(geom[0].center).toExist();
+                expect(geom[0].center.x).toExist();
+                expect(geom[0].center.x.toPrecision(9)).toBe('-1761074.34');
+                expect(geom[0].center.y).toExist();
+                expect(geom[0].center.y.toPrecision(9)).toBe('5852757.63');
+                expect(geom[0].radius).toBe(836584);
+                expect(geom[0].projection).toBe('EPSG:900913');
                 done();
             }
         };
 
         let type = "Circle";
 
-        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} projection="EPSG:900913" type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
         expect(cmp).toExist();
         ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
     });
 
-    it('Test GeometryDetails endDrawing with 4326', (done) => {
+    it('Test GeometryDetails endDrawing with 4326 and 4326', (done) => {
 
         let geometry = {
             center: {
@@ -133,7 +137,7 @@ describe('GeometryDetails', () => {
 
         const type = "Circle";
 
-        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} projection="EPSG:4326" type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
         expect(cmp).toExist();
         ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
     });
@@ -155,6 +159,7 @@ describe('GeometryDetails', () => {
         const geometryDetails = ReactDOM.render(
             <GeometryDetails
                 geometry={geometry}
+                projection="EPSG:900913"
                 type={type}/>,
             document.getElementById("container")
         );
