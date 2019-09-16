@@ -63,6 +63,8 @@
             "delete": "Apagar",
             "deleteLayer":"Apagar Tema",
             "deleteLayerMessage": "Deseja realmente apagar este Tema?",
+            "deleteLayerGroup":"Excluir grupo",
+            "deleteLayerGroupMessage": "Deseja realmente excluir este grupo e todas as suas camadas?",
             "confirmDelete": "Tem a certeza?",
             "featureTypeError": "Não foi possível ler os atributos do tema",
             "featureTypeErrorInvalidJSON": "Não é possível ler os atributos do tema. Resposta não é válida.",

@@ -258,7 +258,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
@@ -315,10 +315,9 @@ class Toolbar extends React.Component {
                 onHide={this.closeDeleteDialog}
                 onClose={this.closeDeleteDialog}
                 onConfirm={this.removeNodes}
-                titleText={this.props.text.confirmDeleteText}
-                confirmText={this.props.text.confirmDeleteText}
+                titleText={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupText : this.props.text.confirmDeleteText}
                 cancelText={this.props.text.confirmDeleteCancelText}
-                body={this.props.text.confirmDeleteMessage} />
+                body={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupMessage : this.props.text.confirmDeleteMessage} />
             {layerMetadataModal}
         </ButtonGroup>) : null;
     }
@@ -382,6 +381,9 @@ class Toolbar extends React.Component {
     removeNodes = () => {
         this.props.selectedLayers.forEach((layer) => {
             this.props.onToolsActions.onRemove(layer.id, 'layers');
+        });
+        this.props.selectedGroups.forEach((group) => {
+            this.props.onToolsActions.onRemove(group.id, 'groups');
         });
         this.props.onToolsActions.onClear();
         this.closeDeleteDialog();
