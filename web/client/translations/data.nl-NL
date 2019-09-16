@@ -61,6 +61,8 @@
             "delete": "Wissen",
             "deleteLayer":"Verwijder de laag",
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
+            "deleteLayerGroup":"Groep verwijderen",
+            "deleteLayerGroupMessage": "Wilt u deze groep en alle lagen ervan echt verwijderen?",
             "confirmDelete": "Bent u zeker?",
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
             "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
