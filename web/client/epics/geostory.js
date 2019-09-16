@@ -125,7 +125,7 @@ export const localizeTemplateEpic = (action$, store) =>
             );
     });
 /**
- * Epic that handles the save story workflow. It uses persistance
+ * Epic that handles the save story workflow. It uses persistence
  * @param {Observable} action$ stream of redux action
  */
 export const saveGeoStoryResource = action$ => action$
