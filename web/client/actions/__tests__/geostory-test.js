@@ -7,21 +7,34 @@
  */
 const expect = require('expect');
 
-import {
-    ADD, add,
-    CHANGE_MODE, setEditing,
-    SET_CURRENT_STORY, setCurrentStory,
-    UPDATE, update,
-    UPDATE_CURRENT_PAGE, updateCurrentPage,
-    LOAD_GEOSTORY, loadGeostory,
-    LOADING_GEOSTORY, loadingGeostory,
-    LOAD_GEOSTORY_ERROR, loadGeostoryError,
-    editResource, EDIT_RESOURCE,
-    remove, REMOVE,
-    toggleCardPreview, TOGGLE_CARD_PREVIEW
-} from '../geostory';
-const { Modes } = require('../../utils/GeoStoryUtils');
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
+
+import {
+    ADD,
+    CHANGE_MODE,
+    EDIT_RESOURCE,
+    LOADING_GEOSTORY,
+    LOAD_GEOSTORY,
+    LOAD_GEOSTORY_ERROR,
+    REMOVE,
+    SET_CURRENT_STORY,
+    TOGGLE_CARD_PREVIEW,
+    UPDATE,
+    UPDATE_CURRENT_PAGE,
+    add,
+    editResource,
+    loadGeostory,
+    loadGeostoryError,
+    loadingGeostory,
+    remove,
+    setCurrentStory,
+    setEditing,
+    toggleCardPreview,
+    update,
+    updateCurrentPage
+} from '../geostory';
+
+const { Modes } = require('../../utils/GeoStoryUtils');
 
 describe('test geostory action creators', () => {
     it('setEditing', () => {
@@ -42,8 +55,7 @@ describe('test geostory action creators', () => {
         const PATH = 'sections';
         const POSITION = 0;
         const SECTION = { type: 'dummy' };
-        const LOCALIZE = i => i;
-        const action = add(PATH, POSITION, SECTION, LOCALIZE);
+        const action = add(PATH, POSITION, SECTION);
         expect(action.type).toBe(ADD);
         expect(action.path).toBe(PATH);
         expect(action.position).toBe(POSITION);

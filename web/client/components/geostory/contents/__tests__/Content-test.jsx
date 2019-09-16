@@ -1,3 +1,4 @@
+import expect from 'expect';
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +9,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import expect from 'expect';
-import Content from '../Content';
 import { ContentTypes, EMPTY_CONTENT, Modes } from '../../../../utils/GeoStoryUtils';
+import Content from '../Content';
 
 describe('Content component', () => {
     beforeEach((done) => {
@@ -36,6 +36,20 @@ describe('Content component', () => {
     });
     it('Content rendering placeholder for title', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="title"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const h1 = container.querySelector('h1');
+        expect(h1).toExist();
+        expect(h1.innerText).toBe("geostory.builder.defaults.htmlTitlePlaceholder");
+    });
+    it('Content rendering placeholder for title html = undefined', () => {
+        ReactDOM.render(<Content type={ContentTypes.TEXT} html={undefined} mode={Modes.EDIT} sectionType="title"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const h1 = container.querySelector('h1');
+        expect(h1).toExist();
+        expect(h1.innerText).toBe("geostory.builder.defaults.htmlTitlePlaceholder");
+    });
+    it('Content rendering placeholder for title, html = ""', () => {
+        ReactDOM.render(<Content type={ContentTypes.TEXT} html={""} mode={Modes.EDIT} sectionType="title"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const h1 = container.querySelector('h1');
         expect(h1).toExist();

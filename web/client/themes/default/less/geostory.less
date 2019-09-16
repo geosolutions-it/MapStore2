@@ -17,10 +17,13 @@
 @ms-story-size-large: 85%;
 @ms-story-size-medium: 60%;
 @ms-story-size-small: 40%;
-/* mixin for align*/
 .ms-story-align-center { margin-left: auto; margin-right: auto; }
+/* mixin for align*/
 .ms-story-align-left { margin-left: 0; margin-right: auto; }
 .ms-story-align-right { margin-left: auto; margin-right: 0; }
+/* mixin for text color*/
+.ms-story-color-contrast { color: contrast(@ms-story-bg); }
+.ms-story-color-no-contrast { color: @ms-story-bg; }
 
 /* TEXT EDITOR TODO: externalize */
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
@@ -286,21 +289,25 @@
 
                 /* themes of text contents */
                 &.ms-bright .ms-content-body > *:not(.ms-content-toolbar) {
-                    color: contrast(@ms-story-bg);
+                    .ms-text-placeholder { .ms-story-color-contrast(); }
+                    .ms-story-color-contrast();
                     background-color: fade(@ms-story-bg, 75%);
                     .shadow-far();
                 }
                 &.ms-bright-text .ms-content-body > *:not(.ms-content-toolbar) {
-                    color: @ms-story-bg;
+                    .ms-text-placeholder {.ms-story-color-no-contrast(); }
+                    .ms-story-color-no-contrast();
                     background-color: transparent;
                 }
                 &.ms-dark .ms-content-body > *:not(.ms-content-toolbar) {
-                    color: @ms-story-bg;
+                    .ms-text-placeholder {.ms-story-color-no-contrast();}
+                    .ms-story-color-no-contrast();
                     background-color: fade(contrast(@ms-story-bg), 75%);
                     .shadow-far();
                 }
                 &.ms-dark-text .ms-content-body > *:not(.ms-content-toolbar) {
-                    color: contrast(@ms-story-bg);
+                    .ms-text-placeholder { .ms-story-color-contrast(); }
+                    .ms-story-color-contrast();
                     background-color: transparent;
                 }
             }
@@ -359,16 +366,19 @@
                 }
                 /* themes of column container */
                 &.ms-bright > .ms-content-body {
-                    color: contrast(@ms-story-bg);
+                    .ms-text-placeholder { .ms-story-color-contrast(); }
+                    .ms-story-color-contrast();
                     background-color: fade(@ms-story-bg, 75%);
                     .shadow-far();
                 }
                 &.ms-bright-text > .ms-content-body {
-                    color: @ms-story-bg;
+                    .ms-text-placeholder { .ms-story-color-no-contrast(); }
+                    .ms-story-color-no-contrast();
                     background-color: transparent;
                 }
                 &.ms-dark > .ms-content-body {
-                    color: @ms-story-bg;
+                    .ms-text-placeholder { .ms-story-color-no-contrast(); }
+                    .ms-story-color-no-contrast();
                     background-color: fade(contrast(@ms-story-bg), 75%);
                     .shadow-far();
                     .add-bar button {
@@ -376,7 +386,8 @@
                     }
                 }
                 &.ms-dark-text > .ms-content-body {
-                    color: contrast(@ms-story-bg);
+                    .ms-text-placeholder { .ms-story-color-contrast(); }
+                    .ms-story-color-contrast();
                     background-color: transparent;
                 }
 
@@ -424,6 +435,10 @@
                     flex-direction: column;
                 }
 
+                .ms-text-wrapper {
+                    min-width: 200px;
+                    min-height: 40px;
+                }
                 /*
                 with position sticky the toolbar is visible in the view
                 also when text editor has height greater than view height*/

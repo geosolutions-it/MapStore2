@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -8,6 +7,7 @@
  */
 import { isString } from 'lodash';
 import uuid from "uuid";
+
 import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 
 export const ADD = "GEOSTORY:ADD";
@@ -29,9 +29,9 @@ export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
  * @param {string} path path where to add the element. It can contain path like this `sections[{id: "abc"}].contents[{id: "def"}]` to resolve the predicate between brackets.
  * @param {string|number} [position] the ID or the index of the section where to place the section (if not present the section will be appended at the end)
  * @param {string|object} element the object to add or the template to apply. can be a section, a content or whatever. If it is a string, it will be transformed in the content template with the provided name.
- * @param {function} localize used to localize new content
+ * @param {function} [localize] localization function used in case of template to localize default strings
  */
-export const add = (path, position, element, localize) => ({
+export const add = (path, position, element, localize = v => v) => ({
     type: ADD,
     id: element && element.id || uuid(), // automatically assign an ID
     path,

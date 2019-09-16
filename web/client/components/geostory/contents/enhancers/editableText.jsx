@@ -1,3 +1,9 @@
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import { Editor } from 'react-draft-wysiwyg';
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -5,14 +11,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { compose, withProps, withState, withHandlers, branch, renderComponent } from "recompose";
-import htmlToDraft from 'html-to-draftjs';
-import { EditorState, ContentState, convertToRaw, Modifier, RichUtils} from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { branch, compose, renderComponent, withHandlers, withProps, withState } from "recompose";
 
-import { SectionTypes, EMPTY_CONTENT } from "../../../../utils/GeoStoryUtils";
+import { EMPTY_CONTENT, SectionTypes } from "../../../../utils/GeoStoryUtils";
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
