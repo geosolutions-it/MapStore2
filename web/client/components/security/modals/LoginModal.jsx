@@ -81,7 +81,7 @@ class LoginModal extends React.Component {
               key="closeButton"
               ref="closeButton"
               bsSize={this.props.buttonSize}
-              onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
+              onClick={this.handleOnHide}><Message msgId="close"/></Button> : <span/>}
         </span>);
     };
 
@@ -99,9 +99,15 @@ class LoginModal extends React.Component {
         </Modal>);
     }
 
+    /**
+     * This is called when close button clicked or
+     * when user click out(modal overlay). Hide when
+     * it is triggered from button otherwise don't hide the
+     * modal
+     */
     handleOnHide = (event) => {
         if (event) {
-            // onHide coming from header closeButton
+            // it is coming from the hide or close button
             this.props.onClose();
         }
     }
