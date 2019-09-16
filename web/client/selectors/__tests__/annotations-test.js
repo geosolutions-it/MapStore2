@@ -10,6 +10,7 @@ const expect = require('expect');
 const {isEmpty, isArray} = require('lodash');
 const {
     annotationsLayerSelector,
+    multiGeometrySelector,
     removingSelector,
     showUnsavedChangesModalSelector,
     showUnsavedStyleModalSelector,
@@ -432,6 +433,14 @@ describe('Test annotations selectors', () => {
     it('test removingSelector', () => {
         const retVal = removingSelector(state);
         expect(retVal).toBe(null);
+    });
+    it('test multiGeometrySelector when it is set', () => {
+        const multiGeometry = multiGeometrySelector(state);
+        expect(multiGeometry).toBe(true);
+    });
+    it('test multiGeometrySelector when it is not set', () => {
+        const multiGeometry = multiGeometrySelector({});
+        expect(multiGeometry).toBe(false);
     });
     it('test showUnsavedChangesModalSelector', () => {
         const retVal = showUnsavedChangesModalSelector(state);

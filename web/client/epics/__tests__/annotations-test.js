@@ -433,6 +433,27 @@ describe('annotations Epics', () => {
         const action = confirmRemoveAnnotation('geometry');
         store.dispatch(action);
     });
+
+    it('remove annotation geometry when initial state is not set', (done) => {
+        const tempStore = mockStore({
+            annotations: {
+                editing: {
+                    style: {},
+                    features: [],
+                    type: "FeatureCollection"
+                }
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = confirmRemoveAnnotation('geometry');
+        store.dispatch(action);
+    });
     it('save annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
