@@ -32,7 +32,7 @@ module.exports = ({ className = "widget-menu", menuIcon = "option-vertical"} = {
                         <MenuItem
                             active={active}
                             tooltipId={tooltipId}
-                        onClick={onClick}
+                        onSelect={onClick}
                         disabled={disabled}
                         eventKey={i}>
                             <Glyphicon className={glyphClassName} glyph={glyph} />
