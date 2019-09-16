@@ -222,7 +222,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return getResource(id);
             })
-            .filter(({data}) => {
+            .do(({data}) => {
                 if (!data) {
                     throw Error("Wrong data format");
                 }
