@@ -434,9 +434,13 @@ describe('Test annotations selectors', () => {
         const retVal = removingSelector(state);
         expect(retVal).toBe(null);
     });
-    it('test multiGeometrySelector', () => {
+    it('test multiGeometrySelector when it is set', () => {
         const multiGeometry = multiGeometrySelector(state);
-        expect(multiGeometry).toBeTruthy();
+        expect(multiGeometry).toBe(true);
+    });
+    it('test multiGeometrySelector when it is not set', () => {
+        const multiGeometry = multiGeometrySelector({});
+        expect(multiGeometry).toBe(false);
     });
     it('test showUnsavedChangesModalSelector', () => {
         const retVal = showUnsavedChangesModalSelector(state);
