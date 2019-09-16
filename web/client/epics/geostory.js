@@ -189,7 +189,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
             const state = store.getState();
             const resourceId = resourceIdSelectorCreator(path)(state);
             return Observable.of(
-                    showMediaEditor(owner), // open mediaEditor
+                    showMediaEditor(owner),
                     selectItem(resourceId)
                 )
                 .merge(
