@@ -72,7 +72,7 @@ describe('withMenu enhancer', () => {
         expect(spyCallback).toHaveBeenCalled();
     });
 
-    it('Widgets callback should be called when menu disabled', () => {
+    it('Widgets callback should not be called when menu disabled', () => {
         const actions = {
             callback: () => {}
         };
