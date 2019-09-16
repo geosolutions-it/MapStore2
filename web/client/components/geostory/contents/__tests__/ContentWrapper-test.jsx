@@ -30,12 +30,15 @@ describe('ContentWrapper component', () => {
         expect(container.querySelector('.ms-content')).toExist();
         expect(container.querySelector('.ms-content .ms-content-body .TEST')).toExist();
     });
-    it('rendering with props(type, contentStyleWrapper)', () => {
+    it('rendering with props(id, type, contentStyleWrapper)', () => {
+        const SOME_ID = 'some-id';
         const container = document.getElementById('container');
-        ReactDOM.render(<ContentWrapper type="text" contentWrapperStyle={{position: "absolute"}}/>, document.getElementById("container"));
-        expect(container.querySelector('.ms-content-text')).toExist();
-        expect(container.querySelector('.ms-content-text .ms-content-body')).toExist(); // has body
-        expect(container.querySelector('.ms-content').style.position).toBe('absolute');
+        ReactDOM.render(<ContentWrapper id={SOME_ID} type="text" contentWrapperStyle={{position: "absolute"}}/>, document.getElementById("container"));
+        const wrapper = container.querySelector(`#${SOME_ID}`); // wrapper has the ID
+        expect(wrapper).toExist();
+        expect(container.querySelector('.ms-content-text').id).toBe(SOME_ID); // the class is applied to the wrapper depending on the type
+        expect(wrapper.querySelector('.ms-content-body')).toExist(); // has body
+        expect(wrapper.style.position).toBe('absolute'); // contentWrapperStyle is applied to the wrapper
     });
     it('inViewRef applied to the container', done => {
         const callback = ref => {

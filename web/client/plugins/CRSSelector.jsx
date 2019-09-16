@@ -23,6 +23,7 @@ const {bottomPanelOpenSelector} = require('../selectors/maplayout');
 const {printSelector} = require('../selectors/controls');
 const {crsInputValueSelector} = require('../selectors/crsselector');
 const {currentBackgroundSelector} = require('../selectors/layers');
+const {queryPanelSelector} = require('../selectors/controls');
 const{modeSelector} = require('../selectors/featuregrid');
 const {error} = require('../actions/notifications');
 const {userRoleSelector} = require('../selectors/security');
@@ -122,14 +123,15 @@ const crsSelector = connect(
             modeSelector,
             isCesium,
             bottomPanelOpenSelector,
+            queryPanelSelector,
             printSelector,
-                ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, printEnabled) => ({
+                ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, queryPanelEnabled, printEnabled) => ({
                     currentRole,
                     currentBackground,
                     selected,
                     projectionDefs,
                     value,
-                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !printEnabled
+                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !queryPanelEnabled && !printEnabled
                 })
             ), {
                 typeInput: setInputValue,

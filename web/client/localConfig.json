@@ -600,6 +600,12 @@
               "containerPosition": "columns"
             }
           },
+          {
+            "name": "GeoStoryNavigation",
+            "cfg": {
+              "containerPosition": "header"
+            }
+          },
           "Notifications",
           {
             "name": "FeedbackMask",

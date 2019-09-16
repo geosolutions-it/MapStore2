@@ -13,12 +13,14 @@ import Immersive from './Immersive';
 import Paragraph from './Paragraph';
 import Title from './Title';
 
+import visibilityHandler from '../../contents/enhancers/visibilityHandler';
+
 const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
     [SectionTypes.PARAGRAPH]: Paragraph,
     [SectionTemplates.MEDIA]: Paragraph,
     [SectionTypes.TITLE]: Title,
-    UNKNOWN: ({type}) => <div className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
+    UNKNOWN: ({ type, inViewRef }) => <div ref={inViewRef} className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
 
 /**
@@ -39,6 +41,7 @@ class Section extends React.Component {
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
         viewWidth: PropTypes.number,
+        inViewRef: PropTypes.func,
         excludeClassName: PropTypes.string,
         cover: PropTypes.bool
     };
@@ -66,15 +69,19 @@ class Section extends React.Component {
                 id={this.props.id}
                 add={this.props.add}
                 update={this.props.update}
+                inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
                 remove={this.props.remove}
                 mode={this.props.mode}
                 cover={this.props.cover}
                 contents={this.props.contents}
                 viewWidth={this.props.viewWidth}
-                viewHeight={this.props.viewHeight}/>
+                viewHeight={this.props.viewHeight}
+                />
         );
     }
 }
+const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
 
-export default Section;
+// add the visibilityHandler to intercept current section (for current page state update)
+export default visibilityHandler({ threshold: DEFAULT_THRESHOLD })(Section);

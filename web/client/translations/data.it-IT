@@ -1868,6 +1868,8 @@
             "addTextContent": "Aggiungi testo",
             "addMediaContent": "Aggiungi Media",
             "zoomToContent": "Zoom al contenuto",
+            "emptyTitle": "Questa storia è vuota",
+            "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
                 "contentSize": "Cambia larghezza",
                 "smallSizeLabel": "Piccola",
@@ -1888,6 +1890,39 @@
                 "editMedia": "Cambia la sorgente del media",
                 "remove": "Elimina"
             },
+            "builder": {
+                "defaults": {
+                    "titleTitle": "Sezione Titolo",
+                    "htmlTitle": "<h1 style='text-align:center'>Inserisci Titolo</h1><p style='text-align:center'><em>sottotitolo</em></p>",
+                    "htmlSample": "<p>Inserisci del testo qui...</p>",
+                    "titleParagraph": "Sezione Paragrafo",
+                    "titleImmersive": "Sezione Immersiva",
+                    "titleMedia": "Sezione Media",
+                    "titleUnknown": "UNKNOWN"
+                },
+                "delete": "Elimina la sezione selezionata",
+                "preview": "Mostra anteprima storia",
+                "edit": "Modifica la storia",
+                "hide": "Nascondi le anteprime nell'editor",
+                "show": "Mostra le anteprime nell'editor",
+                "fullscreen": "Mostra antemprima a schermo pieno",
+                "settings": {
+                    "tooltip": "Impostazioni",
+                    "back": "Torna all'editor",
+                    "save": "Salva impostazioni",
+                    "headerTitle" : "Impostazioni della storia",
+                    "title" : "Titolo",
+                    "titlePlaceholder" : "Inserisci titolo",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Inserisci sorgente del logo (formato immagine)",
+                    "autoplay" : "Autoplay",
+                    "enableAutoplay" : "Abilita Autoplay",
+                    "autoplayInterval" : "Intervallo dell'autoplay (secondi)",
+                    "autoplayIntervalPlaceholder" : "Abilita l'intervallo dell'autoplay",
+                    "navbar" : "Barra di navigazione",
+                    "showNavbar" : "Mostra barra di navigazione"
+                }
+            },
             "errors": {
                 "loading": {
                     "title": "Errore",
@@ -1902,6 +1937,7 @@
             "modalTitle": "Media",
             "images": "Immagini",
             "videos": "Video",
+            "maps": "Mappe",
             "preview": "Anteprima",
             "apply": "Applica",
             "imagePicker": {

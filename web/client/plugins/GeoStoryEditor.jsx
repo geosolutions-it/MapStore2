@@ -9,32 +9,42 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { createPlugin } from '../utils/PluginsUtils';
 
 import {
     currentStorySelector,
+    cardPreviewEnabledSelector,
     modeSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
+import { setEditing, toggleCardPreview } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
 import { Modes } from '../utils/GeoStoryUtils';
-import { setEditing } from '../actions/geostory';
+import { createPlugin } from '../utils/PluginsUtils';
+import { scrollToContent } from '../utils/GeoStoryUtils';
+
+
 const GeoStoryEditor = ({
     mode = Modes.VIEW,
     setEditingMode = () => {},
+    onToggleCardPreview = () => {},
+    cardPreviewEnabled,
     story = {}
-}) => (<div
+}) => (mode === Modes.EDIT ? <div
     key="left-column"
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
+        scrollTo={(id, options = { behavior: "smooth" }) => {
+            scrollToContent(id, options);
+        }}
         story={story}
         mode={mode}
         setEditing={setEditingMode}
+        cardPreviewEnabled={cardPreviewEnabled}
+        onToggleCardPreview={onToggleCardPreview}
         />
-</div>
-);
+</div> : null);
 /**
  * Plugin for GeoStory side panel editor
  * @name GeoStoryEditor
@@ -43,10 +53,12 @@ const GeoStoryEditor = ({
 export default createPlugin('GeoStoryEditor', {
     component: connect(
         createStructuredSelector({
+            cardPreviewEnabled: cardPreviewEnabledSelector,
             mode: modeSelector,
             story: currentStorySelector
         }), {
-            setEditingMode: setEditing
+            setEditingMode: setEditing,
+            onToggleCardPreview: toggleCardPreview
         }
     )(GeoStoryEditor),
     reducers: {

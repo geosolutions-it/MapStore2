@@ -28,12 +28,23 @@ describe('SectionsPreview component', () => {
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
     });
-    it('SectionsPreview rendering with sections', () => {
-        ReactDOM.render(<SectionsPreview sections={STORY.sections} />, document.getElementById("container"));
+    it('SectionsPreview rendering with sections, preview enabled', () => {
+        ReactDOM.render(<SectionsPreview sections={STORY.sections} cardPreviewEnabled />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
         // empty view when no session
-        expect(el.querySelectorAll('.items-list > div').length).toBe(6); // 2 + 2 (first inner) + 2 (second inner)
+        expect(el.querySelectorAll('.items-list > div').length).toBe(8); // 3 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
+        expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(5);
+    });
+
+    it('SectionsPreview rendering with sections, preview disabled', () => {
+        ReactDOM.render(<SectionsPreview sections={STORY.sections} cardPreviewEnabled={false}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.msSideGrid');
+        expect(el).toExist();
+        // empty view when no session
+        expect(el.querySelectorAll('.items-list > div').length).toBe(8); // 3 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
+        expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(0);
     });
 });
