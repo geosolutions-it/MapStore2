@@ -18,6 +18,7 @@ const annotationsLayerSelector = createSelector([
     ], (layers) => head(layers.filter(l => l.id === 'annotations'))
 );
 
+const multiGeometrySelector = (state) => get(state, 'annotations.config.multiGeometry', false);
 const removingSelector = (state) => get(state, "annotations.removing");
 const formatSelector = (state) => get(state, "annotations.format");
 const aeronauticalOptionsSelector = (state) => get(state, "annotations.aeronauticalOptions");
@@ -110,6 +111,7 @@ const annotationSelector = createSelector([annotationsListSelector], (annotation
 });
 
 module.exports = {
+    multiGeometrySelector,
     symbolErrorsSelector,
     modeSelector,
     annotationsLayerSelector,
