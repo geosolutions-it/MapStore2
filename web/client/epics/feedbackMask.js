@@ -86,7 +86,7 @@ const updateDashboardVisibility = action$ =>
 /**
  * Enabled/disabled mask based on geostory load feedback, in case of error enable feedbackMask.
  * @param {Observable} action$ stream of actions. Manages `LOAD_GEOSTORY, `GEOSTORY_LOADED`, `GEOSTORY_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
- * @memberof epics.geostory
+ * @memberof epics.feedbackMask
  * @return {Observable}
  */
 export const updateGeoStoryFeedbackMaskVisibility = action$ =>
