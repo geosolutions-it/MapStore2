@@ -62,6 +62,8 @@
             "delete": "Borrar",
             "deleteLayer":"Borrar el mapa",
             "deleteLayerMessage": "¿Está totalmente seguro de querer borrar este mapa?",
+            "deleteLayerGroup":"Eliminar grupo",
+            "deleteLayerGroupMessage": "¿Realmente quieres eliminar este grupo y todas sus capas?",
             "confirmDelete": "¿Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida",

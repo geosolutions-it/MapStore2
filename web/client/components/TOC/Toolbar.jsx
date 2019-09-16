@@ -315,10 +315,9 @@ class Toolbar extends React.Component {
                 onHide={this.closeDeleteDialog}
                 onClose={this.closeDeleteDialog}
                 onConfirm={this.removeNodes}
-                titleText={this.props.text.confirmDeleteText}
-                confirmText={this.props.text.confirmDeleteText}
+                titleText={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupText : this.props.text.confirmDeleteText}
                 cancelText={this.props.text.confirmDeleteCancelText}
-                body={this.props.text.confirmDeleteMessage} />
+                body={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupMessage : this.props.text.confirmDeleteMessage} />
             {layerMetadataModal}
         </ButtonGroup>) : null;
     }

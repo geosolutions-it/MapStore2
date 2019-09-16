@@ -62,6 +62,8 @@
             "delete": "Löschen",
             "deleteLayer":"Ebene löschen",
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
+            "deleteLayerGroup":"Gruppe löschen",
+            "deleteLayerGroupMessage": "Möchten Sie diese Gruppe und alle ihre Ebenen wirklich löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",

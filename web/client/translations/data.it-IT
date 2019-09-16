@@ -62,6 +62,8 @@
             "delete": "Elimina",
             "deleteLayer":"Elimina Livello",
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
+            "deleteLayerGroup":"Elimina gruppo",
+            "deleteLayerGroupMessage": "Vuoi veramente cancellare questo gruppo e tutti i suoi livelli?",
             "confirmDelete": "Sei sicuro?",
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",

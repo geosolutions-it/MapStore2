@@ -62,6 +62,8 @@
             "delete": "删除",
             "deleteLayer":"删除图层",
             "deleteLayerMessage": "你真的想删除这个层？",
+            "deleteLayerGroup":"删除组",
+            "deleteLayerGroupMessage": "你真的想要删除这个组及其所有图层吗?",
             "confirmDelete": "你确定?",
             "featureTypeError": "无法加载图层属性",
             "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
