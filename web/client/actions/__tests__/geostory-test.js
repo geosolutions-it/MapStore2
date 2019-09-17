@@ -10,28 +10,17 @@ import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.
 
 import { Modes } from '../../utils/GeoStoryUtils';
 import {
-    ADD,
-    CHANGE_MODE,
-    EDIT_RESOURCE,
-    LOADING_GEOSTORY,
-    LOAD_GEOSTORY,
-    LOAD_GEOSTORY_ERROR,
-    REMOVE,
-    SET_CURRENT_STORY,
-    TOGGLE_CARD_PREVIEW,
-    UPDATE,
-    UPDATE_CURRENT_PAGE,
-    add,
-    editResource,
-    loadGeostory,
-    loadGeostoryError,
-    loadingGeostory,
-    remove,
-    setCurrentStory,
-    setEditing,
-    toggleCardPreview,
-    update,
-    updateCurrentPage
+    ADD, add,
+    CHANGE_MODE, setEditing,
+    SET_CURRENT_STORY, setCurrentStory,
+    UPDATE, update,
+    UPDATE_CURRENT_PAGE, updateCurrentPage,
+    LOAD_GEOSTORY, loadGeostory,
+    LOADING_GEOSTORY, loadingGeostory,
+    LOAD_GEOSTORY_ERROR, loadGeostoryError,
+    editResource, EDIT_RESOURCE,
+    remove, REMOVE,
+    toggleCardPreview, TOGGLE_CARD_PREVIEW
 } from '../geostory';
 
 describe('test geostory action creators', () => {
