@@ -160,9 +160,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                     // the followings are here to skip issues caused by uglifyPlugin (see #4212)
                     // TODO: a solution to this issue that uses only libs
                     // like https://www.npmjs.com/package/uglify-js-es6#harmony when stable, terser, babel-minify ...
-                    path.join(__dirname, "..", "node_modules", "query-string"),
-                    path.join(__dirname, "..", "node_modules", "strict-uri-encode"),
-                    path.join(__dirname, "..", "node_modules", "split-on-first")
+                    path.join(__dirname, "..", "node_modules", "@terrestris", "base-util")
                 ]
             }
         ].concat(prod ? [{
