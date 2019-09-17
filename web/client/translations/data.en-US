@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Selected group settings",
             "toolTrashLayerTooltip": "Remove selected layer",
             "toolTrashLayersTooltip": "Remove selected layers",
+            "toolTrashGroupTooltip": "Remove selected group",
             "toolFeaturesGridTooltip": "Open Attribute Table",
             "layerFilterTooltip": "Filter Layer",
             "toolDownloadTooltip": "Export layer data",

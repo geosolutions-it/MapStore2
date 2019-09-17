@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Modifica proprietà del gruppo selezionato",
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
+            "toolTrashGroupTooltip": "Rimuovi gruppo selezionato",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
             "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
