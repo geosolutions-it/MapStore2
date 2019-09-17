@@ -154,7 +154,11 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 use: [{
                     loader: "babel-loader"
                 }],
-                include: paths.code
+                include: [
+                    paths.code,
+                    path.join(__dirname, "..", "node_modules", "query-string"),
+                    path.join(__dirname, "..", "node_modules", "strict-uri-encode"), path.join(__dirname, "..", "node_modules", "split-on-first")
+                ]
             }
         ].concat(prod ? [{
                 test: /\.html$/,
