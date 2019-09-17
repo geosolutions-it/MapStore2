@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Configuración del grupo seleccionado",
             "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
             "toolTrashLayersTooltip": "Eliminar las capas seleccionadas",
+            "toolTrashGroupTooltip": "Eliminar grupo seleccionado",
             "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
             "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",

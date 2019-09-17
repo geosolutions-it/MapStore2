@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Ausgewählte Gruppeneinstellungen",
             "toolTrashLayerTooltip": "Entferne die ausgewählte Ebene",
             "toolTrashLayersTooltip": "Entferne ausgewählte Ebenen",
+            "toolTrashGroupTooltip": "Ausgewählte Gruppe entfernen",
             "toolFeaturesGridTooltip": "Öffnen Sie die Attributtabelle",
             "layerFilterTooltip": "Filterschicht",
             "toolDownloadTooltip": "Layerdaten exportieren",
