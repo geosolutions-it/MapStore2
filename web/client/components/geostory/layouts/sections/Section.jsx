@@ -66,6 +66,7 @@ class Section extends React.Component {
         const SectionType = types[this.props.type] || types.UNKNOWN;
         return (
             <SectionType
+                sectionType={this.props.type}
                 id={this.props.id}
                 add={this.props.add}
                 update={this.props.update}
