@@ -1,9 +1,3 @@
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
-import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { Editor } from 'react-draft-wysiwyg';
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -11,6 +5,12 @@ import { Editor } from 'react-draft-wysiwyg';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import { Editor } from 'react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState } from "recompose";
 
 import { EMPTY_CONTENT, SectionTypes } from "../../../../utils/GeoStoryUtils";
