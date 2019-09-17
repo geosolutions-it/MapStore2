@@ -62,6 +62,8 @@
             "delete": "Effacer",
             "deleteLayer":"Supprimer le calque",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
+            "deleteLayerGroup":"Supprimer le groupe",
+            "deleteLayerGroupMessage": "Voulez-vous vraiment supprimer ce groupe et toutes ses couches?",
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
             "featureTypeErrorInvalidJSON": "Impossible de charger les attributs de calque. La réponse n'est pas valide",

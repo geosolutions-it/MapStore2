@@ -653,6 +653,8 @@
             "delete": "Xóa",
             "deleteLayer": "Xóa lớp",
             "deleteLayerMessage": "Bạn có thực sự muốn xóa lớp này?",
+            "deleteLayerGroup":"Xóa nhóm",
+            "deleteLayerGroupMessage": "Bạn có thực sự muốn xóa nhóm này và tất cả các lớp của nó không?",
             "description": "Mô tả",
             "display": "Hiển thị",
             "editCustomFormat": "Chỉnh sửa định dạng tùy chỉnh",

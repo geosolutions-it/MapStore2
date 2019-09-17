@@ -62,6 +62,8 @@
             "delete": "Izbriši",
             "deleteLayer":"Izbriši sloj",
             "deleteLayerMessage": "Želite li zaista izbrisati ovaj sloj?",
+            "deleteLayerGroup":"Izbriši grupu",
+            "deleteLayerGroupMessage": "Želite li stvarno izbrisati ovu grupu i sve njezine slojeve?",
             "confirmDelete": "Jeste li sigurni?",
             "featureTypeError": "Nije moguće učitavanje atributa sloja",
             "featureTypeErrorInvalidJSON": "Nije moguće učitavanje atributa sloja. Odziv nije ispravan",
