@@ -202,7 +202,6 @@ class GroupDialog extends React.Component {
 
     render() {
         return (<Dialog
-              onClickOut={this.props.onClose}
               modal
               maskLoading={this.props.group && (this.props.group.status === "loading" || this.props.group.status === "saving")}
               id="mapstore-group-dialog"

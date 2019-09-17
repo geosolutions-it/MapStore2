@@ -71,4 +71,23 @@ describe('withMenu enhancer', () => {
         ReactTestUtils.Simulate.click(document.querySelector("#test-menu"));
         expect(spyCallback).toHaveBeenCalled();
     });
+
+    it('Widgets callback should not be called when menu disabled', () => {
+        const actions = {
+            callback: () => {}
+        };
+        const spyCallback = expect.spyOn(actions, 'callback');
+        ReactDOM.render(<Widget
+            widgetType="text"
+            widgetTools={[{
+                glyph: "text",
+                target: "menu",
+                disabled: true,
+                text: <div id="test-menu" />,
+                onClick: actions.callback
+            }]}
+            />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector("#test-menu"));
+        expect(spyCallback).toNotHaveBeenCalled();
+    });
 });
