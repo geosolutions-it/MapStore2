@@ -1939,7 +1939,11 @@
             "videos": "Videos",
             "preview": "Avance",
             "apply": "Aplicar",
-            "imagePicker": {
+            "mediaPicker": {
+                "services": "Servicios: ",
+                "clean": "Resultados limpios",
+                "noResults": "No hay resultados",
+                "selectService": "Seleccione un servicio",
                 "add": "Añadir",
                 "back": "Atrás",
                 "save": "Salvar",

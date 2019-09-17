@@ -1940,7 +1940,11 @@
             "maps": "Mappe",
             "preview": "Anteprima",
             "apply": "Applica",
-            "imagePicker": {
+            "mediaPicker": {
+                "services": "Servizi: ",
+                "clean": "Pulisci",
+                "noResults": "Nessun risultato",
+                "selectService": "Seleziona un servizio",
                 "add": "Aggiungi",
                 "back": "Indietro",
                 "save": "Salva",

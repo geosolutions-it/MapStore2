@@ -6,13 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Select from "react-select";
+import ReactSelect from "react-select";
 
-import BorderLayout from '../layout/BorderLayout';
-import Toolbar from '../misc/toolbar/Toolbar';
-import MediaSelector from './MediaSelector';
+import { MediaTypes } from '../../utils/GeoStoryUtils';
 import Message from '../I18N/Message';
-import PreviewImage from './image/Preview';
+import BorderLayout from '../layout/BorderLayout';
+import localizedProps from '../misc/enhancers/localizedProps';
+import Toolbar from '../misc/toolbar/Toolbar';
+import ImagePreview from './image/ImagePreview';
+import MapPreview from './map/MapPreview';
+import MediaSelector from './MediaSelector';
+import VideoPreview from './video/VideoPreview';
+
+const Select = localizedProps(["placeholder", "clearValueText", "noResultsText" ])(ReactSelect);
+
 // import LocaleUtils from '../../utils/LocaleUtils';
 
 /**
@@ -20,6 +27,7 @@ import PreviewImage from './image/Preview';
  * TODO: save in the state the local content to provide the correct preview
  * TODO: manage different types
  */
+
 export default ({
     mediaType = "image",
     source,
@@ -44,7 +52,7 @@ export default ({
 }) => (<BorderLayout
         className="ms-mediaEditor"
         header={
-            <div style={{ padding: 4, zIndex: 2 }} >
+            <div className="ms-border-layout-header" style={{ padding: 4, zIndex: 2 }} >
                 <Toolbar
                     btnDefaultProps={{ bsSize: 'sm' }}
                     buttons={[{
@@ -65,20 +73,25 @@ export default ({
                     }]} />
 
             <div style={{
-                        position: "absolute",
-                        right: 0,
-                        top: 0,
-                        width: "240px"
-                    }}>
-                        <strong>Servizi: </strong>
+                position: "absolute",
+                right: 0,
+                top: 0,
+                width: "240px",
+                display: "flex",
+                alignItems: "center"
+            }}>
+                <div className="ms-label-services">
+                    <strong><Message msgId="mediaEditor.mediaPicker.services"/></strong>
+                </div>
                 <Select
-                    clearValueText={"pulisci"}
-                    noResultsText={"Nessun risultato"}
+                    clearValueText="mediaEditor.mediaPicker.clean"
+                    noResultsText="mediaEditor.mediaPicker.noResults"
+                    placeholder="mediaEditor.mediaPicker.selectService"
                     clearable
-                    options={services.map(s => ({label: s.name, value: s.id}))} // todo: parametrize with other services
-                    value={selectedService}
+                    options={services.map(s => ({label: s.name, value: s.id}))}
                     onChange={setMediaService}
-                    placeholder={"seleziona un servizio"} />
+                    value={selectedService}
+                />
                 </div>
             </div>
         }
@@ -97,12 +110,12 @@ export default ({
                     setMediaService={setMediaService}
                     selectItem={selectItem}
                     {...saveState}
-                     />
+                />
             </div>
         ]}>
         <div key="preview" style={{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            {mediaType === "image" && <PreviewImage selectedItem={selectedItem} />}
-            {mediaType === "video" && null}
-            {mediaType === "map" && null}
+            {mediaType === MediaTypes.IMAGE && <ImagePreview selectedItem={selectedItem} mediaType={mediaType}/>}
+            {mediaType === MediaTypes.VIDEO && <VideoPreview mediaType={mediaType}/>}
+            {mediaType === MediaTypes.MAP && <MapPreview mediaType={mediaType}/>}
         </div>
     </BorderLayout>);

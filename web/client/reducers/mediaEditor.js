@@ -5,18 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { set, compose } from '../utils/ImmutableUtils';
+
+import { get } from 'lodash';
+
 import {
     ADDING_MEDIA,
     CHOOSE_MEDIA,
     EDITING_MEDIA,
     HIDE,
     LOAD_MEDIA_SUCCESS,
-    SET_MEDIA_TYPE,
-    SET_MEDIA_SERVICE,
     SELECT_ITEM,
+    SET_MEDIA_SERVICE,
+    SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
+import { compose, set } from '../utils/ImmutableUtils';
 
 export const DEFAULT_STATE = {
     open: false,
@@ -36,21 +39,27 @@ export const DEFAULT_STATE = {
                 sources: ["geostory"]
             },
             map: {
-                defaultSource: "geostore",
-                sources: ["geostory", "geostore"]
+                defaultSource: "geostory",
+                sources: ["geostory"]
             }
         },
         // all media sources available, with their type and other parameters
         sources: {
             geostory: {
-                name: "Currently Used", // shown in in the UI,  TODO: localize?
+                name: "Current story", // shown in in the UI,  TODO: localize?
                 type: "geostory" // determines the type related to the API
             },
-            geostore: {
-                name: "Geostore",
+            geostoreMap: {
+                name: "Geostore Dev",
                 type: "geostore",
                 url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
-                categoryWhitelist: ["MAP"]
+                category: "MAP"
+            },
+            geostoreImage: {
+                name: "Geostore QA",
+                type: "geostore",
+                url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
+                category: "IMAGE"
             }
         }
     }
@@ -92,8 +101,9 @@ export default (state = DEFAULT_STATE, action) => {
             return set('selected', action.id, state);
         }
         case SET_MEDIA_TYPE: {
+            const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");
             return compose(
-                set('settings.sourceId', state.settings.mediaTypes[action.mediaType].defaultSource), // reset sourceId to default when media type changes
+                set('settings.sourceId', defaultSource), // reset sourceId to default when media type changes
                 set('settings.mediaType', action.mediaType)
                 )(state);
         }

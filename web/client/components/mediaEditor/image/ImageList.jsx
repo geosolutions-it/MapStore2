@@ -1,3 +1,4 @@
+import {isNil} from 'lodash';
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -6,9 +7,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import Toolbar from '../../misc/toolbar/Toolbar';
+
 import SideGrid from '../../misc/cardgrids/SideGrid';
-import {isNil} from 'lodash';
+import Toolbar from '../../misc/toolbar/Toolbar';
 
 export default ({
     resources = [],
@@ -38,12 +39,12 @@ export default ({
             buttons={[
                 {
                     glyph: 'plus',
-                    tooltipId: 'mediaEditor.imagePicker.add',
+                    tooltipId: 'mediaEditor.mediaPicker.add',
                     onClick: () => setAddingMedia(true)
                 },
                 {
                     glyph: 'pencil',
-                    tooltipId: 'mediaEditor.imagePicker.edit',
+                    tooltipId: 'mediaEditor.mediaPicker.edit',
                     visible: !isNil(selectedItem),
                     onClick: () => setEditingMedia(true)
                 }

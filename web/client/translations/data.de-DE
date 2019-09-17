@@ -1939,7 +1939,11 @@
             "videos": "Videos",
             "preview": "Vorschau",
             "apply": "Sich bewerben",
-            "imagePicker": {
+            "mediaPicker": {
+                "services": "Dienstleistungen: ",
+                "clean": "Saubere Ergebnisse",
+                "noResults": "Keine Ergebnisse",
+                "selectService": "Wählen Sie einen Dienst aus",
                 "add": "Hinzufügen",
                 "back": "Zurück",
                 "save": "Sparen",

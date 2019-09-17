@@ -7,13 +7,23 @@
  */
 import React from "react";
 
-export default ({
-    // selectedItem
+import { MediaTypes } from '../../../utils/GeoStoryUtils';
+import emptyState from '../../misc/enhancers/emptyState';
+
+const Preview = ({
 }) => {
-    // const src = selectedItem && selectedItem.data && selectedItem.data.src;
     return (
         <div key="preview" style = {{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
             Map Preview
         </div>
     );
 };
+
+
+export default emptyState(
+    ( {mediaType, selectedItem}) => mediaType === MediaTypes.MAP && !selectedItem,
+    {
+        iconFit: true,
+        glyph: "1-map"
+    }
+)(Preview);

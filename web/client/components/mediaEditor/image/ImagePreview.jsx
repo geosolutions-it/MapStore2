@@ -7,7 +7,10 @@
  */
 import React from "react";
 
-export default ({
+import { MediaTypes } from '../../../utils/GeoStoryUtils';
+import emptyState from '../../misc/enhancers/emptyState';
+
+const Preview = ({
     selectedItem
 }) => {
     const src = selectedItem && selectedItem.data && selectedItem.data.src;
@@ -23,3 +26,13 @@ export default ({
         </div>
     );
 };
+
+
+export default emptyState(
+    ( {mediaType, selectedItem}) => mediaType === MediaTypes.IMAGE && !selectedItem,
+    {
+        style: { width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" },
+        iconFit: true,
+        glyph: "picture"
+    }
+)(Preview);

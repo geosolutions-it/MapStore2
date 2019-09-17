@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
+
 import mediaEditor, {DEFAULT_STATE} from '../mediaEditor';
+
 const {
     chooseMedia,
     hide,
@@ -14,6 +16,8 @@ const {
     selectItem,
     setAddingMedia,
     setEditingMedia,
+    setMediaService,
+    setMediaType,
     show
 } = require('../../actions/mediaEditor');
 
@@ -78,6 +82,29 @@ describe('Test the mediaEditor reducer', () => {
         const id = "id";
         let state = mediaEditor({}, selectItem(id));
         expect(state.selected).toEqual(id);
+    });
+    it('SET_MEDIA_SERVICE', () => {
+        const value = "id";
+        let state = mediaEditor({}, setMediaService({value}));
+        expect(state.settings.sourceId).toEqual(value);
+    });
+    it('SET_MEDIA_TYPE', () => {
+        const mediaType = "mediaType";
+        let state = mediaEditor({}, setMediaType(mediaType));
+        expect(state.settings.mediaType).toEqual(mediaType);
+        expect(state.settings.sourceId).toEqual("geostory");
+
+        state = mediaEditor({
+            settings: {
+                mediaTypes: {
+                    mediaType: {
+                        defaultSource: "default"
+                    }
+                }
+            }
+        }, setMediaType(mediaType));
+        expect(state.settings.mediaType).toEqual(mediaType);
+        expect(state.settings.sourceId).toEqual("default");
     });
     it('SHOW', () => {
         const owner = "owner";
