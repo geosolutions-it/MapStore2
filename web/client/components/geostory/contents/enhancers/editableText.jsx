@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { compose, withProps, withState, withHandlers, branch, renderComponent } from "recompose";
-
-import htmlToDraft from 'html-to-draftjs';
-import { EditorState, ContentState, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import { Editor } from 'react-draft-wysiwyg';
+import { branch, compose, renderComponent, withHandlers, withProps, withState } from "recompose";
+
+import { EMPTY_CONTENT, SectionTypes } from "../../../../utils/GeoStoryUtils";
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
@@ -26,17 +28,21 @@ export default compose(
     withState('contentEditing', 'setContentEditing', false),
     withState('editorState', 'onEditorStateChange'),
     withHandlers({
-        toggleEditing: ({ onEditorStateChange = () => {}, setContentEditing = () => {}, save = () => {} }) => (editing, html) => {
+        toggleEditing: ({ sectionType, onEditorStateChange = () => {}, setContentEditing = () => {}, save = () => {} }) => (editing, html) => {
             if (!editing) {
                 save(html);
                 setContentEditing(false);
-            } else if (html) {
-                const contentBlock = htmlToDraft(html);
-                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-                onEditorStateChange(EditorState.createWithContent(contentState));
-                setContentEditing(true);
             } else {
-                onEditorStateChange(EditorState.createEmpty());
+                const contentBlock = htmlToDraft(html);
+                let contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                let editorState = EditorState.createWithContent(contentState);
+                // Updating blockType for TITLES when opening an empty text editor
+                if ( sectionType === SectionTypes.TITLE && RichUtils.getCurrentBlockType(editorState) === "unstyled") {
+                    contentState = Modifier.setBlockType(contentState, EditorState.createWithContent(contentState).getSelection(), "header-one");
+                    editorState = EditorState.createWithContent(contentState);
+                }
+                onEditorStateChange(editorState);
+                setContentEditing(true);
             }
         }
     }),
@@ -45,8 +51,10 @@ export default compose(
         compose(
             withHandlers({
                 onBlur: ({toggleEditing = () => {}, editorState}) => () => {
+                    const rawText = convertToRaw(editorState.getCurrentContent()).blocks[0].text;
                     const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-                    toggleEditing(false, html);
+                    // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
+                    toggleEditing(false, rawText ? html : EMPTY_CONTENT);
                 }
             }),
             // default properties for editor

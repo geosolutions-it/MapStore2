@@ -8,7 +8,7 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP, CHANGE_MAP_LIMITS } = require('../actions/map');
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS } = require('../actions/map');
 
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
@@ -72,6 +72,11 @@ function mapConfig(state = null, action) {
             return newState;
         }
         return state;
+    case SET_MAP_RESOLUTIONS: {
+        return assign({}, state, {
+            resolutions: action.resolutions
+        });
+    }
     case ZOOM_TO_POINT: {
         return assign({}, state, {
             center: CoordinatesUtils.reproject(action.pos, action.crs, 'EPSG:4326'),

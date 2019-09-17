@@ -44,6 +44,7 @@ export default ({
         contents=[],
         ContentComponent=Content,
         mode,
+        sectionType,
         editMedia = () => {},
         add = () => {},
         update = () => {},
@@ -57,6 +58,7 @@ export default ({
                     key={`${id}-content`}
                     mode={mode}
                     viewWidth={viewWidth}
+                    sectionType={sectionType}
                     viewHeight={viewHeight}
                     editMedia={({path = ""}, ...args) => editMedia({path: `contents[{"id": "${id}"}]` + path}, ...args)}
                     // restructure the path to give it the correct scope

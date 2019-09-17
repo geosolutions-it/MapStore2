@@ -17,7 +17,6 @@ import axios from '../../libs/ajax';
 import {
     scrollToContentEpic,
     loadGeostoryEpic,
-    localizeTemplateEpic,
     openMediaEditorForNewMedia,
     editMediaForBackgroundEpic,
     cleanUpEmptyStoryContainers
@@ -503,88 +502,7 @@ describe('Geostory Epics', () => {
             }
         });
     });
-    describe('localizeTemplateEpic tests', () => {
-        it('localize template for Content in immersive', done => {
-            const NUM_ACTIONS = 1;
-            const path = 'sections[{"id": "SomeID2"}].contents';
-            testEpic(localizeTemplateEpic, NUM_ACTIONS, {
-                type: 'GEOSTORY:ADD',
-                id: '95d0572f-368b-417b-b505-52846671218f',
-                path,
-                element: {
-                  id: 'faf22bc4-e964-4bab-b165-48360581d3df',
-                  type: 'column',
-                  contents: [
-                    {
-                      id: '46ccb8ff-4260-49bd-b8a7-7c5907bc05e2',
-                      type: 'text',
-                      html: 'geostory.builder.html'
-                    }
-                  ]
-                }
-            }, ([a]) => {
-                expect(a.type).toBe(UPDATE);
-                expect(a.path).toBe(path + "[1]");
-                expect(a.element.contents[0].html).toBe("Html localized");
-                done();
-            }, {
-                    geostory: {
-                        currentStory: TEST_STORY
-                    },
-                    locale: {
-                        messages: {
-                            geostory: {builder: {title: "localized title", html: "Html localized"}}
-                        }
-                    }
-                });
-        });
-        it('localize template for Title Section', done => {
-            const NUM_ACTIONS = 1;
-            const path = 'sections[{"id": "SomeID"}]';
-            testEpic(localizeTemplateEpic, NUM_ACTIONS, {
-                type: 'GEOSTORY:ADD',
-                id: '4d1ebf96-68ac-4efd-81fd-1e30ba9f1ee5',
-                path: 'sections',
-                position: '3df51ac1-ad8a-429b-b29e-5ea50f35ef04',
-                element: {
-                  id: 'SomeID',
-                  type: 'title',
-                  title: 'geostory.builder.defaults.titleTitle',
-                  cover: false,
-                  contents: [
-                    {
-                      id: 'b578a3df-9eb3-49f2-94a7-5b57a8019400',
-                      type: 'text',
-                      html: 'geostory.builder.html',
-                      size: 'large',
-                      align: 'center',
-                      theme: 'bright',
-                      background: {
-                        fit: 'cover',
-                        theme: 'bright',
-                        size: 'full',
-                        align: 'center'
-                      }
-                    }
-                  ]
-                }
-            }, ([a]) => {
-                expect(a.type).toBe(UPDATE);
-                expect(a.path).toBe(path);
-                expect(a.element.contents[0].html).toBe("Html localized");
-                done();
-            }, {
-                    geostory: {
-                        currentStory: TEST_STORY
-                    },
-                    locale: {
-                        messages: {
-                            geostory: {builder: {title: "localized title", html: "Html localized"}}
-                        }
-                    }
-                });
-        });
-    });
+
     describe('cleanUpEmptyStoryContainers', () => {
         it('do not trigger when container has content', done => {
             testEpic(addTimeoutEpic(cleanUpEmptyStoryContainers, 20), 1, remove("sections[0].contents[0].contents[0]"), ([a]) => {
