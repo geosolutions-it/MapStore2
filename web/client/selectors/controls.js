@@ -17,6 +17,7 @@ module.exports = {
     showCoordinateEditorSelector,
     measureSelector: (state) => get(state, "controls.measure.enabled"),
     queryPanelSelector: (state) => get(state, "controls.queryPanel.enabled"),
+    printSelector: (state) => get(state, "controls.print.enabled"),
     wfsDownloadAvailable: state => !!get(state, "controls.wfsdownload.available"),
     wfsDownloadSelector: state => !!get(state, "controls.wfsdownload.enabled"),
     widgetBuilderAvailable: state => get(state, "controls.widgetBuilder.available", false),

@@ -9,7 +9,7 @@ const expect = require('expect');
 const {round} = require('lodash');
 
 var mapConfig = require('../map');
-const { changeMapLimits, PAN_TO } = require('../../actions/map');
+const { changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } = require('../../actions/map');
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {
@@ -157,6 +157,16 @@ describe('Test the map reducer', () => {
         expect(state.mapOptions).toExist();
         expect(state.mapOptions.view).toExist();
         expect(state.mapOptions.view.resolutions).toExist();
+    });
+
+    it('sets new resolutions', () => {
+        const resolutions = [2.54, 0.254];
+        const action = {
+            type: SET_MAP_RESOLUTIONS,
+            resolutions
+        };
+        const state = mapConfig({}, action);
+        expect(state.resolutions).toEqual(resolutions);
     });
 
     it('pan to with center as array', () => {

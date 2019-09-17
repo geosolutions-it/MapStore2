@@ -7,7 +7,6 @@
 */
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const MapUtils = require('../utils/MapUtils');
 const {createSelector} = require('reselect');
 const {get} = require('lodash');
 
@@ -47,6 +46,7 @@ const configuredMinZoomSelector = state => {
 
 const mapLimitsSelector = state => get(mapSelector(state), "limits");
 const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom" );
+const resolutionsSelector = state => get(mapSelector(state), "resolutions");
 
 /**
  * Get the scales of the current map
@@ -56,10 +56,9 @@ const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom" );
  * @return {number[]} the scales of the map
  */
 const scalesSelector = createSelector(
-    [projectionSelector],
-    (projection) => {
-        if (projection) {
-            const resolutions = MapUtils.getResolutions();
+    [resolutionsSelector, projectionSelector],
+    (resolutions, projection) => {
+        if (resolutions && projection) {
             const units = CoordinatesUtils.getUnits(projection);
             const dpm = 96 * (100 / 2.54);
             return resolutions.map((resolution) => resolution * dpm * (units === 'degrees' ? 111194.87428468118 : 1));

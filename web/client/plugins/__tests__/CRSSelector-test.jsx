@@ -31,6 +31,25 @@ describe('CRSSelector Plugin', () => {
         expect(document.getElementsByClassName('ms-prj-selector').length).toBe(1);
     });
 
+    it('CRSSelector is not rendered when Print Panel is enabled', () => {
+        const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
+            controls: {
+                print: {
+                    enabled: true
+                }
+            },
+            map: {
+                projection: "EPSG:900913"
+            },
+            localConfig: {
+                projectionDefs: []
+            }
+        });
+
+        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('ms-prj-selector').length).toBe(0);
+    });
+
     it('CRSSelector is not rendered when Measure Panel is enabled', () => {
         const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
             controls: {

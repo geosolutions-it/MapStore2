@@ -23,6 +23,7 @@ const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
 const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
+const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
 
 
 function errorLoadingFont(err = {family: ""}) {
@@ -163,6 +164,17 @@ function changeMapLimits({restrictedExtent, crs, minZoom}) {
     };
 }
 
+function setMapResolutions(resolutions) {
+    return {
+        type: SET_MAP_RESOLUTIONS,
+        resolutions
+    };
+}
+
+/**
+ * Actions for map
+ * @name actions.map
+ */
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
@@ -180,6 +192,7 @@ module.exports = {
     INIT_MAP,
     RESIZE_MAP,
     CHANGE_MAP_LIMITS,
+    SET_MAP_RESOLUTIONS,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -195,5 +208,6 @@ module.exports = {
     updateVersion,
     initMap,
     resizeMap,
-    changeMapLimits
+    changeMapLimits,
+    setMapResolutions
 };
