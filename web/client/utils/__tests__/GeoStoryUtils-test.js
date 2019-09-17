@@ -136,6 +136,7 @@ describe("GeoStory Utils", () => {
     it("test MediaTypes", () => {
         expect(MediaTypes).toEqual({
             IMAGE: "image",
+            MAP: "map",
             VIDEO: "video"
         });
     });
