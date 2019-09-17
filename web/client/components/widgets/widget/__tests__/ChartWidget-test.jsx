@@ -52,25 +52,4 @@ describe('ChartWidget component', () => {
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonEdit).toHaveBeenCalled();
     });
-    it('Test ChartWidget callbacks', () => {
-        const actions = {
-            onEdit: () => {},
-            exportCSV: () => {},
-            exportImage: () => {}
-        };
-        const spyonEdit = expect.spyOn(actions, 'onEdit');
-        const spyexportCSV = expect.spyOn(actions, 'exportCSV');
-        const spyexportImage = expect.spyOn(actions, 'exportImage');
-        ReactDOM.render(<ChartWidget exportCSV={actions.exportCSV} exportImage={actions.exportImage} onEdit={actions.onEdit} />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        let el = container.querySelector('.glyphicon-pencil');
-        ReactTestUtils.Simulate.click(el); // <-- trigger event callback
-        expect(spyonEdit).toHaveBeenCalled();
-        el = container.querySelector('.exportCSV');
-        ReactTestUtils.Simulate.click(el);
-        expect(spyexportCSV).toHaveBeenCalled();
-        el = container.querySelector('.exportImage');
-        ReactTestUtils.Simulate.click(el);
-        expect(spyexportImage).toHaveBeenCalled();
-    });
 });
