@@ -40,7 +40,8 @@ const {
     METADATA_CHANGED, metadataChanged,
     setShowMapDetails, SHOW_DETAILS,
     updateAttribute, saveAll,
-    SAVE_MAP_RESOURCE, saveMapResource
+    SAVE_MAP_RESOURCE, saveMapResource,
+    FEATURED_MAPS_SET_LATEST_RESOURCE, setFeaturedMapsLatestResource
 } = require('../maps');
 
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
@@ -385,6 +386,14 @@ describe('Test correctness of the maps actions', () => {
         const resource = {};
         const a = saveMapResource(resource);
         expect(a.type).toBe(SAVE_MAP_RESOURCE);
+        expect(a.resource).toBe(resource);
+    });
+    it('setFeaturedMapsLatestResource', () => {
+        const resource = {
+            id: 1
+        };
+        const a = setFeaturedMapsLatestResource(resource);
+        expect(a.type).toBe(FEATURED_MAPS_SET_LATEST_RESOURCE);
         expect(a.resource).toBe(resource);
     });
 

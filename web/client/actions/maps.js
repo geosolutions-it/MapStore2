@@ -60,6 +60,7 @@ const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
+const FEATURED_MAPS_SET_LATEST_RESOURCE = "FEATURED_MAPS:SET_LATEST_RESOURCE";
 
 
 /**
@@ -876,6 +877,15 @@ const saveMapResource = (resource) => ({
     type: SAVE_MAP_RESOURCE,
     resource
 });
+/**
+ * Set the latestResource prop of featuredmaps
+ * @memberof actions.maps
+ * @param {boolean} enabled the `enabled` flag
+ */
+const setFeaturedMapsLatestResource = (resource) => ({
+    type: FEATURED_MAPS_SET_LATEST_RESOURCE,
+    resource
+});
 
 /**
  * Actions for maps
@@ -907,6 +917,7 @@ module.exports = {
     METADATA_CHANGED,
     NO_DETAILS_AVAILABLE,
     SAVE_MAP_RESOURCE,
+    FEATURED_MAPS_SET_LATEST_RESOURCE,
     toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
     toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
     toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
@@ -957,5 +968,6 @@ module.exports = {
     mapError,
     mapsSearchTextChanged,
     updateAttribute,
-    saveMapResource
+    saveMapResource,
+    setFeaturedMapsLatestResource
 };

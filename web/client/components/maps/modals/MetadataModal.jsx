@@ -17,7 +17,7 @@ require('react-quill/dist/quill.snow.css');
 require('./css/modals.css');
 const Spinner = require('react-spinkit');
 const {Grid, Row, Col} = require('react-bootstrap');
-const {isNil} = require('lodash');
+const {get, isNil} = require('lodash');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const {NO_DETAILS_AVAILABLE} = require('../../../actions/maps');
@@ -394,7 +394,7 @@ class MetadataModal extends React.Component {
             <ResizableModal
             id={this.props.id}
             size={this.props.modalSize}
-            title={<Message msgId="manager.editMapMetadata"/>}
+            title={<Message msgId={get(this.props.map, "category.name") === "DASHBOARD" ? "dashboard.saveDialog.title" : "manager.editMapMetadata"}/>}
             show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
             clickOutEnabled
             bodyClassName="ms-flex modal-properties-container"
@@ -458,7 +458,8 @@ class MetadataModal extends React.Component {
                             />
                         </Col>
                     </Row>
-                    {this.props.showDetailsRow ? this.renderDetailsRow() : null}
+                    {this.props.showDetailsRow && get(this.props.map, "category.name") !== "DASHBOARD" ? this.renderDetailsRow() : null}
+
                     {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
 
             </div></Grid>
