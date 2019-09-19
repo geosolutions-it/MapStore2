@@ -22,7 +22,7 @@ const ColorUtils = {
         n = (n > 255 || n < 0) ? 0 : n;
         return HCHARS.charAt( ( n - n % 16 ) / 16 ) + HCHARS.charAt( n % 16 );
     },
-    rgbToHex: function( r, g, b ) {
+    rgbToHex: ( r, g, b ) => {
         if ( r instanceof Array ) { return ColorUtils.rgbToHex( r[0], r[1], r[2] ); }
         return "#" + ColorUtils.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
     },
@@ -30,7 +30,7 @@ const ColorUtils = {
         return Math.min( 255, Math.round( n * 256 ) );
     },
     rgbToHsv: ( rr, gg, bb ) => {
-        if ( rr instanceof Array ) { return ColorUtils.rgbToHsv( r[0], r[1], r[2] ); }
+        if ( rr instanceof Array ) { return ColorUtils.rgbToHsv( rr[0], rr[1], rr[2] ); }
         let r = rr / 255;
         let g = gg / 255;
         let b = bb / 255;
@@ -105,7 +105,6 @@ const ColorUtils = {
         if (total === 1) {
             svstep = 0.50;
             hstep = range / 2;
-
         }
         for (let x = 0; x < total; x++) {
             let h = base + x * hstep - range / 2;
@@ -120,7 +119,6 @@ const ColorUtils = {
             r.push(ColorUtils.hsvToHex(h, s, v, x));
         }
         return r;
-
     },
     hsvToRgb: ( h, s, v ) => {
         if ( h instanceof Array ) { return ColorUtils.hsvToRgb( h[0], h[1], h[2] ); }
@@ -148,7 +146,7 @@ const ColorUtils = {
         // return rgb;
         return ColorUtils.rgbToHex(rgb);
     },
-    hexToHsv: function(h) {
+    hexToHsv: (h) => {
         let hex = h;
         if (hex.length > 0) {
             if (hex[0] === '#') {
@@ -157,6 +155,23 @@ const ColorUtils = {
             let rgb = ColorUtils.hexToRgb(hex);
             return ColorUtils.rgbToHsv(rgb);
         }
+    },
+    hexToRgb: (h) => {
+        let hex = h;
+        let r;
+        let g;
+        let b;
+        if (hex.charAt(0) === '#') {
+            hex = h.substring(1);
+        }
+        r = hex.charAt(0) + hex.charAt(1);
+        g = hex.charAt(2) + hex.charAt(3);
+        b = hex.charAt(4) + hex.charAt(5);
+        return [
+            parseInt(r, 16),
+            parseInt(g, 16),
+            parseInt(b, 16)
+        ];
     },
     colorToHexStr: (color = 'red') => tinycolor(color).toHexString(),
     /**
