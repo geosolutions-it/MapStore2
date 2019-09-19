@@ -29,6 +29,7 @@ module.exports = (props) => (<ContainerDimensions>
                     {...props}
                     minHeight={height}
                     minWidth={width}
+                    enableCellAutoFocus={false}
                     />
             </div>
             }
