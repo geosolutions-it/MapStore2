@@ -42,6 +42,8 @@ const {getMetadataRecordById} = require("../actions/catalog");
 
 const {activeSelector} = require("../selectors/catalog");
 const {isCesium} = require('../selectors/maptype');
+const {getConfiguredPlugin} = require('../utils/PluginsUtils');
+const BorderLayout = require('../components/layout/BorderLayout');
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -132,7 +134,7 @@ const tocSelector = createSelector(
 
 const TOC = require('../components/TOC/TOC');
 const Header = require('../components/TOC/Header');
-const Toolbar = require('../components/TOC/Toolbar');
+const TOCToolbar = require('../components/TOC/Toolbar');
 const DefaultGroup = require('../components/TOC/DefaultGroup');
 const DefaultLayer = require('../components/TOC/DefaultLayer');
 const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
@@ -140,6 +142,7 @@ const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
 class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
+        buttons: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -219,6 +222,7 @@ class LayerTree extends React.Component {
     };
 
     static defaultProps = {
+        buttons: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -351,8 +355,9 @@ class LayerTree extends React.Component {
                     filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "toc.filterPlaceholder")}
                     filterText={this.props.filterText}
                     toolbar={
-                        <Toolbar
+                        <TOCToolbar
                             groups={this.props.groups}
+                            buttons={this.props.buttons}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}
@@ -607,6 +612,54 @@ const TOCPlugin = connect(tocSelector, {
     refreshLayerVersion
 })(LayerTree);
 
+class TOCContainer extends React.Component {
+
+    static propTypes = {
+        items: PropTypes.array
+    }
+
+    static contextTypes = {
+        loadedPlugins: PropTypes.object
+    };
+
+    state = {
+        panels: [],
+        buttons: []
+    };
+
+    componentWillMount() {
+        const { items = [] } = this.props;
+        const buttons = items.map(({ tool }) => tool).filter(val => val);
+        const panels = items
+            .map(({ panel, ...impl }) => {
+                if (panel && panel.Component) {
+                    return panel.Component;
+                }
+                return getConfiguredPlugin({ ...impl }, this.context.loadedPlugins, <div />);
+            })
+            .filter(val => val);
+        this.setState({
+            panels,
+            buttons
+        });
+    }
+
+    render() {
+        const { panels = [], buttons = [] } = this.state;
+        const { items, ...props } = this.props;
+        return (
+            <BorderLayout
+                columns={panels.map( (Panel, idx) => <Panel key={idx}/>)}>
+                <div className="ms-toc-wrapper">
+                    <div className="ms-toc-container">
+                        <TOCPlugin { ...props } buttons={buttons}/>
+                    </div>
+                </div>
+            </BorderLayout>
+        );
+    }
+}
+
 const API = {
     csw: require('../api/CSW'),
     wms: require('../api/WMS'),
@@ -614,7 +667,7 @@ const API = {
 };
 
 module.exports = {
-    TOCPlugin: assign(TOCPlugin, {
+    TOCPlugin: assign(TOCContainer, {
         Toolbar: {
             name: 'toc',
             position: 7,
