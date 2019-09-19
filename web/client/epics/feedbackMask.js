@@ -11,6 +11,8 @@ const Rx = require('rxjs');
 const {split, get, isNil} = require('lodash');
 const {FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE, feedbackMaskLoading, feedbackMaskLoaded, feedbackMaskEnabled, detectedNewPage} = require('../actions/feedbackMask');
 const {LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
+const { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } = require('../actions/geostory');
+
 const {INIT_MAP} = require('../actions/map');
 const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapSelector} = require('../selectors/map');
@@ -81,6 +83,25 @@ const updateDashboardVisibility = action$ =>
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
         });
+/**
+ * Enabled/disabled mask based on geostory load feedback, in case of error enable feedbackMask.
+ * @param {Observable} action$ stream of actions. Manages `LOAD_GEOSTORY, `GEOSTORY_LOADED`, `GEOSTORY_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
+ * @memberof epics.feedbackMask
+ * @return {Observable}
+ */
+export const updateGeoStoryFeedbackMaskVisibility = action$ =>
+    action$.ofType(LOAD_GEOSTORY)
+        .switchMap(() => {
+            const loadActions = [GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR];
+            const isEnabled = ({ type }) => type === LOAD_GEOSTORY_ERROR;
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'geostory');
+            return Rx.Observable.merge(
+                updateObservable,
+                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .switchMap(() => updateObservable)
+                    .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
+            );
+        });
 
 /**
  * Detect if the page has changed, if so it will stop loading and disable feedbackMask state.
@@ -111,5 +132,6 @@ const detectNewPage = (action$, store) =>
 module.exports = {
     updateMapVisibility,
     updateDashboardVisibility,
+    updateGeoStoryFeedbackMaskVisibility,
     detectNewPage
 };

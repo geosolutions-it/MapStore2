@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, toPath, isObject, isArray } from "lodash";
+import { get, isString, isNumber, findIndex, toPath, isObject, isArray, castArray } from "lodash";
 import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
 
 import {
@@ -13,11 +13,16 @@ import {
     ADD_RESOURCE,
     CHANGE_MODE,
     EDIT_RESOURCE,
+    LOADING_GEOSTORY,
     SET_CURRENT_STORY,
     TOGGLE_CARD_PREVIEW,
     UPDATE,
     UPDATE_CURRENT_PAGE,
-    REMOVE
+    REMOVE,
+    SET_CONTROL,
+    SET_RESOURCE,
+    SAVED,
+    SAVE_ERROR
 } from '../actions/geostory';
 
 let INITIAL_STATE = {
@@ -95,6 +100,7 @@ const getIndexToInsert = (array, position) => {
  * {
  *     "mode": "edit", // 'edit' or 'view',
  *     "currentStory": {
+ *      "resources": [] // resources (media) of the story
  *     // sections
  *     "sections": [
  *       {
@@ -132,7 +138,11 @@ const getIndexToInsert = (array, position) => {
  *         ]
  *       }
  *     ]
- *   }
+ *   },
+ *   "resource": {} // original resource of the story. Contains access info (id, canSave, canDelete...)
+ *   "loading": true,
+ *   "loadingFlags": {} // contains specific loading entries (saving, loading...)
+ *   "errors": {} // contains errors if happened
  * }
  *
  */
@@ -170,6 +180,12 @@ export default (state = INITIAL_STATE, action) => {
             const newState = arrayUpdate("currentStory.resources", {id, type, data}, {id}, state);
             return newState;
         }
+        case LOADING_GEOSTORY: {
+            // anyway sets loading to true
+            return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
+                "loading", action.value, state
+            ));
+        }
         case REMOVE: {
             const { path: rawPath } = action;
             const path = getEffectivePath(`currentStory.${rawPath}`, state);
@@ -188,6 +204,24 @@ export default (state = INITIAL_STATE, action) => {
         }
         case SET_CURRENT_STORY: {
             return set('currentStory', action.story, state);
+        }
+        case SET_CONTROL: {
+            const {control, value} = action;
+            return set(`controls.${control}`, value, state);
+        }
+        /**
+         * **NOTE** this is the resource that contains the whole story (e.g. GeoStore).
+         * It contains permissions and so on. Don't confuse with story resources (media).
+         */
+        case SET_RESOURCE: {
+            const { resource } = action;
+            return set(`resource`, resource, state);
+        }
+        case SAVED: {
+            return unset(`errors.save`, state);
+        }
+        case SAVE_ERROR: {
+            return set(`errors.save`, castArray(action.error), state);
         }
         case TOGGLE_CARD_PREVIEW: {
             return set('cardPreviewEnabled', !state.cardPreviewEnabled, state);

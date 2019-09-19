@@ -46,6 +46,12 @@ export const Modes = {
     EDIT: 'edit',
     VIEW: 'view'
 };
+
+export const Controls = {
+    SHOW_SAVE: 'save.show',
+    LOADING: 'loading'
+};
+
 export const lists = {
     StoryTypes: values(StoryTypes),
     SectionTypes: values(SectionTypes),

@@ -1588,18 +1588,6 @@
         },
         "dashboard": {
             "loadingSpinner": "Cargando panel de control",
-            "saveDialog": {
-                "title": "Editar propiedades del panel de control",
-                "name": "Nombre",
-                "description": "Descripción",
-                "namePlaceholder": "Escriba un nombre ...",
-                "descriptionPlaceholder": "Escriba una descripción ...",
-                "confirmCloseText": "Hay cambios pendientes, ¿está seguro que quiere cerrar sin guardar?",
-                "close": "Cerrar",
-                "cancel": "Cancelar",
-                "saveSuccessTitle": "éxito",
-                "saveSuccessMessage": "Panel de control guardado con éxito"
-            },
             "errors":{
                 "loading": {
                     "title": "Error al cargar el panel de control",
@@ -1863,6 +1851,7 @@
             "selectworkspace": "Debe seleccionar el espacio de trabajo para habilitar opciones avanzadas."
         },
         "geostory": {
+            "loadingSpinner": "Cargando Historia",
             "addTitleSection": "Agregar sección de título",
             "addParagraphSection": "Agregar sección de párrafo",
             "addImmersiveSection": "Añadir sección inmersiva",
@@ -1931,10 +1920,23 @@
                     "title": "Error",
                     "unknownError": "Error desconocido",
                     "pleaseLogin": "Por favor Iniciar sesión",
-                    "geostoryNotAccessible": "Esta historia no es accesible",
+                    "notAccessible": "Esta historia no es accesible.",
+                    "geostoryNotAccessible": "No tienes permiso para acceder a esta historia. Por favor, póngase en contacto con el propietario del recurso",
                     "geostoryDoesNotExist": "Esta historia no existe"
                 }
             }
+        },
+        "saveDialog": {
+            "title": "Editar propiedades",
+            "name": "Nombre",
+            "description": "Descripción",
+            "namePlaceholder": "Escriba un nombre ...",
+            "descriptionPlaceholder": "Escriba una descripción ...",
+            "confirmCloseText": "Hay cambios pendientes, ¿está seguro que quiere cerrar sin guardar?",
+            "close": "Cerrar",
+            "cancel": "Cancelar",
+            "saveSuccessTitle": "éxito",
+            "saveSuccessMessage": "Guardado con éxito"
         },
         "mediaEditor": {
             "modalTitle": "Media",

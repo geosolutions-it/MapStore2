@@ -17,7 +17,10 @@ import {
     sectionAtIndexSelectorCreator,
     resourcesSelector,
     resourceByIdSelectorCreator,
-    resourceIdSelectorCreator
+    resourceIdSelectorCreator,
+    saveDialogSelector,
+    errorsSelector,
+    loadingSelector
 } from "../geostory";
 
 describe('geostory selectors', () => { // TODO: check default
@@ -38,4 +41,17 @@ describe('geostory selectors', () => { // TODO: check default
     it('sectionAtIndexSelectorCreator', () => { expect(sectionAtIndexSelectorCreator(0)({geostory: {currentStory: {sections: [{id: "id"}]}}})).toEqual({id: "id"}); });
     it('resourcesSelector', () => { expect(resourcesSelector({geostory: {currentStory: {resources: []}}})).toEqual([]); });
     it('resourceByIdSelectorCreator', () => { expect(resourceByIdSelectorCreator("id")({geostory: {currentStory: {resources: [{id: "id"}]}}})).toEqual({id: "id"}); });
+    it('saveDialogSelector', () => {
+        expect(saveDialogSelector({
+            geostory: {
+                controls: {
+                    save: { // Note: this is the path of Controls.SHOW_SAVE
+                        show: "save"
+                    }
+                }
+            }
+        })).toEqual("save");
+    });
+    it('loadingSelector', () => expect(loadingSelector({ geostory: { loading: true } })).toBe(true));
+    it('errorsSelector', () => expect(errorsSelector({ geostory: { errors: ["some", "error"] } })).toBeTruthy());
 });

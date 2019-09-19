@@ -7,6 +7,8 @@
  */
 import {get, find} from 'lodash';
 import {getEffectivePath} from '../reducers/geostory';
+import { Controls } from '../utils/GeoStoryUtils';
+
 /**
  * Returns a selector using a path inside the current story
  * @param {string} path the path
@@ -32,6 +34,41 @@ export const currentPageSelector = state => get(state, 'geostory.currentPage');
  * @returns {string} current mode. One of "view" / "edit"
  */
 export const modeSelector = state => get(state, "geostory.mode");
+
+/**
+ * Create a selector for the given control
+ * @param {string} control the control name
+ */
+export const controlSelectorCreator = control => state => get(state, `geostory.controls.${control}`);
+
+/**
+ * Gets the state of the save dialog ("save" or "saveAs" values typically identify what window is open)
+ * @param {object} state the application state
+ */
+export const saveDialogSelector = state => controlSelectorCreator(Controls.SHOW_SAVE)(state);
+
+/**
+ * Gets the resource for geostory (contains authorization and other useful information)
+ * **NOTE** don't confuse this with the story resources. This is the single resource
+ * of the whole geostory, containing permissions, id, and so on (e.g. the GeoStore resource)
+ * @param {object} state application state
+ */
+export const resourceSelector = state => get(state, 'geostory.resource');
+/**
+ * Selects the loading state of geostory.
+ * @param {object} state the application state
+ */
+export const loadingSelector = state => get(state, 'geostory.loading');
+/**
+ * Selects the errors container for geostory state
+ * @param {object} state app state
+ */
+export const errorsSelector = state => get(state, 'geostory.errors');
+/**
+ * Selects the error(s) of save operation of a geostory
+ * @param {object} state the application state
+ */
+export const saveErrorSelector = state => get(errorsSelector(state), 'save');
 /**
  * gets the sections array of the current story
  */

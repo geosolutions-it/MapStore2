@@ -8,11 +8,13 @@
 
 const expect = require('expect');
 
-const {updateMapVisibility, updateDashboardVisibility, detectNewPage} = require('../feedbackMask');
+const { updateMapVisibility, updateDashboardVisibility, updateGeoStoryFeedbackMaskVisibility, detectNewPage} = require('../feedbackMask');
 const {FEEDBACK_MASK_LOADING, FEEDBACK_MASK_LOADED, FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE} = require('../../actions/feedbackMask');
 const {initMap} = require('../../actions/map');
 const {configureMap, configureError} = require('../../actions/config');
 const {loadDashboard, dashboardLoaded, dashboardLoadError} = require('../../actions/dashboard');
+const { loadGeostory, geostoryLoaded, loadGeostoryError } = require('../../actions/geostory');
+
 
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
@@ -78,6 +80,35 @@ describe('feedbackMask Epics', () => {
         testEpic(updateDashboardVisibility, 3, [loadDashboard(), dashboardLoadError()], epicResult, {});
     });
 
+    it('test updateGeoStoryFeedbackMaskVisibility loaded', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(3);
+            const loadingAction = actions[0];
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
+            const loadedAction = actions[1];
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
+            const enabledAction = actions[2];
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
+            expect(enabledAction.enabled).toBe(false);
+            done();
+        };
+        testEpic(updateGeoStoryFeedbackMaskVisibility, 3, [loadGeostory(), geostoryLoaded()], epicResult, {});
+    });
+
+    it('test updateGeoStoryFeedbackMaskVisibility error', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(3);
+            const loadingAction = actions[0];
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
+            const loadedAction = actions[1];
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
+            const enabledAction = actions[2];
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
+            expect(enabledAction.enabled).toBe(true);
+            done();
+        };
+        testEpic(updateGeoStoryFeedbackMaskVisibility, 3, [loadGeostory(), loadGeostoryError()], epicResult, {});
+    });
     it('test detectNewPage new page', (done) => {
         const epicResult = actions => {
             try {
