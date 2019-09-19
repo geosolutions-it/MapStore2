@@ -13,7 +13,7 @@ const { loginSuccess, logout, logoutWithReload } = require('../../actions/securi
 const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig } = require('../login');
 const { configureError } = require('../../actions/config');
 const { dashboardLoadError } = require('../../actions/dashboard');
-const {loadGeostoryError } =require('../../actions/geostory');
+const { loadGeostoryError } = require('../../actions/geostory');
 const { FEEDBACK_MASK_LOADING } = require('../../actions/feedbackMask');
 
 const { testEpic } = require('./epicTestUtils');
