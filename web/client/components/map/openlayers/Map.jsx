@@ -47,6 +47,7 @@ export default class OpenlayersMap extends React.Component {
         projection: PropTypes.string,
         projectionDefs: PropTypes.array,
         onMapViewChanges: PropTypes.func,
+        onResolutionsChange: PropTypes.func,
         onClick: PropTypes.func,
         mapOptions: PropTypes.object,
         zoomControl: PropTypes.bool,
@@ -70,6 +71,7 @@ export default class OpenlayersMap extends React.Component {
     static defaultProps = {
         id: 'map',
         onMapViewChanges: () => { },
+        onResolutionsChange: () => { },
         onCreationError: () => { },
         onClick: null,
         onMouseMove: () => { },
@@ -214,6 +216,7 @@ export default class OpenlayersMap extends React.Component {
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
 
+        this.props.onResolutionsChange(this.getResolutions());
         if (this.props.registerHooks) {
             this.registerHooks();
         }
@@ -250,6 +253,7 @@ export default class OpenlayersMap extends React.Component {
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
                 this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
+                this.props.onResolutionsChange(this.getResolutions());
             }
             // We have to force ol to drop tile and reload
             this.map.getLayers().forEach((l) => {

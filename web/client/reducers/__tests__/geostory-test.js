@@ -89,11 +89,11 @@ describe('geostory reducer', () => {
         it('using a template', () => {
             const SectionTypes = lists.SectionTypes;
             SectionTypes.map( type => {
-                const ADD_ACTION = add("sections", 0, type);
+                const ADD_ACTION = add("sections", 0, type, i => i);
                 const STATE = { geostory: geostory(STATE_STORY_1, ADD_ACTION) };
                 const section = sectionAtIndexSelectorCreator(0)(STATE);
-                expect(section.type).toEqual(getDefaultSectionTemplate(type).type);
-                expect(section.contents.length).toEqual(getDefaultSectionTemplate(type).contents.length);
+                expect(section.type).toEqual(getDefaultSectionTemplate(type, i => i).type);
+                expect(section.contents.length).toEqual(getDefaultSectionTemplate(type, i => i).contents.length);
             });
         });
     });

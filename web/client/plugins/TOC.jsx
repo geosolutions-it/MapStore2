@@ -390,6 +390,8 @@ class LayerTree extends React.Component {
                                 closeText: <Message msgId="close"/>,
                                 confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
+                                confirmDeleteLayerGroupText: <Message msgId="layerProperties.deleteLayerGroup" />,
+                                confirmDeleteLayerGroupMessage: <Message msgId="layerProperties.deleteLayerGroupMessage" />,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
                                 addLayerTooltip: <Message msgId="toc.addLayer" />,
@@ -409,7 +411,8 @@ class LayerTree extends React.Component {
                                 downloadToolTooltip: <Message msgId="toc.toolDownloadTooltip" />,
                                 trashTooltip: {
                                     LAYER: <Message msgId="toc.toolTrashLayerTooltip"/>,
-                                    LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>
+                                    LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>,
+                                    GROUP: <Message msgId="toc.toolTrashGroupTooltip"/>
                                 },
                                 reloadTooltip: {
                                     LAYER: <Message msgId="toc.toolReloadLayerTooltip"/>,

@@ -9,15 +9,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import {compose, withPropsOnChange, withHandlers} from 'recompose';
+
 import {createPlugin} from '../utils/PluginsUtils';
+import { Modes } from '../utils/GeoStoryUtils';
+import { getMessageById } from '../utils/LocaleUtils';
 import { add, update, updateCurrentPage, remove } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
 import { currentStorySelector, modeSelector } from '../selectors/geostory';
+import { currentMessagesSelector } from '../selectors/locale';
 import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
 import Story from '../components/geostory/Story';
-const { Modes } = require('../utils/GeoStoryUtils');
 
 const GeoStory = ({
     story,
@@ -39,17 +43,31 @@ const GeoStory = ({
  * @memberof plugins
  */
 export default createPlugin("GeoStory", {
-    component: connect(
-        createStructuredSelector({
-            mode: modeSelector,
-            story: currentStorySelector
-        }), {
-            add,
-            update,
-            updateCurrentPage,
-            remove,
-            editMedia
-        },
+    component: compose(
+        connect(
+            createStructuredSelector({
+                mode: modeSelector,
+                story: currentStorySelector,
+                messages: currentMessagesSelector
+            }), {
+                add,
+                update,
+                updateCurrentPage,
+                remove,
+                editMedia
+            }
+        ),
+        // adding a localize function when adding new content (to localize placeholders of new content)
+        withPropsOnChange(
+            ["messages"],
+            ({messages}) => ({
+                localize: (id) => getMessageById(messages, id)
+            })
+        ),
+        withHandlers({
+            // adding to the original add function the localize function that takes
+            add: ({localize, add: addFunc}) => (path, position, element) => addFunc(path, position, element, localize)
+        })
     )(GeoStory),
     reducers: {
         geostory

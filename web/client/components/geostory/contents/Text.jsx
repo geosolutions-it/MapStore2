@@ -6,16 +6,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import editableText from './enhancers/editableText';
-import { withHandlers, compose, branch} from 'recompose';
-import { Modes } from '../../../utils/GeoStoryUtils';
+import { branch, compose, withHandlers, withPropsOnChange } from 'recompose';
 
-const Text = ({ id, toggleEditing = () => {}, html }) => {
+import { EMPTY_CONTENT, Modes, SectionTypes } from '../../../utils/GeoStoryUtils';
+import localizedProps from '../../misc/enhancers/localizedProps';
+import editableText from './enhancers/editableText';
+
+const Text = ({ placeholder, id, toggleEditing = () => {}, html, mode}) => {
     return (
-        <div
-            id={id}
-            onClick={() => toggleEditing(true, html)}
-            dangerouslySetInnerHTML={{ __html: html }} />
+        <div className="ms-text-wrapper">
+            {   // content => render it
+                html !== EMPTY_CONTENT && <div
+                id={id}
+                onClick={() => toggleEditing(true, html)}
+                dangerouslySetInnerHTML={{ __html: html }} />}
+            {   // no content => render a placeholder
+                (!html || html === EMPTY_CONTENT) && mode === Modes.EDIT &&
+            <div
+                className="ms-text-placeholder"
+                id={"placeholder" + id}
+                // when opening an empty content by clicking the placeholder, then the "html" should be empty
+                onClick={() => toggleEditing(true, html === EMPTY_CONTENT ? "" : html)}
+                dangerouslySetInnerHTML={{ __html: `<h1>${placeholder}</h1>` }}
+            />
+            }
+        </div>
     );
 };
 
@@ -29,7 +44,21 @@ export default compose(
     branch(
         ({ mode }) => mode === Modes.EDIT,
         editableText
+    ),
+    /*
+     * pass the placeholder localized to the text component
+     * when contentEditing is false (the only case the placeholder is visible)
+    */
+    compose(
+        // this is not rendered if editor is opened, i.e. contentEditing = true
+        withPropsOnChange(
+            ["sectionType"],
+            ({sectionType}) => {
+                return {
+                    placeholder: SectionTypes.TITLE === sectionType ? "geostory.builder.defaults.htmlTitlePlaceholder" : "geostory.builder.defaults.htmlPlaceholder"
+                };
+            }
+        ),
+        localizedProps("placeholder")
     )
-
-
 )(Text);

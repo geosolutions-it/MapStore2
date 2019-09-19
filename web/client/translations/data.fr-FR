@@ -62,6 +62,8 @@
             "delete": "Effacer",
             "deleteLayer":"Supprimer le calque",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
+            "deleteLayerGroup":"Supprimer le groupe",
+            "deleteLayerGroupMessage": "Voulez-vous vraiment supprimer ce groupe et toutes ses couches?",
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
             "featureTypeErrorInvalidJSON": "Impossible de charger les attributs de calque. La réponse n'est pas valide",
@@ -403,6 +405,7 @@
             "toolGroupSettingsTooltip": "Réglages du groupe de couches sélectionné",
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
+            "toolTrashGroupTooltip": "Supprimer le groupe sélectionné",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
             "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
@@ -1881,8 +1884,8 @@
             },
             "builder": {
                 "defaults": {
-                    "htmlTitle": "<h1 style='text-align:center'>Insérer un titre</h1><p style='text-align:center'><em>sous-titre</em></p>",
-                    "htmlSample": "<p>insérer du texte ici...</p>",
+                    "htmlTitlePlaceholder": "Insérer un titre",
+                    "htmlPlaceholder": "insérer du texte ici...",
                     "titleTitle": "Section de titre",
                     "titleParagraph": "Section de paragraphe",
                     "titleImmersive": "Section immersive",

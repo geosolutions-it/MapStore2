@@ -49,12 +49,12 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn } from '../selectors/security';
-import { currentMessagesSelector } from '../selectors/locale';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
 import { mediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, localizeElement, Controls } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
+
 import { getEffectivePath } from '../reducers/geostory';
 
 
@@ -103,28 +103,6 @@ export const openMediaEditorForNewMedia = action$ =>
 
 
 /**
- * it localizes the new template element being added
- * @param {} action$
- */
-export const localizeTemplateEpic = (action$, store) =>
-    action$.ofType(ADD)
-    .switchMap(({element, path}) => {
-        const messages = currentMessagesSelector(store.getState());
-        const propsLocalized = localizeElement(element, messages);
-        let elPath = `sections[{"id": "${element.id}"}]`;
-        if (element.type === ContentTypes.COLUMN) {
-            const currentContents = createPathSelector(path)(store.getState());
-            elPath = `${path}[${currentContents.length - 1}]`;
-        }
-        return Observable.of(
-                update(
-                    elPath,
-                    propsLocalized,
-                    "merge"
-                )
-            );
-    });
-/**
  * Epic that handles the save story workflow. It uses persistence
  * @param {Observable} action$ stream of redux action
  */
@@ -169,7 +147,7 @@ export const scrollToContentEpic = action$ =>
                     const err = new Error("Item not mounted yet");
                     throw err;
                 } else {
-                    scrollToContent(element.id, {behavior: "smooth"});
+                    scrollToContent(element.id, {behavior: "auto", block: "center"});
                     return Observable.empty();
                 }
             })

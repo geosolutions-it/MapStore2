@@ -21,7 +21,9 @@ var {
     ZOOM_TO_EXTENT,
     RESIZE_MAP,
     CHANGE_MAP_LIMITS,
-    ZOOM_TO_POINT, zoomToPoint,
+    ZOOM_TO_POINT,
+    SET_MAP_RESOLUTIONS,
+    zoomToPoint,
     errorLoadingFont,
     changeMapView,
     clickOnMap,
@@ -35,7 +37,8 @@ var {
     initMap,
     zoomToExtent,
     resizeMap,
-    changeMapLimits
+    changeMapLimits,
+    setMapResolutions
 } = require('../map');
 const {
     SHOW_NOTIFICATION
@@ -212,5 +215,13 @@ describe('Test correctness of the map actions', () => {
         expect(retval.pos).toEqual(pos);
         expect(retval.zoom).toEqual(zoom);
         expect(retval.crs).toEqual(crs);
+    });
+
+    it('setMapResolutions', () => {
+        const resolutions = [4, 2];
+        const retval = setMapResolutions(resolutions);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(SET_MAP_RESOLUTIONS);
+        expect(retval.resolutions).toEqual(resolutions);
     });
 });

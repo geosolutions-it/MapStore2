@@ -62,6 +62,8 @@
             "delete": "Delete",
             "deleteLayer":"Delete Layer",
             "deleteLayerMessage": "Do you really want to delete this Layer?",
+            "deleteLayerGroup":"Delete Group",
+            "deleteLayerGroupMessage": "Do you really want to delete this group and all of its layers?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
             "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
@@ -403,6 +405,7 @@
             "toolGroupSettingsTooltip": "Selected group settings",
             "toolTrashLayerTooltip": "Remove selected layer",
             "toolTrashLayersTooltip": "Remove selected layers",
+            "toolTrashGroupTooltip": "Remove selected group",
             "toolFeaturesGridTooltip": "Open Attribute Table",
             "layerFilterTooltip": "Filter Layer",
             "toolDownloadTooltip": "Export layer data",
@@ -1882,8 +1885,8 @@
             },
             "builder": {
                 "defaults": {
-                    "htmlTitle": "<h1 style='text-align:center'>Insert title</h1><p style='text-align:center'><em>sub title</em></p>",
-                    "htmlSample": "<p>Insert text here...</p>",
+                    "htmlTitlePlaceholder": "Insert title",
+                    "htmlPlaceholder": "Insert text here...",
                     "titleTitle": "Title Section",
                     "titleParagraph": "Paragraph Section",
                     "titleImmersive": "Immersive Section",

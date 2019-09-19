@@ -20,8 +20,11 @@ const {connect} = require('react-redux');
 const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSelectorMenu');
 const {projectionDefsSelector, projectionSelector} = require('../selectors/map');
 const {bottomPanelOpenSelector} = require('../selectors/maplayout');
+const {printSelector, measureSelector} = require('../selectors/controls');
+const {editingSelector} = require('../selectors/annotations');
 const {crsInputValueSelector} = require('../selectors/crsselector');
 const {currentBackgroundSelector} = require('../selectors/layers');
+const {queryPanelSelector} = require('../selectors/controls');
 const{modeSelector} = require('../selectors/featuregrid');
 const {error} = require('../actions/notifications');
 const {userRoleSelector} = require('../selectors/security');
@@ -121,13 +124,18 @@ const crsSelector = connect(
             modeSelector,
             isCesium,
             bottomPanelOpenSelector,
-                ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel) => ({
+            measureSelector,
+            queryPanelSelector,
+            printSelector,
+            editingSelector,
+            ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations) => ({
                     currentRole,
                     currentBackground,
                     selected,
                     projectionDefs,
                     value,
-                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel
+
+                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled && !editingAnnotations
                 })
             ), {
                 typeInput: setInputValue,

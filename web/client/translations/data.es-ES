@@ -62,6 +62,8 @@
             "delete": "Borrar",
             "deleteLayer":"Borrar el mapa",
             "deleteLayerMessage": "¿Está totalmente seguro de querer borrar este mapa?",
+            "deleteLayerGroup":"Eliminar grupo",
+            "deleteLayerGroupMessage": "¿Realmente quieres eliminar este grupo y todas sus capas?",
             "confirmDelete": "¿Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida",
@@ -403,6 +405,7 @@
             "toolGroupSettingsTooltip": "Configuración del grupo seleccionado",
             "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
             "toolTrashLayersTooltip": "Eliminar las capas seleccionadas",
+            "toolTrashGroupTooltip": "Eliminar grupo seleccionado",
             "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
             "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
@@ -1881,8 +1884,8 @@
             },
             "builder": {
                 "defaults": {
-                    "htmlTitle": "<h1 style='text-align:center'>Insertar título</h1><p style='text-align:center'><em>subtítulo</em></p>",
-                    "htmlSample": "<p>insertar texto aquí...</p>",
+                    "htmlTitlePlaceholder": "Insertar título",
+                    "htmlPlaceholder": "insertar texto aquí...",
                     "titleTitle": "Sección de título",
                     "titleParagraph": "Sección de párrafo",
                     "titleImmersive": "Sección inmersiva",
