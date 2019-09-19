@@ -158,7 +158,9 @@ const ColorUtils = {
     },
     hexToRgb: (h) => {
         let hex = h;
-        let r, g, b;
+        let r;
+        let g;
+        let b;
         if (hex.charAt(0) === '#') {
             hex = h.substring(1);
         }
@@ -168,7 +170,7 @@ const ColorUtils = {
         return [
             parseInt(r, 16),
             parseInt(g, 16),
-            parseInt(b, 16),
+            parseInt(b, 16)
         ];
     },
     colorToHexStr: (color = 'red') => tinycolor(color).toHexString(),
