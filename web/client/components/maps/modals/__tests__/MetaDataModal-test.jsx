@@ -148,4 +148,42 @@ describe('This test for MetadataModal', () => {
         expect(errorFORMAT).toExist();
     });
 
+    it('details row is shown for maps', () => {
+        let thumbnail = "myThumnbnailUrl";
+        let errors = ["FORMAT"];
+        let map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            category: {
+                name: "MAP"
+            },
+            errors: errors
+        };
+
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+        const detailsSheetArray = document.getElementsByClassName('ms-details-sheet');
+        expect(detailsSheetArray.length).toBe(1);
+    });
+
+    it('details row is hidden for dashboards', () => {
+        let thumbnail = "myThumnbnailUrl";
+        let errors = ["FORMAT"];
+        let map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            category: {
+                name: "DASHBOARD"
+            },
+            errors: errors
+        };
+
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+        const detailsSheetArray = document.getElementsByClassName('ms-details-sheet');
+        expect(detailsSheetArray.length).toBe(0);
+    });
+
 });

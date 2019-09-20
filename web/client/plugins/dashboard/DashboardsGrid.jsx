@@ -6,9 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { compose, defaultProps } = require('recompose');
+const { compose, defaultProps, withHandlers } = require('recompose');
 const { deleteDashboard, reloadDashboards } = require('../../actions/dashboards');
-const { updateAttribute } = require('../../actions/maps'); // TODO: externalize
+const { updateAttribute, setFeaturedMapsLatestResource } = require('../../actions/maps'); // TODO: externalize
 const { userSelector } = require('../../selectors/security');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
@@ -16,12 +16,22 @@ const resourceGrid = require('../../components/resources/enhancers/resourceGrid'
 const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
         onDelete: deleteDashboard,
-        onSaveSuccess: reloadDashboards,
+        reloadDashboards,
+        setFeaturedMapsLatestResource,
         onUpdateAttribute: updateAttribute
+    }),
+    withHandlers({
+        onSaveSuccess: (props) => (resource) => {
+            if (props.reloadDashboards) {
+                props.reloadDashboards();
+            }
+            if (props.setFeaturedMapsLatestResource) {
+                props.setFeaturedMapsLatestResource(resource);
+            }
+        }
     }),
     defaultProps({
         category: "DASHBOARD"
-
     }),
     resourceGrid
 )(require('../../components/resources/ResourceGrid'));
