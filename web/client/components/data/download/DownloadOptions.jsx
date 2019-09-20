@@ -8,7 +8,6 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const Select = require('react-select');
-require('react-select/dist/react-select.css');
 const {Checkbox} = require('react-bootstrap');
 const {get, head} = require('lodash');
 const Message = require('../../I18N/Message');

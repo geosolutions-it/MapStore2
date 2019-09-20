@@ -13,7 +13,6 @@ const Select = require('react-select');
 const {Button, Glyphicon, Alert} = require('react-bootstrap');
 const {findIndex} = require('lodash');
 const {Grid} = require('react-bootstrap');
-require('react-select/dist/react-select.css');
 
 /**
  * General Settings form for layer

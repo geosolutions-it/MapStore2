@@ -13,8 +13,6 @@ const Select = require('react-select');
 const Message = require('../../I18N/Message');
 const {findIndex} = require('lodash');
 
-require('react-select/dist/react-select.css');
-
 // const ConfirmModal = require('./modals/ConfirmModal');
 // const GroupManager = require('./GroupManager');
 
