@@ -52,7 +52,7 @@ class FeaturedMaps extends React.Component {
     };
 
     componentWillMount() {
-        this.props.enableFeaturedMaps(false);
+        this.props.enableFeaturedMaps(true);
     }
 
     render() {
