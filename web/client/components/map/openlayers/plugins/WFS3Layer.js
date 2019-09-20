@@ -117,8 +117,13 @@ Layers.registerType('wfs3', {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
         if (oldOptions.securityToken !== newOptions.securityToken
-        || oldOptions.srs !== newOptions.srs) {
+        || oldOptions.srs !== newOptions.srs
+        || oldOptions._v_ !== newOptions._v_) {
             return createLayer(newOptions);
+        }
+        if (get(oldOptions, 'vectorStyle.body') !== get(newOptions, 'vectorStyle.body')
+        || get(oldOptions, 'vectorStyle.url') !== get(newOptions, 'vectorStyle.url')) {
+            applyStyle(newOptions.vectorStyle, layer);
         }
         return null;
     },
