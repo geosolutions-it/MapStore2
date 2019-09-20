@@ -7,7 +7,6 @@
  */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {get} = require('lodash');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const FitIcon = require('../misc/FitIcon');
@@ -106,7 +105,7 @@ class MapCard extends React.Component {
                 }
             },
             {
-                visible: this.props.map.canEdit === true && (get(this.props.map, "category.name") !== "DASHBOARD"),
+                visible: this.props.map.canEdit === true,
                 glyph: 'wrench',
                 disabled: this.props.map.updating,
                 loading: this.props.map.updating,

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {attributeUpdated, mapDeleted, mapMetadataUpdated, permissionsUpdated, mapsLoading, setFeaturedMapsEnabled} = require('../../actions/maps');
+const {attributeUpdated, mapDeleted, mapMetadataUpdated, permissionsUpdated, mapsLoading, setFeaturedMapsEnabled, setFeaturedMapsLatestResource} = require('../../actions/maps');
 const {dashboardDeleted} = require('../../actions/dashboards');
 const { isFeaturedMapsEnabled } = require('../../selectors/featuredmaps');
 const featuredmaps = require('../featuredmaps');
@@ -79,6 +79,16 @@ describe('Test the featuredmaps reducer', () => {
         expect(isFeaturedMapsEnabled({
             featuredmaps: fm
         })).toBe(true);
+    });
+
+    it('setFeaturedMapsLatestResource action', () => {
+        const resource = {
+            resourceId: 1,
+            name: "name",
+            description: "description"
+        };
+        const state = featuredmaps({}, setFeaturedMapsLatestResource(resource));
+        expect(state.latestResource).toEqual(resource);
     });
 
 });

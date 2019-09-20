@@ -25,7 +25,7 @@ const handleSave = mapPropsStream(props$ => {
                             props.onClose();
                         }
                         if (props.onSaveSuccess) {
-                            props.onSaveSuccess();
+                            props.onSaveSuccess(resource);
                         }
                     }
                 })
