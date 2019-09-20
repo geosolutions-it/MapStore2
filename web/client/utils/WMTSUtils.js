@@ -31,15 +31,19 @@ const WMTSUtils = {
         }
         return matrix;
     },
-    getTileMatrixSet: (tileMatrixSet, srs, allowedSRS, matrixIds = {}, defaultMatrix = srs) => {
+    getTileMatrixSet: (tileMatrixSet, srs, allowedSRS, matrixIds = {}, defaultMatrix = srs, options = {}) => {
+        const {
+            identifierKey = "ows:Identifier",
+            supportedCRSKey = "ows:SupportedCRS"
+        } = options;
         if (tileMatrixSet && isString(tileMatrixSet)) {
             return tileMatrixSet;
         }
         if (tileMatrixSet) {
             return CoordinatesUtils.getEquivalentSRS(srs, allowedSRS).reduce((previous, current) => {
                 if (isArray(tileMatrixSet)) {
-                    const matching = head(tileMatrixSet.filter((matrix) => ((matrix["ows:Identifier"] === current || CoordinatesUtils.getEPSGCode(matrix["ows:SupportedCRS"]) === current) && matrixIds[matrix["ows:Identifier"]])));
-                    return matching && matching["ows:Identifier"] ? matching["ows:Identifier"] : previous;
+                    const matching = head(tileMatrixSet.filter((matrix) => ((matrix[identifierKey] === current || CoordinatesUtils.getEPSGCode(matrix[supportedCRSKey]) === current) && matrixIds[matrix[identifierKey]])));
+                    return matching && matching[identifierKey] ? matching[identifierKey] : previous;
                 } else if (isObject(tileMatrixSet)) {
                     return tileMatrixSet[current] || previous;
                 }

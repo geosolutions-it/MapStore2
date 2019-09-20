@@ -11,6 +11,7 @@ module.exports = {
     GoogleLayer: require('./GoogleLayer').default,
     GraticuleLayer: require('./GraticuleLayer').default,
     MapQuest: require('./MapQuest').default,
+    OGCLayer: require('./OGCLayer').default,
     OSMLayer: require('./OSMLayer').default,
     OverlayLayer: require('./OverlayLayer').default,
     TileProviderLayer: require('./TileProviderLayer').default,
