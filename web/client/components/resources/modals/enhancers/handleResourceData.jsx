@@ -54,8 +54,8 @@ module.exports = compose(
         renderComponent(({ onCloseConfirm, onClose }) =>
         (<ConfirmDialog
             show
-            confirmText={<Message msgId="dashboard.saveDialog.close" />}
-            cancelText={<Message msgId="dashboard.saveDialog.cancel" />}
+            confirmText={<Message msgId="saveDialog.close" />}
+            cancelText={<Message msgId="saveDialog.cancel" />}
             onConfirm={() => onClose()}
             onClose={() => onCloseConfirm(false)}
             >

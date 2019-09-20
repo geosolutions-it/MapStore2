@@ -14,10 +14,16 @@ export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
+export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
 export const REMOVE = "GEOSTORY:REMOVE";
+export const SAVE = "GEOSTORY:SAVE_STORY";
+export const SAVE_ERROR = "GEOSTORY:SAVE_ERROR";
+export const SAVED = "GEOSTORY:STORY_SAVED";
+export const SET_CONTROL = "GEOSTORY:SET_CONTROL";
+export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const UPDATE = "GEOSTORY:UPDATE";
@@ -56,6 +62,12 @@ export const editResource = ( id, mediaType, data ) => ({type: EDIT_RESOURCE, id
  * @param {string} id the story name of .json file
  */
 export const loadGeostory = (id) => ({ type: LOAD_GEOSTORY, id});
+
+/**
+ * GeoStory Loaded event
+ * @param {string} id the story name of .json file
+ */
+export const geostoryLoaded = (id) => ({ type: GEOSTORY_LOADED, id });
 /**
  * Loading status of geostory
  * @param {boolean} value the status of the loading process
@@ -75,6 +87,36 @@ export const remove = (path) => ({
     type: REMOVE,
     path
 });
+/**
+ * Lunch the story save
+ * @param {object} resource the resource to save
+ */
+export const saveStory = resource => ({type: SAVE, resource});
+/**
+ * Triggered when there is a save error
+ * @param {Error} error the error
+ */
+export const saveGeoStoryError = error => ({type: SAVE_ERROR, error});
+/**
+ * Sets the variables for the controls of GeoStory. Can be used for dialogs or other tools
+ * specific of GeoStory.
+ * @param {string} control path to the control or control value to set
+ * @param {object} value any value you want to set for the control
+ */
+export const setControl = (control, value) => ({ type: SET_CONTROL, control, value });
+/**
+ * Sets the resource for GeoStorySave plugin content.
+ * **NOTE**: Don't confuse this from the resources of the story content. This contains permission and
+ * basic properties **of the remote resource of the whole story (e.g. geostore resource)**
+ * specific of GeoStory.
+ * @param {object} resource the original resource saved. contains all edit options (canSave, canEdit...)
+ */
+export const setResource = (resource) => ({ type: SET_RESOURCE, resource});
+/**
+ * Triggered when the resource has been saved
+ * @param {number} id the id of the saved resource
+ */
+export const storySaved = id => ({type: SAVED, id});
 /**
  * Sets the current story for editor/viewer
  * @param {object} story the story object

@@ -21,6 +21,7 @@ const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSe
 const {projectionDefsSelector, projectionSelector} = require('../selectors/map');
 const {bottomPanelOpenSelector} = require('../selectors/maplayout');
 const {printSelector, measureSelector} = require('../selectors/controls');
+const {editingSelector} = require('../selectors/annotations');
 const {crsInputValueSelector} = require('../selectors/crsselector');
 const {currentBackgroundSelector} = require('../selectors/layers');
 const {queryPanelSelector} = require('../selectors/controls');
@@ -126,14 +127,15 @@ const crsSelector = connect(
             measureSelector,
             queryPanelSelector,
             printSelector,
-            ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled) => ({
+            editingSelector,
+            ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations) => ({
                     currentRole,
                     currentBackground,
                     selected,
                     projectionDefs,
                     value,
 
-                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled
+                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled && !editingAnnotations
                 })
             ), {
                 typeInput: setInputValue,

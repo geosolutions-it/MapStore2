@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Réglages du groupe de couches sélectionné",
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
+            "toolTrashGroupTooltip": "Supprimer le groupe sélectionné",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
             "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
@@ -1587,18 +1588,6 @@
         },
         "dashboard": {
             "loadingSpinner": "Chargement du tableau de bord",
-            "saveDialog": {
-                "title": "Modifier les propriétés du tableau de bord",
-                "name": "Nom",
-                "description": "Description",
-                "namePlaceholder": "Tapez un nom...",
-                "descriptionPlaceholder": "Tapez une description...",
-                "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
-                "close": "Fermer",
-                "cancel": "Annuler",
-                "saveSuccessTitle": "Succès",
-                "saveSuccessMessage": "Tableau de bord enregistré avec succès"
-            },
             "errors":{
                 "loading": {
                     "title":  "Erreur lors du chargement du tableau de bord",
@@ -1862,6 +1851,7 @@
             "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées."
         },
         "geostory": {
+            "loadingSpinner": "Chargement de GeoStory",
             "addTitleSection": "Ajouter une section de titre",
             "addParagraphSection": "Ajouter une section de paragraphe",
             "addImmersiveSection": "Ajouter une section immersive",
@@ -1930,10 +1920,23 @@
                     "title": "Erreur",
                     "unknownError": "Erreur inconnue",
                     "pleaseLogin": "Veuillez vous connecter",
-                    "geostoryNotAccessible": "Cette histoire n'est pas accessible",
+                    "notAccessible": "Cette histoire n'est pas accessible",
+                    "geostoryNotAccessible": "Vous n'avez pas la permission d'accéder à cette histoire. Veuillez contacter le propriétaire de la ressource",
                     "geostoryDoesNotExist": "Cette histoire n'existe pas"
                 }
             }
+        },
+        "saveDialog": {
+            "title": "Modifier les propriétés",
+            "name": "Nom",
+            "description": "Description",
+            "namePlaceholder": "Tapez un nom...",
+            "descriptionPlaceholder": "Tapez une description...",
+            "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
+            "close": "Fermer",
+            "cancel": "Annuler",
+            "saveSuccessTitle": "Succès",
+            "saveSuccessMessage": "Enregistré avec succès"
         },
         "mediaEditor": {
             "modalTitle": "Médias",

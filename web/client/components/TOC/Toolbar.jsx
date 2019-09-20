@@ -87,7 +87,8 @@ class Toolbar extends React.Component {
             downloadToolTooltip: '',
             trashTooltip: {
                 LAYER: '',
-                LAYERS: ''
+                LAYERS: '',
+                GROUP: ''
             },
             reloadTooltip: {
                 LAYER: '',
@@ -262,7 +263,9 @@ class Toolbar extends React.Component {
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-trash">{this.props.text.trashTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']}</Tooltip>}>
+                        overlay={<Tooltip id="toc-tooltip-trash">{
+                            this.props.selectedGroups.length ? this.props.text.trashTooltip.GROUP : (this.props.text.trashTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER'])
+                            }</Tooltip>}>
                         <Button active={this.state.showDeleteDialog} bsStyle={this.props.settings.showDeleteDialog ? 'success' : 'primary'} className="square-button-md" onClick={this.displayDeleteDialog}>
                             <Glyphicon glyph="trash" />
                         </Button>

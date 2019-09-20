@@ -10,16 +10,21 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MockAdapter from 'axios-mock-adapter';
+import { CALL_HISTORY_METHOD } from 'react-router-redux';
 
 import TEST_STORY from "json-loader!../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';
+
+import { logout, loginSuccess } from '../../actions/security';
 
 import {
     scrollToContentEpic,
     loadGeostoryEpic,
     openMediaEditorForNewMedia,
     editMediaForBackgroundEpic,
-    cleanUpEmptyStoryContainers
+    cleanUpEmptyStoryContainers,
+    saveGeoStoryResource,
+    reloadGeoStoryOnLoginLogout
 } from '../geostory';
 import {
     LOADING_GEOSTORY,
@@ -29,7 +34,12 @@ import {
     add,
     UPDATE,
     remove,
-    REMOVE
+    REMOVE,
+    saveStory,
+    SET_CONTROL,
+    SAVED,
+    SET_RESOURCE,
+    GEOSTORY_LOADED
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -40,7 +50,7 @@ import {
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { ContentTypes, MediaTypes } from '../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes, Controls } from '../../utils/GeoStoryUtils';
 
 let mockAxios;
 describe('Geostory Epics', () => {
@@ -158,8 +168,47 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
+    describe('saveGeoStoryResource', () => {
+        it('test save (create) simple story', done => {
+            const TEST_RESOURCE = {
+                category: "GEOSTORY",
+                metadata: {
+                    name: "name",
+                    description: "description",
+                    attribute1: "value1",
+                    attribute2: "value2"
+                }
+            };
+            mockAxios.onPost().reply(() => {
+                return [200, 1234];
+            });
+            mockAxios.onGet(/\/permissions$/).reply(200, {
+                "SecurityRuleList": {
+                    "SecurityRule": {
+                        "canRead": true,
+                        "canWrite": true,
+                        "user": {
+                            "id": 3,
+                            "name": "admin"
+                        }
+                    }
+                }
+            });
+            testEpic(saveGeoStoryResource, 5, {...saveStory(TEST_RESOURCE), delay: 0}, ([a1, a2, a3, a4, a5]) => {
+                expect(a1.type).toBe(LOADING_GEOSTORY);
+                expect(a2.type).toBe(SAVED);
+                expect(a2.id).toBe(1234);
+                expect(a3.type).toBe(SET_CONTROL);
+                expect(a3.control).toBe(Controls.SHOW_SAVE);
+                expect(a3.value).toBe(false);
+                expect(a4.type).toBe(CALL_HISTORY_METHOD);
+                expect(a5.type).toBe(SHOW_NOTIFICATION);
+                done();
+            });
+        });
+    });
     it('loadGeostoryEpic loading one sample story', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         mockAxios.onGet().reply(200, TEST_STORY);
         testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -172,6 +221,14 @@ describe('Geostory Epics', () => {
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual(TEST_STORY);
                         break;
+                    case SET_RESOURCE: {
+                        expect(a.resource).toExist(); // TODO: test values
+                        break;
+                    }
+                    case GEOSTORY_LOADED: {
+                        expect(a.id).toExist();
+                        break;
+                    }
                     default: expect(true).toBe(false);
                         break;
                 }
@@ -196,7 +253,7 @@ describe('Geostory Epics', () => {
                         expect(a.story).toEqual({});
                         break;
                     case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryDoesNotExist");
+                        expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryDoesNotExist");
                         break;
                     case SHOW_NOTIFICATION:
                         expect(a.message).toEqual("geostory.errors.loading.geostoryDoesNotExist");
@@ -308,7 +365,7 @@ describe('Geostory Epics', () => {
      * with firefox it works but i have some problems of stability
     */
     it.skip('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
-        const NUM_ACTIONS = 5;
+        const NUM_ACTIONS = 6;
         mockAxios.onGet().reply(200, `{"description":"Sample story with 1 paragraph and 1 immersive section, two columns","type":"cascade","sections":[{"type":"paragraph","id":"SomeID","title":"Abstract","contents":[{"id":"SomeID","type":'text',"background":{},"html":"<p>this is some html content</p>"}]}]}`);
         testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("StoryWithError"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -337,7 +394,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('loadGeostoryEpic loading a bad story format', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         mockAxios.onGet().reply(200, false);
         testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -349,6 +406,10 @@ describe('Geostory Epics', () => {
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        break;
+                    case SHOW_NOTIFICATION:
                         break;
                     default: expect(true).toBe(false);
                         break;
@@ -502,7 +563,19 @@ describe('Geostory Epics', () => {
             }
         });
     });
+    describe('reloadGeoStoryOnLoginLogout', () => {
+        it('on login', done => {
+            testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), loginSuccess()], () => {
+                done();
+            });
+        });
+        it('on logout', done => {
+            testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), logout()], () => {
+                done();
+            });
+        });
 
+    });
     describe('cleanUpEmptyStoryContainers', () => {
         it('do not trigger when container has content', done => {
             testEpic(addTimeoutEpic(cleanUpEmptyStoryContainers, 20), 1, remove("sections[0].contents[0].contents[0]"), ([a]) => {

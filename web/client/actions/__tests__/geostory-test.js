@@ -20,7 +20,7 @@ import {
     LOAD_GEOSTORY_ERROR, loadGeostoryError,
     editResource, EDIT_RESOURCE,
     remove, REMOVE,
-    toggleCardPreview, TOGGLE_CARD_PREVIEW
+    toggleCardPreview, TOGGLE_CARD_PREVIEW, SAVE, saveStory
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -107,5 +107,12 @@ describe('test geostory action creators', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(UPDATE_CURRENT_PAGE);
         expect(retVal.sectionId).toBe('TEST');
+    });
+    it('saveStory', () => {
+        const SAMPLE_RESOURCE = { id: 1234, data: { } };
+        const retVal = saveStory(SAMPLE_RESOURCE);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(SAVE);
+        expect(retVal.resource).toBe(SAMPLE_RESOURCE);
     });
 });

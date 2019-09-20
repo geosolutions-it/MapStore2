@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Modifica proprietà del gruppo selezionato",
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
+            "toolTrashGroupTooltip": "Rimuovi gruppo selezionato",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
             "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
@@ -1587,18 +1588,6 @@
         },
         "dashboard": {
             "loadingSpinner": "Caricamento Dashboard",
-            "saveDialog": {
-                "title": "Modifica proprietà dashboard",
-                "name": "Nome",
-                "description": "Descrizione",
-                "namePlaceholder": "Inserisci un nome..",
-                "descriptionPlaceholder": "Inserisci una descrizione...",
-                "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
-                "close": "Chiudi",
-                "cancel": "Annulla",
-                "saveSuccessTitle": "Successo",
-                "saveSuccessMessage": "Dashboard salvata"
-            },
             "errors":{
                 "loading": {
                     "title": "Errore di caricamento della dashboard",
@@ -1862,6 +1851,7 @@
             "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
         "geostory": {
+            "loadingSpinner": "Caricamento Storia",
             "addTitleSection": "Aggiungi sezione titolo",
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
@@ -1930,10 +1920,23 @@
                     "title": "Errore",
                     "unknownError": "Error sconosciuto",
                     "pleaseLogin": "Per favore effettua il login",
-                    "geostoryNotAccessible": "Questa storia non è accessibile",
+                    "notAccessible": "Questa storia non è accessibile",
+                    "geostoryNotAccessible": "Non sei autorizzato ad accedere a questa storia. Si prega di contattare il proprietario della risorsa",
                     "geostoryDoesNotExist": "Questa storia non esiste"
                 }
             }
+        },
+         "saveDialog": {
+            "title": "Modifica proprietà",
+            "name": "Nome",
+            "description": "Descrizione",
+            "namePlaceholder": "Inserisci un nome..",
+            "descriptionPlaceholder": "Inserisci una descrizione...",
+            "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
+            "close": "Chiudi",
+            "cancel": "Annulla",
+            "saveSuccessTitle": "Successo",
+            "saveSuccessMessage": "Salvata con successo"
         },
         "mediaEditor": {
             "modalTitle": "Media",
