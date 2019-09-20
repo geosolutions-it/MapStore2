@@ -14,6 +14,7 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 import find from 'lodash/find';
 import isObject from 'lodash/isObject';
+import isFunction from 'lodash/isFunction';
 
 import {colorToRgbaStr} from '../../../utils/ColorUtils';
 import {reproject, transformLineToArcs} from '../../../utils/CoordinatesUtils';
@@ -30,7 +31,7 @@ import {Point, LineString} from 'ol/geom';
 import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
 
-import { getStyleParser } from '../../../utils/VectorStyleUtils';
+import { getStyleParser, splitStyleSheet } from '../../../utils/VectorStyleUtils';
 import OlStyleParser from 'geostyler-openlayers-parser';
 
 const olStyleParser = new OlStyleParser();
@@ -311,12 +312,89 @@ export const parseStyles = (feature = {properties: {}}) => {
 
 };
 
+function getOlStyleFunction(format, styleBody) {
+    const splitStyle = splitStyleSheet(format, styleBody);
+    const layersStyles = isArray(splitStyle) && splitStyle;
+    if (!layersStyles || layersStyles.length === 1 && layersStyles[0] && layersStyles[0].group && layersStyles[0].group.length === 1) {
+        return getStyleParser(format)
+            .readStyle(styleBody)
+            .then(style => olStyleParser.writeStyle(style));
+    }
+    return Promise.all(
+        layersStyles
+            .reduce((acc, { group, layerName }) => [
+                ...acc,
+                ...group
+                    .map((layerStyleBody) =>
+                        getStyleParser(format)
+                            .readStyle(layerStyleBody)
+                            .then(style => olStyleParser.writeStyle(style))
+                            .then(olStyle => ({
+                                layerName,
+                                olStyle
+                            }))
+                            .catch(() => ({}))
+                    )
+                ],
+            [])
+    )
+    .then((olStyles) => {
+        const filteredStyles = olStyles.filter(({ olStyle }) => olStyle);
+        const groupedStylesByLayerName = filteredStyles
+            .reduce(function(acc, { layerName, olStyle }) {
+                const currentStyle = acc.find((style) => style.layerName === layerName);
+                if (currentStyle) {
+                    return acc.map(function(style) {
+                        return style.layerName === layerName
+                            ? {
+                                layerName,
+                                group: [
+                                    ...style.group,
+                                    olStyle
+                                ]
+                            } : style;
+                    });
+                }
+                return [ ...acc, { layerName, group: [ olStyle ] } ];
+            }, []);
+        let count = 0;
+        const zIndex = groupedStylesByLayerName.map(({ group }) => group.map(() => count++));
+        return function(...args) {
+            return groupedStylesByLayerName
+                .map(function({ layerName, group }, groupIdx) {
+                    return function() {
+                        const [ olFeature ] = args;
+                        const properties = olFeature.getProperties();
+                        const layerId = (olFeature.getId() + '' || '').split('.')[0];
+                        if (layersStyles.length > 1 && !(properties._layer_ === layerName || layerId === layerName)) return [];
+                        return group
+                            .reduce((acc, olStyle, idx) => {
+                                const olStyleObjects = isFunction(olStyle) ? olStyle(...args) : olStyle;
+                                const styles = isArray(olStyleObjects) ? olStyleObjects : [ olStyleObjects ];
+                                return [
+                                    ...acc,
+                                    ...styles
+                                        .map((style) => {
+                                            style.setZIndex(zIndex[groupIdx][idx]);
+                                            return style;
+                                        })
+                                ];
+                            }, []);
+                    };
+                })
+                .reduce((acc, olStyleFunction) => [ ...acc, ...olStyleFunction() ], []);
+        };
+    });
+}
+
 export const getStyle = (options, isDrawing = false, textValues = []) => {
     if (options.style && options.style.url) {
         return axios.get(options.style.url).then(response => {
-            return getStyleParser(options.style.format).readStyle(response.data)
-                .then(style => olStyleParser.writeStyle(style));
+            return getOlStyleFunction(options.style.format, response.data);
         });
+    }
+    if (options.style && options.style.body) {
+        return getOlStyleFunction(options.style.format, options.style.body);
     }
     const style = getStyleLegacy(options, isDrawing, textValues);
     if (options.asPromise) {

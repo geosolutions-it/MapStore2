@@ -6,13 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isNil} = require('lodash');
-const {set} = require('./ImmutableUtils');
-const {colorToRgbaStr} = require('./ColorUtils');
+const { isNil, get, uniq, isArray } = require('lodash');
+const { set } = require('./ImmutableUtils');
+const { colorToRgbaStr } = require('./ColorUtils');
 const axios = require('axios');
 const SLDParser = require('geostyler-sld-parser').default;
+const MBStyleParser = require('geostyler-mapbox-parser').default;
+const { parseString, Builder } = require('xml2js');
 const StyleParsers = {
-    sld: new SLDParser()
+    sld: new SLDParser(),
+    mbstyle: new MBStyleParser()
 };
 
 /**
@@ -49,7 +52,7 @@ const isFillStyle = (style = {}, attributes = ["fillColor", "fillOpacity"]) => {
  * @param {string[]} attibutes of a text style
  * @return {boolean} if the style is compatible with an ol.Text style
 */
-const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "fontSize", "fontStyle", "fontWeight", "textAlign" ]) => {
+const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "fontSize", "fontStyle", "fontWeight", "textAlign"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -98,16 +101,16 @@ const getStylerTitle = (style = {}) => {
     if (isSymbolStyle(style)) {
         return "Symbol";
     }
-    if (isTextStyle(style) ) {
+    if (isTextStyle(style)) {
         return "Text";
     }
     if (isCircleStyle(style) || style.title === "Circle Style") {
         return "Circle";
     }
-    if (isFillStyle(style) ) {
+    if (isFillStyle(style)) {
         return "Polygon";
     }
-    if (isStrokeStyle(style) ) {
+    if (isStrokeStyle(style)) {
         return "Polyline";
     }
     return "";
@@ -121,19 +124,19 @@ const getStylerTitle = (style = {}) => {
 let geometryFunctions = {
     "centerPoint": {
         type: "Point",
-        func: () => {}
+        func: () => { }
     },
     "lineToArc": {
         type: "LineString",
-        func: () => {}
+        func: () => { }
     },
     "startPoint": {
         type: "Point",
-        func: () => {}
+        func: () => { }
     },
     "endPoint": {
         type: "Point",
-        func: () => {}
+        func: () => { }
     }
 };
 
@@ -155,7 +158,7 @@ const getGeometryFunction = (functionName, item) => {
 */
 const registerGeometryFunctions = (functionName, func, type) => {
     if (functionName && func && type) {
-        geometryFunctions[functionName] = {func, type};
+        geometryFunctions[functionName] = { func, type };
     } else {
         throw new Error("specify all the params: functionName, func, type");
     }
@@ -266,64 +269,64 @@ const createSvgUrl = (style = {}, url) => {
     // TODO think about adding a try catch for loading the not found icon
     return isSymbolStyle(style) && style.symbolUrl/* && !fetchStyle(hashAndStringify(style))*/ ?
         axios.get(url, { 'Content-Type': "image/svg+xml;charset=utf-8" })
-        .then(response => {
-            const DOMURL = window.URL || window.webkitURL || window;
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(response.data, 'image/svg+xml'); // create a dom element
-            const svg = doc.firstElementChild; // fetch svg element
+            .then(response => {
+                const DOMURL = window.URL || window.webkitURL || window;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(response.data, 'image/svg+xml'); // create a dom element
+                const svg = doc.firstElementChild; // fetch svg element
 
-            // override attributes to the first svg tag
-            svg.setAttribute("fill", style.fillColor || "#FFCC33");
-            svg.setAttribute("fill-opacity", !isNil(style.fillOpacity) ? style.fillOpacity : 0.2);
-            svg.setAttribute("stroke", colorToRgbaStr(style.color || "#FFCC33", !isNil(style.opacity) ? style.opacity : 1) );
-            svg.setAttribute("stroke-opacity", !isNil(style.opacity) ? style.opacity : 1);
-            svg.setAttribute("stroke-width", style.weight || 1);
-            svg.setAttribute("width", style.size || 32);
-            svg.setAttribute("height", style.size || 32);
-            svg.setAttribute("stroke-dasharray", style.dashArray || "none");
+                // override attributes to the first svg tag
+                svg.setAttribute("fill", style.fillColor || "#FFCC33");
+                svg.setAttribute("fill-opacity", !isNil(style.fillOpacity) ? style.fillOpacity : 0.2);
+                svg.setAttribute("stroke", colorToRgbaStr(style.color || "#FFCC33", !isNil(style.opacity) ? style.opacity : 1));
+                svg.setAttribute("stroke-opacity", !isNil(style.opacity) ? style.opacity : 1);
+                svg.setAttribute("stroke-width", style.weight || 1);
+                svg.setAttribute("width", style.size || 32);
+                svg.setAttribute("height", style.size || 32);
+                svg.setAttribute("stroke-dasharray", style.dashArray || "none");
 
-            const svgBlob = new Blob([domNodeToString(svg)], { type: "image/svg+xml;charset=utf-8" });
-            const symbolUrlCustomized = DOMURL.createObjectURL(svgBlob);
+                const svgBlob = new Blob([domNodeToString(svg)], { type: "image/svg+xml;charset=utf-8" });
+                const symbolUrlCustomized = DOMURL.createObjectURL(svgBlob);
 
 
-            // ******** retrieving the base64 conversion of svg ********
-            let canvas = document.createElement('canvas');
-            canvas.width = style.size;
-            canvas.height = style.size;
-            let ctx = canvas.getContext("2d");
-            let icon = new Image();
+                // ******** retrieving the base64 conversion of svg ********
+                let canvas = document.createElement('canvas');
+                canvas.width = style.size;
+                canvas.height = style.size;
+                let ctx = canvas.getContext("2d");
+                let icon = new Image();
 
-            icon.src = symbolUrlCustomized;
-            let base64 = "";
-            let sha = hashAndStringify(style);
-            icon.onload = () => {
-                try {
-                    // only when loaded draw the customized svg
-                    ctx.drawImage(icon, (canvas.width / 2) - (icon.width / 2), (canvas.height / 2) - (icon.height / 2));
-                    base64 = canvas.toDataURL("image/png");
-                    canvas = null;
-                    registerStyle(sha, {style: {...style, symbolUrlCustomized}, base64});
-                } catch (e) {
-                    return;
-                }
-            };
-            registerStyle(sha, {style: {...style, symbolUrlCustomized}, svg, base64});
+                icon.src = symbolUrlCustomized;
+                let base64 = "";
+                let sha = hashAndStringify(style);
+                icon.onload = () => {
+                    try {
+                        // only when loaded draw the customized svg
+                        ctx.drawImage(icon, (canvas.width / 2) - (icon.width / 2), (canvas.height / 2) - (icon.height / 2));
+                        base64 = canvas.toDataURL("image/png");
+                        canvas = null;
+                        registerStyle(sha, { style: { ...style, symbolUrlCustomized }, base64 });
+                    } catch (e) {
+                        return;
+                    }
+                };
+                registerStyle(sha, { style: { ...style, symbolUrlCustomized }, svg, base64 });
 
-            return symbolUrlCustomized;
-        }).catch(()=> {
-            return require('../product/assets/symbols/symbolMissing.svg');
-        }) : new Promise((resolve) => {
-            resolve(null);
-        });
+                return symbolUrlCustomized;
+            }).catch(() => {
+                return require('../product/assets/symbols/symbolMissing.svg');
+            }) : new Promise((resolve) => {
+                resolve(null);
+            });
 };
 
 const createStylesAsync = (styles = []) => {
     return styles.map(style => {
         return isSymbolStyle(style) && !fetchStyle(hashAndStringify(style)) ? createSvgUrl(style, style.symbolUrl || style.symbolUrlCustomized)
             .then(symbolUrlCustomized => {
-                return symbolUrlCustomized ? {...style, symbolUrlCustomized} : fetchStyle(hashAndStringify(style));
+                return symbolUrlCustomized ? { ...style, symbolUrlCustomized } : fetchStyle(hashAndStringify(style));
             }).catch(() => {
-                return {...style, symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg')};
+                return { ...style, symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg') };
             }) : new Promise((resolve) => {
                 resolve(isSymbolStyle(style) ? fetchStyle(hashAndStringify(style)) : style);
             });
@@ -333,6 +336,279 @@ const createStylesAsync = (styles = []) => {
 const getStyleParser = (format = 'sld') => {
     return StyleParsers[format];
 };
+
+function mergeStyleSheet(format, styleSheets) {
+    const styleParser = StyleParsers[format];
+    if (format === 'sld') {
+        const mergedSldObj = styleSheets
+            .map(function({ group }) {
+                return group
+                    .map(function(styleSheet) {
+                        let response;
+                        parseString(styleSheet, {
+                            tagNameProcessors: [styleParser.tagNameProcessor]
+                        }, function(jsonError, json) {
+                            response = json;
+                        });
+                        return response;
+                    })
+                    .reduce(function(fullSldObj, sldObj) {
+                        const { StyledLayerDescriptor } = sldObj;
+                        const { NamedLayer } = StyledLayerDescriptor;
+                        const { UserStyle } = NamedLayer[0];
+                        const { FeatureTypeStyle } = UserStyle[0];
+                        const featureTypeStyles = get(fullSldObj, 'StyledLayerDescriptor.NamedLayer[0].UserStyle[0].FeatureTypeStyle') || [];
+                        return {
+                            StyledLayerDescriptor: {
+                                ...StyledLayerDescriptor,
+                                NamedLayer: [{
+                                    ...NamedLayer[0],
+                                    UserStyle: [
+                                        {
+                                            ...UserStyle[0],
+                                            FeatureTypeStyle: [
+                                                ...featureTypeStyles,
+                                                ...FeatureTypeStyle
+                                            ]
+                                        }
+                                    ]
+                                }]
+                            }
+                        };
+                    }, {});
+            })
+            .reduce(function(fullSldObj, sldObj) {
+                const { StyledLayerDescriptor } = sldObj;
+                const { NamedLayer } = StyledLayerDescriptor;
+                const namedLayers = get(fullSldObj, 'StyledLayerDescriptor.NamedLayer') || [];
+                return {
+                    StyledLayerDescriptor: {
+                        ...StyledLayerDescriptor,
+                        NamedLayer: [
+                            ...namedLayers,
+                            ...NamedLayer
+                        ]
+                    }
+                };
+            }, {});
+
+        let builderOpts = {
+            renderOpts: { pretty: styleParser.prettyOutput }
+        };
+        const builder = new Builder(builderOpts);
+        return builder.buildObject(mergedSldObj);
+    } else if (format === 'mbstyle') {
+        const mergedMBStyle = styleSheets
+            .map(function({ group }) {
+                return group
+                    .map(function(styleSheet) {
+                        try {
+                            return JSON.parse(styleSheet);
+                        } catch(e) {
+                            return {};
+                        }
+                    })
+                    .reduce(function(fullMBStyleObj, mbStyleObj) {
+                        const layers = fullMBStyleObj.layers || [];
+                        return {
+                            ...fullMBStyleObj,
+                            ...mbStyleObj,
+                            layers: [ ...layers, ...(mbStyleObj.layers || []) ]
+                        };
+                    }, {});
+            })
+            .reduce(function(fullMBStyleObj, mbStyleObj) {
+                const layers = fullMBStyleObj.layers || [];
+                return {
+                    ...fullMBStyleObj,
+                    ...mbStyleObj,
+                    layers: [ ...layers, ...(mbStyleObj.layers || []) ]
+                };
+            }, {});
+        return mergedMBStyle;
+    }
+    return styleSheets;
+}
+
+function splitStyleSheet(format, styleSheet, options = {}) {
+    const {
+        onlyLayers
+    } = options;
+    const styleParser = StyleParsers[format];
+    if (format === 'sld') {
+        let response;
+        parseString(styleSheet, {
+            tagNameProcessors: [styleParser.tagNameProcessor]
+        }, function(jsonError, json) {
+            response = json;
+        });
+        let builderOpts = {
+            renderOpts: { pretty: styleParser.prettyOutput }
+        };
+        const builder = new Builder(builderOpts);
+        const { StyledLayerDescriptor } = response;
+        const { NamedLayer } = StyledLayerDescriptor;
+        const styleSheets = NamedLayer.map((namedLayer) => {
+            const { Name, UserStyle } = namedLayer;
+            const { FeatureTypeStyle } = UserStyle[0];
+            const featureTypeStyles = FeatureTypeStyle.map((featureTypeStyle) => {
+                const geoStylerStyle = styleParser.sldObjectToGeoStylerStyle({
+                    StyledLayerDescriptor: {
+                        ...StyledLayerDescriptor,
+                        NamedLayer: [{
+                            ...namedLayer,
+                            UserStyle: [
+                                {
+                                    ...UserStyle[0],
+                                    FeatureTypeStyle: [
+                                        featureTypeStyle
+                                    ]
+                                }
+                            ]
+                        }]
+                    }
+                });
+                return styleParser.geoStylerStyleToSldObject(geoStylerStyle);
+            });
+
+            const group = onlyLayers
+                ? builder.buildObject({
+                    StyledLayerDescriptor: {
+                        ...StyledLayerDescriptor,
+                        NamedLayer: [{
+                            ...namedLayer,
+                            UserStyle: [
+                                {
+                                    ...UserStyle[0],
+                                    FeatureTypeStyle: featureTypeStyles
+                                        .map(sld => get(sld, 'StyledLayerDescriptor.NamedLayer[0].UserStyle[0].FeatureTypeStyle[0]'))
+                                }
+                            ]
+                        }]
+                    }
+                })
+                : featureTypeStyles.map(featureTypeStyle => builder.buildObject(featureTypeStyle));
+            return {
+                group,
+                layerName: Name[0]
+            };
+        });
+        return styleSheets;
+    }
+    if (format === 'mbstyle') {
+        const { layers = [] } = styleSheet || {};
+        const layersNames = uniq(layers.map(rule => rule['source-layer']));
+        return layersNames.map((layerName) => ({
+            layerName,
+            group: onlyLayers
+                ? {
+                    ...styleSheet,
+                    layers: layers.filter(rule => rule['source-layer'] === layerName)
+                }
+                : [
+                    {
+                        ...styleSheet,
+                        layers: layers.filter(rule => rule['source-layer'] === layerName)
+                    }
+                ]
+        }));
+    }
+    return styleSheet;
+}
+
+function styleSheetToGeoStylerStyle(format, styleSheet) {
+    const styleParser = StyleParsers[format];
+    const splitStyle = splitStyleSheet(format, styleSheet);
+    const layersStyles = isArray(splitStyle) && splitStyle;
+    return Promise.all(
+        layersStyles
+            .reduce((acc, { layerName, group }) => [
+                ...acc,
+                ...group
+                    .map((layerStyleBody) =>
+                        styleParser
+                            .readStyle(layerStyleBody)
+                                .then((style) => ({ ...style }))
+                                .catch(() => ({ rules: [], name: layerName }))
+                    )
+                ],
+            [])
+    )
+    .then(function(geoStylerStyles) {
+        return geoStylerStyles
+            .reduce(function(acc, { name, rules }) {
+                const currentStyle = acc.find((style) => style.layerName === name);
+                if (currentStyle) {
+                    return acc.map(function(style) {
+                        return style.layerName === name
+                            ? {
+                                layerName: name,
+                                group: [
+                                    ...style.group,
+                                    { name, rules }
+                                ]
+                            } : style;
+                    });
+                }
+                return [ ...acc, { layerName: name, group: [ { name, rules } ] } ];
+            }, []);
+    });
+}
+
+function geoStylerStyleToStyleSheet(format, geoStylerStyles) {
+    const styleParser = StyleParsers[format];
+    const layersStyles = isArray(geoStylerStyles) && geoStylerStyles;
+    return Promise.all(
+        layersStyles
+            .reduce((acc, { group, layerName }) => [
+                ...acc,
+                ...group
+                    .map((layerStyleBody) =>
+                        styleParser
+                            .writeStyle(layerStyleBody)
+                                .then((styleSheet) => ({ layerName, styleSheet }))
+                                .catch(() => null)
+                    )
+                ],
+            [])
+    )
+    .then((styles) => {
+        const splitStyle = styles
+            .filter(val => val)
+            .reduce(function(acc, { layerName, styleSheet }) {
+                const currentStyle = acc.find((style) => style.layerName === layerName);
+                if (currentStyle) {
+                    return acc.map(function(style) {
+                        return style.layerName === name
+                            ? {
+                                layerName: name,
+                                group: [
+                                    ...style.group,
+                                    styleSheet
+                                ]
+                            } : style;
+                    });
+                }
+                return [ ...acc, { layerName: name, group: [ styleSheet ] } ];
+            }, []);
+        return mergeStyleSheet(format, splitStyle);
+    });
+}
+
+function mimeTypeToStyleFormat(mimeType) {
+    const formats = [
+        {
+            format: 'mbstyle',
+            types: [ 'application/vnd.geoserver.mbstyle+json' ]
+        },
+        {
+            format: 'sld',
+            types: ['application/vnd.ogc.sld+xml']
+        }
+    ];
+    const { format = 'sld' } = formats.find(({ types }) => types.indexOf(mimeType) !== -1) || {};
+    return format;
+}
 
 module.exports = {
     getGeometryFunction,
@@ -357,5 +633,10 @@ module.exports = {
     getSymbolsStyles,
     setSymbolsStyles,
     createStylesAsync,
-    getStyleParser
+    getStyleParser,
+    splitStyleSheet,
+    mergeStyleSheet,
+    styleSheetToGeoStylerStyle,
+    geoStylerStyleToStyleSheet,
+    mimeTypeToStyleFormat
 };
