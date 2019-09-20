@@ -69,7 +69,7 @@ describe('featuredMaps enhancher', () => {
         });
     });
 
-    it('updateItemsLifecycle verify previews items, view size changes and enableFeaturedMaps called', () => {
+    it('updateItemsLifecycle verify previews items and view size changes', () => {
 
         const CMP = updateItemsLifecycle(({items, previousItems, viewSize = 4}) =>
             <div id="CMP">
@@ -114,7 +114,7 @@ describe('featuredMaps enhancher', () => {
         viewSize = el.querySelector('.view-size');
         expect(viewSize.innerHTML).toBe('4');
 
-        expect(spy.calls.length).toEqual(2);
+        expect(spy.calls.length).toEqual(0);
     });
 
 });
