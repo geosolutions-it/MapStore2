@@ -394,7 +394,7 @@ class MetadataModal extends React.Component {
             <ResizableModal
             id={this.props.id}
             size={this.props.modalSize}
-            title={<Message msgId={get(this.props.map, "category.name") === "DASHBOARD" ? "dashboard.saveDialog.title" : "manager.editMapMetadata"}/>}
+            title={<Message msgId="saveDialog.title"/>}
             show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
             clickOutEnabled
             bodyClassName="ms-flex modal-properties-container"
