@@ -405,6 +405,7 @@
             "toolGroupSettingsTooltip": "Réglages du groupe de couches sélectionné",
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
+            "toolTrashGroupTooltip": "Supprimer le groupe sélectionné",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
             "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",

@@ -411,7 +411,8 @@ class LayerTree extends React.Component {
                                 downloadToolTooltip: <Message msgId="toc.toolDownloadTooltip" />,
                                 trashTooltip: {
                                     LAYER: <Message msgId="toc.toolTrashLayerTooltip"/>,
-                                    LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>
+                                    LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>,
+                                    GROUP: <Message msgId="toc.toolTrashGroupTooltip"/>
                                 },
                                 reloadTooltip: {
                                     LAYER: <Message msgId="toc.toolReloadLayerTooltip"/>,
