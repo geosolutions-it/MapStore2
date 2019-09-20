@@ -201,12 +201,14 @@ class MapPlugin extends React.Component {
         features: PropTypes.array,
         securityToken: PropTypes.string,
         shouldLoadFont: PropTypes.bool,
-        elevationEnabled: PropTypes.bool
+        elevationEnabled: PropTypes.bool,
+        style: PropTypes.object
     };
 
     static defaultProps = {
         mapType: 'leaflet',
         actions: {},
+        style: {},
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
@@ -355,7 +357,8 @@ class MapPlugin extends React.Component {
                     {...this.props.map}
                     mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}
-                    onResolutionsChange={this.props.onResolutionsChange}>
+                    onResolutionsChange={this.props.onResolutionsChange}
+                    style={this.props.style}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
                 </plugins.Map>
