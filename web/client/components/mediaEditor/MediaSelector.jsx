@@ -1,9 +1,14 @@
 
 
-import ImageList from './image/ImageList';
+import MediaList from './MediaList';
 import ImageForm from './image/ImageForm';
 
-import { compose, withHandlers, branch, renderComponent } from 'recompose';
+import {
+    branch,
+    compose,
+    renderComponent,
+    withHandlers
+} from 'recompose';
 
 /**
  * Tool to select a media or add it.
@@ -18,4 +23,4 @@ export default compose(
         ({addingMedia}) => addingMedia,
         renderComponent(ImageForm)
     )
-)(ImageList);
+)(MediaList);

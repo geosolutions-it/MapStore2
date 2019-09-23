@@ -1945,7 +1945,11 @@
             "videos": "Videos",
             "preview": "Preview",
             "apply": "Apply",
-            "imagePicker": {
+            "mediaPicker": {
+                "services": "Services: ",
+                "clean": "Clean results",
+                "noResults": "No results",
+                "selectService": "Select a service",
                 "add": "Add",
                 "back": "Back",
                 "save": "Save",

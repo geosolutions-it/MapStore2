@@ -8,15 +8,33 @@ import {isNil} from 'lodash';
  */
 import React from "react";
 
-import SideGrid from '../../misc/cardgrids/SideGrid';
-import Toolbar from '../../misc/toolbar/Toolbar';
+import SideGrid from '../misc/cardgrids/SideGrid';
+import withLocal from "../misc/enhancers/localizedProps";
+import Filter from '../misc/Filter';
+import Toolbar from '../misc/toolbar/Toolbar';
+
+const FilterLocalized = withLocal('filterPlaceholder')(Filter);
 
 export default ({
     resources = [],
     selectedItem,
+    setMediaService = () => { },
     selectItem = () => { },
     setAddingMedia = () => {},
-    setEditingMedia = () => {}
+    setEditingMedia = () => {},
+    buttons = [
+        {
+            glyph: 'plus',
+            tooltipId: 'mediaEditor.mediaPicker.add',
+            onClick: () => setAddingMedia(true)
+        },
+        {
+            glyph: 'pencil',
+            tooltipId: 'mediaEditor.mediaPicker.edit',
+            visible: !isNil(selectedItem),
+            onClick: () => setEditingMedia(true)
+        }
+    ]
 }) => (
 <div style={{position: 'relative'}} className="ms-imageList">
     <div
@@ -29,6 +47,7 @@ export default ({
         <Toolbar
             btnGroupProps={{
                 style: {
+                    paddingTop: "16px",
                     marginBottom: 8
                 }
             }}
@@ -36,19 +55,13 @@ export default ({
                 bsStyle: 'primary',
                 className: 'square-button-md'
             }}
-            buttons={[
-                {
-                    glyph: 'plus',
-                    tooltipId: 'mediaEditor.mediaPicker.add',
-                    onClick: () => setAddingMedia(true)
-                },
-                {
-                    glyph: 'pencil',
-                    tooltipId: 'mediaEditor.mediaPicker.edit',
-                    visible: !isNil(selectedItem),
-                    onClick: () => setEditingMedia(true)
-                }
-            ]} />
+            buttons={buttons} />
+        <FilterLocalized
+            filterPlaceholder="Filtra per titolo"
+
+            onFilter={() => {
+                // filterText=""
+            }}/>
     </div>
     <SideGrid
         items={resources.map(({ id, data = {}}) => ({

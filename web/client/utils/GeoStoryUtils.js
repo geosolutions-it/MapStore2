@@ -40,6 +40,7 @@ export const SectionTemplates = {
 
 export const MediaTypes = {
     IMAGE: 'image',
+    MAP: 'map',
     VIDEO: 'video'
 };
 export const Modes = {

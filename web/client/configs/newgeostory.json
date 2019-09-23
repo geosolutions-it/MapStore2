@@ -2,6 +2,7 @@
   "type": "cascade",
   "resources": [{
     "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
+    "type": "image",
     "data": {
       "src": "https://images.unsplash.com/photo-1566305828756-cacc74d3dd20?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
       "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
