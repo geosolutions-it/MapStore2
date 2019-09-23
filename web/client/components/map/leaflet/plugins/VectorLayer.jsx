@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/leaflet/Layers');
-var L = require('leaflet');
+const Layers = require('../../../../utils/leaflet/Layers');
+const {isNil} = require('lodash');
+const L = require('leaflet');
 
-var defaultStyle = {
+const defaultStyle = {
     radius: 5,
     color: "red",
     weight: 1,
@@ -45,7 +46,7 @@ var createVectorLayer = function(options) {
         setOpacity(layer, opacity);
     };
     layer.on('layeradd', () => {
-        layer.setOpacity(layer.opacity || options.opacity);
+        layer.setOpacity(!isNil(layer.opacity) ? layer.opacity : options.opacity);
     });
     return layer;
 };
@@ -55,7 +56,7 @@ Layers.registerType('vector', {
         const layer = createVectorLayer(options);
         // layer.opacity will store the opacity value
         // to be applied to layer style once the layer is ready
-        layer.opacity = options.opacity || 1.0;
+        layer.opacity = !isNil(options.opacity) ? options.opacity : 1.0;
         return layer;
     },
     update: (layer, newOptions, oldOptions) => {
