@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { isNil, get, uniq, isArray } = require('lodash');
+const { isNil, get, uniq, isArray, isObject } = require('lodash');
 const { set } = require('./ImmutableUtils');
 const { colorToRgbaStr } = require('./ColorUtils');
 const axios = require('axios');
@@ -399,9 +399,10 @@ function mergeStyleSheet(format, styleSheets) {
         return builder.buildObject(mergedSldObj);
     } else if (format === 'mbstyle') {
         const mergedMBStyle = styleSheets
-            .map(function({ group }) {
+            .map(function({ layerName, group }) {
                 return group
                     .map(function(styleSheet) {
+                        if (isObject(styleSheet)) return styleSheet;
                         try {
                             return JSON.parse(styleSheet);
                         } catch(e) {
@@ -413,7 +414,12 @@ function mergeStyleSheet(format, styleSheets) {
                         return {
                             ...fullMBStyleObj,
                             ...mbStyleObj,
-                            layers: [ ...layers, ...(mbStyleObj.layers || []) ]
+                            layers: [ ...layers, ...(mbStyleObj.layers || [])
+                                .map((layer) => ({
+                                    'source': layerName,
+                                    'source-layer': mbStyleObj.name,
+                                    ...layer
+                                }))]
                         };
                     }, {});
             })
@@ -505,12 +511,12 @@ function splitStyleSheet(format, styleSheet, options = {}) {
                     ...styleSheet,
                     layers: layers.filter(rule => rule['source-layer'] === layerName)
                 }
-                : [
-                    {
+                : layers.filter(rule => rule['source-layer'] === layerName)
+                    .map((layer) => ({
                         ...styleSheet,
-                        layers: layers.filter(rule => rule['source-layer'] === layerName)
-                    }
-                ]
+                        name: layerName,
+                        layers: [ layer ]
+                    }))
         }));
     }
     return styleSheet;
@@ -579,9 +585,9 @@ function geoStylerStyleToStyleSheet(format, geoStylerStyles) {
                 const currentStyle = acc.find((style) => style.layerName === layerName);
                 if (currentStyle) {
                     return acc.map(function(style) {
-                        return style.layerName === name
+                        return style.layerName === layerName
                             ? {
-                                layerName: name,
+                                layerName,
                                 group: [
                                     ...style.group,
                                     styleSheet
@@ -589,7 +595,7 @@ function geoStylerStyleToStyleSheet(format, geoStylerStyles) {
                             } : style;
                     });
                 }
-                return [ ...acc, { layerName: name, group: [ styleSheet ] } ];
+                return [ ...acc, { layerName, group: [ styleSheet ] } ];
             }, []);
         return mergeStyleSheet(format, splitStyle);
     });
@@ -608,6 +614,13 @@ function mimeTypeToStyleFormat(mimeType) {
     ];
     const { format = 'sld' } = formats.find(({ types }) => types.indexOf(mimeType) !== -1) || {};
     return format;
+}
+
+function convertStyle(fromFormat, toFormat, styleSheet) {
+    return styleSheetToGeoStylerStyle(fromFormat, styleSheet)
+        .then(geoStylerStyle =>
+            geoStylerStyleToStyleSheet(toFormat, geoStylerStyle)
+        );
 }
 
 module.exports = {
@@ -638,5 +651,6 @@ module.exports = {
     mergeStyleSheet,
     styleSheetToGeoStylerStyle,
     geoStylerStyleToStyleSheet,
-    mimeTypeToStyleFormat
+    mimeTypeToStyleFormat,
+    convertStyle
 };
