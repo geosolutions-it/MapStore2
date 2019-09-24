@@ -1962,7 +1962,10 @@
                 "descriptionPlaceholder": "Entrez une description",
                 "description": "Description",
                 "creditsPlaceholder": "Entrez des crédits",
-                "credits": "Crédits"
+                "credits": "Crédits",
+                "mapFilter": "Filtrer les cartes",
+                "videoFilter": "Filtrer les vidéos",
+                "imageFilter": "Filtrer les images"
             }
         },
         "tutorial": {

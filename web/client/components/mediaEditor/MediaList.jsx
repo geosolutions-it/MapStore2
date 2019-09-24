@@ -9,12 +9,10 @@ import React from "react";
 import {isNil} from 'lodash';
 
 import { MediaTypes } from '../../utils/GeoStoryUtils';
-import SideGrid from '../misc/cardgrids/SideGrid';
-import withLocal from "../misc/enhancers/localizedProps";
-import Filter from '../misc/Filter';
 import Toolbar from '../misc/toolbar/Toolbar';
 import MapList from "./map/MapList";
-const FilterLocalized = withLocal('filterPlaceholder')(Filter);
+import ImageList from "./image/ImageList";
+
 
 export default ({
     resources = [],
@@ -46,26 +44,16 @@ export default ({
         // when no buttons visible, do not render toolbar components
         buttons.filter(b => !isNil(b.visible) ? b.visible : true).length > 0 &&
         <div
-            className="text-center"
-            key="toolbar"
-            style={{
-                borderBottom: '1px solid #ddd',
-                padding: 8
-            }}>
+            className="ms-media-toolbar"
+            key="toolbar">
             <Toolbar
-                btnGroupProps={{
-                    style: {
-                        paddingTop: "16px",
-                        marginBottom: 8
-                    }
-                }}
                 btnDefaultProps={{
                     bsStyle: 'primary',
                     className: 'square-button-md'
                 }}
                 buttons={buttons} />
-
-        </div>}
+        </div>
+    }
     {
         // Map List selector
         mediaType === MediaTypes.MAP &&
@@ -79,27 +67,13 @@ export default ({
         />
     }
     { mediaType === MediaTypes.IMAGE &&
-        <div>
-            <FilterLocalized
-            filterPlaceholder="Filtra per titolo"
-            onFilter={() => {
-                // filterText=""
-            }}/>
-            <SideGrid
-                items={resources.map(({ id, data = {}}) => ({
-                preview: <div
-                    style={{
-                        background: `url("${data.src}")`,
-                        backgroundSize: 'cover',
-                        height: "100%",
-                        overflow: 'hidden'
-                    }} />,
-                title: data.title,
-                onClick: () => selectItem(id),
-                selected: selectedItem && selectedItem.id && id === selectedItem.id,
-                description: data.description
-            }))}
-            />
-        </div>
+        <ImageList
+            selectedItem={selectedItem}
+            resources={resources}
+            onMapChoice={onMapChoice}
+            onMapSelected={onMapSelected}
+            selectItem={selectItem}
+            selectedSource={selectedSource}
+        />
     }
 </div>);

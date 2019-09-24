@@ -24,6 +24,7 @@
           "size": "large",
           "align": "center",
           "theme": "bright",
+          "html": "",
           "background": {
             "fit": "cover",
             "size": "full",

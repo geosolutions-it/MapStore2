@@ -1963,7 +1963,10 @@
                 "descriptionPlaceholder": "Inserisci una descrizione",
                 "description": "Descrizione",
                 "creditsPlaceholder": "Inserisci i crediti",
-                "credits": "Crediti"
+                "credits": "Crediti",
+                "mapFilter": "Filtra mappe",
+                "videoFilter": "Filtra video",
+                "imageFilter": "Filtra immagini"
             }
         },
         "tutorial": {

@@ -13,7 +13,8 @@ import handleSelectEnhancer from '../../widgets/builder/wizard/map/enhancers/han
 import Filter from '../../misc/Filter';
 import withLocal from "../../misc/enhancers/localizedProps";
 import SideGrid from '../../misc/cardgrids/SideGrid';
-import { SourceTypes } from '../../../utils/GeoStoryUtils';
+import { SourceTypes, filterResources } from '../../../utils/GeoStoryUtils';
+import withFilter from '../../misc/enhancers/withFilter';
 
 const Icon = require('../../misc/FitIcon');
 
@@ -22,25 +23,28 @@ const MapCatalog = mapCatalogWithEmptyMap(MapCatalogComp);
 const defaultPreview = <Icon glyph="geoserver" padding={20} />;
 
 
-const MapList = handleSelectEnhancer(({
-    title,
-    selectedSource = {},
-    setSelected,
-    onMapChoice,
-    resources,
-    selectedItem,
-    selected = {},
-    selectItem = () => {}
+const MapList = handleSelectEnhancer(
+    withFilter(({
+        filterText,
+        onMapChoice,
+        resources,
+        selectedSource = {},
+        setSelected,
+        selectedItem,
+        selected = {},
+        title,
+        onFilter = () => {},
+        selectItem = () => {}
 }) => {
     if (selectedSource.type === SourceTypes.GEOSTORY) {
-        return (<div>
+        return (<div className="ms-mapList">
             <FilterLocalized
-            filterPlaceholder="Filtra per titolo"
-            onFilter={() => {
-                // filterText=""
-            }}/>
+                filterPlaceholder="mediaEditor.mediaPicker.mapFilter"
+                filterText={filterText}
+                onFilter={onFilter}
+            />
             <SideGrid
-                items={resources.map(({ id, data = {}}) => ({
+                items={filterResources(resources, filterText).map(({ id, data = {}}) => ({
                 preview: data.thumbnail ? <img src={data.thumbnail}/> : defaultPreview,
                 title: data.name || data.title,
                 onClick: () => selectItem(id),
@@ -57,14 +61,12 @@ const MapList = handleSelectEnhancer(({
             selectedSource={selectedSource}
             onSelected={r => {
                 setSelected(r);
-                onMapChoice(r); // LAUNCH TWO ACTIONS
-                // SELECT ITEM
-                // {}
-            } } // TODO update preview
+                onMapChoice(r);
+            }}
         />);
     }
     return null;
-});
+}));
 
 
 export default MapList;

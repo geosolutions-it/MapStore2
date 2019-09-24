@@ -56,6 +56,7 @@ export default ({
                         bsStyle: mediaType === "image" ? "primary" : "default",
                         onClick: () => {setMediaType("image"); }
                     }, {
+                        visible: false, // TODO RESTORE THIS when video is implemented
                         text: <Message msgId= "mediaEditor.videos"/>,
                         active: mediaType === "video",
                         bsStyle: mediaType === "video" ? "primary" : "default",
@@ -83,7 +84,7 @@ export default ({
             </div>
         }
         columns={[
-            <div key="selector" style={{ zIndex: 2, order: -1, width: 300, backgroundColor: '#ffffff' }} >
+            <div key="selector" className="ms-mediaSelector">
                 <MediaSelector
                     selectedItem={selectedItem}
                     selectedSource={selectedSource}

@@ -10,7 +10,7 @@
  * Utils for geostory
  */
 
-import { isArray, values } from 'lodash';
+import { isArray, values, filter } from 'lodash';
 import uuid from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
@@ -115,6 +115,13 @@ export const scrollToContent = (id, scrollOptions) => {
     }
 };
 
+
+export const testRegex = (title = "", filterText, regex = RegExp(filterText, "i")) => {
+    return filterText ? regex.test(title) : true;
+};
+export const filterResources = (resources = [], filterText, regex = RegExp(filterText, "i") ) => {
+    return filter(resources, r => testRegex(r.data && r.data.title, filterText, regex));
+};
 
 /**
  * Creates a default template for the given type
