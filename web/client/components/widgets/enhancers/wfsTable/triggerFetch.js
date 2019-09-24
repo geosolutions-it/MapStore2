@@ -26,7 +26,7 @@ module.exports = ($props) =>
         .distinctUntilChanged(
         ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
             getSearchUrl(layer) === getSearchUrl(layer)
-            && (newProps.layer && layer.name === newProps.layer.name)
+            && (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
             && sameOptions(options, newProps.options)
             && sameFilter(filter, newProps.filter)
             && sameSortOptions(sortOptions, newProps.sortOptions))

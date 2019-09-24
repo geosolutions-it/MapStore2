@@ -12,7 +12,8 @@ const {
     clearWidgetsOnLocationChange,
     alignDependenciesToWidgets,
     toggleWidgetConnectFlow,
-    updateLayerOnLayerPropertiesChange
+    updateLayerOnLayerPropertiesChange,
+    updateLayerOnLoad
 } = require('../widgets');
 const {
     CLEAR_WIDGETS,
@@ -33,7 +34,8 @@ const {
     configureMap
 } = require('../../actions/config');
 const {
-    changeLayerProperties
+    changeLayerProperties,
+    layerLoad
 } = require('../../actions/layers');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const { ActionsObservable } = require('redux-observable');
@@ -364,5 +366,38 @@ describe('widgets Epics', () => {
         updateLayerOnLayerPropertiesChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
                                           .toArray()
                                           .subscribe(checkActions);
+    });
+    it('updateLayerOnLoad triggers updateWidgetLayer on LAYER_LOAD', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "3",
+                name: "layer3"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLoad,
+            1,
+            [layerLoad(
+                "3",
+                "Error"
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        loadingError: "Error"
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
     });
 });

@@ -53,9 +53,10 @@ module.exports = ({
             footer={pagination.totalFeatures ? (
                     <div style={{ height: "30px", overflow: "hidden"}}>
                     {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
-                    <span style={{ "float": "left", margin: "5px" }} ><Message
+                    {error === undefined &&
+                        <span style={{ "float": "left", margin: "5px" }} ><Message
                             msgId={"featuregrid.resultInfoVirtual"}
-                            msgParams={{ total: pagination.totalFeatures }} /></span>
+                            msgParams={{ total: pagination.totalFeatures }} /></span>}
                     </div>) : null}
         >
         <FeatureGrid
