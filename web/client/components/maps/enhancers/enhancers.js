@@ -9,9 +9,8 @@ const React = require('react');
 const Rx = require('rxjs');
 const { compose, withProps, mapPropsStream } = require('recompose');
 const { castArray } = require('lodash');
-const GeoStoreApi = require('../../../api/GeoStoreDAO');
 const Message = require('../../I18N/Message');
-
+const {getResources} = require('../../../api/persistence');
 const Icon = require('../../misc/FitIcon');
 
 const withControllableState = require('../../misc/enhancers/withControllableState');
@@ -36,14 +35,16 @@ const PAGE_SIZE = 10;
 /*
  * retrieves data from a catalog service and converts to props
  */
-const loadPage = ({ text, options = {} }, page = 0) => Rx.Observable
-    .fromPromise(GeoStoreApi.getResourcesByCategory("MAP", text, {
-        params: {
-            start: page * PAGE_SIZE,
-            limit: PAGE_SIZE
-        },
-        options
-    }))
+const loadPage = ({ text = "*", options = {} }, page = 0) => getResources({
+        category: "MAP",
+        query: text,
+        options: {
+            params: {
+                start: page * PAGE_SIZE,
+                limit: PAGE_SIZE
+            },
+        ...options
+    }})
     .map(resToProps)
     .catch(e => Rx.Observable.of({
         error: e,

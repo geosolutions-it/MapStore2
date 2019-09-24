@@ -18,7 +18,7 @@ const FitIcon = require('./FitIcon');
  * @memberof components.misc
  * @param  {object} [mainViewStyle]     Style for the main view
  * @param  {object} [contentStyle]      Style for the container view
- * @param  {String} [glyph="info-sign"] The icon glyph
+ * @param  {string} [glyph="info-sign"] The icon glyph
  * @param  {string|node} [title]               The title of the advice to display
  * @param  {string|node} [description]         The description to display
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)

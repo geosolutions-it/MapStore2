@@ -7,6 +7,7 @@
  */
 
 import { get } from 'lodash';
+import { SourceTypes, MediaTypes } from '../utils/GeoStoryUtils';
 
 import {
     ADDING_MEDIA,
@@ -15,50 +16,52 @@ import {
     HIDE,
     LOAD_MEDIA_SUCCESS,
     SELECT_ITEM,
+    SELECT_MAP,
     SET_MEDIA_SERVICE,
     SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
 import { compose, set } from '../utils/ImmutableUtils';
 
+const GEOSTORY_SOURCE_ID = "geostory";
 export const DEFAULT_STATE = {
     open: false,
     // contains local data (path for data is mediaType, sourceId, e.g. data: {image : { geostory: { resultData: {...}, params: {...}}})
     data: {},
     settings: {
-        mediaType: "image", // current selected media type
-        sourceId: "geostory", // current selected service
+        mediaType: MediaTypes.IMAGE, // current selected media type
+        sourceId: GEOSTORY_SOURCE_ID, // current selected service
         // available media types
         mediaTypes: {
             image: {
-                defaultSource: "geostory", // source selected when this media is selected
-                sources: ["geostory"] // services for the selected media type
+                defaultSource: GEOSTORY_SOURCE_ID, // source selected when this media is selected
+                sources: [GEOSTORY_SOURCE_ID, "geostoreImage"] // services for the selected media type
             },
             video: {
-                defaultSource: "geostory",
-                sources: ["geostory"]
+                defaultSource: GEOSTORY_SOURCE_ID,
+                sources: [GEOSTORY_SOURCE_ID]
             },
             map: {
-                defaultSource: "geostory",
-                sources: ["geostory"]
+                defaultSource: GEOSTORY_SOURCE_ID,
+                sources: [GEOSTORY_SOURCE_ID, "geostoreMap", "geostoreImage"]
             }
         },
         // all media sources available, with their type and other parameters
         sources: {
             geostory: {
                 name: "Current story", // shown in in the UI,  TODO: localize?
-                type: "geostory" // determines the type related to the API
+                type: SourceTypes.GEOSTORY // determines the type related to the API
             },
             geostoreMap: {
                 name: "Geostore Dev",
-                type: "geostore",
-                url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
+                type: SourceTypes.GEOSTORE,
+                baseURL: "/rest/geostore/",
                 category: "MAP"
             },
             geostoreImage: {
-                name: "Geostore QA",
-                type: "geostore",
-                url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
+                name: "Geostore Images",
+                type: SourceTypes.GEOSTORE,
+                baseURL: "/mapstore/rest/geostore/",
                 category: "IMAGE"
             }
         }
@@ -89,7 +92,7 @@ export default (state = DEFAULT_STATE, action) => {
                 set('selected', ""),
                 set('saveState.addingMedia', false),
                 set('saveState.editing', false),
-                set('settings', state.stashedSettings || state.settings), // restore defaults
+                set('settings', state.stashedSettings || state.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
                 set('stashedSettings', undefined)
             )(state);
         // set adding media state (to toggle add/select in media selectors)
@@ -99,6 +102,14 @@ export default (state = DEFAULT_STATE, action) => {
         }
         case SELECT_ITEM: {
             return set('selected', action.id, state);
+        }
+        case SELECT_MAP: {
+            // TODO DO NOT DO THIS HERE, USE media api
+            const oldResources = get(state, `data.map["${state.settings.sourceId}"].resultData.resources`, []).filter(m => m.id !== action.map.id);
+            return compose(
+                set(`data.map["${state.settings.sourceId}"]`, { params: {}, resultData: {resources: oldResources.concat([action.map])} }),
+                set('selected', action.map.id)
+            )(state);
         }
         case SET_MEDIA_TYPE: {
             const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");

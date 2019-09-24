@@ -8,7 +8,6 @@
 
 import geostory from './geostory';
 
-
 const registry = {
     "geostory": geostory
 };

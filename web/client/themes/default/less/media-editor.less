@@ -1,7 +1,7 @@
 
 .ms-mediaEditor {
     /* render the scrollbar on the list */
-    .ms-imageList {
+    .ms-mediaList {
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -21,14 +21,30 @@
                 padding: 0;
             }
         }
+        .map-catalog{
+            .ms2-border-layout-body {
+                .ms2-border-layout-content {
+                    width: 100%;
+                }
+            }
+        }
     }
     // move service selector in top right corner
     .ms-border-layout-header {
-        .Select.Select--single {
-            flex: 5;
-        }
-        .ms-label-services {
-            flex: 1;
+        .ms-mediaEditor-services {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 240px; // todo think about this
+            display: flex;
+            align-items: center;
+
+            .Select.Select--single {
+                flex: 5;
+            }
+            .ms-mediaEditor-label {
+                flex: 1;
+            }
         }
     }
 }

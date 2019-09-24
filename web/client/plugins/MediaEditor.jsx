@@ -13,7 +13,11 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { hide, chooseMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/mediaEditor';
 import mediaEditor from '../reducers/mediaEditor';
-import { openSelector, selectedItemSelector, mediaTypeSelector } from '../selectors/mediaEditor';
+import {
+    mediaTypeSelector,
+    openSelector,
+    selectedItemSelector
+} from '../selectors/mediaEditor';
 
 import MediaModal from './mediaEditor/MediaModal';
 

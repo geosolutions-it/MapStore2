@@ -6,18 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {Observable} from 'rxjs';
+import {find} from 'lodash';
 import {
-    LOAD_MEDIA,
     loadMedia,
     loadMediaSuccess,
-    SAVE_MEDIA,
     saveMediaSuccess,
     setAddingMedia,
     setEditingMedia,
     selectItem,
-    SHOW
+    CHOOSE_MEDIA,
+    HIDE,
+    LOAD_MEDIA,
+    SAVE_MEDIA,
+    SHOW,
+    SELECT_MAP
 } from '../actions/mediaEditor';
-import { editingSelector } from '../selectors/mediaEditor';
+import { editResource, addResource } from '../actions/geostory';
+
+import { mediaTypeSelector, editingSelector } from '../selectors/mediaEditor';
+import { resourcesSelector } from '../selectors/geostory';
 
 import mediaAPI from '../api/media';
 
@@ -26,19 +33,18 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     // final version should get mediaType and sourceId from settings, for show (ok for LOAD_MEDIA)
     // now we have only one type/source, so I trigger directly the load of it
     action$.ofType(SHOW, LOAD_MEDIA)
-    .switchMap((action) => {
-        // TODO: get params from action
-        let params = action.params || {};
-        let mediaType = action.mediaType || "image";
-        let sourceId = action.sourceId || "geostory";
-        if (action.type === SHOW) {
-            // TODO: get params from state
-        }
-        // TODO: get media type and source
-        return mediaAPI(mediaType, /* TODO: get the source from the sourceId */)
-            .load(params, store) // store is required for local data (e.g. local geostory data)
-            .switchMap(resultData =>
-                Observable.of(loadMediaSuccess({mediaType, sourceId, params, resultData}))
+    .switchMap(() => {
+        return mediaAPI()
+            .load(store) // store is required for local data (e.g. local geostory data)
+            .switchMap(results =>
+                Observable.from(
+                    results.map(r => loadMediaSuccess({
+                        mediaType: r.mediaType,
+                        sourceId: r.sourceId,
+                        params: {mediaType: r.mediaType},
+                        resultData: {resources: r.resources}
+                    }))
+                )
             );
     });
 
@@ -71,4 +77,19 @@ export const editorSaveUpdateMediaEpic = (action$, store) =>
                 );
             });
     }
-    );
+   );
+
+export const saveMapEpic = (action$, store) =>
+    action$.ofType(SELECT_MAP)
+    .switchMap(({map}) => {
+        return action$.ofType(CHOOSE_MEDIA)
+            .switchMap(() => {
+                const mediaType = mediaTypeSelector(store.getState());
+                const alreadyPresent = find(resourcesSelector(store.getState()), {id: map.id});
+                return Observable.of(
+                    alreadyPresent ? editResource(map.id, mediaType, map) : addResource(map.id, mediaType, map)
+                );
+            }).takeUntil(action$.ofType(HIDE));
+    }
+);
+

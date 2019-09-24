@@ -66,7 +66,8 @@ export default backgroundPropWithHandler(({
                     backgroundSize: `${cover ? 64 : 600 }px auto`
                 }}
                 tools={{
-                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
+                    [MediaTypes.MAP]: ['editMedia', 'size', 'align', 'theme']
                 }}
                 height={height >= viewHeight
                     ? viewHeight

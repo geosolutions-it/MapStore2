@@ -84,8 +84,13 @@ const Api = {
     createAttributeList,
     generateMetadata,
     authProviderName: "geostore",
+    /**
+     * add the geostore base url, default is /mapstore/rest/geostore/
+     * @param {object} options axios options
+     * @return {object} options with baseURL
+     */
     addBaseUrl: function(options) {
-        return assign(options || {}, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
+        return assign(options || {}, {baseURL: options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
     },
     getData: function(id, options) {
         const url = "data/" + id;

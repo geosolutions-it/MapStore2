@@ -8,19 +8,13 @@
 import React from 'react';
 import ReactSelect from "react-select";
 
-import { MediaTypes } from '../../utils/GeoStoryUtils';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import localizedProps from '../misc/enhancers/localizedProps';
 import Toolbar from '../misc/toolbar/Toolbar';
-import ImagePreview from './image/ImagePreview';
-import MapPreview from './map/MapPreview';
 import MediaSelector from './MediaSelector';
-import VideoPreview from './video/VideoPreview';
-
+import MediaPreview from './MediaPreview';
 const Select = localizedProps(["placeholder", "clearValueText", "noResultsText" ])(ReactSelect);
-
-// import LocaleUtils from '../../utils/LocaleUtils';
 
 /**
  * Full view of the media with selector and preview.
@@ -34,8 +28,8 @@ export default ({
     resources,
     saveState,
     selectedItem,
-    // messages,
-    selectedService = "current",
+    selectedSource,
+    selectedService = "currentStory",
     services = [{
         name: "Currently used",
         id: "geostory"
@@ -44,6 +38,7 @@ export default ({
         id: "geostore"
     }],
     selectItem = () => {},
+    selectMap = () => {},
     setAddingMedia = () => {},
     setMediaType = () => {},
     setMediaService = () => {},
@@ -71,34 +66,27 @@ export default ({
                         bsStyle: mediaType === "map" ? "primary" : "default",
                         onClick: () => {setMediaType("map"); }
                     }]} />
-
-            <div style={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                width: "240px",
-                display: "flex",
-                alignItems: "center"
-            }}>
-                <div className="ms-label-services">
-                    <strong><Message msgId="mediaEditor.mediaPicker.services"/></strong>
-                </div>
-                <Select
-                    clearValueText="mediaEditor.mediaPicker.clean"
-                    noResultsText="mediaEditor.mediaPicker.noResults"
-                    placeholder="mediaEditor.mediaPicker.selectService"
-                    clearable
-                    options={services.map(s => ({label: s.name, value: s.id}))}
-                    onChange={setMediaService}
-                    value={selectedService}
-                />
+                <div className="ms-mediaEditor-services">
+                    <div className="ms-mediaEditor-label">
+                        <strong><Message msgId="mediaEditor.mediaPicker.services"/></strong>
+                    </div>
+                    <Select
+                        clearValueText="mediaEditor.mediaPicker.clean"
+                        noResultsText="mediaEditor.mediaPicker.noResults"
+                        placeholder="mediaEditor.mediaPicker.selectService"
+                        clearable
+                        options={services.map(s => ({label: s.name, value: s.id}))}
+                        onChange={setMediaService}
+                        value={selectedService}
+                    />
                 </div>
             </div>
         }
-        columns={[ //
+        columns={[
             <div key="selector" style={{ zIndex: 2, order: -1, width: 300, backgroundColor: '#ffffff' }} >
                 <MediaSelector
                     selectedItem={selectedItem}
+                    selectedSource={selectedSource}
                     resources={resources}
                     mediaType={mediaType}
                     mediaSource={source}
@@ -107,15 +95,15 @@ export default ({
                     selectedService={selectedService}
                     setAddingMedia={setAddingMedia}
                     setEditingMedia={setEditingMedia}
+                    onMapSelected={selectMap}
                     setMediaService={setMediaService}
                     selectItem={selectItem}
                     {...saveState}
                 />
             </div>
         ]}>
-        <div key="preview" style={{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            {mediaType === MediaTypes.IMAGE && <ImagePreview selectedItem={selectedItem} mediaType={mediaType}/>}
-            {mediaType === MediaTypes.VIDEO && <VideoPreview mediaType={mediaType}/>}
-            {mediaType === MediaTypes.MAP && <MapPreview mediaType={mediaType}/>}
-        </div>
+        <MediaPreview
+            selectedItem={selectedItem}
+            mediaType={mediaType}
+        />
     </BorderLayout>);

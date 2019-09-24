@@ -22,9 +22,10 @@ export const mediaTypeSelector = state => get(state, "mediaEditor.settings.media
 export const mediaTypesSelector = state => get(state, "mediaEditor.settings.mediaTypes");
 export const sourcesSelector = state => get(state, "mediaEditor.settings.sources");
 export const sourcesForMediaTypeSelector = state => get(mediaTypesSelector(state), `${mediaTypeSelector(state)}.sources`, []);
-export const currentSource = sourceId => state => get(sourcesSelector(state), `${sourceId}`, {});
+export const selectedSourceSelector = state => get(sourcesSelector(state), sourceIdSelector(state), {});
+export const getSourceByIdSelectorCreator = sourceId => state => get(sourcesSelector(state), `${sourceId}`, {});
 // export const availableSourcesSelector = state => pick(sourcesSelector(state), sourcesForMediaTypeSelector(state) );
-export const availableSourcesSelector = state => sourcesForMediaTypeSelector(state).map(s => ({id: s, name: currentSource(s)(state).name}));
+export const availableSourcesSelector = state => sourcesForMediaTypeSelector(state).map(s => ({id: s, name: getSourceByIdSelectorCreator(s)(state).name}));
 export const resultDataSelector = state => get(state, `mediaEditor.data["${mediaTypeSelector(state)}"]["${sourceIdSelector(state)}"].resultData`);
 export const currentResourcesSelector = state => get(resultDataSelector(state), "resources");
 export const selectedIdSelector = state => get(state, "mediaEditor.selected");

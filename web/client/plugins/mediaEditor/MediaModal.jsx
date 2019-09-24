@@ -16,7 +16,8 @@ import {
     setMediaType,
     setMediaService,
     saveMedia,
-    selectItem
+    selectItem,
+    selectMap
 } from '../../actions/mediaEditor';
 import {
     availableSourcesSelector,
@@ -24,6 +25,7 @@ import {
     editingSelector,
     saveStateSelector,
     sourceIdSelector,
+    selectedSourceSelector,
     selectedItemSelector
 } from '../../selectors/mediaEditor';
 
@@ -37,11 +39,13 @@ const Editor = connect(createStructuredSelector({
     saveState: saveStateSelector,
     selectedItem: selectedItemSelector,
     selectedService: sourceIdSelector,
+    selectedSource: selectedSourceSelector,
     services: availableSourcesSelector,
     editing: editingSelector,
     resources: currentResourcesSelector
 }), {
     selectItem,
+    selectMap,
     setMediaService,
     setAddingMedia,
     setMediaType,

@@ -63,7 +63,7 @@ import { getEffectivePath } from '../reducers/geostory';
  * then it waits for chose media for updating the resourceId
  * @param {*} action$
  */
-export const openMediaEditorForNewMedia = action$ =>
+export const openMediaEditorForNewMedia = (action$, store) =>
     action$.ofType(ADD)
         .filter(({ element = {} }) => {
             const isMediaContent = element.type === ContentTypes.MEDIA;
@@ -92,7 +92,7 @@ export const openMediaEditorForNewMedia = action$ =>
                                 Observable.of(
                                     update(
                                         path,
-                                        { resourceId: resource.id, type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        { resourceId: resource.id, type: mediaTypeSelector(store.getState()) }, // TODO take type from mediaEditor state or from resource
                                         "merge"
                                     )
                                 );
@@ -173,7 +173,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
-                            const type = mediaTypeSelector(state);
+                            const type = mediaTypeSelector(store.getState());
                             return Observable.of(
                                 update(`${path}`, {resourceId: resource.id, type}, "merge" )
                                 );

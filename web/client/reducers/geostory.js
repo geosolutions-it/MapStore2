@@ -25,6 +25,7 @@ import {
     SAVE_ERROR
 } from '../actions/geostory';
 
+
 let INITIAL_STATE = {
     mode: 'edit', // TODO: change in to Modes.VIEW
     cardPreviewEnabled: true

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import {isObject} from 'lodash';
 export const ADDING_MEDIA = "MEDIA_EDITOR:ADDING_MEDIA";
 export const CHOOSE_MEDIA = "MEDIA_EDITOR:CHOOSE_MEDIA";
 export const EDITING_MEDIA = "MEDIA_EDITOR:EDITING_MEDIA";
@@ -18,6 +18,7 @@ export const SAVE_MEDIA_SUCCESS = "MEDIA_EDITOR:SAVE_MEDIA_SUCCESS";
 export const SET_MEDIA_TYPE = "MEDIA_EDITOR:SET_MEDIA_TYPE";
 export const SET_MEDIA_SERVICE = "MEDIA_EDITOR:SET_MEDIA_SERVICE";
 export const SELECT_ITEM = "MEDIA_EDITOR:SELECT_ITEM";
+export const SELECT_MAP = "MEDIA_EDITOR:SELECT_MAP";
 export const SHOW = "MEDIA_EDITOR:SHOW";
 
 /**
@@ -66,6 +67,11 @@ export const saveMediaSuccess = ({ mediaType, source, data, id }) => ({ type: SA
  * @param {string} id of the resource
  */
 export const selectItem = (id) => ({ type: SELECT_ITEM, id});
+/**
+ * select map in media editor list
+ * @param {object} param.map
+ */
+export const selectMap = ({map}) => ({ type: SELECT_MAP, map});
 // RESOURCE FORMAT DRAFT :
 /*
 {
@@ -83,9 +89,9 @@ export const selectItem = (id) => ({ type: SELECT_ITEM, id});
 export const setAddingMedia = (adding) => ({ type: ADDING_MEDIA, adding });
 /**
  * set the media service
- * @param {string} service id of the service
+ * @param {object|string} service id or object containing id of the service
  */
-export const setMediaService = (service) => ({ type: SET_MEDIA_SERVICE, id: service ? service.value : null });
+export const setMediaService = (service) => ({ type: SET_MEDIA_SERVICE, id: isObject(service) ? service.value : service });
 /**
  * change the media type in the media editor
  * @param {string} mediaType type of the media, can be one of "image", "video" or "map"

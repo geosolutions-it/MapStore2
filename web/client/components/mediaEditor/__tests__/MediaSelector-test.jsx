@@ -24,6 +24,6 @@ describe('MediaSelector component', () => {
     it('MediaSelector rendering with defaults', () => {
         ReactDOM.render(<MediaSelector />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-imageList')).toExist();
+        expect(container.querySelector('.ms-mediaList')).toExist();
     });
 });

@@ -7,21 +7,28 @@
  */
 import React from "react";
 
-import { MediaTypes } from '../../../utils/GeoStoryUtils';
+import { MediaTypes, defaultLayerMapPreview } from '../../../utils/GeoStoryUtils';
 import emptyState from '../../misc/enhancers/emptyState';
+import PreviewMap from '../../widgets/builder/wizard/map/PreviewMap';
+import { isEmpty } from 'lodash';
 
 const Preview = ({
+    selectedItem
 }) => {
     return (
-        <div key="preview" style = {{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            Map Preview
-        </div>
+        <PreviewMap
+            styleMap={{height: "100%"}}
+            center={selectedItem.center}
+            zoom={selectedItem.zoom}
+            id={"preview" + selectedItem.id}
+            layers={ selectedItem.layers || [defaultLayerMapPreview]}
+        />
     );
 };
 
 
 export default emptyState(
-    ( {mediaType, selectedItem}) => mediaType === MediaTypes.MAP && !selectedItem,
+    ( {mediaType, selectedItem}) => mediaType === MediaTypes.MAP && (!selectedItem || isEmpty(selectedItem)),
     {
         iconFit: true,
         glyph: "1-map"

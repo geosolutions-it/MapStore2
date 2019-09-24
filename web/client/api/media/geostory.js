@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Observable } from 'rxjs';
-import { isNil } from 'lodash';
+import { groupBy } from 'lodash';
 import uuid from 'uuid';
 
 import { addResource, editResource } from '../../actions/geostory';
 import { resourcesSelector } from '../../selectors/geostory';
 import { selectedIdSelector } from '../../selectors/mediaEditor';
+import { SourceTypes } from '../../utils/GeoStoryUtils';
 
 /**
  * API to save in local resources. All the methods must implement the same interface.
@@ -69,16 +70,21 @@ export default {
      * ```json
      * {
      *     "resources": [{id, type, data}],
+     *     "sourceId": geostory,
+     *     "mediaType": image | map,
      *     "totalCount": 1
      * }
      * ```
      */
-    load: ({mediaType}, store) => {
-        const resources = resourcesSelector(store.getState())
-            .filter(({ type }) => !isNil(mediaType) ? type === mediaType : true);
-        return Observable.of({
-            resources,
-            totalCount: resources.length
-        });
+    load: (store) => {
+        const separatedResources = groupBy(resourcesSelector(store.getState()), "type");
+        return Observable.of(
+            Object.keys(separatedResources).map(mediaType => ({
+                resources: separatedResources[mediaType],
+                sourceId: SourceTypes.GEOSTORY,
+                mediaType,
+                totalCount: separatedResources[mediaType].length
+            }))
+         );
     }
 };
