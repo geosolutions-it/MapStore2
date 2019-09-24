@@ -10,12 +10,13 @@ import React from 'react';
 import image from './Image';
 import map from './Map';
 
+export const Image = image;
 const typesMap = {
     image,
     map
 };
-export const Media = ({ mediaType, ...props }) => {
-    const MediaType = typesMap[mediaType];
+export const Media = ({ mediaType, type, ...props }) => {
+    const MediaType = typesMap[mediaType || type] || Image;
     return <MediaType {...props} />;
 };
 export default typesMap;

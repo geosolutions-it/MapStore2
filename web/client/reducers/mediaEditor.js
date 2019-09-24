@@ -89,7 +89,6 @@ export default (state = DEFAULT_STATE, action) => {
             return compose(
                 set('open', false),
                 set('owner', undefined),
-                set('selected', ""),
                 set('saveState.addingMedia', false),
                 set('saveState.editing', false),
                 set('settings', state.stashedSettings || state.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED

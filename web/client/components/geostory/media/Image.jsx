@@ -15,7 +15,6 @@ import { connect } from "react-redux";
 import { compose, withState, withProps, branch } from 'recompose';
 
 import { resourcesSelector } from '../../../selectors/geostory';
-import emptyState from '../../misc/enhancers/emptyState';
 
 
 /**
@@ -109,12 +108,6 @@ export default compose(
                     return resource.data;
                 }
             )
-        ),
-        emptyState(
-            ({src = ""} = {}) => !src,
-            () => ({
-                glyph: "picture"
-            })
         )
     ),
     withState('fullscreen', 'onClick', false)

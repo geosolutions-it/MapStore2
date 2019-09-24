@@ -10,18 +10,31 @@ import React from "react";
 import { MediaTypes, defaultLayerMapPreview } from '../../../utils/GeoStoryUtils';
 import emptyState from '../../misc/enhancers/emptyState';
 import PreviewMap from '../../widgets/builder/wizard/map/PreviewMap';
-import { isEmpty } from 'lodash';
+import { isEmpty, merge } from 'lodash';
+// TODO MOVE TO UTILS (SHARED WITH PREVIEW)
+const DEFAULT_OPTIONS = {
+    zoomControl: true,
+    style: {width: "100%", height: "100%"},
+    mapOptions: {
+        interactions: {
+            mouseWheelZoom: false
+        }
+    }
+};
+// TODO MOVE TO UTILS (SHARED WITH PREVIEW)
+const applyDefaults = (options = {}) => merge({}, options, DEFAULT_OPTIONS);
 
 const Preview = ({
     selectedItem
 }) => {
+    const { layers = [], mapOptions, ...m} = selectedItem; // remove mapOptions to not override options
     return (
         <PreviewMap
             styleMap={{height: "100%"}}
-            center={selectedItem.center}
-            zoom={selectedItem.zoom}
+            map={{...m, id: "map" + m.id}}
             id={"preview" + selectedItem.id}
-            layers={ selectedItem.layers || [defaultLayerMapPreview]}
+            layers={layers || [defaultLayerMapPreview]}
+            options={applyDefaults({})}
         />
     );
 };

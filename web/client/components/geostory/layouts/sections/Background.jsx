@@ -10,7 +10,8 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 
 import stickySupport from '../../../misc/enhancers/stickySupport';
-import Media from '../../media/index';
+import {Media} from '../../media/index';
+import MediaType from '../../media/index';
 import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
 import ContentToolbar from '../../contents/ContentToolbar';
 import Message from '../../../I18N/Message';
@@ -25,6 +26,8 @@ import pattern from './patterns/grid.svg';
 class Background extends Component {
 
     static propTypes = {
+        id: PropTypes.id,
+        sectionId: PropTypes.string,
         mode: PropTypes.string,
         fit: PropTypes.string,
         size: PropTypes.string,
@@ -57,7 +60,6 @@ class Background extends Component {
     };
 
     render() {
-        const MediaType = Media[this.props.type];
         const parentNode = !this.props.disableToolbarPortal && this.refs && this.refs.div && this.refs.div.parentNode;
         const toolbar = (
             <ContentToolbar
@@ -81,11 +83,16 @@ class Background extends Component {
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
                     style={{
                         height: this.props.height,
-                        ...(!MediaType
+                        ...(!MediaType[this.props.type]
                             ? this.props.backgroundPlaceholder
                             : {})
                     }}>
-                    {MediaType && <MediaType { ...this.props } enableFullscreen={false} descriptionEnabled={false}/>}
+                    <Media
+                        id={`${this.props.sectionId || "ms"}-media-${this.props.id}`}
+                        {...this.props}
+                        enableFullscreen={false}
+                        descriptionEnabled={false}
+                        />
                     { this.props.mode === Modes.EDIT && (
                     parentNode
                     ? (

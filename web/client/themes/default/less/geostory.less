@@ -532,10 +532,12 @@
     //////////
 
     .ms-media {
-        &.ms-media-image {
+        &.ms-media-image, &.ms-media-map {
             position: relative;
             width: 100%;
             height: 100%;
+        }
+        &.ms-media-image {
             & > img {
                 position: relative;
                 width: 100%;
@@ -566,6 +568,12 @@
                     font-size: @ms-story-font-size-caption;
                 }
             }
+        }
+        &.ms-media-map {
+            .ol-zoom {
+                top: 50px;
+            }
+
         }
     }
     .empty-state-container .empty-state-main-view .empty-state-description {
