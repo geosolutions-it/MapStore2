@@ -138,10 +138,10 @@ module.exports = (env) => {
         devServer: isProduction ? undefined : {
             proxy: {
                 '/mapstore/rest/geostore': {
-                    target: "http://dev.mapstore2.geo-solutions.it"
+                    target: "http://dev.mapstore.geo-solutions.it"
                 },
                 '/mapstore/proxy': {
-                    target: "http://dev.mapstore2.geo-solutions.it"
+                    target: "http://dev.mapstore.geo-solutions.it"
                 }
             }
         },

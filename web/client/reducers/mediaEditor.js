@@ -52,13 +52,13 @@ export const DEFAULT_STATE = {
             geostoreMap: {
                 name: "Geostore Dev",
                 type: "geostore",
-                url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
+                url: "https://dev.mapstore.geo-solutions.it/mapstore/rest/geostore/",
                 category: "MAP"
             },
             geostoreImage: {
                 name: "Geostore QA",
                 type: "geostore",
-                url: "https://dev.mapstore2.geo-solutions.it/mapstore/rest/geostore/",
+                url: "https://dev.mapstore.geo-solutions.it/mapstore/rest/geostore/",
                 category: "IMAGE"
             }
         }
