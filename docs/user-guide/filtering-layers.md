@@ -2,7 +2,7 @@
 ******************
 
 When using vector layers it might be useful to work with a subset of features.
-About that, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) let you set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.  
+About that, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) let you set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
 The map will immediately update when a filter is created and all other tools will take it into consideration when used. More over, the filter is saved into the map context so if you save it the filter will apply when you open the map next time.
 
 Creating a new Layer Filter
@@ -63,7 +63,7 @@ The layer [Attributes Table](attributes-table.md) also takes the filter into acc
 
 <img src="../img/filtered_features_grid.png" />
 
-Any additional filter you define using the [Advanced Filtering](attributes-table.md#advanced-filtering) tool or the *Quick Filter* will overlap the layer filter.  
+Any additional filter you define using the [Advanced Filtering](attributes-table.md#advanced-filtering) tool or the *Quick Filter* will overlap the layer filter.
 *Layer Filter* will go in *`AND`* with *Advanced Filtering*:
 
 <img src="../img/filtered_advanced_filtering.gif" />
@@ -92,7 +92,7 @@ The *Query Builder* toolbar makes also available the *Undo* button <img src="../
 Removing a Layer Filter
 -----------------------
 
-When opening the *Query Builder* of a filtered layer, the filter is already configured.  
+When opening the *Query Builder* of a filtered layer, the filter is already configured.
 The *Reset* button <img src="../img/reset_button.png" style="max-width:30px;"/> is the only one enabled and it allows you to clear the filter (it restores an empty filter):
 
 * **Click** on *Reset* <img src="../img/reset_button.png" style="max-width:30px;"/>, an empty filter will be configured and the map updates immediately.

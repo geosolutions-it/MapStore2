@@ -18,7 +18,7 @@ In the *Search Bar*, for example, **Type** the text "rome" then **Select** the f
 
 ### Searching by coordinates
 
-Through the *Search Bar* you have the possibility to zoom to a specific point and place a marker in its position. The map will be centered in that point.  
+Through the *Search Bar* you have the possibility to zoom to a specific point and place a marker in its position. The map will be centered in that point.
 The point can be specified typing its coordinates both in `decimal` and `aeronautical` formats.
 
 !!! warning
@@ -38,7 +38,7 @@ To experience this, follow these steps:
 
     <img src="../img/search_by_decimal_coordinates.gif" />
 
-By default [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/gear_icon.png" style="max-width:30px;"> of the coordinates editor, select *Aeronautical* and click on it to switch to this coordinate format.
+By default [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/gear_icon.png" style="max-width:30px;"> of the coordinates editor, select *Aeronautical* and click on it to switch to this coordinate format.
 
 <img src="../img/search_by_aeronautical_coordinates.gif" />
 
@@ -90,10 +90,10 @@ The following example shows the steps required to set up a custom service:
     - **Launch Info Panel** is a flag that can be used to trigger GetFeatureInfo requests when selecting a record after a search.
     It has three values as shown here:
     <img src="../img/launch-info-panel.jpg" style="max-height:500px;" />
-     - "No info" means that no GFI request will be triggered and it is the default value. 
-     
+     - "No info" means that no GFI request will be triggered and it is the default value.
+
      Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
-     
+
      - "Search Layer" means that the GFI will filter results to the record selected and to its layer. It will also force the info_format to "application/json" (PROPERTIES) for allowing filtering on the features by using the id of the selected record.
      - "All Layers" means that there will be no filtering as it happens when you click on map.
 

@@ -64,9 +64,9 @@ Demo Instances
 ---------------
 We have the following instances:
 
-1. a DEV instance, which can be accessed [here](http://dev.mapstore2.geo-solutions.it), where all the changes are deployed once they are published on the Master branch of our repo
-2. a QA instance, which can be accessed  [here](http://qa.mapstore2.geo-solutions.it), that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
-3. a STABLE instance, which can be accessed [here](http://mapstore2.geo-solutions.it), that gets deployed on demand after each release.
+1. a DEV instance, which can be accessed [here](http://dev.mapstore.geo-solutions.it), where all the changes are deployed once they are published on the Master branch of our repo
+2. a QA instance, which can be accessed  [here](http://qa.mapstore.geo-solutions.it), that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
+3. a STABLE instance, which can be accessed [here](http://mapstore.geo-solutions.it), that gets deployed on demand after each release.
 
 As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
 So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
