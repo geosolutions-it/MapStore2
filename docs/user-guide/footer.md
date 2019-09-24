@@ -8,7 +8,7 @@ Located at the bottom of the Data Frame, the Footer can be expanded by clicking 
 CRS Selector
 ------------
 
-[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) provides a *CRS Selector* through which you are able to switch the *Coordinate Reference System* of your map. In the bottom-right corner of the screen you should see this icon <img src="../img/crs_selector_icon.png" style="max-width:30px;" />.
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides a *CRS Selector* through which you are able to switch the *Coordinate Reference System* of your map. In the bottom-right corner of the screen you should see this icon <img src="../img/crs_selector_icon.png" style="max-width:30px;" />.
 
 <img src="../img/crs_selector.png" style="max-width:500px;" />
 
