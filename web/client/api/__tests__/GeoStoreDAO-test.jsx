@@ -184,4 +184,93 @@ describe('Test correctness of the GeoStore APIs', () => {
             "</Attributes>"
         );
     });
+    it("test getAvailableGroups for ADMIN multiple groups", () => {
+        const sampleResponse = {
+            "UserGroupList": {
+                "UserGroup": [
+                    {
+                        "groupName": "everyone",
+                        "id": 1,
+                        "restUsers": {
+                            "User": [
+                                {
+                                    "groupsNames": "everyone",
+                                    "id": 3,
+                                    "name": "user",
+                                    "role": "USER"
+                                },
+                                {
+                                    "groupsNames": "everyone",
+                                    "id": 2,
+                                    "name": "admin",
+                                    "role": "ADMIN"
+                                },
+                                {
+                                    "groupsNames": "everyone",
+                                    "id": 1,
+                                    "name": "guest",
+                                    "role": "GUEST"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "description": "test",
+                        "groupName": "test",
+                        "id": 5,
+                        "restUsers": ""
+                    }
+                ]
+            }
+        };
+
+        mockAxios.onGet().reply(200, sampleResponse);
+        API.getAvailableGroups({role: "ADMIN"}).then((data) => {
+            expect(data).toExist();
+            expect(data.length).toBe(2);
+            const everyoneGroup = data.find(g => g.id === 1);
+            expect(everyoneGroup).toEqual({id: 1, groupName: "everyone"});
+            const testGroup = data.find(g => g.id === 5);
+            expect(testGroup).toEqual({id: 5, groupName: "test"});
+        });
+    });
+    it("test getAvailableGroups for ADMIN single group", () => {
+        const sampleResponse = {
+            "UserGroupList": {
+                "UserGroup": {
+                    "groupName": "everyone",
+                    "id": 1,
+                    "restUsers": {
+                        "User": [
+                            {
+                                "groupsNames": "everyone",
+                                "id": 3,
+                                "name": "user",
+                                "role": "USER"
+                            },
+                            {
+                                "groupsNames": "everyone",
+                                "id": 2,
+                                "name": "admin",
+                                "role": "ADMIN"
+                            },
+                            {
+                                "groupsNames": "everyone",
+                                "id": 1,
+                                "name": "guest",
+                                "role": "GUEST"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        mockAxios.onGet().reply(200, sampleResponse);
+        API.getAvailableGroups({role: "ADMIN"}).then((data) => {
+            expect(data).toExist();
+            expect(data.length).toBe(1);
+            expect(data[0]).toEqual({id: 1, groupName: "everyone"});
+        });
+    });
 });
