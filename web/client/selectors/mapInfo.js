@@ -14,8 +14,6 @@ const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 
-const {queryPanelSelector} = require('./controls');
-
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -70,13 +68,11 @@ const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
-    queryPanelSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, isQueryPanelActive) =>
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing) =>
         isMapInfoDisabled
         || !!isMeasureActive
         || isDrawSupportActive
         || !!isAnnotationsEditing
-        || !!isQueryPanelActive
     );
 
 /**
