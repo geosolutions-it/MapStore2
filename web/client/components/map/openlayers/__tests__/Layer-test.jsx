@@ -1004,6 +1004,43 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
     });
 
+    it('creates a vector layer with opacity for openlayers map', () => {
+        const opacity = 0.45;
+        var options = {
+            crs: 'EPSG:4326',
+            opacity,
+            features: {
+                'type': 'FeatureCollection',
+                'crs': {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Polygon',
+                            'coordinates': [[
+                              [13, 43],
+                              [15, 43],
+                              [15, 44],
+                              [13, 44]
+                            ]]
+                        }
+                    }
+                ]
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="vector"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer.layer.values_.opacity).toEqual(opacity);
+    });
+
     it('creates a vector layer specifying the feature CRS for openlayers map', () => {
         var options = {
             crs: 'EPSG:4326',
