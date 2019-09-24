@@ -1,7 +1,7 @@
 # Performing Measurements
 *************************
 
-Measure tools in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allow the user to perform distance, area and bearing measurments on the map.
+Measure tools in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allow the user to perform distance, area and bearing measurments on the map.
 
 Starting from a new map or an already existing map:
 
@@ -16,7 +16,7 @@ button add ability to create annotation from the measurements.
 Measuring Distances
 -------------------
 
-Since [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) works in geographic coordinates, the measured distances are geodesic. You can draw a segment line or multi-segments line.
+Since [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) works in geographic coordinates, the measured distances are geodesic. You can draw a segment line or multi-segments line.
 
 * **Click** on *Measure Distance* button <img src="../img/measure-distance.jpg" style="max-width:30px;" />.
 
@@ -61,10 +61,10 @@ The bearing measure will be reported as a tool tip and on the measure page.
 
 Annotation
 ------------------
-It is possible to define [annotation](annotations.md) from the measurements i.e length, area or bearing. 
+It is possible to define [annotation](annotations.md) from the measurements i.e length, area or bearing.
 
 * Define the measurement i.e distance, area or bearing.
-* **Click** on  *Add as annotation* button <img src="../img/add-as-annotation.jpg" style="max-width:30px;" />. 
+* **Click** on  *Add as annotation* button <img src="../img/add-as-annotation.jpg" style="max-width:30px;" />.
 *(This button is clickable only after defining the measurement)*
 
 Annotation panel will open and you can continue to define the new [annotation](annotations.md) originating from measurement.

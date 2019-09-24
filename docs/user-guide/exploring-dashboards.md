@@ -1,7 +1,7 @@
 # Exploring Dashboards
 **********************
 
-In [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/), a *Dashboard* is a space where the user can add many miniature items, such as charts, maps, tables, texts and counters, and can create connections between them in order to:
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a space where the user can add many miniature items, such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
 1. Provide an overview for a better visualization of the data.
 2. Interact spatially and analytically with the data by creating connections between maps and charts.
