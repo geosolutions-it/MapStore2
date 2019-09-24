@@ -627,7 +627,7 @@ export default class DrawSupport extends React.Component {
                 roiProps.geometryFunction = function(coordinates, geometry) {
                     let geom = geometry;
                     if (!geom) {
-                        geom = new Polygon(null);
+                        geom = new Polygon([]);
                     }
                     let start = coordinates[0];
                     let end = coordinates[1];
@@ -651,7 +651,7 @@ export default class DrawSupport extends React.Component {
                     roiProps.geometryFunction = (coordinates, geometry) => {
                         let geom = geometry;
                         if (!geom) {
-                            geom = new Polygon(null);
+                            geom = new Polygon([]);
                             geom.setProperties({geodesicCenter: [...coordinates[0]]}, true);
                         }
                         let projection = this.props.map.getView().getProjection().getCode();
