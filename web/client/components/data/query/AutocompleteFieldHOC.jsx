@@ -56,6 +56,10 @@ class AutocompleteFieldHOC extends React.Component {
     };
 
     getPagination = (options) => {
+        if (!this.props.filterField.options) {
+            return {};
+        }
+
         const numberOfPages = Math.ceil(this.props.filterField.fieldOptions.valuesCount / this.props.maxFeaturesWPS);
         const firstPage = this.props.filterField.fieldOptions.currentPage === 1 || !this.props.filterField.fieldOptions.currentPage;
         const lastPage = this.props.filterField.fieldOptions.currentPage === numberOfPages || !this.props.filterField.fieldOptions.currentPage;

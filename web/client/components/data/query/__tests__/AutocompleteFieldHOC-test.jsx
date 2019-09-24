@@ -80,4 +80,28 @@ describe('AutocompleteFieldHOC', () => {
         expect(cmp).toExist();
 
     });
+
+    it('create a AutocompleteFieldHOC without pagination fields', () => {
+        let conf = {
+            filterField: {
+                attribute: "NAME",
+                options: {
+                    "NAME": [{
+                        value: "val1",
+                        label: "val1"
+                    }, {
+                        value: "val2",
+                        label: "val2"
+                    }]
+                },
+                value: "someVAlue"
+            },
+            maxFeaturesWPS: 5,
+            pagination: {
+                paginated: true
+            }
+        };
+        const cmp = ReactDOM.render(<AutocompleteFieldHOC {...conf} />, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
 });
