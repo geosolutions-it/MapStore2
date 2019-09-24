@@ -8,7 +8,7 @@
 import React from "react";
 
 import MapCatalogComp from '../../maps/MapCatalog';
-import mapCatalogWithEmptyMap from '../../maps/enhancers/mapCatalogWithEmptyMap';
+import mapCatalog from '../../maps/enhancers/mapCatalog';
 import handleSelectEnhancer from '../../widgets/builder/wizard/map/enhancers/handleSelect';
 import Filter from '../../misc/Filter';
 import withLocal from "../../misc/enhancers/localizedProps";
@@ -19,7 +19,7 @@ import withFilter from '../../misc/enhancers/withFilter';
 const Icon = require('../../misc/FitIcon');
 
 const FilterLocalized = withLocal('filterPlaceholder')(Filter);
-const MapCatalog = mapCatalogWithEmptyMap(MapCatalogComp);
+const MapCatalog = mapCatalog(MapCatalogComp);
 const defaultPreview = <Icon glyph="geoserver" padding={20} />;
 
 
