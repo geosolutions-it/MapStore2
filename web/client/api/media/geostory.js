@@ -18,7 +18,7 @@ import { SourceTypes } from '../../utils/GeoStoryUtils';
  * API to save in local resources. All the methods must implement the same interface.
  * TODO: bring the interface documentation into mediaAPI
  */
-export default {
+
     /**
      * Saves a media with passed data and returns the object shaped as {id, mediaType, data, source}
      * @param {string} mediaType type of the media (image, video...)
@@ -35,10 +35,10 @@ export default {
      * }
      * ```
      */
-    save: (mediaType, source, data, store) =>
+export const save = (mediaType, source, data, store) =>
         Observable.of(uuid()).do(
                 (id) => store.dispatch(addResource(id, mediaType, data)
-            )).map(id => ({id, mediaType, data, source})),
+            )).map(id => ({id, mediaType, data, source}));
 /**
      * Updates a media with passed data and returns the object shaped as {id, mediaType, data, source}
      * @param {string} mediaType type of the media (image, video...)
@@ -55,36 +55,35 @@ export default {
      * }
      * ```
      */
-    edit: (mediaType, source, data, store) => {
-        const state = store.getState();
-        const id = selectedIdSelector(state);
-        return Observable.of(id).do(
-            () => {
-                return store.dispatch(editResource(id, mediaType, data));
-            }
-        ).map(() => ({id, mediaType, data, source}));
-    },
+export const edit = (mediaType, source, data, store) => {
+    const state = store.getState();
+    const id = selectedIdSelector(state);
+    return Observable.of(id).do(
+        () => {
+            return store.dispatch(editResource(id, mediaType, data));
+        }
+    ).map(() => ({id, mediaType, data, source}));
+};
     /**
-     * load data from the source, with the search parameters passed
-     * @returns {Observable} a stream that emits an object with the following shape:
+     * load data for every media type
+     * @returns {Observable} a stream that emits an array of object with the following shape:
      * ```json
-     * {
+     * [{
      *     "resources": [{id, type, data}],
      *     "sourceId": geostory,
      *     "mediaType": image | map,
      *     "totalCount": 1
-     * }
+     * }]
      * ```
      */
-    load: (store) => {
-        const separatedResources = groupBy(resourcesSelector(store.getState()), "type");
-        return Observable.of(
-            Object.keys(separatedResources).map(mediaType => ({
-                resources: separatedResources[mediaType],
-                sourceId: SourceTypes.GEOSTORY,
-                mediaType,
-                totalCount: separatedResources[mediaType].length
-            }))
-         );
-    }
+export const load = (store) => {
+    const separatedResources = groupBy(resourcesSelector(store.getState()), "type");
+    return Observable.of(
+        Object.keys(separatedResources).map(mediaType => ({
+            resources: separatedResources[mediaType],
+            sourceId: SourceTypes.GEOSTORY,
+            mediaType,
+            totalCount: separatedResources[mediaType].length
+        }))
+        );
 };

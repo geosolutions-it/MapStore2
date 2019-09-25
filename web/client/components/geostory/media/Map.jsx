@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { find, merge } from 'lodash';
+import { find } from 'lodash';
 import { createSelector } from 'reselect';
 
 import { connect } from "react-redux";
@@ -15,23 +15,8 @@ import { compose, withProps, branch } from 'recompose';
 import { resourcesSelector } from '../../../selectors/geostory';
 
 import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
-import { defaultLayerMapPreview } from '../../../utils/GeoStoryUtils';
-// TODO MOVE TO UTILS (SHARED WITH PREVIEW)
-const DEFAULT_OPTIONS = {
-    zoomControl: true,
-    style: {width: "100%", height: "100%"},
-    mapOptions: {
-        interactions: {
-            mouseWheelZoom: false
-        }
-    }
-};
-// TODO MOVE TO UTILS (SHARED WITH PREVIEW)
-const applyDefaults = (options = {}) => merge({}, options, DEFAULT_OPTIONS);
-// TODO MOVE TO UTILS (SHARED WITH PREVIEW)
-const createMapObject = (baseMap = {}, overrides = {}) => {
-    return merge({}, baseMap, overrides);
-};
+import {createMapObject, applyDefaults, defaultLayerMapPreview } from '../../../utils/GeoStoryUtils';
+
 export default compose(
     branch(
         ({ resourceId }) => resourceId,

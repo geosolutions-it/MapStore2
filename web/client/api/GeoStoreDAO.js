@@ -90,7 +90,7 @@ const Api = {
      * @return {object} options with baseURL
      */
     addBaseUrl: function(options) {
-        return assign(options || {}, {baseURL: options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
+        return assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
     },
     getData: function(id, options) {
         const url = "data/" + id;

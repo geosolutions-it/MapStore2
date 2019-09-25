@@ -21,6 +21,17 @@ export const SELECT_ITEM = "MEDIA_EDITOR:SELECT_ITEM";
 export const SELECT_MAP = "MEDIA_EDITOR:SELECT_MAP";
 export const SHOW = "MEDIA_EDITOR:SHOW";
 
+// RESOURCE FORMAT DRAFT :
+/*
+{
+    type: 'image'|'video'|'map'|'iframe'|'document' // (pdf)
+    source: 'id' // id of the source, just to identify it in a local context
+    data: {
+        //specific data for the source type
+    }
+}
+*/
+
 /**
  * choose media for media editor
  * @param {object} resource
@@ -72,16 +83,6 @@ export const selectItem = (id) => ({ type: SELECT_ITEM, id});
  * @param {object} param.map
  */
 export const selectMap = ({map}) => ({ type: SELECT_MAP, map});
-// RESOURCE FORMAT DRAFT :
-/*
-{
-    type: 'image'|'video'|'map'|'iframe'|'document' // (pdf)
-    source: 'id' // id of the source, just to identify it in a local context
-    data: {
-        //specific data for the source type
-    }
-}
-*/
 /**
  * adding media
  * @param {boolean} adding
