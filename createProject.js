@@ -24,7 +24,7 @@ const paramsDesc = [{
     "default": '1.0.0',
     validate: () => true
 }, {
-    label: 'Project Description: (Project Name)',
+    label: 'Project Description (Project Name): ',
     name: 'projectDescription',
     "default": '',
     validate: () => true
