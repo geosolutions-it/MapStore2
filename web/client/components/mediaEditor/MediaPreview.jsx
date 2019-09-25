@@ -16,10 +16,10 @@ import MapPreview from './map/MapPreview';
  */
 export default (props = {}) => {
 
-    return (
+    return props.mediaType && (
     <div className="ms-media-preview" key="preview" style={{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
         {props.mediaType === MediaTypes.IMAGE && <ImagePreview {...props}/>}
         {props.mediaType === MediaTypes.VIDEO && <VideoPreview {...props}/>}
         {props.mediaType === MediaTypes.MAP && <MapPreview {...props}/>}
-    </div>);
+    </div>) || null;
 };

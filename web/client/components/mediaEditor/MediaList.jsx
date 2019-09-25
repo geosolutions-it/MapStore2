@@ -55,7 +55,6 @@ export default ({
         </div>
     }
     {
-        // Map List selector
         mediaType === MediaTypes.MAP &&
         <MapList
             selectedItem={selectedItem}

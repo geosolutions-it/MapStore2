@@ -50,7 +50,7 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 import { isLoggedIn } from '../selectors/security';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
-import { mediaTypeSelector } from '../selectors/mediaEditor';
+import { currentMediaTypeSelector } from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
 import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
@@ -92,7 +92,7 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                                 Observable.of(
                                     update(
                                         path,
-                                        { resourceId: resource.id, type: mediaTypeSelector(store.getState()) }, // TODO take type from mediaEditor state or from resource
+                                        { resourceId: resource.id, type: currentMediaTypeSelector(store.getState()) }, // TODO take type from mediaEditor state or from resource
                                         "merge"
                                     )
                                 );
@@ -173,7 +173,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
-                            const type = mediaTypeSelector(store.getState());
+                            const type = currentMediaTypeSelector(store.getState());
                             return Observable.of(
                                 update(`${path}`, {resourceId: resource.id, type}, "merge" )
                                 );

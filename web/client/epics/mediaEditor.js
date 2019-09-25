@@ -23,7 +23,7 @@ import {
 } from '../actions/mediaEditor';
 import { editResource, addResource } from '../actions/geostory';
 
-import { mediaTypeSelector, editingSelector, sourceIdSelector } from '../selectors/mediaEditor';
+import { currentMediaTypeSelector, editingSelector, sourceIdSelector } from '../selectors/mediaEditor';
 import { resourcesSelector } from '../selectors/geostory';
 
 import mediaAPI from '../api/media';
@@ -85,7 +85,7 @@ export const saveMapEpic = (action$, store) =>
     .switchMap(({map}) => {
         return action$.ofType(CHOOSE_MEDIA)
             .switchMap(() => {
-                const mediaType = mediaTypeSelector(store.getState());
+                const mediaType = currentMediaTypeSelector(store.getState());
                 const alreadyPresent = find(resourcesSelector(store.getState()), {id: map.id});
                 return Observable.of(
                     alreadyPresent ? editResource(map.id, mediaType, map) : addResource(map.id, mediaType, map)

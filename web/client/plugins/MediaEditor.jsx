@@ -14,7 +14,7 @@ import { hide, chooseMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/mediaEditor';
 import mediaEditor from '../reducers/mediaEditor';
 import {
-    mediaTypeSelector,
+    currentMediaTypeSelector,
     openSelector,
     selectedItemSelector
 } from '../selectors/mediaEditor';
@@ -29,7 +29,7 @@ import MediaModal from './mediaEditor/MediaModal';
 export default createPlugin('MediaEditor', {
     component: connect(
         createStructuredSelector({
-            mediaType: mediaTypeSelector,
+            mediaType: currentMediaTypeSelector,
             open: openSelector,
             selectedItem: selectedItemSelector
         }), {

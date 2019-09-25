@@ -32,7 +32,6 @@ const MapList = handleSelectEnhancer(
         setSelected,
         selectedItem,
         selected = {},
-        title,
         onFilter = () => {},
         selectItem = () => {}
 }) => {
