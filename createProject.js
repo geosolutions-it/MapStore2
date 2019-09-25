@@ -65,7 +65,7 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('package.json file created\n');
-            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', 'web/client/.babelrc', 'Dockerfile']);
+            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', '.babelrc', 'Dockerfile']);
         })
         .then(() => {
             process.stdout.write('copied static files\n');
