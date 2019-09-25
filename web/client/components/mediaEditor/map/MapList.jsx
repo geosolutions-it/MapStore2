@@ -56,7 +56,7 @@ const MapList = handleSelectEnhancer(
     }
     if (selectedSource.type === SourceTypes.GEOSTORE) {
         return (<MapCatalog
-            title={title}
+            title={null}
             selected={selected}
             selectedSource={selectedSource}
             onSelected={r => {

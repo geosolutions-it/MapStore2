@@ -23,7 +23,7 @@ import {
 } from '../actions/mediaEditor';
 import { editResource, addResource } from '../actions/geostory';
 
-import { mediaTypeSelector, editingSelector } from '../selectors/mediaEditor';
+import { mediaTypeSelector, editingSelector, sourceIdSelector } from '../selectors/mediaEditor';
 import { resourcesSelector } from '../selectors/geostory';
 
 import mediaAPI from '../api/media';
@@ -34,7 +34,8 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     // now we have only one type/source, so I trigger directly the load of it
     action$.ofType(SHOW, LOAD_MEDIA)
     .switchMap(() => {
-        return mediaAPI.load(store) // store is required for local data (e.g. local geostory data)
+        const sourceId = sourceIdSelector(store.getState());
+        return mediaAPI(sourceId).load(store) // store is required for local data (e.g. local geostory data)
             .switchMap(results =>
                 Observable.from(
                     results.map(r => loadMediaSuccess({
@@ -61,9 +62,10 @@ export const editorSaveUpdateMediaEpic = (action$, store) =>
     action$.ofType(SAVE_MEDIA)
     .switchMap(({mediaType = "image", source, data}) => {
         const editing = editingSelector(store.getState());
+        const sourceId = sourceIdSelector(store.getState());
         const handler = editing ?
-            mediaAPI.edit(mediaType, source, data, store) :
-            mediaAPI.save(mediaType, source, data, store);
+            mediaAPI(sourceId).edit(mediaType, source, data, store) :
+            mediaAPI(sourceId).save(mediaType, source, data, store);
         const feedbackAction = editing ? setEditingMedia(false) : setAddingMedia(false);
         return handler // store is required both for some custom auth, or to dispatch actions in case of local
             // TODO: saving state (for loading spinners), errors

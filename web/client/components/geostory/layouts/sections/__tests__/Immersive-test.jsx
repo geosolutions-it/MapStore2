@@ -7,14 +7,16 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import {Provider} from 'react-redux';
 import expect from 'expect';
+
 import Immersive from '../Immersive';
 
 // TODO: externalize
 import {setObservableConfig} from 'recompose';
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
+import { testToolbarButtons } from './testUtils';
 
 import { Modes } from '../../../../../utils/GeoStoryUtils';
 
@@ -49,6 +51,7 @@ const CONTENTS = [
 ];
 
 describe('Immersive component', () => {
+
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -58,6 +61,7 @@ describe('Immersive component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+
     it('Immersive rendering with defaults', () => {
         ReactDOM.render(<Immersive />, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -116,5 +120,33 @@ describe('Immersive component', () => {
         expect(innerMediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
+    });
+
+    it('Immersive background rendering (Map)', () => {
+        const CONTENTS_MAP = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'map'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Immersive mode={Modes.EDIT} contents={CONTENTS_MAP} />
+            </Provider>
+        , document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(["pencil", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
     });
 });
