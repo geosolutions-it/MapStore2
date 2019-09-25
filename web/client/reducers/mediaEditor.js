@@ -103,7 +103,6 @@ export default (state = DEFAULT_STATE, action) => {
             return set('selected', action.id, state);
         }
         case SELECT_MAP: {
-            // TODO DO NOT DO THIS HERE, USE media api
             const oldResources = get(state, `data.map["${state.settings.sourceId}"].resultData.resources`, []).filter(m => m.id !== action.map.id);
             return compose(
                 set(`data.map["${state.settings.sourceId}"]`, { params: {}, resultData: {resources: oldResources.concat([action.map])} }),

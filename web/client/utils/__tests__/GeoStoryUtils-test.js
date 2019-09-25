@@ -12,7 +12,11 @@ import ReactDOM from 'react-dom';
 import uuid from 'uuid';
 
 import {
+    DEFAULT_MAP_OPTIONS,
+    applyDefaults,
+    createMapObject,
     ContentTypes,
+    filterResources,
     MediaTypes,
     Modes,
     SectionTemplates,
@@ -22,7 +26,8 @@ import {
     getDefaultSectionTemplate,
     isMediaSection,
     lists,
-    scrollToContent
+    scrollToContent,
+    testRegex
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -269,5 +274,39 @@ describe("GeoStory Utils", () => {
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.TEXT);
         });
+    });
+    it('test applyDefaults', () => {
+        const res = applyDefaults();
+        expect(res).toEqual(DEFAULT_MAP_OPTIONS);
+    });
+    it('test createMapObject', () => {
+        const merged = {
+            zoomControl: true,
+            style: {width: "100%", height: "100%"},
+            mapOptions: {
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false
+                }
+            }
+        };
+        const res = createMapObject(DEFAULT_MAP_OPTIONS, {
+            mapOptions: {
+                interactions: {
+                    mouseClick: false
+                }
+            }
+        });
+        expect(res).toEqual(merged);
+    });
+    it('test testRegex', () => {
+        const title = "title";
+        expect(testRegex(title, "it")).toBe(true);
+        expect(testRegex(title, "aaa")).toBe(false);
+    });
+    it('test filterResources', () => {
+        const resources = [{data: {title: "res1"}}, {data: {title: "res2"}}, {data: {title: "not matching title"}}];
+        expect(filterResources(resources, "re").length).toBe(2);
+        expect(filterResources(resources, "e").length).toBe(3);
     });
 });
