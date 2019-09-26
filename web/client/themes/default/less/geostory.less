@@ -2,6 +2,8 @@
 @ms-story-bg-grey: @ms2-color-shade-lighter;
 @ms-story-highlight: lighten(@ms2-color-primary, 20%);
 @ms-story-text: @ms2-color-text;
+@ms-story-bg-guidelines: #0571b0; // background guidelines color
+@ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
@@ -570,6 +572,33 @@
     }
     .empty-state-container .empty-state-main-view .empty-state-description {
         text-align: center;
+    }
+
+    /////////////////////
+    // EDITING
+    /////////////////////
+
+    &.ms-edit {
+        .ms-section {
+            // background guidelines color for container size
+            & > div > .ms-content-toolbar,
+            .ms-section-background .ms-section-background-container .ms-content-toolbar {
+                border-top: 2px solid @ms-story-bg-guidelines;
+            }
+            .ms-section-background .ms-section-background-container .ms-media {
+                border-left: 2px dashed @ms-story-bg-guidelines;
+                border-right: 2px dashed @ms-story-bg-guidelines;
+            }
+
+            // foreground guidelines color for container size
+            &.ms-section-title .ms-content {
+                border-left: 2px dashed @ms-story-fg-guidelines;
+                border-right: 2px dashed @ms-story-fg-guidelines;
+                .ms-content-toolbar {
+                    border-top: 2px solid @ms-story-fg-guidelines;
+                }
+            }
+        }
     }
 
     /////////////////////

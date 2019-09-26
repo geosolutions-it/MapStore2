@@ -40,4 +40,10 @@ describe('Cascade component', () => {
         expect(el.querySelector('.ms-section-paragraph > .ms-section-contents')).toExist();
         expect(el.querySelector('.add-bar')).toNotExist();
     });
+    it('Cascade rendering mode edit', () => {
+        ReactDOM.render(<Cascade {...STORY} mode="edit" />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-edit');
+        expect(el).toExist();
+    });
 });
