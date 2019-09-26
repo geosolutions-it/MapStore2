@@ -1942,6 +1942,7 @@
             "modalTitle": "Media",
             "images": "Imágenes",
             "videos": "Videos",
+            "maps": "Mapas",
             "preview": "Avance",
             "apply": "Aplicar",
             "mediaPicker": {
