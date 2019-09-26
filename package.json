@@ -21,9 +21,9 @@
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.19.0",
     "denodeify": "1.2.1",
-    "dynamic-public-path-webpack-plugin": "1.0.4",
     "docma": "1.5.1",
     "download-cli": "1.0.1",
+    "dynamic-public-path-webpack-plugin": "1.0.4",
     "escope": "3.2.0",
     "eslint": "0.24.1",
     "eslint-plugin-react": "3.3.2",
@@ -73,6 +73,7 @@
     "simple-git": "1.33.1",
     "style-loader": "0.12.4",
     "url-loader": "0.5.7",
+    "vusion-webfonts-generator": "0.4.1",
     "webpack": "2.2.1",
     "webpack-bundle-size-analyzer": "2.0.2",
     "webpack-dev-server": "2.4.1",
@@ -245,7 +246,8 @@
     "continuoustest": "karma start ./build/karma.conf.continuous-test.js",
     "mvntest": "karma start ./build/karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",
-    "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs"
+    "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs",
+    "generate-icons": "node ./build/generateIcons.js" 
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
