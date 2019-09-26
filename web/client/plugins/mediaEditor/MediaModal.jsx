@@ -64,6 +64,7 @@ const MediaModal = ({
     mediaType,
     chooseMedia,
     selectedItem,
+    editing,
     hide = () => { }
 }) => {
 
@@ -79,7 +80,7 @@ const MediaModal = ({
                     {
                         text: <Message msgId="mediaEditor.apply"/>,
                         bsSize: 'sm',
-                        disabled: !selectedItem,
+                        disabled: !selectedItem || editing,
                         onClick: () => chooseMedia(selectedItem)
                     }
                 ]}>

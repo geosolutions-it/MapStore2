@@ -16,6 +16,7 @@ import mediaEditor from '../reducers/mediaEditor';
 import {
     currentMediaTypeSelector,
     openSelector,
+    editingSelector,
     selectedItemSelector
 } from '../selectors/mediaEditor';
 
@@ -30,6 +31,7 @@ export default createPlugin('MediaEditor', {
     component: connect(
         createStructuredSelector({
             mediaType: currentMediaTypeSelector,
+            editing: editingSelector,
             open: openSelector,
             selectedItem: selectedItemSelector
         }), {
