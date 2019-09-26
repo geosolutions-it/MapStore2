@@ -73,7 +73,7 @@ const Cascade = ({
     editMedia = () => {},
     update = () => {},
     remove = () => {}
-}) => (<BorderLayout className="ms-cascade-story">
+}) => (<BorderLayout className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
