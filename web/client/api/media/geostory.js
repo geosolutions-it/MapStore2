@@ -77,13 +77,14 @@ export const edit = (mediaType, source, data, store) => {
      * ```
      */
 export const load = (store) => {
-    const separatedResources = groupBy(resourcesSelector(store.getState()), "type");
-    return Observable.of(
-        Object.keys(separatedResources).map(mediaType => ({
-            resources: separatedResources[mediaType],
+    const resources = resourcesSelector(store.getState());
+    const separatedResourcesPerType = resources.length ? groupBy(resourcesSelector(store.getState()), "type") : {};
+    return Object.keys(separatedResourcesPerType).length && Observable.of(
+        Object.keys(separatedResourcesPerType).map(mediaType => ({
+            resources: separatedResourcesPerType[mediaType],
             sourceId: SourceTypes.GEOSTORY,
             mediaType,
-            totalCount: separatedResources[mediaType].length
+            totalCount: separatedResourcesPerType[mediaType].length
         }))
-        );
+        ) || Observable.of(null);
 };

@@ -39,7 +39,8 @@ import {
     SET_CONTROL,
     SAVED,
     SET_RESOURCE,
-    GEOSTORY_LOADED
+    GEOSTORY_LOADED,
+    ADD_RESOURCE
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -443,7 +444,12 @@ describe('Geostory Epics', () => {
             });
             done();
         }, {
-            geostory: {}
+            geostory: {},
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
+                }
+            }
         });
     });
     it('test openMediaEditorForNewMedia, adding an empty media content (image)', (done) => {
@@ -469,7 +475,12 @@ describe('Geostory Epics', () => {
             });
             done();
         }, {
-            geostory: {}
+            geostory: {},
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
+                }
+            }
         });
     });
     it('test openMediaEditorForNewMedia, adding a media section and choosing an image', (done) => {
@@ -513,13 +524,18 @@ describe('Geostory Epics', () => {
             });
             done();
         }, {
-            geostory: {}
+            geostory: {},
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
+                }
+            }
         });
     });
     it('editMediaForBackgroundEpic showing media and updating story', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
-            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostory"}),
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
             chooseMedia({id: "resourceId"})
         ], (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -534,8 +550,13 @@ describe('Geostory Epics', () => {
                         expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
                         break;
                     case SHOW:
-                        expect(a.owner).toEqual("geostory");
+                        expect(a.owner).toEqual("geostore");
                         break;
+                    case ADD_RESOURCE:
+                        expect(a.id).toEqual("resourceId");
+                        expect(a.mediaType).toEqual("image");
+                        expect(a.data).toEqual({id: "resourceId"});
+                    break;
                     case SELECT_ITEM:
                         expect(a.id).toEqual("resource_id");
                         break;
@@ -547,6 +568,9 @@ describe('Geostory Epics', () => {
         }, {
             geostory: {
                 currentStory: {
+                    resources: [{
+                        id: "geostoreMap-resource_id"
+                    }],
                     sections: [{
                         id: "section_id",
                         contents: [{
@@ -558,7 +582,8 @@ describe('Geostory Epics', () => {
             },
             mediaEditor: {
                 settings: {
-                    mediaType: "image"
+                    mediaType: "image",
+                    sourceId: "geostoreMap"
                 }
             }
         });

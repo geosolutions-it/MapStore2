@@ -30,14 +30,14 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     .switchMap(() => {
         return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
             .switchMap(results =>
-                Observable.from(
+                results && Observable.from(
                     results.map(r => loadMediaSuccess({
                         mediaType: r.mediaType,
                         sourceId: r.sourceId,
                         params: {mediaType: r.mediaType},
-                        resultData: {resources: r.resources}
+                        resultData: {resources: r.resources, totalCount: r.totalCount}
                     }))
-                )
+                ) || Observable.empty()
             );
     });
 
