@@ -2084,4 +2084,54 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test drawPropertiesForGeometryType for BBOX', (done) => {
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "BBOX",
+            drawStatus: "start",
+            features: [],
+            options: {
+                transformToFeatureCollection: false,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+
+        const geometryType = "BBOX";
+        const maxPoints = null;
+        const source = support.drawSource;
+        const newProps = {};
+        const drawProps = support.drawPropertiesForGeometryType(geometryType, maxPoints, source, newProps);
+        expect(drawProps).toExist();
+        expect(drawProps.maxPoints).toBe(2);
+        const olGeom = drawProps.geometryFunction([1, 3], null);
+        expect(olGeom).toExist();
+        done();
+    });
+    it('test drawPropertiesForGeometryType for Circle', (done) => {
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "start",
+            features: [],
+            options: {
+                transformToFeatureCollection: false,
+                editEnabled: true,
+                geodesic: true
+            }
+        });
+        expect(support).toExist();
+
+        const geometryType = "Circle";
+        const maxPoints = null;
+        const source = support.drawSource;
+        const drawProps = support.drawPropertiesForGeometryType(geometryType, maxPoints, source, {options: {
+            geodesic: true
+        }});
+        expect(drawProps).toExist();
+        expect(drawProps.maxPoints).toBe(100);
+        const olGeom = drawProps.geometryFunction([[[1, 3], [1, 3]]], null);
+        expect(olGeom).toExist();
+        done();
+    });
 });

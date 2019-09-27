@@ -109,7 +109,7 @@ class MapCard extends React.Component {
                 glyph: 'wrench',
                 disabled: this.props.map.updating,
                 loading: this.props.map.updating,
-                tooltipId: 'manager.editMapMetadata',
+                tooltipId: this.props.tooltips.editResource,
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.map, true);

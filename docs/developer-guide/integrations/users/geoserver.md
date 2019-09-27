@@ -111,7 +111,7 @@ These last steps are required to allow users logged in MapStore to be authentica
          ```
          http://localhost:36728/mapstore/rest/geostore/session/username/{key}
          http://localhost/mapstore2/rest/geostore/session/username/{key}
-         http://mapstore2.geo-solutions.it/mapstore/rest/geostore/session/username/{key}
+         http://mapstore.geo-solutions.it/mapstore/rest/geostore/session/username/{key}
          ```
 	* Save.
     * Go into the authentication page and open default filter chain.
