@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { isNil, get, uniq, isArray, isObject } = require('lodash');
+const { isNil, get, uniq, isArray, isObject, castArray } = require('lodash');
 const { set } = require('./ImmutableUtils');
 const { colorToRgbaStr } = require('./ColorUtils');
 const axios = require('axios');
@@ -522,24 +522,92 @@ function splitStyleSheet(format, styleSheet, options = {}) {
     return styleSheet;
 }
 
+let ICONS_DATA = {};
+
+function getImageDataFromGeoStylerStyles(geoStylerStyles) {
+    const images = geoStylerStyles.reduce(function(acc, { rules = [] }) {
+        return rules.reduce(function(newImages, { symbolizers = []}) {
+            return [
+                ...newImages,
+                ...symbolizers.filter(({ image }) => image).map(({ image }) => image)
+            ];
+        }, []);
+    }, []);
+    return Promise.all(
+        images.map(function(src) {
+            return ICONS_DATA[src]
+                ? new Promise((resolve) => resolve(ICONS_DATA[src]))
+                : new Promise(function(resolve) {
+                    const img = new Image();
+                    img.onload = (event) => {
+                        const width = event && event.target.naturalWidth;
+                        const height = event && event.target.naturalHeight;
+                        ICONS_DATA[src] = { src, width, height };
+                        resolve({ src, width, height });
+                    };
+                    img.onerror = () => {
+                        resolve({ src });
+                    };
+                    img.crossOrigin = 'Anonymous';
+                    img.src = src;
+                });
+        })
+    );
+}
+
+function adjustIconSize(format, geoStylerStyles, toStyleSheet) {
+    if (format === 'sld') {
+        const styles = castArray(geoStylerStyles);
+        return getImageDataFromGeoStylerStyles(styles)
+            .then(function() {
+                const newStyles = styles.map(function({ rules = [], ...style }) {
+                    return {
+                        ...style,
+                        rules: rules.map(function({ symbolizers = [], ...rule }) {
+                            return {
+                                ...rule,
+                                symbolizers: symbolizers
+                                    .map(function({ size, ...symbolizer }) {
+                                        if (symbolizer.kind === 'Icon' && symbolizer.image
+                                        && ICONS_DATA[symbolizer.image] && ICONS_DATA[symbolizer.image].width) {
+                                            const adjustedSize = toStyleSheet
+                                                ? size * ICONS_DATA[symbolizer.image].width
+                                                : size / ICONS_DATA[symbolizer.image].width;
+                                            return {
+                                                ...symbolizer,
+                                                size: adjustedSize
+                                            };
+                                        }
+                                        return symbolizer;
+                                    })
+                                };
+                        })
+                    };
+                });
+                return isArray(geoStylerStyles) ? newStyles : newStyles[0];
+            });
+    }
+    return new Promise((resolve) => resolve(geoStylerStyles));
+}
+
 function styleSheetToGeoStylerStyle(format, styleSheet) {
     const styleParser = StyleParsers[format];
     const splitStyle = splitStyleSheet(format, styleSheet);
     const layersStyles = isArray(splitStyle) && splitStyle;
     return Promise.all(
         layersStyles
-            .reduce((acc, { layerName, group }) => [
+            .reduce((acc, { group }) => [
                 ...acc,
                 ...group
                     .map((layerStyleBody) =>
                         styleParser
                             .readStyle(layerStyleBody)
                                 .then((style) => ({ ...style }))
-                                .catch(() => ({ rules: [], name: layerName }))
                     )
                 ],
             [])
     )
+    .then((geoStylerStyles) => adjustIconSize(format, geoStylerStyles))
     .then(function(geoStylerStyles) {
         return geoStylerStyles
             .reduce(function(acc, { name, rules }) {
@@ -570,10 +638,11 @@ function geoStylerStyleToStyleSheet(format, geoStylerStyles) {
                 ...acc,
                 ...group
                     .map((layerStyleBody) =>
-                        styleParser
-                            .writeStyle(layerStyleBody)
-                                .then((styleSheet) => ({ layerName, styleSheet }))
-                                .catch(() => null)
+                        adjustIconSize(format, layerStyleBody, true)
+                            .then((styles) =>
+                                styleParser.writeStyle(styles)
+                                    .then((styleSheet) => ({ layerName, styleSheet }))
+                            )
                     )
                 ],
             [])
@@ -601,6 +670,13 @@ function geoStylerStyleToStyleSheet(format, geoStylerStyles) {
     });
 }
 
+function convertStyle(fromFormat, toFormat, styleSheet) {
+    return styleSheetToGeoStylerStyle(fromFormat, styleSheet)
+        .then(geoStylerStyle =>
+            geoStylerStyleToStyleSheet(toFormat, geoStylerStyle)
+        );
+}
+
 function mimeTypeToStyleFormat(mimeType) {
     const formats = [
         {
@@ -614,13 +690,6 @@ function mimeTypeToStyleFormat(mimeType) {
     ];
     const { format = 'sld' } = formats.find(({ types }) => types.indexOf(mimeType) !== -1) || {};
     return format;
-}
-
-function convertStyle(fromFormat, toFormat, styleSheet) {
-    return styleSheetToGeoStylerStyle(fromFormat, styleSheet)
-        .then(geoStylerStyle =>
-            geoStylerStyleToStyleSheet(toFormat, geoStylerStyle)
-        );
 }
 
 module.exports = {
@@ -652,5 +721,6 @@ module.exports = {
     styleSheetToGeoStylerStyle,
     geoStylerStyleToStyleSheet,
     mimeTypeToStyleFormat,
-    convertStyle
+    convertStyle,
+    adjustIconSize
 };

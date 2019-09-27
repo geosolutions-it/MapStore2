@@ -31,7 +31,7 @@ import {Point, LineString} from 'ol/geom';
 import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
 
-import { getStyleParser, splitStyleSheet } from '../../../utils/VectorStyleUtils';
+import { getStyleParser, splitStyleSheet, adjustIconSize } from '../../../utils/VectorStyleUtils';
 import OlStyleParser from 'geostyler-openlayers-parser';
 
 const olStyleParser = new OlStyleParser();
@@ -318,6 +318,7 @@ function getOlStyleFunction(format, styleBody) {
     if (!layersStyles || layersStyles.length === 1 && layersStyles[0] && layersStyles[0].group && layersStyles[0].group.length === 1) {
         return getStyleParser(format)
             .readStyle(styleBody)
+            .then(style => adjustIconSize(format, style))
             .then(style => olStyleParser.writeStyle(style));
     }
     return Promise.all(
@@ -328,6 +329,7 @@ function getOlStyleFunction(format, styleBody) {
                     .map((layerStyleBody) =>
                         getStyleParser(format)
                             .readStyle(layerStyleBody)
+                            .then(style => adjustIconSize(format, style))
                             .then(style => olStyleParser.writeStyle(style))
                             .then(olStyle => ({
                                 layerName,
