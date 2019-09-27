@@ -26,7 +26,8 @@ Layers.registerType('vector', {
             source: source,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
-            style
+            style,
+            opacity: options.opacity
         });
     },
     update: (layer, newOptions, oldOptions) => {
