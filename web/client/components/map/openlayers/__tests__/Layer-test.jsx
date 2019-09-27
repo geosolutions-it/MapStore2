@@ -1038,7 +1038,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="vector"
                  options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer.layer.values_.opacity).toEqual(opacity);
+        expect(layer.layer.getOpacity()).toEqual(opacity);
     });
 
     it('creates a vector layer specifying the feature CRS for openlayers map', () => {
