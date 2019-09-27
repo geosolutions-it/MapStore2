@@ -394,7 +394,7 @@ class MetadataModal extends React.Component {
             <ResizableModal
             id={this.props.id}
             size={this.props.modalSize}
-            title={<Message msgId="saveDialog.title"/>}
+            title={<Message msgId="resources.resource.editResource"/>}
             show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
             clickOutEnabled
             bodyClassName="ms-flex modal-properties-container"
