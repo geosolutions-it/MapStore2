@@ -178,7 +178,6 @@ export const getResource = (id, { includeAttributes = true, withData = true, wit
         data,
         permissions
     }));
-
 /**
  * Retrieves an array of resources with all information about user's permission on that resource, attributes and data.
  * @param {number} id the id of the resource to get
@@ -211,12 +210,21 @@ export const getResources = ({
     API = GeoStoreDAO ) => {
         return Observable.defer(
             () => API.getResourcesByCategory(category, query, options)
-        ).map(({ results = [], totalCount = 0 }) => {
+        ).switchMap(({ results = [], totalCount = 0 }) => {
             const { includeAttributes, withData, withPermission} = options;
-            //  if one of the includeAttributes or withData or withPermissions is true then it searches for those related info
-            return (includeAttributes || withData || withPermission) ?
-                {totalCount, results: results.map(({id}) => getResource(id, options, API))} :
-                {totalCount, results};
+            /* if one of the includeAttributes or withData or withPermissions
+             * is true then it searches for those related info
+            */
+            if (includeAttributes || withData || withPermission) {
+                return Observable.forkJoin(
+                    results.map((r) =>
+                        getResource(r.id, options, API)
+                    )
+                ).map((...res) => {
+                    return {totalCount, results: res};
+                });
+            }
+            return Observable.of({totalCount, results});
         });
     };
 

@@ -58,8 +58,7 @@ describe('Test the mediaEditor reducer', () => {
         expect(state.open).toEqual(false);
         expect(state.owner).toEqual(undefined);
         expect(state.settings).toEqual(undefined);
-        expect(state.settings).toEqual(undefined);
-        expect(state.selected).toEqual("");
+        expect(state.selected).toEqual(undefined);
         expect(state.saveState).toEqual({editing: false, addingMedia: false});
         expect(state.stashedSettings).toEqual(undefined);
 

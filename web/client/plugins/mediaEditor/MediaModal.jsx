@@ -17,7 +17,8 @@ import {
     setMediaService,
     saveMedia,
     selectItem,
-    selectMap
+    updateItem,
+    loadMediaSuccess
 } from '../../actions/mediaEditor';
 import {
     availableSourcesSelector,
@@ -45,11 +46,12 @@ const Editor = connect(createStructuredSelector({
     resources: currentResourcesSelector
 }), {
     selectItem,
-    selectMap,
+    updateItem,
     setMediaService,
     setAddingMedia,
     setMediaType,
     setEditingMedia,
+    loadItems: loadMediaSuccess,
     saveMedia
 })(MediaEditor);
 

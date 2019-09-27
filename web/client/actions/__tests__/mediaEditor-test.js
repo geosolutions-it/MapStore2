@@ -17,7 +17,7 @@ import {
     saveMedia, SAVE_MEDIA,
     saveMediaSuccess, SAVE_MEDIA_SUCCESS,
     selectItem, SELECT_ITEM,
-    selectMap, SELECT_MAP,
+    updateItem, UPDATE_ITEM,
     setMediaService, SET_MEDIA_SERVICE,
     setMediaType, SET_MEDIA_TYPE,
     setAddingMedia, ADDING_MEDIA,
@@ -93,11 +93,11 @@ describe('mediaEditor actions', () => {
         expect(action.id).toEqual(id);
         expect(action.type).toEqual(SELECT_ITEM);
     });
-    it('selectMap', () => {
+    it('updateItem', () => {
         const map = {id: "val"};
-        const action = selectMap({map});
+        const action = updateItem({map});
         expect(action.map).toEqual(map);
-        expect(action.type).toEqual(SELECT_MAP);
+        expect(action.type).toEqual(UPDATE_ITEM);
     });
     it('setAddingMedia', () => {
         const adding = true;

@@ -38,7 +38,8 @@ export default ({
         id: "geostore"
     }],
     selectItem = () => {},
-    selectMap = () => {},
+    updateItem = () => {},
+    loadItems = () => {},
     setAddingMedia = () => {},
     setMediaType = () => {},
     setMediaService = () => {},
@@ -92,11 +93,12 @@ export default ({
                     mediaType={mediaType}
                     mediaSource={source}
                     saveMedia={saveMedia}
+                    loadItems={loadItems}
                     services={services}
                     selectedService={selectedService}
                     setAddingMedia={setAddingMedia}
                     setEditingMedia={setEditingMedia}
-                    onMapSelected={selectMap}
+                    onMapSelected={updateItem}
                     setMediaService={setMediaService}
                     selectItem={selectItem}
                     {...saveState}

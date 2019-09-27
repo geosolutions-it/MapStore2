@@ -24,10 +24,8 @@ const handleSelectEnhancer = compose(
             ).then((config => {
                 let mapState = (!config.version && typeof map.id !== 'string') ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
                 return {
-                    ...map,
                     ...(mapState && mapState.map || {}),
                     id: map.id,
-                    thumbnail: decodeURIComponent(map.thumbnail),
                     layers: excludeGoogleBackground(mapState.layers.map(l => {
                         if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
                             l.type = "empty";

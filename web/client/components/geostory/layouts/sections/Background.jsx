@@ -26,7 +26,7 @@ import pattern from './patterns/grid.svg';
 class Background extends Component {
 
     static propTypes = {
-        id: PropTypes.id,
+        id: PropTypes.string,
         sectionId: PropTypes.string,
         mode: PropTypes.string,
         fit: PropTypes.string,

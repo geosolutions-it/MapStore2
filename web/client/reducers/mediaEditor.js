@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { get } from 'lodash';
+import { get, findIndex, find, merge } from 'lodash';
 import { SourceTypes, MediaTypes } from '../utils/GeoStoryUtils';
+import assign from 'object-assign';
 
 import {
     ADDING_MEDIA,
@@ -16,12 +17,17 @@ import {
     HIDE,
     LOAD_MEDIA_SUCCESS,
     SELECT_ITEM,
-    SELECT_MAP,
+    UPDATE_ITEM,
     SET_MEDIA_SERVICE,
     SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
 import { compose, set } from '../utils/ImmutableUtils';
+import {
+    sourceIdSelector,
+    currentMediaTypeSelector,
+    resultDataSelector
+} from './../selectors/mediaEditor';
 
 const GEOSTORY_SOURCE_ID = "geostory";
 export const DEFAULT_STATE = {
@@ -99,15 +105,18 @@ export default (state = DEFAULT_STATE, action) => {
             const {resultData, params, mediaType, sourceId} = action;
             return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
         }
+        case UPDATE_ITEM: {
+            const {item} = action;
+            const sourceId = sourceIdSelector({mediaEditor: state});
+            const mediaType = currentMediaTypeSelector({mediaEditor: state});
+            const resources = resultDataSelector({mediaEditor: state}).resources;
+            const indexItem = findIndex(resources, {id: item.id});
+            const resource = find(resources, {id: item.id});
+            const newResource = assign({}, merge({}, item), merge({}, resource));
+            return set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state);
+        }
         case SELECT_ITEM: {
             return set('selected', action.id, state);
-        }
-        case SELECT_MAP: {
-            const oldResources = get(state, `data.map["${state.settings.sourceId}"].resultData.resources`, []).filter(m => m.id !== action.map.id);
-            return compose(
-                set(`data.map["${state.settings.sourceId}"]`, { params: {}, resultData: {resources: oldResources.concat([action.map])} }),
-                set('selected', action.map.id)
-            )(state);
         }
         case SET_MEDIA_TYPE: {
             const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");

@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {Observable} from 'rxjs';
-import {find} from 'lodash';
 import {
     loadMedia,
     loadMediaSuccess,
@@ -14,17 +13,12 @@ import {
     setAddingMedia,
     setEditingMedia,
     selectItem,
-    CHOOSE_MEDIA,
-    HIDE,
     LOAD_MEDIA,
     SAVE_MEDIA,
-    SHOW,
-    SELECT_MAP
+    SHOW
 } from '../actions/mediaEditor';
-import { editResource, addResource } from '../actions/geostory';
 
-import { currentMediaTypeSelector, editingSelector, sourceIdSelector } from '../selectors/mediaEditor';
-import { resourcesSelector } from '../selectors/geostory';
+import { editingSelector, sourceIdSelector } from '../selectors/mediaEditor';
 
 import mediaAPI from '../api/media';
 
@@ -34,8 +28,7 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     // now we have only one type/source, so I trigger directly the load of it
     action$.ofType(SHOW, LOAD_MEDIA)
     .switchMap(() => {
-        const sourceId = sourceIdSelector(store.getState());
-        return mediaAPI(sourceId).load(store) // store is required for local data (e.g. local geostory data)
+        return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
             .switchMap(results =>
                 Observable.from(
                     results.map(r => loadMediaSuccess({
@@ -78,19 +71,4 @@ export const editorSaveUpdateMediaEpic = (action$, store) =>
                 );
             });
     }
-   );
-
-export const saveMapEpic = (action$, store) =>
-    action$.ofType(SELECT_MAP)
-    .switchMap(({map}) => {
-        return action$.ofType(CHOOSE_MEDIA)
-            .switchMap(() => {
-                const mediaType = currentMediaTypeSelector(store.getState());
-                const alreadyPresent = find(resourcesSelector(store.getState()), {id: map.id});
-                return Observable.of(
-                    alreadyPresent ? editResource(map.id, mediaType, map) : addResource(map.id, mediaType, map)
-                );
-            }).takeUntil(action$.ofType(HIDE));
-    }
 );
-

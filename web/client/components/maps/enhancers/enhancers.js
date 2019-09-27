@@ -43,8 +43,9 @@ const loadPage = ({ text = "*", options = {} }, page = 0) => getResources({
                 start: page * PAGE_SIZE,
                 limit: PAGE_SIZE
             },
-        ...options
-    }})
+            ...options
+        }
+    })
     .map(resToProps)
     .catch(e => Rx.Observable.of({
         error: e,

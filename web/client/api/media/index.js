@@ -13,4 +13,4 @@ const registry = {
 };
 
 
-export default (sourceId) => registry[sourceId]; // TODO: support other kinds of media types and sources
+export default (sourceType) => registry[sourceType]; // TODO: support other kinds of media types and sources

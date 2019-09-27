@@ -19,6 +19,7 @@ const {
 } = require('../api/persistence');
 
 import {
+    addResource,
     ADD,
     REMOVE,
     LOAD_GEOSTORY,
@@ -49,8 +50,8 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
-import { currentMediaTypeSelector } from '../selectors/mediaEditor';
+import { resourceByIdSelectorCreator, resourceIdSelectorCreator, createPathSelector, currentStorySelector} from '../selectors/geostory';
+import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
 import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
@@ -164,8 +165,7 @@ export const scrollToContentEpic = action$ =>
 export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
-            const state = store.getState();
-            const resourceId = resourceIdSelectorCreator(path)(state);
+            const resourceId = resourceIdSelectorCreator(path)(store.getState());
             return Observable.of(
                     showMediaEditor(owner),
                     selectItem(resourceId)
@@ -173,10 +173,17 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
-                            const type = currentMediaTypeSelector(store.getState());
-                            return Observable.of(
-                                update(`${path}`, {resourceId: resource.id, type}, "merge" )
-                                );
+                            let actions = [];
+                            const state = store.getState();
+                            const mediaType = currentMediaTypeSelector(state);
+                            const sourceId = sourceIdSelector(state);
+                            const resId = `${sourceId}-${resource.id}`;
+                            if (!resourceByIdSelectorCreator(resId)(state)) {
+                                actions = [...actions, addResource(/*`${sourceId}-${resource.id}`*/resource.id, mediaType, resource)];
+                            }
+                            actions = [...actions, update(`${path}`, {resourceId: resource.id, type: mediaType}, "merge" )];
+
+                            return Observable.from(actions);
                         })
                         .takeUntil(action$.ofType(HIDE, ADD))
                 );

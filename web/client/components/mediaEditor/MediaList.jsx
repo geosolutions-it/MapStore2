@@ -18,10 +18,12 @@ export default ({
     resources = [],
     selectedItem,
     selectedSource,
+    selectedService,
     mediaType,
     onMapChoice = () => {},
     onMapSelected = () => {},
     selectItem = () => { },
+    loadItems = () => {},
     setAddingMedia = () => {},
     setEditingMedia = () => {},
     buttons = [
@@ -58,11 +60,14 @@ export default ({
         mediaType === MediaTypes.MAP &&
         <MapList
             selectedItem={selectedItem}
+            loadItems={loadItems}
             resources={resources}
+            mediaType={mediaType}
             onMapChoice={onMapChoice}
             onMapSelected={onMapSelected}
             selectItem={selectItem}
             selectedSource={selectedSource}
+            selectedService={selectedService}
         />
     }
     { mediaType === MediaTypes.IMAGE &&

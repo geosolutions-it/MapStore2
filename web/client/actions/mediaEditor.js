@@ -18,14 +18,14 @@ export const SAVE_MEDIA_SUCCESS = "MEDIA_EDITOR:SAVE_MEDIA_SUCCESS";
 export const SET_MEDIA_TYPE = "MEDIA_EDITOR:SET_MEDIA_TYPE";
 export const SET_MEDIA_SERVICE = "MEDIA_EDITOR:SET_MEDIA_SERVICE";
 export const SELECT_ITEM = "MEDIA_EDITOR:SELECT_ITEM";
-export const SELECT_MAP = "MEDIA_EDITOR:SELECT_MAP";
 export const SHOW = "MEDIA_EDITOR:SHOW";
+export const UPDATE_ITEM = "MEDIA_EDITOR:UPDATE_ITEM";
 
-// RESOURCE FORMAT DRAFT :
+// RESOURCE FORMAT :
 /*
 {
-    type: 'image'|'video'|'map'|'iframe'|'document' // (pdf)
-    source: 'id' // id of the source, just to identify it in a local context
+    type: 'image'|'video'|'map'|'iframe'|'document', // (pdf)
+    source: 'id', // id of the source, just to identify it in a local context
     data: {
         //specific data for the source type
     }
@@ -79,10 +79,10 @@ export const saveMediaSuccess = ({ mediaType, source, data, id }) => ({ type: SA
  */
 export const selectItem = (id) => ({ type: SELECT_ITEM, id});
 /**
- * select map in media editor list
- * @param {object} param.map
+ * update item in media editor list
+ * @param {object} param.item
  */
-export const selectMap = ({map}) => ({ type: SELECT_MAP, map});
+export const updateItem = ({map}) => ({ type: UPDATE_ITEM, item: map});
 /**
  * adding media
  * @param {boolean} adding
