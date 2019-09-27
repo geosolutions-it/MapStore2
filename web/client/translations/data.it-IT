@@ -289,7 +289,7 @@
             "deleteCancelButtonText": "Chiudi",
             "resource": {
                 "deleteResource": "Elimina",
-                "editResource": "Modifica properietà",
+                "editResource": "Modifica proprietà",
                 "addToFeatured": "Metti in evidenza",
                 "removeFromFeatured": "Rimuovi da 'in evidenza'",
                 "showDetails": "mostra dettagli"
@@ -1591,7 +1591,7 @@
             "errors":{
                 "loading": {
                     "title": "Errore di caricamento della dashboard",
-                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
+                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il proprietario",
                     "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
                     "dashboardDoesNotExist": "La dashboard richiesta non esiste",
                     "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore",
