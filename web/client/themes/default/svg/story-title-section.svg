@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   viewBox="0 -240 1200 1200"
+   id="svg6"
+   sodipodi:docname="story-title-section.svg"
+   inkscape:version="0.92.1 r15371">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="0.39333335"
+     inkscape:cx="528.21921"
+     inkscape:cy="338.65653"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2"
+     showguides="false" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="glyph">
+    <path
+       style="fill:currentColor;stroke-width:1.02389073"
+       d="M 0 120 L 0 233.13281 L 59.919922 233.13281 L 64.837891 174.55273 L 178.86523 174.55273 L 178.86523 577.89258 L 120.73438 588.17773 L 120.73438 632 L 305.41211 632 L 305.41211 588.17773 L 248.17383 577.89258 L 248.17383 174.55273 L 361.75391 174.55273 L 367.11914 233.13281 L 426.14453 233.13281 L 426.14453 120 L 0 120 z M 540.70508 120 L 540.70508 236.66797 L 1200 236.66797 L 1200 120 L 540.70508 120 z M 540.70508 353.33594 L 540.70508 470.00391 L 1020.2031 470.00391 L 1020.2031 353.33594 L 540.70508 353.33594 z M 943.00391 657.54102 L 711.60352 838.77148 L 794.54102 1032.2871 L 559.04297 838.77148 L 78.386719 1064.9629 L 0 1103.3613 L 0 1320 L 1200 1320 L 1200 821.04688 L 1125.8184 770.10938 L 943.00391 657.54102 z "
+       transform="translate(0,-240)"
+       id="path4483-6-7-2" />
+  </g>
+</svg>

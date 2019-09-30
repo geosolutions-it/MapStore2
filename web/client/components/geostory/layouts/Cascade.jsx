@@ -28,34 +28,36 @@ const ContainerDimensions = emptyState(
             transform: "translate(-50%, -50%)"
         },
         // TODO: localize
+        glyph: 'geostory',
         title: <Message msgId="geostory.emptyTitle"/>,
         description: <Message msgId="geostory.emptyDescription"/>,
         content: <AddBar
+            addButtonClassName="square-button-md"
             containerWidth={"100%"}
             containerHeight={"100%"}
             buttons={[{
-                glyph: 'font',
+                glyph: 'story-title-section',
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add('sections', 0, SectionTypes.TITLE);
                 }
             },
             {
-                glyph: 'sheet',
+                glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
                     add('sections', 0, SectionTypes.PARAGRAPH);
                 }
             },
             {
-                glyph: 'book',
+                glyph: 'story-immersive-section',
                 tooltipId: 'geostory.addImmersiveContent',
                 onClick: () => {
                     add(`sections`, 0, SectionTypes.IMMERSIVE);
                 }
             },
             {
-                glyph: 'picture',
+                glyph: 'story-media-section',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
                     add(`sections`, 0, SectionTemplates.MEDIA);

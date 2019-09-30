@@ -24,7 +24,8 @@ class AddBar extends React.Component {
         type: PropTypes.string,
         buttons: PropTypes.array,
         containerWidth: PropTypes.number,
-        containerHeight: PropTypes.number
+        containerHeight: PropTypes.number,
+        addButtonClassName: PropTypes.string
     };
 
     static defaultProps = {
@@ -32,7 +33,8 @@ class AddBar extends React.Component {
         type: '',
         buttons: [],
         containerWidth: 0,
-        containerHeight: 0
+        containerHeight: 0,
+        addButtonClassName: ''
     };
 
     componentWillReceiveProps(newProps) {
@@ -68,7 +70,8 @@ class AddBar extends React.Component {
                 }}
                 placement="top"
                 >
-                <Button>
+                <Button
+                    className={this.props.addButtonClassName}>
                     <Glyphicon
                         glyph="plus"/>
                 </Button>
