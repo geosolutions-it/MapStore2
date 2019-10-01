@@ -10,8 +10,11 @@
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
+import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import Message from '../../I18N/Message';
-
+import withConfirm from "../../misc/toolbar/withConfirm";
+const DeleteButton = withConfirm(ToolbarButton);
+const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
     size: ({ size, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
@@ -94,12 +97,15 @@ const toolButtons = {
     }),
     // remove content
     remove: ({ path, remove = () => { } }) => ({
-        glyph: "trash",
-        visible: true,
-        tooltipId: "geostory.contentToolbar.remove",
-        onClick: () => {
+        Element: () => (<DeleteButton
+        glyph={"trash"}
+        visible
+        className={BUTTON_CLASSES}
+        tooltipId={"geostory.contentToolbar.remove"}
+        onClick={ () => {
             remove(path);
-        }
+        }} />)
+
     })
 };
 
@@ -121,7 +127,7 @@ export default function ContentToolbar({
         <div className="ms-content-toolbar">
             <Toolbar
                 btnDefaultProps={{
-                    className: 'square-button-md no-border'
+                    className: BUTTON_CLASSES,
                 }}
                 buttons={tools
                     .filter((id) => toolButtons[id])
