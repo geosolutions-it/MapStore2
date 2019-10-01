@@ -68,7 +68,6 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
           }
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
-        new NormalModuleReplacementPlugin(/openlayers$/, path.join(paths.framework, "libs", "openlayers")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin

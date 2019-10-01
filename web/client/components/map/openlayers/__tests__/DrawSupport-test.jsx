@@ -5,23 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const ol = require('openlayers');
-const assign = require('object-assign');
-const DrawSupport = require('../DrawSupport');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
-const {circle, geomCollFeature} = require('../../../../test-resources/drawsupport/features');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import assign from 'object-assign';
+import DrawSupport from '../DrawSupport';
+import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
+
+import {Map, View, Feature} from 'ol';
+import {Point, Circle, Polygon, LineString, MultiLineString} from 'ol/geom';
+import Collection from 'ol/Collection';
 
 const viewOptions = {
     projection: 'EPSG:3857',
     center: [0, 0],
     zoom: 5
 };
-let olMap = new ol.Map({
+let olMap = new Map({
     target: "map",
-    view: new ol.View(viewOptions)
+    view: new View(viewOptions)
 });
 olMap.disableEventListener = () => {};
 
@@ -77,9 +80,9 @@ describe('Test DrawSupport', () => {
 
     afterEach((done) => {
         document.body.innerHTML = '';
-        olMap = new ol.Map({
+        olMap = new Map({
             target: "map",
-            view: new ol.View(viewOptions)
+            view: new View(viewOptions)
         });
         olMap.disableEventListener = () => {};
 
@@ -226,8 +229,8 @@ describe('Test DrawSupport', () => {
             <DrawSupport features={[ft]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Point"
                 options={{editEnabled: true, selectEnabled: true}}
                 onSelectFeatures={testHandlers.onStatusChange}/>, document.getElementById("container"));
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+              geometry: new Point(13.0, 43.0),
               name: 'My Point'
         });
         support.selectInteraction.dispatchEvent({
@@ -256,8 +259,8 @@ describe('Test DrawSupport', () => {
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{editEnabled: true}}
                  onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+              geometry: new Point(13.0, 43.0),
               name: 'My Point'
         });
         support.translateInteraction.dispatchEvent({
@@ -372,8 +375,8 @@ describe('Test DrawSupport', () => {
                 })
             })
         };
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+              geometry: new Point(13.0, 43.0),
               name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
@@ -410,8 +413,8 @@ describe('Test DrawSupport', () => {
                 })
             })
         };
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Circle([13.0, 43.0], 100),
+        const feature = new Feature({
+              geometry: new Circle([13.0, 43.0], 100),
               name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
@@ -451,8 +454,8 @@ describe('Test DrawSupport', () => {
                 })
             })
         };
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+              geometry: new Point(13.0, 43.0),
               name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
@@ -1151,8 +1154,8 @@ describe('Test DrawSupport', () => {
                 'name': "some name"
             }
         };
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+              geometry: new Point(13.0, 43.0),
               name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
@@ -1205,8 +1208,8 @@ describe('Test DrawSupport', () => {
                 'name': "some name"
             }
         };
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+              geometry: new Point(13.0, 43.0),
               name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
@@ -1346,8 +1349,8 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const simplifiedCircle = new ol.Feature({
-            geometry: new ol.geom.Polygon([[
+        const simplifiedCircle = new Feature({
+            geometry: new Polygon([[
                 [1260844.6064174946, 5858067.29727681],
                 [1260960.7874218025, 5857951.114737838],
                 [1260844.6064174946, 5857834.9352681665],
@@ -1739,8 +1742,8 @@ describe('Test DrawSupport', () => {
         const radius = 1000;
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.Circle(center, radius)
+            feature: new Feature({
+                geometry: new Circle(center, radius)
             })
         });
         const drawOwner = null;
@@ -1782,8 +1785,8 @@ describe('Test DrawSupport', () => {
         const coordinate = [1300, 4300];
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.Point(coordinate)
+            feature: new Feature({
+                geometry: new Point(coordinate)
             })
         });
         const drawOwner = null;
@@ -1824,8 +1827,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.Polygon([[[1300, 4300], [8, 9], [8, 59]]])
+            feature: new Feature({
+                geometry: new Polygon([[[1300, 4300], [8, 9], [8, 59]]])
             })
         });
         const drawOwner = null;
@@ -1865,8 +1868,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.LineString([[1300, 4300], [8, 9], [8, 59]])
+            feature: new Feature({
+                geometry: new LineString([[1300, 4300], [8, 9], [8, 59]])
             })
         });
         const drawOwner = null;
@@ -1905,8 +1908,8 @@ describe('Test DrawSupport', () => {
         const radius = 1000;
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.Circle(center, radius)
+            feature: new Feature({
+                geometry: new Circle(center, radius)
             })
         });
         expect(spyOnGeometryChanged).toHaveBeenCalled();
@@ -1941,8 +1944,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.MultiLineString([[[1300, 4300], [8, 9], [8, 59]]])
+            feature: new Feature({
+                geometry: new MultiLineString([[[1300, 4300], [8, 9], [8, 59]]])
             })
         });
         expect(spyOnGeometryChanged).toHaveBeenCalled();
@@ -1976,8 +1979,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                geometry: new ol.geom.Point([1300, 4300])
+            feature: new Feature({
+                geometry: new Point([1300, 4300])
             })
         });
         expect(spyOnGeometryChanged).toHaveBeenCalled();
@@ -2008,8 +2011,8 @@ describe('Test DrawSupport', () => {
             }
         });
         expect(support).toExist();
-        const feature = new ol.Feature({
-            geometry: new ol.geom.Point(13.0, 43.0),
+        const feature = new Feature({
+            geometry: new Point(13.0, 43.0),
             name: 'My Point'
         });
         support.selectInteraction.dispatchEvent({
@@ -2037,9 +2040,9 @@ describe('Test DrawSupport', () => {
         const radius = 1000;
         support.modifyInteraction.dispatchEvent({
             type: 'modifyend',
-            features: new ol.Collection(
-                [new ol.Feature({
-                    geometry: new ol.geom.Circle(center, radius)
+            features: new Collection(
+                [new Feature({
+                    geometry: new Circle(center, radius)
                 })]
             )
         });
@@ -2070,9 +2073,9 @@ describe('Test DrawSupport', () => {
         const radius = 1000;
         support.modifyInteraction.dispatchEvent({
             type: 'modifyend',
-            features: new ol.Collection(
-                [new ol.Feature({
-                    geometry: new ol.geom.Circle(center, radius)
+            features: new Collection(
+                [new Feature({
+                    geometry: new Circle(center, radius)
                 })]
             )
         });

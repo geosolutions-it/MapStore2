@@ -6,17 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ol = require('openlayers');
-const {round} = require('lodash');
-const MeasurementSupport = require('../MeasurementSupport');
-const {
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+
+import round from 'lodash/round';
+import MeasurementSupport from '../MeasurementSupport';
+
+import {
     lineFeature,
     lineFeature3,
     polyFeatureClosed
-} = require('../../../../test-resources/drawsupport/features');
+} from '../../../../test-resources/drawsupport/features';
+
+import { Map, View, Feature } from 'ol';
+import {LineString} from 'ol/geom';
 
 describe('Openlayers MeasurementSupport', () => {
     let msNode;
@@ -27,9 +31,9 @@ describe('Openlayers MeasurementSupport', () => {
         center: [0, 0],
         zoom: 5
     };
-    let map = new ol.Map({
+    let map = new Map({
         target: "map",
-        view: new ol.View(viewOptions)
+        view: new View(viewOptions)
     });
     const uom = {
         length: {unit: 'm', label: 'm'},
@@ -83,9 +87,9 @@ describe('Openlayers MeasurementSupport', () => {
         document.body.innerHTML = '';
         msNode = undefined;
         expect.restoreSpies();
-        map = new ol.Map({
+        map = new Map({
             target: "map",
-            view: new ol.View(viewOptions)
+            view: new View(viewOptions)
         });
         setTimeout(done);
     });
@@ -192,7 +196,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(spyUpdateMeasures.calls.length).toBe(1);
         const measureState = spyUpdateMeasures.calls[0].arguments[0];
         expect(measureState).toExist();
-        expect(round(measureState.area, 2)).toBe(49490132941.51);
+        expect(round(measureState.area, 2)).toBe(49379574502.64);
         expect(measureState.bearing).toBe(0);
     });
 
@@ -214,15 +218,15 @@ describe('Openlayers MeasurementSupport', () => {
         });
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
-            feature: new ol.Feature({
-                  geometry: new ol.geom.LineString([[13.0, 43.0], [13.0, 40.0]]),
+            feature: new Feature({
+                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
                   name: 'My line with 2 points'
             })
         });
         cmp.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                  geometry: new ol.geom.LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
+            feature: new Feature({
+                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
                   name: 'My line with 3 points'
             })
         });
@@ -249,15 +253,15 @@ describe('Openlayers MeasurementSupport', () => {
         });
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
-            feature: new ol.Feature({
-                  geometry: new ol.geom.LineString([[13.0, 43.0], [13.0, 40.0]]),
+            feature: new Feature({
+                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
                   name: 'My line with 2 points'
             })
         });
         cmp.drawInteraction.dispatchEvent({
             type: 'drawend',
-            feature: new ol.Feature({
-                  geometry: new ol.geom.LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
+            feature: new Feature({
+                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
                   name: 'My line with 3 points'
             })
         });

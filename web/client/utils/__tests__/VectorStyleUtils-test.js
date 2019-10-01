@@ -29,7 +29,8 @@ const {
     createSvgUrl,
     createStylesAsync,
     setSymbolsStyles,
-    getSymbolsStyles
+    getSymbolsStyles,
+    getStyleParser
 } = require("../VectorStyleUtils");
 
 const LENGTH_OF_OBJECT_DATA_URL = "blob:http://localhost:9876/87844744-f879-4f5b-90bc-2cc6e70ba3cd".length;
@@ -405,5 +406,11 @@ describe("VectorStyleUtils ", () => {
             expect(results[1].color).toBe("#FF00FF");
             expect(results[1].fillColor).toBe("#FF00FF");
         });
+    });
+    it('getStyleParser returns parsers for supported style formats', () => {
+        expect(getStyleParser('sld')).toExist();
+        expect(getStyleParser('sld').readStyle).toExist();
+        expect(getStyleParser('sld').writeStyle).toExist();
+        expect(getStyleParser('css')).toNotExist();
     });
 });

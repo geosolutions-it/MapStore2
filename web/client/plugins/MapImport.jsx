@@ -18,6 +18,7 @@ const {toggleControl} = require('../actions/controls');
 
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
+const {mapTypeSelector} = require('../selectors/maptype');
 
 module.exports = {
     MapImportPlugin: assign({loadPlugin: (resolve) => {
@@ -32,7 +33,8 @@ module.exports = {
                     bbox: state.mapimport && state.mapimport.bbox || null,
                     success: state.mapimport && state.mapimport.success || null,
                     errors: state.mapimport && state.mapimport.errors || null,
-                    shapeStyle: state.style || {}
+                    shapeStyle: state.style || {},
+                    mapType: mapTypeSelector(state)
                 }
             ), {
                 setLayers,

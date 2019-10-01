@@ -11,14 +11,14 @@ const addI18NProps = require('../../../components/I18N/enhancers/addI18NProps');
 const addFormatNumber = addI18NProps(['formatNumber']);
 
 module.exports = {
-    LMap: require('../../../components/map/openlayers/Map'),
-    Layer: require('../../../components/map/openlayers/Layer'),
-    Feature: require('../../../components/map/openlayers/Feature'),
-    Locate: require('../../../components/map/openlayers/Locate'),
-    MeasurementSupport: addFormatNumber(require('../../../components/map/openlayers/MeasurementSupport')),
-    Overview: require('../../../components/map/openlayers/Overview'),
-    ScaleBar: require('../../../components/map/openlayers/ScaleBar'),
-    DrawSupport: require('../../../components/map/openlayers/DrawSupport'),
-    HighlightFeatureSupport: require('../../../components/map/openlayers/HighlightFeatureSupport'),
-    SelectionSupport: require('../../../components/map/openlayers/SelectionSupport')
+    LMap: require('../../../components/map/openlayers/Map').default,
+    Layer: require('../../../components/map/openlayers/Layer').default,
+    Feature: require('../../../components/map/openlayers/Feature').default,
+    Locate: require('../../../components/map/openlayers/Locate').default,
+    MeasurementSupport: addFormatNumber(require('../../../components/map/openlayers/MeasurementSupport').default),
+    Overview: require('../../../components/map/openlayers/Overview').default,
+    ScaleBar: require('../../../components/map/openlayers/ScaleBar').default,
+    DrawSupport: require('../../../components/map/openlayers/DrawSupport').default,
+    HighlightFeatureSupport: require('../../../components/map/openlayers/HighlightFeatureSupport').default,
+    SelectionSupport: require('../../../components/map/openlayers/SelectionSupport').default
 };

@@ -18,6 +18,8 @@ const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils
 const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 
+const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
+
 function splitUrl(originalUrl) {
     let url = originalUrl;
     let queryString = "";
@@ -57,7 +59,7 @@ function wmsToCesiumOptionsSingleTile(options) {
     const params = optionsToVendorParams(options);
     const parameters = assign({
         styles: options.style || "",
-        format: options.format || 'image/png',
+        format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
         opacity: opacity,
         tiled: options.tiled !== undefined ? options.tiled : true,
@@ -94,7 +96,7 @@ function wmsToCesiumOptions(options) {
         enablePickFeatures: false,
         parameters: assign({
             styles: options.style || "",
-            format: options.format || 'image/png',
+            format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
             opacity: opacity,
             tiled: options.tiled !== undefined ? options.tiled : true

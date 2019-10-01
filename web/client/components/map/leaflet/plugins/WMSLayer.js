@@ -19,6 +19,8 @@ const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
 const { creditsToAttribution } = require('../../../../utils/LayersUtils');
 
+const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
+
 require('leaflet.nontiledlayer');
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
@@ -166,7 +168,7 @@ function wmsToLeafletOptions(options) {
         attribution: options.credits && creditsToAttribution(options.credits),
         layers: options.name,
         styles: options.style || "",
-        format: options.format || 'image/png',
+        format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
         tiled: options.tiled !== undefined ? options.tiled : true,
         opacity: opacity,

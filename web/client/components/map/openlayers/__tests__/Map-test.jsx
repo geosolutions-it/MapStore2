@@ -5,18 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const OpenlayersMap = require('../Map.jsx');
-const OpenlayersLayer = require('../Layer.jsx');
-const expect = require('expect');
-const assign = require('object-assign');
-const ol = require('openlayers');
-const proj = require('proj4').default;
-const mapUtils = require('../../../../utils/MapUtils');
-require('../../../../utils/openlayers/Layers');
-require('../plugins/OSMLayer');
-require('../plugins/VectorLayer');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import OpenlayersLayer from '../Layer';
+import OpenlayersMap from '../Map';
+
+import assign from 'object-assign';
+
+import proj from 'proj4';
+import MapUtils from '../../../../utils/MapUtils';
+
+import '../../../../utils/openlayers/Layers';
+import '../plugins/OSMLayer';
+import '../plugins/VectorLayer';
+
+import {get, transform} from 'ol/proj';
+
+import Feature from 'ol/Feature';
+import {Point, Polygon} from 'ol/geom';
 
 describe('OpenlayersMap', () => {
 
@@ -109,7 +116,7 @@ describe('OpenlayersMap', () => {
         const map = ReactDOM.render(comp, document.getElementById("map"));
         expect(map).toExist();
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:25830');
-        expect(ol.proj.get('EPSG:25830')).toExist();
+        expect(get('EPSG:25830')).toExist();
     });
 
     it('custom projection with axisOrientation', () => {
@@ -136,8 +143,8 @@ describe('OpenlayersMap', () => {
         const map = ReactDOM.render(comp, document.getElementById("map"));
         expect(map).toExist();
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:31468');
-        expect(ol.proj.get('EPSG:31468')).toExist();
-        expect(ol.proj.get('EPSG:31468').getAxisOrientation()).toBe('neu');
+        expect(get('EPSG:31468')).toExist();
+        expect(get('EPSG:31468').getAxisOrientation()).toBe('neu');
     });
 
     it('check if the handler for "click" event is called with elevation', () => {
@@ -262,8 +269,8 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
-                    feature: new ol.Feature({
-                        geometry: new ol.geom.Point([10.3, 43.9]),
+                    feature: new Feature({
+                        geometry: new Point([10.3, 43.9]),
                         name: 'My Point'
                     }),
                     getGeometry: () => {
@@ -299,8 +306,8 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
-                    feature: new ol.Feature({
-                        geometry: new ol.geom.Point([10.3, 43.9]),
+                    feature: new Feature({
+                        geometry: new Point([10.3, 43.9]),
                         name: 'My Point'
                     }),
                     getGeometry: () => {
@@ -335,8 +342,8 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
-                    feature: new ol.Feature({
-                        geometry: new ol.geom.Polygon([ [0, 0], [0, 1], [1, 1], [1, 0], [0, 0] ]),
+                    feature: new Feature({
+                        geometry: new Polygon([ [0, 0], [0, 1], [1, 1], [1, 0], [0, 0] ]),
                         name: 'My Point'
                     }),
                     getGeometry: () => {
@@ -375,8 +382,8 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
-                    feature: new ol.Feature({
-                        geometry: new ol.geom.Polygon([ [0, 0], [0, 1], [1, 1], [1, 0], [0, 0] ]),
+                    feature: new Feature({
+                        geometry: new Polygon([ [0, 0], [0, 1], [1, 1], [1, 0], [0, 0] ]),
                         name: 'My Point'
                     }),
                     getGeometry: () => {
@@ -416,8 +423,8 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
-                    feature: new ol.Feature({
-                        geometry: new ol.geom.Point([43.0, 10]),
+                    feature: new Feature({
+                        geometry: new Point([43.0, 10]),
                         name: 'My Point'
                     }),
                     getGeometry: () => {
@@ -534,7 +541,7 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
-        olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
+        olMap.getView().setCenter(transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
         olMap.dispatchEvent('moveend');
     });
 
@@ -705,7 +712,7 @@ describe('OpenlayersMap', () => {
         // instanciating the map that will be used to compute the bounfing box
         let map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
         // computing the bounding box for the new center and the new zoom
-        const bbox = mapUtils.getBbox({y: 44, x: 10}, 5);
+        const bbox = MapUtils.getBbox({y: 44, x: 10}, 5);
         // update the map with the new center and the new zoom so we can check our computed bouding box
         map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 44, x: 10}} zoom={5}/>, document.getElementById("map"));
         const mapBbox = map.map.getView().calculateExtent(map.map.getSize());
@@ -724,10 +731,10 @@ describe('OpenlayersMap', () => {
     });
 
     it('test GET_PIXEL_FROM_COORDINATES_HOOK/GET_COORDINATES_FROM_PIXEL_HOOK hook registration', () => {
-        mapUtils.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
-        mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
-        let getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
-        let getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+        MapUtils.registerHook(MapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
+        MapUtils.registerHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        let getPixelFromCoordinates = MapUtils.getHook(MapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
+        let getCoordinatesFromPixel = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
         expect(getPixelFromCoordinates).toNotExist();
         expect(getCoordinatesFromPixel).toNotExist();
 
@@ -735,13 +742,13 @@ describe('OpenlayersMap', () => {
                                     document.getElementById("map"));
         expect(map).toExist();
 
-        getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
-        getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+        getPixelFromCoordinates = MapUtils.getHook(MapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
+        getCoordinatesFromPixel = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
         expect(getPixelFromCoordinates).toExist();
         expect(getCoordinatesFromPixel).toExist();
     });
     it('test ZOOM_TO_EXTENT_HOOK', (done) => {
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
 
         const testHandlers = {
             onMapViewChanges: () => { }
@@ -786,7 +793,7 @@ describe('OpenlayersMap', () => {
 
         });
         expect(map).toExist();
-        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         expect(hook).toExist();
         hook([0, 0, 20, 20], { crs: "EPSG:4326", duration: 0 });
         olMap.dispatchEvent('moveend');
@@ -810,7 +817,7 @@ describe('OpenlayersMap', () => {
          * To avoid this, zoom to max resolution extent.
          * TODO: improve this to manage all degenerated bounding boxes.
          */
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
 
         const testHandlers = {
             onMapViewChanges: () => { }
@@ -841,7 +848,7 @@ describe('OpenlayersMap', () => {
 
         });
         expect(map).toExist();
-        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         expect(hook).toExist();
         hook([-180, -90, 180, 90], { crs: "EPSG:4326", duration: 0 });
         olMap.dispatchEvent('moveend');
@@ -856,7 +863,7 @@ describe('OpenlayersMap', () => {
          * To avoid this, zoom to max resolution extent.
          * TODO: improve this to manage all degenerated bounding boxes.
          */
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
 
         const testHandlers = {
             onMapViewChanges: () => { }
@@ -889,7 +896,7 @@ describe('OpenlayersMap', () => {
 
         });
         expect(map).toExist();
-        const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         expect(hook).toExist();
         hook([1, 1, 1, 1], { crs: "EPSG:4326", duration: 0 });
         olMap.dispatchEvent('moveend');

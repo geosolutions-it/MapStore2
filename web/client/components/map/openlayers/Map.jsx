@@ -5,20 +5,39 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const ol = require('openlayers');
-const proj4 = require('proj4').default;
-const PropTypes = require('prop-types');
-const React = require('react');
-const assign = require('object-assign');
 
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-const ConfigUtils = require('../../../utils/ConfigUtils');
-const mapUtils = require('../../../utils/MapUtils');
-const projUtils = require('../../../utils/openlayers/projUtils');
+import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
+import { defaults as defaultControls } from 'ol/control';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import { toLonLat } from 'ol/proj';
+import Zoom from 'ol/control/Zoom';
+import Units from 'ol/proj/Units';
 
-const { isEqual, throttle, isArray, isNil } = require('lodash');
+import { getWidth, getHeight } from 'ol/extent';
 
-class OpenlayersMap extends React.Component {
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4.js';
+import PropTypes from 'prop-types';
+import React from 'react';
+import assign from 'object-assign';
+
+import CoordinatesUtils from '../../../utils/CoordinatesUtils';
+import ConfigUtils from '../../../utils/ConfigUtils';
+import mapUtils from '../../../utils/MapUtils';
+import projUtils from '../../../utils/openlayers/projUtils';
+
+import isEqual from 'lodash/isEqual';
+import throttle from 'lodash/throttle';
+import isArray from 'lodash/isArray';
+import isNil from 'lodash/isNil';
+
+import 'ol/ol.css';
+
+// add overrides for css
+import './mapstore-ol-overrides.css';
+
+export default class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         style: PropTypes.object,
@@ -69,12 +88,12 @@ class OpenlayersMap extends React.Component {
 
     componentDidMount() {
         this.props.projectionDefs.forEach(p => {
-            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent, p.axisOrientation || proj4.defs(p.code).axis || 'enu');
+            projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || proj4.defs(p.code).axis || 'enu');
         });
         // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
         // normally it happens ad application level.
         let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
-        ol.proj.setProj4(proj4);
+        register(proj4);
         let interactionsOptions = assign(this.props.interactive ? {} : {
             doubleClickZoom: false,
             dragPan: false,
@@ -86,21 +105,21 @@ class OpenlayersMap extends React.Component {
             pinchZoom: false
         }, this.props.mapOptions.interactions);
 
-        let interactions = ol.interaction.defaults(assign({
+        let interactions = defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
         }, interactionsOptions, {}));
         if (interactionsOptions === undefined || interactionsOptions.dragPan === undefined || interactionsOptions.dragPan) {
             interactions.extend([
-                new ol.interaction.DragPan({ kinetic: false })
+                new DragPan({ kinetic: false })
             ]);
         }
         if (interactionsOptions === undefined || interactionsOptions.mouseWheelZoom === undefined || interactionsOptions.mouseWheelZoom) {
             interactions.extend([
-                new ol.interaction.MouseWheelZoom({ duration: 0 })
+                new MouseWheelZoom({ duration: 0 })
             ]);
         }
-        let controls = ol.control.defaults(assign({
+        let controls = defaultControls(assign({
             zoom: this.props.zoomControl,
             attributionOptions: assign({
                 collapsible: false
@@ -108,7 +127,7 @@ class OpenlayersMap extends React.Component {
                 target: document.querySelector(this.props.mapOptions.attribution.container)
             } : {})
         }, this.props.mapOptions.controls));
-        let map = new ol.Map({
+        let map = new Map({
             layers: [],
             controls: controls,
             interactions: interactions,
@@ -135,7 +154,7 @@ class OpenlayersMap extends React.Component {
                     pos[0] = CoordinatesUtils.normalizeLng(pos[0]);
                 }
                 if (this.props.projection === 'EPSG:900913' || this.props.projection === 'EPSG:3857') {
-                    pos = ol.proj.toLonLat(pos, this.props.projection);
+                    pos = toLonLat(pos, this.props.projection);
                     projectionExtent = CoordinatesUtils.reprojectBbox(projectionExtent, this.props.projection, "EPSG:4326");
                 }
                 // prevent user from clicking outside the projection extent
@@ -162,7 +181,7 @@ class OpenlayersMap extends React.Component {
                             if (!this.markerPresent && geom.getType() === "Point") {
                                 this.markerPresent = true;
                                 layerInfo = layer.get('msId');
-                                const arr = ol.proj.toLonLat(geom.getFirstCoordinate(), this.props.projection);
+                                const arr = toLonLat(geom.getFirstCoordinate(), this.props.projection);
                                 coords = { x: arr[0], y: arr[1] };
                             }
                         }
@@ -210,9 +229,9 @@ class OpenlayersMap extends React.Component {
 
         if (newProps.zoomControl !== this.props.zoomControl) {
             if (newProps.zoomControl) {
-                this.map.addControl(new ol.control.Zoom());
+                this.map.addControl(new Zoom());
             } else {
-                this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof ol.control.Zoom)[0]);
+                this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof Zoom)[0]);
             }
         }
 
@@ -291,12 +310,12 @@ class OpenlayersMap extends React.Component {
         const projection = this.map.getView().getProjection();
         const extent = projection.getExtent();
 
-        const extentWidth = !extent ? 360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
-            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
-            ol.extent.getWidth(extent);
-        const extentHeight = !extent ? 360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
-            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
-            ol.extent.getHeight(extent);
+        const extentWidth = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
+            Units.METERS_PER_UNIT[projection.getUnits()] :
+            getWidth(extent);
+        const extentHeight = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
+            Units.METERS_PER_UNIT[projection.getUnits()] :
+            getHeight(extent);
 
         let resX = extentWidth / tileWidth;
         let resY = extentHeight / tileHeight;
@@ -392,7 +411,7 @@ class OpenlayersMap extends React.Component {
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
             let pos = event.coordinate.slice();
-            let coords = ol.proj.toLonLat(pos, this.props.projection);
+            let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
             if (tLng < -180) {
                 tLng = tLng + 360;
@@ -419,11 +438,11 @@ class OpenlayersMap extends React.Component {
         const crs = view.getProjection().getCode();
         // some projections are repeated on the x axis
         // and they need to be updated also if the center is outside of the projection extent
-        const wrappedProjections = [ 'EPSG:3857', 'EPSG:900913', 'EPSG:4326' ];
+        const wrappedProjections = ['EPSG:3857', 'EPSG:900913', 'EPSG:4326'];
         // prevent user from dragging outside the projection extent
         if (wrappedProjections.indexOf(crs) !== -1
-        || (tempCenter && tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
-            tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3])) {
+            || (tempCenter && tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
+                tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3])) {
             let c = this.normalizeCenter(view.getCenter());
             let bbox = view.calculateExtent(this.map.getSize());
             let size = {
@@ -463,7 +482,7 @@ class OpenlayersMap extends React.Component {
             zoom: zoom,
             minZoom: limits.minZoom
         }, newOptions || {});
-        return new ol.View(viewOptions);
+        return new View(viewOptions);
     };
 
     _updateMapPositionFromNewProps = (newProps) => {
@@ -546,7 +565,3 @@ class OpenlayersMap extends React.Component {
         });
     };
 }
-
-// add overrides for css
-require('./mapstore-ol-overrides.css');
-module.exports = OpenlayersMap;

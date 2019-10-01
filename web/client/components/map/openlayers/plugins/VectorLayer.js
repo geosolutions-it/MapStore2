@@ -6,22 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/openlayers/Layers');
-const VectorStyle = require('../VectorStyle');
-var ol = require('openlayers');
-const {isEqual} = require('lodash');
+import Layers from '../../../../utils/openlayers/Layers';
+import {getStyle} from '../VectorStyle';
+import isEqual from 'lodash/isEqual';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
 
 Layers.registerType('vector', {
     create: (options) => {
         let features = [];
 
-        const source = new ol.source.Vector({
+        const source = new VectorSource({
             features: features
         });
 
-        const style = VectorStyle.getStyle(options);
+        const style = getStyle(options);
 
-        return new ol.layer.Vector({
+        return new VectorLayer({
             msId: options.id,
             source: source,
             visible: options.visibility !== false,
@@ -40,7 +41,7 @@ Layers.registerType('vector', {
         }
 
         if (!isEqual(oldOptions.style, newOptions.style)) {
-            layer.setStyle(VectorStyle.getStyle(newOptions));
+            layer.setStyle(getStyle(newOptions));
         }
     },
     render: () => {

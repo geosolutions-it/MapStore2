@@ -7,8 +7,9 @@
  */
 
 const assign = require('object-assign');
-const ol = require('openlayers');
-const {reproject, reprojectGeoJson, transformLineToArcs} = require('../utils/CoordinatesUtils');
+const {transformLineToArcs} = require('../utils/CoordinatesUtils');
+
+const circle = require('@turf/circle').default;
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -75,35 +76,29 @@ function annotations(state = { validationErrors: {} }, action) {
 
             let features;
             if (selected.properties.isCircle) {
-                let center = !isNil(coordinates) ? validCoordinates[0] : state.selected.properties.center;
+                let centerCoords = !isNil(coordinates) ? validCoordinates[0] : state.selected.properties.center;
 
                 selected = assign({}, {...selected, properties: {
-                    ...state.selected.properties, center, radius: !isNil(radius) ? radius : selected.properties.radius
+                    ...state.selected.properties, center: centerCoords, radius: !isNil(radius) ? radius : selected.properties.radius
                 }});
                 features = state.editing.features.map(f => {
                     return f.properties.id === state.selected.properties.id ? selected : f;
                 });
-                selected = {...selected, geometry: {coordinates: center, type: "Circle"}};
-                let centerOL;
-                let c = [[[]]];
+                selected = { ...selected, geometry: { coordinates: centerCoords, type: "Circle"}};
+                let center;
+                let c = {
+                    type: 'Polygon',
+                    coordinates: [[[]]]
+                };
                 // polygonGeom setting
                 if (validateCoordsArray(selected.properties.center)) {
-                    centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
-                    c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
+                    center = selected.properties.center;
+                    c = circle(center, radius * 1000, { steps: 100 }).geometry;
                 } else {
                     selected = set("properties.center", [], selected);
                 }
 
-                // need to change the polygon coords after radius changes, but this implementation is ugly. is using ol to do that, maybe we need to refactor this
-                let feature = {
-                    type: "Feature",
-                    geometry: {
-                        type: "Polygon",
-                        coordinates: c
-                    }
-                };
-                let projFt = reprojectGeoJson(feature, "EPSG:3857", "EPSG:4326");
-                selected = set("properties.polygonGeom", projFt.geometry, selected);
+                selected = set("properties.polygonGeom", c, selected);
             } else if (selected.properties.isText) {
                 let c = !isNil(coordinates) ? validCoordinates[0] : state.selected.geometry.coordinates;
                 selected = assign({}, {...selected,
@@ -235,20 +230,11 @@ function annotations(state = { validationErrors: {} }, action) {
             }), selected);
             selected = set("properties.center", action.components[0], selected);
             selected = set("geometry.coordinates", action.components[0], selected);
-            let center = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
 
             // need to change the polygon coords after radius changes
             // but this implementation is ugly. is using openlayers to do that and maybe we need to refactor this
-            let coordinates = ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], action.radius), 100).getCoordinates();
-            let feature = {
-                type: "Feature",
-                geometry: {
-                    type: "Polygon",
-                    coordinates
-                }
-            };
-            let projFt = reprojectGeoJson(feature, "EPSG:3857", "EPSG:4326");
-            selected = set("properties.polygonGeom", projFt.geometry, selected);
+            let feature = circle(selected.properties.center, action.radius * 1000, { steps: 100 });
+            selected = set("properties.polygonGeom", feature.geometry, selected);
 
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
             const selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selected);

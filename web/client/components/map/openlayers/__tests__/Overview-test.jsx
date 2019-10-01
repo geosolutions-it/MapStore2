@@ -5,27 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ol = require('openlayers');
-const Overview = require('../Overview');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
 
+import Overview from '../Overview';
+
+import { Map, View } from 'ol';
 
 describe('Openlayers Overview component', () => {
     let map;
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
-        map = new ol.Map({
+        map = new Map({
             layers: [
             ],
-            controls: ol.control.defaults({
-                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
-                    collapsible: false
-                }
-            }),
             target: 'map',
-            view: new ol.View({
+            view: new View({
                 center: [0, 0],
                 zoom: 5
             })

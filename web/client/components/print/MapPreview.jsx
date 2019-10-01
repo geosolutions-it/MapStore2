@@ -57,10 +57,11 @@ class MapPreview extends React.Component {
     };
 
     componentWillMount() {
-        PMap = require('../map/' + this.props.mapType + '/Map');
-        Layer = require('../map/' + this.props.mapType + '/Layer');
+        const mapComponents = require('../map/' + this.props.mapType + '/index');
+        PMap = mapComponents.LMap;
+        Layer = mapComponents.LLayer;
+        Feature = mapComponents.Feature;
         require('../map/' + this.props.mapType + '/plugins/index');
-        Feature = require('../map/' + this.props.mapType + '/index').Feature;
     }
 
     getRatio = () => {
