@@ -29,7 +29,6 @@ module.exports = compose(
             mapSync !== nextProps.mapSync
             || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport)
             || geomProp !== nextProps.geomProp
-            || (nextProps.layer && layer.loadingError !== nextProps.layer.loadingError)
             || filter !== nextProps.filter
             || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
             || getLayerFilter(layer) !== getLayerFilter(nextProps.layer),

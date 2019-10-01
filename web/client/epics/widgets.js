@@ -6,7 +6,7 @@ const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
-const { CHANGE_LAYER_PROPERTIES, LAYER_LOAD } = require('../actions/layers');
+const { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } = require('../actions/layers');
 const { getLayerFromId } = require('../selectors/layers');
 const { pathnameSelector } = require('../selectors/routing');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
@@ -179,16 +179,20 @@ module.exports = {
             }),
 
     /**
-     * Triggers updates of the layer property of widgets on LAYER_LOAD
+     * Triggers updates of the layer property of widgets on loading error state change
      * @memberof epics.widgets
-     * @param {external:Observable} action$ manages `LAYER_LOAD`
+     * @param {external:Observable} action$ manages `LAYER_LOAD, LAYER_ERROR`
      * @return {external:Observable}
      */
-    updateLayerOnLoad: (action$, store) =>
-        action$.ofType(LAYER_LOAD)
+    updateLayerOnLoadingErrorChange: (action$, store) =>
+        action$.ofType(LAYER_LOAD, LAYER_ERROR)
             .switchMap(({layerId}) => {
                 const state = store.getState();
                 const flatLayer = getLayerFromId(state, layerId);
-                return flatLayer ? Rx.Observable.of(updateWidgetLayer(flatLayer)) : Rx.Observable.empty;
+                return Rx.Observable.of(
+                    ...(flatLayer && flatLayer.previousLoadingError !== flatLayer.loadingError ?
+                        [updateWidgetLayer(flatLayer)] :
+                        [])
+                );
             })
 };

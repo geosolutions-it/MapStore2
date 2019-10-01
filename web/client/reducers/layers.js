@@ -85,14 +85,18 @@ function layers(state = { flat: [] }, action) {
         }
         case LAYER_LOAD: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: action.error ? "Error" : false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {
+                    loading: false, previousLoadingError: layer.loadingError, loadingError: action.error ? "Error" : false
+                }) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_ERROR: {
             const isError = action.tilesCount === action.tilesErrorCount;
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loadingError: isError ? 'Error' : 'Warning'}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {
+                    previousLoadingError: layer.loadingError, loadingError: isError ? 'Error' : 'Warning'
+                }) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
