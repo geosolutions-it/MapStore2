@@ -14,6 +14,7 @@ const CONTEXT_NODE = 'CONTEXT_NODE';
 const SORT_NODE = 'SORT_NODE';
 const REMOVE_NODE = 'REMOVE_NODE';
 const UPDATE_NODE = 'UPDATE_NODE';
+const MOVE_NODE = 'MOVE_NODE';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
 const LAYER_ERROR = 'LAYER_ERROR';
@@ -130,6 +131,15 @@ function updateNode(node, type, options) {
         node: node,
         nodeType: type,
         options: options
+    };
+}
+
+function moveNode(node, groupId, index) {
+    return {
+        type: MOVE_NODE,
+        node,
+        groupId,
+        index
     };
 }
 
@@ -277,11 +287,11 @@ function updateSettingsParams(newParams, update) {
 
 module.exports = {
     changeLayerProperties, changeLayerParams, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
-    updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
+    updateNode, moveNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
     layersRefreshed, layersRefreshError, refreshLayerVersion, updateLayerDimension, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
     hideLayerMetadata, download, updateSettingsParams, addGroup,
     CHANGE_LAYER_PROPERTIES, CHANGE_LAYER_PARAMS, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
-    REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
+    REMOVE_NODE, UPDATE_NODE, MOVE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
     ADD_GROUP,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_LAYERS_DIMENSION, BROWSE_DATA, DOWNLOAD,
     CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA, UPDATE_SETTINGS_PARAMS

@@ -8,6 +8,8 @@
 const React = require('react');
 const {Provider} = require('react-redux');
 const PropTypes = require('prop-types');
+const dragDropContext = require('react-dnd').DragDropContext;
+const html5Backend = require('react-dnd-html5-backend');
 const proj4 = require('proj4').default;
 
 const {changeBrowserProperties} = require('../../actions/browser');
@@ -116,7 +118,7 @@ class StandardApp extends React.Component {
     render() {
         const {plugins, requires} = this.props.pluginsDef;
         const {pluginsDef, appStore, initialActions, appComponent, mode, ...other} = this.props;
-        const App = this.props.appComponent;
+        const App = dragDropContext(html5Backend)(this.props.appComponent);
         return this.state.initialized ?
             <Provider store={this.store}>
                 <App {...other} plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>

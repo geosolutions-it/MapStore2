@@ -8,6 +8,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
+const dragDropContext = require('react-dnd').DragDropContext;
+const html5Backend = require('react-dnd-html5-backend');
 const { withContext } = require('recompose');
 const expect = require('expect');
 
@@ -21,7 +23,7 @@ const mockStore = withContext({
         ...store
     }
 }));
-const MapWizard = mockStore(require('../MapWizard'));
+const MapWizard = mockStore(dragDropContext(html5Backend)(require('../MapWizard')));
 describe('MapWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

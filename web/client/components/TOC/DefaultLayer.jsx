@@ -12,6 +12,7 @@ const Node = require('./Node');
 
 const { isObject, castArray, find} = require('lodash');
 const { Grid, Row, Col, Glyphicon} = require('react-bootstrap');
+const draggableComponent = require('./enhancers/draggableComponent');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
 const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
@@ -51,7 +52,12 @@ class DefaultLayer extends React.Component {
         filter: PropTypes.func,
         showFullTitleOnExpand: PropTypes.bool,
         hideOpacityTooltip: PropTypes.bool,
-        tooltipOptions: PropTypes.object
+        tooltipOptions: PropTypes.object,
+        connectDragPreview: PropTypes.func,
+        connectDragSource: PropTypes.func,
+        connectDropTarget: PropTypes.func,
+        isDraggable: PropTypes.bool,
+        isDragging: PropTypes.bool
     };
 
     static defaultProps = {
@@ -145,7 +151,7 @@ class DefaultLayer extends React.Component {
     renderNode = (grab, hide, selected, error, warning, other) => {
         const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
         || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
-        return this.props.node.showComponent !== false ? (
+        return (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
                     {grab}
@@ -167,11 +173,11 @@ class DefaultLayer extends React.Component {
                 {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
-        ) : null;
+        );
     }
 
     render() {
-        let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
+        let {children, propertiesChangeHandler, onToggle, connectDragPreview, connectDragSource, connectDropTarget, ...other } = this.props;
 
         const hide = !this.props.node.visibility || this.props.node.invalid ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
@@ -179,8 +185,15 @@ class DefaultLayer extends React.Component {
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
         const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
         const filteredNode = this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, other) : null;
-        if (this.props.filter(this.props.node)) {
-            return !this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode;
+        const tocListItem = (
+            <div className="toc-list-item">
+                {!this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode}
+            </div>
+        );
+        if (!this.props.isDragging && this.props.node.showComponent !== false && this.props.filter(this.props.node)) {
+            return this.props.isDraggable ? connectDragPreview(connectDropTarget(connectDragSource(
+                tocListItem
+            ))) : tocListItem;
         }
         return null;
     }
@@ -192,4 +205,4 @@ class DefaultLayer extends React.Component {
     };
 }
 
-module.exports = DefaultLayer;
+module.exports = draggableComponent('LayerOrGroup', DefaultLayer);

@@ -145,18 +145,4 @@ describe('Layers component', () => {
         expect(domNode).toExist();
         expect(domNode.children.length).toBe(layers.length);
     });
-
-    it('tests Layers component sortable', () => {
-        const comp = ReactDOM.render(<TOC onSort={() => {}} nodes={layers}><Layer/></TOC>, document.getElementById("container"));
-
-        const domNode = ReactDOM.findDOMNode(comp);
-
-        const sortable = domNode.getElementsByClassName('Sortable');
-        expect(sortable).toExist();
-        expect(sortable.length).toBe(1);
-
-        const sortableItem = domNode.getElementsByClassName('SortableItem');
-        expect(sortableItem).toExist();
-        expect(sortableItem.length).toBe(3);
-    });
 });

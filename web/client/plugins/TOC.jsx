@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+       showSettings, hideSettings, updateSettings, updateNode, moveNode, removeNode,
        browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
 const {openQueryBuilder} = require("../actions/layerFilter");
@@ -443,17 +443,17 @@ class LayerTree extends React.Component {
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
                     }/>
-                <div className={'mapstore-toc' + bodyClass}>
-                    {this.props.noFilterResults && this.props.filterText ?
-                        <div>
-                            <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
-                        </div>
-                        :
-                        <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
-                            <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
-                        </TOC>
-                    }
-                </div>
+                    <div className={'mapstore-toc' + bodyClass}>
+                        {this.props.noFilterResults && this.props.filterText ?
+                            <div>
+                                <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
+                            </div>
+                            :
+                            <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
+                                <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
+                            </TOC>
+                        }
+                    </div>
             </div>
         );
     };
@@ -590,7 +590,7 @@ const TOCPlugin = connect(tocSelector, {
     onBrowseData: browseData,
     onQueryBuilder: openQueryBuilder,
     onDownload: download,
-    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
+    onSort: moveNode,
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,
     hideSettings,

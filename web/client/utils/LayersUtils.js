@@ -90,7 +90,7 @@ const getNode = (nodes, id) => {
             if (previous) {
                 return previous;
             }
-            if (node && (node.name === id || node.id === id)) {
+            if (node && (node.name === id || node.id === id || node === id)) {
                 return node;
             }
             if (node && node.nodes && node.nodes.length > 0) {

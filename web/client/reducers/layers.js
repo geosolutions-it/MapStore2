@@ -7,7 +7,7 @@
  */
 
 var { LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
-    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER, ADD_GROUP,
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, MOVE_NODE, ADD_LAYER, REMOVE_LAYER, ADD_GROUP,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
     } = require('../actions/layers');
 
@@ -68,6 +68,27 @@ const insertNode = (nodes, node, parent) => {
         ...n,
         nodes: insertNode(n.nodes, node, parent)
     }));
+};
+
+const updateGroupIds = (node, parentGroupId, newLayers) => {
+    if (node) {
+        if (isString(node.id)) {
+            const lastDot = node.id.lastIndexOf('.');
+            const newId = lastDot !== -1 ?
+                 parentGroupId + node.id.slice(lastDot + (parentGroupId === '' ? 1 : 0)) :
+                 parentGroupId + (parentGroupId === '' ? '' : '.') + node.id;
+            return assign({}, node, {id: newId, nodes: node.nodes.map(x => updateGroupIds(x, newId, newLayers))});
+        } else if (isString(node)) {
+            // if it's just a string it means it is a layer id
+            for (let layer of newLayers) {
+                if (layer.id === node) {
+                    layer.group = parentGroupId;
+                }
+            }
+            return node;
+        }
+    }
+    return node;
 };
 
 function layers(state = { flat: [] }, action) {
@@ -209,6 +230,59 @@ function layers(state = { flat: [] }, action) {
                 });
             }
             return assign({}, state, {flat: newLayers});
+        }
+        case MOVE_NODE: {
+            const node = LayersUtils.getNode(state.groups || [], action.node);
+            const layerNode = LayersUtils.getNode(state.flat, action.node);
+            if (node && action.index >= 0 && node.id !== 'root' && node.id !== 'Default' && !(!!layerNode && action.groupId === 'root')) {
+                const groupId = action.groupId || 'Default';
+                const curGroupId = layerNode ? (layerNode.group || 'Default') : (() => {
+                    const groups = node.id.split('.');
+                    return groups[groups.length - 2] || 'root';
+                })();
+
+                if (groupId === curGroupId) {
+                    const curGroupNode = curGroupId === 'root' ? {nodes: state.groups} : LayersUtils.getNode(state.groups, curGroupId);
+                    let nodes = (curGroupNode && curGroupNode.nodes || []).slice();
+                    const nodeIndex = nodes.findIndex(x => (x.id || x) === (node.id || node));
+
+                    if (nodeIndex !== -1 && nodeIndex !== action.index) {
+                        const swapCnt = Math.abs(action.index - nodeIndex);
+                        const delta = nodeIndex < action.index ? 1 : -1;
+                        let pos = nodeIndex;
+                        for (let i = 0; i < swapCnt; ++i, pos += delta) {
+                            const tmp = nodes[pos];
+                            nodes[pos] = nodes[pos + delta];
+                            nodes[pos + delta] = tmp;
+                        }
+
+                        const newGroups = curGroupId === 'root' ? nodes : LayersUtils.deepChange(state.groups, action.groupId, 'nodes', nodes);
+
+                        return assign({}, state, {
+                            flat: LayersUtils.sortLayers(newGroups, state.flat),
+                            groups: newGroups
+                        });
+                    }
+                } else {
+                    const groupsWithRemovedNode = deepRemove(state.groups, node.id || node);
+                    const dstGroup = groupId === 'root' ? {nodes: groupsWithRemovedNode} : LayersUtils.getNode(groupsWithRemovedNode, action.groupId);
+                    if (dstGroup) {
+                        const newLayers = state.flat.map(layer => assign({}, layer));
+                        const newNode = updateGroupIds(node, groupId === 'root' ? '' : groupId, newLayers);
+                        let newDestNodes = dstGroup.nodes.slice();
+                        newDestNodes.splice(action.index, 0, newNode);
+                        const newGroups = groupId === 'root' ?
+                            newDestNodes :
+                            LayersUtils.deepChange(groupsWithRemovedNode.slice(), dstGroup.id, 'nodes', newDestNodes);
+
+                        return assign({}, state, {
+                            flat: LayersUtils.sortLayers(newGroups, newLayers),
+                            groups: newGroups
+                        });
+                    }
+                }
+            }
+            return state;
         }
         case REMOVE_NODE: {
             if (action.nodeType === 'groups') {
