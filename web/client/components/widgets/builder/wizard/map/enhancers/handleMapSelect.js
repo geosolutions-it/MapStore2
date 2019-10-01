@@ -14,7 +14,7 @@ import ConfigUtils from '../../../../../../utils/ConfigUtils';
 import { excludeGoogleBackground } from '../../../../../../utils/LayersUtils';
 
 
-const handleSelectEnhancer = compose(
+const handleMapSelect = compose(
     withState('selected', "setSelected", null),
     withHandlers({
         onMapChoice: ({ onMapSelected = () => { }, selectedSource = {} } = {}) => map =>
@@ -49,4 +49,4 @@ const handleSelectEnhancer = compose(
     )
 );
 
-export default handleSelectEnhancer;
+export default handleMapSelect;

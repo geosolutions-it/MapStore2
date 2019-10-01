@@ -1860,8 +1860,8 @@
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
-            "emptyTitle": "This story is empty",
-            "emptyDescription": "Start creating an awesome geostory by adding new content",
+            "emptyTitle": "Diese Geschichte ist leer",
+            "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {
                 "contentSize": "Größe ändern",
                 "smallSizeLabel": "Klein",

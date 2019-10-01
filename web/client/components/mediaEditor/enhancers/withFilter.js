@@ -9,10 +9,11 @@ import {
     compose,
     withState
 } from 'recompose';
-
+/**
+ * holds the state of the text filter in the media editor
+ */
 const withFilter = compose(
     withState('filterText', "onFilter", null)
 );
 
 export default withFilter;
-

@@ -15,7 +15,7 @@ import { isEmpty } from 'lodash';
 const Preview = ({
     selectedItem
 }) => {
-    const { layers = [], mapOptions, ...m} = selectedItem; // remove mapOptions to not override options
+    const { layers = [], mapOptions, ...m} = selectedItem.data ? selectedItem.data : selectedItem; // remove mapOptions to not override options
     return (
         <PreviewMap
             styleMap={{height: "100%"}}

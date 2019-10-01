@@ -8,7 +8,6 @@
 
 import { get, findIndex, find, merge } from 'lodash';
 import { SourceTypes, MediaTypes } from '../utils/GeoStoryUtils';
-import assign from 'object-assign';
 
 import {
     ADDING_MEDIA,
@@ -112,7 +111,7 @@ export default (state = DEFAULT_STATE, action) => {
             const resources = resultDataSelector({mediaEditor: state}).resources;
             const indexItem = findIndex(resources, {id: item.id});
             const resource = find(resources, {id: item.id});
-            const newResource = assign({}, merge({}, item), merge({}, resource));
+            const newResource = merge({}, merge({}, resource), merge({}, item));
             return set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state);
         }
         case SELECT_ITEM: {

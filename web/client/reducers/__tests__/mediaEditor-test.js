@@ -135,7 +135,7 @@ describe('Test the mediaEditor reducer', () => {
                     }
                 }
             }
-        }, updateItem({map}));
+        }, updateItem(map));
         expect(state.data.map.geostoreMap.resultData.resources[0]).toEqual(map);
     });
 });

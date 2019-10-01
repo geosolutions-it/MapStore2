@@ -95,7 +95,7 @@ describe('mediaEditor actions', () => {
     });
     it('updateItem', () => {
         const map = {id: "val"};
-        const action = updateItem({map});
+        const action = updateItem(map);
         expect(action.item).toEqual(map);
         expect(action.type).toEqual(UPDATE_ITEM);
     });

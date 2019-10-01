@@ -34,7 +34,7 @@ export default compose(
     options = {},
     fit
 }) => {
-    const { layers = [], mapOptions, ...m} = map; // remove mapOptions to not override options
+    const { layers = [], mapOptions, ...m} = (map.data ? map.data : map); // remove mapOptions to not override options
     return (<div
         className="ms-media ms-media-map" style={{
             objectFit: fit

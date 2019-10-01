@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import withFilter from '../../misc/enhancers/withFilter';
 
+import withFilter from '../enhancers/withFilter';
 import withLocal from "../../misc/enhancers/localizedProps";
 import Filter from '../../misc/Filter';
 import SideGrid from '../../misc/cardgrids/SideGrid';

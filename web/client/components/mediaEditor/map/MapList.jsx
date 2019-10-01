@@ -6,16 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import {compose, mapPropsStream} from 'recompose';
+import {compose, withHandlers, mapPropsStream} from 'recompose';
 
 import MapCatalogComp from '../../maps/MapCatalog';
 import mapCatalog from '../../maps/enhancers/mapCatalog';
-import handleSelectEnhancer from '../../widgets/builder/wizard/map/enhancers/handleSelect';
+import handleMapSelect from '../../widgets/builder/wizard/map/enhancers/handleMapSelect';
 import Filter from '../../misc/Filter';
 import withLocal from "../../misc/enhancers/localizedProps";
 import SideGrid from '../../misc/cardgrids/SideGrid';
 import { SourceTypes, filterResources } from '../../../utils/GeoStoryUtils';
-import withFilter from '../../misc/enhancers/withFilter';
+import withFilter from '../enhancers/withFilter';
+
 
 const Icon = require('../../misc/FitIcon');
 
@@ -38,6 +39,8 @@ const MapCatalog = compose(
                             params: {mediaType},
                             resultData: {
                                 resources: items.map(i => ({
+                                    id: i.map.id,
+                                    type: "map",
                                     ...i.map,
                                     thumbnail: decodeURIComponent(i.map.thumbnail || "")
                                 }))
@@ -50,8 +53,7 @@ const MapCatalog = compose(
 const defaultPreview = <Icon glyph="geoserver" padding={20} />;
 
 
-const MapList = handleSelectEnhancer(
-    withFilter(({
+const MapList = ({
         filterText,
         onMapChoice,
         resources,
@@ -74,7 +76,7 @@ const MapList = handleSelectEnhancer(
                 onFilter={onFilter}
             />
             <SideGrid
-                items={filterResources(resources, filterText).map(({ id, data = {}}) => ({
+                items={filterResources(resources, filterText).map(({ id, data, thumbnail = ""}) => ({
                     preview: data.thumbnail ? <img src={data.thumbnail}/> : defaultPreview,
                     title: data.name || data.title,
                     onClick: () => selectItem(id),
@@ -101,7 +103,15 @@ const MapList = handleSelectEnhancer(
         />);
     }
     return null;
-}));
+};
 
 
-export default MapList;
+export default compose(
+    withFilter,
+    withHandlers({
+        onMapSelected: ({onMapSelected = () => {}} = {}) => ({map}) => {
+            onMapSelected(map);
+        }
+    }),
+    handleMapSelect
+    )(MapList);

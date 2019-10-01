@@ -9,6 +9,7 @@
 import { Observable } from 'rxjs';
 import {isNaN, isString, isNil, lastIndexOf} from 'lodash';
 import { push, LOCATION_CHANGE } from 'react-router-redux';
+import uuid from 'uuid/v1';
 
 import axios from '../libs/ajax';
 
@@ -50,11 +51,11 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn } from '../selectors/security';
-import { resourceByIdSelectorCreator, resourceIdSelectorCreator, createPathSelector, currentStorySelector} from '../selectors/geostory';
-import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector} from '../selectors/geostory';
+import { currentMediaTypeSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, MediaTypes } from '../utils/GeoStoryUtils';
 
 import { getEffectivePath } from '../reducers/geostory';
 
@@ -176,12 +177,16 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                             let actions = [];
                             const state = store.getState();
                             const mediaType = currentMediaTypeSelector(state);
-                            const sourceId = sourceIdSelector(state);
-                            const resId = `${sourceId}-${resource.id}`;
-                            if (!resourceByIdSelectorCreator(resId)(state)) {
-                                actions = [...actions, addResource(/*`${sourceId}-${resource.id}`*/resource.id, mediaType, resource)];
+
+                            let resId = resourceIdSelectorCreator(path)(state);
+                            if (!resId && resource.type === MediaTypes.MAP) {
+                                resId = uuid();
+                                actions = [...actions, addResource(resId, mediaType, resource)];
                             }
-                            actions = [...actions, update(`${path}`, {resourceId: resource.id, type: mediaType}, "merge" )];
+                            if (resource.type === MediaTypes.IMAGE) {
+                                resId = resource.id;
+                            }
+                            actions = [...actions, update(`${path}`, {resourceId: resId, type: mediaType}, "merge" )];
 
                             return Observable.from(actions);
                         })

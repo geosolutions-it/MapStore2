@@ -75,7 +75,6 @@ export default ({
             selectedItem={selectedItem}
             resources={resources}
             onMapChoice={onMapChoice}
-            onMapSelected={onMapSelected}
             selectItem={selectItem}
             selectedSource={selectedSource}
         />

@@ -5,22 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const BorderLayout = require('../../../../layout/BorderLayout');
+import BorderLayout from '../../../../layout/BorderLayout';
 
-const Toolbar = require('../../../../misc/toolbar/Toolbar');
-const BuilderHeader = require('../../BuilderHeader');
+import Toolbar from '../../../../misc/toolbar/Toolbar';
+import BuilderHeader from '../../BuilderHeader';
 
-const mcEnhancer = require('../../../../maps/enhancers/mapCatalogWithEmptyMap');
-const Message = require('../../../../I18N/Message');
+import mcEnhancer from '../../../../maps/enhancers/mapCatalogWithEmptyMap';
+import Message from '../../../../I18N/Message';
 const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
-import handleSelectEnhancer from './enhancers/handleSelect';
+import handleMapSelect from './enhancers/handleMapSelect';
 
 /**
  * Builder page that allows layer's selection
  */
-module.exports = handleSelectEnhancer(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected } = {}) =>
+module.exports = handleMapSelect(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected } = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
