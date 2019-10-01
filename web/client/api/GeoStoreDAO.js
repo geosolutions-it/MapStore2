@@ -34,8 +34,13 @@ const createAttributeList = (metadata = {}) => {
 let parseOptions = (opts) => opts;
 
 let parseAdminGroups = (groupsObj) => {
-    if (!groupsObj || !groupsObj.UserGroupList || !groupsObj.UserGroupList.UserGroup || !isArray(groupsObj.UserGroupList.UserGroup)) return [];
-    return groupsObj.UserGroupList.UserGroup.filter(obj => !!obj.id).map((obj) => pick(obj, ["id", "groupName", "description"]));
+    if (!groupsObj || !groupsObj.UserGroupList || !groupsObj.UserGroupList.UserGroup) return [];
+
+    const pickFromObj = (obj) => pick(obj, ["id", "groupName", "description"]);
+    if (isArray(groupsObj.UserGroupList.UserGroup)) {
+        return groupsObj.UserGroupList.UserGroup.filter(obj => !!obj.id).map(pickFromObj);
+    }
+    return [pickFromObj(groupsObj.UserGroupList.UserGroup)];
 };
 
 let parseUserGroups = (groupsObj) => {

@@ -156,7 +156,7 @@ describe('This test for Thumbnail', () => {
 
         /* let files = [{
             type: "image/png",
-            preview: "blob:http://dev.mapstore2.geo-solutions.it/6b67787f-0654-4107-94bf-165adf386259"
+            preview: "blob:http://dev.mapstore.geo-solutions.it/6b67787f-0654-4107-94bf-165adf386259"
         }];*/
 
         // map, metadata

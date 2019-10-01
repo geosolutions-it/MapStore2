@@ -52,7 +52,7 @@ class FeaturedMaps extends React.Component {
     };
 
     componentWillMount() {
-        this.props.enableFeaturedMaps(false);
+        this.props.enableFeaturedMaps(true);
     }
 
     render() {
@@ -97,7 +97,6 @@ const featuredMapsPluginSelector = createSelector([
 const updateFeaturedMapsStream = mapPropsStream(props$ =>
     props$.merge(props$.take(1).switchMap(({searchText = '', permission, viewSize, pageSize, loadFirst = () => {} }) => {
         return props$
-            .debounceTime(500)
             .startWith({searchText, permission, viewSize, pageSize, loading: true})
             .distinctUntilChanged((previous, next) =>
                 isEqual(previous.resource, next.resource)
