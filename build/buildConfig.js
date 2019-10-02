@@ -84,7 +84,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         }, alias)
     },
     module: {
-        noParse: [/html2canvas/, /json-schema/],
+        noParse: [/html2canvas/],
         rules: [
             {
                 test: /\.css$/,
