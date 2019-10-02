@@ -10,10 +10,6 @@ const React = require('react');
 const { pure, branch } = require('recompose');
 const { find, mapValues } = require('lodash');
 
-/*
-react-grid-layout-resize-prevent-collision is a fork of react-grid-layout deployed on npmjs.org to fix https://github.com/STRML/react-grid-layout/issues/655
-You can install and use react-grid-layout again when the issue is fixed
-*/
 const { Responsive, WidthProvider: widthProvider } = require('react-grid-layout');
 const ResponsiveReactGridLayout =
     branch(

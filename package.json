@@ -176,7 +176,6 @@
     "react-dropzone": "3.13.1",
     "react-error-boundary": "1.2.5",
     "react-grid-layout": "0.16.6",
-    "react-grid-layout-resize-prevent-collision": "0.16.0",
     "react-image-lightbox": "4.2.2",
     "react-input-autosize": "1.1.4",
     "react-intersection-observer": "8.24.1",
