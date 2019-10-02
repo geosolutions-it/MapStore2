@@ -52,7 +52,7 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 import { isLoggedIn } from '../selectors/security';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector} from '../selectors/geostory';
-import { currentMediaTypeSelector, sourceIdSelector, selectedIdSelector} from '../selectors/mediaEditor';
+import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
 import { scrollToContent, ContentTypes, isMediaSection, Controls, MediaTypes } from '../utils/GeoStoryUtils';
