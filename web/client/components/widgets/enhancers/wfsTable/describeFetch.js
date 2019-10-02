@@ -15,10 +15,12 @@ const { getSearchUrl } = require('../../../../utils/LayersUtils');
  */
 module.exports = props$ =>
     props$
-        .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) => getSearchUrl(layer1) === getSearchUrl(layer2)) // this check is not too precise,it may need a refinement
+        .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) =>
+            getSearchUrl(layer1) === getSearchUrl(layer2)
+            && layer1.loadingError === layer2.loadingError) // this check is not too precise,it may need a refinement
         .switchMap(({ layer } = {}) => describeFeatureType({ layer })
-            .map(r => ({ describeFeatureType: r.data, loading: false, error: undefined })))
-        .catch(error => Rx.Observable.of({
-            loading: false,
-            error
-        }));
+            .map(r => ({ describeFeatureType: r.data, loading: false, error: undefined }))
+            .catch(error => Rx.Observable.of({
+                loading: false,
+                error
+            })));

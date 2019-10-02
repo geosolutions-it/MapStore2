@@ -12,7 +12,8 @@ const {
     clearWidgetsOnLocationChange,
     alignDependenciesToWidgets,
     toggleWidgetConnectFlow,
-    updateLayerOnLayerPropertiesChange
+    updateLayerOnLayerPropertiesChange,
+    updateLayerOnLoadingErrorChange
 } = require('../widgets');
 const {
     CLEAR_WIDGETS,
@@ -33,7 +34,9 @@ const {
     configureMap
 } = require('../../actions/config');
 const {
-    changeLayerProperties
+    changeLayerProperties,
+    layerLoad,
+    layerError
 } = require('../../actions/layers');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const { ActionsObservable } = require('redux-observable');
@@ -362,6 +365,102 @@ describe('widgets Epics', () => {
             done();
         };
         updateLayerOnLayerPropertiesChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
+    });
+    it('updateLayerOnLoadingErrorChange triggers updateWidgetLayer on LAYER_LOAD error', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "2",
+                name: "layer2",
+                loadingError: "Error"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLoadingErrorChange,
+            1,
+            [layerLoad(
+                "2",
+                "Error"
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        loadingError: "Error"
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('updateLayerOnLoadingErrorChange triggers updateWidgetLayer on LAYER_ERROR error', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "2",
+                name: "layer2",
+                loadingError: "Error"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLoadingErrorChange,
+            1,
+            [layerError(
+                "2",
+                10,
+                10
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        loadingError: "Error"
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('updateLayerOnLoadingErrorChange does not trigger updateWidgetLayer if loadingError does not change', (done) => {
+        const action = layerLoad("3", "Error");
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer"
+                }, {
+                    id: "2",
+                    name: "layer2",
+                    loadingError: "Error"
+                }, {
+                    id: "3",
+                    name: "layer3",
+                    previousLoadingError: "Error",
+                    loadingError: "Error"
+                }]
+            }
+        };
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        updateLayerOnLoadingErrorChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
             .toArray()
             .subscribe(checkActions);
     });

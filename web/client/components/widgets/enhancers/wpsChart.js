@@ -41,7 +41,7 @@ const dataStreamFactory = ($props) =>
         .distinctUntilChanged(
             ({layer = {}, options = {}, filter}, newProps) =>
                 /* getLayerUrl(layer) === getLayerUrl(layer) && */
-                (newProps.layer && layer.name === newProps.layer.name)
+                (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter))
         .switchMap(
