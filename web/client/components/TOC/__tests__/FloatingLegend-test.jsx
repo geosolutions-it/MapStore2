@@ -222,7 +222,7 @@ describe('tests FloatingLegend component', () => {
                 expect(prevListSize > listSize).toBe(true);
                 expect(listSize === height - deltaHeight).toBe(true);
                 done();
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
         };
@@ -250,7 +250,7 @@ describe('tests FloatingLegend component', () => {
         const spyChange = expect.spyOn(actions, 'onExpand');
         ReactDOM.render(
             <FloatingLegend
-            onExpand= {actions.onExpand}
+                onExpand= {actions.onExpand}
                 layers={[
                     {
                         name: 'layer:00',

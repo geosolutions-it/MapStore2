@@ -53,10 +53,10 @@ module.exports = compose(
     withPropsOnChange(
         ['value', 'localValue', 'uom', 'valueUom'],
         ({ value, localValue, uom, valueUom}) => ({
-        value: value === toValue(localValue, uom, valueUom)
-            ? localValue
-            : toLocalValue(value, uom, valueUom)
-    })),
+            value: value === toValue(localValue, uom, valueUom)
+                ? localValue
+                : toLocalValue(value, uom, valueUom)
+        })),
     withHandlers({
         onChange: ({ uom, valueUom, onChange = () => { }, setLocalValue = () => {} }) => (value) => {
             setLocalValue(value);
@@ -80,7 +80,7 @@ module.exports = compose(
             value={value}
             placeholder="radius"
             name="radius"
-                onChange={e => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             step={1}
             type="number" />
         <FormControl

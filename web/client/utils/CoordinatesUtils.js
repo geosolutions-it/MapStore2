@@ -101,7 +101,8 @@ const normalizePoint = (point) => {
     return {
         x: point.x || 0.0,
         y: point.y || 0.0,
-        srs: point.srs || 'EPSG:4326'
+        srs: point.srs || point.crs || 'EPSG:4326',
+        crs: point.srs || point.crs || 'EPSG:4326'
     };
 };
 const numberize = (point) => {
@@ -148,7 +149,7 @@ const normalizeExtent = (bounds, projection) => {
         reproject([parseFloat(bounds.minx), parseFloat(bounds.miny)], projection, 'EPSG:4326'),
         reproject([parseFloat(bounds.maxx), parseFloat(bounds.maxy)], projection, 'EPSG:4326')
     ].reduce((a, b) => [...a, b.x, b.y], [])
-    : [parseFloat(bounds.minx), parseFloat(bounds.miny), parseFloat(bounds.maxx), parseFloat(bounds.maxy)];
+        : [parseFloat(bounds.minx), parseFloat(bounds.miny), parseFloat(bounds.maxx), parseFloat(bounds.maxy)];
 
     let isWorldView = false;
     if (projection === 'EPSG:4326') {
@@ -158,12 +159,12 @@ const normalizeExtent = (bounds, projection) => {
     }
 
     return isWorldView ? [0, extent[1], 360, extent[3]] :
-    [(extent[0] + 180) % 360, extent[1], (extent[2] + 180) % 360, extent[3]].map((e, i) => {
-        if (i % 2 === 0) {
-            return e < 0 ? 360 + e : e;
-        }
-        return e;
-    });
+        [(extent[0] + 180) % 360, extent[1], (extent[2] + 180) % 360, extent[3]].map((e, i) => {
+            if (i % 2 === 0) {
+                return e < 0 ? 360 + e : e;
+            }
+            return e;
+        });
 };
 
 /**
@@ -181,10 +182,10 @@ const reprojectExtent = (extent, projection, isIDL) => {
         reproject([extent[0], extent[1]], 'EPSG:4326', projection),
         reproject([extent[2], extent[3]], 'EPSG:4326', projection)
     ].reduce((a, b) => [...a, b.x, b.y], [])
-    : extent.map(ext => [
-        reproject([ext[0], ext[1]], 'EPSG:4326', projection),
-        reproject([ext[2], ext[3]], 'EPSG:4326', projection)
-    ].reduce((a, b) => [...a, b.x, b.y], []));
+        : extent.map(ext => [
+            reproject([ext[0], ext[1]], 'EPSG:4326', projection),
+            reproject([ext[2], ext[3]], 'EPSG:4326', projection)
+        ].reduce((a, b) => [...a, b.x, b.y], []));
 };
 
 const getPolygonFromExtent = (extent) => {
@@ -194,6 +195,7 @@ const getPolygonFromExtent = (extent) => {
         }
         return bboxPolygon(extent);
     }
+    return null;
 };
 /**
  * Reproject extent to verify the intersection with the international date line (isIDL)
@@ -499,6 +501,7 @@ const CoordinatesUtils = {
             if (this.isValidExtent(ext)) {
                 return this.extendExtent(ext, extent);
             }
+            return ext;
         };
         if (geoJSON.coordinates) {
             if (geoJSON.type === "Point") {
@@ -597,18 +600,18 @@ const CoordinatesUtils = {
     },
     coordsOLtoLeaflet: ({coordinates, type}) => {
         switch (type) {
-            case "Polygon": {
-                return coordinates.map(c => {
-                    return c.map(point => point.reverse());
-                });
-            }
-            case "LineString": {
-                return coordinates.map(point => point.reverse());
-            }
-            case "Point": {
-                return coordinates.reverse();
-            }
-            default: return [];
+        case "Polygon": {
+            return coordinates.map(c => {
+                return c.map(point => point.reverse());
+            });
+        }
+        case "LineString": {
+            return coordinates.map(point => point.reverse());
+        }
+        case "Point": {
+            return coordinates.reverse();
+        }
+        default: return [];
         }
     },
     mergeToPolyGeom(features) {
@@ -705,6 +708,7 @@ const CoordinatesUtils = {
             // TODO check is valid EPSG code
             return "EPSG:" + crsCode;
         }
+        return null;
     },
     determineCrs,
     parseString: (str) => {

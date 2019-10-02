@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -35,18 +35,18 @@ const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
  * return <AutoCount dataStreamFactory={$props => $props.scan( (acc) => acc + 1, 0).map(count => ({count}))} />;
  */
 module.exports = compose(
-  defaultProps({
-      dataStreamFactory: () => Rx.Observable.of({})
-  }),
-  mapPropsStream(props$ => {
-      // TODO capture sensible props changes instead of take first
-      let fetcherStream = props$.take(1).switchMap(p => {
-          // this provides the stream of props with the first event
-          return p.dataStreamFactory(props$.startWith(p), p);
-      });
-      return fetcherStream.combineLatest(props$, (overrides= {}, props = {}) => ({
-          ...props,
-          ...overrides
-      }));
-  })
+    defaultProps({
+        dataStreamFactory: () => Rx.Observable.of({})
+    }),
+    mapPropsStream(props$ => {
+        // TODO capture sensible props changes instead of take first
+        let fetcherStream = props$.take(1).switchMap(p => {
+            // this provides the stream of props with the first event
+            return p.dataStreamFactory(props$.startWith(p), p);
+        });
+        return fetcherStream.combineLatest(props$, (overrides = {}, props = {}) => ({
+            ...props,
+            ...overrides
+        }));
+    })
 );

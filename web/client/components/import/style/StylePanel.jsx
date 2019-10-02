@@ -62,7 +62,7 @@ class StylePanel extends React.Component {
         zoomOnShapefiles: true
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         StyleUtils = require('../../../utils/StyleUtils')(this.props.mapType);
     }
 
@@ -77,21 +77,21 @@ class StylePanel extends React.Component {
         }
         if (geometry) {
             switch (geometry.type) {
-                case 'Polygon':
-                case 'MultiPolygon': {
-                    return 'Polygon';
-                }
-                case 'MultiLineString':
-                case 'LineString': {
-                    return 'LineString';
-                }
-                case 'Point':
-                case 'MultiPoint': {
-                    return 'Point';
-                }
-                default: {
-                    return null;
-                }
+            case 'Polygon':
+            case 'MultiPolygon': {
+                return 'Polygon';
+            }
+            case 'MultiLineString':
+            case 'LineString': {
+                return 'LineString';
+            }
+            case 'Point':
+            case 'MultiPoint': {
+                return 'Point';
+            }
+            default: {
+                return null;
+            }
             }
         }
         return null;
@@ -107,26 +107,27 @@ class StylePanel extends React.Component {
                 return currentType;
             }, null);
         }
+        return null;
     };
 
     renderError = () => {
         return this.props.errors
             && this.props.errors
-            .filter(e => (e.filename || e.name)
+                .filter(e => (e.filename || e.name)
                 && this.props.layers && this.props.layers[0]
                 && (this.props.layers[0].filename === e.filename || this.props.layers[0].name === e.name)
-            )
-            .map( e =>
-            (<Row key={e && e.name + e.message}>
-                <Alert bsStyle={e.type} style={{ textAlign: "center" }}><Message msgId={e.message} /></Alert>
-            </Row>)
-        );
+                )
+                .map( e =>
+                    (<Row key={e && e.name + e.message}>
+                        <Alert bsStyle={e.type} style={{ textAlign: "center" }}><Message msgId={e.message} /></Alert>
+                    </Row>)
+                );
     };
 
     renderSuccess = () => {
         return (<Row>
-                <div style={{textAlign: "center", overflowWrap: "break-word"}} className="alert alert-success">{this.props.success}</div>
-            </Row>);
+            <div style={{textAlign: "center", overflowWrap: "break-word"}} className="alert alert-success">{this.props.success}</div>
+        </Row>);
     };
 
     render() {
@@ -134,12 +135,12 @@ class StylePanel extends React.Component {
             <Grid role="body" style={{width: "300px"}} fluid>
                 {this.props.errors ? this.renderError() : null}
                 {this.props.success ? this.renderSuccess() : null}
-            <Row key="select" style={{textAlign: "center"}}>
-                <Combo data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} />
-            </Row>
-            <Row key="styler" style={{marginBottom: 10}}>
+                <Row key="select" style={{textAlign: "center"}}>
+                    <Combo data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} />
+                </Row>
+                <Row key="styler" style={{marginBottom: 10}}>
                     {this.state.useDefaultStyle ? null : this.props.stylers[this.getGeomType(this.props.selected)]}
-            </Row>
+                </Row>
                 <Row key="options">
                     <Col xs={2}>
                         <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => { this.setState({ useDefaultStyle: e.target.checked }); }} />
@@ -155,10 +156,10 @@ class StylePanel extends React.Component {
                         <label><Message msgId="shapefile.zoom" /></label>
                     </Col>
                 </Row>
-            <Row>
-                <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => { this.props.setLayers(null); }}>{this.props.cancelMessage}</Button></Col>
-                <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.addMessage}</Button></Col>
-            </Row>
+                <Row>
+                    <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => { this.props.setLayers(null); }}>{this.props.cancelMessage}</Button></Col>
+                    <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.addMessage}</Button></Col>
+                </Row>
             </Grid>
         );
     }

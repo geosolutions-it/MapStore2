@@ -175,6 +175,13 @@ var Graticule = (function() {
         });
     };
 
+    function gridPrecision(dDeg) {
+        if (dDeg < 0.01) return 3;
+        if (dDeg < 0.1) return 2;
+        if (dDeg < 1) return 1;
+        return 0;
+    }
+
     _.prototype._drawGrid = function(extent) {
 
         if (this._currentExtent && this._currentExtent.equals(extent)) {
@@ -317,13 +324,6 @@ var Graticule = (function() {
             this._scene.primitives.remove(this._labels);
         }
     };
-
-    function gridPrecision(dDeg) {
-        if (dDeg < 0.01) return 3;
-        if (dDeg < 0.1) return 2;
-        if (dDeg < 1) return 1;
-        return 0;
-    }
 
     return _;
 

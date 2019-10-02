@@ -27,23 +27,23 @@ class MapsList extends React.Component {
         if (this.props.maps) {
             return (
                 <div>
-                <Label><I18N.Message msgId="manager.mapTypes_combo"/></Label>
-                <FormGroup bsSize="small">
-                    <FormControl value={this.props.mapType} componentClass="select" ref="mapType" onChange={this.props.onChangeMapType}>
-                        <option value="leaflet" key="leaflet">Leaflet</option>
-                        <option value="openlayers" key="openlayer">OpenLayers</option>
-                    </FormControl>
-                </FormGroup>
-                <h3>{this.props.title}</h3>
-                <MapGrid mapType={this.props.mapType}
-                    viewerUrl={this.props.onGoToMap}
-                    loading={this.props.maps && this.props.maps.loading}
-                    maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
-                    panelProps={{className: "mapmanager",
-                        collapsible: true,
-                        defaultExpanded: true}}
+                    <Label><I18N.Message msgId="manager.mapTypes_combo"/></Label>
+                    <FormGroup bsSize="small">
+                        <FormControl value={this.props.mapType} componentClass="select" ref="mapType" onChange={this.props.onChangeMapType}>
+                            <option value="leaflet" key="leaflet">Leaflet</option>
+                            <option value="openlayers" key="openlayer">OpenLayers</option>
+                        </FormControl>
+                    </FormGroup>
+                    <h3>{this.props.title}</h3>
+                    <MapGrid mapType={this.props.mapType}
+                        viewerUrl={this.props.onGoToMap}
+                        loading={this.props.maps && this.props.maps.loading}
+                        maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
+                        panelProps={{className: "mapmanager",
+                            collapsible: true,
+                            defaultExpanded: true}}
                     />
-             </div>
+                </div>
             );
         }
         return null;

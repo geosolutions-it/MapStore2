@@ -10,7 +10,7 @@ const React = require('react');
 const { wizardHandlers } = require('../../../misc/wizard/enhancers');
 const loadingState = require('../../../misc/enhancers/loadingState')(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const noAttribute = require('./common/noAttributesEmptyView');
-const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type =""} = {}) => type.indexOf("gml:") !== 0).length === 0;
+const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = ""} = {}) => type.indexOf("gml:") !== 0).length === 0;
 const ChartType = noAttribute(
     hasNoAttributes
 )(require('./chart/ChartType'));
@@ -81,10 +81,10 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         cartesian={data.cartesian}
         yAxis={data.yAxis}
         shortenChartLabelThreshold={shortenChartLabelThreshold}
-        />);
+    />);
 
 const enhanceWizard = compose(lifecycle({
-    componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
+    UNSAFE_componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
         if (valid && !isChartOptionsValid(data.options)) {
             setValid(false);
         }
@@ -97,12 +97,12 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
         setPage={setPage}
         onFinish={onFinish}
         isStepValid={n =>
-                n === 0
-                    ? data.chartType
-                    : n === 1
-                        ? isChartOptionsValid(data.options)
-                        : true
-                } hideButtons>
+            n === 0
+                ? data.chartType
+                : n === 1
+                    ? isChartOptionsValid(data.options)
+                    : true
+        } hideButtons>
         <ChartType
             key="type"
             featureTypeProperties={featureTypeProperties}

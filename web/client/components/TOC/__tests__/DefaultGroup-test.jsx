@@ -183,7 +183,7 @@ describe('test Group module component', () => {
         let spy = expect.spyOn(actions, "propertiesChangeHandler");
         const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox visibilityCheckType="checkbox"
             propertiesChangeHandler={actions.propertiesChangeHandler}><div/></Group>,
-            document.getElementById("container"));
+        document.getElementById("container"));
         expect(comp).toExist();
         const cmpDom = ReactDOM.findDOMNode(comp);
         expect(cmpDom).toExist();
@@ -213,7 +213,7 @@ describe('test Group module component', () => {
         let spy = expect.spyOn(actions, "propertiesChangeHandler");
         const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox visibilityCheckType="glyph"
             propertiesChangeHandler={actions.propertiesChangeHandler}><div/></Group>,
-            document.getElementById("container"));
+        document.getElementById("container"));
         expect(comp).toExist();
         const cmpDom = ReactDOM.findDOMNode(comp);
         expect(cmpDom).toExist();

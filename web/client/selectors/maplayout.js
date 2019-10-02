@@ -47,7 +47,7 @@ const mapLayoutValuesSelector = (state, attributes = {}) => {
     const layout = mapLayoutSelector(state);
     return layout && Object.keys(layout).filter(key =>
         attributes[key]).reduce((a, key) => ({...a, [key]: layout[key]}),
-    {}) || {};
+        {}) || {};
 };
 
 /**

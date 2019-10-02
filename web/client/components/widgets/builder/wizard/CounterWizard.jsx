@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2018, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -27,7 +27,7 @@ const errorChartState = require('../../enhancers/errorChartState');
 const isCounterOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute;
 const triggerSetValid = compose(
     lifecycle({
-        componentWillReceiveProps: ({ valid, data = [], options={}, setValid = () => { }, error } = {}) => {
+        UNSAFE_componentWillReceiveProps: ({ valid, data = [], options = {}, setValid = () => { }, error } = {}) => {
             const isNowValid = !isNil(data[0]) && !error;
             if (!!valid !== !!isNowValid && isCounterOptionsValid(options)) {
                 setValid(isNowValid);
@@ -80,13 +80,13 @@ const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid =
             options={data.options} />;
 
 const enhanceWizard = compose(lifecycle({
-    componentWillReceiveProps: ({data = {}, valid, setValid = () => {}} = {}) => {
+    UNSAFE_componentWillReceiveProps: ({data = {}, valid, setValid = () => {}} = {}) => {
         if (valid && !isCounterOptionsValid(data.options)) {
             setValid(false);
         }
     }})
 );
-module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, valid, formOptions, data = {}, layer ={}, step=0, types, featureTypeProperties, dependencies}) =>
+module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, valid, formOptions, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies}) =>
     (<Wizard
         step={step}
         setPage={setPage}
@@ -120,4 +120,4 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
                 dependencies={dependencies}
                 setValid={v => setValid(v && isCounterOptionsValid(data.options))} />}
         />
-</Wizard>));
+    </Wizard>));

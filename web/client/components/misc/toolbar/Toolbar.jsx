@@ -25,22 +25,22 @@ const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 * @param  {object|boolean} [transitionProps] properties of ReactCSSTransitionGroup. If false transition are  disabled. (for vertical toolbar)
 */
 module.exports = ({
-   buttons = [],
-   btnGroupProps={},
-   btnDefaultProps = {},
-   transitionProps = {
-       transitionName: "toolbar-btn-transition",
-       transitionEnterTimeout: 300,
-       transitionLeaveTimeout: 300
-   }} = {}) => {
-       const renderButtons = () => buttons.map(
-           ({ visible = true, Element, ...props }, index) => visible
-               ? (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
-               : null
-       );
-       return (<ButtonGroup {...btnGroupProps}>
-           {transitionProps
-               ? <ReactCSSTransitionGroup {...transitionProps}>{renderButtons()}</ReactCSSTransitionGroup>
-               : renderButtons()}
-           </ButtonGroup>);
-   };
+    buttons = [],
+    btnGroupProps = {},
+    btnDefaultProps = {},
+    transitionProps = {
+        transitionName: "toolbar-btn-transition",
+        transitionEnterTimeout: 300,
+        transitionLeaveTimeout: 300
+    }} = {}) => {
+    const renderButtons = () => buttons.map(
+        ({ visible = true, Element, ...props }, index) => visible
+            ? (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
+            : null
+    );
+    return (<ButtonGroup {...btnGroupProps}>
+        {transitionProps
+            ? <ReactCSSTransitionGroup {...transitionProps}>{renderButtons()}</ReactCSSTransitionGroup>
+            : renderButtons()}
+    </ButtonGroup>);
+};

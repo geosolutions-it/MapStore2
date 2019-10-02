@@ -30,15 +30,15 @@ const textSearchConfigSelector = state => state.searchconfig && state.searchconf
 const selector = createSelector(
     mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector,
     (map, additionalOptions, layers, groups, show, textSearchConfig) => ({
-    currentZoomLvl: map && map.zoom,
-    show,
-    map,
-    additionalOptions,
-    mapId: map && map.mapId,
-    layers,
-    textSearchConfig,
-    groups
-}));
+        currentZoomLvl: map && map.zoom,
+        show,
+        map,
+        additionalOptions,
+        mapId: map && map.mapId,
+        layers,
+        textSearchConfig,
+        groups
+    }));
 
 class Save extends React.Component {
     static propTypes = {
@@ -62,11 +62,11 @@ class Save extends React.Component {
         show: false
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.onMissingInfo(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.onMissingInfo(nextProps);
     }
 
@@ -86,7 +86,7 @@ class Save extends React.Component {
             show={this.props.show}
             onClose={this.props.onClose}
             onConfirm={this.goForTheUpdate}
-            />);
+        />);
     }
 
     goForTheUpdate = () => {
@@ -108,29 +108,29 @@ module.exports = {
             onMapSave: saveMapResource,
             loadMapInfo
         })(assign(Save, {
-            BurgerMenu: {
-                name: 'save',
-                position: 30,
-                text: <Message msgId="save"/>,
-                icon: <Glyphicon glyph="floppy-open"/>,
-                action: toggleControl.bind(null, 'save', null),
-                // display the BurgerMenu button only if the map can be edited
-                selector: (state) => {
-                    let map = state.map && state.map.present || state.map || state.config && state.config.map || null;
-                    if (map && map.mapId && state && state.security && state.security.user) {
-                        if (state.maps && state.maps.results) {
-                            let mapId = map.mapId;
-                            let currentMap = state.maps.results.filter(item=> item && '' + item.id === mapId);
-                            if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
-                                return { };
-                            }
-                        }
-                        if (map.info && map.info.canEdit) {
+        BurgerMenu: {
+            name: 'save',
+            position: 30,
+            text: <Message msgId="save"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: toggleControl.bind(null, 'save', null),
+            // display the BurgerMenu button only if the map can be edited
+            selector: (state) => {
+                let map = state.map && state.map.present || state.map || state.config && state.config.map || null;
+                if (map && map.mapId && state && state.security && state.security.user) {
+                    if (state.maps && state.maps.results) {
+                        let mapId = map.mapId;
+                        let currentMap = state.maps.results.filter(item=> item && '' + item.id === mapId);
+                        if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
                             return { };
                         }
                     }
-                    return { style: {display: "none"} };
+                    if (map.info && map.info.canEdit) {
+                        return { };
+                    }
                 }
+                return { style: {display: "none"} };
             }
-        }))
+        }
+    }))
 };

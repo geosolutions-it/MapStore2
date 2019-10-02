@@ -19,14 +19,14 @@ module.exports = compose(
     dropZoneHandlers
 )(
     ({
-    onClose = () => {},
-    onDrop = () => {},
-    onRef = () => {},
-    ...props
-}) => <DragZone
-    onClose={onClose}
-    onDrop={onDrop}
-    onRef={onRef}
+        onClose = () => {},
+        onDrop = () => {},
+        onRef = () => {},
+        ...props
+    }) => <DragZone
+        onClose={onClose}
+        onDrop={onDrop}
+        onRef={onRef}
     >
-    <Content {...props} />
-</DragZone>);
+        <Content {...props} />
+    </DragZone>);

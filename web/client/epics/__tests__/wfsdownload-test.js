@@ -33,19 +33,19 @@ describe('wfsdownload Epics', () => {
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
-                    case TOGGLE_CONTROL:
-                        expect(action.control).toBe('wfsdownload');
-                        break;
-                    case DOWNLOAD_OPTIONS_CHANGE:
-                        expect(action.key).toBe('singlePage');
-                        expect(action.value).toBe(false);
-                        break;
-                    case QUERY_CREATE:
-                        expect(action.searchUrl).toBe('myurl');
-                        expect(action.filterObj.featureTypeName).toBe('mylayer');
-                        break;
-                    default:
-                        break;
+                case TOGGLE_CONTROL:
+                    expect(action.control).toBe('wfsdownload');
+                    break;
+                case DOWNLOAD_OPTIONS_CHANGE:
+                    expect(action.key).toBe('singlePage');
+                    expect(action.value).toBe(false);
+                    break;
+                case QUERY_CREATE:
+                    expect(action.searchUrl).toBe('myurl');
+                    expect(action.filterObj.featureTypeName).toBe('mylayer');
+                    break;
+                default:
+                    break;
                 }
             });
             done();

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import expect from"expect";
+import expect from "expect";
 import { isArray, values } from "lodash";
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -46,25 +46,25 @@ describe("GeoStory Utils", () => {
                     id={SAMPLE_ID + 0}
                     src={SAMPLE_SRC}
                 />
-                 <img
+                <img
                     width= {500}
                     height= {500}
                     id={SAMPLE_ID + 1}
                     src={SAMPLE_SRC}
                 />
-                 <img
+                <img
                     width= {500}
                     height= {500}
                     id={SAMPLE_ID + 2}
                     src={SAMPLE_SRC}
                 />
-                 <img
+                <img
                     width= {500}
                     height= {500}
                     id={SAMPLE_ID + 3}
                     src={SAMPLE_SRC}
                 />
-                 <img
+                <img
                     width= {500}
                     height= {500}
                     id={SAMPLE_ID + 4}
@@ -133,6 +133,7 @@ describe("GeoStory Utils", () => {
     it("test MediaTypes", () => {
         expect(MediaTypes).toEqual({
             IMAGE: "image",
+            MAP: "map",
             VIDEO: "video"
         });
     });

@@ -53,13 +53,13 @@ const UPDATE_SYMBOLS = 'ANNOTATIONS:UPDATE_SYMBOLS';
 const ERROR_SYMBOLS = 'ANNOTATIONS:ERROR_SYMBOLS';
 
 const updateSymbols = (symbols = []) => ({
-        type: UPDATE_SYMBOLS,
-        symbols
-    });
+    type: UPDATE_SYMBOLS,
+    symbols
+});
 const setErrorSymbol = (symbolErrors) => ({
-        type: ERROR_SYMBOLS,
-        symbolErrors
-    });
+    type: ERROR_SYMBOLS,
+    symbolErrors
+});
 
 function loadAnnotations(features, override = false) {
     return {

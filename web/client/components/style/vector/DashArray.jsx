@@ -68,8 +68,8 @@ class DashArray extends React.Component {
             </svg>);
         return (
             <div style={{ display: 'flex', alignItems: 'center', width: '100%', paddingRight: 25 }}>
-            {pattern}
-        </div>);
+                {pattern}
+            </div>);
     }
 }
 

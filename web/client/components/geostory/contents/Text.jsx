@@ -17,9 +17,9 @@ const Text = ({ placeholder, id, toggleEditing = () => {}, html, mode}) => {
         <div className="ms-text-wrapper">
             {   // content => render it
                 html !== EMPTY_CONTENT && <div
-                id={id}
-                onClick={() => toggleEditing(true, html)}
-                dangerouslySetInnerHTML={{ __html: html }} />}
+                    id={id}
+                    onClick={() => toggleEditing(true, html)}
+                    dangerouslySetInnerHTML={{ __html: html }} />}
             {   // no content => render a placeholder
                 (!html || html === EMPTY_CONTENT) && mode === Modes.EDIT &&
             <div

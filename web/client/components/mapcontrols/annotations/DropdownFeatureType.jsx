@@ -45,7 +45,7 @@ const DropdownFeatureType = ({
             onClick("LineString");
             onSetStyle(
                 [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
-                .concat(getStartEndPointsForLinestring()));
+                    .concat(getStartEndPointsForLinestring()));
             onStartDrawing();
         }}>
             <Glyphicon glyph="line"/>{titles.line}

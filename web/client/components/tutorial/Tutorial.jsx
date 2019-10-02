@@ -123,13 +123,13 @@ class Tutorial extends React.Component {
         checkAction: {}
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let defaultSteps = this.props.presetList[this.props.preset] || [];
         let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
         this.props.actions.onSetup('default', defaultSteps, this.props.introStyle, checkbox, this.props.defaultStep, assign({}, this.props.presetList, {default_tutorial: defaultSteps}));
     }
 
-    componentWillUpdate(newProps, newState) {
+    UNSAFE_componentWillUpdate(newProps, newState) {
         if (this.props.steps.length > 0) {
             if (!this.props.toggle && newProps.toggle) {
                 this.props.actions.onStart();

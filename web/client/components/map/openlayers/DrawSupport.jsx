@@ -56,7 +56,7 @@ const geojsonFormat = new GeoJSON();
  * @memberof components
  * @prop {object} map the map usedto drawing on
  * @prop {string} drawOwner the owner of the drawn features
- * @prop {string} drawStatus the status that allows to do different things. see componentWillReceiveProps method
+ * @prop {string} drawStatus the status that allows to do different things. see UNSAFE_componentWillReceiveProps method
  * @prop {string} drawMethod the method used to draw different geometries. can be Circle,BBOX, or a geomType from Point to MultiPolygons
  * @prop {object} options it contains the params used to enable the interactions or simply stop the DrawSupport after a ft is drawn
  * @prop {boolean} options.geodesic enable to draw a geodesic geometry (supported only for Circle)
@@ -105,8 +105,8 @@ export default class DrawSupport extends React.Component {
         onEndDrawing: () => {}
     };
 
-/** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
- * @function componentWillReceiveProps
+    /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
+ * @function UNSAFE_componentWillReceiveProps
  * Here is the list of all status
  * create allows to create features
  * start allows to start drawing features
@@ -117,7 +117,7 @@ export default class DrawSupport extends React.Component {
  * cleanAndContinueDrawing it cleares the drawn features and allows to continue drawing features
  * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
 */
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
         }
@@ -126,16 +126,16 @@ export default class DrawSupport extends React.Component {
         }
         if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features) {
             switch (newProps.drawStatus) {
-                case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
-                case "start":/* only starts draw*/ this.addInteractions(newProps); break;
-                case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
-                case "stop": /* only stops draw*/ this.removeDrawInteraction(); break;
-                case "replace": this.replaceFeatures(newProps); break;
-                case "updateStyle": this.updateOnlyFeatureStyles(newProps); break;
-                case "clean": this.clean(); break;
-                case "cleanAndContinueDrawing": this.clean(true); break;
-                case "endDrawing": this.endDrawing(newProps); break;
-                default : return;
+            case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
+            case "start":/* only starts draw*/ this.addInteractions(newProps); break;
+            case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
+            case "stop": /* only stops draw*/ this.removeDrawInteraction(); break;
+            case "replace": this.replaceFeatures(newProps); break;
+            case "updateStyle": this.updateOnlyFeatureStyles(newProps); break;
+            case "clean": this.clean(); break;
+            case "cleanAndContinueDrawing": this.clean(true); break;
+            case "endDrawing": this.endDrawing(newProps); break;
+            default : return;
             }
         }
 
@@ -199,10 +199,10 @@ export default class DrawSupport extends React.Component {
                 axios.all(promises).then((styles) => {
                     ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
                 });
-            } else {
-                // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                return parseStyles({style: defaultStyles[styleType]});
+                return null;
             }
+            // if the styles is not present in the feature it uses a default one based on the drawMethod basically
+            return parseStyles({style: defaultStyles[styleType]});
         };
         this.geojson = new GeoJSON();
         this.drawSource = new VectorSource();
@@ -321,11 +321,9 @@ export default class DrawSupport extends React.Component {
                         axios.all(promises).then((styles) => {
                             ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
                         });
-                    } else {
-                        const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
-                        // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                        return parseStyles({style: defaultStyles[styleType]});
+                        return null;
                     }
+                    return parseStyles({style: defaultStyles[styleType]});
                 });
             }
         }
@@ -446,7 +444,7 @@ export default class DrawSupport extends React.Component {
                 let newFeatureColl = geojsonFormat.writeFeaturesObject(newFeatures);
                 const vectorSource = new VectorSource({
                     features: (new GeoJSON()).readFeatures(newFeatureColl)
-                  });
+                });
                 this.drawLayer.setSource(vectorSource);
                 let feature = reprojectGeoJson(newFeatureColl, this.getMapCrs(), "EPSG:4326");
                 this.props.onGeometryChanged([feature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
@@ -546,19 +544,19 @@ export default class DrawSupport extends React.Component {
                 let properties = this.props.features[0].properties;
                 if (drawMethod === "Text") {
                     properties = assign({}, this.props.features[0].properties, {
-                            textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
-                            textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
-                        });
+                        textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
+                        textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
+                    });
                 }
                 if (drawMethod === "Circle") {
                     properties = assign({}, properties, {
-                            circles: (this.props.features[0].properties.circles || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
-                        });
+                        circles: (this.props.features[0].properties.circles || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
+                    });
                 }
                 let feature = this.fromOLFeature(sketchFeature, startingPoint, properties);
                 const vectorSource = new VectorSource({
                     features: (new GeoJSON()).readFeatures(feature)
-                  });
+                });
                 this.drawLayer.setSource(vectorSource);
 
                 let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(sketchFeature.clone()), this.getMapCrs(), "EPSG:4326");
@@ -621,70 +619,70 @@ export default class DrawSupport extends React.Component {
         };
         let roiProps = {};
         switch (geometryType) {
-            case "BBOX": {
-                roiProps.type = "LineString";
-                roiProps.maxPoints = 2;
-                roiProps.geometryFunction = function(coordinates, geometry) {
-                    let geom = geometry;
-                    if (!geom) {
-                        geom = new Polygon(null);
-                    }
-                    let start = coordinates[0];
-                    let end = coordinates[1];
-                    geom.setCoordinates(
+        case "BBOX": {
+            roiProps.type = "LineString";
+            roiProps.maxPoints = 2;
+            roiProps.geometryFunction = function(coordinates, geometry) {
+                let geom = geometry;
+                if (!geom) {
+                    geom = new Polygon([]);
+                }
+                let start = coordinates[0];
+                let end = coordinates[1];
+                geom.setCoordinates(
+                    [
                         [
-                            [
-                                start,
-                                    [start[0], end[1]],
-                                end,
-                                [end[0],
-                                    start[1]], start
-                            ]
-                        ]);
-                    return geom;
-                };
-                break;
-            }
-            case "Circle": {
-                roiProps.maxPoints = 100;
-                if (newProps.options && newProps.options.geodesic) {
-                    roiProps.geometryFunction = (coordinates, geometry) => {
-                        let geom = geometry;
-                        if (!geom) {
-                            geom = new Polygon(null);
-                            geom.setProperties({geodesicCenter: [...coordinates[0]]}, true);
-                        }
-                        let projection = this.props.map.getView().getProjection().getCode();
-                        let wgs84Coordinates = [...coordinates].map((coordinate) => {
-                            return this.reprojectCoordinatesToWGS84(coordinate, projection);
-                        });
-                        let radius = calculateDistance(wgs84Coordinates, 'haversine');
-                        let coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
-                        geom.setCoordinates(coords);
-                        return geom;
-                    };
-                } else {
-                    roiProps.type = geometryType;
-                }
-                break;
-            }
-            case "Marker": case "Point": case "Text": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": {
-                if (geometryType === "LineString") {
-                    roiProps.maxPoints = maxPoints;
-                }
-                let geomType = geometryType === "Text" || geometryType === "Marker" ? "Point" : geometryType;
-                roiProps.type = geomType;
+                            start,
+                            [start[0], end[1]],
+                            end,
+                            [end[0],
+                                start[1]], start
+                        ]
+                    ]);
+                return geom;
+            };
+            break;
+        }
+        case "Circle": {
+            roiProps.maxPoints = 100;
+            if (newProps.options && newProps.options.geodesic) {
                 roiProps.geometryFunction = (coordinates, geometry) => {
                     let geom = geometry;
                     if (!geom) {
-                        geom = this.createOLGeometry({type: geomType, coordinates: null, options: newProps.options});
+                        geom = new Polygon([]);
+                        geom.setProperties({ geodesicCenter: [...coordinates[0]] }, true);
                     }
-                    geom.setCoordinates(coordinates);
+                    let projection = this.props.map.getView().getProjection().getCode();
+                    let wgs84Coordinates = [...coordinates].map((coordinate) => {
+                        return this.reprojectCoordinatesToWGS84(coordinate, projection);
+                    });
+                    let radius = calculateDistance(wgs84Coordinates, 'haversine');
+                    let coords = circular(wgs84Coordinates[0], radius).clone().transform('EPSG:4326', projection).getCoordinates();
+                    geom.setCoordinates(coords);
                     return geom;
                 };
-                break;
+            } else {
+                roiProps.type = geometryType;
             }
-            default : return {};
+            break;
+        }
+        case "Marker": case "Point": case "Text": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": {
+            if (geometryType === "LineString") {
+                roiProps.maxPoints = maxPoints;
+            }
+            let geomType = geometryType === "Text" || geometryType === "Marker" ? "Point" : geometryType;
+            roiProps.type = geomType;
+            roiProps.geometryFunction = (coordinates, geometry) => {
+                let geom = geometry;
+                if (!geom) {
+                    geom = this.createOLGeometry({ type: geomType, coordinates: null, options: newProps.options });
+                }
+                geom.setCoordinates(coordinates);
+                return geom;
+            };
+            break;
+        }
+        default: return {};
         }
         return assign({}, drawBaseProps, roiProps);
     };
@@ -781,56 +779,56 @@ export default class DrawSupport extends React.Component {
                 let olFt;
                 let newDrawMethod = newProps.drawMethod;
                 switch (newDrawMethod) {
-                    case "Polygon": {
-                        if (previousCoords.length) {
-                            if (isCompletePolygon(previousCoords)) {
-                                // insert at penultimate position
-                                actualCoords = slice(previousCoords[0], 0, previousCoords[0].length - 1);
-                                actualCoords = actualCoords.concat([event.coordinate]);
-                                actualCoords = [actualCoords.concat([previousCoords[0][0]])];
-                            } else {
-                                // insert at ultimate position if more than 2 point
-                                actualCoords = previousCoords[0].length > 1 ? [[...previousCoords[0], event.coordinate, previousCoords[0][0] ]] : [[...previousCoords[0], event.coordinate ]];
-                            }
+                case "Polygon": {
+                    if (previousCoords.length) {
+                        if (isCompletePolygon(previousCoords)) {
+                            // insert at penultimate position
+                            actualCoords = slice(previousCoords[0], 0, previousCoords[0].length - 1);
+                            actualCoords = actualCoords.concat([event.coordinate]);
+                            actualCoords = [actualCoords.concat([previousCoords[0][0]])];
                         } else {
-                            // insert at first position
-                            actualCoords = [[event.coordinate]];
+                            // insert at ultimate position if more than 2 point
+                            actualCoords = previousCoords[0].length > 1 ? [[...previousCoords[0], event.coordinate, previousCoords[0][0] ]] : [[...previousCoords[0], event.coordinate ]];
                         }
-                        olFt = this.getNewFeature(newDrawMethod, actualCoords);
-                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
-                        break;
+                    } else {
+                        // insert at first position
+                        actualCoords = [[event.coordinate]];
                     }
-                    case "LineString": case "MultiPoint": {
-                        actualCoords = previousCoords.length ? [...previousCoords, event.coordinate] : [event.coordinate];
-                        olFt = this.getNewFeature(newDrawMethod, actualCoords);
-                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
-                    }
-                     break;
-                    case "Circle": {
-                        newDrawMethod = "Polygon";
-                        const radius = previousFt && previousFt.getProperties() && previousFt.getProperties().radius || 10000;
-                        let center = event.coordinate;
-                        const coords = this.polygonCoordsFromCircle(center, 100);
-                        olFt = this.getNewFeature(newDrawMethod, coords);
-                        // TODO verify center is projected in 4326 and is an array
-                        center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
-                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
-                        olFt.setProperties({isCircle: true, radius, center: [center.x, center.y]});
-                        break;
-                    }
-                    case "Text": {
-                        newDrawMethod = "Point";
-                        olFt = this.getNewFeature(newDrawMethod, event.coordinate);
-                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
-                        olFt.setProperties({isText: true, valueText: previousFt && previousFt.getProperties() && previousFt.getProperties().valueText || newProps.options.defaultTextAnnotation || "New" });
-                        break;
-                    }
-                    // point
-                    default: {
-                        actualCoords = event.coordinate;
-                        olFt = this.getNewFeature(newDrawMethod, actualCoords);
-                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
-                    }
+                    olFt = this.getNewFeature(newDrawMethod, actualCoords);
+                    olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
+                    break;
+                }
+                case "LineString": case "MultiPoint": {
+                    actualCoords = previousCoords.length ? [...previousCoords, event.coordinate] : [event.coordinate];
+                    olFt = this.getNewFeature(newDrawMethod, actualCoords);
+                    olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
+                    break;
+                }
+                case "Circle": {
+                    newDrawMethod = "Polygon";
+                    const radius = previousFt && previousFt.getProperties() && previousFt.getProperties().radius || 10000;
+                    let center = event.coordinate;
+                    const coords = this.polygonCoordsFromCircle(center, 100);
+                    olFt = this.getNewFeature(newDrawMethod, coords);
+                    // TODO verify center is projected in 4326 and is an array
+                    center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
+                    olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
+                    olFt.setProperties({isCircle: true, radius, center: [center.x, center.y]});
+                    break;
+                }
+                case "Text": {
+                    newDrawMethod = "Point";
+                    olFt = this.getNewFeature(newDrawMethod, event.coordinate);
+                    olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
+                    olFt.setProperties({isText: true, valueText: previousFt && previousFt.getProperties() && previousFt.getProperties().valueText || newProps.options.defaultTextAnnotation || "New" });
+                    break;
+                }
+                // point
+                default: {
+                    actualCoords = event.coordinate;
+                    olFt = this.getNewFeature(newDrawMethod, actualCoords);
+                    olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
+                }
                 }
 
                 let drawnFtWGS84 = reprojectGeoJson(geojsonFormat.writeFeaturesObject([olFt.clone()]), this.getMapCrs(), "EPSG:4326");
@@ -960,7 +958,7 @@ export default class DrawSupport extends React.Component {
                 this.drawSource.getFeatures().map( ft => this.deselectFeature(ft));
                 return null;
             }
-            // this.props.onChangeDrawingStatus('select', null, this.props.drawOwner, features);
+            return null;
         });
 
         this.props.map.addInteraction(this.selectInteraction);
@@ -1156,10 +1154,10 @@ export default class DrawSupport extends React.Component {
 
         if (type === "GeometryCollection") {
             return [...getMarkerStyleLegacy({
-                    style: { iconGlyph: 'comment',
-                        iconShape: 'square',
-                        iconColor: 'blue' }
-                }), newStyle];
+                style: { iconGlyph: 'comment',
+                    iconShape: 'square',
+                    iconColor: 'blue' }
+            }), newStyle];
         }
         if (style && (style.iconUrl || style.iconGlyph)) {
             return getMarkerStyleLegacy({
@@ -1240,8 +1238,8 @@ export default class DrawSupport extends React.Component {
             this.props.map.removeInteraction(this.translateInteraction);
         }
         this.translateInteraction = new Translate({
-                features: new Collection(this.drawLayer.getSource().getFeatures())
-            });
+            features: new Collection(this.drawLayer.getSource().getFeatures())
+        });
         this.translateInteraction.setActive(false);
         this.translateInteraction.on('translateend', (e) => {
             let features = e.features.getArray().map(f => {
@@ -1282,15 +1280,15 @@ export default class DrawSupport extends React.Component {
 
         let geometry;
         switch (type) {
-            case "Point": case "Marker": case "Text": { geometry = new Point(coordinates ? coordinates : []); break; }
-            case "LineString": { geometry = new LineString(coordinates ? coordinates : []); break; }
-            case "MultiPoint": /*case "Text":*/ { geometry = new MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
-            case "MultiLineString": { geometry = new MultiLineString(coordinates ? [coordinates] : []); break; }
-            case "MultiPolygon": { geometry = new MultiPolygon(coordinates ? coordinates : []); break; }
-            // default is Polygon
-            default: {
-                let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
-                const isCircle = projection
+        case "Point": case "Marker": case "Text": { geometry = new Point(coordinates ? coordinates : []); break; }
+        case "LineString": { geometry = new LineString(coordinates ? coordinates : []); break; }
+        case "MultiPoint": { geometry = new MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
+        case "MultiLineString": { geometry = new MultiLineString(coordinates ? [coordinates] : []); break; }
+        case "MultiPolygon": { geometry = new MultiPolygon(coordinates ? coordinates : []); break; }
+        // default is Polygon
+        default: {
+            let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
+            const isCircle = projection
                     && !isNaN(parseFloat(radius))
                     && correctCenter
                     && !isNil(correctCenter.x)
@@ -1298,39 +1296,39 @@ export default class DrawSupport extends React.Component {
                     && !isNaN(parseFloat(correctCenter.x))
                     && !isNaN(parseFloat(correctCenter.y));
 
-                    // TODO simplify, too much use of elvis operator
-                geometry = isCircle ?
-                    options.geodesic ?
+            // TODO simplify, too much use of elvis operator
+            geometry = isCircle ?
+                options.geodesic ?
                     circular(this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
                     : fromCircle(new Circle([correctCenter.x, correctCenter.y], radius), 100)
-                        : new Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
+                : new Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
 
-                    // store geodesic center
-                if (geometry && isCircle && options.geodesic) {
-                    geometry.setProperties({geodesicCenter: [correctCenter.x, correctCenter.y]}, true);
-                }
+            // store geodesic center
+            if (geometry && isCircle && options.geodesic) {
+                geometry.setProperties({geodesicCenter: [correctCenter.x, correctCenter.y]}, true);
             }
+        }
         }
         return geometry;
     }
     convertGeometryTypeToStyleType = (drawMethod) => {
         switch (drawMethod) {
-            case "BBOX": return "LineString";
-            default: return drawMethod;
+        case "BBOX": return "LineString";
+        default: return drawMethod;
         }
     }
 
     appendToMultiGeometry = (drawMethod, geometry, drawnGeom) => {
         switch (drawMethod) {
-            case "MultiPoint": geometry.appendPoint(drawnGeom); break;
-            case "MultiLineString": geometry.appendLineString(drawnGeom); break;
-            case "MultiPolygon": {
-                let coords = drawnGeom.getCoordinates();
-                coords[0].push(coords[0][0]);
-                drawnGeom.setCoordinates(coords);
-                geometry.appendPolygon(drawnGeom); break;
-            }
-            default: break;
+        case "MultiPoint": geometry.appendPoint(drawnGeom); break;
+        case "MultiLineString": geometry.appendLineString(drawnGeom); break;
+        case "MultiPolygon": {
+            let coords = drawnGeom.getCoordinates();
+            coords[0].push(coords[0][0]);
+            drawnGeom.setCoordinates(coords);
+            geometry.appendPolygon(drawnGeom); break;
+        }
+        default: break;
         }
     }
     calculateRadius = (center, coordinates) => {

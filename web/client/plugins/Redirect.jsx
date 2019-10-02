@@ -24,7 +24,7 @@ class RedirectComponent extends React.Component {
         this.redirect(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.redirect(nextProps);
     }
 
@@ -46,4 +46,4 @@ const Redirect = connect((state) => ({
 
 module.exports = {
     RedirectPlugin: assign(Redirect, {}
-)};
+    )};

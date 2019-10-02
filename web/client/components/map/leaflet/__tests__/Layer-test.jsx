@@ -51,7 +51,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer source={source}
-                  map={map}/>, document.getElementById("container"));
+                map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -71,7 +71,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -90,7 +90,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -103,7 +103,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -116,7 +116,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="graticule"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -134,7 +134,7 @@ describe('Leaflet layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <LeafLetLayer type="mapquest"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -154,7 +154,7 @@ describe('Leaflet layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -174,7 +174,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -182,7 +182,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         let urls;
-        map.eachLayer((l) => urls = l._urls);
+        map.eachLayer((l) => {urls = l._urls;});
         expect(urls.length).toBe(1);
     });
 
@@ -279,7 +279,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
         let elevationFunc;
-        map.eachLayer((l) => elevationFunc = l.getElevation);
+        map.eachLayer((l) => {elevationFunc = l.getElevation;});
         expect(elevationFunc).toExist();
     });
     it('creates a wms layer with credits', () => {
@@ -323,7 +323,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -331,7 +331,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         let urls;
-        map.eachLayer((l) => urls = l._urls);
+        map.eachLayer((l) => {urls = l._urls;});
         expect(urls.length).toBe(1);
     });
 
@@ -354,7 +354,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -362,7 +362,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         let urls;
-        map.eachLayer((l) => urls = l._urls);
+        map.eachLayer((l) => {urls = l._urls;});
         expect(urls.length).toBe(2);
     });
 
@@ -382,7 +382,7 @@ describe('Leaflet layer', () => {
                     "geometry": {
                         "type": "LineString",
                         "coordinates": [
-                        [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
                         ]
                     },
                     "properties": {
@@ -395,7 +395,7 @@ describe('Leaflet layer', () => {
                         "type": "Polygon",
                         "coordinates": [
                             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
-                           [100.0, 1.0], [100.0, 0.0] ]
+                                [100.0, 1.0], [100.0, 0.0] ]
                         ]
                     },
                     "properties": {
@@ -427,9 +427,9 @@ describe('Leaflet layer', () => {
                 { "type": "Feature",
                     "geometry": { "type": "MultiPolygon",
                         "coordinates": [
-                          [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
+                            [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
                             [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
-                           [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
+                                [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
                         ]
                     },
                     "properties": {
@@ -458,7 +458,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="vector"
-                 options={options} map={map}>
+                options={options} map={map}>
                 {options.features.map((feature) => <Feature
                     key={feature.id}
                     type={feature.type}
@@ -466,11 +466,11 @@ describe('Leaflet layer', () => {
                     style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
-                        />)}</LeafLetLayer>, document.getElementById("container"));
+                />)}</LeafLetLayer>, document.getElementById("container"));
         expect(layer).toExist();
         let l2 = ReactDOM.render(
             <LeafLetLayer type="vector"
-                 options={options} map={map}>
+                options={options} map={map}>
                 {options.features.map((feature) => <Feature
                     key={feature.id}
                     type={feature.type}
@@ -478,7 +478,7 @@ describe('Leaflet layer', () => {
                     style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
-                        />)}</LeafLetLayer>, document.getElementById("container"));
+                />)}</LeafLetLayer>, document.getElementById("container"));
         expect(l2).toExist();
     });
 
@@ -495,7 +495,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -503,7 +503,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         let width;
-        map.eachLayer((l) => width = l.wmsParams.width);
+        map.eachLayer((l) => {width = l.wmsParams.width;});
         expect(width).toBe(512);
     });
 
@@ -519,7 +519,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -527,7 +527,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         let urls;
-        map.eachLayer((l) => urls = l._urls);
+        map.eachLayer((l) => {urls = l._urls;});
         expect(urls.length).toBe(2);
     });
 
@@ -590,7 +590,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={{}} position={0} map={map}/>, document.getElementById("container"));
+                options={{}} position={0} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -599,11 +599,11 @@ describe('Leaflet layer', () => {
         // not visibile layers are removed from the leaflet maps
         layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
+                options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.hasLayer(layer.layer)).toBe(false);
         layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
+                options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.hasLayer(layer.layer)).toBe(true);
     });
 
@@ -620,7 +620,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -632,7 +632,7 @@ describe('Leaflet layer', () => {
 
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
@@ -649,7 +649,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map} position={10}/>, document.getElementById("container"));
+                options={options} map={map} position={10}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -660,7 +660,7 @@ describe('Leaflet layer', () => {
         expect(layer.layer.options.zIndex).toBe(10);
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map} position={2}/>, document.getElementById("container"));
+                options={options} map={map} position={2}/>, document.getElementById("container"));
         expect(layer.layer.options.zIndex).toBe(2);
     });
 
@@ -677,7 +677,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -870,7 +870,7 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -880,7 +880,7 @@ describe('Leaflet layer', () => {
         });
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={newOptions} map={map}/>, document.getElementById("container"));
+                options={newOptions} map={map}/>, document.getElementById("container"));
         expect(layer).toExist();
         // count layers
         map.eachLayer(function() {lcount++; });
@@ -905,7 +905,7 @@ describe('Leaflet layer', () => {
             type="wms"
             options={options}
             map={map}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         expect(layer).toExist();
         let lcount = 0;
@@ -1079,5 +1079,230 @@ describe('Leaflet layer', () => {
 
         expect(layer.layer.wmtsParams.format).toBe(JPEG);
 
+    });
+
+    it('creates a vector layer with opacity for leaflet map', (done) => {
+        const opacity = 0.45;
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "vector_sample",
+            "group": "sample",
+            "styleName": "marker",
+            "opacity": opacity,
+            "features": [
+                { "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+                    "properties": {"prop0": "value0"}
+                },
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": 0.0
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                                [100.0, 1.0], [100.0, 0.0] ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiPoint",
+                        "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiLineString",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 1.0] ],
+                            [ [102.0, 2.0], [103.0, 3.0] ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiPolygon",
+                        "coordinates": [
+                            [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
+                            [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+                                [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "GeometryCollection",
+                        "geometries": [
+                            { "type": "Point",
+                                "coordinates": [100.0, 0.0]
+                            },
+                            { "type": "LineString",
+                                "coordinates": [ [101.0, 0.0], [102.0, 1.0] ]
+                            }
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                }
+            ]
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <LeafLetLayer type="vector"
+                options={options} map={map}>
+                {options.features.map((feature) => <Feature
+                    key={feature.id}
+                    type={feature.type}
+                    geometry={feature.geometry}
+                    style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
+                    msId={feature.id}
+                    featuresCrs={ 'EPSG:4326' }
+                />)}</LeafLetLayer>, document.getElementById("container"));
+        layer.layer.on('layeradd', function(newLayer) {
+            expect(newLayer.layer.options.opacity).toEqual(opacity);
+            done();
+        });
+    });
+
+    it('creates a vector layer with zero opacity for leaflet map', (done) => {
+        const opacity = 0;
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "vector_sample",
+            "group": "sample",
+            "styleName": "marker",
+            "opacity": opacity,
+            "features": [
+                { "type": "Feature",
+                    "id": 1,
+                    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+                    "properties": {"prop0": "value0"}
+                },
+                { "type": "Feature",
+                    "id": 2,
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": 0.0
+                    }
+                },
+                { "type": "Feature",
+                    "id": 3,
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                                [100.0, 1.0], [100.0, 0.0] ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "id": 4,
+                    "geometry": { "type": "MultiPoint",
+                        "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "id": 5,
+                    "geometry": { "type": "MultiLineString",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 1.0] ],
+                            [ [102.0, 2.0], [103.0, 3.0] ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "id": 6,
+                    "geometry": { "type": "MultiPolygon",
+                        "coordinates": [
+                            [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
+                            [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+                                [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "id": 7,
+                    "geometry": { "type": "GeometryCollection",
+                        "geometries": [
+                            { "type": "Point",
+                                "coordinates": [100.0, 0.0]
+                            },
+                            { "type": "LineString",
+                                "coordinates": [ [101.0, 0.0], [102.0, 1.0] ]
+                            }
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                }
+            ]
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <LeafLetLayer type="vector"
+                options={options} map={map}>
+                {options.features.map((feature) => <Feature
+                    key={feature.id}
+                    type={feature.type}
+                    geometry={feature.geometry}
+                    style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
+                    msId={feature.id}
+                    featuresCrs={ 'EPSG:4326' }
+                />)}</LeafLetLayer>, document.getElementById("container"));
+        layer.layer.on('layeradd', function(newLayer) {
+            expect(newLayer.layer.options.opacity).toEqual(opacity);
+            done();
+        });
     });
 });

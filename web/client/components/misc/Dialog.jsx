@@ -28,7 +28,7 @@ class Dialog extends React.Component {
         modal: PropTypes.bool,
         start: PropTypes.object,
         draggable: PropTypes.bool,
-        bounds: PropTypes.object
+        bounds: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     };
 
     static defaultProps = {
@@ -61,12 +61,13 @@ class Dialog extends React.Component {
                 background: "rgba(255, 255, 255, 0.5)",
                 zIndex: 2
             }}><div style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -40%)"
-            }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -40%)"
+                }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
+        return null;
     };
 
     renderRole = (role) => {

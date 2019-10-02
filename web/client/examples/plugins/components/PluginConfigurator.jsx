@@ -31,13 +31,13 @@ class PluginConfigurator extends React.Component {
         code: "{}"
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             code: this.props.pluginConfig
         });
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.pluginConfig !== this.props.pluginConfig) {
             this.setState({
                 code: newProps.pluginConfig

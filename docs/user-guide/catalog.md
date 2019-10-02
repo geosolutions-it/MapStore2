@@ -3,7 +3,7 @@
 
 The Catalog Service for the Web (CSW) is an OGC Standard to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
-In [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) the Catalog offers demo services that allow you to extract the data and add them to the map from GeoServer or to create connections to other geospatial services (supported services are WMS, WMTS and CSW).
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers demo services that allow you to extract the data and add them to the map from GeoServer or to create connections to other geospatial services (supported services are WMS, WMTS and CSW).
 
 Adding Layers from Demo Services
 --------------------------------
@@ -36,7 +36,7 @@ An example:
 Adding and Editing a Service
 ----------------------------
 
-As mentioned before, [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to connect to remote services and to import the data from them.
+As mentioned before, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to connect to remote services and to import the data from them.
 
 * **Click** on the <img src="../img/+.jpg" style="max-width:80px;" /> button to add a new service.
 
@@ -64,7 +64,7 @@ In order to edit a service, **Click** on the edit button <img src="../img/edit-s
 Custom Metadata Template
 ------------------------
 
-The *Catalog* tool of [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to customize what metadata to show and how they appear. About that, a **Metadata Template** is provided from the *Advanced Settings* panel of the service:
+The *Catalog* tool of [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to customize what metadata to show and how they appear. About that, a **Metadata Template** is provided from the *Advanced Settings* panel of the service:
 
 <p align = "center" ><img src="../img/metadata_template.png" style="max-width:500px;" /></p>
 
@@ -73,7 +73,7 @@ Tick that checkbox to get access to this functionality.
 !!! warning
     The *Metadata Template* function is available for **CSW Services** only.
 
-The *Metadata Template* panel makes available a **Text Editor** through which you can expose the available metadata information within a custom text. [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) suggests you how to correctly retrieve the properties values (**`${ property_name }`**) and what properties are available (see the tooltip content in the picture below).
+The *Metadata Template* panel makes available a **Text Editor** through which you can expose the available metadata information within a custom text. [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) suggests you how to correctly retrieve the properties values (**`${ property_name }`**) and what properties are available (see the tooltip content in the picture below).
 
 <p align = "center" ><img src="../img/metadata_template_panel.png" style="max-width:500px;" /></p>
 

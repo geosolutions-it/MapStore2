@@ -40,4 +40,4 @@ module.exports = ({
     </span>
     <span role="body">{children}</span>
     {footer ? <span role="footer">{footer}</span> : null}
-    </Dialog>) : null;
+</Dialog>) : null;

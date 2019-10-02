@@ -14,7 +14,7 @@ module.exports = connect( createSelector(
     ({ editNode } = {}) => ({
         editNode
     })
- ), {
-        setEditNode: node => changeEditorSetting('editNode', node),
-        closeNodeEditor: () => changeEditorSetting('editNode', undefined)
+), {
+    setEditNode: node => changeEditorSetting('editNode', node),
+    closeNodeEditor: () => changeEditorSetting('editNode', undefined)
 });

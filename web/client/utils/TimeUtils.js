@@ -6,7 +6,7 @@ const ROUND_RESOLUTION_REGEX = /PT?[\d\.]+[YMWDHMS]/;
 
 const toTime = date => {
     if (!date) {
-        return undefined;
+        return null;
     } else if (isString(date)) {
         return new Date(date).getTime();
     } else if (isDate(date)) {
@@ -204,12 +204,12 @@ const getDateTimeFormat = (locale, type) => {
     const dateFormat = LocaleUtils.getDateFormat(locale);
     const timeFormat = "HH:mm:SS";
     switch (type) {
-        case "time":
-            return timeFormat;
-        case "date":
-            return dateFormat;
-        default:
-            return dateFormat + " " + timeFormat;
+    case "time":
+        return timeFormat;
+    case "date":
+        return dateFormat;
+    default:
+        return dateFormat + " " + timeFormat;
     }
 };
 

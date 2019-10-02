@@ -147,14 +147,14 @@ class RulesManagerPage extends React.Component {
             component={BorderLayout}
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label><Message msgId="rulesmanager.missingconfig"/></label></div>;
+        />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label><Message msgId="rulesmanager.missingconfig"/></label></div>;
     }
 }
 
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
-    {
-        loadMapConfig,
-        reset: resetControls
-    })(RulesManagerPage);
+{
+    loadMapConfig,
+    reset: resetControls
+})(RulesManagerPage);

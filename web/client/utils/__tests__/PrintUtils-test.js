@@ -25,32 +25,32 @@ const layerSottoPasso = {
 
 const layerFilterSottoPasso = {
     groupFields: [
-      {
-        id: 1,
-        logic: 'OR',
-        index: 0
-      }
+        {
+            id: 1,
+            logic: 'OR',
+            index: 0
+        }
     ],
     filterFields: [
-      {
-        rowId: 1563970241851,
-        groupId: 1,
-        attribute: 'TIPO',
-        operator: '=',
-        value: 2,
-        type: 'number',
-        fieldOptions: {
-          valuesCount: 0,
-          currentPage: 1
-        },
-        exception: null
-      }
+        {
+            rowId: 1563970241851,
+            groupId: 1,
+            attribute: 'TIPO',
+            operator: '=',
+            value: 2,
+            type: 'number',
+            fieldOptions: {
+                valuesCount: 0,
+                currentPage: 1
+            },
+            exception: null
+        }
     ],
     spatialField: {
-      method: null,
-      operation: 'INTERSECTS',
-      geometry: null,
-      attribute: 'GEOMETRY'
+        method: null,
+        operation: 'INTERSECTS',
+        geometry: null,
+        attribute: 'GEOMETRY'
     }
 };
 const filterObjSottoPasso = {
@@ -58,25 +58,25 @@ const filterObjSottoPasso = {
     filterType: 'OGC',
     ogcVersion: '1.1.0',
     pagination: {
-      startIndex: 0,
-      maxFeatures: 20
+        startIndex: 0,
+        maxFeatures: 20
     },
     groupFields: [
-      {
-        id: 1,
-        logic: 'AND',
-        index: 0
-      }
+        {
+            id: 1,
+            logic: 'AND',
+            index: 0
+        }
     ],
     filterFields: [
-      {
-        attribute: 'ID_OGGETTO',
-        rowId: 1563970257711,
-        type: 'number',
-        groupId: 1,
-        operator: '<',
-        value: 44
-      }
+        {
+            attribute: 'ID_OGGETTO',
+            rowId: 1563970257711,
+            type: 'number',
+            groupId: 1,
+            operator: '<',
+            value: 44
+        }
     ]
 };
 

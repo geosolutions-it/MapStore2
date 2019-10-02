@@ -56,11 +56,11 @@ module.exports = {
             attributes: layerDetails.attributes
                 && {
                     attribute: layerDetails.attributes.map(({ name, accessType }) =>
-                    ({
-                        name,
-                        access: accessType
-                    }))
-            }
+                        ({
+                            name,
+                            access: accessType
+                        }))
+                }
         }
     }),
 

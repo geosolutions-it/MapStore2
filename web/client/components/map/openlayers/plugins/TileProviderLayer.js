@@ -1,4 +1,4 @@
- /**
+/**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -13,12 +13,10 @@ import { getUrls, template } from '../../../../utils/TileProviderUtils';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 
-/*eslint-disable */
-function lBoundsToOlExtent(bounds, destPrj){
+function lBoundsToOlExtent(bounds, destPrj) {
     var [ [ miny, minx], [ maxy, maxx ] ] = bounds;
     return CoordinatesUtils.reprojectBbox([minx, miny, maxx, maxy], 'EPSG:4326', CoordinatesUtils.normalizeSRS(destPrj));
 }
-/*eslint-enable */
 function tileXYZToOpenlayersOptions(options) {
     let urls = options.url.match(/(\{s\})/) ? getUrls(options) : [template(options.url, options)];
     let sourceOpt = assign({}, {

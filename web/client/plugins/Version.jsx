@@ -22,7 +22,7 @@ const Message = require('../components/I18N/Message');
 const Version = connect((state) => ({
     version: versionSelector(state)
 }))(
-class extends React.Component {
+    class extends React.Component {
     static propTypes = {
         version: PropTypes.string
     };
@@ -34,7 +34,7 @@ class extends React.Component {
     render() {
         return <span className="application-version"><span className="application-version-label"><Message msgId="version.label"/></span>: {this.props.version}</span>;
     }
-});
+    });
 
 const assign = require('object-assign');
 

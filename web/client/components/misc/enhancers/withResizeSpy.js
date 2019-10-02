@@ -29,7 +29,7 @@ module.exports = ({
     querySelector,
     closest = false
 } = {}) => (Component) =>
-class WithResizeSpy extends React.Component {
+    class WithResizeSpy extends React.Component {
     static propTypes = {
         handleWidth: PropTypes.bool,
         handleHeight: PropTypes.bool,
@@ -89,4 +89,4 @@ class WithResizeSpy extends React.Component {
     render() {
         return <Component {...this.props} />;
     }
-};
+    };

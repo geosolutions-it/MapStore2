@@ -21,6 +21,7 @@ const renderMetadataModal = ({ Component, edit, resource, setEdit, onSaveSuccess
         return (<MetadataModal user={user} setEdit={setEdit} key="metadataModal" show={edit} onSaveSuccess={onSaveSuccess}
             resource={resource} />);
     }
+    return null;
 };
 
 module.exports = ({
@@ -49,28 +50,28 @@ module.exports = ({
             {title}
         </Row>}
         <Row className="ms-grid">
-                {loading && resources.length === 0
-                    ? renderLoading()
-                    : resources.map(
-                        res => (<Col key={res.id} {...colProps}>
-                            <ResourceCard
-                                viewerUrl={viewerUrl}
-                                resource={res}
-                                onEdit={onEdit}
-                                onDelete={onDelete}
-                                onUpdateAttribute={onUpdateAttribute} />
-                        </Col>))
-                }
+            {loading && resources.length === 0
+                ? renderLoading()
+                : resources.map(
+                    res => (<Col key={res.id} {...colProps}>
+                        <ResourceCard
+                            viewerUrl={viewerUrl}
+                            resource={res}
+                            onEdit={onEdit}
+                            onDelete={onDelete}
+                            onUpdateAttribute={onUpdateAttribute} />
+                    </Col>))
+            }
         </Row>
         {bottom}
         {renderMetadataModal({
-                Component: metadataModal,
-                user,
-                onSaveSuccess,
-                resource,
-                setEdit,
-                edit
-                // resource
+            Component: metadataModal,
+            user,
+            onSaveSuccess,
+            resource,
+            setEdit,
+            edit
+            // resource
         })}
     </Grid>
 );

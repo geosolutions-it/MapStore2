@@ -27,11 +27,13 @@ describe('This test for MetadataModal', () => {
 
     // test DEFAULTS
     it('creates the component with defaults, show=false', () => {
-        const metadataModalItem = ReactDOM.render(<MetadataModal show={false}/>, document.getElementById("container"));
+        const metadataModalItem = ReactDOM.render(<MetadataModal map={{}} show={false}/>, document.getElementById("container"));
         expect(metadataModalItem).toExist();
 
         const metadataModalItemDom = ReactDOM.findDOMNode(metadataModalItem);
-        expect(metadataModalItemDom).toNotExist();
+        expect(metadataModalItemDom).toExist();
+        const modalDivList = document.getElementsByClassName("modal-content");
+        expect(modalDivList.length).toBe(0);
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');

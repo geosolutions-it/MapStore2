@@ -69,17 +69,18 @@ class Task extends React.Component {
 
     renderGeneral = (importObj) => {
         return (<dl className="dl-horizontal">
-              <dt><Message msgId="importer.import.status" /></dt>
-              <dd><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label></dd>
-              <dt><Message msgId="importer.import.archive" /></dt>
-              <dd>{importObj.archive}</dd>
-            </dl>);
+            <dt><Message msgId="importer.import.status" /></dt>
+            <dd><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label></dd>
+            <dt><Message msgId="importer.import.archive" /></dt>
+            <dd>{importObj.archive}</dd>
+        </dl>);
     };
 
     renderProgressTask = (task) => {
         if ( task.state === "RUNNING") {
             return <TaskProgress progress={task.progress} total={task.total} state={task.state} update={this.props.updateProgress.bind(null, this.props.import.id, task.id)} />;
         }
+        return null;
     };
 
     renderTask = (task) => {
@@ -101,6 +102,7 @@ class Task extends React.Component {
         if (this.props.import.loading) {
             return <div style={{"float": "left"}}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
+        return null;
     };
 
     renderLoadingMessage = (task) => {
@@ -128,34 +130,34 @@ class Task extends React.Component {
     render() {
         return (
             <Panel header={<span><Message msgId="importer.importN" msgParams={{id: this.props.import.id}}/>{this.renderLoading()}</span>} >
-            <Grid fluid>
-                <Row>
-                    {this.renderGeneral(this.props.import)}
-                </Row>
-                <Row>
-                    <h3><Message msgId="importer.import.tasks" /></h3>
-                    <Table striped bordered condensed hover>
-                        <thead>
-                          <tr>
-                            <th><Message msgId="importer.number"/></th>
-                            <th><Message msgId="importer.import.status" /></th>
-                            <th><Message msgId="importer.import.actions" /></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {this.props.import.tasks.map(this.renderTask)}
-                        </tbody>
-                    </Table>
-                </Row>
-                <Row style={{"float": "right"}}>
-                    {
-                        this.props.import.tasks.reduce((prev, cur) => prev || cur.state === "READY", false) ?
-                        <Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>
-                        : null
-                    }
-                    <Button bsStyle="danger" onClick={() => {this.props.deleteImport(this.props.import.id); }}><Message msgId="importer.import.deleteImport" /></Button>
-                </Row>
-            </Grid>
+                <Grid fluid>
+                    <Row>
+                        {this.renderGeneral(this.props.import)}
+                    </Row>
+                    <Row>
+                        <h3><Message msgId="importer.import.tasks" /></h3>
+                        <Table striped bordered condensed hover>
+                            <thead>
+                                <tr>
+                                    <th><Message msgId="importer.number"/></th>
+                                    <th><Message msgId="importer.import.status" /></th>
+                                    <th><Message msgId="importer.import.actions" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.props.import.tasks.map(this.renderTask)}
+                            </tbody>
+                        </Table>
+                    </Row>
+                    <Row style={{"float": "right"}}>
+                        {
+                            this.props.import.tasks.reduce((prev, cur) => prev || cur.state === "READY", false) ?
+                                <Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>
+                                : null
+                        }
+                        <Button bsStyle="danger" onClick={() => {this.props.deleteImport(this.props.import.id); }}><Message msgId="importer.import.deleteImport" /></Button>
+                    </Row>
+                </Grid>
             </Panel>
         );
     }

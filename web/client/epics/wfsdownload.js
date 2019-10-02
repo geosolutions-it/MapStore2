@@ -24,20 +24,20 @@ const {getLayerWFSCapabilities} = require('../observables/wfs');
 
 
 const DOWNLOAD_FORMATS_LOOKUP = {
-	"gml3": "GML3.1",
-	"GML2": "GML2",
-	"application/vnd.google-earth.kml+xml": "KML",
-	"OGR-CSV": "OGR-CSV",
-	"OGR-FileGDB": "OGR-GeoDatabase",
-	"OGR-GPKG": "OGR-GeoPackage",
-	"OGR-KML": "OGR-KML",
-	"OGR-MIF": "OGR-MIF",
-	"OGR-TAB": "OGR-TAB",
-	"SHAPE-ZIP": "Shapefile",
-	"gml32": "GML3.2",
-	"application/json": "GeoJSON",
-	"csv": "CSV",
-	"application/x-gpkg": "GeoPackage"
+	        "gml3": "GML3.1",
+	        "GML2": "GML2",
+	        "application/vnd.google-earth.kml+xml": "KML",
+	        "OGR-CSV": "OGR-CSV",
+	        "OGR-FileGDB": "OGR-GeoDatabase",
+	        "OGR-GPKG": "OGR-GeoPackage",
+	        "OGR-KML": "OGR-KML",
+	        "OGR-MIF": "OGR-MIF",
+	        "OGR-TAB": "OGR-TAB",
+	        "SHAPE-ZIP": "Shapefile",
+	        "gml32": "GML3.2",
+	        "application/json": "GeoJSON",
+	        "csv": "CSV",
+	        "application/x-gpkg": "GeoPackage"
 };
 
 const hasOutputFormat = (data) => {
@@ -49,14 +49,14 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({url, filterObj = {}, downloadOptions= {}} = {}) => {
+const getWFSFeature = ({url, filterObj = {}, downloadOptions = {}} = {}) => {
     const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
     return Rx.Observable.defer( () =>
         axios.post(cleanDuplicatedQuestionMarks(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`), data, {
             timeout: 60000,
             responseType: 'arraybuffer',
             headers: {'Content-Type': 'application/xml'}
-    }));
+        }));
 };
 const getFileName = action => {
     const name = get(action, "filterObj.featureTypeName");
@@ -95,21 +95,21 @@ module.exports = {
         action$.ofType(FORMAT_OPTIONS_FETCH)
             .switchMap( action => {
                 return getLayerWFSCapabilities(action)
-                .map((data) => {
-                    return updateFormats(hasOutputFormat(data));
-                });
+                    .map((data) => {
+                        return updateFormats(hasOutputFormat(data));
+                    });
             }),
     startFeatureExportDownload: (action$, store) =>
         action$.ofType(DOWNLOAD_FEATURES).switchMap(action => {
-            const {virtualScroll= false} = (store.getState()).featuregrid;
+            const {virtualScroll = false} = (store.getState()).featuregrid;
             return getWFSFeature({
-                    url: action.url,
-                    downloadOptions: action.downloadOptions,
-                    filterObj: {
-                        ...action.filterObj,
-                        pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
-                    }
-                })
+                url: action.url,
+                downloadOptions: action.downloadOptions,
+                filterObj: {
+                    ...action.filterObj,
+                    pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
+                }
+            })
                 .do(({data, headers}) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                         let xml = String.fromCharCode.apply(null, new Uint8Array(data));
@@ -120,22 +120,22 @@ module.exports = {
                 })
                 .catch( () => {
                     return getWFSFeature({
-                            url: action.url,
-                            downloadOptions: action.downloadOptions,
-                            filterObj: {
-                                ...action.filterObj,
-                                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
-                                sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
+                        url: action.url,
+                        downloadOptions: action.downloadOptions,
+                        filterObj: {
+                            ...action.filterObj,
+                            pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
+                            sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
+                        }
+                    }).do(({data, headers}) => {
+                        if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
+                            let xml = String.fromCharCode.apply(null, new Uint8Array(data));
+                            if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
+                                throw xml;
                             }
-                        }).do(({data, headers}) => {
-                            if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
-                                let xml = String.fromCharCode.apply(null, new Uint8Array(data));
-                                if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
-                                    throw xml;
-                                }
-                            }
-                            saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
-                        });
+                        }
+                        saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
+                    });
                 }).do(({data, headers}) => {
                     saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
                 })
@@ -153,6 +153,6 @@ module.exports = {
         }),
     closeExportDownload: (action$, store) =>
         action$.ofType(TOGGLE_CONTROL)
-        .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
-        .switchMap( () => Rx.Observable.of(toggleControl("wfsdownload")))
+            .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
+            .switchMap( () => Rx.Observable.of(toggleControl("wfsdownload")))
 };

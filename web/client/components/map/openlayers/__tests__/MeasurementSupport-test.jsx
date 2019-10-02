@@ -66,7 +66,7 @@ describe('Openlayers MeasurementSupport', () => {
     */
     const renderWithDrawing = (props = {}) => {
         let cmp = renderMeasurement();
-        // entering componentWillReceiveProps
+        // entering UNSAFE_componentWillReceiveProps
         cmp = renderMeasurement({
             measurement: {
                 feature: {},
@@ -219,15 +219,15 @@ describe('Openlayers MeasurementSupport', () => {
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
-                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
-                  name: 'My line with 2 points'
+                geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
+                name: 'My line with 2 points'
             })
         });
         cmp.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: new Feature({
-                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
-                  name: 'My line with 3 points'
+                geometry: new LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
+                name: 'My line with 3 points'
             })
         });
         expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
@@ -254,15 +254,15 @@ describe('Openlayers MeasurementSupport', () => {
         cmp.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: new Feature({
-                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
-                  name: 'My line with 2 points'
+                geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
+                name: 'My line with 2 points'
             })
         });
         cmp.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: new Feature({
-                  geometry: new LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
-                  name: 'My line with 3 points'
+                geometry: new LineString([[13.0, 43.0], [13.0, 40.0], [11.0, 41.0]]),
+                name: 'My line with 3 points'
             })
         });
         cmp = renderMeasurement({

@@ -10,8 +10,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { setAddingMedia, setEditingMedia, saveMedia, selectItem } from '../../actions/mediaEditor';
-import { saveStateSelector, currentResourcesSelector, editingSelector, selectedItemSelector } from '../../selectors/mediaEditor';
+import {
+    setAddingMedia,
+    setEditingMedia,
+    setMediaType,
+    setMediaService,
+    saveMedia,
+    selectItem
+} from '../../actions/mediaEditor';
+import {
+    availableSourcesSelector,
+    currentResourcesSelector,
+    editingSelector,
+    saveStateSelector,
+    sourceIdSelector,
+    selectedItemSelector
+} from '../../selectors/mediaEditor';
 
 import ResizableModal from '../../components/misc/ResizableModal';
 import Portal from '../../components/misc/Portal';
@@ -22,11 +36,15 @@ import Message from '../../components/I18N/Message';
 const Editor = connect(createStructuredSelector({
     saveState: saveStateSelector,
     selectedItem: selectedItemSelector,
+    selectedService: sourceIdSelector,
+    services: availableSourcesSelector,
     editing: editingSelector,
     resources: currentResourcesSelector
 }), {
     selectItem,
+    setMediaService,
     setAddingMedia,
+    setMediaType,
     setEditingMedia,
     saveMedia
 })(MediaEditor);
@@ -39,6 +57,7 @@ const Editor = connect(createStructuredSelector({
  */
 const MediaModal = ({
     open,
+    mediaType,
     chooseMedia,
     selectedItem,
     hide = () => { }
@@ -60,7 +79,7 @@ const MediaModal = ({
                         onClick: () => chooseMedia(selectedItem)
                     }
                 ]}>
-                <Editor />
+                <Editor mediaType={mediaType} />
             </ResizableModal>
         </Portal>
     );

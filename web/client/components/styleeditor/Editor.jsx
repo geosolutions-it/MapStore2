@@ -85,11 +85,11 @@ class Editor extends React.Component {
 
     state = {}
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({ code: this.props.code });
     }
 
-    componentWillUpdate(newProps) {
+    UNSAFE_componentWillUpdate(newProps) {
         if (!isEqual(this.props.error, newProps.error)) {
             if (this.marker) {
                 this.marker.clear();
@@ -251,11 +251,11 @@ class Editor extends React.Component {
                             {this.props.inlineWidgets
                                 .filter(({type}) => type === this.state.inlineWidgetType)
                                 .map(({ Widget }) =>
-                                <Widget
-                                    value={this.state.value}
-                                    token={this.state.token}
-                                    onChange={value => this.setState({ value })}/>
-                            )}
+                                    <Widget
+                                        value={this.state.value}
+                                        token={this.state.token}
+                                        onChange={value => this.setState({ value })}/>
+                                )}
                         </div>
                     </div>}
             </BorderLayout>

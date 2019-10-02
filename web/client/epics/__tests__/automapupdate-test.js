@@ -48,7 +48,7 @@ describe('automapupdate Epics', () => {
                 const actions = store.getActions();
                 expect(actions.length).toBe(2);
             } catch (e) {
-                return done(e);
+                done(e);
             }
             done();
         }, 1000);
@@ -75,7 +75,7 @@ describe('automapupdate Epics', () => {
                 const actions = store.getActions();
                 expect(actions.length).toBe(2);
             } catch (e) {
-                return done(e);
+                done(e);
             }
             done();
         }, 1000);
@@ -106,7 +106,7 @@ describe('automapupdate Epics', () => {
                 });
 
             } catch (e) {
-                return done(e);
+                done(e);
             }
             done();
         }, 1000);

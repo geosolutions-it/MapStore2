@@ -7,16 +7,16 @@
  */
 const getScriptPath = () => {
     const scriptEl = document.getElementById('ms2-api');
-    return scriptEl && scriptEl.src && scriptEl.src.substring(0, scriptEl.src.lastIndexOf('/')) || 'https://dev.mapstore2.geo-solutions.it/mapstore/dist';
+    return scriptEl && scriptEl.src && scriptEl.src.substring(0, scriptEl.src.lastIndexOf('/')) || 'https://dev.mapstore.geo-solutions.it/mapstore/dist';
 };
 
 const MapStore2 = require('../jsapi/MapStore2')
-  .withPlugins(require('./apiPlugins'), {
-      theme: {
-          path: getScriptPath() + '/themes'
-      },
-      noLocalConfig: true,
-      initialState: require('./appConfigEmbedded').initialState,
-      translations: getScriptPath() + '/../translations'
-  });
+    .withPlugins(require('./apiPlugins'), {
+        theme: {
+            path: getScriptPath() + '/themes'
+        },
+        noLocalConfig: true,
+        initialState: require('./appConfigEmbedded').initialState,
+        translations: getScriptPath() + '/../translations'
+    });
 window.MapStore2 = MapStore2;

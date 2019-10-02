@@ -24,7 +24,7 @@ class SwitchButton extends React.Component {
             <input type="checkbox"
                 checked={this.props.checked}
                 onChange={() => this.props.onChange(!this.props.checked)}
-                />
+            />
             <span onClick={() => this.props.onClick(!this.props.checked)} className="m-slider"/>
         </label>);
     }

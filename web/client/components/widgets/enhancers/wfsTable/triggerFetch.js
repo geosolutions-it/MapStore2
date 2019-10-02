@@ -7,7 +7,7 @@
  */
 
 require('rxjs');
-const { getSearchUrl } = require('../../../../utils/LayersUtils');
+// const { getSearchUrl } = require('../../../../utils/LayersUtils');
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
     o1.propertyName === o2.propertyName
@@ -24,9 +24,9 @@ const sameSortOptions = (o1 = {}, o2 = {}) =>
 module.exports = ($props) =>
     $props.filter(({ layer = {} }) => layer.name )
         .distinctUntilChanged(
-        ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
-            getSearchUrl(layer) === getSearchUrl(layer)
-            && (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
+            ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
+            /* getSearchUrl(layer) === getSearchUrl(layer) && */
+                (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
             && sameOptions(options, newProps.options)
             && sameFilter(filter, newProps.filter)
             && sameSortOptions(sortOptions, newProps.sortOptions))

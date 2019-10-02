@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- /**
+/**
   * Please, keep them sorted alphabetically
  */
 module.exports = {

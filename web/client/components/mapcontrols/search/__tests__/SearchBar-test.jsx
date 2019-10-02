@@ -63,12 +63,12 @@ describe("test the SearchBar", () => {
         const renderSearchBar = (testHandlers, text) => {
             return ReactDOM.render(
                 <SearchBar
-                searchText={text}
-                delay={0}
-                typeAhead={false}
-                onSearch={testHandlers.onSearchHandler}
-                onSearchReset={testHandlers.onSearchResetHandler}
-                onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+                    searchText={text}
+                    delay={0}
+                    typeAhead={false}
+                    onSearch={testHandlers.onSearchHandler}
+                    onSearchReset={testHandlers.onSearchResetHandler}
+                    onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
 
         const testHandlers = {

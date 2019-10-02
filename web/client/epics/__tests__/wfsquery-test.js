@@ -31,54 +31,54 @@ describe('wfsquery Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_GEOMETRY:
-                        expect(action.geometry).toEqual({
-                            center: [0, 0],
-                            coordinates: [[[-170, -50], [-170, 50], [170, 50], [170, -50], [-170, -50]]],
-                            extent: [-170, -50, 170, 50],
-                            projection: 'EPSG:4326',
-                            radius: 0,
-                            type: 'Polygon' });
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case UPDATE_GEOMETRY:
+                    expect(action.geometry).toEqual({
+                        center: [0, 0],
+                        coordinates: [[[-170, -50], [-170, 50], [170, 50], [170, -50], [-170, -50]]],
+                        extent: [-170, -50, 170, 50],
+                        projection: 'EPSG:4326',
+                        radius: 0,
+                        type: 'Polygon' });
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
             done();
         }, {queryform: { spatialField: {method: 'Viewport'}}});
     });
     it('wfsQueryEpic', (done) => {
-        const expectedResult = require('json-loader!../../test-resources/wfs/museam.json');
+        const expectedResult = require('../../test-resources/wfs/museam.json');
         testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", {pagination: {} }), actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case QUERY_RESULT:
-                        expect(action.result).toEqual(expectedResult);
-                        break;
-                    case FEATURE_LOADING:
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case QUERY_RESULT:
+                    expect(action.result).toEqual(expectedResult);
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
             done();
         }, {});
     });
     it('wfsQueryEpic passes query options', (done) => {
-        const expectedResult = require('json-loader!../../test-resources/wfs/museam.json');
+        const expectedResult = require('../../test-resources/wfs/museam.json');
         testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", { pagination: {} }, {viewParams: "a:b"}), actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case QUERY_RESULT:
-                        expect(action.result).toEqual(expectedResult);
-                        expect(action.queryOptions.viewParams).toEqual("a:b");
-                        break;
-                    case FEATURE_LOADING:
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case QUERY_RESULT:
+                    expect(action.result).toEqual(expectedResult);
+                    expect(action.queryOptions.viewParams).toEqual("a:b");
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
             done();
@@ -132,7 +132,7 @@ describe('wfsquery Epics', () => {
         };
         it('wfsQueryEpic manages time dimension, when enabled and present', (done) => {
             const mockAxios = new MockAdapter(axios);
-            const expectedResult = require('json-loader!../../test-resources/wfs/museam.json');
+            const expectedResult = require('../../test-resources/wfs/museam.json');
             mockAxios.onPost().reply(config => {
                 const { pathname, query: queryString } = parse(config.url);
                 expect(pathname).toBe(`${BASE_URL}`);
@@ -145,14 +145,14 @@ describe('wfsquery Epics', () => {
                 expect(actions.length).toBe(2);
                 actions.map((action) => {
                     switch (action.type) {
-                        case QUERY_RESULT:
-                            expect(action.result).toEqual(expectedResult);
-                            expect(action.queryOptions.viewParams).toEqual("a:b");
-                            break;
-                        case FEATURE_LOADING:
-                            break;
-                        default:
-                            expect(false).toBe(true);
+                    case QUERY_RESULT:
+                        expect(action.result).toEqual(expectedResult);
+                        expect(action.queryOptions.viewParams).toEqual("a:b");
+                        break;
+                    case FEATURE_LOADING:
+                        break;
+                    default:
+                        expect(false).toBe(true);
                     }
                 });
                 mockAxios.restore();
@@ -161,7 +161,7 @@ describe('wfsquery Epics', () => {
         });
         it('wfsQueryEpic do not add time dimension, when timeSync disabled', (done) => {
             const mockAxios = new MockAdapter(axios);
-            const expectedResult = require('json-loader!../../test-resources/wfs/museam.json');
+            const expectedResult = require('../../test-resources/wfs/museam.json');
             mockAxios.onPost().reply(config => {
                 const { pathname, query: queryString } = parse(config.url);
                 expect(pathname).toBe(`${BASE_URL}`);
@@ -174,14 +174,14 @@ describe('wfsquery Epics', () => {
                 expect(actions.length).toBe(2);
                 actions.map((action) => {
                     switch (action.type) {
-                        case QUERY_RESULT:
-                            expect(action.result).toEqual(expectedResult);
-                            expect(action.queryOptions.viewParams).toEqual("a:b");
-                            break;
-                        case FEATURE_LOADING:
-                            break;
-                        default:
-                            expect(false).toBe(true);
+                    case QUERY_RESULT:
+                        expect(action.result).toEqual(expectedResult);
+                        expect(action.queryOptions.viewParams).toEqual("a:b");
+                        break;
+                    case FEATURE_LOADING:
+                        break;
+                    default:
+                        expect(false).toBe(true);
                     }
                 });
                 mockAxios.restore();
@@ -195,19 +195,19 @@ describe('wfsquery Epics', () => {
         testEpic(addTimeoutEpic(wfsQueryEpic, 50), 2, [
             query("base/web/client/test-resources/wfs/museam.json", {pagination: {} }),
             updateQuery()
-            ], actions => {
-                expect(actions.length).toBe(2);
-                actions.map((action) => {
-                    switch (action.type) {
-                        case TEST_TIMEOUT:
-                            break;
-                        case FEATURE_LOADING:
-                            break;
-                        default:
-                            expect(false).toBe(true);
-                    }
-                });
-                done();
-            }, {});
+        ], actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case TEST_TIMEOUT:
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, {});
     });
 });

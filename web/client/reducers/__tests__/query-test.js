@@ -10,7 +10,7 @@ const expect = require('expect');
 const query = require('../query');
 const {TOGGLE_LAYER_FILTER} = require('../../actions/wfsquery');
 const { reset
- } = require('../../actions/queryform');
+} = require('../../actions/queryform');
 
 describe('Test the query reducer', () => {
     it('Test QUERY_FORM_RESET to skip query', () => {

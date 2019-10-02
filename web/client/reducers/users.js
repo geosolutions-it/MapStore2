@@ -60,7 +60,7 @@ function users(state = {
                     status: action.status,
                     ...action.user
                 })}
-                );
+            );
             // this to catch user loaded but window already closed
         } else if (action.status === "loading" || action.status === "new" || !action.status) {
             return assign({}, state, {

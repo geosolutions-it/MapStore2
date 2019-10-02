@@ -1,4 +1,4 @@
- /**
+/**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-const RecordItem = require('../RecordItem.jsx');
+const RecordItem = require('../RecordItem.jsx').default;
 const expect = require('expect');
 const assign = require('object-assign');
 const ReactTestUtils = require('react-dom/test-utils');
@@ -126,8 +126,8 @@ const esriRecord = {
         SRS: [],
         params: {
             name: "0-Atlantic Hurricanes 2000"}
-        }]
-    };
+    }]
+};
 
 describe('This test for RecordItem', () => {
     beforeEach((done) => {
@@ -234,7 +234,7 @@ describe('This test for RecordItem', () => {
         expect(itemDom).toExist();
         expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
-           item, 'button'
+            item, 'button'
         );
         expect(button).toExist();
         button.click();
@@ -254,7 +254,7 @@ describe('This test for RecordItem', () => {
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
             catalogType="csw"
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -517,7 +517,7 @@ describe('This test for RecordItem', () => {
         expect(item).toExist();
 
         let button = TestUtils.findRenderedDOMComponentWithTag(
-           item, 'button'
+            item, 'button'
         );
         expect(button).toExist();
         button.click();
@@ -536,14 +536,14 @@ describe('This test for RecordItem', () => {
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
         expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
-           item, 'button'
+            item, 'button'
         );
         expect(button).toExist();
         button.click();

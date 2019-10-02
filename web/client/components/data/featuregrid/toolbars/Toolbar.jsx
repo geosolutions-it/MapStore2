@@ -164,7 +164,7 @@ module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize
                         bottom: syncPopover.dockSize
                     }
                 }}
-        } />
+            } />
         <TButton
             id="timeSync-button"
             keyProp="fg-timeSync-button"
@@ -174,4 +174,5 @@ module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize
             onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
             glyph="time" />
 
-</ButtonGroup>); };
+    </ButtonGroup>);
+};

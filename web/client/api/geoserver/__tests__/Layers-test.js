@@ -121,7 +121,7 @@ describe('Test default style update with layers rest API', () => {
                         "href": "/geoserver/rest/workspaces/workspace001/styles/new_default_style.json"
                     }
                 ]);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -196,7 +196,7 @@ describe('Test default style update with layers rest API', () => {
                         "href": "/geoserver/rest/workspaces/workspace001/styles/other_style.json"
                     }
                 ]);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();

@@ -10,11 +10,11 @@ const Rx = require('rxjs');
 
 module.exports = {
     onEpic: (action$, store) =>
-    action$.filter((action) => action.type.indexOf('IF:') === 0)
-        .switchMap((action) => {
-            if (action.condition(store.getState())) {
-                return Rx.Observable.of(action.action);
-            }
-            return Rx.Observable.of(action.elseAction.call());
-        })
+        action$.filter((action) => action.type.indexOf('IF:') === 0)
+            .switchMap((action) => {
+                if (action.condition(store.getState())) {
+                    return Rx.Observable.of(action.action);
+                }
+                return Rx.Observable.of(action.elseAction.call());
+            })
 };

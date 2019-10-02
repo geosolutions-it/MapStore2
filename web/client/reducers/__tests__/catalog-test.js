@@ -98,7 +98,7 @@ describe('Test the catalog reducer', () => {
             [titleCustom]: {
                 title: titleCustom
             }},
-            selectedService: titleCustom
+        selectedService: titleCustom
         }, {type: DELETE_CATALOG_SERVICE, service: titleCustom});
         expect(state.selectedService).toBe("");
     });

@@ -40,8 +40,8 @@ const streamEnhancer = mapPropsStream(props$ => {
 // component enhanced with props from stream, and local state
 const PagedComboboxEnhanced = streamEnhancer(
     ({ open, toggle, select, focus, change, value, valuesCount,
-    loadNextPage, loadPrevPage, maxFeatures, currentPage,
-    busy, data, loading = false }) => {
+        loadNextPage, loadPrevPage, maxFeatures, currentPage,
+        busy, data, loading = false }) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
         return (<PagedCombobox
             pagination={{firstPage: currentPage === 1, lastPage: currentPage === numberOfPages, paginated: true, loadPrevPage, loadNextPage}}

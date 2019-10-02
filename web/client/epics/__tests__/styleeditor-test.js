@@ -86,14 +86,14 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe('global');
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('global');
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -104,7 +104,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             toggleStyleEditor(undefined, true),
             results,
-        state);
+            state);
 
     });
     it('test toggleStyleEditorEpic enabled to false', (done) => {
@@ -130,17 +130,17 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case RESET_STYLE_EDITOR:
-                            expect(action.type).toBe(RESET_STYLE_EDITOR);
-                            break;
-                        case REMOVE_ADDITIONAL_LAYER:
-                            expect(action.owner).toBe('styleeditor');
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case RESET_STYLE_EDITOR:
+                        expect(action.type).toBe(RESET_STYLE_EDITOR);
+                        break;
+                    case REMOVE_ADDITIONAL_LAYER:
+                        expect(action.owner).toBe('styleeditor');
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -151,7 +151,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             toggleStyleEditor(undefined, false),
             results,
-        state);
+            state);
 
     });
     it('toggleStyleEditorEpic: missing availableStyles starts the styles retrieval', (done) => {
@@ -185,14 +185,14 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe('global');
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('global');
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -203,7 +203,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             toggleStyleEditor(undefined, true),
             results,
-        state);
+            state);
 
     });
     it('test updateLayerOnStatusChangeEpic status template', (done) => {
@@ -229,14 +229,14 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe('global');
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('global');
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -247,7 +247,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             updateStatus('template'),
             results,
-        state);
+            state);
 
     });
     it('test updateLayerOnStatusChangeEpic status edit with describe', (done) => {
@@ -279,16 +279,16 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case SELECT_STYLE_TEMPLATE:
-                            expect(action.code).toBe('* { stroke: #ff0000; }');
-                            expect(action.format).toBe('css');
-                            expect(action.init).toBe(true);
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case SELECT_STYLE_TEMPLATE:
+                        expect(action.code).toBe('* { stroke: #ff0000; }');
+                        expect(action.format).toBe('css');
+                        expect(action.init).toBe(true);
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -299,7 +299,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             updateStatus('edit'),
             results,
-        state);
+            state);
     });
     it('test updateTemporaryStyleEpic error due to generated uuid', (done) => {
         const state = {
@@ -329,21 +329,21 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe(undefined);
-                            break;
-                        case ERROR_STYLE:
-                            expect(action.status).toBe(undefined);
-                            expect(action.error).toExist();
-                            break;
-                        case LOADED_STYLE:
-                            expect(action).toExist();
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe(undefined);
+                        break;
+                    case ERROR_STYLE:
+                        expect(action.status).toBe(undefined);
+                        expect(action.error).toExist();
+                        break;
+                    case LOADED_STYLE:
+                        expect(action).toExist();
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -354,7 +354,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({ code: '* { stroke: #ff0000; }', templateId: '', format: 'css', init: false }),
             results,
-        state);
+            state);
     });
 
     it('test updateTemporaryStyleEpic with temporaryId', (done) => {
@@ -386,30 +386,30 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe(undefined);
-                            break;
-                        case LOADED_STYLE:
-                            expect(action).toExist();
-                            break;
-                        case UPDATE_OPTIONS_BY_OWNER:
-                            expect(action.owner).toBe('styleeditor');
-                            expect(action.options[0].style).toBe('test_style');
-                            expect(action.options[0]._v_).toExist();
-                            expect(action.options[0].singleTile).toBe(true);
-                            break;
-                        case UPDATE_TEMPORARY_STYLE:
-                            expect(action.temporaryId).toBe('test_style');
-                            expect(action.templateId).toBe('');
-                            expect(action.code).toBe('* { stroke: #ff0000; }');
-                            expect(action.format).toBe('css');
-                            expect(action.init).toBe(false);
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe(undefined);
+                        break;
+                    case LOADED_STYLE:
+                        expect(action).toExist();
+                        break;
+                    case UPDATE_OPTIONS_BY_OWNER:
+                        expect(action.owner).toBe('styleeditor');
+                        expect(action.options[0].style).toBe('test_style');
+                        expect(action.options[0]._v_).toExist();
+                        expect(action.options[0].singleTile).toBe(true);
+                        break;
+                    case UPDATE_TEMPORARY_STYLE:
+                        expect(action.temporaryId).toBe('test_style');
+                        expect(action.templateId).toBe('');
+                        expect(action.code).toBe('* { stroke: #ff0000; }');
+                        expect(action.format).toBe('css');
+                        expect(action.init).toBe(false);
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -420,7 +420,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({ code: '* { stroke: #ff0000; }', templateId: '', format: 'css', init: false }),
             results,
-        state);
+            state);
     });
 
     it('test createStyleEpic', (done) => {
@@ -451,29 +451,29 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe('');
-                            break;
-                        case UPDATE_OPTIONS_BY_OWNER:
-                            expect(action.owner).toBe('styleeditor');
-                            expect(action.options).toEqual([{}]);
-                            break;
-                        case UPDATE_SETTINGS_PARAMS:
-                            const styleName = action.newParams.style.split('___');
-                            expect(styleName[0]).toBe('style_title');
-                            expect(action.update).toBe(true);
-                            break;
-                        case UPDATE_STATUS:
-                            expect(action.status).toBe('');
-                            break;
-                        case LOADED_STYLE:
-                            expect(action).toExist();
-                            break;
-                        default:
-                            expect(action).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('');
+                        break;
+                    case UPDATE_OPTIONS_BY_OWNER:
+                        expect(action.owner).toBe('styleeditor');
+                        expect(action.options).toEqual([{}]);
+                        break;
+                    case UPDATE_SETTINGS_PARAMS:
+                        const styleName = action.newParams.style.split('___');
+                        expect(styleName[0]).toBe('style_title');
+                        expect(action.update).toBe(true);
+                        break;
+                    case UPDATE_STATUS:
+                        expect(action.status).toBe('');
+                        break;
+                    case LOADED_STYLE:
+                        expect(action).toExist();
+                        break;
+                    default:
+                        expect(action).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -484,7 +484,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             createStyle({title: 'style TitLe'}),
             results,
-        state);
+            state);
     });
 
     it('test createStyleEpic with workspace', (done) => {
@@ -516,29 +516,29 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe('');
-                            break;
-                        case UPDATE_OPTIONS_BY_OWNER:
-                            expect(action.owner).toBe('styleeditor');
-                            expect(action.options).toEqual([{}]);
-                            break;
-                        case UPDATE_SETTINGS_PARAMS:
-                            const styleName = action.newParams.style.split('___');
-                            expect(styleName[0]).toBe(`${workspace}:style_title`);
-                            expect(action.update).toBe(true);
-                            break;
-                        case UPDATE_STATUS:
-                            expect(action.status).toBe('');
-                            break;
-                        case LOADED_STYLE:
-                            expect(action).toExist();
-                            break;
-                        default:
-                            expect(action).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('');
+                        break;
+                    case UPDATE_OPTIONS_BY_OWNER:
+                        expect(action.owner).toBe('styleeditor');
+                        expect(action.options).toEqual([{}]);
+                        break;
+                    case UPDATE_SETTINGS_PARAMS:
+                        const styleName = action.newParams.style.split('___');
+                        expect(styleName[0]).toBe(`${workspace}:style_title`);
+                        expect(action.update).toBe(true);
+                        break;
+                    case UPDATE_STATUS:
+                        expect(action.status).toBe('');
+                        break;
+                    case LOADED_STYLE:
+                        expect(action).toExist();
+                        break;
+                    default:
+                        expect(action).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -549,7 +549,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             createStyle({title: 'style TitLe'}),
             results,
-        state);
+            state);
     });
 
     it('test updateStyleCodeEpic', (done) => {
@@ -581,36 +581,36 @@ describe('Test styleeditor epics', () => {
             try {
                 actions.map((action) => {
                     switch (action.type) {
-                        case LOADING_STYLE:
-                            expect(action.status).toBe('global');
-                            break;
-                        case UPDATE_NODE:
-                            expect(action.node).toBe('layerId');
-                            expect(action.nodeType).toBe('layer');
-                            expect(action.options._v_).toExist();
-                            break;
-                        case LOADED_STYLE:
-                            expect(action).toExist();
-                            break;
-                        case UPDATE_TEMPORARY_STYLE:
-                            expect(action.temporaryId).toBe(undefined);
-                            expect(action.templateId).toBe('');
-                            expect(action.code).toBe('* { stroke: #ff0000; }');
-                            expect(action.format).toBe('css');
-                            expect(action.init).toBe(true);
-                            break;
-                        case SHOW_NOTIFICATION:
-                            expect(action.title).toBe('styleeditor.savedStyleTitle');
-                            expect(action.message).toBe('styleeditor.savedStyleMessage');
-                            expect(action.uid).toBe('savedStyleTitle');
-                            expect(action.autoDismiss).toBe(5);
-                            expect(action.level).toBe('success');
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('global');
+                        break;
+                    case UPDATE_NODE:
+                        expect(action.node).toBe('layerId');
+                        expect(action.nodeType).toBe('layer');
+                        expect(action.options._v_).toExist();
+                        break;
+                    case LOADED_STYLE:
+                        expect(action).toExist();
+                        break;
+                    case UPDATE_TEMPORARY_STYLE:
+                        expect(action.temporaryId).toBe(undefined);
+                        expect(action.templateId).toBe('');
+                        expect(action.code).toBe('* { stroke: #ff0000; }');
+                        expect(action.format).toBe('css');
+                        expect(action.init).toBe(true);
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.title).toBe('styleeditor.savedStyleTitle');
+                        expect(action.message).toBe('styleeditor.savedStyleMessage');
+                        expect(action.uid).toBe('savedStyleTitle');
+                        expect(action.autoDismiss).toBe(5);
+                        expect(action.level).toBe('success');
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -621,7 +621,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             updateStyleCode(),
             results,
-        state);
+            state);
     });
 
     it('test deleteStyleEpic', (done) => {
@@ -658,7 +658,7 @@ describe('Test styleeditor epics', () => {
                 expect(actions[5].type).toBe(SHOW_NOTIFICATION);
 
                 expect(actions[5].level).toBe('success');
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -669,7 +669,7 @@ describe('Test styleeditor epics', () => {
             NUMBER_OF_ACTIONS,
             deleteStyle('test_style'),
             results,
-        state);
+            state);
     });
 
     it('test setDefaultStyleEpic', (done) => {
@@ -744,7 +744,7 @@ describe('Test styleeditor epics', () => {
                 expect(actions[2].type).toBe(SHOW_NOTIFICATION);
 
                 expect(actions[3].type).toBe(LOADED_STYLE);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -755,9 +755,9 @@ describe('Test styleeditor epics', () => {
                 NUMBER_OF_ACTIONS,
                 setDefaultStyle(),
                 results,
-            state);
+                state);
 
-        } catch(e) {
+        } catch (e) {
             done(e);
         }
     });
@@ -823,7 +823,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(showNotificationAction.type).toBe(SHOW_NOTIFICATION);
                 expect(showNotificationAction.level).toBe('success');
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -834,7 +834,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             updateStyleCode(),
             results,
-        state);
+            state);
     });
 
 
@@ -885,7 +885,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(loadedStyleAction.type).toBe(LOADED_STYLE);
                 expect(showNotificationAction.type).toBe(SHOW_NOTIFICATION);
                 expect(showNotificationAction.level).toBe('error');
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -896,7 +896,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             updateStyleCode(),
             results,
-        state);
+            state);
     });
 
     it('test updateTemporaryStyleEpic, temporary style does not exist, response 200', (done) => {
@@ -907,7 +907,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             try {
                 expect(config.url).toBe('/geoserver/rest/styles.json');
                 TEMP_STYLE_ID = config.params.name;
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -916,7 +916,7 @@ describe('Test styleeditor epics, with mock axios', () => {
         mockAxios.onPut(/\/styles/).reply((config) => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMP_STYLE_ID}`);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -947,7 +947,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(updateTemporaryStyleAction.temporaryId).toBe(TEMP_STYLE_ID);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -958,7 +958,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({}),
             results,
-        state);
+            state);
     });
 
 
@@ -970,7 +970,7 @@ describe('Test styleeditor epics, with mock axios', () => {
         mockAxios.onDelete(/\/styles/).reply((config) => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -980,7 +980,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             try {
                 expect(config.url).toBe('/geoserver/rest/styles.json');
                 TEMP_STYLE_ID = config.params.name;
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -989,7 +989,7 @@ describe('Test styleeditor epics, with mock axios', () => {
         mockAxios.onPut(/\/styles/).reply((config) => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMP_STYLE_ID}`);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -1022,7 +1022,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(updateTemporaryStyleAction.temporaryId).toBe(TEMP_STYLE_ID);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -1033,7 +1033,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({ format: 'sld' }),
             results,
-        state);
+            state);
     });
 
 
@@ -1045,7 +1045,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
                 expect(config.params.raw).toBe(undefined);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -1079,7 +1079,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -1090,7 +1090,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({ format: 'sld' }),
             results,
-        state);
+            state);
     });
 
     it('test updateTemporaryStyleEpic, temporary style exist and same format and different version (style body version 1.1.0), response 200', (done) => {
@@ -1101,7 +1101,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
                 expect(config.params.raw).toBe(true);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -1135,7 +1135,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -1149,7 +1149,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 code: '<StyledLayerDescriptor version="1.1.0" ></StyledLayerDescriptor>'
             }),
             results,
-        state);
+            state);
     });
 
 
@@ -1160,7 +1160,7 @@ describe('Test styleeditor epics, with mock axios', () => {
         mockAxios.onDelete(/\/styles/).reply((config) => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 404, {}];
@@ -1169,7 +1169,7 @@ describe('Test styleeditor epics, with mock axios', () => {
         mockAxios.onPut(/\/styles/).reply((config) => {
             try {
                 expect(config.url).toBe(`/geoserver/rest/styles/${TEMPORARY_ID}`);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             return [ 200, {}];
@@ -1200,7 +1200,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateOptionsByOwnerAction.type).toBe(UPDATE_OPTIONS_BY_OWNER);
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(updateTemporaryStyleAction.temporaryId).toBe(TEMPORARY_ID);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -1211,7 +1211,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({ format: 'sld' }),
             results,
-        state);
+            state);
     });
 
 
@@ -1237,7 +1237,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(showNotifiactionAction.level).toBe('error');
                 expect(updateTemporaryStyleAction.type).toBe(UPDATE_TEMPORARY_STYLE);
                 expect(updateTemporaryStyleAction.temporaryId).toBe(null);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -1250,7 +1250,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             selectStyleTemplate({ }),
             results,
-        state);
+            state);
     });
 
     it('toggleStyleEditorEpic: test dynamic style service', (done) => {
@@ -1303,7 +1303,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                     formats: [ 'css', 'sld' ],
                     availableUrls: []
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -1314,7 +1314,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             NUMBER_OF_ACTIONS,
             toggleStyleEditor(undefined, true),
             results,
-        state);
+            state);
 
     });
 

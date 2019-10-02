@@ -13,7 +13,7 @@ Layers.registerType('mapquest', {
     create: (options) => {
         if (MQ) {
             return MQ.mapLayer({
-            maxZoom: 23, ...options});
+                maxZoom: 23, ...options});
         }
         if (options && options.onError) {
             options.onError();

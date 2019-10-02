@@ -119,7 +119,7 @@ class ComboField extends React.Component {
                 onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, this.props.multivalue ? value : value[this.props.valueField], this.props.attType)}
                 onToggle={this.props.onToggle}
                 onSearch={this.props.onSearch}/>)
-         :
+            :
             (<ListComponent
                 {...this.props.options}
                 busy={this.props.busy}
@@ -142,15 +142,15 @@ class ComboField extends React.Component {
 
         return this.props.fieldException ?
             <OverlayTrigger placement="bottom" overlay={(
-                    <Tooltip id={this.props.fieldRowId + "_tooltip"}>
-                        <strong>
-                            {this.props.fieldException}
-                        </strong>
-                    </Tooltip>
+                <Tooltip id={this.props.fieldRowId + "_tooltip"}>
+                    <strong>
+                        {this.props.fieldException}
+                    </strong>
+                </Tooltip>
             )}>
                 {list}
             </OverlayTrigger>
-         :
+            :
             list
         ;
     }

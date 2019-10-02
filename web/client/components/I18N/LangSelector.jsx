@@ -39,9 +39,9 @@ class LangSelector extends React.Component {
             }
         }
         return (
-                <FormControl id={this.props.id} value={this.props.currentLocale} componentClass="select" bsSize="small" onChange={this.launchNewLangAction}>
-                    {list}
-                </FormControl>
+            <FormControl id={this.props.id} value={this.props.currentLocale} componentClass="select" bsSize="small" onChange={this.launchNewLangAction}>
+                {list}
+            </FormControl>
         );
     }
 

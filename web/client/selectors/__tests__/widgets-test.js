@@ -138,17 +138,17 @@ describe('widgets selectors', () => {
                     f: "widgets[NO_ID].map.center",
                     g: "widgets.otherStateSlice"
                 },
-             otherStateSlice: "otherStateValue"
-             },
-             mydep: {
-                 a: "A",
-                 b: "B"
-             },
-             map: {
-                 present: {
-                     abc: "ABC"
-                 }
-             }
+                otherStateSlice: "otherStateValue"
+            },
+            mydep: {
+                a: "A",
+                b: "B"
+            },
+            map: {
+                present: {
+                    abc: "ABC"
+                }
+            }
         };
         const dependencies = dependenciesSelector(state);
         expect(dependencies.a).toBe("A");

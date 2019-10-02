@@ -32,7 +32,7 @@ class EmptyMaps extends React.Component {
             : null}</div>);
     }
 }
-module.exports = connect(
+export default connect(
     createSelector([isLoggedIn, mapTypeSelector], (loggedIn, mapType) => ({
         loggedIn: !!loggedIn,
         mapType

@@ -24,11 +24,11 @@ class Template extends React.Component {
         onError: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.parseTemplate(this.props.template);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.template !== this.props.template) {
             this.parseTemplate(nextProps.template);
         }
@@ -38,14 +38,14 @@ class Template extends React.Component {
         return !isEqual(nextProps, this.props);
     }
 
-    /*eslint-disable */
+    /* eslint-disable */
     renderContent = () => {
         let model = this.props.model;
         let props = this.props;
         return eval(this.comp);
     };
+    /* eslint-enable */
 
-    /*eslint-enable */
     render() {
         if (this.comp) {
             let content = this.props.renderContent ? this.props.renderContent(this.comp, this.props) : this.renderContent();

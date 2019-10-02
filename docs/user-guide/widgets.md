@@ -1,7 +1,7 @@
 # Creating Widgets
 ******************
 
-In addition to adding layers to the map, in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) the user can create widgets from the added layers. Widgets are graphical elements created by the user that describe and visualize qualitatively and quantitatively the data of the layer such as charts, texts, tables and counters.
+In addition to adding layers to the map, in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can create widgets from the added layers. Widgets are graphical elements created by the user that describe and visualize qualitatively and quantitatively the data of the layer such as charts, texts, tables and counters.
 
 * **Open** a new map.
 * **Add** a layer (e.g. USA Population).

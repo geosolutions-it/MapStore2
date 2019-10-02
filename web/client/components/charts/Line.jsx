@@ -33,7 +33,7 @@ class LineChartWrapper extends React.Component {
         marginLeft: 0,
         marginBottom: 0
     }
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (!isEqual(newProps.xAxisAngle, this.props.xAxisAngle)) {
             this.setState({marginLeft: 0, marginBottom: 0});
         }

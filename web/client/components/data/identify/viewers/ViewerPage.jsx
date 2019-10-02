@@ -71,7 +71,7 @@ module.exports = class extends React.Component {
             onTouchMove={this.onTouchMove}
             onTouchStart={this.onTouchStart}
             onTouchEnd={this.onTouchEnd}>
-                {this.renderPage()}
+            {this.renderPage()}
         </div>);
     }
 };

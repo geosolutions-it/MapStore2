@@ -20,7 +20,7 @@ class MapViewerComponent extends React.Component {
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
-        wrappedContainer: PropTypes.object,
+        wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
     static defaultProps = {
@@ -32,7 +32,7 @@ class MapViewerComponent extends React.Component {
             params: {}
         }
     };
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const id = this.props.match.params.mapId || '0';
         this.updateMap(id);
     }
@@ -50,7 +50,7 @@ class MapViewerComponent extends React.Component {
             pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />);
+        />);
     }
     updateMap = (id) => {
         if (id && oldLocation !== this.props.location) {

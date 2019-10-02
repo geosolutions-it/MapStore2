@@ -71,8 +71,8 @@ export const openMediaEditorForNewMedia = action$ =>
         })
         .switchMap(({path: arrayPath, element}) => {
             return Observable.of(
-                    showMediaEditor('geostory') // open mediaEditor
-                )
+                showMediaEditor('geostory') // open mediaEditor
+            )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA, HIDE)
                         .switchMap( ({type, resource = {}}) => {
@@ -88,7 +88,7 @@ export const openMediaEditorForNewMedia = action$ =>
                                         path,
                                         { type: "image" }, // TODO take type from mediaEditor state or from resource
                                         "merge" )
-                                    ) :
+                                ) :
                                 Observable.of(
                                     update(
                                         path,
@@ -107,32 +107,32 @@ export const openMediaEditorForNewMedia = action$ =>
  * @param {Observable} action$ stream of redux action
  */
 export const saveGeoStoryResource = action$ => action$
-        .ofType(SAVE)
-        // delay is for speed up tests, not part of the SAVE action
-        .exhaustMap(({ resource, delay = 1000 } = {}) =>
-            (!resource.id ? createResource(resource) : updateResource(resource))
-                .switchMap(rid => Observable.of(
-                    storySaved(rid),
-                    setControl(Controls.SHOW_SAVE, false),
-                    !resource.id
-                        ? push(`/geostory/${rid}`)
-                        : loadGeostory(rid),
-                ).merge(
-                    Observable.of(show({
-                        id: "STORY_SAVE_SUCCESS",
-                        title: "saveDialog.saveSuccessTitle",
-                        message: "saveDialog.saveSuccessMessage"
-                    })).delay(!resource.id ? delay : 0) // delay to allow loading
-                )
-                )
-                .let(wrapStartStop(
-                    loadingGeostory(true, "loading"),
-                    loadingGeostory(false, "loading")
-                ))
-                .catch(
-                    ({ status, statusText, data, message, ...other } = {}) => Observable.of(saveGeoStoryError(status ? { status, statusText, data } : message || other), loadingGeostory(false, "loading"))
-                )
-        );
+    .ofType(SAVE)
+    // delay is for speed up tests, not part of the SAVE action
+    .exhaustMap(({ resource, delay = 1000 } = {}) =>
+        (!resource.id ? createResource(resource) : updateResource(resource))
+            .switchMap(rid => Observable.of(
+                storySaved(rid),
+                setControl(Controls.SHOW_SAVE, false),
+                !resource.id
+                    ? push(`/geostory/${rid}`)
+                    : loadGeostory(rid),
+            ).merge(
+                Observable.of(show({
+                    id: "STORY_SAVE_SUCCESS",
+                    title: "saveDialog.saveSuccessTitle",
+                    message: "saveDialog.saveSuccessMessage"
+                })).delay(!resource.id ? delay : 0) // delay to allow loading
+            )
+            )
+            .let(wrapStartStop(
+                loadingGeostory(true, "loading"),
+                loadingGeostory(false, "loading")
+            ))
+            .catch(
+                ({ status, statusText, data, message, ...other } = {}) => Observable.of(saveGeoStoryError(status ? { status, statusText, data } : message || other), loadingGeostory(false, "loading"))
+            )
+    );
 /**
  * side effect to scroll to new sections
  * it tries for max 10 times with an interval of 200 ms between each
@@ -140,19 +140,19 @@ export const saveGeoStoryResource = action$ => action$
  */
 export const scrollToContentEpic = action$ =>
     action$.ofType(ADD)
-    .switchMap(({element}) => {
-        return Observable.of(element)
-            .switchMap(() => {
-                if (!document.getElementById(element.id)) {
-                    const err = new Error("Item not mounted yet");
-                    throw err;
-                } else {
-                    scrollToContent(element.id, {behavior: "auto", block: "center"});
-                    return Observable.empty();
-                }
-            })
-            .retryWhen(errors => errors.delay(200).take(10));
-    });
+        .switchMap(({element}) => {
+            return Observable.of(element)
+                .switchMap(() => {
+                    if (!document.getElementById(element.id)) {
+                        const err = new Error("Item not mounted yet");
+                        throw err;
+                    } else {
+                        scrollToContent(element.id, {behavior: "auto", block: "center"});
+                        return Observable.empty();
+                    }
+                })
+                .retryWhen(errors => errors.delay(200).take(10));
+        });
 
 
 /**
@@ -167,16 +167,16 @@ export const editMediaForBackgroundEpic = (action$, store) =>
             const state = store.getState();
             const resourceId = resourceIdSelectorCreator(path)(state);
             return Observable.of(
-                    showMediaEditor(owner),
-                    selectItem(resourceId)
-                )
+                showMediaEditor(owner),
+                selectItem(resourceId)
+            )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
                             const type = mediaTypeSelector(state);
                             return Observable.of(
                                 update(`${path}`, {resourceId: resource.id, type}, "merge" )
-                                );
+                            );
                         })
                         .takeUntil(action$.ofType(HIDE, ADD))
                 );
@@ -189,17 +189,17 @@ export const editMediaForBackgroundEpic = (action$, store) =>
  * @param {object} store
  */
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
-        .ofType(LOAD_GEOSTORY)
-        .switchMap( ({id}) =>
-            Observable.defer(() => {
-                if (id && isNaN(parseInt(id, 10))) {
-                    return axios.get(`configs/${id}.json`)
-                        // not return anything else that data in this case
-                        // to match with data/resource object structure of getResource
-                        .then(({data}) => ({data}));
-                }
-                return getResource(id);
-            })
+    .ofType(LOAD_GEOSTORY)
+    .switchMap( ({id}) =>
+        Observable.defer(() => {
+            if (id && isNaN(parseInt(id, 10))) {
+                return axios.get(`configs/${id}.json`)
+                    // not return anything else that data in this case
+                    // to match with data/resource object structure of getResource
+                    .then(({data}) => ({data}));
+            }
+            return getResource(id);
+        })
             .do(({data}) => {
                 if (!data) {
                     throw Error("Wrong data format");
@@ -240,7 +240,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     );
                 }
             ))
-        );
+    );
 /**
  * Triggers reload of last loaded story when user login-logout
  * @param {Observable} action$ the stream of redux actions

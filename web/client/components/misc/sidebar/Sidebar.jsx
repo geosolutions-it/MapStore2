@@ -17,28 +17,28 @@ const Sidebar = require('react-sidebar').default;
  * @param  {node} children      Content
  */
 module.exports = ({open, width = 600, children, ...props} = {}) => (<Sidebar
-   open={open}
-   sidebarClassName="sidepanel-content"
-   sidebar={children}
-   styles={{
-       sidebar: {
-           zIndex: 1024,
-           width
-       },
-       overlay: {
-           zIndex: 1023,
-           width: 0
-       },
-       root: {
-           right: open ? 0 : 'auto',
-           width: '0',
-           overflow: 'visible'
-       },
-       content: {
-           overflowY: 'auto'
-       }
-   }}
-   {...props}
-   >
-   <div/>
+    open={open}
+    sidebarClassName="sidepanel-content"
+    sidebar={children}
+    styles={{
+        sidebar: {
+            zIndex: 1024,
+            width
+        },
+        overlay: {
+            zIndex: 1023,
+            width: 0
+        },
+        root: {
+            right: open ? 0 : 'auto',
+            width: '0',
+            overflow: 'visible'
+        },
+        content: {
+            overflowY: 'auto'
+        }
+    }}
+    {...props}
+>
+    <div/>
 </Sidebar>);

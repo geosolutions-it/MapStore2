@@ -6,6 +6,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 /**
  * Webpack configuration builder.
@@ -35,6 +36,10 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
     }, bundles, themeEntries),
+    mode: prod ? "production" : "development",
+    optimization: {
+        minimize: false
+    },
     output: {
         path: paths.dist,
         publicPath,
@@ -45,17 +50,12 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new CopyWebpackPlugin([
             { from: path.join(paths.base, 'node_modules', 'bootstrap', 'less'), to: path.join(paths.dist, "bootstrap", "less") }
         ]),
-		new CopyWebpackPlugin([
+        new CopyWebpackPlugin([
             { from: path.join(paths.base, 'node_modules', 'react-nouislider', 'example'), to: path.join(paths.dist, "react-nouislider", "example") }
         ]),
         new LoaderOptionsPlugin({
             debug: !prod,
             options: {
-                postcss: {
-                    plugins: [
-                      require('postcss-prefix-selector')({prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])})
-                    ]
-                },
                 context: paths.base
             }
         }),
@@ -63,9 +63,9 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
             "__DEVTOOLS__": !prod
         }),
         new DefinePlugin({
-          'process.env': {
-            'NODE_ENV': prod ? '"production"' : '""'
-          }
+            'process.env': {
+                'NODE_ENV': prod ? '"production"' : '""'
+            }
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
@@ -74,7 +74,6 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     ].concat(prod && prodPlugins || []).concat(prod ? [new ParallelUglifyPlugin({
         uglifyJS: {
             sourceMap: false,
-            compress: {warnings: false},
             mangle: true
         }
     })] : []),
@@ -92,7 +91,12 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 }, {
                     loader: 'css-loader'
                 }, {
-                  loader: 'postcss-loader'
+                    loader: 'postcss-loader',
+                    options: {
+                        plugins: [
+                            require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
+                        ]
+                    }
                 }]
             },
             {
@@ -108,10 +112,17 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
             },
             {
                 test: /themes[\\\/]?.+\.less$/,
-                use: extractThemesPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'postcss-loader', 'less-loader']
-                    })
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader', {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: [
+                                require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
+                            ]
+                        }
+                    }, 'less-loader'
+                ]
             },
             {
                 test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
@@ -142,31 +153,24 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 }] // inline base64 URLs for <=8k images, direct URLs for the rest
             },
             {
-                test: /\.jsx$/,
-                exclude: /(ol\.js)$|(Cesium\.js)$/,
-                use: [{
-                    loader: "react-hot-loader"
-                }],
-                include: paths.code
-            }, {
                 test: /\.jsx?$/,
                 exclude: /(ol\.js)$|(Cesium\.js)$/,
                 use: [{
-                    loader: "babel-loader"
+                    loader: "babel-loader",
+                    options: {
+                        configFile: path.join(__dirname, 'babel.config.js')
+                    }
                 }],
                 include: [
                     paths.code,
-                    // the followings are here to skip issues caused by uglifyPlugin (see #4212)
-                    // TODO: a solution to this issue that uses only libs
-                    // like https://www.npmjs.com/package/uglify-js-es6#harmony when stable, terser, babel-minify ...
-                    path.join(__dirname, "..", "node_modules", "query-string"),
-                    path.join(__dirname, "..", "node_modules", "strict-uri-encode"),
-                    path.join(__dirname, "..", "node_modules", "split-on-first")
+                    path.join(paths.base, "node_modules", "query-string"),
+                    path.join(paths.base, "node_modules", "strict-uri-encode"),
+                    path.join(paths.base, "node_modules", "split-on-first")
                 ]
             }
         ].concat(prod ? [{
-                test: /\.html$/,
-                loader: 'html-loader'
+            test: /\.html$/,
+            loader: 'html-loader'
         }] : [])
     },
     devServer: {

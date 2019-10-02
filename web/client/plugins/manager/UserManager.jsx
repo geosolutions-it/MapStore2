@@ -60,27 +60,27 @@ class UserManager extends React.Component {
 
     render() {
         return (<div>
-                <SearchBar
-                    className={this.props.className}
-                    splitTools={this.props.splitTools}
-                    showOptions={this.props.showOptions}
-                    isSearchClickable={this.props.isSearchClickable}
-                    hideOnBlur={this.props.hideOnBlur}
-                    placeholderMsgId ={this.props.placeholderMsgId}
-                    onSearch={this.props.onSearch}
-                    onSearchReset={this.props.onSearchReset}
-                    onSearchTextChange={this.props.onSearchTextChange}
-                    typeAhead={this.props.typeAhead}
-                    searchText={this.props.searchText}
-                    start={this.props.start}
-                    limit={this.props.limit} />
-                <Grid style={{marginBottom: "10px"}} fluid>
-                    <h1 className="usermanager-title"><Message msgId={"users.users"}/></h1>
-                    <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>&nbsp;<span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>
-                </Grid>
-                <UserGrid />
-                <UserDialog />
-                <UserDeleteConfirm />
+            <SearchBar
+                className={this.props.className}
+                splitTools={this.props.splitTools}
+                showOptions={this.props.showOptions}
+                isSearchClickable={this.props.isSearchClickable}
+                hideOnBlur={this.props.hideOnBlur}
+                placeholderMsgId ={this.props.placeholderMsgId}
+                onSearch={this.props.onSearch}
+                onSearchReset={this.props.onSearchReset}
+                onSearchTextChange={this.props.onSearchTextChange}
+                typeAhead={this.props.typeAhead}
+                searchText={this.props.searchText}
+                start={this.props.start}
+                limit={this.props.limit} />
+            <Grid style={{marginBottom: "10px"}} fluid>
+                <h1 className="usermanager-title"><Message msgId={"users.users"}/></h1>
+                <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>&nbsp;<span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>
+            </Grid>
+            <UserGrid />
+            <UserDialog />
+            <UserDeleteConfirm />
         </div>);
     }
 }
@@ -95,36 +95,36 @@ module.exports = {
                 searchText: searchState && searchState.searchText && trim(searchState.searchText, '*') || ""
             };
         },
-            {
-                onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
-                onSearchTextChange: usersSearchTextChanged,
-                onSearch: getUsers
-            }, (stateProps, dispatchProps, ownProps) => {
-                return {
-                    ...stateProps,
-                    ...dispatchProps,
-                    ...ownProps,
-                    onSearchReset: (text) => {
-                        let limit = stateProps.limit;
-                        let searchText = text && text !== "" ? "*" + text + "*" : "*";
-                        dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
-                    },
-                    onSearch: (text) => {
-                        let limit = stateProps.limit;
-                        let searchText = text && text !== "" ? "*" + text + "*" : "*";
-                        dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
-                    }
-                };
-            })(UserManager), {
-                hide: true,
-                Manager: {
-                    id: "usermanager",
-                    name: 'usermanager',
-                    position: 1,
-                    priority: 1,
-                    title: <Message msgId="users.manageUsers" />,
-                    glyph: "1-user-mod"
-                }}),
+        {
+            onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
+            onSearchTextChange: usersSearchTextChanged,
+            onSearch: getUsers
+        }, (stateProps, dispatchProps, ownProps) => {
+            return {
+                ...stateProps,
+                ...dispatchProps,
+                ...ownProps,
+                onSearchReset: (text) => {
+                    let limit = stateProps.limit;
+                    let searchText = text && text !== "" ? "*" + text + "*" : "*";
+                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                },
+                onSearch: (text) => {
+                    let limit = stateProps.limit;
+                    let searchText = text && text !== "" ? "*" + text + "*" : "*";
+                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                }
+            };
+        })(UserManager), {
+            hide: true,
+            Manager: {
+                id: "usermanager",
+                name: 'usermanager',
+                position: 1,
+                priority: 1,
+                title: <Message msgId="users.manageUsers" />,
+                glyph: "1-user-mod"
+            }}),
     reducers: {
         users: require('../../reducers/users')
     }

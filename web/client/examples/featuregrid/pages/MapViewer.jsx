@@ -41,7 +41,7 @@ class MapViewer extends React.Component {
         mode: 'desktop'
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (this.props.params.mapType && this.props.params.mapId) {
 
             const mapId = this.props.params.mapId === '0' ? null : this.props.params.mapId;
@@ -56,15 +56,15 @@ class MapViewer extends React.Component {
         return (<PluginsContainer key="viewer" id="viewer" className="viewer"
             plugins={this.props.plugins}
             params={this.props.params}
-            />);
+        />);
     }
 }
 
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.touch ? 'mobile' : 'desktop'
 }),
-    {
-        loadMapConfig,
-        reset: resetControls
-    })(MapViewer);
+{
+    loadMapConfig,
+    reset: resetControls
+})(MapViewer);
 

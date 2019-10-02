@@ -208,7 +208,7 @@ function maps(state = {
     }
     case PERMISSIONS_LIST_LOADING: {
         let newMaps = state.results === "" ? [] : [...state.results];
-            // TODO: Add the fix for GeoStore single-item arrays
+        // TODO: Add the fix for GeoStore single-item arrays
         let newState = assign({}, state, {
             results: newMaps.map(function(map) {
                 if (map.id === action.mapId) {
@@ -217,17 +217,17 @@ function maps(state = {
                 return map;
             })
         }
-            );
+        );
         return newState;
     }
     case PERMISSIONS_LIST_LOADED: {
         let newMaps = state.results === "" ? [] : [...state.results];
-            // TODO: Add the fix for GeoStore single-item arrays
+        // TODO: Add the fix for GeoStore single-item arrays
         let newState = assign({}, state, {
             results: newMaps.map(function(map) {
                 if (map.id === action.mapId) {
 
-                            // Fix to overcome GeoStore bad encoding of single object arrays
+                    // Fix to overcome GeoStore bad encoding of single object arrays
                     let fixedSecurityRule = [];
                     if (action.permissions && action.permissions.SecurityRuleList && action.permissions.SecurityRuleList.SecurityRule) {
                         if ( isArray(action.permissions.SecurityRuleList.SecurityRule)) {
@@ -248,7 +248,7 @@ function maps(state = {
                 return map;
             })
         }
-            );
+        );
         return newState;
     }
     default:

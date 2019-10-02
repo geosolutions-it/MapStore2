@@ -51,7 +51,7 @@ module.exports = ({
         topRightItems={topRightItems}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
-                    <div style={{ height: "30px", overflow: "hidden"}}>
+                <div style={{ height: "30px", overflow: "hidden"}}>
                     {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
                     {error === undefined &&
                         <span style={{ "float": "left", margin: "5px" }} ><Message
@@ -59,21 +59,21 @@ module.exports = ({
                             msgParams={{ total: pagination.totalFeatures }} /></span>}
                     </div>) : null}
         >
-        <FeatureGrid
-            emptyRowsView={() => <EmptyRowsView loading={loading} />}
-            gridEvents={gridEvents}
-            sortable={false}
-            defaultSize={false}
-            columnSettings={columnSettings}
-            pageEvents={pageEvents}
-            virtualScroll={virtualScroll}
-            features={features}
-            pages={pages}
-            error={error}
-            size={size}
-            rowKey="id"
-            describeFeatureType={describeFeatureType}
-            pagination={pagination} />
+            <FeatureGrid
+                emptyRowsView={() => <EmptyRowsView loading={loading} />}
+                gridEvents={gridEvents}
+                sortable={false}
+                defaultSize={false}
+                columnSettings={columnSettings}
+                pageEvents={pageEvents}
+                virtualScroll={virtualScroll}
+                features={features}
+                pages={pages}
+                error={error}
+                size={size}
+                rowKey="id"
+                describeFeatureType={describeFeatureType}
+                pagination={pagination} />
         </BorderLayout>
     </WidgetContainer>
 

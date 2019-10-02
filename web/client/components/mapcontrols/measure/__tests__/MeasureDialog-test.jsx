@@ -67,13 +67,13 @@ describe("test the MeasureDialog", () => {
         const defaultOptions = {showAddAsAnnotation: true};
         const mc = ReactDOM.render(
             <MeasureDialog
-            show
-            showCoordinateEditor={showCoordinateEditor}
-            defaultOptions={defaultOptions}
-            onMount={handlers.onMount}
-            onInit={handlers.onInit}
-            toggleMeasure={handlers.toggleMeasure}
-            measurement={measurement}/>, document.getElementById("container"));
+                show
+                showCoordinateEditor={showCoordinateEditor}
+                defaultOptions={defaultOptions}
+                onMount={handlers.onMount}
+                onInit={handlers.onInit}
+                toggleMeasure={handlers.toggleMeasure}
+                measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
@@ -107,13 +107,13 @@ describe("test the MeasureDialog", () => {
             bearingMeasureEnabled: true};
         const mc = ReactDOM.render(
             <MeasureDialog
-            show
-            showCoordinateEditor={showCoordinateEditor}
-            defaultOptions={defaultOptions}
-            onMount={handlers.onMount}
-            onInit={handlers.onInit}
-            toggleMeasure={handlers.toggleMeasure}
-            measurement={measurement}/>, document.getElementById("container"));
+                show
+                showCoordinateEditor={showCoordinateEditor}
+                defaultOptions={defaultOptions}
+                onMount={handlers.onMount}
+                onInit={handlers.onInit}
+                toggleMeasure={handlers.toggleMeasure}
+                measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');

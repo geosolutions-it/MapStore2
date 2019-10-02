@@ -59,7 +59,7 @@ describe('OpenlayersMap', () => {
                 <div id="container1"><OpenlayersMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><OpenlayersMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -96,7 +96,7 @@ describe('OpenlayersMap', () => {
 
     it('normalized CRS', () => {
         const comp = (<OpenlayersMap projection="EPSG:900913" center={{y: 43.9, x: 10.3}} zoom={11}
-            />);
+        />);
 
         const map = ReactDOM.render(comp, document.getElementById("map"));
         expect(map).toExist();
@@ -436,8 +436,8 @@ describe('OpenlayersMap', () => {
                         };
                     }
                 }, {
-                        get: (key) => key === "handleClickOnLayer" ? true : "ID"
-                    });
+                    get: (key) => key === "handleClickOnLayer" ? true : "ID"
+                });
             };
             map.map.dispatchEvent({
                 type: 'singleclick',
@@ -493,7 +493,7 @@ describe('OpenlayersMap', () => {
                 zoom={11}
                 onMapViewChanges={testHandlers.handler}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         const olMap = map.map;
         olMap.on('moveend', () => {
@@ -525,7 +525,7 @@ describe('OpenlayersMap', () => {
                 zoom={11}
                 onMapViewChanges={testHandlers.handler}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         const olMap = map.map;
         olMap.on('moveend', () => {
@@ -552,7 +552,7 @@ describe('OpenlayersMap', () => {
                 zoom={11.6}
                 measurement={{}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         const olMap = map.map;
         expect(olMap.getView().getZoom()).toBe(12);
@@ -562,7 +562,7 @@ describe('OpenlayersMap', () => {
                 zoom={9.4}
                 measurement={{}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         expect(olMap.getView().getZoom()).toBe(9);
         let center = map.normalizeCenter(olMap.getView().getCenter());
         expect(center[1].toFixed(1)).toBe('44.0');
@@ -585,17 +585,17 @@ describe('OpenlayersMap', () => {
                 zoom={11}
                 measurement={{}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         const firstView = map.map.getView().calculateExtent(map.map.getSize());
         map = ReactDOM.render(
             <OpenlayersMap
-            projection="EPSG:25830"
+                projection="EPSG:25830"
                 projectionDefs={projectionDefs}
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 measurement={{}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         const secondView = map.map.getView().calculateExtent(map.map.getSize());
         expect(firstView.length).toBe(4);
         expect(secondView.length).toBe(4);
@@ -610,7 +610,7 @@ describe('OpenlayersMap', () => {
                 zoom={11.6}
                 measurement={{}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         let origProps = assign({}, map.props);
         function testProps(newProps) {
@@ -625,7 +625,7 @@ describe('OpenlayersMap', () => {
                 measurement={{}}
                 mapOptions={undefined}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
@@ -641,7 +641,7 @@ describe('OpenlayersMap', () => {
                 measurement={{}}
                 mapOptions={{}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
@@ -656,7 +656,7 @@ describe('OpenlayersMap', () => {
                 measurement={{}}
                 mapOptions={{view: {}}}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
@@ -671,7 +671,7 @@ describe('OpenlayersMap', () => {
                 mapOptions={{view: {resolutions: [10, 5, 2, 1]}}}
                 maxExtent= {[-180, -90, 180, 80]}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(true);
@@ -686,7 +686,7 @@ describe('OpenlayersMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         const olMap = map.map;
         const mapDiv = olMap.getViewport();
@@ -700,7 +700,7 @@ describe('OpenlayersMap', () => {
                 zoom={11}
                 mousePointer="pointer"
             />
-        , document.getElementById("map"));
+            , document.getElementById("map"));
 
         const olMap = map.map;
         const mapDiv = olMap.getViewport();
@@ -739,7 +739,7 @@ describe('OpenlayersMap', () => {
         expect(getCoordinatesFromPixel).toNotExist();
 
         const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks/>,
-                                    document.getElementById("map"));
+            document.getElementById("map"));
         expect(map).toExist();
 
         getPixelFromCoordinates = MapUtils.getHook(MapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
@@ -763,7 +763,7 @@ describe('OpenlayersMap', () => {
             registerHooks
             mapOptions={{ zoomAnimation: false }}
             onMapViewChanges={testHandlers.onMapViewChanges} />,
-            document.getElementById("map"));
+        document.getElementById("map"));
         const olMap = map.map;
         let bbox1;
         olMap.on('moveend', () => {
@@ -832,7 +832,7 @@ describe('OpenlayersMap', () => {
             registerHooks
             mapOptions={{ zoomAnimation: false }}
             onMapViewChanges={testHandlers.onMapViewChanges} />,
-            document.getElementById("map"));
+        document.getElementById("map"));
         const olMap = map.map;
         olMap.on('moveend', () => {
             expect(spy.calls[1]).toExist();
@@ -878,7 +878,7 @@ describe('OpenlayersMap', () => {
             registerHooks
             mapOptions={{ zoomAnimation: false }}
             onMapViewChanges={testHandlers.onMapViewChanges} />,
-            document.getElementById("map"));
+        document.getElementById("map"));
         const olMap = map.map;
         olMap.on('moveend', () => {
             expect(spy.calls[1]).toExist();
@@ -969,7 +969,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={projectionDefs[0].code}
-            />, document.getElementById("map"));
+        />, document.getElementById("map"));
 
         expect(map.getResolutions()).toExist();
         expect(map.getResolutions().length).toBe(expectedResolutions.length);
@@ -983,7 +983,7 @@ describe('OpenlayersMap', () => {
                 <div id="map-attribution"></div>
                 <OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: '#map-attribution'}}}/>
             </span>
-        , document.getElementById("map"));
+            , document.getElementById("map"));
         expect(map).toExist();
         const domMap = document.getElementById('ol-map');
         let attributions = domMap.getElementsByClassName('ol-attribution');
@@ -1030,7 +1030,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={projectionDefs[0].code}
-            />, document.getElementById("map"));
+        />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(0);
     });
@@ -1054,7 +1054,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={'EPSG:3857'}
-            />, document.getElementById("map"));
+        />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
     });
@@ -1078,7 +1078,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={'EPSG:4326'}
-            />, document.getElementById("map"));
+        />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
     });
@@ -1102,7 +1102,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={'EPSG:900913'}
-            />, document.getElementById("map"));
+        />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
     });

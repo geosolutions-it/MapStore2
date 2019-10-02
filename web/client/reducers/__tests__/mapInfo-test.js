@@ -130,7 +130,7 @@ describe('Test the mapInfo reducer', () => {
                         "type": "Polygon",
                         "coordinates": [
                             [ [9.0, 42.0], [11.0, 42.0], [11.0, 44.0],
-                           [9.0, 44.0], [9.0, 42.0] ]
+                                [9.0, 44.0], [9.0, 42.0] ]
                         ]
                     },
                     "properties": {
@@ -162,7 +162,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.requests.length).toBe(1);
         expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
 
-        state = mapInfo({requests: {} }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
+        state = mapInfo({requests: [] }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
         expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
@@ -279,373 +279,373 @@ describe('Test the mapInfo reducer', () => {
 
     it('creates a feature info data from vector info request, with FeatureCollection inside', () => {
         let testAction = {
-          type: 'GET_VECTOR_INFO',
-          layer: {
-            type: 'vector',
-            visibility: true,
-            id: 'annotations',
-            name: 'Annotations',
-            hideLoading: true,
-            style: {
-              type: 'FeatureCollection',
-              Polygon: {
-                color: '#ffcc33',
-                opacity: 1,
-                weight: 3,
-                fillColor: '#ffffff',
-                fillOpacity: 0.2,
-                editing: {
-                  fill: 1
-                }
-              },
-              MultiPolygon: {
-                color: '#ffcc33',
-                opacity: 1,
-                weight: 3,
-                fillColor: '#ffffff',
-                fillOpacity: 0.2,
-                editing: {
-                  fill: 1
-                }
-              }
-            },
-            features: [
-              {
-                type: 'FeatureCollection',
-                properties: {
-                  title: 'ads',
-                  id: '77359220-6b2d-11e8-af0b-7f182f5005a7'
-                },
-                features: [
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      coordinates: [
-                        [
-                          [
-                            1.4062499999999993,
-                            0.07690427378333507
-                          ],
-                          [
-                            2.878417968750001,
-                            -2.2077054557054083
-                          ],
-                          [
-                            -1.5600585937500016,
-                            -1.7245930431979002
-                          ],
-                          [
-                            1.4062499999999993,
-                            0.07690427378333507
-                          ]
-                        ]
-                      ],
-                      type: 'Polygon'
-                    },
-                    properties: {
-                      id: '782dadc0-6b2d-11e8-af0b-7f182f5005a7',
-                      isValidFeature: true,
-                      canEdit: false
-                    }
-                  },
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      coordinates: [
-                        [
-                          [
-                            -4.394531250000002,
-                            0.03295898255728466
-                          ],
-                          [
-                            -3.4716796875000018,
-                            -2.3174830687583046
-                          ],
-                          [
-                            -6.767578125000002,
-                            -2.8442900428132867
-                          ],
-                          [
-                            -4.394531250000002,
-                            0.03295898255728466
-                          ]
-                        ]
-                      ],
-                      type: 'Polygon'
-                    },
-                    properties: {
-                      id: '7a4199a0-6b2d-11e8-af0b-7f182f5005a7',
-                      isValidFeature: true,
-                      canEdit: false
-                    }
-                  }
-                ],
+            type: 'GET_VECTOR_INFO',
+            layer: {
+                type: 'vector',
+                visibility: true,
+                id: 'annotations',
+                name: 'Annotations',
+                hideLoading: true,
                 style: {
-                  type: 'FeatureCollection',
-                  Polygon: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
+                    type: 'FeatureCollection',
+                    Polygon: {
+                        color: '#ffcc33',
+                        opacity: 1,
+                        weight: 3,
+                        fillColor: '#ffffff',
+                        fillOpacity: 0.2,
+                        editing: {
+                            fill: 1
+                        }
+                    },
+                    MultiPolygon: {
+                        color: '#ffcc33',
+                        opacity: 1,
+                        weight: 3,
+                        fillColor: '#ffffff',
+                        fillOpacity: 0.2,
+                        editing: {
+                            fill: 1
+                        }
                     }
-                  },
-                  MultiPolygon: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  highlight: false
-                }
-              },
-              {
-                type: 'FeatureCollection',
-                properties: {
-                  title: 'dfgd',
-                  id: '87056c20-6b2d-11e8-af0b-7f182f5005a7'
                 },
                 features: [
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      coordinates: [
-                        -1.0107421874999996,
-                        2.7126091154394105
-                      ],
-                      type: 'Point'
+                    {
+                        type: 'FeatureCollection',
+                        properties: {
+                            title: 'ads',
+                            id: '77359220-6b2d-11e8-af0b-7f182f5005a7'
+                        },
+                        features: [
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    coordinates: [
+                                        [
+                                            [
+                                                1.4062499999999993,
+                                                0.07690427378333507
+                                            ],
+                                            [
+                                                2.878417968750001,
+                                                -2.2077054557054083
+                                            ],
+                                            [
+                                                -1.5600585937500016,
+                                                -1.7245930431979002
+                                            ],
+                                            [
+                                                1.4062499999999993,
+                                                0.07690427378333507
+                                            ]
+                                        ]
+                                    ],
+                                    type: 'Polygon'
+                                },
+                                properties: {
+                                    id: '782dadc0-6b2d-11e8-af0b-7f182f5005a7',
+                                    isValidFeature: true,
+                                    canEdit: false
+                                }
+                            },
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    coordinates: [
+                                        [
+                                            [
+                                                -4.394531250000002,
+                                                0.03295898255728466
+                                            ],
+                                            [
+                                                -3.4716796875000018,
+                                                -2.3174830687583046
+                                            ],
+                                            [
+                                                -6.767578125000002,
+                                                -2.8442900428132867
+                                            ],
+                                            [
+                                                -4.394531250000002,
+                                                0.03295898255728466
+                                            ]
+                                        ]
+                                    ],
+                                    type: 'Polygon'
+                                },
+                                properties: {
+                                    id: '7a4199a0-6b2d-11e8-af0b-7f182f5005a7',
+                                    isValidFeature: true,
+                                    canEdit: false
+                                }
+                            }
+                        ],
+                        style: {
+                            type: 'FeatureCollection',
+                            Polygon: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                editing: {
+                                    fill: 1
+                                }
+                            },
+                            MultiPolygon: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                editing: {
+                                    fill: 1
+                                }
+                            },
+                            highlight: false
+                        }
                     },
-                    properties: {
-                      id: '87f9b730-6b2d-11e8-af0b-7f182f5005a7',
-                      isValidFeature: true,
-                      canEdit: false
-                    }
-                  },
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      type: 'Polygon',
-                      coordinates: [
-                        [
-                          [
-                            -1.801757812500001,
-                            0.2966295342722069
-                          ],
-                          [
-                            0.3735351562500003,
-                            -1.461023280622767
-                          ],
-                          [
-                            -5.075683593750002,
-                            -1.6147764249055092
-                          ],
-                          [
-                            -1.801757812500001,
-                            0.2966295342722069
-                          ]
-                        ]
-                      ]
-                    },
-                    properties: {
-                      id: '8984eb10-6b2d-11e8-af0b-7f182f5005a7',
-                      isValidFeature: true,
-                      canEdit: false,
-                      selected: true
-                    }
-                  },
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      coordinates: [
-                        4.724121093750001,
-                        2.0100855878673873
-                      ],
-                      type: 'Point'
-                    },
-                    properties: {
-                      id: '8e11c630-6b2d-11e8-af0b-7f182f5005a7',
-                      isValidFeature: true,
-                      canEdit: false,
-                      isText: true,
-                      valueText: 'New'
-                    }
-                  },
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      coordinates: [
-                        [
-                          [
-                            1.4950389402841207,
-                            0.6481795331595092
-                          ],
+                    {
+                        type: 'FeatureCollection',
+                        properties: {
+                            title: 'dfgd',
+                            id: '87056c20-6b2d-11e8-af0b-7f182f5005a7'
+                        },
+                        features: [
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    coordinates: [
+                                        -1.0107421874999996,
+                                        2.7126091154394105
+                                    ],
+                                    type: 'Point'
+                                },
+                                properties: {
+                                    id: '87f9b730-6b2d-11e8-af0b-7f182f5005a7',
+                                    isValidFeature: true,
+                                    canEdit: false
+                                }
+                            },
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    type: 'Polygon',
+                                    coordinates: [
+                                        [
+                                            [
+                                                -1.801757812500001,
+                                                0.2966295342722069
+                                            ],
+                                            [
+                                                0.3735351562500003,
+                                                -1.461023280622767
+                                            ],
+                                            [
+                                                -5.075683593750002,
+                                                -1.6147764249055092
+                                            ],
+                                            [
+                                                -1.801757812500001,
+                                                0.2966295342722069
+                                            ]
+                                        ]
+                                    ]
+                                },
+                                properties: {
+                                    id: '8984eb10-6b2d-11e8-af0b-7f182f5005a7',
+                                    isValidFeature: true,
+                                    canEdit: false,
+                                    selected: true
+                                }
+                            },
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    coordinates: [
+                                        4.724121093750001,
+                                        2.0100855878673873
+                                    ],
+                                    type: 'Point'
+                                },
+                                properties: {
+                                    id: '8e11c630-6b2d-11e8-af0b-7f182f5005a7',
+                                    isValidFeature: true,
+                                    canEdit: false,
+                                    isText: true,
+                                    valueText: 'New'
+                                }
+                            },
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    coordinates: [
+                                        [
+                                            [
+                                                1.4950389402841207,
+                                                0.6481795331595092
+                                            ],
 
-                          [
-                            1.4950318567997916,
-                            0.6480669516034593
-                          ],
-                          [
-                            1.495037167664108,
-                            0.6481231310851803
-                          ],
-                          [
-                            1.4950389402841207,
-                            0.6481795331595092
-                          ]
-                        ]
-                      ],
-                      type: 'Polygon'
-                    },
-                    properties: {
-                      isCircle: true,
-                      radius: 187065.88083090802,
-                      center: [
-                        1.494140625000001,
-                        0.6481795331595092
-                      ],
-                      id: '902563f0-6b2d-11e8-af0b-7f182f5005a7',
-                      polygonGeom: {
-                        coordinates: [
-                          [
-                            [
-                              1.4950389402841207,
-                              0.6481795331595092
-                            ],
-                            [
-                              1.495037167664108,
-                              0.6481231310851803
-                            ],
-                            [
-                              1.4950389402841207,
-                              0.6481795331595092
-                            ]
-                          ]
+                                            [
+                                                1.4950318567997916,
+                                                0.6480669516034593
+                                            ],
+                                            [
+                                                1.495037167664108,
+                                                0.6481231310851803
+                                            ],
+                                            [
+                                                1.4950389402841207,
+                                                0.6481795331595092
+                                            ]
+                                        ]
+                                    ],
+                                    type: 'Polygon'
+                                },
+                                properties: {
+                                    isCircle: true,
+                                    radius: 187065.88083090802,
+                                    center: [
+                                        1.494140625000001,
+                                        0.6481795331595092
+                                    ],
+                                    id: '902563f0-6b2d-11e8-af0b-7f182f5005a7',
+                                    polygonGeom: {
+                                        coordinates: [
+                                            [
+                                                [
+                                                    1.4950389402841207,
+                                                    0.6481795331595092
+                                                ],
+                                                [
+                                                    1.495037167664108,
+                                                    0.6481231310851803
+                                                ],
+                                                [
+                                                    1.4950389402841207,
+                                                    0.6481795331595092
+                                                ]
+                                            ]
+                                        ],
+                                        type: 'Polygon'
+                                    },
+                                    isValidFeature: true,
+                                    canEdit: false
+                                }
+                            },
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    coordinates: [
+                                        [
+                                            2.0654296874999982,
+                                            3.568247821628616
+                                        ],
+                                        [
+                                            -5.844726562500002,
+                                            -0.0769042737833478
+                                        ]
+                                    ],
+                                    type: 'LineString'
+                                },
+                                properties: {
+                                    id: '921748e0-6b2d-11e8-af0b-7f182f5005a7',
+                                    isValidFeature: true,
+                                    canEdit: false
+                                }
+                            }
                         ],
-                        type: 'Polygon'
-                      },
-                      isValidFeature: true,
-                      canEdit: false
+                        style: {
+                            type: 'FeatureCollection',
+                            Point: {
+                                iconGlyph: 'comment',
+                                iconShape: 'square',
+                                iconColor: 'blue'
+                            },
+                            MultiPoint: {
+                                iconGlyph: 'comment',
+                                iconShape: 'square',
+                                iconColor: 'blue'
+                            },
+                            Polygon: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                editing: {
+                                    fill: 1
+                                }
+                            },
+                            MultiPolygon: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                editing: {
+                                    fill: 1
+                                }
+                            },
+                            Text: {
+                                fontStyle: 'normal',
+                                fontSize: '14',
+                                fontSizeUom: 'px',
+                                fontFamily: 'Arial',
+                                fontWeight: 'normal',
+                                font: '14px Arial',
+                                textAlign: 'center',
+                                color: '#000000',
+                                opacity: 1
+                            },
+                            Circle: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                radius: 10
+                            },
+                            LineString: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                editing: {
+                                    fill: 1
+                                }
+                            },
+                            MultiLineString: {
+                                color: '#ffcc33',
+                                opacity: 1,
+                                weight: 3,
+                                fillColor: '#ffffff',
+                                fillOpacity: 0.2,
+                                editing: {
+                                    fill: 1
+                                }
+                            },
+                            highlight: false
+                        }
                     }
-                  },
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      coordinates: [
-                        [
-                          2.0654296874999982,
-                          3.568247821628616
-                        ],
-                        [
-                          -5.844726562500002,
-                          -0.0769042737833478
-                        ]
-                      ],
-                      type: 'LineString'
-                    },
-                    properties: {
-                      id: '921748e0-6b2d-11e8-af0b-7f182f5005a7',
-                      isValidFeature: true,
-                      canEdit: false
-                    }
-                  }
                 ],
-                style: {
-                  type: 'FeatureCollection',
-                  Point: {
-                    iconGlyph: 'comment',
-                    iconShape: 'square',
-                    iconColor: 'blue'
-                  },
-                  MultiPoint: {
-                    iconGlyph: 'comment',
-                    iconShape: 'square',
-                    iconColor: 'blue'
-                  },
-                  Polygon: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  MultiPolygon: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  Text: {
-                    fontStyle: 'normal',
-                    fontSize: '14',
-                    fontSizeUom: 'px',
-                    fontFamily: 'Arial',
-                    fontWeight: 'normal',
-                    font: '14px Arial',
-                    textAlign: 'center',
-                    color: '#000000',
-                    opacity: 1
-                  },
-                  Circle: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    radius: 10
-                  },
-                  LineString: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  MultiLineString: {
-                    color: '#ffcc33',
-                    opacity: 1,
-                    weight: 3,
-                    fillColor: '#ffffff',
-                    fillOpacity: 0.2,
-                    editing: {
-                      fill: 1
-                    }
-                  },
-                  highlight: false
-                }
-              }
-            ],
-            handleClickOnLayer: true
-          },
-          request: {
-            lat: 0.6481795331595066,
-            lng: 1.4941406250000009
-          },
-          metadata: {
-            fields: [
-              'title',
-              'id'
-            ],
-            title: 'Annotations',
-            resolution: 2445.98490512564,
-            buffer: 2,
-            units: 'm'
-          }
+                handleClickOnLayer: true
+            },
+            request: {
+                lat: 0.6481795331595066,
+                lng: 1.4941406250000009
+            },
+            metadata: {
+                fields: [
+                    'title',
+                    'id'
+                ],
+                title: 'Annotations',
+                resolution: 2445.98490512564,
+                buffer: 2,
+                units: 'm'
+            }
         };
 
         let state = mapInfo(appState, testAction);
@@ -718,81 +718,81 @@ describe('Test the mapInfo reducer', () => {
             y: (coordinates[0][1] + coordinates[1][1]) / 2
         };
         const getVectorInfoAction = {
-          type: 'GET_VECTOR_INFO',
-          layer: {
-            type: 'vector',
-            visibility: true,
-            id: 'annotations',
-            name: 'Annotations',
-            hideLoading: true,
-            style: null,
-            features: [
-              {
-                type: 'FeatureCollection',
+            type: 'GET_VECTOR_INFO',
+            layer: {
+                type: 'vector',
+                visibility: true,
+                id: 'annotations',
+                name: 'Annotations',
+                hideLoading: true,
+                style: null,
                 features: [
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      type: 'Point',
-                      coordinates: [
-                        -16.352332555255717,
-                        49.53350105609461
-                      ]
-                    },
-                    properties: {
-                      valueText: '1998753.55 m',
-                      isText: true,
-                      isValidFeature: true,
-                      id: 'e3129731-40b7-11e9-8a48-ad0c6ec638ad'
-                    },
-                    style: [{}]
-                  },
-                  {
-                    type: 'Feature',
-                    geometry: {
-                      type: 'MultiPoint',
-                      // start end ponts
-                      coordinates
-                    },
-                    properties: {
-                      isValidFeature: true,
-                      useGeodesicLines: true,
-                      id: 'e312be41-40b7-11e9-8a48-ad0c6ec638ad',
-                      geometryGeodesic: {
-                        type: 'LineString',
-                        // simplified for tests. Densified in rea world
-                        coordinates
-                      }
-                    },
-                    style: [{}]
-                  }
+                    {
+                        type: 'FeatureCollection',
+                        features: [
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: [
+                                        -16.352332555255717,
+                                        49.53350105609461
+                                    ]
+                                },
+                                properties: {
+                                    valueText: '1998753.55 m',
+                                    isText: true,
+                                    isValidFeature: true,
+                                    id: 'e3129731-40b7-11e9-8a48-ad0c6ec638ad'
+                                },
+                                style: [{}]
+                            },
+                            {
+                                type: 'Feature',
+                                geometry: {
+                                    type: 'MultiPoint',
+                                    // start end ponts
+                                    coordinates
+                                },
+                                properties: {
+                                    isValidFeature: true,
+                                    useGeodesicLines: true,
+                                    id: 'e312be41-40b7-11e9-8a48-ad0c6ec638ad',
+                                    geometryGeodesic: {
+                                        type: 'LineString',
+                                        // simplified for tests. Densified in rea world
+                                        coordinates
+                                    }
+                                },
+                                style: [{}]
+                            }
+                        ],
+                        properties: {
+                            id: 'e3129730-40b7-11e9-8a48-ad0c6ec638ad',
+                            title: 'New annotation',
+                            description: '<p>1998753.55 m</p>'
+                        },
+                        style: {}
+                    }
                 ],
-                properties: {
-                  id: 'e3129730-40b7-11e9-8a48-ad0c6ec638ad',
-                  title: 'New annotation',
-                  description: '<p>1998753.55 m</p>'
-                },
-                style: {}
-              }
-            ],
-            handleClickOnLayer: true
-          },
-          // click on mid point (one that belongs to the `geometryGeodesic`)
-          request: {
-              lat: MPoint.y,
-              lng: MPoint.x
-          },
-          metadata: {
-            fields: [
-              'id',
-              'title',
-              'description'
-            ],
-            title: 'Annotations',
-            resolution: 10583.33333333336,
-            buffer: 2,
-            units: 'm'
-          }
+                handleClickOnLayer: true
+            },
+            // click on mid point (one that belongs to the `geometryGeodesic`)
+            request: {
+                lat: MPoint.y,
+                lng: MPoint.x
+            },
+            metadata: {
+                fields: [
+                    'id',
+                    'title',
+                    'description'
+                ],
+                title: 'Annotations',
+                resolution: 10583.33333333336,
+                buffer: 2,
+                units: 'm'
+            }
         };
         let state = mapInfo({
             requests: [],

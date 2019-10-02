@@ -52,14 +52,14 @@ class Section extends React.Component {
                     <span className={this.headerClassName + " sectionTitle"} ref="sectionTitle" >{this.props.header}</span>
                 </div>
                 {!this.props.renderInModal ?
-                     <div ref="sectionContent" className="sectionContent" style={style} >{this.props.children}</div>
-                         :
-                     <Modal ref="modal" show={this.props.open}
-                         onHide={this.onHeaderClick}>
+                    <div ref="sectionContent" className="sectionContent" style={style} >{this.props.children}</div>
+                    :
+                    <Modal ref="modal" show={this.props.open}
+                        onHide={this.onHeaderClick}>
                         <Modal.Header closeButton >
-                         <Modal.Title>{this.props.header}</Modal.Title>
-                     </Modal.Header>
-                     <Modal.Body>{this.props.children}</Modal.Body></Modal>}
+                            <Modal.Title>{this.props.header}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>{this.props.children}</Modal.Body></Modal>}
             </div>
         );
     }

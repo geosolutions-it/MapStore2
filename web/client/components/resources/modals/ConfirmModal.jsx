@@ -23,31 +23,31 @@ module.exports = ({
     running = false
 }) => {
     const footer = (<span role="footer"><div style={{"float": "left"}}></div>
-    <Button
-        disabled={running}
-        className={className}
-        key="confirmButton"
-        bsStyle="primary"
-        bsSize={buttonSize}
-        onClick={() => {
-            onConfirm();
-        }}>{confirmText}</Button>
-    {<Button
-        key="cancelButton"
-        bsSize={buttonSize}
-        disabled={running}
-        onClick={onClose}>{cancelText}</Button>}
+        <Button
+            disabled={running}
+            className={className}
+            key="confirmButton"
+            bsStyle="primary"
+            bsSize={buttonSize}
+            onClick={() => {
+                onConfirm();
+            }}>{confirmText}</Button>
+        {<Button
+            key="cancelButton"
+            bsSize={buttonSize}
+            disabled={running}
+            onClick={onClose}>{cancelText}</Button>}
     </span>);
     return (
         <Modal show={show} onHide={onClose}>
             <Modal.Header key="dialogHeader" closeButton>
-              <Modal.Title>{title}</Modal.Title>
+                <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {children}
             </Modal.Body>
             <Modal.Footer>
-                  {footer}
+                {footer}
             </Modal.Footer>
         </Modal>);
 

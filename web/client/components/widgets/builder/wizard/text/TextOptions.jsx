@@ -18,20 +18,20 @@ module.exports = ({ data = {}, onChange = () => { }}) => (
     <div>
         <Col key="form" xs={12}>
             <Form>
-            <FormGroup controlId="title">
-                <Col sm={12}>
+                <FormGroup controlId="title">
+                    <Col sm={12}>
                         <TitleInput style={{ marginBottom: 10 }} placeholder="widgets.builder.wizard.titlePlaceholder" value={data.title} type="text" onChange={e => onChange("title", e.target.value)} />
-                </Col>
-            </FormGroup>
+                    </Col>
+                </FormGroup>
             </Form>
         </Col>
         <Editor modules={{
-                toolbar: [
-                    [{'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
-                    [{'list': 'bullet' }, {'align': [] }],
-                    [{'color': [] }, {'background': [] }, 'clean'], ['image', 'link']
-                ]
-            }} placeholder="widgets.builder.wizard.textPlaceholder" value={data && data.text || ''} onChange={(val) => onChange("text", val)} />
-</div>
+            toolbar: [
+                [{'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
+                [{'list': 'bullet' }, {'align': [] }],
+                [{'color': [] }, {'background': [] }, 'clean'], ['image', 'link']
+            ]
+        }} placeholder="widgets.builder.wizard.textPlaceholder" value={data && data.text || ''} onChange={(val) => onChange("text", val)} />
+    </div>
 );
 

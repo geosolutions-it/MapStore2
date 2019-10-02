@@ -56,17 +56,17 @@ class GroupCard extends React.Component {
 
     renderStatus = () => {
         return (<div key="status" className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
-           <div><strong><Message msgId="users.statusTitle"/></strong></div>
-           {this.props.group.enabled ?
-               <Glyphicon glyph="ok-sign"/> :
-               <Glyphicon glyph="minus-sign"/>}
-       </div>);
+            <div><strong><Message msgId="users.statusTitle"/></strong></div>
+            {this.props.group.enabled ?
+                <Glyphicon glyph="ok-sign"/> :
+                <Glyphicon glyph="minus-sign"/>}
+        </div>);
     };
 
     renderAvatar = () => {
         return (<div key="avatar" style={this.props.avatarStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="1-group" />
-            </Button></div>);
+        </Button></div>);
     };
 
     renderDescription = () => {
@@ -82,16 +82,16 @@ class GroupCard extends React.Component {
 
     render() {
         return (
-           <GridCard className="group-thumb" style={this.props.style} header={this.props.group.groupName}
+            <GridCard className="group-thumb" style={this.props.style} header={this.props.group.groupName}
                 actions={this.props.actions}
-               >
-            <div className="user-data-container">
-                {this.renderAvatar()}
-                {this.renderName()}
-                {this.renderDescription()}
-            </div>
-            {this.renderStatus()}
-           </GridCard>
+            >
+                <div className="user-data-container">
+                    {this.renderAvatar()}
+                    {this.renderName()}
+                    {this.renderDescription()}
+                </div>
+                {this.renderStatus()}
+            </GridCard>
         );
     }
 }

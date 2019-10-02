@@ -18,17 +18,17 @@ const {set} = require('../utils/ImmutableUtils');
  */
 function floatinglegend(state = {}, action) {
     switch (action.type) {
-        case RESIZE_LEGEND: {
-            return set('size', {
-                width: action.size && action.size.width,
-                height: action.size && action.size.height
-            }, state);
-        }
-        case EXPAND_LEGEND: {
-            return {...state, expanded: action.expanded};
-        }
-        default:
-            return state;
+    case RESIZE_LEGEND: {
+        return set('size', {
+            width: action.size && action.size.width,
+            height: action.size && action.size.height
+        }, state);
+    }
+    case EXPAND_LEGEND: {
+        return {...state, expanded: action.expanded};
+    }
+    default:
+        return state;
     }
 }
 module.exports = floatinglegend;

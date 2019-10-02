@@ -20,8 +20,8 @@ const retrieveGroups = (API) =>
                 .take(1)
                 .switchMap(({ user }) =>
                     Rx.Observable.defer(() => API.getAvailableGroups(user))
-                    .map(availableGroups => ({ availableGroups }))
-                    .startWith({ loading: true })
+                        .map(availableGroups => ({ availableGroups }))
+                        .startWith({ loading: true })
                 )
                 .startWith({})
                 .catch( () => Rx.Observable.of({})),
@@ -29,8 +29,8 @@ const retrieveGroups = (API) =>
                 ...props,
                 ...overrides
             })
-    )
-);
+        )
+    );
 
 /**
  * retrieves permission for the resource
@@ -40,7 +40,7 @@ const retrievePermission = (API) =>
     mapPropsStream(props$ =>
         props$.combineLatest(
             props$
-                 // trigger when resource changes
+            // trigger when resource changes
                 .distinctUntilKeyChanged('resource')
                 .pluck('resource')
                 .filter(resource => resource.id)

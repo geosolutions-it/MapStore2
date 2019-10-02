@@ -7,20 +7,20 @@
  */
 
 import React from 'react';
-import { compose, withState, getContext } from 'recompose';
-import { Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
+import { compose, getContext, withState } from 'recompose';
 
+import LocaleUtils from '../../../utils/LocaleUtils';
+import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
-import Message from '../../I18N/Message';
-import LocaleUtils from '../../../utils/LocaleUtils';
 
 const form = [
     {
-        placeholder: "mediaEditor.imagePicker.sourcePlaceholder",
+        placeholder: "mediaEditor.mediaPicker.sourcePlaceholder",
         type: "text",
         id: "src",
-        label: <Message msgId = "mediaEditor.imagePicker.source"/>,
+        label: <Message msgId = "mediaEditor.mediaPicker.source"/>,
         validation: ({ src }) => src !== undefined && src === "" ?
             "error"
             : src
@@ -28,10 +28,10 @@ const form = [
                 : undefined
     },
     {
-        placeholder: "mediaEditor.imagePicker.titlePlaceholder",
+        placeholder: "mediaEditor.mediaPicker.titlePlaceholder",
         type: "text",
         id: "title",
-        label: <Message msgId = "mediaEditor.imagePicker.title"/>,
+        label: <Message msgId = "mediaEditor.mediaPicker.title"/>,
         validation: ({ title }) => title !== undefined && title === "" ?
             "error"
             : title
@@ -39,22 +39,22 @@ const form = [
                 : undefined
     },
     {
-        placeholder: "mediaEditor.imagePicker.altTextPlaceholder",
+        placeholder: "mediaEditor.mediaPicker.altTextPlaceholder",
         type: "text",
         id: "alt",
-        label: <Message msgId = "mediaEditor.imagePicker.altText"/>
+        label: <Message msgId = "mediaEditor.mediaPicker.altText"/>
     },
     {
-        placeholder: "mediaEditor.imagePicker.descriptionPlaceholder",
+        placeholder: "mediaEditor.mediaPicker.descriptionPlaceholder",
         type: "text",
         id: "description",
-        label: <Message msgId = "mediaEditor.imagePicker.description"/>
+        label: <Message msgId = "mediaEditor.mediaPicker.description"/>
     },
     {
-        placeholder: "mediaEditor.imagePicker.creditsPlaceholder",
+        placeholder: "mediaEditor.mediaPicker.creditsPlaceholder",
         type: "text",
         id: "credits",
-        label: <Message msgId = "mediaEditor.imagePicker.credits"/>
+        label: <Message msgId = "mediaEditor.mediaPicker.credits"/>
     }
 ];
 
@@ -83,28 +83,28 @@ export default enhance(({
                     borderBottom: "1px solid #ddd",
                     padding: 8
                 }}>
-                    <Toolbar
-                        btnGroupProps={{
-                            style: {
-                                marginBottom: 8
-                            }
-                        }}
-                        btnDefaultProps={{
-                            bsStyle: "primary",
-                            className: "square-button-md"
-                        }}
-                        buttons={[{
-                            glyph: "arrow-left",
-                            tooltipId: "mediaEditor.imagePicker.back",
-                            onClick: () => editing ? setEditingMedia(false) : setAddingMedia(false)
-                        }, {
-                            glyph: "floppy-disk",
-                            tooltipId: "mediaEditor.imagePicker.save",
-                            disabled: !properties.src || !properties.title,
-                            onClick: () => {
-                                onSave(properties);
-                            }
-                        }]} />
+                <Toolbar
+                    btnGroupProps={{
+                        style: {
+                            marginBottom: 8
+                        }
+                    }}
+                    btnDefaultProps={{
+                        bsStyle: "primary",
+                        className: "square-button-md"
+                    }}
+                    buttons={[{
+                        glyph: "arrow-left",
+                        tooltipId: "mediaEditor.mediaPicker.back",
+                        onClick: () => editing ? setEditingMedia(false) : setAddingMedia(false)
+                    }, {
+                        glyph: "floppy-disk",
+                        tooltipId: "mediaEditor.mediaPicker.save",
+                        disabled: !properties.src || !properties.title,
+                        onClick: () => {
+                            onSave(properties);
+                        }
+                    }]} />
             </div>
         }>
         <Form style={{ padding: 8 }}>

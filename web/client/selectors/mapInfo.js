@@ -75,17 +75,17 @@ const stopGetFeatureInfoSelector = createSelector(
         || !!isMeasureActive
         || isDrawSupportActive
         || !!isAnnotationsEditing
-    );
+);
 
 /**
  * Defines the general options of the identifyTool to build the request
  */
 const identifyOptionsSelector = createStructuredSelector({
-        format: generalInfoFormatSelector,
-        map: mapSelector,
-        point: clickPointSelector,
-        currentLocale: currentLocaleSelector
-    });
+    format: generalInfoFormatSelector,
+    map: mapSelector,
+    point: clickPointSelector,
+    currentLocale: currentLocaleSelector
+});
 
 const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state.mapInfo.highlight;
 
@@ -124,10 +124,10 @@ const currentFeatureCrsSelector = state => {
 const getStyleForFeature = (style) => (f = {}) =>
     f.style
         || (f.geometry && (f.geometry.type === "Point" || f.geometry.type === "MultiPoint"))
-            // point style circle requires radius (it's strange circle should be a default)
-            ? style
-            // no radius means normal polygon, line or other. TODO: fix VectorStyle to omit radius automatically
-            : omit(style, 'radius');
+    // point style circle requires radius (it's strange circle should be a default)
+        ? style
+    // no radius means normal polygon, line or other. TODO: fix VectorStyle to omit radius automatically
+        : omit(style, 'radius');
 /**
  * Create a function that add the style property to the feature.
  */

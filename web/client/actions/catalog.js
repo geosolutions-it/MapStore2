@@ -263,7 +263,7 @@ export function addLayerAndDescribe(layer) {
 
             }).catch((e) => dispatch(describeError(layer, e)));
         }
-
+        return null;
     };
 }
 export const addLayer = addLayerAndDescribe;

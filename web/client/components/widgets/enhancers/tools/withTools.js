@@ -16,30 +16,30 @@ const hasTools = (tt = []) => tt.filter(isTool).length > 0;
  * Transforms widgetTools into leftItems for the widget.
  */
 module.exports = () =>
-compose(
-    withPropsOnChange(
-        ['topLeftItems', 'widgetTools'],
-        ({ topLeftItems = [], widgetTools}) => ({
-        topLeftItems: hasTools(widgetTools)
-            ? [
-                ...topLeftItems,
-                (<Toolbar btnGroupProps={{
-                    style: {
-                        position: 'absolute',
-                        left: 14
-                    }
-                }}
-                btnDefaultProps={{
-                    className: 'no-border',
-                    bsSize: 'small',
-                    bsStyle: 'link',
-                    style: {
-                        paddingLeft: 4,
-                        paddingRight: 4
-                    }
-                }}
-                buttons={widgetTools.filter(isTool)} />)]
-            : topLeftItems
-        })
-    )
-);
+    compose(
+        withPropsOnChange(
+            ['topLeftItems', 'widgetTools'],
+            ({ topLeftItems = [], widgetTools}) => ({
+                topLeftItems: hasTools(widgetTools)
+                    ? [
+                        ...topLeftItems,
+                        (<Toolbar btnGroupProps={{
+                            style: {
+                                position: 'absolute',
+                                left: 14
+                            }
+                        }}
+                        btnDefaultProps={{
+                            className: 'no-border',
+                            bsSize: 'small',
+                            bsStyle: 'link',
+                            style: {
+                                paddingLeft: 4,
+                                paddingRight: 4
+                            }
+                        }}
+                        buttons={widgetTools.filter(isTool)} />)]
+                    : topLeftItems
+            })
+        )
+    );

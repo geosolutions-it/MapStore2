@@ -175,7 +175,7 @@ describe('Test the map reducer', () => {
             center: [2, 2]
         };
         const state = mapConfig({}, action);
-        expect(state.center).toEqual( { x: 2, y: 2, srs: "EPSG:4326" } );
+        expect(state.center).toEqual( { x: 2, y: 2, srs: "EPSG:4326", crs: "EPSG:4326" } );
     });
     it('pan to with center as object', () => {
         const action = {
@@ -254,7 +254,7 @@ describe('Test the map reducer', () => {
             crs
         };
         let state = mapConfig({}, action);
-        expect(state.center).toEqual({...pos, srs: crs});
+        expect(state.center).toEqual({...pos, srs: crs, crs});
         expect(state.zoom).toEqual(zoom);
         expect(state.mapStateSource).toEqual(null);
     });

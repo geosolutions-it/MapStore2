@@ -9,10 +9,10 @@
 const expect = require('expect');
 const requestBuilder = require('../RequestBuilder');
 const {fidFilter} = require('../../Filter/filter');
-const describeStates = require('json-loader!../../../../test-resources/wfs/describe-states.json');
-const describePois = require('json-loader!../../../../test-resources/wfs/describe-pois.json');
-const wyoming = require('json-loader!../../../../test-resources/wfs/Wyoming.json');
-const museam = require('json-loader!../../../../test-resources/wfs/museam.json');
+const describeStates = require('../../../../test-resources/wfs/describe-states.json');
+const describePois = require('../../../../test-resources/wfs/describe-pois.json');
+const wyoming = require('../../../../test-resources/wfs/Wyoming.json');
+const museam = require('../../../../test-resources/wfs/museam.json');
 const expectedInsertWyoming = require('raw-loader!../../../../test-resources/wfst/insert/Wyoming_1_1_0.xml');
 const expectedInsertmuseam = require('raw-loader!../../../../test-resources/wfst/insert/museam_1_1_0.xml');
 const expectedDelete = require('raw-loader!../../../../test-resources/wfst/delete/museam_1_1_0.xml');
@@ -68,7 +68,7 @@ describe('Test WFS-T request bodies generation', () => {
         const result = transaction(
             update(
                 [propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7")])
-            );
+        );
         expect(result).toExist();
         expect(result).toEqual(expectedUpdate.replace(/[\r\n]/g, ''));
     });
@@ -76,7 +76,7 @@ describe('Test WFS-T request bodies generation', () => {
         const {update, propertyChange, transaction} = requestBuilder(describePois);
         const result = transaction(
             update(propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7")),
-            );
+        );
         expect(result).toExist();
         expect(result).toEqual(expectedUpdate.replace(/[\n\r]/g, ''));
     });

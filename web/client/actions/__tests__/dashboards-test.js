@@ -39,12 +39,12 @@ describe('dashboards (browse) actions', () => {
     });
     it('dashboardListLoaded', () => {
         const retval = dashboardListLoaded({
-                results: [{id: 1}],
-                success: true,
-                totalCount: 1
-            }, {
-                searchText: "test",
-                options: "someOptions"
+            results: [{id: 1}],
+            success: true,
+            totalCount: 1
+        }, {
+            searchText: "test",
+            options: "someOptions"
         });
         expect(retval).toExist();
         expect(retval.type).toBe(DASHBOARDS_LIST_LOADED);

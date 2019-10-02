@@ -76,19 +76,19 @@ module.exports = {
      */
     alignDependenciesToWidgets: (action$, { getState = () => { } } = {}) =>
         action$.ofType(MAP_CONFIG_LOADED, DASHBOARD_LOADED, INSERT)
-        .map(() => availableDependenciesSelector(getState()))
-        .pluck('availableDependencies')
-        .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
+            .map(() => availableDependenciesSelector(getState()))
+            .pluck('availableDependencies')
+            .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
         // add dependencies for all map widgets (for the moment the only ones that shares dependencies)
         // and for main "map" dependency, the "viewport" and "center"
-        .map((maps=[]) => loadDependencies(maps.reduce( (deps, m) => ({
-            ...deps,
-            [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
-            [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
-            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
-            [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
-        }), {}))
-    ),
+            .map((maps = []) => loadDependencies(maps.reduce( (deps, m) => ({
+                ...deps,
+                [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
+                [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
+                [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
+                [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
+            }), {}))
+            ),
     /**
      * Toggles the dependencies setup and widget selection for dependencies
      * (if more than one widget is available for connection)
@@ -104,20 +104,20 @@ module.exports = {
                     ? configureDependency(active, availableDependencies[0], options)
                     // case of multiple map
                     : Rx.Observable.of(toggleDependencySelector(active, {
-                            availableDependencies
-                        })
-                        ).merge(
-                            action$.ofType(WIDGET_SELECTED)
-                                .filter(() => isWidgetSelectionActive(getState()))
-                                .switchMap(({ widget }) => {
-                                    const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
-                                    const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
-                                    return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
-                                }).takeUntil(
-                                    action$.ofType(LOCATION_CHANGE)
+                        availableDependencies
+                    })
+                    ).merge(
+                        action$.ofType(WIDGET_SELECTED)
+                            .filter(() => isWidgetSelectionActive(getState()))
+                            .switchMap(({ widget }) => {
+                                const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
+                                const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
+                                return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                            }).takeUntil(
+                                action$.ofType(LOCATION_CHANGE)
                                     .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))
-                                )
-                        )
+                            )
+                    )
 
                 // deactivate flow
                 : configureDependency(active, availableDependencies[0], options)

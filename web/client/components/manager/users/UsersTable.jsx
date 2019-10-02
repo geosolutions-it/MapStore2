@@ -29,18 +29,18 @@ class UsersTable extends React.Component {
         return (<Table striped condensed hover><tbody>{this.props.users.map((user) => {
             let tooltip = <Tooltip id="tooltip"><Message msgId={this.props.deleteToolTip} /></Tooltip>;
             return (<tr>
-                      <td><Glyphicon glyph="user" /> {user.name}</td>
-                      <td>
-                          <OverlayTrigger placement="left" overlay={tooltip}>
-                              <Button style={{"float": "right"}} bsSize="xs" onClick={() => {
-                                  this.props.onRemove(user);
-                              }}>
-                                  <Glyphicon glyph="remove-circle"/>
-                              </Button>
-                          </OverlayTrigger>
-                          </td>
-                      </tr>
-                      );
+                <td><Glyphicon glyph="user" /> {user.name}</td>
+                <td>
+                    <OverlayTrigger placement="left" overlay={tooltip}>
+                        <Button style={{"float": "right"}} bsSize="xs" onClick={() => {
+                            this.props.onRemove(user);
+                        }}>
+                            <Glyphicon glyph="remove-circle"/>
+                        </Button>
+                    </OverlayTrigger>
+                </td>
+            </tr>
+            );
         })}</tbody></Table>);
     }
 }

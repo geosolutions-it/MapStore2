@@ -16,33 +16,33 @@ const ShapeFileUploadAndStyle = connect((state) => (
             error: state.mapimport && state.mapimport.error || null,
             loading: state.mapimport && state.mapimport.loading || false }
     }
-        ), {
-            onShapeError: onShapeError
-        })(require('../../components/import/ShapefileUploadAndStyle'));
+), {
+    onShapeError: onShapeError
+})(require('../../components/import/ShapefileUploadAndStyle'));
 
 const StylePolygon = connect((state) => (
     {
         shapeStyle: state.style || {}
     }
-        ), {
-            setStyleParameter: setStyleParameter
-        })(require('../../components/style/StylePolygon'));
+), {
+    setStyleParameter: setStyleParameter
+})(require('../../components/style/StylePolygon'));
 
 const StylePoint = connect((state) => (
     {
         shapeStyle: state.style || {}
     }
-        ), {
-            setStyleParameter: setStyleParameter
-        })(require('../../components/style/StylePoint'));
+), {
+    setStyleParameter: setStyleParameter
+})(require('../../components/style/StylePoint'));
 
 const StylePolyline = connect((state) => (
     {
         shapeStyle: state.style || {}
     }
-        ), {
-            setStyleParameter: setStyleParameter
-        })(require('../../components/style/StylePolyline'));
+), {
+    setStyleParameter: setStyleParameter
+})(require('../../components/style/StylePolyline'));
 
 module.exports = {
     ShapeFileUploadAndStyle,

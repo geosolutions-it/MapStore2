@@ -106,34 +106,34 @@ class MousePosition extends React.Component {
         if (this.props.enabled) {
             const position = this.getPosition();
             return (
-                    <div id={this.props.id} style={this.props.style}>
-                        <span className="mapstore-mouse-coordinates">
-                            {this.props.showLabels ? <label><Message msgId="mouseCoordinates"/></label> : null}
-                            {Template ? <Template position={position} /> :
-                                <h5>
-                                    <Label bsSize="lg" bsStyle="info">{'...'}<span/></Label>
-                                </h5>
-                            }
-                        </span>
-                        {this.props.copyToClipboardEnabled &&
+                <div id={this.props.id} style={this.props.style}>
+                    <span className="mapstore-mouse-coordinates">
+                        {this.props.showLabels ? <label><Message msgId="mouseCoordinates"/></label> : null}
+                        {Template ? <Template position={position} /> :
+                            <h5>
+                                <Label bsSize="lg" bsStyle="info">{'...'}<span/></Label>
+                            </h5>
+                        }
+                    </span>
+                    {this.props.copyToClipboardEnabled &&
                             <CopyToClipboard text={JSON.stringify(position)} onCopy={this.props.onCopy}>
                                 <Button bsSize={this.props.btnSize}>
                                     {<Glyphicon glyph={this.props.glyphicon}/>}
                                 </Button>
                             </CopyToClipboard>
-                        }
-                        {this.props.showElevation ? <span className="mapstore-mouse-elevation">
-                            {this.props.showLabels ? <label><Message msgId="mousePositionElevation" /></label> : null}
-                            <h5>{this.props.elevationTemplate(position.z)}</h5>
-                        </span> : null}
-                        {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                        {this.props.editCRS ?
-                            <CRSSelector projectionDefs={this.props.projectionDefs}
-                                filterAllowedCRS={this.props.filterAllowedCRS}
-                                additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
-                                crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
-                        {this.props.showToggle ? this.props.toggle : null}
-                    </div>
+                    }
+                    {this.props.showElevation ? <span className="mapstore-mouse-elevation">
+                        {this.props.showLabels ? <label><Message msgId="mousePositionElevation" /></label> : null}
+                        <h5>{this.props.elevationTemplate(position.z)}</h5>
+                    </span> : null}
+                    {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
+                    {this.props.editCRS ?
+                        <CRSSelector projectionDefs={this.props.projectionDefs}
+                            filterAllowedCRS={this.props.filterAllowedCRS}
+                            additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
+                            crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
+                    {this.props.showToggle ? this.props.toggle : null}
+                </div>
             );
         }
         return this.props.showToggle ? <div id={this.props.id} style={this.props.style}>{this.props.toggle}</div> : null;

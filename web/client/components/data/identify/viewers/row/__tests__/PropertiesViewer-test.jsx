@@ -91,7 +91,7 @@ describe('PropertiesViewer', () => {
 
         const body = cmpDom.childNodes.item(0);
         const pChild = body.childNodes.item(0);
-        const spanChild = pChild.childNodes.item(4);
+        const spanChild = pChild.childNodes.item(2);
         expect(spanChild).toExist();
         expect(spanChild.childNodes.item(0).outerHTML).toBe(testProps.withHtml);
     });

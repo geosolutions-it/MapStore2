@@ -23,14 +23,14 @@ class MousePositionLabelDD extends React.Component {
         let integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 6, minimumFractionDigits: 6};
         let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 6, minimumFractionDigits: 6};
         return (
-                <h5>
+            <h5>
                 <Label bsSize="lg" bsStyle="info">
                     <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={this.props.position.lat} />
                     <span>° Lng: </span>
                     <NumberFormat key="lngD" numberParams={lngDFormat} value={this.props.position.lng} />
                     <span>° </span>
                 </Label>
-                </h5>);
+            </h5>);
     }
 }
 

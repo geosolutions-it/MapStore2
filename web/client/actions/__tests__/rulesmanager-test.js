@@ -8,11 +8,11 @@
 
 const expect = require('expect');
 const { RULES_SELECTED, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
-        rulesSelected,
-        optionsLoaded, updateFiltersValues,
-        SET_FILTER, setFilter,
-        SAVE_RULE, saveRule, cleanEditing, CLEAN_EDITING,
-        onEditRule, EDIT_RULE, delRules, DELETE_RULES} = require('../rulesmanager');
+    rulesSelected,
+    optionsLoaded, updateFiltersValues,
+    SET_FILTER, setFilter,
+    SAVE_RULE, saveRule, cleanEditing, CLEAN_EDITING,
+    onEditRule, EDIT_RULE, delRules, DELETE_RULES} = require('../rulesmanager');
 
 describe('test rules manager actions', () => {
     it('save rule', () => {

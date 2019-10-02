@@ -45,7 +45,7 @@ class HolyGrail extends React.Component {
         onMount: () => { }
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.onMount();
     }
 

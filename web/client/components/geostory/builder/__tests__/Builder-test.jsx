@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Builder from '../Builder';
-import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
+import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 
 describe('Builder component', () => {
     beforeEach((done) => {

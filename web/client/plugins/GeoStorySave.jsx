@@ -46,9 +46,9 @@ const SaveBaseDialog = compose(
         saveErrorSelector,
         (data, user, loading, errors) => ({ data, user, loading, errors })
     ), {
-            onClose: () => setControl(Controls.SHOW_SAVE, false),
-            onSave: saveStory
-        }),
+        onClose: () => setControl(Controls.SHOW_SAVE, false),
+        onSave: saveStory
+    }),
     withProps({
         category: "GEOSTORY"
     }),
@@ -95,11 +95,11 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
  */
 export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
     component: compose(
-            connect(createSelector(
-                saveDialogSelector,
-                (showSave) => ({ show: showSave === "saveAs" })
-            ))
-        )(SaveBaseDialog),
+        connect(createSelector(
+            saveDialogSelector,
+            (showSave) => ({ show: showSave === "saveAs" })
+        ))
+    )(SaveBaseDialog),
     reducers: { geostory },
     containers: {
         BurgerMenu: {

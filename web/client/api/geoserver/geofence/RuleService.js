@@ -52,13 +52,13 @@ const normalizeFilterValue = (value) => {
  */
 const normalizeKey = (key) => {
     switch (key) {
-        // found out that is case sensitive
-        case 'username':
-            return 'userName';
-        case 'rolename':
-            return 'roleName';
-        default:
-            return key;
+    // found out that is case sensitive
+    case 'username':
+        return 'userName';
+    case 'rolename':
+        return 'roleName';
+    default:
+        return key;
     }
 };
 
@@ -99,7 +99,7 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
                     count: data.count,
                     rules: (data.rules || []).map( convertRuleGS2GF )
                     // remove null. undefined is expected as no-data value
-                    .map( clearNullEntries )
+                        .map( clearNullEntries )
                 };
             });
     },

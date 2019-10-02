@@ -22,7 +22,7 @@ module.exports = compose(
         onChange: onEditorChange,
         insertWidget
     },
-        wizardStateToProps
+    wizardStateToProps
     ),
     manageLayers,
     handleNodeEditing,

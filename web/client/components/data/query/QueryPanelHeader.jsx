@@ -10,8 +10,8 @@ module.exports = ({loadingError, onToggleQuery = () => {}} = {}) => (<div classN
         key="menu-button"
         className="square-button no-border"
         onClick={() => onToggleQuery()}>
-            <Glyphicon glyph="arrow-left"/>
+        <Glyphicon glyph="arrow-left"/>
     </Button>
     {loadingError && (<AlertIcon popover={{text: (<Message msgId="queryform.loadingError"/>)}}/>) || (
-    <div className="square-button pull-right no-border" style={{display: 'flex'}}><Glyphicon glyph="filter" className="text-primary"/></div>)}
+        <div className="square-button pull-right no-border" style={{display: 'flex'}}><Glyphicon glyph="filter" className="text-primary"/></div>)}
 </div>);

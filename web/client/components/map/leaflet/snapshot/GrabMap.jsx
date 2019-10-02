@@ -73,7 +73,7 @@ class GrabLMap extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let mapIsLoading = this.mapIsLoading(nextProps.layers);
         let mapChanged = this.mapChanged(nextProps);
         if (this.previousTimeout) {
@@ -223,12 +223,12 @@ class GrabLMap extends React.Component {
                 newCanvas.width = newCanvas.width + left;
                 resetLayerStyles(l);
                 return html2canvas(l, {
-                        // you have to provide a canvas to avoid html2canvas to crop the image
+                    // you have to provide a canvas to avoid html2canvas to crop the image
                     canvas: newCanvas,
                     logging: false,
                     proxy: this.proxy,
                     allowTaint: props && props.allowTaint,
-                        // TODO: improve to useCORS if every source has CORS enabled
+                    // TODO: improve to useCORS if every source has CORS enabled
                     useCORS: props && props.allowTaint
                 });
             }, this);
@@ -260,12 +260,12 @@ class GrabLMap extends React.Component {
                         let newCanvas = this.refs.canvas.cloneNode();
                         newCanvas.width = newCanvas.width + left;
                         html2canvas(markers, {
-                                // you have to provide a canvas to avoid html2canvas to crop the image
+                            // you have to provide a canvas to avoid html2canvas to crop the image
                             canvas: newCanvas,
                             logging: false,
                             proxy: this.proxy,
                             allowTaint: props && props.allowTaint,
-                                // TODO: improve to useCORS if every source has CORS enabled
+                            // TODO: improve to useCORS if every source has CORS enabled
                             useCORS: props && props.allowTaint
                         }).then( (c) => {
                             let cx = finalCanvas.getContext("2d");

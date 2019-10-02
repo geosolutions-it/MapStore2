@@ -86,73 +86,73 @@ const StyleTemplates = ({
     onUpdate = () => {},
     loading
 }) => (
-        <BorderLayout
-            header={
-                <div>
-                    <Filter
-                        filterPlaceholder="styleeditor.templateFilterPlaceholder"
-                        filterText={filterText}
-                        onFilter={onFilter}/>
-                    <div className="text-center">
-                        <small>{loading ? <Loader size={15} style={{ display: 'inline-block' }}/> : <Message msgId="styleeditor.createStyleFromTemplate"/>}</small>
-                    </div>
+    <BorderLayout
+        header={
+            <div>
+                <Filter
+                    filterPlaceholder="styleeditor.templateFilterPlaceholder"
+                    filterText={filterText}
+                    onFilter={onFilter}/>
+                <div className="text-center">
+                    <small>{loading ? <Loader size={15} style={{ display: 'inline-block' }}/> : <Message msgId="styleeditor.createStyleFromTemplate"/>}</small>
                 </div>
-            }>
-            <SideGrid
-                colProps={{}}
-                cardComponent={SquareCard}
-                onItemClick={({
+            </div>
+        }>
+        <SideGrid
+            colProps={{}}
+            cardComponent={SquareCard}
+            onItemClick={({
+                code,
+                styleId: templateId,
+                format
+            }) => {
+                onSelect({
                     code,
-                    styleId: templateId,
-                    format
-                }) => {
-                    onSelect({
-                        code,
-                        templateId,
-                        format: format || 'css'
-                    });
-                    onUpdate({...styleSettings, title: head(templates.filter(({styleId}) => styleId === templateId).map(({title}) => title))});
-                }}
-                items={templates
-                    .filter(({title}) => !filterText || filterText && title.indexOf(filterText) !== -1)
-                    .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
-                    .map(styleTemplate => ({
-                        ...styleTemplate,
-                        selected: styleTemplate.styleId === selectedStyle,
-                        disabled: loading
-                        }))}/>
-            <Portal>
-                <ResizableModal
-                    show={!!add}
-                    fitContent
-                    title={<Message msgId="styleeditor.createStyleModalTitle"/>}
-                    onClose={() => onClose()}
-                    buttons={[
-                        {
-                            text: <Message msgId="save"/>,
-                            bsStyle: 'primary',
-                            disabled: !validateAlphaNumeric(styleSettings),
-                            onClick: () => onSave(styleSettings)
-                        }
-                    ]}>
-                    <Form>
-                        <FormGroup controlId="styleTitle" validationState={!validateAlphaNumeric(styleSettings) && 'error'}>
-                            {formFields.map(({title, placeholder, key}) => (<span key={key}>
-                                <ControlLabel>{title}</ControlLabel>
-                                <FormControl
-                                    type="text"
-                                    defaultValue={styleSettings[key]}
-                                    placeholder={placeholder}
-                                    onChange={event => onUpdate({...styleSettings, [key]: event.target.value})}/>
-                            </span>))}
-                        </FormGroup>
-                        {!validateAlphaNumeric(styleSettings) && <Alert style={{margin: 0}} bsStyle="danger">
-                            <HTML msgId="styleeditor.titleRequired"/>
-                        </Alert>}
-                    </Form>
-                </ResizableModal>
-            </Portal>
-        </BorderLayout>
-    );
+                    templateId,
+                    format: format || 'css'
+                });
+                onUpdate({...styleSettings, title: head(templates.filter(({styleId}) => styleId === templateId).map(({title}) => title))});
+            }}
+            items={templates
+                .filter(({title}) => !filterText || filterText && title.indexOf(filterText) !== -1)
+                .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
+                .map(styleTemplate => ({
+                    ...styleTemplate,
+                    selected: styleTemplate.styleId === selectedStyle,
+                    disabled: loading
+                }))}/>
+        <Portal>
+            <ResizableModal
+                show={!!add}
+                fitContent
+                title={<Message msgId="styleeditor.createStyleModalTitle"/>}
+                onClose={() => onClose()}
+                buttons={[
+                    {
+                        text: <Message msgId="save"/>,
+                        bsStyle: 'primary',
+                        disabled: !validateAlphaNumeric(styleSettings),
+                        onClick: () => onSave(styleSettings)
+                    }
+                ]}>
+                <Form>
+                    <FormGroup controlId="styleTitle" validationState={!validateAlphaNumeric(styleSettings) && 'error'}>
+                        {formFields.map(({title, placeholder, key}) => (<span key={key}>
+                            <ControlLabel>{title}</ControlLabel>
+                            <FormControl
+                                type="text"
+                                defaultValue={styleSettings[key]}
+                                placeholder={placeholder}
+                                onChange={event => onUpdate({...styleSettings, [key]: event.target.value})}/>
+                        </span>))}
+                    </FormGroup>
+                    {!validateAlphaNumeric(styleSettings) && <Alert style={{margin: 0}} bsStyle="danger">
+                        <HTML msgId="styleeditor.titleRequired"/>
+                    </Alert>}
+                </Form>
+            </ResizableModal>
+        </Portal>
+    </BorderLayout>
+);
 
 module.exports = StyleTemplates;

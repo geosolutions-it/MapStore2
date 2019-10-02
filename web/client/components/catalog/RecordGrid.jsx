@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col} = require('react-bootstrap');
 
-const RecordItem = require('./RecordItem');
+const RecordItem = require('./RecordItem').default;
 
 class RecordGrid extends React.Component {
     static propTypes = {
@@ -47,7 +47,7 @@ class RecordGrid extends React.Component {
     renderRecordItem = (record) => {
         let Item = this.props.recordItem || RecordItem;
         return (
-			<Col {...this.props.column} key={record.identifier}>
+            <Col {...this.props.column} key={record.identifier}>
                 <Item
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
@@ -66,8 +66,8 @@ class RecordGrid extends React.Component {
                     addAuthentication={this.props.addAuthentication}
                     currentLocale={this.props.currentLocale}
                     layerBaseConfig={this.props.layerBaseConfig}
-                    />
-			</Col>
+                />
+            </Col>
         );
     };
 
@@ -77,9 +77,9 @@ class RecordGrid extends React.Component {
             return (
                 <Grid className="record-grid" fluid style={this.props.style}>
                     <Row>
-						{mapsList.map(this.renderRecordItem)}
-					</Row>
-				</Grid>
+                        {mapsList.map(this.renderRecordItem)}
+                    </Row>
+                </Grid>
             );
         }
 

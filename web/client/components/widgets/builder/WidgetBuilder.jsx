@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -9,27 +9,27 @@ const React = require('react');
 
 const ChartWizard = require('./wizard/ChartWizard');
 module.exports = ({
-        step=0,
-        valid,
-        onFinish = () => {},
-        setValid = () => {},
-        onEditorChange = () => {},
-        setPage = () => {},
-        layer,
-        types,
-        featureTypeProperties,
-        dependencies,
-        editorData = {}}
-    ) =>
-        (<ChartWizard
-            dependencies={dependencies}
-            valid={valid}
-            types={types}
-            featureTypeProperties={featureTypeProperties}
-            step={step}
-            layer={layer}
-            data={editorData}
-            setValid={setValid}
-            onFinish={onFinish}
-            setPage={setPage}
-            onChange={onEditorChange}/>);
+    step = 0,
+    valid,
+    onFinish = () => {},
+    setValid = () => {},
+    onEditorChange = () => {},
+    setPage = () => {},
+    layer,
+    types,
+    featureTypeProperties,
+    dependencies,
+    editorData = {}}
+) =>
+    (<ChartWizard
+        dependencies={dependencies}
+        valid={valid}
+        types={types}
+        featureTypeProperties={featureTypeProperties}
+        step={step}
+        layer={layer}
+        data={editorData}
+        setValid={setValid}
+        onFinish={onFinish}
+        setPage={setPage}
+        onChange={onEditorChange}/>);

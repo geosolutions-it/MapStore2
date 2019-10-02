@@ -11,10 +11,10 @@ const {Tooltip, Legend} = require('recharts');
 
 const {sameToneRangeColors} = require('../../utils/ColorUtils');
 const charts = {
-   line: require('./Line'),
-   pie: require('./Pie'),
-   bar: require('./Bar'),
-   gauge: require('./Gauge')
+    line: require('./Line'),
+    pie: require('./Pie'),
+    bar: require('./Bar'),
+    gauge: require('./Gauge')
 };
 
 const AUTOCOLOR_DEFAULTS = {
@@ -32,7 +32,7 @@ const AUTOCOLOR_DEFAULTS = {
  * @param {Object} [autoColorOptions] [description]      Options to generate colors for the chart
  * @param {[type]} props                                 [description]
  */
-const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions = AUTOCOLOR_DEFAULTS, colorGenerator, ...props} = {}) => {
+const SimpleChart = ({type = "line", tooltip = {}, legend = {}, autoColorOptions = AUTOCOLOR_DEFAULTS, colorGenerator, ...props} = {}) => {
     const Component = charts[type];
 
     const defaultColorGenerator = (total, colorOptions = autoColorOptions) => {
@@ -40,7 +40,7 @@ const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions =
         return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
     };
 
-    const CustomTooltip = ({active, payload}={}) => {
+    const CustomTooltip = ({active, payload} = {}) => {
         if (active) {
             const label = payload[0].name;
             const percent = payload[0].percent;
@@ -56,15 +56,15 @@ const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions =
     };
 
     return (<Component
-                margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                colorGenerator={colorGenerator || defaultColorGenerator}
-                autoColorOptions={autoColorOptions}
-                {...props}
-                {...{legend, tooltip}}
-            >
-                {tooltip !== false ? type === "pie" ? <Tooltip content={CustomTooltip}/> : <Tooltip {...tooltip}/> : null}
-                {legend !== false ? <Legend {...legend} wrapperStyle={{bottom: 0}} /> : null}
-            </Component>
+        margin={{top: 5, right: 30, left: 20, bottom: 5}}
+        colorGenerator={colorGenerator || defaultColorGenerator}
+        autoColorOptions={autoColorOptions}
+        {...props}
+        {...{legend, tooltip}}
+    >
+        {tooltip !== false ? type === "pie" ? <Tooltip content={CustomTooltip}/> : <Tooltip {...tooltip}/> : null}
+        {legend !== false ? <Legend {...legend} wrapperStyle={{bottom: 0}} /> : null}
+    </Component>
     );
 };
 

@@ -11,7 +11,7 @@ const Selectors = require("./attributeselectors");
 const Message = require("../../../I18N/Message");
 
 
-module.exports = ({rule = {}, setOption= () => {}, active = true}) => {
+module.exports = ({rule = {}, setOption = () => {}, active = true}) => {
     const {grant, layer, workspace} = rule;
     const showInfo = grant !== "DENY" && layer && !workspace;
     return (

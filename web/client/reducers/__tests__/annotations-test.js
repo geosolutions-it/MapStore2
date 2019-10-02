@@ -40,7 +40,7 @@ const {
     toggleStyle,
     setStyle,
     updateSymbols
- } = require('../../actions/annotations');
+} = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
 
@@ -253,20 +253,20 @@ describe('Test the annotations reducer', () => {
             drawing: false,
             editing: {
                 features: [{
-                style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
-            }]
+                    style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
+                }]
             }}, {
-                type: TOGGLE_ADD,
-                featureType: "Polygon"
-            });
+            type: TOGGLE_ADD,
+            featureType: "Polygon"
+        });
         expect(state.coordinateEditorEnabled).toBe(true);
         expect(state.stylerType).toBe("polygon");
         expect(state.featureType).toBe("Polygon");
         expect(state.drawing).toBe(true);
         state = annotations({drawing: true, editing: {
             features: [{
-            style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
-        }]
+                style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
+            }]
         }}, {
             type: TOGGLE_ADD
         });
@@ -277,12 +277,12 @@ describe('Test the annotations reducer', () => {
             drawing: false,
             editing: {
                 features: [{
-                style: {"Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon, type: "Polygon"}
-            }]
+                    style: {"Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon, type: "Polygon"}
+                }]
             }}, {
-                type: TOGGLE_ADD,
-                featureType: "Text"
-            });
+            type: TOGGLE_ADD,
+            featureType: "Text"
+        });
         expect(state.coordinateEditorEnabled).toBe(true);
         expect(state.stylerType).toBe("text");
         expect(state.featureType).toBe("Text");
@@ -327,7 +327,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-        }}, toggleStyle());
+            }}, toggleStyle());
         expect(annotationsState.styling).toBe(false);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(true);
@@ -359,7 +359,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-        }}, toggleStyle());
+            }}, toggleStyle());
         expect(annotationsState.styling).toBe(true);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(false);
@@ -449,9 +449,9 @@ describe('Test the annotations reducer', () => {
                     }
                 }]
             }}, {
-                type: TOGGLE_ADD,
-                featureType: "Circle"
-            });
+            type: TOGGLE_ADD,
+            featureType: "Circle"
+        });
         expect(state.coordinateEditorEnabled).toBe(true);
         expect(state.selected.properties.isCircle).toBe(true);
         expect(state.selected.properties.isValidFeature).toBe(false);
@@ -477,9 +477,9 @@ describe('Test the annotations reducer', () => {
                     }
                 }]
             }}, {
-                type: TOGGLE_ADD,
-                featureType: "Text"
-            });
+            type: TOGGLE_ADD,
+            featureType: "Text"
+        });
         expect(state.coordinateEditorEnabled).toBe(true);
         expect(state.selected.properties.isText).toBe(true);
         expect(state.selected.properties.isValidFeature).toBe(false);
@@ -618,7 +618,7 @@ describe('Test the annotations reducer', () => {
         const errorFrom = "text";
         const coordinates = [1, 1];
         const state = annotations({
-                editing: featureColl
+            editing: featureColl
         }, setInvalidSelected(errorFrom, coordinates));
         expect(state.selected.properties.isValidFeature).toBe(false);
         expect(state.selected.properties.valueText).toBe(undefined);

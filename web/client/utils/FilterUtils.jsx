@@ -32,7 +32,7 @@ const checkOperatorValidity = (value, operator) => {
  * @return {boolean}
  */
 const isCrossLayerFilterValid = (crossLayerFilter) =>
-        get(crossLayerFilter, 'operation', false) &&
+    get(crossLayerFilter, 'operation', false) &&
         get(crossLayerFilter, 'collectGeometries.queryCollection.typeName', false) &&
         get(crossLayerFilter, 'collectGeometries.queryCollection.geometryName', false);
 const wrapAttributeWithDoubleQuotes = a => "\"" + a + "\"";
@@ -48,7 +48,7 @@ const setupCrossLayerFilterDefaults = (crossLayerFilter) => {
                 id: 1,
                 index: 0,
                 logic: 'OR'
-        }];
+            }];
         return {
             ...crossLayerFilter,
             collectGeometries: {
@@ -61,8 +61,7 @@ const setupCrossLayerFilterDefaults = (crossLayerFilter) => {
             }
         };
     }
-
-
+    return null;
 };
 
 const normalizeVersion = (version) => {
@@ -141,7 +140,7 @@ const ogcStringField = (attribute, operator, value, nsplaceholder) => {
                         attribute +
                     propertyTagReference[nsplaceholder].endTag
                 );
-        }else if (operator === "=") {
+        } else if (operator === "=") {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
                     propertyTagReference[nsplaceholder].startTag +
@@ -149,7 +148,7 @@ const ogcStringField = (attribute, operator, value, nsplaceholder) => {
                     propertyTagReference[nsplaceholder].endTag +
                     "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>"
                 );
-        }else {
+        } else {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
                     propertyTagReference[nsplaceholder].startTag +
@@ -190,19 +189,19 @@ const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
     if (operator === "><") {
         if (!isNil(value) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
             fieldFilter = ogcComparisonOperators[">="](nsplaceholder,
-                            propertyTagReference[nsplaceholder].startTag +
+                propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>"
-                        );
-        }else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+            );
+        } else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
             fieldFilter = ogcComparisonOperators["<="](nsplaceholder,
-                            propertyTagReference[nsplaceholder].startTag +
+                propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>"
-                     );
-        }else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+            );
+        } else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
@@ -220,11 +219,11 @@ const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
         let val = !isNil(value) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
         if (!isNil(val)) {
             fieldFilter = ogcComparisonOperators[operator](nsplaceholder,
-                            propertyTagReference[nsplaceholder].startTag +
+                propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + val + "</" + nsplaceholder + ":Literal>"
-                     );
+            );
         }
     }
     return fieldFilter;
@@ -232,36 +231,36 @@ const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
 const processOGCSimpleFilterField = (field, nsplaceholder) => {
     let filter = "";
     switch (field.type) {
-        case "date":
-            filter = ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "number":
-            filter = ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "string":
-            filter = ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "boolean":
-            filter = ogcBooleanField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "list": {
-            if (field.values && field.values.length > 0 ) {
-                const OP = "OR";
-                filter = field.values.reduce((ogc, val) => {
-                    let op = (val === null || val === "null") ? "isNull" : "=";
-                    return ogc + ogcStringField(field.attribute, op, val, nsplaceholder);
-                }, "");
-                filter = ogcLogicalOperators[OP](nsplaceholder, filter);
-            }
-            break;
+    case "date":
+        filter = ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
+        break;
+    case "number":
+        filter = ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
+        break;
+    case "string":
+        filter = ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
+        break;
+    case "boolean":
+        filter = ogcBooleanField(field.attribute, field.operator, field.values, nsplaceholder);
+        break;
+    case "list": {
+        if (field.values && field.values.length > 0 ) {
+            const OP = "OR";
+            filter = field.values.reduce((ogc, val) => {
+                let op = (val === null || val === "null") ? "isNull" : "=";
+                return ogc + ogcStringField(field.attribute, op, val, nsplaceholder);
+            }, "");
+            filter = ogcLogicalOperators[OP](nsplaceholder, filter);
         }
-        default:
-            break;
+        break;
+    }
+    default:
+        break;
     }
     return filter;
 };
 
-const cqlQueryCollection = ({typeName, geometryName, cqlFilter= "INCLUDE"} = {}) => `queryCollection('${typeName}', '${geometryName}','${escapeCQLStrings(cqlFilter)}')`;
+const cqlQueryCollection = ({typeName, geometryName, cqlFilter = "INCLUDE"} = {}) => `queryCollection('${typeName}', '${geometryName}','${escapeCQLStrings(cqlFilter)}')`;
 const cqlCollectGeometries = (content) => `collectGeometries(${content})`;
 const FilterUtils = {
     checkOperatorValidity,
@@ -278,7 +277,7 @@ const FilterUtils = {
             if (attributeFilter !== "") {
                 filters.push(attributeFilter);
             }
-        }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
+        } else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             const OP = "AND";
             const ogc = ogcLogicalOperators[OP](nsplaceholder, objFilter.simpleFilterFields.map( (f) => processOGCSimpleFilterField(f, nsplaceholder)).join("") );
             filters.push(ogc);
@@ -410,25 +409,25 @@ const FilterUtils = {
             filter = fields.reduce((arr, field) => {
                 let fieldFilter;
                 switch (field.type) {
-                    case "date":
-                    case "date-time":
-                    case "time":
-                        fieldFilter = ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "number":
-                        fieldFilter = ogcNumberField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "string":
-                        fieldFilter = ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "boolean":
-                        fieldFilter = ogcBooleanField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "list":
-                        fieldFilter = ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    default:
-                        break;
+                case "date":
+                case "date-time":
+                case "time":
+                    fieldFilter = ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "number":
+                    fieldFilter = ogcNumberField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "string":
+                    fieldFilter = ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "boolean":
+                    fieldFilter = ogcBooleanField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "list":
+                    fieldFilter = ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                default:
+                    break;
                 }
                 if (field.operator === "isNull") {
                     fieldFilter = ogcStringField(field.attribute, field.operator, field.operator, nsplaceholder);
@@ -462,33 +461,33 @@ const FilterUtils = {
             propertyTagReference[nsplaceholder].endTag;
 
         switch (objFilter.spatialField.operation) {
-            case "INTERSECTS":
-            case "DWITHIN":
-            case "WITHIN":
-            case "CONTAINS": {
-                ogc += processOGCGeometry(wfsToGmlVersion(version), objFilter.spatialField.geometry);
+        case "INTERSECTS":
+        case "DWITHIN":
+        case "WITHIN":
+        case "CONTAINS": {
+            ogc += processOGCGeometry(wfsToGmlVersion(version), objFilter.spatialField.geometry);
 
-                if (objFilter.spatialField.operation === "DWITHIN") {
-                    ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
-                }
-
-                break;
-
+            if (objFilter.spatialField.operation === "DWITHIN") {
+                ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
             }
-            case "BBOX": {
-                let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
-                let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
 
-                ogc +=
+            break;
+
+        }
+        case "BBOX": {
+            let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
+            let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
+
+            ogc +=
                         '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
                             '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
                             '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
                         '</gml:Envelope>';
 
-                break;
-            }
-            default:
-                break;
+            break;
+        }
+        default:
+            break;
         }
 
         return ogcSpatialOperators[objFilter.spatialField.operation](nsplaceholder, ogc);

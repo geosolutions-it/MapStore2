@@ -17,42 +17,42 @@ const { head, pickBy, identity, isObject, isArray } = require('lodash');
 
 function additionallayers(state = [], action) {
     switch (action.type) {
-        case UPDATE_ADDITIONAL_LAYER: {
+    case UPDATE_ADDITIONAL_LAYER: {
 
-            const newLayerItem = pickBy({
-                id: action.id,
-                owner: action.owner,
-                actionType: action.actionType,
-                options: action.options
-            }, identity);
+        const newLayerItem = pickBy({
+            id: action.id,
+            owner: action.owner,
+            actionType: action.actionType,
+            options: action.options
+        }, identity);
 
-            const currentLayerItem = head(state.filter(({id}) => id === newLayerItem.id));
+        const currentLayerItem = head(state.filter(({id}) => id === newLayerItem.id));
 
-            if (currentLayerItem) {
-                return state.map(layerItem => layerItem.id === newLayerItem.id ? {...currentLayerItem, ...newLayerItem} : {...layerItem});
-            }
+        if (currentLayerItem) {
+            return state.map(layerItem => layerItem.id === newLayerItem.id ? {...currentLayerItem, ...newLayerItem} : {...layerItem});
+        }
 
-            return [
-                ...state,
-                newLayerItem
-            ];
-        }
-        case UPDATE_OPTIONS_BY_OWNER: {
-            const {options, owner} = action;
-            return state.map((layerItem, idx) => layerItem.owner === owner ? {
-                ...layerItem,
-                options: isObject(options) && options[layerItem.id] || isArray(options) && options[idx] || {}
-            } : {...layerItem});
-        }
-        case REMOVE_ADDITIONAL_LAYER: {
-            const {id, owner} = action;
-            return owner ? state.filter(layerItem => layerItem.owner !== owner) : state.filter(layerItem => layerItem.id !== id);
-        }
-        case REMOVE_ALL_ADDITIONAL_LAYERS: {
-            return [];
-        }
-        default:
-            return state;
+        return [
+            ...state,
+            newLayerItem
+        ];
+    }
+    case UPDATE_OPTIONS_BY_OWNER: {
+        const {options, owner} = action;
+        return state.map((layerItem, idx) => layerItem.owner === owner ? {
+            ...layerItem,
+            options: isObject(options) && options[layerItem.id] || isArray(options) && options[idx] || {}
+        } : {...layerItem});
+    }
+    case REMOVE_ADDITIONAL_LAYER: {
+        const {id, owner} = action;
+        return owner ? state.filter(layerItem => layerItem.owner !== owner) : state.filter(layerItem => layerItem.id !== id);
+    }
+    case REMOVE_ALL_ADDITIONAL_LAYERS: {
+        return [];
+    }
+    default:
+        return state;
     }
 }
 

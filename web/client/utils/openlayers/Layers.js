@@ -43,6 +43,7 @@ export const updateLayer = function(type, layer, newOptions, oldOptions, map, ma
             layer.getSource().updateParams(newOptions.params);
         }
     }
+    return null;
 };
 
 export const removeLayer = function(type, options, map, mapId, layer) {

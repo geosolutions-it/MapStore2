@@ -47,18 +47,18 @@ class CreateNewMap extends React.Component {
     render() {
         const display = this.isAllowed() ? null : "none";
         return (<Grid fluid={this.props.fluid} style={{marginBottom: "30px", padding: 0, display}}>
-        <Col {...this.props.colProps} >
-            <ButtonToolbar>
-            <Button tooltipId="newMap" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
-                <Glyphicon glyph="add-map" />
-            </Button>
-            {this.props.showNewDashboard ?
-                <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
-                    <Glyphicon glyph="add-dashboard" />
-                </Button>
-                : null}
-            </ButtonToolbar>
-        </Col>
+            <Col {...this.props.colProps} >
+                <ButtonToolbar>
+                    <Button tooltipId="newMap" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
+                        <Glyphicon glyph="add-map" />
+                    </Button>
+                    {this.props.showNewDashboard ?
+                        <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
+                            <Glyphicon glyph="add-dashboard" />
+                        </Button>
+                        : null}
+                </ButtonToolbar>
+            </Col>
         </Grid>);
     }
     isAllowed = () => this.props.isLoggedIn && this.props.allowedRoles.indexOf(this.props.user && this.props.user.role) >= 0;

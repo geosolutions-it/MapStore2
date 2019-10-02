@@ -11,79 +11,79 @@ const {createSink} = require('recompose');
 const expect = require('expect');
 const wfsChartOptions = require('../wfsChartOptions');
 const featureTypeProperties = [
-                {
-                    "name": "Integer",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:int",
-                    "localType": "int"
-                },
-                {
-                    "name": "Long",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:int",
-                    "localType": "int"
-                },
-                {
-                    "name": "Float",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:number",
-                    "localType": "number"
-                },
-                {
-                    "name": "Double_Precision",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:number",
-                    "localType": "number"
-                },
-                {
-                    "name": "Date",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:date",
-                    "localType": "date"
-                },
-                {
-                    "name": "Time",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:time",
-                    "localType": "time"
-                },
-                {
-                    "name": "DateTime",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:date-time",
-                    "localType": "date-time"
-                },
-                {
-                    "name": "String",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "xsd:string",
-                    "localType": "string"
-                },
-                {
-                    "name": "Point",
-                    "maxOccurs": 1,
-                    "minOccurs": 0,
-                    "nillable": true,
-                    "type": "gml:Point",
-                    "localType": "Point"
-                }
-            ];
+    {
+        "name": "Integer",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:int",
+        "localType": "int"
+    },
+    {
+        "name": "Long",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:int",
+        "localType": "int"
+    },
+    {
+        "name": "Float",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:number",
+        "localType": "number"
+    },
+    {
+        "name": "Double_Precision",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:number",
+        "localType": "number"
+    },
+    {
+        "name": "Date",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:date",
+        "localType": "date"
+    },
+    {
+        "name": "Time",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:time",
+        "localType": "time"
+    },
+    {
+        "name": "DateTime",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:date-time",
+        "localType": "date-time"
+    },
+    {
+        "name": "String",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "xsd:string",
+        "localType": "string"
+    },
+    {
+        "name": "Point",
+        "maxOccurs": 1,
+        "minOccurs": 0,
+        "nillable": true,
+        "type": "gml:Point",
+        "localType": "Point"
+    }
+];
 
 
 describe('wfsChartOptions enhancer', () => {

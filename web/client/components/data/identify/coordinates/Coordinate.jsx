@@ -23,7 +23,7 @@ module.exports = ({
     edit,
     onChange = () => {},
     onChangeFormat = () => {}
-    }) =>
+}) =>
     edit ?
         (<Editor
             removeVisible={false}

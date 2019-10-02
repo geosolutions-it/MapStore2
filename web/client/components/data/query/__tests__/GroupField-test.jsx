@@ -64,11 +64,11 @@ describe('GroupField', () => {
             valueId: "id",
             valueLabel: "name",
             values: [
-               {id: "attribute1", name: "attribute1"},
-               {id: "attribute2", name: "attribute2"},
-               {id: "attribute3", name: "attribute3"},
-               {id: "attribute4", name: "attribute4"},
-               {id: "attribute5", name: "attribute5"}
+                {id: "attribute1", name: "attribute1"},
+                {id: "attribute2", name: "attribute2"},
+                {id: "attribute3", name: "attribute3"},
+                {id: "attribute4", name: "attribute4"},
+                {id: "attribute5", name: "attribute5"}
             ]
         }];
 

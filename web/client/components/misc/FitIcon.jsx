@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -26,11 +26,11 @@ module.exports = ({glyph = "info-sign", tooltip, tooltipId, iconFit, padding = 0
             tooltipId={tooltipId}
             style={{
                 display: "inline-block",
-                padding,
-                margin,
+                padding: padding + "px",
+                margin: margin + "px",
                 textAlign: "center",
                 fontSize: iconFit
                     ? Math.min(width, height) - 2 * padding - 2 * margin
                     : width - 2 * padding - 2 * margin
-                }} />)}
+            }} />)}
 </ContainerDimensions>);

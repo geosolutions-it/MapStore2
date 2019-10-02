@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+    sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
 const Message = require('./locale/Message');
 
 
@@ -264,7 +264,7 @@ class QueryPanel extends React.Component {
         super(props);
         this.state = {showModal: false};
     }
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.querypanelEnabled === true && this.props.querypanelEnabled === false) {
             this.props.onInit();
         }
@@ -298,7 +298,7 @@ class QueryPanel extends React.Component {
                         overflowY: 'auto'
                     }
                 }}
-                >
+            >
                 <div/>
             </Sidebar>
         );
@@ -306,7 +306,7 @@ class QueryPanel extends React.Component {
     onToggle = () => {
         if (this.props.advancedToolbar && !isEqual(this.props.appliedFilter, this.props.storedFilter)) {
             this.setState(() => ({showModal: true}));
-        }else {
+        } else {
             this.props.onToggleQuery();
         }
     }

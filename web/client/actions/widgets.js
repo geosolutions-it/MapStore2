@@ -222,7 +222,7 @@ const setPage = (step) => changeEditorSetting("step", step);
  * ex
  * @return {[type]} [description]
  */
-const exportCSV = ({data= [], title = "export"}) => ({
+const exportCSV = ({data = [], title = "export"}) => ({
     type: EXPORT_CSV,
     data,
     title

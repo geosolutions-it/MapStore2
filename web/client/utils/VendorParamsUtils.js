@@ -30,7 +30,7 @@ module.exports = {
         cqlFilters = cqlFilters.filter( f => !!f);
         if (cqlFilters.length > 1) {
             CQL_FILTER = cqlFilters.map(f => (`(${f})`)).join(" AND ");
-        }else {
+        } else {
             CQL_FILTER = cqlFilters.pop();
         }
         return CQL_FILTER ? {

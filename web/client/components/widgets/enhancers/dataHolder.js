@@ -7,9 +7,9 @@
  */
 const {compose, withState, withHandlers} = require('recompose');
 module.exports = compose(
-   // table / chart visualization
-   withState('data', 'setData', {}),
-   withHandlers({
-      onChange: ({ data, setData }) => (key, value) => setData({...data, [key]: value})
+    // table / chart visualization
+    withState('data', 'setData', {}),
+    withHandlers({
+        onChange: ({ data, setData }) => (key, value) => setData({...data, [key]: value})
     })
 );

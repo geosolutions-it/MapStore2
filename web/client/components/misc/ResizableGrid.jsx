@@ -70,7 +70,7 @@ class ResizableGrid extends React.Component {
         minWidth: this.props.minWidth
     };
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.size.width !== newProps.size.width ) {
             this.setState({
                 minWidth: this.getWidth(this.refs.grid),

@@ -15,7 +15,7 @@ const fixUrl = (url) => {
 const getUpdateType = (o, n) => {
     if (o.priority !== n.priority) {
         return 'full';
-    }else if (o.grant !== n.grant || o.ipaddress !== n.ipaddress) {
+    } else if (o.grant !== n.grant || o.ipaddress !== n.ipaddress) {
         return 'grant';
     }
     return "simple";
@@ -45,62 +45,62 @@ const deleteRule = (id) => Rx.Observable.defer(() => GeoFence.deleteRule(id));
 
 // Full update we need to delete, save and move
 const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) =>getUpdateType(oR, r) === 'full')
-        .switchMap(({rule, origRule}) => deleteRule(rule.id)
-            .switchMap(() => {
-                const {priority, id, ...newRule} = rule;
-                return Rx.Observable.defer(() => GeoFence.addRule(newRule))
+    .switchMap(({rule, origRule}) => deleteRule(rule.id)
+        .switchMap(() => {
+            const {priority, id, ...newRule} = rule;
+            return Rx.Observable.defer(() => GeoFence.addRule(newRule))
                 .catch((e) => {
                     const {priority: p, id: omit, ...oldRule} = origRule;
                     oldRule.position = {value: p, position: "fixedPriority"};
                     // We have to restore original rule and to throw the exception!!
                     return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).concat(Rx.Observable.of({type: RULE_SAVED}).do(() => { throw (e); }));
                 });
-            })
+        })
         .switchMap(({data: id}) => {
             return Rx.Observable.defer(() => GeoFence.moveRules(rule.priority, [{id}]));
         }
-));
+        ));
 const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => getUpdateType(oR, r) === 'grant')
-        .switchMap(({rule, origRule}) => deleteRule(rule.id)
-            .switchMap(() => {
-                const {priority, id, ...newRule} = rule;
-                newRule.position = {value: priority, position: "fixedPriority"};
-                return Rx.Observable.defer(() => GeoFence.addRule(newRule))
+    .switchMap(({rule, origRule}) => deleteRule(rule.id)
+        .switchMap(() => {
+            const {priority, id, ...newRule} = rule;
+            newRule.position = {value: priority, position: "fixedPriority"};
+            return Rx.Observable.defer(() => GeoFence.addRule(newRule))
                 .catch((e) => {
                     const {priority: p, id: omit, ...oldRule} = origRule;
                     oldRule.position = {value: p, position: "fixedPriority"};
                     // We have to restore original rule and to throw the exception and reload the rules!!
                     return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).concat(Rx.Observable.of({type: RULE_SAVED}).do(() => { throw (e); }));
                 });
-            })
-        );
+        })
+    );
 // if priority and grant are the same we just need to update new rule
 const justUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => getUpdateType(oR, r) === 'simple')
-        .switchMap(({rule}) => Rx.Observable.defer(() => GeoFence.updateRule(rule)));
+    .switchMap(({rule}) => Rx.Observable.defer(() => GeoFence.updateRule(rule)));
 module.exports = {
     loadRules: (pages = [], filters = {}, size) =>
         Rx.Observable.combineLatest(pages.map(p => loadSinglePage(p, filters, size)))
-        .map(results => results.reduce( (acc, {page, rules}) => ({...acc, [page]: rules}), {}))
-        .map(p => ({pages: p})),
+            .map(results => results.reduce( (acc, {page, rules}) => ({...acc, [page]: rules}), {}))
+            .map(p => ({pages: p})),
     getCount: (filters = {}) => Rx.Observable.defer(() => GeoFence.getRulesCount(filters)),
     moveRules: (targetPriority, rulesIds) => Rx.Observable.defer(() => GeoFence.moveRules(targetPriority, rulesIds)),
-    getUsers: (userFilter = "", page = 0, size = 10, parentsFilter = {}, countEl = false) => {
+    getUsers: (userFilter = "", page = 0, size = 10, countEl = false) => {
         return countEl && Rx.Observable.combineLatest([countUsers(userFilter), loadUsers(userFilter, page, size)], (count, {users}) => ({
             count,
             data: users
         })) || loadUsers(userFilter, page, size).map(({users}) => ({data: users}));
     },
-    getRoles: (roleFilter = "", page = 0, size = 10, parentsFilter = {}, countEl = false) => {
+    getRoles: (roleFilter = "", page = 0, size = 10, countEl = false) => {
         return countEl
             ? Rx.Observable.combineLatest([countRoles(roleFilter), loadRoles(roleFilter, page, size)],
                 (count, {roles}) => ({
-                        count,
-                        data: roles
-                    }))
+                    count,
+                    data: roles
+                }))
             : loadRoles(roleFilter, page, size).map(({ roles }) => ({ data: roles}));
     },
     getWorkspaces: ({size}) => Rx.Observable.defer(() => GeoFence.getWorkspaces())
-                        .map(({workspaces = {}}) => ({count: size, data: [].concat(workspaces.workspace)})),
+        .map(({workspaces = {}}) => ({count: size, data: [].concat(workspaces.workspace)})),
     loadLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) =>
         Rx.Observable.defer( () => GeoFence.getLayers(layerFilter, page, size, parentsFilter)),
     updateRule: (rule, origRule) => {
@@ -116,12 +116,12 @@ module.exports = {
         const name = `${workspace}:${layer}`;
         const l = {url: `${fixUrl(url)}wms`, name};
         return Rx.Observable.combineLatest(getLayerCapabilities(l)
-                .map((cp) => ({style: cp.style, ly: {bbox: WMS.getBBox(cp), name, url: `${fixUrl(url)}wms`, type: "wms", visibility: true, format: "image/png", title: cp.title}})),
-                describeLayer(l).map(({data}) => data.layerDescriptions[0])
-                .switchMap(({owsType}) => {
-                    return owsType === "WCS" ? Rx.Observable.of({properties: [], type: "RASTER"}) : describeFeatureType({layer: l})
+            .map((cp) => ({style: cp.style, ly: {bbox: WMS.getBBox(cp), name, url: `${fixUrl(url)}wms`, type: "wms", visibility: true, format: "image/png", title: cp.title}})),
+        describeLayer(l).map(({data}) => data.layerDescriptions[0])
+            .switchMap(({owsType}) => {
+                return owsType === "WCS" ? Rx.Observable.of({properties: [], type: "RASTER"}) : describeFeatureType({layer: l})
                     .map(({data}) => ({properties: data.featureTypes[0] && data.featureTypes[0].properties || [], type: "VECTOR"}));
-                }), ({style, ly}, {properties, type}) => ({styles: style || [], properties, type, layer: ly}));
+            }), ({style, ly}, {properties, type}) => ({styles: style || [], properties, type, layer: ly}));
 
     },
     cleanCache: () => Rx.Observable.defer(() => GeoFence.cleanCache())

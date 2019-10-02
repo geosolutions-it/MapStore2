@@ -48,7 +48,7 @@ class ScaleBar extends React.Component {
         if (this.props.container && this.scalebar && this.scalebar.getContainer()) {
             try {
                 document.querySelector(this.props.container).removeChild(this.scalebar.getContainer());
-            } catch(e) {
+            } catch (e) {
                 // nothing to do
             }
         }

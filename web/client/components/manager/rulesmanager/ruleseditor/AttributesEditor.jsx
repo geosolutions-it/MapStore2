@@ -18,7 +18,7 @@ const getAttributeValue = (name, constraints) => {
     return (getAttribute(name, constraints) || {}).access || "READWRITE";
 };
 
-module.exports = ({attributes = [], constraints = {}, setOption= () => {}, active = false}) => {
+module.exports = ({attributes = [], constraints = {}, setOption = () => {}, active = false}) => {
     const onChange = (at) => {
         const {attributes: attrs} = constraints;
         const attribute = (attrs && attrs.attribute || []).filter(e => e.name !== at.name).concat(at);
@@ -52,11 +52,11 @@ module.exports = ({attributes = [], constraints = {}, setOption= () => {}, activ
                                 attribute={mA}
                                 onChange={onChange}
                                 value={getAttributeValue(mA.name, constraints)}
-                                />
+                            />
                         </Col>
                     </Row>
                 );
             })}
         </Grid>
-);
+    );
 };
