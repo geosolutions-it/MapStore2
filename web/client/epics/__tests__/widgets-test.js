@@ -461,7 +461,7 @@ describe('widgets Epics', () => {
             done();
         };
         updateLayerOnLoadingErrorChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
-                                       .toArray()
-                                       .subscribe(checkActions);
+            .toArray()
+            .subscribe(checkActions);
     });
 });

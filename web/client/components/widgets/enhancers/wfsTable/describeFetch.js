@@ -20,7 +20,7 @@ module.exports = props$ =>
             && layer1.loadingError === layer2.loadingError) // this check is not too precise,it may need a refinement
         .switchMap(({ layer } = {}) => describeFeatureType({ layer })
             .map(r => ({ describeFeatureType: r.data, loading: false, error: undefined }))
-        .catch(error => Rx.Observable.of({
-            loading: false,
-            error
-        })));
+            .catch(error => Rx.Observable.of({
+                loading: false,
+                error
+            })));

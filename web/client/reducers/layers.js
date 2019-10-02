@@ -76,6 +76,7 @@ function layers(state = { flat: [] }, action) {
         if (action.control === 'RefreshLayers') {
             return assign({}, state, {refreshError: []});
         }
+        return state;
     }
     case LAYER_LOADING: {
         const newLayers = (state.flat || []).map((layer) => {
