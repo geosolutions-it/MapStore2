@@ -57,7 +57,8 @@ class DefaultLayer extends React.Component {
         connectDragSource: PropTypes.func,
         connectDropTarget: PropTypes.func,
         isDraggable: PropTypes.bool,
-        isDragging: PropTypes.bool
+        isDragging: PropTypes.bool,
+        isOver: PropTypes.bool
     };
 
     static defaultProps = {
@@ -151,25 +152,28 @@ class DefaultLayer extends React.Component {
     renderNode = (grab, hide, selected, error, warning, other) => {
         const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
         || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
-        return (
-            <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <div className="toc-default-layer-head">
-                    {grab}
-                    {this.renderVisibility()}
-                    <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
-                    <Title
-                        tooltipOptions={this.props.tooltipOptions}
-                        tooltip={this.props.titleTooltip}
-                        filterText={this.props.filterText}
-                        node={this.props.node}
-                        currentLocale={this.props.currentLocale}
-                        onClick={this.props.onSelect}
-                        onContextMenu={this.props.onContextMenu}
-                    />
+        const head = (
+            <div className="toc-default-layer-head">
+                {grab}
+                {this.renderVisibility()}
+                <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
+                <Title
+                    tooltipOptions={this.props.tooltipOptions}
+                    tooltip={this.props.titleTooltip}
+                    filterText={this.props.filterText}
+                    node={this.props.node}
+                    currentLocale={this.props.currentLocale}
+                    onClick={this.props.onSelect}
+                    onContextMenu={this.props.onContextMenu}
+                />
 
-                    {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
-                    {this.props.indicators ? this.renderIndicators() : null}
-                </div>
+                {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
+                {this.props.indicators ? this.renderIndicators() : null}
+            </div>
+        );
+        return (
+            <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + 'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
+                {this.props.connectDragPreview(head)}
                 {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
@@ -177,7 +181,7 @@ class DefaultLayer extends React.Component {
     }
 
     render() {
-        let {children, propertiesChangeHandler, onToggle, connectDragPreview, connectDragSource, connectDropTarget, ...other } = this.props;
+        let {children, propertiesChangeHandler, onToggle, connectDragSource, connectDropTarget, ...other } = this.props;
 
         const hide = !this.props.node.visibility || this.props.node.invalid ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
@@ -190,10 +194,10 @@ class DefaultLayer extends React.Component {
                 {!this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode}
             </div>
         );
-        if (!this.props.isDragging && this.props.node.showComponent !== false && this.props.filter(this.props.node)) {
-            return this.props.isDraggable ? connectDragPreview(connectDropTarget(connectDragSource(
+        if (other.node.showComponent !== false && !other.node.hide && this.props.filter(this.props.node)) {
+            return other.isDraggable ? connectDropTarget(connectDragSource(
                 tocListItem
-            ))) : tocListItem;
+            )) : tocListItem;
         }
         return null;
     }

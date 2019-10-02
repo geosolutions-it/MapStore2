@@ -31,6 +31,7 @@ class DefaultGroup extends React.Component {
         onSelect: PropTypes.func,
         titleTooltip: PropTypes.bool,
         tooltipOptions: PropTypes.object,
+        setDndState: PropTypes.func,
         connectDragSource: PropTypes.func,
         connectDragPreview: PropTypes.func,
         connectDropTarget: PropTypes.func,
@@ -96,16 +97,20 @@ class DefaultGroup extends React.Component {
             </div>
         );
         const groupChildren = (
-            <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
+            <GroupChildren
+                level={this.props.level + 1}
+                onSort={this.props.onSort}
+                setDndState={this.props.setDndState}
+                position="collapsible">
                 {this.props.children}
             </GroupChildren>
         );
 
-        if (this.props.node.showComponent && !this.props.isDragging) {
+        if (this.props.node.showComponent && !this.props.node.hide) {
             return (
-                <Node className={"toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
+                <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + "toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
                     {this.props.isDraggable ? connectDragPreview(connectDropTarget(connectDragSource(groupHead))) : groupHead}
-                    {this.props.isDragging || this.props.isOver ? null : groupChildren}
+                    {this.props.isDragging || this.props.node.placeholder ? null : groupChildren}
                 </Node>
             );
         }

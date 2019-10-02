@@ -8,6 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const dndTree = require('./enhancers/dndTree');
 require('./css/toc.css');
 
 class TOC extends React.Component {
@@ -15,14 +16,16 @@ class TOC extends React.Component {
         filter: PropTypes.func,
         nodes: PropTypes.array,
         id: PropTypes.string,
-        onSort: PropTypes.func
+        onSort: PropTypes.func,
+        setDndState: PropTypes.func
     };
 
     static defaultProps = {
         filter() {return true; },
         nodes: [],
         id: 'mapstore-layers',
-        onSort: null
+        onSort: null,
+        setDndState: () => {}
     };
 
     render() {
@@ -34,9 +37,10 @@ class TOC extends React.Component {
                 node: node,
                 parentNodeId: 'root',
                 onSort: this.props.onSort,
-                sortIndex: i++,
+                sortIndex: node.hide ? i : i++,
                 key: node.name || 'default',
-                isDraggable: !!this.props.onSort
+                isDraggable: !!this.props.onSort,
+                setDndState: this.props.setDndState
             }));
         }
         if (this.props.onSort) {
@@ -50,4 +54,4 @@ class TOC extends React.Component {
     }
 }
 
-module.exports = TOC;
+module.exports = dndTree(TOC);

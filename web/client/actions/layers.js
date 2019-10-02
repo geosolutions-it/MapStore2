@@ -67,6 +67,7 @@ function changeLayerProperties(layer, properties) {
 
     };
 }
+
 /**
  * Change params for a layer. Useful for WMS layers, when you need to change only the params (i.e. dimension) merging with existing ones.
  * @memberof actions.layers
@@ -134,6 +135,14 @@ function updateNode(node, type, options) {
     };
 }
 
+/**
+ * Move a node in state.groups from one parent to another
+ * @memberof actions.layers
+ * @function
+ * @param {object} node an id of a node to move
+ * @param {object} groupId an id of a group node to move current node into
+ * @param {number} index a position that inserted node should have(ordering)
+ */
 function moveNode(node, groupId, index) {
     return {
         type: MOVE_NODE,
