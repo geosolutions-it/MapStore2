@@ -32,7 +32,7 @@ class MapsPage extends React.Component {
         reset: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (this.props.match.params.mapType && this.props.match.params.mapId) {
             if (this.props.mode === 'mobile') {
                 require('../assets/css/mobile.css');
@@ -46,13 +46,13 @@ class MapsPage extends React.Component {
             id="maps"
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />);
+        />);
     }
 }
 
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
-    {
-        reset: resetControls
-    })(MapsPage);
+{
+    reset: resetControls
+})(MapsPage);

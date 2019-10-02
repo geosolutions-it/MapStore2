@@ -39,19 +39,19 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        if (action.control === "widgetBuilder") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(true);
-                        } else if (action.control === "metadataexplorer") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(false);
-                        }else {
-                            done(new Error("Control not recognized"));
-                        }
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_CONTROL_PROPERTY:
+                    if (action.control === "widgetBuilder") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(true);
+                    } else if (action.control === "metadataexplorer") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(false);
+                    } else {
+                        done(new Error("Control not recognized"));
+                    }
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -69,19 +69,19 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        if (action.control === "widgetBuilder") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(true);
-                        } else if (action.control === "metadataexplorer") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(false);
-                        }else {
-                            done(new Error("Control not recognized"));
-                        }
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_CONTROL_PROPERTY:
+                    if (action.control === "widgetBuilder") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(true);
+                    } else if (action.control === "metadataexplorer") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(false);
+                    } else {
+                        done(new Error("Control not recognized"));
+                    }
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -100,16 +100,16 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        if (action.control === "widgetBuilder") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(false);
-                        } else {
-                            done(new Error("Control not recognized"));
-                        }
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_CONTROL_PROPERTY:
+                    if (action.control === "widgetBuilder") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(false);
+                    } else {
+                        done(new Error("Control not recognized"));
+                    }
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -129,16 +129,16 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        if (action.control === "widgetBuilder") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(false);
-                        } else {
-                            done(new Error("Control not recognized"));
-                        }
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_CONTROL_PROPERTY:
+                    if (action.control === "widgetBuilder") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(false);
+                    } else {
+                        done(new Error("Control not recognized"));
+                    }
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -156,13 +156,13 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case EDIT_NEW:
-                        expect(action.widget).toExist();
-                        // verify default mapSync
-                        expect(action.widget.mapSync).toBe(true);
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case EDIT_NEW:
+                    expect(action.widget).toExist();
+                    // verify default mapSync
+                    expect(action.widget.mapSync).toBe(true);
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             }, );
             done();
@@ -180,16 +180,16 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case EDIT_NEW:
-                        expect(action.widget).toExist();
-                        // verify default mapSync
-                        expect(action.widget.mapSync).toBe(true);
-                        break;
-                    case CLOSE_FEATURE_GRID:
-                        expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case EDIT_NEW:
+                    expect(action.widget).toExist();
+                    // verify default mapSync
+                    expect(action.widget.mapSync).toBe(true);
+                    break;
+                case CLOSE_FEATURE_GRID:
+                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             }, );
             done();
@@ -207,7 +207,7 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
+                case SET_CONTROL_PROPERTY:
                     if (action.control === "widgetBuilder") {
                         expect(action.property).toBe("enabled");
                         expect(action.value).toBe(false);
@@ -217,13 +217,13 @@ describe('widgetsbuilder epic', () => {
                     } else {
                         done(new Error("Control not recognized"));
                     }
-                        break;
-                    case FEATURE_TYPE_SELECTED:
-                        break;
-                    case LOAD_FILTER:
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                    break;
+                case FEATURE_TYPE_SELECTED:
+                    break;
+                case LOAD_FILTER:
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -256,7 +256,7 @@ describe('widgetsbuilder epic', () => {
             expect(actions.length).toBe(8);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
+                case SET_CONTROL_PROPERTY:
                     if (action.control === "widgetBuilder") {
                         expect(action.property).toBe("enabled");
                     } else if (action.control === "queryPanel") {
@@ -264,17 +264,17 @@ describe('widgetsbuilder epic', () => {
                     } else {
                         done(new Error("Control not recognized"));
                     }
-                        break;
-                    case FEATURE_TYPE_SELECTED:
-                        break;
-                    case LOAD_FILTER:
-                        break;
-                    case EDITOR_CHANGE:
-                        break;
-                    case CHANGE_DRAWING_STATUS:
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                    break;
+                case FEATURE_TYPE_SELECTED:
+                    break;
+                case LOAD_FILTER:
+                    break;
+                case EDITOR_CHANGE:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();

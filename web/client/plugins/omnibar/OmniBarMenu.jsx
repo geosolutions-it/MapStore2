@@ -44,10 +44,10 @@ class OmniBarMenu extends React.Component {
 
     render() {
         return (<NavDropdown noCaret pullRight bsStyle="primary" title={<Button bsStyle="primary" className="square-button"><Glyphicon glyph="menu-hamburger" /></Button>} >
-                {this.props.title}
-                {this.props.items.sort((a, b) => a.position - b.position).map(this.renderNavItem)}
-            </NavDropdown>)
-            ;
+            {this.props.title}
+            {this.props.items.sort((a, b) => a.position - b.position).map(this.renderNavItem)}
+        </NavDropdown>)
+        ;
     }
 }
 

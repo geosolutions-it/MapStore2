@@ -38,12 +38,12 @@ const normalizeFilterValue = (value) => {
 };
 const normalizeKey = (key) => {
     switch (key) {
-        case 'username':
-            return 'userName';
-        case 'rolename':
-            return 'groupName';
-        default:
-            return key;
+    case 'username':
+        return 'userName';
+    case 'rolename':
+        return 'groupName';
+    default:
+        return key;
     }
 };
 

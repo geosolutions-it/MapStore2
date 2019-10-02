@@ -47,7 +47,7 @@ function usergroups(state = {
                     status: action.status,
                     ...action.group
                 })}
-                );
+            );
             // this to catch user loaded but window already closed
         } else if (action.status === "loading" || action.status === "new" || !action.status) {
             return assign({}, state, {

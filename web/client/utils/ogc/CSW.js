@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 // Disable ESLint because some of the names to include are not in camel case
-/*eslint-disable */
+/* eslint-disable */
 // include base schemas and name spaces
 const {
         OWS_1_0_0,
@@ -61,7 +61,7 @@ const context = new Jsonix.Context([
         "http://www.opengis.net/ows": "ows"
     }
 });
-/*eslint-enable */
+/* eslint-enable */
 const marshaller = context.createMarshaller();
 const unmarshaller = context.createUnmarshaller();
 const CSW = {

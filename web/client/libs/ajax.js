@@ -47,46 +47,46 @@ function addAuthenticationToAxios(axiosConfig) {
     const rule = SecurityUtils.getAuthenticationRule(axiosUrl);
 
     switch (rule && rule.method) {
-        case 'browserWithCredentials':
-        {
-            axiosConfig.withCredentials = true;
+    case 'browserWithCredentials':
+    {
+        axiosConfig.withCredentials = true;
+        return axiosConfig;
+    }
+    case 'authkey':
+    {
+        const token = SecurityUtils.getToken();
+        if (!token) {
             return axiosConfig;
         }
-        case 'authkey':
-        {
-            const token = SecurityUtils.getToken();
-            if (!token) {
-                return axiosConfig;
-            }
-            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        return axiosConfig;
+    }
+    case 'test': {
+        const token = rule ? rule.token : "";
+        if (!token) {
             return axiosConfig;
         }
-        case 'test': {
-            const token = rule ? rule.token : "";
-            if (!token) {
-                return axiosConfig;
-            }
-            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        return axiosConfig;
+    }
+    case 'basic':
+        const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
+        if (!basicAuthHeader) {
             return axiosConfig;
         }
-        case 'basic':
-            const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
-            if (!basicAuthHeader) {
-                return axiosConfig;
-            }
-            addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
-            return axiosConfig;
-        case 'bearer':
-        {
-            const token = SecurityUtils.getToken();
-            if (!token) {
-                return axiosConfig;
-            }
-            addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
+        addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
+        return axiosConfig;
+    case 'bearer':
+    {
+        const token = SecurityUtils.getToken();
+        if (!token) {
             return axiosConfig;
         }
-        default:
-            // we cannot handle the required authentication method
+        addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
+        return axiosConfig;
+    }
+    default:
+        // we cannot handle the required authentication method
         return axiosConfig;
     }
 }

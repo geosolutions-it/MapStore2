@@ -97,8 +97,8 @@ const currentTimeEnhancer = compose(
             currentTimeSelector,
             currentTimeRangeSelector,
             (current, range) => ({
-                        currentTime: current,
-                        currentTimeRange: range
+                currentTime: current,
+                currentTimeRange: range
             })
         ),
         {

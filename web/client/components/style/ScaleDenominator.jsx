@@ -34,7 +34,7 @@ class ScaleDenominator extends React.Component {
 
     state = {error: false};
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let scales = mapUtils.getGoogleMercatorScales(0, 21);
         this.scales = [{value: null, text: LocaleUtils.getMessageById(this.context.messages, "scaledenominator.none") || 'None'}, ...scales.map((v) => ({value: v, text: `${v.toFixed(0)}`}))];
     }
@@ -55,7 +55,7 @@ class ScaleDenominator extends React.Component {
     renderErrorPopOver = () => {
         return (
             <Overlay
-            target={() => findDOMNode(this.refs[this.state.error.type])}
+                target={() => findDOMNode(this.refs[this.state.error.type])}
                 show placement="top" >
                 <Popover id={`${this.state.error.type}_id`}>
                     <Label bsStyle="danger" > <Message msgId={this.state.error.msg}/></Label>
@@ -67,30 +67,30 @@ class ScaleDenominator extends React.Component {
     render() {
         return (<Row>
             <Col xs={6}>
-            <label><Message msgId="scaledenominator.minlabel"/></label>
-            <DropdownList
-                ref="minDenominator"
-                data={this.scales}
-                value={this.props.minValue}
-                valueField="value"
-                textField="text"
-                onChange={(v) => this.onChange("minDenominator", v)}
-            />
+                <label><Message msgId="scaledenominator.minlabel"/></label>
+                <DropdownList
+                    ref="minDenominator"
+                    data={this.scales}
+                    value={this.props.minValue}
+                    valueField="value"
+                    textField="text"
+                    onChange={(v) => this.onChange("minDenominator", v)}
+                />
             </Col>
             <Col xs={6}>
-            <label><Message msgId="scaledenominator.maxlabel"/></label>
-            <DropdownList
-                ref="maxDenominator"
-                data={this.scales}
-                value={this.props.maxValue}
-                valueField="value"
-                textField="text"
-                onChange={(v) => this.onChange("maxDenominator", v)}
-            />
+                <label><Message msgId="scaledenominator.maxlabel"/></label>
+                <DropdownList
+                    ref="maxDenominator"
+                    data={this.scales}
+                    value={this.props.maxValue}
+                    valueField="value"
+                    textField="text"
+                    onChange={(v) => this.onChange("maxDenominator", v)}
+                />
             </Col>
             {(this.state.error) ? this.renderErrorPopOver() : null}
-            </Row>)
-            ;
+        </Row>)
+        ;
     }
 }
 

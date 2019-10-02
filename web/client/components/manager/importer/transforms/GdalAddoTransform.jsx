@@ -37,6 +37,7 @@ class GdalTranslateTransform extends React.Component {
         if (!this.isValid(this.props.transform)) {
             return <Alert bsStyle="danger" key="error">This transform is not valid</Alert>;
         }
+        return null;
     };
 
     render() {

@@ -61,34 +61,35 @@ class FileUploader extends React.Component {
             let percent = round(uploading.progress * 100, 2);
             return <ProgressBar key="progressbar" striped now={percent} label={`${percent}%`}/>;
         }
-
+        return null;
     };
 
     renderPreview = () => {
         return (<Table striped bordered condensed hover>
-                    <thead>
-                        <tr>
-                            <th key="hname"><Message msgId="uploader.filename" /></th>
-                            <th key="hsize"><Message msgId="uploader.filesize" /></th>
-                            <th key="htype"><Message msgId="uploader.type" /></th>
-                            <th key="hlast"><Message msgId="uploader.lastModified" /></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.fileList && this.state.fileList.map((file, index) =>
-                        (<tr key={"row_" + index}>
-                            <td key="name">{file.name}</td>
-                            <td key="size">{this.humanFileSize(file.size)}</td>
-                            <td key="type">{file.type}</td>
-                            <td key="last"><DateFormat value={file.lastModifiedDate} /></td>
-                        </tr>) )
-        }</tbody></Table>);
+            <thead>
+                <tr>
+                    <th key="hname"><Message msgId="uploader.filename" /></th>
+                    <th key="hsize"><Message msgId="uploader.filesize" /></th>
+                    <th key="htype"><Message msgId="uploader.type" /></th>
+                    <th key="hlast"><Message msgId="uploader.lastModified" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                {this.state.fileList && this.state.fileList.map((file, index) =>
+                    (<tr key={"row_" + index}>
+                        <td key="name">{file.name}</td>
+                        <td key="size">{this.humanFileSize(file.size)}</td>
+                        <td key="type">{file.type}</td>
+                        <td key="last"><DateFormat value={file.lastModifiedDate} /></td>
+                    </tr>) )
+                }</tbody></Table>);
     };
 
     renderError = () => {
         if (this.props.error) {
             return <Alert bsStyle="danger">There was an error during the upload: {this.props.error.statusText}<div>{this.props.error.data}</div></Alert>;
         }
+        return null;
     };
 
     render() {
@@ -99,7 +100,7 @@ class FileUploader extends React.Component {
                 <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/><Message msgId="uploader.uploadingFiles"/>
                 {this.renderProgress(this.props.uploading)}
                 {this.renderPreview()}
-                </div>);
+            </div>);
         }
 
         return (<div><Dropzone
@@ -109,13 +110,13 @@ class FileUploader extends React.Component {
             onDrop={this.uploadFiles}
             style={this.props.dropZoneStyle}
             activeStyle={this.props.dropZoneActiveStyle}>
-                <div style={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                        height: "100%",
-                        justifyContent: "center"
-                }}>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                height: "100%",
+                justifyContent: "center"
+            }}>
                 <span style={{
                     width: "100px",
                     height: "100px",
@@ -124,7 +125,7 @@ class FileUploader extends React.Component {
                     <Glyphicon glyph="upload" />
                     {this.props.dropMessage}
                 </span>
-                </div>
+            </div>
         </Dropzone>{this.renderError()}</div>);
 
     }

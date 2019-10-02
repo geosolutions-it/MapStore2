@@ -17,7 +17,7 @@ class Header extends React.Component {
         filterText: PropTypes.string,
         filterPlaceholder: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         showTitle: PropTypes.bool,
-        showFilter: PropTypes.bool,
+        showFilter: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
         showTools: PropTypes.bool,
         toolbar: PropTypes.object,
         onFilter: PropTypes.func,

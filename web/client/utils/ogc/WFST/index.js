@@ -11,8 +11,8 @@ const {insert} = require('./insert');
 const {deleteFeature, deleteFeaturesByFilter, deleteById} = require('./delete');
 module.exports = {
     insert,
-//    update,
-//    property,
+    //    update,
+    //    property,
     deleteFeature,
     deleteFeaturesByFilter,
     deleteById,

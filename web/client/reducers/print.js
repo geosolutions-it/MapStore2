@@ -68,7 +68,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         return assign({}, state, {
             spec: assign({}, state.spec, {[action.name]: action.value})
         }
-            );
+        );
     }
     case CONFIGURE_PRINT_MAP: {
 
@@ -91,7 +91,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
             },
             error: null
         }
-            );
+        );
     }
     case CHANGE_PRINT_ZOOM_LEVEL: {
         const diff = action.zoom - state.map.scaleZoom;
@@ -102,7 +102,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 scale: action.scale
             })
         }
-            );
+        );
     }
     case CHANGE_MAP_PRINT_PREVIEW: {
         return assign({}, state, {
@@ -110,7 +110,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 size: action.size
             })
         }
-            );
+        );
     }
     case PRINT_SUBMITTING: {
         return assign({}, state, {isLoading: true, pdfUrl: null, error: null});

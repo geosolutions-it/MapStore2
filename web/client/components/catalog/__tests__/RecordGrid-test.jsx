@@ -66,7 +66,7 @@ describe('This test for Record Grid', () => {
 
         // check the thumbnail as a to verify thtat the url is really loaded into the component
         let img = TestUtils.findRenderedDOMComponentWithTag(
-           item, 'img'
+            item, 'img'
         );
         expect(img).toExist();
         expect(img.src).toBe(sampleRecord.thumbnail);
@@ -83,7 +83,7 @@ describe('This test for Record Grid', () => {
 
         // check the thumbnail as a to verify thtat the url is really loaded into the component
         let img = TestUtils.findRenderedDOMComponentWithTag(
-           item, 'img'
+            item, 'img'
         );
         expect(img).toExist();
         expect(img.src).toBe(sampleRecord.thumbnail);

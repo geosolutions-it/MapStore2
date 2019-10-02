@@ -46,9 +46,9 @@ const startApp = () => {
     class PrintApp extends React.Component {
         render() {
             return (
-            <Provider store={store}>
-                <Print/>
-            </Provider>);
+                <Provider store={store}>
+                    <Print/>
+                </Provider>);
         }
     }
 

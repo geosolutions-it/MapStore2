@@ -82,7 +82,7 @@ class BaseMap extends React.Component {
                     position={index}
                     key={layer.id || layer.name}
                     options={layer}
-                    >
+                >
                     {this.renderLayerContent(layer, projection)}
                 </Layer>
             );
@@ -134,9 +134,9 @@ class BaseMap extends React.Component {
                     {...this.props.options}
                     {...this.props.map}
                     {...this.props.eventHandlers}
-                    >
-                        {this.renderLayers()}
-                        {this.renderTools()}
+                >
+                    {this.renderLayers()}
+                    {this.renderTools()}
                 </Map>
             );
         }

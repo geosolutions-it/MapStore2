@@ -82,40 +82,40 @@ module.exports = ({
     onEdit = () => {},
     ...w
 } = {}) => w.widgetType === "text"
-            ? (<TextWidget {...w}
-                toggleCollapse={toggleCollapse}
-                onDelete={onDelete}
-                onEdit={onEdit}/>)
-            : w.widgetType === "table"
-            ? <TableWidget {...w}
-                toggleCollapse={toggleCollapse}
-                exportCSV={exportCSV}
-                dependencies={dependencies}
-                onDelete={onDelete}
-                onEdit={onEdit}
-            />
-            : w.widgetType === "counter"
+    ? (<TextWidget {...w}
+        toggleCollapse={toggleCollapse}
+        onDelete={onDelete}
+        onEdit={onEdit}/>)
+    : w.widgetType === "table"
+        ? <TableWidget {...w}
+            toggleCollapse={toggleCollapse}
+            exportCSV={exportCSV}
+            dependencies={dependencies}
+            onDelete={onDelete}
+            onEdit={onEdit}
+        />
+        : w.widgetType === "counter"
             ? <CounterWidget {...w}
                 toggleCollapse={toggleCollapse}
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
             : w.widgetType === "map"
-            ? <MapWidget {...w}
-                toggleCollapse={toggleCollapse}
-                dependencies={dependencies}
-                onDelete={onDelete}
-                onEdit={onEdit} />
-            : w.widgetType === "legend"
-            ? <LegendWidget {...w}
-                toggleCollapse={toggleCollapse}
-                dependencies={dependencies}
-                onDelete={onDelete}
-                onEdit={onEdit} />
-            : (<ChartWidget {...w}
-                toggleCollapse={toggleCollapse}
-                exportCSV={exportCSV}
-                dependencies={dependencies}
-                exportImage={exportImage}
-                onDelete={onDelete}
-                onEdit={onEdit} />);
+                ? <MapWidget {...w}
+                    toggleCollapse={toggleCollapse}
+                    dependencies={dependencies}
+                    onDelete={onDelete}
+                    onEdit={onEdit} />
+                : w.widgetType === "legend"
+                    ? <LegendWidget {...w}
+                        toggleCollapse={toggleCollapse}
+                        dependencies={dependencies}
+                        onDelete={onDelete}
+                        onEdit={onEdit} />
+                    : (<ChartWidget {...w}
+                        toggleCollapse={toggleCollapse}
+                        exportCSV={exportCSV}
+                        dependencies={dependencies}
+                        exportImage={exportImage}
+                        onDelete={onDelete}
+                        onEdit={onEdit} />);

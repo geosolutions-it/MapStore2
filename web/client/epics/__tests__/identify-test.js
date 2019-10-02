@@ -428,16 +428,16 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case ZOOM_TO_POINT:
-                        expect(action.zoom).toBe(4);
-                        expect({ x: parseFloat(action.pos.x.toFixed(2)), y: parseFloat(action.pos.y.toFixed(2)) }).toEqual({ x: -101.81, y: 27.68 });
-                        expect(action.crs).toBe('EPSG:4326');
-                        break;
-                    case UPDATE_CENTER_TO_MARKER:
-                        expect(action.status).toBe('enabled');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ZOOM_TO_POINT:
+                    expect(action.zoom).toBe(4);
+                    expect({ x: parseFloat(action.pos.x.toFixed(2)), y: parseFloat(action.pos.y.toFixed(2)) }).toEqual({ x: -101.81, y: 27.68 });
+                    expect(action.crs).toBe('EPSG:4326');
+                    break;
+                case UPDATE_CENTER_TO_MARKER:
+                    expect(action.status).toBe('enabled');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -470,11 +470,11 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_CENTER_TO_MARKER:
-                        expect(action.status).toBe('disabled');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case UPDATE_CENTER_TO_MARKER:
+                    expect(action.status).toBe('disabled');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -488,11 +488,11 @@ describe('identify Epics', () => {
             expect(action.type === FEATURE_INFO_CLICK);
             done();
         }, {
-                mapInfo: {
-                    enabled: true,
-                    disableAlwaysOn: false
-                }
-            });
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false
+            }
+        });
     });
     it('onMapClick do not trigger when mapinfo is not elabled', done => {
         testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
@@ -500,11 +500,11 @@ describe('identify Epics', () => {
                 done();
             }
         }, {
-                mapInfo: {
-                    enabled: false,
-                    disableAlwaysOn: false
-                }
-            });
+            mapInfo: {
+                enabled: false,
+                disableAlwaysOn: false
+            }
+        });
     });
     it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
 
@@ -514,11 +514,11 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CLOSE_ANNOTATIONS:
-                        done();
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CLOSE_ANNOTATIONS:
+                    done();
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
         };
@@ -533,11 +533,11 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case PURGE_MAPINFO_RESULTS:
-                        done();
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case PURGE_MAPINFO_RESULTS:
+                    done();
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
         };
@@ -552,13 +552,13 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case FEATURE_INFO_CLICK:
-                        expect(action.point).toEqual({latlng: {lng: -110.05255, lat: 46.67685}});
-                        break;
-                    case SHOW_MAPINFO_MARKER:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case FEATURE_INFO_CLICK:
+                    expect(action.point).toEqual({latlng: {lng: -110.05255, lat: 46.67685}});
+                    break;
+                case SHOW_MAPINFO_MARKER:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();

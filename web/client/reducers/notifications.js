@@ -25,21 +25,20 @@ const {SHOW_NOTIFICATION, HIDE_NOTIFICATION, CLEAR_NOTIFICATIONS} = require('../
  */
 function notifications(state = [], action = {}) {
     switch (action.type) {
-        case SHOW_NOTIFICATION:
-            const { type, ...rest } = action;
-            return [
-                ...state,
-                { ...rest}
-            ];
-        case HIDE_NOTIFICATION:
-            return state.filter(notification => {
-                return notification.uid !== action.uid;
-            });
-        case CLEAR_NOTIFICATIONS:
-            return [];
-        default:
-            return state;
+    case SHOW_NOTIFICATION:
+        const { type, ...rest } = action;
+        return [
+            ...state,
+            { ...rest}
+        ];
+    case HIDE_NOTIFICATION:
+        return state.filter(notification => {
+            return notification.uid !== action.uid;
+        });
+    case CLEAR_NOTIFICATIONS:
+        return [];
+    default:
+        return state;
     }
-    return state;
 }
 module.exports = notifications;

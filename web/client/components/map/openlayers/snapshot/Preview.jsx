@@ -67,7 +67,7 @@ export default class GrabLMap extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.previousTimeout) {
             clearTimeout(this.previousTimeout);
         }

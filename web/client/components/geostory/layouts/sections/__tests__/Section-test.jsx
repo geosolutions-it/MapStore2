@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Section from '../Section';
-import STORY from 'json-loader!../../../../../test-resources/geostory/sampleStory_1.json';
+import STORY from '../../../../../test-resources/geostory/sampleStory_1.json';
 import { lists } from '../../../../../utils/GeoStoryUtils';
 
 

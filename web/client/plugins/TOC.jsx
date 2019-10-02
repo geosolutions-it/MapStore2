@@ -12,8 +12,8 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
-       browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
+    sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+    browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
@@ -330,7 +330,7 @@ class LayerTree extends React.Component {
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
-                />);
+            />);
     }
 
     renderTOC = () => {
@@ -643,5 +643,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: require("../epics/catalog")(API)
+    epics: require("../epics/catalog").default(API)
 };

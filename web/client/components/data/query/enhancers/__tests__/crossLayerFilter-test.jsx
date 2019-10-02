@@ -34,7 +34,7 @@ describe('crossLayerFilter enhancer', () => {
         ReactDOM.render((<Sink
             crossLayerExpanded
             searchUrl="base/web/client/test-resources/wfs/states-capabilities.xml"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
     it('crossLayerFilter not supported', (done) => {
         const Sink = crossLayerFilter(createSink( props => {
@@ -48,10 +48,14 @@ describe('crossLayerFilter enhancer', () => {
         ReactDOM.render((<Sink
             crossLayerExpanded
             searchUrl="base/web/client/test-resources/wfs/states-capabilities-nocoll.xml"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
 
     it('crossLayerFilter WFS Attributes retrival', (done) => {
+        const actions = {
+            setCrossLayerFilterParameter: () => { }
+        };
+        const spysetCrossLayerFilterParameter = expect.spyOn(actions, 'setCrossLayerFilterParameter');
         const Sink = crossLayerFilter(createSink( props => {
             expect(props).toExist();
             if (!props.loadingAttributes) {
@@ -62,10 +66,6 @@ describe('crossLayerFilter enhancer', () => {
             }
 
         }));
-        const actions = {
-            setCrossLayerFilterParameter: () => {}
-        };
-        const spysetCrossLayerFilterParameter = expect.spyOn(actions, 'setCrossLayerFilterParameter');
         ReactDOM.render((<Sink
             setCrossLayerFilterParameter={actions.setCrossLayerFilterParameter}
             crossLayerExpanded
@@ -83,6 +83,6 @@ describe('crossLayerFilter enhancer', () => {
                 }
             }}
             searchUrl="base/web/client/test-resources/wfs/states-capabilities.xml"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
 });

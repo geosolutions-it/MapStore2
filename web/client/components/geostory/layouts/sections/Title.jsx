@@ -48,29 +48,29 @@ export default backgroundPropWithHandler(({
             // background height need to be equal to section size
             // this is important when working with z-index of section
             // in case we increase the z-index of title the whole background is visible and overlap next section
-            <Background
-                { ...background }
-                // selector used by sticky polyfill to detect scroll events
-                scrollContainerSelector="#ms-sections-container"
-                key={background.id}
-                mode={mode}
-                id={contentId}
-                path={path}
-                update={updateBackground}
-                add={add}
-                editMedia={editMedia}
-                remove={remove}
-                width={viewWidth}
-                backgroundPlaceholder={{
-                    background: `url(${cover ? coverPattern : titlePattern })`,
-                    backgroundSize: `${cover ? 64 : 600 }px auto`
-                }}
-                tools={{
-                    [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
-                }}
-                height={height >= viewHeight
-                    ? viewHeight
-                    : height}/>}
+                <Background
+                    { ...background }
+                    // selector used by sticky polyfill to detect scroll events
+                    scrollContainerSelector="#ms-sections-container"
+                    key={background.id}
+                    mode={mode}
+                    id={contentId}
+                    path={path}
+                    update={updateBackground}
+                    add={add}
+                    editMedia={editMedia}
+                    remove={remove}
+                    width={viewWidth}
+                    backgroundPlaceholder={{
+                        background: `url(${cover ? coverPattern : titlePattern })`,
+                        backgroundSize: `${cover ? 64 : 600 }px auto`
+                    }}
+                    tools={{
+                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                    }}
+                    height={height >= viewHeight
+                        ? viewHeight
+                        : height}/>}
         </ContainerDimensions>
         <SectionContents
             className="ms-section-contents"

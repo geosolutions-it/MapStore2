@@ -31,7 +31,7 @@ module.exports = compose(
     }),
     withPropsOnChange(
         ['onMapViewChanges', 'eventHandlers'],
-        ({ onMapViewChanges = () => {}, eventHandlers ={} } = {}) => ({
+        ({ onMapViewChanges = () => {}, eventHandlers = {} } = {}) => ({
             eventHandlers: {
                 ...eventHandlers,
                 onMapViewChanges

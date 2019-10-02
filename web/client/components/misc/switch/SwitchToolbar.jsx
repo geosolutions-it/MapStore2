@@ -52,4 +52,4 @@ class SwitchToolbar extends React.Component {
     }
 }
 
-module.exports = SwitchToolbar;
+export default SwitchToolbar;

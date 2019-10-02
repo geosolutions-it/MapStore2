@@ -67,8 +67,8 @@ const WMTSUtils = {
                     .filter((operation) => operation.$.name === name)
                     .map((operation) => castArray(operation["ows:DCP"]["ows:HTTP"]["ows:Get"]))
             ) || [])
-            .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
-            .map((request) => request.$["xlink:href"])
+                .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
+                .map((request) => request.$["xlink:href"])
         );
     },
     /**

@@ -13,50 +13,50 @@ const {set} = require('../utils/ImmutableUtils');
 
 function dashboard(state = {}, action) {
     switch (action.type) {
-        case ATTRIBUTE_UPDATED: {
-            return set("latestResource", {
-                resourceId: action.resourceId,
-                [action.name]: decodeURIComponent(action.value)
-            }, state);
-        }
-        case MAP_DELETED: {
-            return set("latestResource", {
-                resourceId: action.resourceId,
-                deleted: true
-            }, state);
-        }
-        case DASHBOARD_DELETED: {
-            return set("latestResource", {
-                resourceId: action.id,
-                deleted: true
-            }, state);
-        }
-        case MAP_METADATA_UPDATED: {
-            return set("latestResource", {
-                resourceId: action.resourceId,
-                name: action.newName,
-                description: action.newDescription
-            }, state);
-        }
-        case PERMISSIONS_UPDATED: {
-            return set("latestResource", {
-                resourceId: action.resourceId,
-                permission: 'updated'
-            }, state);
-        }
-        case MAPS_LIST_LOADING: {
-            return {...state,
-                searchText: action.searchText
-            };
-        }
-        case FEATURED_MAPS_SET_ENABLED: {
-            return set("enabled", action.enabled, state);
-        }
-        case FEATURED_MAPS_SET_LATEST_RESOURCE: {
-            return set("latestResource", action.resource, state);
-        }
-        default:
-            return state;
+    case ATTRIBUTE_UPDATED: {
+        return set("latestResource", {
+            resourceId: action.resourceId,
+            [action.name]: decodeURIComponent(action.value)
+        }, state);
+    }
+    case MAP_DELETED: {
+        return set("latestResource", {
+            resourceId: action.resourceId,
+            deleted: true
+        }, state);
+    }
+    case DASHBOARD_DELETED: {
+        return set("latestResource", {
+            resourceId: action.id,
+            deleted: true
+        }, state);
+    }
+    case MAP_METADATA_UPDATED: {
+        return set("latestResource", {
+            resourceId: action.resourceId,
+            name: action.newName,
+            description: action.newDescription
+        }, state);
+    }
+    case PERMISSIONS_UPDATED: {
+        return set("latestResource", {
+            resourceId: action.resourceId,
+            permission: 'updated'
+        }, state);
+    }
+    case MAPS_LIST_LOADING: {
+        return {...state,
+            searchText: action.searchText
+        };
+    }
+    case FEATURED_MAPS_SET_ENABLED: {
+        return set("enabled", action.enabled, state);
+    }
+    case FEATURED_MAPS_SET_LATEST_RESOURCE: {
+        return set("latestResource", action.resource, state);
+    }
+    default:
+        return state;
     }
 }
 module.exports = dashboard;

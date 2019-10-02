@@ -8,11 +8,11 @@ const GPX_FILE_URL = require('file-loader!../../../../../test-resources/caput-mu
 const KMZ_FILE_URL = require('file-loader!../../../../../test-resources/caput-mundi/caput-mundi.kmz');
 const KML_FILE_URL = require('file-loader!../../../../../test-resources/caput-mundi/caput-mundi.kml');
 const GEO_JSON_FILE_URL = require('file-loader!../../../../../test-resources/caput-mundi/caput-mundi.geojson');
-const MAP_FILE = require('file-loader!../../../../../test-resources/map.json');
+const MAP_FILE = require('file-loader!../../../../../test-resources/map.config');
 const getFile = (url, fileName = "file") =>
-        Rx.Observable.defer( () => axios.get(url, {
-            responseType: 'arraybuffer'
-        }))
+    Rx.Observable.defer( () => axios.get(url, {
+        responseType: 'arraybuffer'
+    }))
         .map( res =>
             new File([new Blob([res.data], {type: res.headers['response-type']})], fileName)
         );

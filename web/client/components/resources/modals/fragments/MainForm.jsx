@@ -17,7 +17,7 @@ module.exports = class MainForm extends React.Component {
     render() {
         const {
             resource,
-            linkedResources={},
+            linkedResources = {},
             onError = () => { },
             onUpdate = () => { },
             onUpdateLinkedResource = () => { }

@@ -29,7 +29,7 @@ describe('AutocompleteField', () => {
     });
     it('create a AutocompleteField with 2 options', () => {
         let conf = {
-                    filterField:
+            filterField:
                         {options: [{
                             value: "val1",
                             label: "val1"
@@ -37,9 +37,9 @@ describe('AutocompleteField', () => {
                             value: "val2",
                             label: "val2"
                         }]
-                    },
-                    autocompleteEnabled: true
-                    };
+                        },
+            autocompleteEnabled: true
+        };
         const cmp = ReactDOM.render(<AutocompleteField {...conf} />, document.getElementById("container"));
         expect(cmp).toExist();
         let node = ReactDOM.findDOMNode(cmp);

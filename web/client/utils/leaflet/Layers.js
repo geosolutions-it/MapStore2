@@ -37,6 +37,7 @@ var Layers = {
         if (layerCreator && layerCreator.update) {
             return layerCreator.update(layer, newOptions, oldOptions);
         }
+        return null;
     },
     isValid(type, layer) {
         var layerCreator = layerTypes[type];

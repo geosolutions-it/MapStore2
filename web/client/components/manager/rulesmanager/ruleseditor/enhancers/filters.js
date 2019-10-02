@@ -17,16 +17,16 @@ module.exports = compose(
         return {
             mapActive: wkt && wkt.length > 0,
             spatialField: {}
-            };
+        };
     },
     {
         toggleMap: (state, {onChangeDrawingStatus}) => (isActive) => {
             if (!isActive) {
                 onChangeDrawingStatus( "clean",
-                "",
-                "rulesmanager",
-                [],
-                {});
+                    "",
+                    "rulesmanager",
+                    [],
+                    {});
                 return {
                     mapActive: isActive,
                     spatialField: {}

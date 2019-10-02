@@ -64,7 +64,7 @@ class StyleEditorPanel extends React.Component {
         ]
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const canEdit = !this.props.editingAllowedRoles || (isArray(this.props.editingAllowedRoles) && isString(this.props.userRole)
             && this.props.editingAllowedRoles.indexOf(this.props.userRole) !== -1);
         this.props.onInit(this.props.styleService, canEdit && isSameOrigin(this.props.layer, this.props.styleService));

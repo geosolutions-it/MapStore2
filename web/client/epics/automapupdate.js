@@ -62,7 +62,7 @@ const manageAutoMapUpdate = (action$, store) =>
                                         });
                                     return Rx.Observable.of(notification, toggleControl('save'), updateVersion(2));
                                 }))
-                    : Rx.Observable.empty();
+                        : Rx.Observable.empty();
                 }));
 
 /**

@@ -95,7 +95,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                 direction
             };
         } catch (e) {
-            return undefined;
+            return null;
         }
     }
 

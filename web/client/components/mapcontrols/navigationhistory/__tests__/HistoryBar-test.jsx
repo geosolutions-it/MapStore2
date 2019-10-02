@@ -49,9 +49,9 @@ describe('HistoryBar', () => {
                 redoBtnProps={{ onClick: handlers.onclick}}/>, document.getElementById("container"));
             const cmpDom = ReactDOM.findDOMNode(cmp);
             const undo = btnType === "normal" ? cmpDom.getElementsByTagName("button").item(0)
-                                              : cmpDom.getElementsByTagName("img").item(0);
+                : cmpDom.getElementsByTagName("img").item(0);
             const redo = btnType === "normal" ? cmpDom.getElementsByTagName("button").item(1)
-                                              : cmpDom.getElementsByTagName("img").item(1);
+                : cmpDom.getElementsByTagName("img").item(1);
             undo.click();
             redo.click();
             expect(spy.calls.length).toBe(2);

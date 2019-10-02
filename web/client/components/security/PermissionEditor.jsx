@@ -84,16 +84,16 @@ class PermissionEditor extends React.Component {
                 {
                     SecurityRuleList: {
                         SecurityRule: this.props.map.permissions.SecurityRuleList.SecurityRule.map(
-                                function(rule) {
-                                    if (rule.group && rule.group.groupName === this.props.newGroup.groupName) {
-                                        if (this.props.newPermission === "canWrite") {
-                                            return assign({}, rule, {canRead: true, canWrite: true});
-                                        }
-                                        return assign({}, rule, {canRead: true, canWrite: false});
+                            function(rule) {
+                                if (rule.group && rule.group.groupName === this.props.newGroup.groupName) {
+                                    if (this.props.newPermission === "canWrite") {
+                                        return assign({}, rule, {canRead: true, canWrite: true});
                                     }
-                                    return rule;
-                                }, this
-                            ).filter(rule => rule.canRead || rule.canWrite)
+                                    return assign({}, rule, {canRead: true, canWrite: false});
+                                }
+                                return rule;
+                            }, this
+                        ).filter(rule => rule.canRead || rule.canWrite)
                     }
                 }
             );
@@ -113,22 +113,22 @@ class PermissionEditor extends React.Component {
                 {
                     SecurityRuleList: {
                         SecurityRule: this.props.map.permissions.SecurityRuleList.SecurityRule.map(
-                        function(rule) {
-                            if (rule.group && rule.group.groupName === this.localGroups[index].name) {
-                                if (input === "canWrite") {
-                                    return assign({}, rule, {canRead: true, canWrite: true});
-                                } else if (input === "canRead") {
-                                    return assign({}, rule, {canRead: true, canWrite: false});
+                            function(rule) {
+                                if (rule.group && rule.group.groupName === this.localGroups[index].name) {
+                                    if (input === "canWrite") {
+                                        return assign({}, rule, {canRead: true, canWrite: true});
+                                    } else if (input === "canRead") {
+                                        return assign({}, rule, {canRead: true, canWrite: false});
+                                    }
+                                    // TODO: this entry is useless, it should be removed from the array
+                                    return assign({}, rule, {canRead: false, canWrite: false});
                                 }
-                                // TODO: this entry is useless, it should be removed from the array
-                                return assign({}, rule, {canRead: false, canWrite: false});
-                            }
-                            return rule;
-                        }, this
-                     ).filter(rule => rule.canRead || rule.canWrite)
+                                return rule;
+                            }, this
+                        ).filter(rule => rule.canRead || rule.canWrite)
                     }
                 }
-         );
+            );
         }
     };
 
@@ -175,12 +175,12 @@ class PermissionEditor extends React.Component {
                     <td style={{width: "50px"}}>{
                         // <Button bsStyle="danger" className="square-button" onClick={this.onChangePermission.bind(this, index, "delete")} ><Glyphicon glyph="1-close"/></Button>
                     }
-                        <Button
-                            key={"deleteButton" + index}
-                            ref="deleteButton"
-                            bsStyle="danger"
-                            disabled={this.props.disabled}
-                            onClick={this.onChangePermission.bind(this, index, "delete")}><Glyphicon glyph="1-close"/></Button>
+                    <Button
+                        key={"deleteButton" + index}
+                        ref="deleteButton"
+                        bsStyle="danger"
+                        disabled={this.props.disabled}
+                        onClick={this.onChangePermission.bind(this, index, "delete")}><Glyphicon glyph="1-close"/></Button>
                     </td>
                 </tr>
             );
@@ -190,12 +190,13 @@ class PermissionEditor extends React.Component {
         // Hack to convert map permissions to a simpler format, TODO: remove this
         if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
             this.localGroups = this.props.map.permissions.SecurityRuleList.SecurityRule
-            .map(function(rule) {
-                if (rule && rule.group && rule.canRead) {
-                    return {name: rule.group.groupName, permission: rule.canWrite ? "canWrite" : "canRead" };
+                .map(function(rule) {
+                    if (rule && rule.group && rule.canRead) {
+                        return {name: rule.group.groupName, permission: rule.canWrite ? "canWrite" : "canRead" };
+                    }
+                    return {};
                 }
-            }
-            ).filter(rule => rule);  // filter out undefined values
+                ).filter(rule => rule);  // filter out undefined values
         } else {
             this.localGroups = this.props.groups;
         }
@@ -209,8 +210,8 @@ class PermissionEditor extends React.Component {
                     </thead>
                     <tbody>
                         {this.props.map && this.props.map.permissionLoading ?
-                        <tr><td colSpan="3"><div><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle" /></div></td></tr>
-                        : this.renderPermissionRows()}
+                            <tr><td colSpan="3"><div><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle" /></div></td></tr>
+                            : this.renderPermissionRows()}
 
 
                         <tr>
@@ -231,12 +232,12 @@ class PermissionEditor extends React.Component {
                                     onChange={this.onNewGroupChoose}/>
                             </td>
                             <td style={{width: "150px"}}>
-                            <Select
-                                ref="newChoice"
-                                clearable={false}
-                                options={this.getAvailablePermissions()}
-                                value={this.props.newPermission || _.head(this.props.availablePermissions)}
-                                onChange={(sel) => {this.props.onNewPermissionChoose(sel && sel.value); }}/>
+                                <Select
+                                    ref="newChoice"
+                                    clearable={false}
+                                    options={this.getAvailablePermissions()}
+                                    value={this.props.newPermission || _.head(this.props.availablePermissions)}
+                                    onChange={(sel) => {this.props.onNewPermissionChoose(sel && sel.value); }}/>
                             </td>
                             <td style={{width: "50px"}}>
                                 <Button

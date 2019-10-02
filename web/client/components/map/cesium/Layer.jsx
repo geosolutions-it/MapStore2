@@ -28,7 +28,7 @@ class CesiumLayer extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility, newProps);
 
@@ -86,9 +86,9 @@ class CesiumLayer extends React.Component {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
             return (
-                <noscript>
+                <>
                     {children}
-                </noscript>
+                </>
             );
         }
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.map.id, this.layer);

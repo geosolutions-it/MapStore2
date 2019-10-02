@@ -69,7 +69,7 @@ module.exports = pure(({
         className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
-        verticalCompact={verticalCompact}
+        compactType={verticalCompact ? "vertical" : "horizontal"}
         breakpoints={breakpoints}
         cols={cols}
         layouts={layouts ?

@@ -4,7 +4,9 @@ const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const path = require("path");
 
 module.exports = require('./buildConfig')(
-    require('./examples.js'),
+    process.env.example ? {
+        [process.env.example]: path.join(__dirname, "..", "web", "client", "examples", process.env.example, "app")
+    } : require('./examples.js'),
     themeEntries,
     {
         base: path.join(__dirname, ".."),

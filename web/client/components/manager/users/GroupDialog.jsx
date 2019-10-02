@@ -86,31 +86,31 @@ class GroupDialog extends React.Component {
 
     renderGeneral = () => {
         return (<div style={{clear: "both", marginTop: "10px"}}>
-        <FormGroup>
-            <ControlLabel><Message msgId="usergroups.groupName"/>{' '}<span style={{ fontWeight: 'bold' }}>*</span></ControlLabel>
-            <FormControl ref="groupName"
-                key="groupName"
-                type="text"
-                name="groupName"
-                readOnly={this.props.group && this.props.group.id}
-                style={this.props.inputStyle}
-                onChange={this.handleChange}
-                maxLength={this.props.nameLimit}
-                value={this.props.group && this.props.group.groupName || ""}/>
-        </FormGroup>
-        <FormGroup>
-            <ControlLabel><Message msgId="usergroups.groupDescription"/></ControlLabel>
-            <FormControl componentClass="textarea"
-                ref="description"
-                key="description"
-                name="description"
-                maxLength={this.props.descLimit}
-                readOnly={this.props.group && this.props.group.id}
-                style={this.props.inputStyle}
-                onChange={this.handleChange}
-                value={this.props.group && this.props.group.description || ""}/>
-        </FormGroup>
-        <div style={{ fontStyle: 'italic' }}><Message msgId="users.requiredFiedsMessage"/></div>
+            <FormGroup>
+                <ControlLabel><Message msgId="usergroups.groupName"/>{' '}<span style={{ fontWeight: 'bold' }}>*</span></ControlLabel>
+                <FormControl ref="groupName"
+                    key="groupName"
+                    type="text"
+                    name="groupName"
+                    readOnly={this.props.group && this.props.group.id}
+                    style={this.props.inputStyle}
+                    onChange={this.handleChange}
+                    maxLength={this.props.nameLimit}
+                    value={this.props.group && this.props.group.groupName || ""}/>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel><Message msgId="usergroups.groupDescription"/></ControlLabel>
+                <FormControl componentClass="textarea"
+                    ref="description"
+                    key="description"
+                    name="description"
+                    maxLength={this.props.descLimit}
+                    readOnly={this.props.group && this.props.group.id}
+                    style={this.props.inputStyle}
+                    onChange={this.handleChange}
+                    value={this.props.group && this.props.group.description || ""}/>
+            </FormGroup>
+            <div style={{ fontStyle: 'italic' }}><Message msgId="users.requiredFiedsMessage"/></div>
         </div>);
     };
 
@@ -148,16 +148,16 @@ class GroupDialog extends React.Component {
             let lastError = this.props.group && this.props.group.lastError;
             return <Alert key="error" bsStyle="warning"><Message msgId="usergroups.errorSaving" />{lastError && lastError.statusText}</Alert>;
         }
-
+        return null;
     };
 
     renderMembers = () => {
         let members = this.getCurrentGroupMembers();
         if (!members || members.length === 0) {
             return (<div style={{
-                    width: "100%",
-                    textAlign: "center"
-                }}><Message msgId="usergroups.noUsers"/></div>);
+                width: "100%",
+                textAlign: "center"
+            }}><Message msgId="usergroups.noUsers"/></div>);
         }
         // NOTE: faking group Id
         return (<UsersTable users={[...members].sort((u1, u2) => u1.name > u2.name)} onRemove={(user) => {
@@ -172,12 +172,12 @@ class GroupDialog extends React.Component {
         return (<div style={{marginTop: "10px"}}>
             <label key="member-label" className="control-label"><Message msgId="usergroups.groupMembers" /></label>
             <div key="member-list" style={
-            {
-                maxHeight: "200px",
-                padding: "5px",
-                overflow: "auto",
-                boxShadow: "inset 0 2px 5px 0 #AAA"
-            }} >{this.renderMembers()}</div>
+                {
+                    maxHeight: "200px",
+                    padding: "5px",
+                    overflow: "auto",
+                    boxShadow: "inset 0 2px 5px 0 #AAA"
+                }} >{this.renderMembers()}</div>
             <div key="add-member" style={{marginTop: "10px"}}>
                 <label key="add-member-label" className="control-label"><Message msgId="usergroups.addMember" /></label>
                 <Select
@@ -202,13 +202,13 @@ class GroupDialog extends React.Component {
 
     render() {
         return (<Dialog
-              modal
-              maskLoading={this.props.group && (this.props.group.status === "loading" || this.props.group.status === "saving")}
-              id="mapstore-group-dialog"
-              className="group-edit-dialog"
-              style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
-              draggable={false}
-              >
+            modal
+            maskLoading={this.props.group && (this.props.group.status === "loading" || this.props.group.status === "saving")}
+            id="mapstore-group-dialog"
+            className="group-edit-dialog"
+            style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
+            draggable={false}
+        >
             <span role="header">
                 <button onClick={this.props.onClose} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
@@ -216,16 +216,16 @@ class GroupDialog extends React.Component {
                 <span className="user-panel-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
             </span>
             <div role="body">
-            <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
-                    {this.renderGeneral()}
-                    {this.checkNameLenght()}
-                    {this.checkDescLenght()}
-                </Tab>
-                <Tab eventKey={2} title={<Glyphicon glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
-                    {this.renderMembersTab()}
-                </Tab>
-            </Tabs>
+                <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
+                    <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
+                        {this.renderGeneral()}
+                        {this.checkNameLenght()}
+                        {this.checkDescLenght()}
+                    </Tab>
+                    <Tab eventKey={2} title={<Glyphicon glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
+                        {this.renderMembersTab()}
+                    </Tab>
+                </Tabs>
             </div>
             <div role="footer">
                 {this.renderError()}
@@ -236,14 +236,14 @@ class GroupDialog extends React.Component {
 
     checkNameLenght = () => {
         return this.props.group && this.props.group.groupName && this.props.group.groupName.length === this.props.nameLimit ? <div className="alert alert-warning">
-              <Message msgId="usergroups.nameLimit"/>
-          </div> : null;
+            <Message msgId="usergroups.nameLimit"/>
+        </div> : null;
     };
 
     checkDescLenght = () => {
         return this.props.group && this.props.group.description && this.props.group.description.length === this.props.descLimit ? <div className="alert alert-warning">
-              <Message msgId="usergroups.descLimit"/>
-          </div> : null;
+            <Message msgId="usergroups.descLimit"/>
+        </div> : null;
     };
 
     isSaving = () => {

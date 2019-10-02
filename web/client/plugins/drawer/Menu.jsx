@@ -73,8 +73,8 @@ class Menu extends React.Component {
     renderButtons = () => {
         return this.props.children.map((child) => {
             const button = (<Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey, this.props.activeKey === child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
-                        {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
-                    </Button>);
+                {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
+            </Button>);
             if (child.props.buttonConfig && child.props.buttonConfig.tooltip) {
                 const tooltip = <Tooltip key={"tooltip." + child.props.eventKey} id={"tooltip." + child.props.eventKey}><Message msgId={child.props.buttonConfig.tooltip}/></Tooltip>;
                 return (
@@ -96,14 +96,14 @@ class Menu extends React.Component {
                     {this.renderButtons()}
                 </div>
             </div>)
-         : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-            <span className="title">{this.props.title}</span>
-            <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
-        </div>);
+            : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
+                <span className="title">{this.props.title}</span>
+                <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
+            </div>);
         const content = (<div className={"nav-content"}>
             {header}
             <div className={"nav-body"}>
-            {this.props.children.filter((child) => !this.props.single || this.props.activeKey === child.props.eventKey).map(this.renderChildren)}
+                {this.props.children.filter((child) => !this.props.single || this.props.activeKey === child.props.eventKey).map(this.renderChildren)}
             </div>
         </div>);
         return this.props.resizable ? <Resizable axis="x" resizeHandles={['e']} width={this.getWidth()} onResize={this.resize}>{content}</Resizable> : content;

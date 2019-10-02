@@ -107,7 +107,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
                         }
                     }}
                 />
-            , document.getElementById("container"));
+                , document.getElementById("container"));
             expect(cmp).toExist();
 
             let componentSpy = expect.spyOn(cmp, 'zoomToMaxExtent').andCallThrough();
@@ -173,7 +173,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
                         projection: "EPSG:900913"
                     }}
                 />
-            , document.getElementById("container"));
+                , document.getElementById("container"));
             expect(cmp).toExist();
 
             let componentSpy = expect.spyOn(cmp, 'zoomToInitialExtent').andCallThrough();

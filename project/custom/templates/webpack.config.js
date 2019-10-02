@@ -31,7 +31,7 @@ module.exports = (env) => {
                 options: {
                     postcss: {
                         plugins: [
-                        require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.ms2', '.__PROJECTNAME__', '[data-ms2-container]']})
+                            require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.ms2', '.__PROJECTNAME__', '[data-ms2-container]']})
                         ]
                     },
                     context: __dirname
@@ -69,7 +69,7 @@ module.exports = (env) => {
                     }, {
                         loader: 'css-loader'
                     }, {
-                    loader: 'postcss-loader'
+                        loader: 'postcss-loader'
                     }]
                 },
                 {
@@ -86,9 +86,9 @@ module.exports = (env) => {
                 {
                     test: /themes[\\\/]?.+\.less$/,
                     use: extractThemesPlugin.extract({
-                            fallback: 'style-loader',
-                            use: ['css-loader', 'postcss-loader', 'less-loader']
-                        })
+                        fallback: 'style-loader',
+                        use: ['css-loader', 'postcss-loader', 'less-loader']
+                    })
                 },
                 {
                     test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
@@ -119,13 +119,6 @@ module.exports = (env) => {
                     }]
                 },
                 {
-                    test: /\.jsx?$/,
-                    exclude: /(ol\.js)$|(Cesium\.js)$|(cesium\.js)$/,
-                    use: [{
-                        loader: "react-hot-loader"
-                    }],
-                    include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
-                }, {
                     test: /\.jsx?$/,
                     exclude: /(ol\.js)$|(Cesium\.js)$/,
                     use: [{

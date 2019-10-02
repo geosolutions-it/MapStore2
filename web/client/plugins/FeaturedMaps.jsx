@@ -51,7 +51,8 @@ class FeaturedMaps extends React.Component {
         router: PropTypes.object
     };
 
-    componentWillMount() {
+
+    UNSAFE_componentWillMount() {
         this.props.enableFeaturedMaps(true);
     }
 
@@ -172,8 +173,8 @@ module.exports = {
     FeaturedMapsPlugin: assign(FeaturedMapsPlugin, {
         NavMenu: {
             position: 1,
-            labelComponent: <LabeledNavItem />,
-            iconComponent: <IconNavItem />
+            labelComponent: <LabeledNavItem key="featured-maps-label"/>,
+            iconComponent: <IconNavItem key="featured-maps-icon"/>
         }
     }),
     epics: {

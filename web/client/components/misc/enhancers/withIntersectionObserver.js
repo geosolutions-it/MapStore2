@@ -32,7 +32,7 @@ import "intersection-observer";
  * @prop {function} onVisibilityChange handler of intersection event. (inView (boolean), entry (object)) are the handler's parameters. If present, it overrides the onVisibilityChange defined as parameter.
  * @prop {object} intersectionObserverOptions overrides for the params passed on enhancer creation (rootMargin, threshold, triggerOnce)
  */
-export default ({ onVisibilityChange: onVisibilityChange, ...options, rootSelector } = {}) => (Component) => ({ intersectionObserverOptions = {}, onVisibilityChange: onVisibilityChange2, ...props }) => {
+export default ({ onVisibilityChange: onVisibilityChange, rootSelector, ...options } = {}) => (Component) => ({ intersectionObserverOptions = {}, onVisibilityChange: onVisibilityChange2, ...props }) => {
     const onChange = onVisibilityChange || onVisibilityChange2;
     return (<InView {...options} {...intersectionObserverOptions} onChange={onChange}>
         {({ inView, ref, entry }) => (<Component {...props} inView={inView} inViewRef={ref} inViewEntry={entry} />)}

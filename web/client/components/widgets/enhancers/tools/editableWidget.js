@@ -12,7 +12,7 @@ const {withProps} = require('recompose');
  */
 module.exports = () =>
     withProps(({ widgetTools = [], dataGrid = {}, canEdit, onEdit = () => {}, toggleDeleteConfirm = () => {} }) => ({
-    widgetTools: canEdit
+        widgetTools: canEdit
             ? [
                 ...widgetTools,
                 {
@@ -29,5 +29,5 @@ module.exports = () =>
                     onClick: () => toggleDeleteConfirm(true)
                 }
             ]
-        : widgetTools
-}));
+            : widgetTools
+    }));

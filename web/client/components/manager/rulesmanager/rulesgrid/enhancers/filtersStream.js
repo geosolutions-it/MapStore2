@@ -12,8 +12,8 @@
  * @return {Observable} Stream of props to trigger the data fetch
  */
 module.exports = (props$) => props$
-            .distinctUntilChanged(({setFilters}, newProps) => setFilters === newProps.setFilters)
-            .switchMap(({setFilters, addFilter$}) => addFilter$
-                .debounceTime(500)
-                .do((f) => setFilters(f))
-            );
+    .distinctUntilChanged(({setFilters}, newProps) => setFilters === newProps.setFilters)
+    .switchMap(({setFilters, addFilter$}) => addFilter$
+        .debounceTime(500)
+        .do((f) => setFilters(f))
+    );

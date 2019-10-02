@@ -24,7 +24,7 @@ const getIcon = (style, geojson) => {
     if (style && style.iconUrl || style.symbolUrlCustomized || style.symbolUrl) {
         return Icons.standard.getIcon(style);
     }
-
+    return null;
 };
 
 const coordsToLatLngF = function(coords) {
@@ -36,8 +36,8 @@ const coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
     var len = coords.length;
     for (let i = 0, latlng; i < len; i++) {
         latlng = levelsDeep ?
-                coordsToLatLngs(coords[i], levelsDeep - 1, coordsToLatLng) :
-                (coordsToLatLng || this.coordsToLatLng)(coords[i]);
+            coordsToLatLngs(coords[i], levelsDeep - 1, coordsToLatLng) :
+            (coordsToLatLng || this.coordsToLatLng)(coords[i]);
 
         latlngs.push(latlng);
     }
@@ -144,69 +144,69 @@ const VectorUtils = {
         let style = props.style || assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
 
         switch (geometry.type) {
-            case 'Point':
-                latlng = coordsToLatLng(coords);
+        case 'Point':
+            latlng = coordsToLatLng(coords);
+            layer = VectorUtils.createTextPointMarkerLayer({pointToLayer, geojson, latlng, options, style, highlight: style && style.highlight});
+            return layer;
+        case 'MultiPoint':
+            for (i = 0, len = coords.length; i < len; i++) {
+                latlng = coordsToLatLng(coords[i]);
                 layer = VectorUtils.createTextPointMarkerLayer({pointToLayer, geojson, latlng, options, style, highlight: style && style.highlight});
-                return layer;
-            case 'MultiPoint':
-                for (i = 0, len = coords.length; i < len; i++) {
-                    latlng = coordsToLatLng(coords[i]);
-                    layer = VectorUtils.createTextPointMarkerLayer({pointToLayer, geojson, latlng, options, style, highlight: style && style.highlight});
-                    layer.msId = geojson.id;
+                layer.msId = geojson.id;
+                layers.push(layer);
+            }
+            return new L.FeatureGroup(layers);
+
+        case 'LineString':
+            style = VectorUtils.updateHighlightStyle(style);
+            latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
+            layer = new L.Polyline(latlngs, style);
+            layer.msId = geojson.id;
+            return layer;
+        case 'MultiLineString':
+            style = VectorUtils.updateHighlightStyle(style);
+            latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
+            for (i = 0, len = latlngs.length; i < len; i++) {
+                layer = new L.Polyline(latlngs[i], style);
+                layer.msId = geojson.id;
+                if (layer) {
                     layers.push(layer);
                 }
-                return new L.FeatureGroup(layers);
-
-            case 'LineString':
-                style = VectorUtils.updateHighlightStyle(style);
-                latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-                layer = new L.Polyline(latlngs, style);
-                layer.msId = geojson.id;
-                return layer;
-            case 'MultiLineString':
-                style = VectorUtils.updateHighlightStyle(style);
-                latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-                for (i = 0, len = latlngs.length; i < len; i++) {
-                    layer = new L.Polyline(latlngs[i], style);
-                    layer.msId = geojson.id;
-                    if (layer) {
-                        layers.push(layer);
-                    }
-                }
-                return new L.FeatureGroup(layers);
-            case 'Polygon':
-                style = VectorUtils.updateHighlightStyle(style);
-                latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
+            }
+            return new L.FeatureGroup(layers);
+        case 'Polygon':
+            style = VectorUtils.updateHighlightStyle(style);
+            latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
+            layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
+            layer.msId = geojson.id;
+            return layer;
+        case 'MultiPolygon':
+            style = VectorUtils.updateHighlightStyle(style);
+            latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
+            for (i = 0, len = latlngs.length; i < len; i++) {
                 layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
                 layer.msId = geojson.id;
-                return layer;
-            case 'MultiPolygon':
-                style = VectorUtils.updateHighlightStyle(style);
-                latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-                for (i = 0, len = latlngs.length; i < len; i++) {
-                    layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
-                    layer.msId = geojson.id;
-                    if (layer) {
-                        layers.push(layer);
-                    }
+                if (layer) {
+                    layers.push(layer);
                 }
-                return new L.FeatureGroup(layers);
-            case 'GeometryCollection':
-                for (i = 0, len = geometry.geometries.length; i < len; i++) {
-                    layer = VectorUtils.geometryToLayer({
-                        geometry: geometry.geometries[i],
-                        type: 'Feature',
-                        properties: geojson.properties
-                    }, options);
+            }
+            return new L.FeatureGroup(layers);
+        case 'GeometryCollection':
+            for (i = 0, len = geometry.geometries.length; i < len; i++) {
+                layer = VectorUtils.geometryToLayer({
+                    geometry: geometry.geometries[i],
+                    type: 'Feature',
+                    properties: geojson.properties
+                }, options);
 
-                    if (layer) {
-                        layers.push(layer);
-                    }
+                if (layer) {
+                    layers.push(layer);
                 }
-                return new L.FeatureGroup(layers);
+            }
+            return new L.FeatureGroup(layers);
 
-            default:
-                throw new Error('Invalid GeoJSON object.');
+        default:
+            throw new Error('Invalid GeoJSON object.');
         }
     },
     updateHighlightStyle: (style) => {

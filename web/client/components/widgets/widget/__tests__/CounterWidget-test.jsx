@@ -17,7 +17,7 @@ const CounterWidget = compose(
         canEdit: true
     }),
     counterWidget
-    )(require('../CounterWidget'));
+)(require('../CounterWidget'));
 describe('CounterWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

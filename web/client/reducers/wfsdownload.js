@@ -20,44 +20,42 @@ const {DOWNLOAD_OPTIONS_CHANGE, DOWNLOAD_FEATURES, DOWNLOAD_FINISHED, FORMAT_OPT
  */
 function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
     switch (action.type) {
-        case DOWNLOAD_FEATURES:
-            return {
-                ...state,
-                loading: true
-            };
-        case DOWNLOAD_OPTIONS_CHANGE:
-            return {
-                ...state,
-                downloadOptions: {
-                    ...state.downloadOptions,
-                    [action.key]: action.value
-                }
-            };
-        case FORMAT_OPTIONS_FETCH:
-            return {
-                ...state,
-                layer: action.layer,
-                wfsFormats: [],
-                formatsLoading: true
-            };
-        case DOWNLOAD_FINISHED: {
-            return {
-                ...state,
-                loading: false
-            };
-        }
-        case FORMAT_OPTIONS_UPDATE: {
-            return {
-                ...state,
-                wfsFormats: action.wfsFormats,
-                formatsLoading: false
-            };
-        }
-        default:
-            return state;
-
+    case DOWNLOAD_FEATURES:
+        return {
+            ...state,
+            loading: true
+        };
+    case DOWNLOAD_OPTIONS_CHANGE:
+        return {
+            ...state,
+            downloadOptions: {
+                ...state.downloadOptions,
+                [action.key]: action.value
+            }
+        };
+    case FORMAT_OPTIONS_FETCH:
+        return {
+            ...state,
+            layer: action.layer,
+            wfsFormats: [],
+            formatsLoading: true
+        };
+    case DOWNLOAD_FINISHED: {
+        return {
+            ...state,
+            loading: false
+        };
     }
-    return state;
+    case FORMAT_OPTIONS_UPDATE: {
+        return {
+            ...state,
+            wfsFormats: action.wfsFormats,
+            formatsLoading: false
+        };
+    }
+    default:
+        return state;
+    }
 }
 
 module.exports = wfsdownload;

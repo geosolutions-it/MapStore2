@@ -105,7 +105,7 @@ export default class GrabOlMap extends React.Component {
             >
                 {this.renderLayers(this.props.layers)}
             </LMap>
-         : null;
+            : null;
     }
 
     layerLoad = () => {
@@ -153,6 +153,6 @@ export default class GrabOlMap extends React.Component {
                 return err.code === 18;
             }
         }
-
+        return false;
     };
 }

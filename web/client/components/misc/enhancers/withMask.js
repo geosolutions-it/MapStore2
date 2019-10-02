@@ -31,18 +31,18 @@ const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, cl
  *  - white: makes the mask background white, false by default
  */
 module.exports = (
-        showMask = () => {},
-        maskContent = () => {},
-        {
-            alwaysWrap = true,
-            white = false,
-            maskContainerStyle = {},
-            maskStyle = {},
-            className
-        } = {}
-    ) => alwaysWrap
-        ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className, white })
-        : branch(
-            showMask,
-            maskEnhancer(() => true, maskContent, { maskContainerStyle, maskStyle, white })
-        );
+    showMask = () => {},
+    maskContent = () => {},
+    {
+        alwaysWrap = true,
+        white = false,
+        maskContainerStyle = {},
+        maskStyle = {},
+        className
+    } = {}
+) => alwaysWrap
+    ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className, white })
+    : branch(
+        showMask,
+        maskEnhancer(() => true, maskContent, { maskContainerStyle, maskStyle, white })
+    );

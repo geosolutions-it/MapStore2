@@ -14,7 +14,7 @@ const {Col, Button, ButtonGroup} = require("react-bootstrap");
 const ResizableModal = require("../../misc/ResizableModal");
 const BorderLayout = require("../../layout/BorderLayout");
 
-module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {}, show = false, stylesFilter = '', filterPlaceholder = "Filter styles...", clearAll= () => {}, selectAll = () => {}, onFilter = () => {}, onClose = () => {}}) => {
+module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {}, show = false, stylesFilter = '', filterPlaceholder = "Filter styles...", clearAll = () => {}, selectAll = () => {}, onFilter = () => {}, onClose = () => {}}) => {
     const filteredStyle = stylesFilter && stylesFilter.length > 0 && styles.filter(st => st.title.toLowerCase().match(stylesFilter && stylesFilter.toLowerCase())) || styles;
     return (
         <Portal>
@@ -28,16 +28,16 @@ module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {
                         <BorderLayout
                             header={<span>
                                 <Filter filterPlaceholder={filterPlaceholder} filterText={stylesFilter || ''} onFilter={onFilter}/>
-                                    <Col className="text-center">
-                                        <ButtonGroup>
-                                            <Button bsStyle="primary" bsSize="sm" onClick={clearAll}>
-                                                <Message msgId="rulesmanager.clearbtn"/>
-                                            </Button>
-                                            <Button bsStyle="primary" bsSize="sm" onClick={selectAll}>
-                                                <Message msgId="rulesmanager.selectbtn"/>
-                                            </Button>
-                                        </ButtonGroup>
-                                    </Col>
+                                <Col className="text-center">
+                                    <ButtonGroup>
+                                        <Button bsStyle="primary" bsSize="sm" onClick={clearAll}>
+                                            <Message msgId="rulesmanager.clearbtn"/>
+                                        </Button>
+                                        <Button bsStyle="primary" bsSize="sm" onClick={selectAll}>
+                                            <Message msgId="rulesmanager.selectbtn"/>
+                                        </Button>
+                                    </ButtonGroup>
+                                </Col>
                             </span>}>
                             <StylesList styles={filteredStyle} selectedStyles={selectedStyles} onSelectionChange={onSelectionChange}/>
                         </BorderLayout>

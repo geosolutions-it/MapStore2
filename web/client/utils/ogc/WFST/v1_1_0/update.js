@@ -21,6 +21,6 @@ const property = (propName, value) => '<wfs:Property>'
  */
 const update = (content, describeFeatureType) => `<wfs:Update typeName="${getTypeName(describeFeatureType)}">${Array.isArray(content) ? content.join("") : content}</wfs:Update>`;
 module.exports = {
-      update,
-      property
+    update,
+    property
 };

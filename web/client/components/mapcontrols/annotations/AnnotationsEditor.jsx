@@ -344,52 +344,52 @@ class AnnotationsEditor extends React.Component {
                     <Toolbar
                         btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary' }}
                         buttons={[
-                        {
-                            glyph: 'arrow-left',
-                            tooltipId: "annotations.back",
-                            visible: true,
-                            onClick: () => {
-                                if (this.props.styling) {
-                                    if (this.props.unsavedStyle) {
-                                        this.props.onToggleUnsavedStyleModal();
+                            {
+                                glyph: 'arrow-left',
+                                tooltipId: "annotations.back",
+                                visible: true,
+                                onClick: () => {
+                                    if (this.props.styling) {
+                                        if (this.props.unsavedStyle) {
+                                            this.props.onToggleUnsavedStyleModal();
+                                        } else {
+                                            this.props.onCancelStyle();
+                                        }
+                                    } else if (this.props.unsavedGeometry) {
+                                        this.props.onToggleUnsavedGeometryModal();
                                     } else {
-                                        this.props.onCancelStyle();
+                                        this.props.onResetCoordEditor();
                                     }
-                                } else if (this.props.unsavedGeometry) {
-                                    this.props.onToggleUnsavedGeometryModal();
-                                } else {
-                                    this.props.onResetCoordEditor();
+                                }
+                            }, {
+                                glyph: 'trash',
+                                tooltipId: "annotations.deleteFeature",
+                                visible: !this.props.styling,
+                                onClick: this.props.onToggleDeleteFtModal
+                            }, {
+                                glyph: 'dropper',
+                                tooltipId: "annotations.styleGeometry",
+                                visible: !this.props.styling && this.props.selected,
+                                onClick: this.props.onStyleGeometry
+                            }, {// only in styler
+                                glyph: 'ok',
+                                tooltipId: "annotations.applyStyle",
+                                visible: this.props.styling,
+                                onClick: () => {
+                                    this.props.onSaveStyle();
+                                    this.props.onSetUnsavedStyle(false);
+                                }
+                            }, {// only in coord editor
+                                glyph: 'floppy-disk',
+                                tooltipId: "annotations.save",
+                                visible: !this.props.styling,
+                                disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
+                                onClick: () => {
+                                    if (this.props.selected) {
+                                        this.props.onAddNewFeature();
+                                    }
                                 }
                             }
-                        }, {
-                            glyph: 'trash',
-                            tooltipId: "annotations.deleteFeature",
-                            visible: !this.props.styling,
-                            onClick: this.props.onToggleDeleteFtModal
-                        }, {
-                            glyph: 'dropper',
-                            tooltipId: "annotations.styleGeometry",
-                            visible: !this.props.styling && /*this.props.editing && this.props.editing.features && this.props.editing.features.length &&*/ this.props.selected,
-                            onClick: this.props.onStyleGeometry
-                        }, {// only in styler
-                            glyph: 'ok',
-                            tooltipId: "annotations.applyStyle",
-                            visible: this.props.styling,
-                            onClick: () => {
-                                this.props.onSaveStyle();
-                                this.props.onSetUnsavedStyle(false);
-                            }
-                        }, {// only in coord editor
-                            glyph: 'floppy-disk',
-                            tooltipId: "annotations.save",
-                            visible: !this.props.styling,
-                            disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
-                            onClick: () => {
-                                if (this.props.selected) {
-                                    this.props.onAddNewFeature();
-                                }
-                            }
-                        }
                         ]} />
                 </Col>
             </Row>
@@ -407,24 +407,24 @@ class AnnotationsEditor extends React.Component {
         const fieldValue = this.props.editedFields[field.name] === undefined ? prop : this.props.editedFields[field.name];
         if (editing) {
             switch (field.type) {
-                case 'html':
-                    return <ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
-                case 'component':
-                    const Component = fieldValue;
-                    return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
-                default:
-                    return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+            case 'html':
+                return <ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+            case 'component':
+                const Component = fieldValue;
+                return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+            default:
+                return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             }
 
         }
         switch (field.type) {
-            case 'html':
-                return <span dangerouslySetInnerHTML={{ __html: fieldValue }} />;
-            case 'component':
-                const Component = fieldValue;
-                return <Component annotation={this.props.feature} />;
-            default:
-                return (<p>{fieldValue}</p>);
+        case 'html':
+            return <span dangerouslySetInnerHTML={{ __html: fieldValue }} />;
+        case 'component':
+            const Component = fieldValue;
+            return <Component annotation={this.props.feature} />;
+        default:
+            return (<p>{fieldValue}</p>);
         }
     };
 
@@ -465,13 +465,13 @@ class AnnotationsEditor extends React.Component {
             defaultShape={this.props.defaultShape}
             lineDashOptions={this.props.lineDashOptions}
             markersOptions={this.getConfig()}
-            />);
+        />);
     };
 
     renderStyler = () => {
         return (<BorderLayout
             className="mapstore-annotations-info-viewer-styler-container">
-                {this.renderStylerBody("marker" || this.props.stylerType)}
+            {this.renderStylerBody("marker" || this.props.stylerType)}
         </BorderLayout>);
     };
 
@@ -599,6 +599,7 @@ class AnnotationsEditor extends React.Component {
                     <Message msgId="annotations.removeannotation" msgParams={{title: this.props.feature && this.props.feature.properties && this.props.feature.properties.title}}/>}
             </ConfirmDialog></Portal>);
         }
+        return null;
     }
 
     render() {
@@ -654,15 +655,15 @@ class AnnotationsEditor extends React.Component {
     selectGlyph = (option) => {
         return this.props.onSetStyle(
             assign({}, this.props.editing.style, {
-            "Point": {
-                ...this.props.editing.style.Point,
-                iconGlyph: option && option.value || ""
-            },
-            "MultiPoint": {
-                ...this.props.editing.style.MultiPoint,
-                iconGlyph: option && option.value || ""
-            }
-        }));
+                "Point": {
+                    ...this.props.editing.style.Point,
+                    iconGlyph: option && option.value || ""
+                },
+                "MultiPoint": {
+                    ...this.props.editing.style.MultiPoint,
+                    iconGlyph: option && option.value || ""
+                }
+            }));
     };
 
     validate = () => {

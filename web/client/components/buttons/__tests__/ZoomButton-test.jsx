@@ -107,7 +107,7 @@ describe('This test for ZoomButton', () => {
                         }
                     }}
                 />
-            , document.getElementById("container"));
+                , document.getElementById("container"));
             expect(cmp).toExist();
 
             const cmpDom = document.getElementById("mapstore-zoom");
@@ -165,7 +165,7 @@ describe('This test for ZoomButton', () => {
                         projection: "EPSG:900913"
                     }}
                 />
-            , document.getElementById("container"));
+                , document.getElementById("container"));
             expect(cmp).toExist();
 
             const cmpDom = document.getElementById("mapstore-zoom");

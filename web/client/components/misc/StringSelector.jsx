@@ -52,7 +52,7 @@ class StringSelector extends React.Component {
     };
     render() {
         return (
-            <span ref={node => this.node = node} className="mapstore-string-select">
+            <span ref={node => {this.node = node;}} className="mapstore-string-select">
                 <span onClick={this.handleClick}>
                     <strong>{this.renderLabel(this.getSelected())}</strong>
                     <Glyphicon glyph="chevron-down"/>

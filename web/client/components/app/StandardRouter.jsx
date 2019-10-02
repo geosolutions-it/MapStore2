@@ -10,10 +10,8 @@ const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
 const Debug = require('../development/Debug');
 const {Route} = require('react-router');
-const {ConnectedRouter} = require('react-router-redux');
-const createHistory = require('history/createHashHistory').default;
-const history = createHistory();
-
+const {ConnectedRouter} = require('connected-react-router');
+const history = require('../../stores/History').default;
 
 const Localized = require('../I18N/Localized');
 
@@ -72,7 +70,7 @@ class StandardRouter extends React.Component {
                         </ConnectedRouter>
                     </Localized>) :
                         (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
-                        <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>)}
+                            <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>)}
                 </Theme>
                 <Debug/>
             </div>
@@ -88,7 +86,7 @@ class StandardRouter extends React.Component {
                             {this.renderPages()}
                         </div>
                     </ConnectedRouter>
-                    </Localized>
+                </Localized>
                 <Debug/>
             </div>);
     }

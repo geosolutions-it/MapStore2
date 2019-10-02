@@ -20,7 +20,7 @@ module.exports = (showCondition = () => true) => compose(
         connected,
         ...props
     }) => ({
-            stepButtons: [...stepButtons, {
+        stepButtons: [...stepButtons, {
             onClick: () => toggleConnection(availableDependencies),
             disabled: disableMultiDependencySupport,
             visible: !!showCondition(props) && !!canConnect && availableDependencies.length > 0,

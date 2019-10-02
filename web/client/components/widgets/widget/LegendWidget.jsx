@@ -16,16 +16,16 @@ module.exports = ({
     id, title,
     icons,
     headerStyle,
-    confirmDelete= false,
+    confirmDelete = false,
     topRightItems,
-    onDelete=() => {},
+    onDelete = () => {},
     ...props
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
-    icons={icons}
-    topRightItems={topRightItems}
-        >
+        icons={icons}
+        topRightItems={topRightItems}
+    >
         <LegendView {...props} />
     </WidgetContainer>
 
-);
+    );

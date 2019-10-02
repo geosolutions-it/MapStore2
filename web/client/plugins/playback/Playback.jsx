@@ -81,7 +81,7 @@ module.exports = playbackEnhancer(({
     onShowSettings = () => {},
     settingsStyle = {}
 }) =>
-( <div style={{display: 'flex'}}>
+    ( <div style={{display: 'flex'}}>
         { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <Settings style={settingsStyle}/>}
         <Toolbar
             btnDefaultProps={{
@@ -105,8 +105,8 @@ module.exports = playbackEnhancer(({
                     tooltipId: hasNext && (status === statusMap.PLAY
                         ? "playback.pause"
                         : status === statusMap.PAUSE
-                                ? "playback.paused"
-                                : "playback.play")
+                            ? "playback.paused"
+                            : "playback.play")
                 }, {
                     glyph: "stop",
                     key: 'stop',

@@ -12,11 +12,11 @@ const {
 
 function contenttabs(state = {selected: "maps"}, action) {
     switch (action.type) {
-        case ON_TAB_SELECTED: {
-            return {selected: action.id || "maps"};
-        }
-        default:
-            return state;
+    case ON_TAB_SELECTED: {
+        return {selected: action.id || "maps"};
+    }
+    default:
+        return state;
     }
 }
 

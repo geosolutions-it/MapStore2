@@ -28,14 +28,14 @@ const {get} = require('lodash');
 
 const setSupportedLocales = (action$) =>
     action$.ofType(LOCAL_CONFIG_LOADED)
-    .switchMap(action => {
-        const supportedLocales = get(action, "config.initialState.defaultState.locales.supportedLocales", {});
-        if (Object.keys(supportedLocales).length === 0) {
-            return Rx.Observable.of(supportedLanguagesRegistered({}));
-        }
-        LocaleUtils.setSupportedLocales(supportedLocales);
-        return Rx.Observable.of(supportedLanguagesRegistered(supportedLocales));
-    });
+        .switchMap(action => {
+            const supportedLocales = get(action, "config.initialState.defaultState.locales.supportedLocales", {});
+            if (Object.keys(supportedLocales).length === 0) {
+                return Rx.Observable.of(supportedLanguagesRegistered({}));
+            }
+            LocaleUtils.setSupportedLocales(supportedLocales);
+            return Rx.Observable.of(supportedLanguagesRegistered(supportedLocales));
+        });
 
 
 module.exports = {

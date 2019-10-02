@@ -25,10 +25,10 @@ module.exports = {
             && state.query.featureTypes[state.query.typeName]
             && state.query.featureTypes[state.query.typeName].attributes
             && state.query.featureTypes[state.query.typeName].attributes.filter(attr => attr.name !== "geometry")
-            .map((attr) => ({
-                headerName: attr.label,
-                field: attr.attribute
-            })),
+                .map((attr) => ({
+                    headerName: attr.label,
+                    field: attr.attribute
+                })),
         query: state.query && state.query.queryObj,
         isNew: state.query && state.query.isNew,
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures,

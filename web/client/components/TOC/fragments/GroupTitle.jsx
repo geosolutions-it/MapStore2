@@ -49,11 +49,11 @@ class GroupTitle extends React.Component {
                 </div>
             </OverlayTrigger>
         ) :
-        (
-            <div style={this.props.style}>
-                <span className="toc-group-title" onClick={ this.props.onSelect ? (e) => this.props.onSelect(this.props.node.id, 'group', e.ctrlKey) : () => {}}>{groupTitle}</span><StatusIcon onClick={() => this.props.onClick(this.props.node.id, expanded)} expanded={expanded} node={this.props.node}/>
-            </div>
-        );
+            (
+                <div style={this.props.style}>
+                    <span className="toc-group-title" onClick={ this.props.onSelect ? (e) => this.props.onSelect(this.props.node.id, 'group', e.ctrlKey) : () => {}}>{groupTitle}</span><StatusIcon onClick={() => this.props.onClick(this.props.node.id, expanded)} expanded={expanded} node={this.props.node}/>
+                </div>
+            );
     }
 }
 

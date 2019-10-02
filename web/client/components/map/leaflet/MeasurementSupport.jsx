@@ -196,7 +196,7 @@ class MeasurementSupport extends React.Component {
     };
 
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if ((newProps && newProps.uom && newProps.uom.length && newProps.uom.length.unit) !== (this.props && this.props.uom && this.props.uom.length && this.props.uom.length.unit) && this.drawControl) {
             const uomOptions = this.uomLengthOptions(newProps);
             this.drawControl.setOptions({...uomOptions, uom: newProps.uom});

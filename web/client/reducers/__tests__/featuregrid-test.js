@@ -20,28 +20,28 @@ let feature1 = {
     }
 };
 let feature2 = {
-     type: "Feature",
-     geometry: {
-         type: "Point",
-         coordinates: [1, 2]
-     },
-     id: idFt2,
-     properties: {
-         someProp: "someValue"
-     }
- };
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [1, 2]
+    },
+    id: idFt2,
+    properties: {
+        someProp: "someValue"
+    }
+};
 let newfeature3 = {
-     type: "Feature",
-     geometry: {
-         type: "Point",
-         coordinates: [1, 2]
-     },
-     _new: true,
-     id: idFt2,
-     properties: {
-         someProp: "someValue"
-     }
- };
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [1, 2]
+    },
+    _new: true,
+    id: idFt2,
+    properties: {
+        someProp: "someValue"
+    }
+};
 const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
@@ -52,7 +52,7 @@ const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
 
 const {changeDrawingStatus} = require('../../actions/draw');
 
-const museam = require('json-loader!../../test-resources/wfs/museam.json');
+const museam = require('../../test-resources/wfs/museam.json');
 describe('Test the featuregrid reducer', () => {
 
     it('returns original state on unrecognized action', () => {
@@ -302,12 +302,12 @@ describe('Test the featuregrid reducer', () => {
     it('featureTypeLoaded', () => {
         let state = featuregrid( {}, featureTypeLoaded("typeName", {
             original: {featureTypes: [
-            {
-                properties: [
-                    {},
-                    {localType: "Point"}
-                ]
-            }]}}));
+                {
+                    properties: [
+                        {},
+                        {localType: "Point"}
+                    ]
+                }]}}));
         expect(state.localType).toBe("Point");
 
     });

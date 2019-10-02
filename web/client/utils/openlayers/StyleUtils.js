@@ -49,13 +49,13 @@ const toVectorStyle = function(layer, style) {
         }
         case 'MultiLineString':
         case 'LineString':
-            {
-                // TODO clear this, it goes in maximum call stack size exceeded
-                newLayer.nativeStyle = new Style({
-                    stroke: stroke
-                });
-                break;
-            }
+        {
+            // TODO clear this, it goes in maximum call stack size exceeded
+            newLayer.nativeStyle = new Style({
+                stroke: stroke
+            });
+            break;
+        }
         case 'Point':
         case 'MultiPoint': {
             // TODO clear this, it goes in maximum call stack size exceeded

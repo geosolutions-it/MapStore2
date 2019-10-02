@@ -39,7 +39,7 @@ class VisibilityCheck extends React.Component {
                 data-position={this.props.node.storeIndex}
                 glyph={this.props.node.visibility ? this.props.glyphChecked : this.props.glyphUnchecked}
                 onClick={this.changeVisibility}
-                />);
+            />);
         }
         return (<input className="visibility-check" style={this.props.style}
             data-position={this.props.node.storeIndex}

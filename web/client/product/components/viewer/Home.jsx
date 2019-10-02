@@ -43,7 +43,7 @@ class Home extends React.Component {
                 onClick={this.goHome}
                 tooltip={tooltip}
                 tooltipPlace="left"
-                />
+            />
         );
     }
 

@@ -24,7 +24,7 @@ const {createSelector} = require('reselect');
 
 const MapsGrid = require('./maps/MapsGrid');
 const MetadataModal = require('./maps/MetadataModal');
-const EmptyMaps = require('./maps/EmptyMaps');
+const EmptyMaps = require('./maps/EmptyMaps').default;
 
 const {loadMaps, setShowMapDetails} = require('../actions/maps');
 
@@ -68,7 +68,7 @@ class Maps extends React.Component {
         loadMaps: PropTypes.func,
         setShowMapDetails: PropTypes.func,
         showMapDetails: PropTypes.bool,
-        maps: PropTypes.object,
+        maps: PropTypes.array,
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
@@ -106,7 +106,7 @@ class Maps extends React.Component {
             viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id); }}
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}
-            />);
+        />);
     }
 }
 
@@ -129,7 +129,7 @@ const MapsPlugin = compose(
         loadMaps, setShowMapDetails
     }),
     emptyState(
-        ({maps =[], loading}) => !loading && maps.length === 0,
+        ({maps = [], loading}) => !loading && maps.length === 0,
         () => ({
             glyph: "1-map",
             title: <Message msgId="resources.maps.noMapAvailable" />,

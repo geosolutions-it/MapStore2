@@ -43,7 +43,7 @@ const GeoStoryEditor = ({
         setEditing={setEditingMode}
         cardPreviewEnabled={cardPreviewEnabled}
         onToggleCardPreview={onToggleCardPreview}
-        />
+    />
 </div> : null);
 /**
  * Plugin for GeoStory side panel editor

@@ -48,7 +48,7 @@ export default class Feature extends React.Component {
     }
 
 
-    componentWillUpdate(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
         this.removeFromContainer();
         this.addFeatures(nextProps);
     }
@@ -82,9 +82,9 @@ export default class Feature extends React.Component {
                 id: props.msId,
                 ...ftGeometry
             }, {
-                    // reproject features from featureCrs
-                    dataProjection: props.featuresCrs
-                });
+                // reproject features from featureCrs
+                dataProjection: props.featuresCrs
+            });
             this._feature.map(f => {
                 let newF = f;
                 if (f.getProperties().isCircle) {

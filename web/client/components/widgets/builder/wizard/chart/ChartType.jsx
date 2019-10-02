@@ -30,10 +30,7 @@ const ITEMS = [{
     type: "pie"
 }, {
     type: "line"
-}/*, {
-    type: "gauge"
-}
-*/].map( ({type}) => ({
+}].map( ({type}) => ({
     type,
     title: <Message msgId={`widgets.chartType.${type}.title`} />,
     description: <Message msgId={`widgets.chartType.${type}.description`} />,
@@ -59,7 +56,7 @@ module.exports = shouldUpdate(
                             s: 0,
                             v: 0
                         } : undefined}
-                     />)
-            }))} />
+                    />)
+                }))} />
 </Row>
-    ));
+));

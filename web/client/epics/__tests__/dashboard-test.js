@@ -77,12 +77,12 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_EDITING:
-                        expect(action.editing).toBe(true);
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_EDITING:
+                    expect(action.editing).toBe(true);
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -94,11 +94,11 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -110,12 +110,12 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_EDITING:
-                        expect(action.editing).toBe(false);
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_EDITING:
+                    expect(action.editing).toBe(false);
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -127,11 +127,11 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -144,16 +144,16 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case EDIT_NEW:
-                        expect(action.widget).toExist();
-                        // verify default mapSync, legend, cartesian and yaxis
-                        expect(action.widget.mapSync).toBe(false);
-                        expect(action.widget.legend).toBe(false);
-                        expect(action.widget.cartesian).toBe(true);
-                        expect(action.widget.yAxis).toBe(true);
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case EDIT_NEW:
+                    expect(action.widget).toExist();
+                    // verify default mapSync, legend, cartesian and yaxis
+                    expect(action.widget.mapSync).toBe(false);
+                    expect(action.widget.legend).toBe(false);
+                    expect(action.widget.cartesian).toBe(true);
+                    expect(action.widget.yAxis).toBe(true);
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             }, );
             done();
@@ -165,11 +165,11 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             }, );
             done();
@@ -181,24 +181,24 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        if (action.control === "queryPanel") {
-                            expect(action.property).toBe("enabled");
-                            expect(action.value).toBe(true);
-                        }
-                        break;
-                    case FEATURE_TYPE_SELECTED:
-                        break;
-                    case LOAD_FILTER:
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_CONTROL_PROPERTY:
+                    if (action.control === "queryPanel") {
+                        expect(action.property).toBe("enabled");
+                        expect(action.value).toBe(true);
+                    }
+                    break;
+                case FEATURE_TYPE_SELECTED:
+                    break;
+                case LOAD_FILTER:
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
         },
-            // state
-            FILTER_BUILDER_STATE);
+        // state
+        FILTER_BUILDER_STATE);
     });
 
     it('handleDashboardWidgetsFilterPanel close on search', (done) => {
@@ -207,21 +207,21 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        if (action.control === "queryPanel") {
-                            expect(action.property).toBe("enabled");
-                        }
-                        break;
-                    case FEATURE_TYPE_SELECTED:
-                        break;
-                    case LOAD_FILTER:
-                        break;
-                    case EDITOR_CHANGE:
-                        break;
-                    case CHANGE_DRAWING_STATUS:
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case SET_CONTROL_PROPERTY:
+                    if (action.control === "queryPanel") {
+                        expect(action.property).toBe("enabled");
+                    }
+                    break;
+                case FEATURE_TYPE_SELECTED:
+                    break;
+                case LOAD_FILTER:
+                    break;
+                case EDITOR_CHANGE:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();

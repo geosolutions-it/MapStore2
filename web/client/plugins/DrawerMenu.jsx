@@ -147,16 +147,16 @@ class DrawerMenu extends React.Component {
                     marginBottom: "0px",
                     cursor: "pointer"
                 }}}
-                />);
+            />);
             const header = tool.title ? <div className={'drawer-menu-head drawer-menu-head-' + tool.name}><Message msgId={tool.title}/></div> : null;
 
             return this.props.singleSection ?
                 <Panel icon={tool.icon} glyph={tool.glyph} buttonConfig={tool.buttonConfig} key={tool.name} eventKey={index + 1 + ""} header={header}>
                     {plugin}
                 </Panel>
-             : <Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={index + 1 + ""} header={header}>
-                {plugin}
-            </Section>;
+                : <Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={index + 1 + ""} header={header}>
+                    {plugin}
+                </Section>;
         });
     };
 

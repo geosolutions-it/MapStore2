@@ -120,7 +120,7 @@ describe('feedbackMask Epics', () => {
                 const enabledAction = actions[2];
                 expect(enabledAction.type).toBe(DETECTED_NEW_PAGE);
                 expect(enabledAction.currentPage).toBe('viewer');
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -143,11 +143,11 @@ describe('feedbackMask Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -168,11 +168,11 @@ describe('feedbackMask Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();

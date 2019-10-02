@@ -36,7 +36,7 @@ describe('test Editor module component (Style Editor)', () => {
             mode="geocss"
             code={code}
             waitTime={0}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.editor).toExist();
 
@@ -84,7 +84,7 @@ describe('test Editor module component (Style Editor)', () => {
                     )
                 }
             ]}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.editor).toExist();
         let cmAtom = document.querySelectorAll('.cm-atom');
@@ -143,14 +143,14 @@ describe('test Editor module component (Style Editor)', () => {
         ReactDOM.render(<Editor
             mode="geocss"
             loading
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         let loadingDOM = document.querySelector('.mapstore-small-size-loader');
         expect(loadingDOM).toExist();
 
         ReactDOM.render(<Editor
             mode="geocss"
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
 
         loadingDOM = document.querySelector('.mapstore-small-size-loader');
         expect(loadingDOM).toNotExist();

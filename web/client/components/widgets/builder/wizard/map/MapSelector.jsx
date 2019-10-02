@@ -32,7 +32,7 @@ module.exports = compose(
             (typeof map.id === 'string'
                 ? axios.get(map.id).then(response => response.data)
                 : GeoStoreDAO.getData(map.id)
-            ).then((config => {
+            ).then(config => {
                 let mapState = (!config.version && typeof map.id !== 'string') ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
                 return {
                     ...(mapState && mapState.map || {}),
@@ -43,10 +43,10 @@ module.exports = compose(
                         return l;
                     }))
                 };
-            }))
-            .then(res => onMapSelected({
-                map: res
-            }))
+            })
+                .then(res => onMapSelected({
+                    map: res
+                }))
     }),
     mapPropsStream(props$ =>
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected).startWith({})
@@ -67,12 +67,12 @@ module.exports = compose(
                     bsSize: "sm"
                 }}
                 buttons={[...stepButtons, {
-                tooltipId: "widgets.builder.wizard.useThisMap",
-                onClick: () => onMapChoice(selected),
-                visible: true,
-                disabled: !selected,
-                glyph: "arrow-right"
-            }]} />
+                    tooltipId: "widgets.builder.wizard.useThisMap",
+                    onClick: () => onMapChoice(selected),
+                    visible: true,
+                    disabled: !selected,
+                    glyph: "arrow-right"
+                }]} />
         </BuilderHeader>}
     >
         <MapCatalog title={<Message msgId="widgets.builder.wizard.selectAMap" />} selected={selected} onSelected={r => setSelected(r)} />

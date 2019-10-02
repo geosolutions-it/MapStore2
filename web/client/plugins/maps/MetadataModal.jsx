@@ -26,6 +26,6 @@ const MetadataModal = connect(
         loadPermissions, loadAvailableGroups, updatePermissions, onGroupsChange: updateCurrentMapPermissions, onAddPermission: addCurrentMapPermission, metadataChanged,
         onNewGroupChoose: setControlProperty.bind(null, 'permissionEditor', 'newGroup'),
         onNewPermissionChoose: setControlProperty.bind(null, 'permissionEditor', 'newPermission')
-    }, null, {withRef: true} )(require('../../components/maps/modals/MetadataModal'));
+    }, null)(require('../../components/maps/modals/MetadataModal'));
 
 module.exports = MetadataModal;

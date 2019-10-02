@@ -10,10 +10,10 @@ const {compose, withStateHandlers} = require("recompose");
 
 module.exports = compose(
     withStateHandlers(() => ({}),
-    {
-        toggleModal: () => (modal) => ({
-            modal
-        })
+        {
+            toggleModal: () => (modal) => ({
+                modal
+            })
 
-    })
+        })
 );

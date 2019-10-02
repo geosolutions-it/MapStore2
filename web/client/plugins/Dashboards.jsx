@@ -76,7 +76,7 @@ class Dashboards extends React.Component {
             colProps={this.props.colProps}
             viewerUrl={(dashboard) => {this.context.router.history.push(`dashboard/${dashboard.id}`); }}
             bottom={<PaginationToolbar />}
-            />);
+        />);
     }
 }
 
@@ -97,7 +97,7 @@ const DashboardsPlugin = compose(
         onMount: () => setDashboardsAvailable(true)
     }),
     emptyState(
-        ({resources =[], loading}) => !loading && resources.length === 0,
+        ({resources = [], loading}) => !loading && resources.length === 0,
         () => ({
             glyph: "dashboard",
             title: <Message msgId="resources.dashboards.noDashboardAvailable" />,

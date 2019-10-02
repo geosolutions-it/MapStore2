@@ -65,7 +65,7 @@ class RefreshLayers extends React.Component {
             return (<Alert bsStyle="danger">
                 <Message msgId="toc.refreshError" />
                 {this.props.error.map((e) => e.layer).join(', ')}
-              </Alert>);
+            </Alert>);
         }
         return null;
     };

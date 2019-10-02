@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -11,27 +11,27 @@ const {compose, withProps} = require('recompose');
 const {find} = require('lodash');
 
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
-.map( ({name} = {}) => ({label: name, value: name}));
+    .map( ({name} = {}) => ({label: name, value: name}));
 
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});
     if (prop && (prop.localType === 'number' || prop.localType === 'int')) {
         return [
-          {value: "Count", label: "COUNT"},
-          {value: "Sum", label: "SUM"},
-          {value: "Average", label: "AVG"},
-          {value: "StdDev", label: "STDDEV"},
-          {value: "Min", label: "MIN"},
-          {value: "Max", label: "MAX"}
-      ];
+            {value: "Count", label: "COUNT"},
+            {value: "Sum", label: "SUM"},
+            {value: "Average", label: "AVG"},
+            {value: "StdDev", label: "STDDEV"},
+            {value: "Min", label: "MIN"},
+            {value: "Max", label: "MAX"}
+        ];
     }
     return [{value: "Count", label: "COUNT"}];
 };
 
 module.exports = compose(
-  withProps(({featureTypeProperties = [], data = {}} = {}) => ({
-      options: propsToOptions(featureTypeProperties),
-      aggregationOptions: getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties)
-  })),
+    withProps(({featureTypeProperties = [], data = {}} = {}) => ({
+        options: propsToOptions(featureTypeProperties),
+        aggregationOptions: getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties)
+    })),
 
 );

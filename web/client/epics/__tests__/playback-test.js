@@ -116,7 +116,7 @@ describe('playback Epics', () => {
             try {
                 expect(action.type).toBe(UPDATE_METADATA);
                 expect(action.forTime).toBe(time);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -140,7 +140,7 @@ describe('playback Epics', () => {
             try {
                 expect(action.type).toBe(UPDATE_METADATA);
                 expect(action.forTime).toBe(time);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -153,7 +153,7 @@ describe('playback Epics', () => {
             try {
                 expect(action.type).toBe(UPDATE_METADATA);
                 expect(action.forTime).toBe(currentTime);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -171,16 +171,16 @@ describe('playback Epics', () => {
             try {
                 expect(action.type).toBe(UPDATE_METADATA);
                 expect(action.forTime).toBe(currentTime);
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
         }, {
-                ...ANIMATION_MOCK_STATE,
-                dimension: {
-                    currentTime
-                }
-            });
+            ...ANIMATION_MOCK_STATE,
+            dimension: {
+                currentTime
+            }
+        });
     });
     it('playbackStopWhenDeleteLayer', done => {
         testEpic(playbackStopWhenDeleteLayer, 1, removeNode(), ([action]) => {

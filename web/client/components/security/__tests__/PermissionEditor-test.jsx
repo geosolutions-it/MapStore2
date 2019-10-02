@@ -37,13 +37,13 @@ let setupEditor = (docElement, actions) => {
                 }
             }
         }}
-    availableGroups = {[{
-        groupName: "everyone",
-        id: "1234"
-    }, {
-        groupName: "g22",
-        id: "22"
-    }]} />, docElement);
+        availableGroups = {[{
+            groupName: "everyone",
+            id: "1234"
+        }, {
+            groupName: "g22",
+            id: "22"
+        }]} />, docElement);
 };
 
 describe("Test the permission editor component", () => {

@@ -55,7 +55,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const cmp = ReactDOM.render(
             <ThemaClassesEditor classification={classification}
                 onUpdateClasses={actions.onUpdateClasses}
-                 />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
         const input = domNode.getElementsByTagName('input')[0];
         TestUtils.Simulate.change(input, { target: { value: '7.0' } });

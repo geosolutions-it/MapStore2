@@ -9,6 +9,7 @@
 const React = require('react');
 const {Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
 
+/* eslint-disable */
 const fullscreenGlyph = {
     bottom: {
         true: 'chevron-down',
@@ -27,6 +28,7 @@ const fullscreenGlyph = {
         false: 'chevron-right'
     }
 };
+/* eslint-enable */
 
 /**
  * Component for rendering a PanelHeader
@@ -62,19 +64,19 @@ module.exports = ({
     );
     const glyphButton = showFullscreen ? (
         <Button
-           key="ms-header-glyph"
-           className="square-button"
-           bsStyle={bsStyle}
-           onClick={() => onFullscreen(!fullscreen)}>
-           <Glyphicon glyph={fullscreenGlyph[position] && fullscreenGlyph[position][fullscreen] || 'resize-full'}/>
-       </Button>) :
-       (<div
-           key="ms-header-glyph"
-           className={`square-button ${'bg-' + bsStyle}`}
-           style={{display: 'flex'}}>
-           <Glyphicon glyph={glyph} className={`${bsStyle === 'default' ? 'text-primary' : '' }`}/>
-       </div>
-   );
+            key="ms-header-glyph"
+            className="square-button"
+            bsStyle={bsStyle}
+            onClick={() => onFullscreen(!fullscreen)}>
+            <Glyphicon glyph={fullscreenGlyph[position] && fullscreenGlyph[position][fullscreen] || 'resize-full'}/>
+        </Button>) :
+        (<div
+            key="ms-header-glyph"
+            className={`square-button ${'bg-' + bsStyle}`}
+            style={{display: 'flex'}}>
+            <Glyphicon glyph={glyph} className={`${bsStyle === 'default' ? 'text-primary' : '' }`}/>
+        </div>
+        );
     const buttons = position === 'left' ? [closeButton, glyphButton] : [glyphButton, closeButton];
     return (
         <Grid fluid style={{width: '100%'}} className={'ms-header ms-' + bsStyle}>

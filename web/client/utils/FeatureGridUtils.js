@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -108,21 +108,21 @@ const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, size) => 
 module.exports = {
     getAttributeFields,
     featureTypeToGridColumns: (
-            describe,
-            columnSettings = {},
-            {editable=false, sortable=true, resizable=true, filterable = true, defaultSize = 200} = {},
-            {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}} = {}) =>
+        describe,
+        columnSettings = {},
+        {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200} = {},
+        {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}} = {}) =>
         getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
-                sortable,
-                key: desc.name,
-                width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
-                name: desc.name,
-                resizable,
-                editable,
-                filterable,
-                editor: getEditor(desc),
-                formatter: getFormatter(desc),
-                filterRenderer: getFilterRenderer(desc, desc.name)
+            sortable,
+            key: desc.name,
+            width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
+            name: desc.name,
+            resizable,
+            editable,
+            filterable,
+            editor: getEditor(desc),
+            formatter: getFormatter(desc),
+            filterRenderer: getFilterRenderer(desc, desc.name)
         })),
     getRow,
     getRowVirtual,
@@ -138,7 +138,7 @@ module.exports = {
             ...events,
             [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, describe, actionOpts)
         }), {})
-        })
+    })
     ),
     /**
      * Maps every grid event to a function that passes all the arguments, plus the rowgetter, describe and actionOpts passed
@@ -158,7 +158,7 @@ module.exports = {
     getDefaultFeatureProjection: () => "EPSG:4326",
     toChangesMap,
     createNewAndEditingFilter: (hasChanges, newFeatures, changes) => f => newFeatures.length > 0 ? f._new : !hasChanges || hasChanges && !!changes[f.id],
-    hasValidNewFeatures: (newFeatures=[], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true),
+    hasValidNewFeatures: (newFeatures = [], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true),
     applyAllChanges: (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {}),
     applyChanges,
     gridUpdateToQueryUpdate: ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {

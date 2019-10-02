@@ -52,11 +52,11 @@ module.exports = {
                     areWidgetsExpanded(getState()) && isTimelineVisible(getState())
                 )
         )
-        .switchMap(() => Rx.Observable.of(setTimelineCollapsed(true)))
-        .let(notifyCollapsedTimeline({
-            title: "widgets.tray.notifications.collapsed.timelineTitle",
-            message: "widgets.tray.notifications.collapsed.message"
-        })),
+            .switchMap(() => Rx.Observable.of(setTimelineCollapsed(true)))
+            .let(notifyCollapsedTimeline({
+                title: "widgets.tray.notifications.collapsed.timelineTitle",
+                message: "widgets.tray.notifications.collapsed.message"
+            })),
     /**
      * Manages mutual exclusion of visibility between timeline and widgets.
      * This collapse widgets when timeline is expanded or added to the map
@@ -68,15 +68,15 @@ module.exports = {
             // ... or add some dimensions ...
             action$.ofType(CHANGE_LAYER_PROPERTIES).filter(({ newProperties = {} } = {}) => newProperties.dimensions)
         )// ...if there are widgets not collapsed
-        .filter(() =>
-            areWidgetsExpanded(getState())
+            .filter(() =>
+                areWidgetsExpanded(getState())
             && hasTimelineLayers(getState())
             && isTimelineVisible(getState())
-        )
-        .switchMap(() => Rx.Observable.of(toggleCollapseAll())).let(notifyCollapsedTimeline({
-            title: "widgets.tray.notifications.collapsed.widgetsTitle",
-            message: "widgets.tray.notifications.collapsed.message"
-        })),
+            )
+            .switchMap(() => Rx.Observable.of(toggleCollapseAll())).let(notifyCollapsedTimeline({
+                title: "widgets.tray.notifications.collapsed.widgetsTitle",
+                message: "widgets.tray.notifications.collapsed.message"
+            })),
     /**
      * When widgets tray disappears, the timeline have to be expanded anyway.
      * Otherwise it stays in collapsed state without any possibility to expand (tray is hidden)

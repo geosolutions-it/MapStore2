@@ -70,7 +70,7 @@ describe('CrossLayerFilter component', () => {
                 id: "WITHIN",
                 name: "Within"
             }]}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(container.querySelector('.geometry-operation-selector')).toExist();
         expect(container.querySelector('.mapstore-conditions-group')).toExist();
     });
@@ -110,7 +110,7 @@ describe('CrossLayerFilter component', () => {
                 id: "WITHIN",
                 name: "Within"
             }]}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         const collapsablePanel = container.querySelector('.mapstore-switch-panel .panel-collapse');
         const expected = collapsablePanel.getAttribute('aria-hidden');
         expect(expected).toEqual('false');

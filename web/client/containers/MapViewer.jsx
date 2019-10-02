@@ -40,7 +40,7 @@ class MapViewer extends React.Component {
         loadMapConfig: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.loadMapConfig();
     }
 
@@ -49,7 +49,7 @@ class MapViewer extends React.Component {
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}
-            />);
+        />);
     }
 }
 

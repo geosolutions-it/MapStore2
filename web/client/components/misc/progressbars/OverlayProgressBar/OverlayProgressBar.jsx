@@ -40,12 +40,12 @@ class OverlayProgressBar extends React.Component {
                     </Row>
                     <Row>
                         <Col xs={12}>
-                        {
-                        this.props.spinner ?
-                            <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName={this.props.spinner}/>
-                            :
-                            <ProgressBar active now={100 * this.props.count / this.props.length} />
-                        }
+                            {
+                                this.props.spinner ?
+                                    <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName={this.props.spinner}/>
+                                    :
+                                    <ProgressBar active now={100 * this.props.count / this.props.length} />
+                            }
                         </Col>
                     </Row>
                     <Row>

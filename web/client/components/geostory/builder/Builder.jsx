@@ -13,7 +13,7 @@ import BorderLayout from '../../layout/BorderLayout';
 import SectionsPreview from './SectionsPreview';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
-import { lists, Modes } from'../../../utils/GeoStoryUtils';
+import { lists, Modes } from '../../../utils/GeoStoryUtils';
 
 /**
  * Base Component that shows basic editing tools and SlidesPreview
@@ -54,47 +54,47 @@ class Builder extends React.Component {
             onToggleCardPreview
         } = this.props;
         return (<BorderLayout
-                className="ms-geostory-builder"
-                header={
-                    <div
-                        className="text-center ms-geostory-builder-header"
-                        >
-                        <Toolbar
-                            btnDefaultProps={{
-                                className: "square-button-md",
-                                bsStyle: "primary"
-                            }}
-                            buttons={[
-                                {
-                                    tooltipId: "geostory.builder.delete",
-                                    glyph: "trash",
-                                    disabled: !cardSelected
-                                },
-                                {
-                                    tooltipId: "geostory.builder.preview",
-                                    glyph: "eye-open",
-                                    onClick: () => setEditing(mode === Modes.VIEW)
-                                },
-                                {
-                                    tooltipId: "geostory.builder.settings.tooltip",
-                                    glyph: "cog"
+            className="ms-geostory-builder"
+            header={
+                <div
+                    className="text-center ms-geostory-builder-header"
+                >
+                    <Toolbar
+                        btnDefaultProps={{
+                            className: "square-button-md",
+                            bsStyle: "primary"
+                        }}
+                        buttons={[
+                            {
+                                tooltipId: "geostory.builder.delete",
+                                glyph: "trash",
+                                disabled: !cardSelected
+                            },
+                            {
+                                tooltipId: "geostory.builder.preview",
+                                glyph: "eye-open",
+                                onClick: () => setEditing(mode === Modes.VIEW)
+                            },
+                            {
+                                tooltipId: "geostory.builder.settings.tooltip",
+                                glyph: "cog"
 
-                                },
-                                {
-                                    tooltipId: `geostory.builder.${cardPreviewEnabled ? "hide" : "show"}`,
-                                    glyph: "list-alt",
-                                    bsStyle: cardPreviewEnabled ? "success" : "primary",
-                                    onClick: () => onToggleCardPreview()
-                                }
-                            ]}/>
-                    </div>
-                }>
+                            },
+                            {
+                                tooltipId: `geostory.builder.${cardPreviewEnabled ? "hide" : "show"}`,
+                                glyph: "list-alt",
+                                bsStyle: cardPreviewEnabled ? "success" : "primary",
+                                onClick: () => onToggleCardPreview()
+                            }
+                        ]}/>
+                </div>
+            }>
             <SectionsPreview
                 scrollTo={scrollTo}
                 cardPreviewEnabled={cardPreviewEnabled}
                 sections={story && story.sections}
-                />
-            </BorderLayout>
+            />
+        </BorderLayout>
         );
     }
 }

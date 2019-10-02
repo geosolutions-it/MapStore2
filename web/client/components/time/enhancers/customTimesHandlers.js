@@ -35,20 +35,20 @@ module.exports = withHandlers({
             return;
         }
         switch (what) {
-            // case "axis":
-            case "group-label": {
-                if (group && status !== "PLAY") selectGroup(group);
-                break;
+        // case "axis":
+        case "group-label": {
+            if (group && status !== "PLAY") selectGroup(group);
+            break;
+        }
+        default: {
+            const target = event && event.target && event.target.closest('.vis-custom-time');
+            const className = target && target.getAttribute('class');
+            const timeId = className && trim(className.replace('vis-custom-time', ''));
+            if (time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime") {
+                setCurrentTime(time.toISOString(), selectedLayer);
             }
-            default: {
-                const target = event && event.target && event.target.closest('.vis-custom-time');
-                const className = target && target.getAttribute('class');
-                const timeId = className && trim(className.replace('vis-custom-time', ''));
-                if (time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime") {
-                    setCurrentTime(time.toISOString(), selectedLayer);
-                }
-                break;
-            }
+            break;
+        }
         }
     },
     /**

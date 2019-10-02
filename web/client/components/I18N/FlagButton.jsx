@@ -37,7 +37,7 @@ class LangBar extends React.Component {
         let imgSrc;
         try {
             imgSrc = require('./images/flags/' + this.props.code + '.png');
-        } catch(e) {
+        } catch (e) {
             imgSrc = null;
         }
 

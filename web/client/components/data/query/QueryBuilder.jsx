@@ -177,37 +177,37 @@ class QueryBuilder extends React.Component {
             /></div>);
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
-                    <GroupField
-                        autocompleteEnabled={this.props.autocompleteEnabled}
-                        maxFeaturesWPS={this.props.maxFeaturesWPS}
-                        attributes={this.props.attributes}
-                        groupLevels={this.props.groupLevels}
-                        filterFields={this.props.filterFields}
-                        groupFields={this.props.groupFields}
-                        removeButtonIcon={this.props.removeButtonIcon}
-                        addButtonIcon={this.props.addButtonIcon}
-                        attributePanelExpanded={this.props.attributePanelExpanded}
-                        actions={this.props.attributeFilterActions}/>
+                <GroupField
+                    autocompleteEnabled={this.props.autocompleteEnabled}
+                    maxFeaturesWPS={this.props.maxFeaturesWPS}
+                    attributes={this.props.attributes}
+                    groupLevels={this.props.groupLevels}
+                    filterFields={this.props.filterFields}
+                    groupFields={this.props.groupFields}
+                    removeButtonIcon={this.props.removeButtonIcon}
+                    addButtonIcon={this.props.addButtonIcon}
+                    attributePanelExpanded={this.props.attributePanelExpanded}
+                    actions={this.props.attributeFilterActions}/>
                 {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter
-                        useMapProjection={this.props.useMapProjection}
-                        spatialField={this.props.spatialField}
-                        spatialOperations={this.props.spatialOperations}
-                        spatialMethodOptions={this.props.spatialMethodOptions}
-                        spatialPanelExpanded={this.props.spatialPanelExpanded}
-                        showDetailsPanel={this.props.showDetailsPanel}
-                        actions={this.props.spatialFilterActions}
-                        zoom={this.props.zoom}
-                        projection={this.props.projection}/>}
+                    useMapProjection={this.props.useMapProjection}
+                    spatialField={this.props.spatialField}
+                    spatialOperations={this.props.spatialOperations}
+                    spatialMethodOptions={this.props.spatialMethodOptions}
+                    spatialPanelExpanded={this.props.spatialPanelExpanded}
+                    showDetailsPanel={this.props.showDetailsPanel}
+                    actions={this.props.spatialFilterActions}
+                    zoom={this.props.zoom}
+                    projection={this.props.projection}/>}
                 {this.props.toolsOptions.hideCrossLayer ? null : <CrossLayerFilter
-                        spatialOperations={this.props.spatialOperations}
-                        crossLayerExpanded={this.props.crossLayerExpanded}
-                        searchUrl={this.props.searchUrl}
-                        featureTypeName={this.props.featureTypeName}
-                        {...this.props.crossLayerFilterOptions}
-                        {...this.props.crossLayerFilterActions}
-                        />}
+                    spatialOperations={this.props.spatialOperations}
+                    crossLayerExpanded={this.props.crossLayerExpanded}
+                    searchUrl={this.props.searchUrl}
+                    featureTypeName={this.props.featureTypeName}
+                    {...this.props.crossLayerFilterOptions}
+                    {...this.props.crossLayerFilterActions}
+                />}
             </BorderLayout>
-         : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
+            : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }
 }
 

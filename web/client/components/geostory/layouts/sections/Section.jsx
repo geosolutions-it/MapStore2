@@ -78,7 +78,7 @@ class Section extends React.Component {
                 contents={this.props.contents}
                 viewWidth={this.props.viewWidth}
                 viewHeight={this.props.viewHeight}
-                />
+            />
         );
     }
 }

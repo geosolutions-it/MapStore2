@@ -43,26 +43,26 @@ describe('QueryToolbar component', () => {
         const VALID_FILTERS = [
             // spatial only
             {
-            groupFields: [],
-            spatialPanelExpanded: true,
-            spatialField: {
-                attribute: "the_geom",
-                geometry: {
-                    "some": "geometry"
+                groupFields: [],
+                spatialPanelExpanded: true,
+                spatialField: {
+                    attribute: "the_geom",
+                    geometry: {
+                        "some": "geometry"
+                    }
                 }
-            }
-        },
-        // spatial different
-        {
-            groupFields: [],
-            spatialPanelExpanded: true,
-            spatialField: {
-                attribute: "the_geom",
-                geometry: {
-                    "some": "OTHER_geometry"
+            },
+            // spatial different
+            {
+                groupFields: [],
+                spatialPanelExpanded: true,
+                spatialField: {
+                    attribute: "the_geom",
+                    geometry: {
+                        "some": "OTHER_geometry"
+                    }
                 }
-            }
-        }];
+            }];
         const checkButtonsEnabledCondition = (container) => (apply, save, discard, reset) => {
             return expect(!container.querySelector("button#query-toolbar-query").disabled).toBe(!!apply, `expected apply to be ${apply ? 'enabled' : 'disabled'}`)
                 && expect(!container.querySelector("button#query-toolbar-save").disabled).toBe(!!save, `expected save to be ${save ? 'enabled' : 'disabled'}`)
@@ -103,7 +103,7 @@ describe('QueryToolbar component', () => {
                 {...VALID_FILTERS[0]}
                 appliedFilter={VALID_FILTERS[0]}
                 storedFilter={VALID_FILTERS[1]}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
             const buttons = [...container.querySelectorAll('button')];
             expect(buttons.length).toBe(4);
             checkButtonsEnabledCondition(container)(false, true, true, true);

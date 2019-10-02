@@ -36,17 +36,17 @@ const loader = () => new Promise((resolve) => {
                 shapeStyle: state.style || {}
             }
         ), {
-                onShapeChoosen: onShapeChoosen,
-                onLayerAdded: onLayerAdded,
-                onSelectLayer: onSelectLayer,
-                onShapeError: onShapeError,
-                onShapeSuccess: onShapeSuccess,
-                addShapeLayer: addLayer,
-                onZoomSelected: zoomToExtent,
-                updateShapeBBox: updateShapeBBox,
-                shapeLoading: shapeLoading,
-                toggleControl: toggleControl.bind(null, 'shapefile', null)
-            })(ShapeFile);
+            onShapeChoosen: onShapeChoosen,
+            onLayerAdded: onLayerAdded,
+            onSelectLayer: onSelectLayer,
+            onShapeError: onShapeError,
+            onShapeSuccess: onShapeSuccess,
+            addShapeLayer: addLayer,
+            onZoomSelected: zoomToExtent,
+            updateShapeBBox: updateShapeBBox,
+            shapeLoading: shapeLoading,
+            toggleControl: toggleControl.bind(null, 'shapefile', null)
+        })(ShapeFile);
 
         resolve(ShapeFilePlugin);
     });

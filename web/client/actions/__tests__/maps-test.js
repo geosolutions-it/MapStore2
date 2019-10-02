@@ -94,9 +94,9 @@ describe('Test correctness of the maps actions', () => {
         let count = 0;
         retFun((action) => {
             switch (count) {
-                case 0: expect(action.type).toBe(MAP_UPDATING); break;
-                case 1: expect(action.type).toBe("NONE"); break;
-                default: done();
+            case 0: expect(action.type).toBe(MAP_UPDATING); break;
+            case 1: expect(action.type).toBe("NONE"); break;
+            default: done();
             }
             count++;
         }, () => {});
@@ -154,7 +154,7 @@ describe('Test correctness of the maps actions', () => {
         let count = 0;
         retFun((action) => {
             switch (count) {
-                // TODO: this should return PERMISSIONS_UPDATED
+            // TODO: this should return PERMISSIONS_UPDATED
             case 0: expect(action.type).toBe(PERMISSIONS_UPDATED); break;
             default: done();
             }

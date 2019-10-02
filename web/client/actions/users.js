@@ -165,7 +165,7 @@ function editUser(user, options = {params: {includeattributes: true}} ) {
         }
         if (user && user.id) {
             dispatch(editUserLoading(user));
-            return API.getUser(user.id, options).then((userDetails) => {
+            API.getUser(user.id, options).then((userDetails) => {
                 let userLoaded = userDetails.User;
                 let attribute = userLoaded.attribute;
                 if (attribute) {
@@ -182,8 +182,9 @@ function editUser(user, options = {params: {includeattributes: true}} ) {
             }).catch((error) => {
                 dispatch(editUserError(user, error));
             });
+        } else {
+            dispatch(editNewUser(user));
         }
-        dispatch(editNewUser(user));
     };
 }
 
@@ -322,6 +323,7 @@ function deleteUser(id, status = "confirm") {
             });
         };
     }
+    return () => {};
 }
 
 function usersSearchTextChanged(text) {

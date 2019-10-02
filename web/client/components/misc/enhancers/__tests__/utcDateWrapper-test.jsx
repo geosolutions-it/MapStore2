@@ -34,7 +34,7 @@ describe('utcDateWrapper enhancher', () => {
             value="2018-01-02Z"
             type="date"
             format="DD/MM/YYYY"
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
         expect(el).toExist();
@@ -48,7 +48,7 @@ describe('utcDateWrapper enhancher', () => {
             value="03:00:00Z"
             format="HH:mm:SS"
             type="time"
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
         expect(el).toExist();
@@ -62,7 +62,7 @@ describe('utcDateWrapper enhancher', () => {
             value="2018-01-02T03:00:00Z"
             format="DD/MM/YYYY HH:mm:SS"
             type="date-time"
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
         expect(el).toExist();

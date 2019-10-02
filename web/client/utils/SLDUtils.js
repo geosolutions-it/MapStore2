@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const assign = require('object-assign');
-/*eslint-disable */
+/* eslint-disable */
 const XLink_1_0 = require('w3c-schemas').XLink_1_0;
 const {
     WMS_1_3_0,
@@ -50,7 +50,7 @@ const context = new Jsonix.Context([
         },
         mappingStyle: 'simplified'
 });
-/*eslint-enable */
+/* eslint-enable */
 
 const marshall = context.createMarshaller();
 
@@ -163,17 +163,17 @@ const jsonToSLD = function({styletype, opacity = "1.0", state, layer} = {}) {
 };
 const getStroke = function({a = 1, r = 0, g = 0, b = 255, width = 1} = {}) {
     return {cssParameter: [
-            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "stroke"},
-            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "stroke-opacity"},
-            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${width}`], name: "stroke-width"}
+        {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "stroke"},
+        {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "stroke-opacity"},
+        {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${width}`], name: "stroke-width"}
 
     ]
     };
 };
 const getFill = function({a = 1, r = 0, g = 0, b = 255} = {}) {
     return {cssParameter: [
-            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "fill"},
-            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "fill-opacity"}
+        {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "fill"},
+        {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "fill-opacity"}
     ]
     };
 
@@ -238,7 +238,7 @@ const vecStyleToSLD = function({rules = [], layer = {}} = {}) {
                 "namedStyleOrUserStyle": [{"TYPE_NAME": "SLD_1_0_0.UserStyle",
                     "featureTypeStyle": [{"TYPE_NAME": "SLD_1_0_0.FeatureTypeStyle",
                         "rule": getRules(rules)}]}]}]}}
-                            );
+    );
 };
 
 module.exports = {

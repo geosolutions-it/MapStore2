@@ -81,10 +81,10 @@ class RasterStyler extends React.Component {
         hideLayerSelector: false
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
     }
 
-    componentWillUpdate(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
         this.bands = nextProps.layer && nextProps.layer.describeLayer ? nextProps.layer.describeLayer.bands : undefined;
 
     }
@@ -117,47 +117,47 @@ class RasterStyler extends React.Component {
 
     renderSelector = () => {
         return (<Row style={{marginBottom: "22px"}}>
-                    <Row>
-                       {!this.props.hideLayerSelector ? ( <Col xs={4} >
-                            <label><Message msgId="rasterstyler.layerlabel"/></label>
-                            <Combobox data={this.props.layers.reverse()}
-                                value={(this.props.layer) ? this.props.layer.id : null}
-                                onChange={(value)=> this.props.selectLayer(value)}
-                                valueField={"id"}
-                                textField={"title"} />
-                        </Col>) : null }
-                        {this.props.layer ? (<Col xs={4}>
-                            <label><Message msgId="rasterstyler.typelabel"/></label>
-                            <RasterStyleTypePicker styletype={this.props.styletype}/> </Col>) : null}
-                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}>
-                            <label><Message msgId="rasterstyler.opacitylabel"/></label>
-                            <OpacityPicker disabled={this.canApply()} opacity={this.props.opacity}/>
-                         </Col>) : null}
-                    </Row>
-                </Row>);
+            <Row>
+                {!this.props.hideLayerSelector ? ( <Col xs={4} >
+                    <label><Message msgId="rasterstyler.layerlabel"/></label>
+                    <Combobox data={this.props.layers.reverse()}
+                        value={(this.props.layer) ? this.props.layer.id : null}
+                        onChange={(value)=> this.props.selectLayer(value)}
+                        valueField={"id"}
+                        textField={"title"} />
+                </Col>) : null }
+                {this.props.layer ? (<Col xs={4}>
+                    <label><Message msgId="rasterstyler.typelabel"/></label>
+                    <RasterStyleTypePicker styletype={this.props.styletype}/> </Col>) : null}
+                {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}>
+                    <label><Message msgId="rasterstyler.opacitylabel"/></label>
+                    <OpacityPicker disabled={this.canApply()} opacity={this.props.opacity}/>
+                </Col>) : null}
+            </Row>
+        </Row>);
     };
 
     renderRasterStyler = () => {
         return this.props.layer ?
             <Row>
-                    {this.props.styletype === 'gray' ? this.renderGreyscale() : null}
-                    {this.props.styletype === 'rgb' ? this.renderRGB() : null}
-                    {this.props.styletype === 'pseudo' ? this.renderPseudocolor() : null}
+                {this.props.styletype === 'gray' ? this.renderGreyscale() : null}
+                {this.props.styletype === 'rgb' ? this.renderRGB() : null}
+                {this.props.styletype === 'pseudo' ? this.renderPseudocolor() : null}
             </Row> : null;
     };
 
     renderRGB = () => {
         return (<PanelGroup defaultActiveKey="1" accordion>
-                    <Panel header={(<label><Message msgId="rasterstyler.redtitle"/></label>)} eventKey="1">
-                        <RedBandSelector bands={this.bands}/>
-                    </Panel>
-                    <Panel header={(<label><Message msgId="rasterstyler.greentitle"/></label>)} eventKey="2">
-                        <GreenBandSelector bands={this.bands}/>
-                    </Panel>
-                    <Panel header={(<label><Message msgId="rasterstyler.bluetitle"/></label>)} eventKey="3">
-                        <BlueBandSelector bands={this.bands}/>
-                    </Panel>
-                </PanelGroup>);
+            <Panel header={(<label><Message msgId="rasterstyler.redtitle"/></label>)} eventKey="1">
+                <RedBandSelector bands={this.bands}/>
+            </Panel>
+            <Panel header={(<label><Message msgId="rasterstyler.greentitle"/></label>)} eventKey="2">
+                <GreenBandSelector bands={this.bands}/>
+            </Panel>
+            <Panel header={(<label><Message msgId="rasterstyler.bluetitle"/></label>)} eventKey="3">
+                <BlueBandSelector bands={this.bands}/>
+            </Panel>
+        </PanelGroup>);
     };
 
     renderGreyscale = () => {
@@ -179,10 +179,10 @@ class RasterStyler extends React.Component {
                     eventKey="1">
                     <EqualInterval onClassify={this.classify}/>
                 </Panel>
-                 <Panel header={(<label><Message msgId="rasterstyler.pseudotitle"/></label>)}
+                <Panel header={(<label><Message msgId="rasterstyler.pseudotitle"/></label>)}
                     eventKey="2">
                     {this.props.rasterstyler.pseudocolor.activepanel === "2" ? <PseudoColor/> : null}
-                 </Panel>
+                </Panel>
             </PanelGroup>
         );
     };
@@ -190,26 +190,26 @@ class RasterStyler extends React.Component {
     renderApplyBtn = () => {
         return (
             <Row><Button style={{"float": "right"}} onClick={this.apply}
-            disabled={this.canApply()} ><Message msgId="rasterstyler.applybtn"/></Button></Row>);
+                disabled={this.canApply()} ><Message msgId="rasterstyler.applybtn"/></Button></Row>);
     };
 
     renderBody = () => {
 
         return (<Grid fluid>
-                {this.renderError()}
-                {this.renderSelector()}
-                {this.renderRasterStyler()}
-                {this.props.layer ? this.renderApplyBtn() : null}
-                </Grid>);
+            {this.renderError()}
+            {this.renderSelector()}
+            {this.renderRasterStyler()}
+            {this.props.layer ? this.renderApplyBtn() : null}
+        </Grid>);
     };
 
     render() {
         if (this.props.forceOpen || this.props.open) {
             return this.props.withContainer ?
                 <Panel className="mapstore-rasterstyler-panel"
-                        style={this.getPanelStyle()}
-                        header={<label><Message msgId="rasterstyler.paneltitle"/></label>}>
-                        {this.renderBody()}
+                    style={this.getPanelStyle()}
+                    header={<label><Message msgId="rasterstyler.paneltitle"/></label>}>
+                    {this.renderBody()}
                 </Panel> : this.renderBody();
         }
         return null;

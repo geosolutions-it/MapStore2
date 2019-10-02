@@ -18,7 +18,7 @@ const {maxFeaturesWPSSelector, appliedFilterSelector, storedFilterSelector} = re
 const {getParsedUrl} = require('../utils/ConfigUtils');
 const {authkeyParamNameSelector} = require('../selectors/catalog');
 
-   /**
+/**
     * Epics for WFS query requests
     * @name epics.wfsquery
     * @type {Object}
@@ -27,27 +27,27 @@ const {authkeyParamNameSelector} = require('../selectors/catalog');
 module.exports = {
 
     isAutoCompleteEnabled: (action$, store) =>
-    action$.ofType(FEATURE_TYPE_SELECTED)
-        .switchMap((action) => {
-            const parsedUrl = getParsedUrl(action.url, {
-                "version": "1.0.0",
-                "REQUEST": "DescribeProcess",
-                "IDENTIFIER": "gs:PagedUnique" }, authkeyParamNameSelector(store.getState()));
-            if (parsedUrl === null) {
-                return Rx.Observable.of(setAutocompleteMode(false));
-            }
-            return Rx.Observable.fromPromise(
-                axios.post(parsedUrl, null, {
-                    timeout: 5000,
-                    headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
-                }).then(res => res.data)
-            ).switchMap((data) => {
-                if (startsWith(data, "<ows:ExceptionReport")) {
+        action$.ofType(FEATURE_TYPE_SELECTED)
+            .switchMap((action) => {
+                const parsedUrl = getParsedUrl(action.url, {
+                    "version": "1.0.0",
+                    "REQUEST": "DescribeProcess",
+                    "IDENTIFIER": "gs:PagedUnique" }, authkeyParamNameSelector(store.getState()));
+                if (parsedUrl === null) {
                     return Rx.Observable.of(setAutocompleteMode(false));
                 }
-                return Rx.Observable.of(setAutocompleteMode(true));
-            }).catch(() => { return Rx.Observable.of(setAutocompleteMode(false)); });
-        }),
+                return Rx.Observable.fromPromise(
+                    axios.post(parsedUrl, null, {
+                        timeout: 5000,
+                        headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
+                    }).then(res => res.data)
+                ).switchMap((data) => {
+                    if (startsWith(data, "<ows:ExceptionReport")) {
+                        return Rx.Observable.of(setAutocompleteMode(false));
+                    }
+                    return Rx.Observable.of(setAutocompleteMode(true));
+                }).catch(() => { return Rx.Observable.of(setAutocompleteMode(false)); });
+            }),
     fetchAutocompleteOptionsEpic: (action$, store) =>
         action$.ofType(UPDATE_FILTER_FIELD)
             .debounce((action) => {
@@ -65,13 +65,13 @@ module.exports = {
                     ]);
                 }
                 const data = getWpsPayload({
-                        attribute: filterField.attribute,
-                        layerName: typeNameSelector(state),
-                        layerFilter: appliedFilterSelector(state) || storedFilterSelector(state),
-                        maxFeatures: maxFeaturesWPS,
-                        startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
-                        value: action.fieldValue
-                    });
+                    attribute: filterField.attribute,
+                    layerName: typeNameSelector(state),
+                    layerFilter: appliedFilterSelector(state) || storedFilterSelector(state),
+                    maxFeatures: maxFeaturesWPS,
+                    startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
+                    value: action.fieldValue
+                });
                 const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"}, authkeyParamNameSelector(store.getState()));
                 if (parsedUrl === null) {
                     return Rx.Observable.of(setAutocompleteMode(false));
@@ -86,22 +86,22 @@ module.exports = {
                     let valuesCount = res.size;
                     return Rx.Observable.from([updateFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] );
                 })
-                .startWith(loadingFilterFieldOptions(true, filterField))
-                .catch( () => {
+                    .startWith(loadingFilterFieldOptions(true, filterField))
+                    .catch( () => {
                     // console.log("error: " + e + " data:" + e.data);
-                    return Rx.Observable.from([
-                        updateFilterFieldOptions(filterField, [], 0),
-                        error({
-                            title: "warning",
-                            message: "warning", // TODO add tranlations
-                            action: {
-                                label: "warning" // TODO add tranlations
-                            },
-                            autoDismiss: 3,
-                            position: "tr"
-                        }), toggleMenu(action.rowId, true)
-                    ]);
-                })
-                .concat([loadingFilterFieldOptions(false, filterField)]);
+                        return Rx.Observable.from([
+                            updateFilterFieldOptions(filterField, [], 0),
+                            error({
+                                title: "warning",
+                                message: "warning", // TODO add tranlations
+                                action: {
+                                    label: "warning" // TODO add tranlations
+                                },
+                                autoDismiss: 3,
+                                position: "tr"
+                            }), toggleMenu(action.rowId, true)
+                        ]);
+                    })
+                    .concat([loadingFilterFieldOptions(false, filterField)]);
             })
 };

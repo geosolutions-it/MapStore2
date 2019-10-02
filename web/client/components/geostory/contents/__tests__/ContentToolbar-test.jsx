@@ -37,23 +37,23 @@ describe('ContentToolbar component', () => {
         expect(buttons.length).toEqual(3);
     });
     const testItems = [{
-            name: "align",
-            length: 3,
-            totButtons: 1,
-            aTag: ["left", "center", "right"]
-        },
-        {
-            name: "size",
-            length: 4,
-            totButtons: 1,
-            aTag: ["small", "medium", "large", "full"]
-        },
-        {
-            name: "theme",
-            length: 4,
-            totButtons: 1,
-            aTag: ["bright", "bright-text", "dark", "dark-text"]
-        }];
+        name: "align",
+        length: 3,
+        totButtons: 1,
+        aTag: ["left", "center", "right"]
+    },
+    {
+        name: "size",
+        length: 4,
+        totButtons: 1,
+        aTag: ["small", "medium", "large", "full"]
+    },
+    {
+        name: "theme",
+        length: 4,
+        totButtons: 1,
+        aTag: ["bright", "bright-text", "dark", "dark-text"]
+    }];
     testItems.forEach(tool => {
         it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {
             ReactDOM.render(<ContentToolbar
