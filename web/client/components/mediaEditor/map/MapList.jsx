@@ -76,7 +76,7 @@ const MapList = ({
                 onFilter={onFilter}
             />
             <SideGrid
-                items={filterResources(resources, filterText).map(({ id, data, thumbnail = ""}) => ({
+                items={filterResources(resources, filterText).map(({ id, data}) => ({
                     preview: data.thumbnail ? <img src={data.thumbnail}/> : defaultPreview,
                     title: data.name || data.title,
                     onClick: () => selectItem(id),

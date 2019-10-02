@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, lastIndexOf} from 'lodash';
+import {head, isNaN, isString, isNil, lastIndexOf} from 'lodash';
 import { push, LOCATION_CHANGE } from 'react-router-redux';
 import uuid from 'uuid/v1';
 
@@ -51,13 +51,14 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector} from '../selectors/geostory';
-import { currentMediaTypeSelector} from '../selectors/mediaEditor';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector} from '../selectors/geostory';
+import { currentMediaTypeSelector, sourceIdSelector, selectedIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
 import { scrollToContent, ContentTypes, isMediaSection, Controls, MediaTypes } from '../utils/GeoStoryUtils';
 
 import { getEffectivePath } from '../reducers/geostory';
+import { SourceTypes } from './../utils/GeoStoryUtils';
 
 
 /**
@@ -166,10 +167,10 @@ export const scrollToContentEpic = action$ =>
 export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
-            const resourceId = resourceIdSelectorCreator(path)(store.getState());
+            const selectedResource = resourceIdSelectorCreator(path)(store.getState());
             return Observable.of(
                     showMediaEditor(owner),
-                    selectItem(resourceId)
+                    selectItem(selectedResource)
                 )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
@@ -177,20 +178,26 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                             let actions = [];
                             const state = store.getState();
                             const mediaType = currentMediaTypeSelector(state);
+                            const sourceId = sourceIdSelector(state);
 
-                            let resId = resourceIdSelectorCreator(path)(state);
-                            if (!resId && resource.type === MediaTypes.MAP) {
-                                resId = uuid();
-                                actions = [...actions, addResource(resId, mediaType, resource)];
-                            }
-                            if (resource.type === MediaTypes.IMAGE) {
-                                resId = resource.id;
-                            }
-                            actions = [...actions, update(`${path}`, {resourceId: resId, type: mediaType}, "merge" )];
+                            // if resources comes from geostory the id is at root level
+                            // otherwise it checks for the original resource id present in data
+                            const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
 
+                            let resourceId = resource.id;
+                            if (!resourceAlreadyPresent && resource.type === MediaTypes.MAP && sourceId !== SourceTypes.GEOSTORY) {
+                                // if using a geostore map that is not present in the story => add it
+                                resourceId = uuid();
+                                actions = [...actions, addResource(resourceId, mediaType, resource)];
+                            }
+                            if (resourceAlreadyPresent) {
+                                resourceId = resourceAlreadyPresent.id;
+                            }
+                            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
                             return Observable.from(actions);
                         })
-                        .takeUntil(action$.ofType(HIDE, ADD))
+                        .takeUntil(action$.ofType(HIDE, ADD)
+                    )
                 );
         });
 /**

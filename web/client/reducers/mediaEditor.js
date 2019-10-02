@@ -40,7 +40,7 @@ export const DEFAULT_STATE = {
         mediaTypes: {
             image: {
                 defaultSource: GEOSTORY_SOURCE_ID, // source selected when this media is selected
-                sources: [GEOSTORY_SOURCE_ID, "geostoreImage"] // services for the selected media type
+                sources: [GEOSTORY_SOURCE_ID] // services for the selected media type
             },
             video: {
                 defaultSource: GEOSTORY_SOURCE_ID,
@@ -48,7 +48,7 @@ export const DEFAULT_STATE = {
             },
             map: {
                 defaultSource: GEOSTORY_SOURCE_ID,
-                sources: [GEOSTORY_SOURCE_ID, "geostoreMap", "geostoreImage"]
+                sources: [GEOSTORY_SOURCE_ID, "geostoreMap"]
             }
         },
         // all media sources available, with their type and other parameters
@@ -62,12 +62,6 @@ export const DEFAULT_STATE = {
                 type: SourceTypes.GEOSTORE,
                 baseURL: "/rest/geostore/",
                 category: "MAP"
-            },
-            geostoreImage: {
-                name: "Geostore Images",
-                type: SourceTypes.GEOSTORE,
-                baseURL: "/mapstore/rest/geostore/",
-                category: "IMAGE"
             }
         }
     }
