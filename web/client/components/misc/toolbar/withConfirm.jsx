@@ -41,7 +41,7 @@ const withChildren = (...children) => mainComponent => nest(mainComponent, ...ch
 export default (Component) => compose(
     withState('confirming', 'setConfirming', false),
     withHandlers({
-        onClick: ({setConfirming = () => {}}) => () => setConfirming(true),
+        onClick: ({ setConfirming = () => { } }) => () => setConfirming(true),
         onConfirm: ({onClick}) => (...args) => {
             onClick(...args);
         }
@@ -49,7 +49,7 @@ export default (Component) => compose(
     withChildren(
         compose(
             withHandlers({
-                onClose: ({setConfirming = () => {}}) => () => setConfirming(false)
+                onClose: ({ setConfirming = () => { } }) => () => setConfirming(false)
             }),
             withProps(({confirming}) => ({
                 show: !!confirming
