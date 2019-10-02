@@ -186,13 +186,16 @@ module.exports = {
      */
     updateLayerOnLoadingErrorChange: (action$, store) =>
         action$.ofType(LAYER_LOAD, LAYER_ERROR)
-            .switchMap(({layerId}) => {
-                const state = store.getState();
-                const flatLayer = getLayerFromId(state, layerId);
-                return Rx.Observable.of(
-                    ...(flatLayer && flatLayer.previousLoadingError !== flatLayer.loadingError ?
-                        [updateWidgetLayer(flatLayer)] :
-                        [])
-                );
-            })
+            .groupBy(({layerId}) => layerId)
+            .map(layerStream$ => layerStream$
+                .switchMap(({layerId}) => {
+                    const state = store.getState();
+                    const flatLayer = getLayerFromId(state, layerId);
+                    return Rx.Observable.of(
+                        ...(flatLayer && flatLayer.previousLoadingError !== flatLayer.loadingError ?
+                            [updateWidgetLayer(flatLayer)] :
+                            [])
+                    );
+                })
+            ).mergeAll()
 };
