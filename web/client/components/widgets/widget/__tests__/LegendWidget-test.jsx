@@ -76,33 +76,33 @@ describe('LegendWidget component', () => {
     });
     it('LegendWidget rendering with layers specified in dependenciesMap', () => {
         const layers = [
-                {
-                  type: 'wms',
-                  url: 'https://gs-stable.geo-solutions.it/geoserver/wms',
-                  visibility: true,
-                  dimensions: [],
-                  name: 'gs:us_states',
-                  title: 'States of US',
-                  description: '',
-                  bbox: {
+            {
+                type: 'wms',
+                url: 'https://gs-stable.geo-solutions.it/geoserver/wms',
+                visibility: true,
+                dimensions: [],
+                name: 'gs:us_states',
+                title: 'States of US',
+                description: '',
+                bbox: {
                     crs: 'EPSG:4326',
                     bounds: {
-                      minx: -124.73142200000001,
-                      miny: 24.955967,
-                      maxx: -66.969849,
-                      maxy: 49.371735
+                        minx: -124.73142200000001,
+                        miny: 24.955967,
+                        maxx: -66.969849,
+                        maxy: 49.371735
                     }
-                  },
-                  links: [],
-                  params: {},
-                  allowedSRS: {},
-                  search: {
+                },
+                links: [],
+                params: {},
+                allowedSRS: {},
+                search: {
                     type: 'wfs',
                     url: 'https://gs-stable.geo-solutions.it/geoserver/wfs'
-                  },
-                  id: 'gs:us_states__qxhbmc4jmko'
-                }
-              ];
+                },
+                id: 'gs:us_states__qxhbmc4jmko'
+            }
+        ];
         ReactDOM.render(<LegendWidget
             dependencies={{"widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].map.layers": layers}}
             dependenciesMap={{layers: "widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].map.layers" }} />, document.getElementById("container"));

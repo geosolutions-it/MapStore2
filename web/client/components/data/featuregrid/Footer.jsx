@@ -38,8 +38,8 @@ module.exports = (props = {
                     className="no-border last-page"
                     disabled={page >= maxPages}
                 ><Glyphicon glyph="step-forward"/></Button>
-        </Col>) : null} <Col md={3}>
-            {props.loading ? <span style={{"float": "right"}} ><Message msgId="loading" /><Spinner spinnerName="circle" style={{"float": "right"}}noFadeIn/></span> : null}
-        </Col>
-    </Row></Grid>);
+            </Col>) : null} <Col md={3}>
+                {props.loading ? <span style={{"float": "right"}} ><Message msgId="loading" /><Spinner spinnerName="circle" style={{"float": "right"}}noFadeIn/></span> : null}
+            </Col>
+        </Row></Grid>);
 };

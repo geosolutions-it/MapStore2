@@ -72,14 +72,14 @@ module.exports = (mapType, actions) => {
 
     const DrawSupport = connect((state) =>
         state.draw || {}, {
-            onChangeDrawingStatus: changeDrawingStatus,
-            onEndDrawing: endDrawing,
-            onGeometryChanged: geometryChanged,
-            onSelectFeatures: selectFeatures,
-            onDrawingFeatures: drawingFeatures,
-            onDrawStopped: drawStopped,
-            setCurrentStyle: setCurrentStyle
-        })( components.DrawSupport || Empty);
+        onChangeDrawingStatus: changeDrawingStatus,
+        onEndDrawing: endDrawing,
+        onGeometryChanged: geometryChanged,
+        onSelectFeatures: selectFeatures,
+        onDrawingFeatures: drawingFeatures,
+        onDrawStopped: drawStopped,
+        setCurrentStyle: setCurrentStyle
+    })( components.DrawSupport || Empty);
 
     const HighlightSupport = connect((state) =>
         state.highlight || {}, {updateHighlighted})( components.HighlightFeatureSupport || Empty);

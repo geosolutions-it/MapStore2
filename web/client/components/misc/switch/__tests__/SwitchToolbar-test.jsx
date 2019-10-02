@@ -11,7 +11,7 @@ const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 
 const expect = require('expect');
-const SwitchToolbar = require('../SwitchToolbar');
+const SwitchToolbar = require('../SwitchToolbar').default;
 describe('SwitchToolbar component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

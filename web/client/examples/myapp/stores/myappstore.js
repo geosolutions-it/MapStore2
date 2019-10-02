@@ -3,7 +3,7 @@ var {createStore, combineReducers, applyMiddleware} = require('redux');
 var thunkMiddleware = require('redux-thunk');
 var mapConfig = require('../../../reducers/config');
 
- // reducers
+// reducers
 const reducers = combineReducers({
     mapConfig
 });

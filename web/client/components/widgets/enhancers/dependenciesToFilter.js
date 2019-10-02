@@ -44,7 +44,7 @@ module.exports = compose(
                     filter: filterObj || layerFilter ? filter(and(
                         ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                         ...(filterObj ? FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") : [])
-                        )) : undefined
+                    )) : undefined
                 };
             }
 

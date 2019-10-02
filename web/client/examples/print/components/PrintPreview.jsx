@@ -18,19 +18,19 @@ class PrintPreview extends React.Component {
     state = {
         PrintPlugin: null
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         PrintPlugin.loadPlugin((plugin) => {
             this.setState({PrintPlugin: plugin});
         });
     }
     render() {
         return (
-           this.state.PrintPlugin ? <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
-               <div>
-                   <this.state.PrintPlugin style={this.props.style}
-                       />
-               </div>
-           </Draggable> : null
+            this.state.PrintPlugin ? <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
+                <div>
+                    <this.state.PrintPlugin style={this.props.style}
+                    />
+                </div>
+            </Draggable> : null
         );
     }
 }

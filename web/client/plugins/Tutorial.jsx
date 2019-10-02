@@ -140,13 +140,13 @@ const Tutorial = connect(tutorialPluginSelector, (dispatch) => {
         }, dispatch)
     };
 }, (stateProps, dispatchProps, ownProps) => ({
-        ...stateProps,
-        ...dispatchProps,
-        ...ownProps,
-        presetList: {
-            ...presetList,
-            ...ownProps.presetList
-        }
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    presetList: {
+        ...presetList,
+        ...ownProps.presetList
+    }
 }))(require('../components/tutorial/Tutorial'));
 
 module.exports = {

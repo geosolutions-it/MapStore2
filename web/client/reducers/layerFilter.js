@@ -13,23 +13,23 @@ const initialState = {};
 
 function layerFilter(state = initialState, action) {
     switch (action.type) {
-        case INIT_LAYER_FILTER: {
-            return { ...initialState, persisted: action.filter, applied: action.filter};
-        }
-        case DISCARD_CURRENT_FILTER: {
-            return {...state, applied: state.persisted};
-        }
-        case APPLIED_FILTER: {
-            return { ...state, applied: action.filter};
-        }
-        case STORE_CURRENT_APPLIED_FILTER: {
-            return {...state, persisted: state.applied};
-        }
-        case QUERY_FORM_RESET: {
-            return {...state, applied: undefined};
-        }
-        default:
-            return state;
+    case INIT_LAYER_FILTER: {
+        return { ...initialState, persisted: action.filter, applied: action.filter};
+    }
+    case DISCARD_CURRENT_FILTER: {
+        return {...state, applied: state.persisted};
+    }
+    case APPLIED_FILTER: {
+        return { ...state, applied: action.filter};
+    }
+    case STORE_CURRENT_APPLIED_FILTER: {
+        return {...state, persisted: state.applied};
+    }
+    case QUERY_FORM_RESET: {
+        return {...state, applied: undefined};
+    }
+    default:
+        return state;
     }
 }
 

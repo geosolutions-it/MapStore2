@@ -157,10 +157,10 @@ const TimelinePlugin = compose(
             const shift = moment(view.end).diff(view.start) / 2;
             if (type === "time-current" && view) {
                 // if the current time is centered to viewRange do nothing
-                return view.start.toString() !== moment(time).add(-1 * shift).toString() && view.end.toString() !== moment(time).add(shift).toString()
+                view.start.toString() !== moment(time).add(-1 * shift).toString() && view.end.toString() !== moment(time).add(shift).toString()
                 && moveRangeTo({
-                        start: moment(time).add(-1 * shift),
-                        end: moment(time).add(shift)
+                    start: moment(time).add(-1 * shift),
+                    end: moment(time).add(shift)
                 });
             }
             // center to the current offset range
@@ -172,13 +172,13 @@ const TimelinePlugin = compose(
                     moveRangeTo({
                         start: moment(offsetCenter).add(-1 * shift),
                         end: moment(offsetCenter).add(shift)
-                });
+                    });
                 // if offset range is wider than the view range zoom out + move
                 } else {
                     moveRangeTo({
                         start: moment(offsetCenter).add(-1 * offsetRangeDistance * 5 / 2),
                         end: moment(offsetCenter).add( offsetRangeDistance * 5 / 2)
-                });
+                    });
                 }
             }
         };
@@ -195,20 +195,20 @@ const TimelinePlugin = compose(
 
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
-                clickable={!collapsed}
-                glyph="range-start"
-                onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
-                tooltip={<Message msgId="timeline.rangeStart"/>}
-                showButtons
-                date={currentTime || currentTimeRange && currentTimeRange.start}
-                onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
-                className="shadow-soft"
-                style={{
-                    position: 'absolute',
-                    top: -5,
-                    left: 2,
-                    transform: 'translateY(-100%)'
-                }} />}
+                    clickable={!collapsed}
+                    glyph="range-start"
+                    onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
+                    tooltip={<Message msgId="timeline.rangeStart"/>}
+                    showButtons
+                    date={currentTime || currentTimeRange && currentTimeRange.start}
+                    onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
+                    className="shadow-soft"
+                    style={{
+                        position: 'absolute',
+                        top: -5,
+                        left: 2,
+                        transform: 'translateY(-100%)'
+                    }} />}
 
             <div
                 className={`timeline-plugin-toolbar${compactToolbar ? ' ms-collapsed' : ''}`}>

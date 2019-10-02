@@ -7,10 +7,10 @@
 * LICENSE file in the root directory of this source tree.
 */
 const Rx = require('rxjs');
-const { compose, branch, withState, withHandlers, defaultProps, mapPropsStream, createEventHandler} = require('recompose');
+const { compose, branch, withState, withHandlers, defaultProps, mapPropsStream, createEventHandler } = require('recompose');
 const handleSaveModal = require('../modals/enhancers/handleSaveModal');
 const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
-const {updateResource} = require('../../../api/persistence');
+const { updateResource } = require('../../../api/persistence');
 
 const handleSave = mapPropsStream(props$ => {
     const { handler: onSave, stream: saveEventStream$ } = createEventHandler();
@@ -19,24 +19,24 @@ const handleSave = mapPropsStream(props$ => {
             .withLatestFrom(props$)
             .switchMap(([resource, props]) =>
                 updateResource(resource)
-                .do( () => {
-                    if (props) {
-                        if (props.onClose) {
-                            props.onClose();
+                    .do(() => {
+                        if (props) {
+                            if (props.onClose) {
+                                props.onClose();
+                            }
+                            if (props.onSaveSuccess) {
+                                props.onSaveSuccess(resource);
+                            }
                         }
-                        if (props.onSaveSuccess) {
-                            props.onSaveSuccess(resource);
-                        }
-                    }
-                })
-                .catch( e => Rx.Observable.of({
-                    errors: [
-                        ...(props.errors || []),
-                        e
-                    ]
-                }))
-                .startWith({loading: true})
-                .concat(Rx.Observable.of({loading: false}))
+                    })
+                    .catch(e => Rx.Observable.of({
+                        errors: [
+                            ...(props.errors || []),
+                            e
+                        ]
+                    }))
+                    .startWith({ loading: true })
+                    .concat(Rx.Observable.of({ loading: false }))
             );
     return props$.combineLatest(
         saveStream$.startWith({}),

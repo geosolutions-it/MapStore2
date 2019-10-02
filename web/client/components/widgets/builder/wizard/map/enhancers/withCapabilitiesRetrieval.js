@@ -14,8 +14,8 @@ module.exports = mapPropsStream(props$ => {
         .pluck('element')
         .distinctUntilChanged((a = {}, b = {}) => a.id === b.id)
         .switchMap(() =>
-                retrieveLayerData$.switchMap((element) =>
-                    getLayerCapabilities(element)
+            retrieveLayerData$.switchMap((element) =>
+                getLayerCapabilities(element)
                     .map(layerCapability => ({
                         capabilities: layerCapability,
                         capabilitiesLoading: null,
@@ -25,7 +25,7 @@ module.exports = mapPropsStream(props$ => {
                     })).startWith({
                         capabilitiesLoading: true
                     }))
-                    .catch((error) => Rx.Observable.of({ capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: error }, description: null }))
+                .catch((error) => Rx.Observable.of({ capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: error }, description: null }))
         )
         .startWith({})
         .combineLatest(props$, (elementProps = {}, props = {}) => ({

@@ -39,11 +39,11 @@ class RasterStyleTypePicker extends React.Component {
                     name: LocaleUtils.getMessageById(this.context.messages, "rasterstyletype.pseudo"),
                     type: LocaleUtils.getMessageById(this.context.messages, "rasterstyletype.single")
                 }]}
-                textField="name"
-                valueField="value"
-                groupBy="type"
-                onChange={(v) => this.props.onChange("styletype", v.value)}
-                value={this.props.styletype} />
+            textField="name"
+            valueField="value"
+            groupBy="type"
+            onChange={(v) => this.props.onChange("styletype", v.value)}
+            value={this.props.styletype} />
         );
     }
 }

@@ -37,10 +37,10 @@ describe('Test for HelpBadge', () => {
 
     it('creates the component with custom props', () => {
         const helpBadge = ReactDOM.render(<HelpBadge
-                        id="fooid"
-                        isVisible
-                        className="foofoo"
-                        />, document.getElementById("container"));
+            id="fooid"
+            isVisible
+            className="foofoo"
+        />, document.getElementById("container"));
         expect(helpBadge).toExist();
 
         const helpBadgeDom = ReactDOM.findDOMNode(helpBadge);

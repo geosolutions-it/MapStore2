@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Content from '../SectionContent';
-import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
+import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
 
 import { ContentTypes } from '../../../../utils/GeoStoryUtils';

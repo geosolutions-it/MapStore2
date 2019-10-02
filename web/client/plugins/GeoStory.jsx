@@ -28,13 +28,13 @@ const GeoStory = ({
     mode = Modes.VIEW,
     ...props
 }) => (<BorderLayout
-        className="ms-geostory">
-        <Story
-            {...story}
-            {...props} // add actions
-            mode={mode}
-        />
-    </BorderLayout>
+    className="ms-geostory">
+    <Story
+        {...story}
+        {...props} // add actions
+        mode={mode}
+    />
+</BorderLayout>
 );
 
 /**

@@ -39,14 +39,14 @@ class GroupSettingsModal extends React.Component {
         originalSettings: {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             initialState: this.props.element,
             originalSettings: this.props.element
         });
     }
 
-    componentWillUpdate(newProps, newState) {
+    UNSAFE_componentWillUpdate(newProps, newState) {
         if (this.props.settings.expanded && !newProps.settings.expanded && !newState.save) {
             this.props.updateNode(
                 this.props.settings.node,

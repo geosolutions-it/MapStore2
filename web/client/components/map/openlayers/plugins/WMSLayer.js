@@ -307,5 +307,6 @@ Layers.registerType('wms', {
                 }, {})));
             }
         }
+        return null;
     }
 });

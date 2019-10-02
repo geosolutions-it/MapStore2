@@ -101,6 +101,7 @@ class SearchResultList extends React.Component {
                 return item.__SERVICE__;
             }
         }
+        return null;
     };
 }
 

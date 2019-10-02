@@ -95,10 +95,10 @@ const TOCItemSettings = (props, context) => {
                     <Row key="ms-toc-settings-toolbar" className="text-center">
                         <Col xs={12}>
                             {ToolbarComponent ?
-                            <ToolbarComponent buttons={toolbarButtons}/>
-                            : <Toolbar
-                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={toolbarButtons}/>}
+                                <ToolbarComponent buttons={toolbarButtons}/>
+                                : <Toolbar
+                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                    buttons={toolbarButtons}/>}
                         </Col>
                     </Row>,
                     ...(tabs.length > 1 ? [<Row key="ms-toc-settings-navbar" className="ms-row-tab">
@@ -120,19 +120,19 @@ const TOCItemSettings = (props, context) => {
                         </Col>
                     </Row>] : [])
                 ]}>
-            {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
-                <tab.Component
-                    {...props}
-                    {...tabsConfig[tab.id]}
-                    key={'ms-tab-settings-body-' + tab.id}
-                    containerWidth={width}
-                    element={element}
-                    groups={groups}
-                    nodeType={settings.nodeType}
-                    settings={settings}
-                    retrieveLayerData={onRetrieveLayerData}
+                {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
+                    <tab.Component
+                        {...props}
+                        {...tabsConfig[tab.id]}
+                        key={'ms-tab-settings-body-' + tab.id}
+                        containerWidth={width}
+                        element={element}
+                        groups={groups}
+                        nodeType={settings.nodeType}
+                        settings={settings}
+                        retrieveLayerData={onRetrieveLayerData}
                         onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}/>
-            ))}
+                ))}
             </DockablePanel>
             <Portal>
                 <ResizableModal
@@ -165,7 +165,7 @@ const TOCItemSettings = (props, context) => {
 };
 TOCItemSettings.contextTypes = {
     plugins: PropTypes.object,
-    pluginsConfig: PropTypes.object,
+    pluginsConfig: PropTypes.array,
     loadedPlugins: PropTypes.object
 };
 

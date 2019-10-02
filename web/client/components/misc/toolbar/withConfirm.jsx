@@ -14,21 +14,22 @@ const ConfirmModal = ({
     confirmButtonMessageId = "confirm",
     show = false,
     modal = true,
-    confirmMessageId="confirmTitle",
+    confirmMessageId = "confirmTitle",
     confirmMessageParams,
     onClose = () => { },
     onConfirm = () => { }
-} = {}) => (<Portal><Confirm
-    show={show}
-    modal={modal}
-    onClose={onClose}
-    onConfirm={onConfirm}
-    confirmButtonBSStyle="default"
-    closeGlyph="1-close"
-    confirmButtonContent={<Message msgId={confirmButtonMessageId} />}
+} = {}) => (<Portal>
+    <Confirm
+        show={show}
+        modal={modal}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        confirmButtonBSStyle="default"
+        closeGlyph="1-close"
+        confirmButtonContent={<Message msgId={confirmButtonMessageId} />}
     >
-    <Message msgId={confirmMessageId} msgParams={confirmMessageParams} />
-</Confirm></Portal>);
+        <Message msgId={confirmMessageId} msgParams={confirmMessageParams} />
+    </Confirm></Portal>);
 
 
 import { compose, withHandlers, withState, withProps, nest} from 'recompose';
@@ -41,8 +42,9 @@ export default (Component) => compose(
     withState('confirming', 'setConfirming', false),
     withHandlers({
         onClick: ({setConfirming = () => {}}) => () => setConfirming(true),
-        onConfirm: ({onClick}) => (...args) => {onClick(...args)},
-        // TODO:
+        onConfirm: ({onClick}) => (...args) => {
+            onClick(...args);
+        }
     }),
     withChildren(
         compose(

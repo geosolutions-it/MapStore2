@@ -18,8 +18,8 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 
 class RoiCql extends React.Component {
     static propTypes = {
-       wkt: PropTypes.string,
-       onChangeFilter: PropTypes.func
+        wkt: PropTypes.string,
+        onChangeFilter: PropTypes.func
     };
     static contextTypes = {
         messages: PropTypes.object
@@ -28,7 +28,7 @@ class RoiCql extends React.Component {
         super(props);
         this.state = {cql: props.wkt};
     }
-    componentWillReceiveProps({wkt: nw}) {
+    UNSAFE_componentWillReceiveProps({wkt: nw}) {
         if (nw !== this.props.wkt) {
             this.setState({cql: nw});
         }
@@ -45,12 +45,12 @@ class RoiCql extends React.Component {
                             value={this.state.cql}
                             onBeforeChange={this.onChange}
                             options={{
-                            mode: {name: "sql"},
-                            lineNumbers: true,
-                            lineWrapping: true
-                        }}/>
+                                mode: {name: "sql"},
+                                lineNumbers: true,
+                                lineWrapping: true
+                            }}/>
                         <Button disabled={this.props.wkt === this.state.cql} text={LocaleUtils.getMessageById(this.context.messages, "rulesmanager.apply")} onClick={this.apply}/>
-                </div>}
+                    </div>}
             </ContainerDimensions>);
     }
     apply = () => {

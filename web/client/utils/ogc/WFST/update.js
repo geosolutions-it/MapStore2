@@ -20,6 +20,6 @@ const propertyChange = (ns, propName, value) => `<${ns}:Property>`
  */
 const update = (wfsNs, typeName, content) => `<${wfsNs}:Update typeName="${typeName}">${Array.isArray(content) ? content.join("") : content}</wfs:Update>`;
 module.exports = {
-      update,
-      propertyChange
+    update,
+    propertyChange
 };

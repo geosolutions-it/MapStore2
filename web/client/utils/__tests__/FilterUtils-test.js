@@ -211,7 +211,7 @@ describe('FilterUtils', () => {
                             logic: "OR"
                         }]
                     }
-            }
+                }
             },
             hits: false
         };
@@ -849,7 +849,7 @@ describe('FilterUtils', () => {
     });
     it('Check SpatialFilterField ogc 1.1.0 Point', () => {
         let filterObj = {
-        spatialField: {
+            spatialField: {
                 "operation": "INTERSECTS",
                 "attribute": "geometry",
                 "geometry": {
@@ -1125,7 +1125,7 @@ describe('FilterUtils', () => {
         expect(FilterUtils.ogcBooleanField("attribute_1", "<", false, "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "<", true, "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "like", true, "ogc")).toBe("");
-            // testing falsy values
+        // testing falsy values
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", "", "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", undefined, "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", null, "ogc")).toBe("");
@@ -1134,15 +1134,15 @@ describe('FilterUtils', () => {
     it('Calculate CQL filter for number with value 0', () => {
         let filterObj = {
             filterFields: [
-            {
-                groupId: 1,
-                attribute: "attribute3",
-                exception: null,
-                operator: "=",
-                rowId: "3",
-                type: "number",
-                value: 0
-            }],
+                {
+                    groupId: 1,
+                    attribute: "attribute3",
+                    exception: null,
+                    operator: "=",
+                    rowId: "3",
+                    type: "number",
+                    value: 0
+                }],
             groupFields: [{
                 id: 1,
                 index: 0,
@@ -1157,15 +1157,15 @@ describe('FilterUtils', () => {
     it('Calculate CQL filter for string  and LIKE operator', () => {
         let filterObj = {
             filterFields: [
-            {
-                groupId: 1,
-                attribute: "attribute3",
-                exception: null,
-                operator: "LIKE",
-                rowId: "3",
-                type: "string",
-                value: "val"
-            }],
+                {
+                    groupId: 1,
+                    attribute: "attribute3",
+                    exception: null,
+                    operator: "LIKE",
+                    rowId: "3",
+                    type: "string",
+                    value: "val"
+                }],
             groupFields: [{
                 id: 1,
                 index: 0,
@@ -1319,7 +1319,7 @@ describe('FilterUtils', () => {
         const filter = FilterUtils.getCrossLayerCqlFilter({
             collectGeometries: {
                 queryCollection: {
-                        filterFields: [
+                    filterFields: [
                         {
                             groupId: 1,
                             attribute: "attribute3",
@@ -1329,11 +1329,11 @@ describe('FilterUtils', () => {
                             type: "string",
                             value: "val"
                         }],
-                        groupFields: [{
-                            id: 1,
-                            index: 0,
-                            logic: "OR"
-                        }]
+                    groupFields: [{
+                        id: 1,
+                        index: 0,
+                        logic: "OR"
+                    }]
                 }
             }
         });
@@ -1343,107 +1343,107 @@ describe('FilterUtils', () => {
     it('compose filterFilds', () => {
         const filterA = {
             "groupFields": [
-            {
-                "id": 1,
-                "logic": "OR",
-                "index": 0
-            },
-            {
-                "id": 2,
-                "logic": "OR",
-                "groupId": 1,
-                "index": 1
-            }
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                },
+                {
+                    "id": 2,
+                    "logic": "OR",
+                    "groupId": 1,
+                    "index": 1
+                }
             ],
-        "filterFields": [
-            {
-                "rowId": 1545411885028,
-                "groupId": 1,
-                "attribute": "STATE_NAME",
-                "operator": "=",
-                "value": "Alabama",
-                "type": "string",
-                "fieldOptions": {
-                    "valuesCount": 0,
-                    "currentPage": 1
+            "filterFields": [
+                {
+                    "rowId": 1545411885028,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Alabama",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
                 },
-                "exception": null,
-                "openAutocompleteMenu": false,
-                "loading": false,
-                "options": {
-                    "STATE_NAME": []
-                }
-            },
-            {
-                "rowId": 1545411894600,
-                "groupId": 2,
-                "attribute": "STATE_NAME",
-                "operator": "=",
-                "value": "Arizona",
-                "type": "string",
-                "fieldOptions": {
-                    "valuesCount": 0,
-                    "currentPage": 1
-                },
-                "exception": null,
-                "openAutocompleteMenu": false,
-                "loading": false,
-                "options": {
-                    "STATE_NAME": []
-                }
-            }]
+                {
+                    "rowId": 1545411894600,
+                    "groupId": 2,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Arizona",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                }]
         };
         const filterB = {
             "groupFields": [
-            {
-                "id": 1,
-                "logic": "OR",
-                "index": 0
-            },
-            {
-                "id": 2,
-                "logic": "OR",
-                "groupId": 1,
-                "index": 1
-            }
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                },
+                {
+                    "id": 2,
+                    "logic": "OR",
+                    "groupId": 1,
+                    "index": 1
+                }
             ],
-        "filterFields": [
-            {
-                "rowId": 15454118,
-                "groupId": 1,
-                "attribute": "STATE_NAME",
-                "operator": "=",
-                "value": "Alabama",
-                "type": "string",
-                "fieldOptions": {
-                    "valuesCount": 0,
-                    "currentPage": 1
+            "filterFields": [
+                {
+                    "rowId": 15454118,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Alabama",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
                 },
-                "exception": null,
-                "openAutocompleteMenu": false,
-                "loading": false,
-                "options": {
-                    "STATE_NAME": []
-                }
-            },
-            {
-                "rowId": 1545411894,
-                "groupId": 2,
-                "attribute": "STATE_NAME",
-                "operator": "=",
-                "value": "Arizona",
-                "type": "string",
-                "fieldOptions": {
-                    "valuesCount": 0,
-                    "currentPage": 1
-                },
-                "exception": null,
-                "openAutocompleteMenu": false,
-                "loading": false,
-                "options": {
-                    "STATE_NAME": []
-                }
-            }]
+                {
+                    "rowId": 1545411894,
+                    "groupId": 2,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Arizona",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                }]
         };
         const filter = FilterUtils.composeAttributeFilters([filterA, filterB]);
         expect(filter).toExist();

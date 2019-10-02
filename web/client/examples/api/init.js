@@ -1,6 +1,6 @@
 /*eslint-disable */
 function init() {
-/*eslint-enable */
+/* eslint-enable */
     var cfg;
     var cfgUrl;
     var theme;
@@ -11,7 +11,7 @@ function init() {
     cfg = MapStore2.loadConfigFromStorage('mapstore.example.plugins.' + MapStore2.getParamFromRequest('map'));
     cfgUrl = MapStore2.getParamFromRequest('config');
     theme = MapStore2.getParamFromRequest('theme');
-    /*eslint-enable */
+    /* eslint-enable */
     embeddedPlugins = {
         "desktop": [
             "Map",
@@ -105,5 +105,5 @@ function init() {
           crs: 'EPSG:4326'
       });
     });
-    /*eslint-enable */
+    /* eslint-enable */
 }

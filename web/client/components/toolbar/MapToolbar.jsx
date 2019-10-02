@@ -68,11 +68,11 @@ class MapToolbar extends React.Component {
         var children = React.Children.map(this.props.children, (item) => {
             if (item.props.isPanel) {
                 return (
-                <Collapse key={"mapToolBar-item-collapse-" + item.key} in={this.props.activeKey === item.key}>
-                    <Panel header={item.props.title} style={this.getPanelStyle()} >
-                        {item}
-                    </Panel>
-                </Collapse>);
+                    <Collapse key={"mapToolBar-item-collapse-" + item.key} in={this.props.activeKey === item.key}>
+                        <Panel header={item.props.title} style={this.getPanelStyle()} >
+                            {item}
+                        </Panel>
+                    </Collapse>);
             }
             return null;
 
@@ -86,15 +86,15 @@ class MapToolbar extends React.Component {
                             active={this.props.activeKey === item.key}
                             style={{width: "100%"}}
                             onClick={ () => this.handleSelect(item.key)}>
-                                {item.props.helpText ? <HelpBadge
-                                    className="mapstore-tb-helpbadge"
-                                    helpText={item.props.helpText}
-                                    isVisible={this.props.helpEnabled}
-                                    changeHelpText={this.props.changeHelpText}
-                                    changeHelpwinVisibility={this.props.changeHelpwinVisibility}
-                                    /> : null}
-                                {item.props.help}
-                                {item.props.buttonContent || item.props.icon}
+                            {item.props.helpText ? <HelpBadge
+                                className="mapstore-tb-helpbadge"
+                                helpText={item.props.helpText}
+                                isVisible={this.props.helpEnabled}
+                                changeHelpText={this.props.changeHelpText}
+                                changeHelpwinVisibility={this.props.changeHelpwinVisibility}
+                            /> : null}
+                            {item.props.help}
+                            {item.props.buttonContent || item.props.icon}
                         </Button>
                     </OverlayTrigger>
                 );
@@ -107,7 +107,7 @@ class MapToolbar extends React.Component {
             <ButtonGroup vertical className="mapToolbar">
                 {buttons}
             </ButtonGroup>
-            </div>);
+        </div>);
 
     }
 

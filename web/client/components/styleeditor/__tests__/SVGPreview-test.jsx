@@ -40,7 +40,7 @@ describe('test SVGPreview module component', () => {
                         stroke: '#999999'
                     }
                 ]}/>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         const paths = document.querySelectorAll('path');
         expect(paths.length).toBe(2);
         expect(paths[1].getAttribute('d')).toBe('M30 160 L100 40');
@@ -61,7 +61,7 @@ describe('test SVGPreview module component', () => {
                         strokeWidth: 2
                     }
                 ]}/>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         const paths = document.querySelectorAll('path');
         expect(paths.length).toBe(3);
         expect(paths[1].getAttribute('d')).toBe('M30 160 L100 40 L170 160');
@@ -79,7 +79,7 @@ describe('test SVGPreview module component', () => {
                         fill: '#999999'
                     }
                 ]}/>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         const paths = document.querySelectorAll('path');
         expect(paths.length).toBe(2);
         expect(paths[1].getAttribute('d')).toBe('M20 20 L180 20 L180 180 L20 180Z');
@@ -97,7 +97,7 @@ describe('test SVGPreview module component', () => {
                 patterns={[{
                     id: 'tree', icon: { d: 'M0.1 0.9 L0.5 0.1 L0.9 0.9Z', fill: '#98c390'}
                 }]}/>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         const paths = document.querySelectorAll('path');
         expect(paths.length).toBe(4);
 
@@ -127,7 +127,7 @@ describe('test SVGPreview module component', () => {
                             fontWeight: 'bold'
                         }
                     }]}/>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         const paths = document.querySelectorAll('path');
         expect(paths.length).toBe(1);
 

@@ -44,7 +44,7 @@ const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${inde
  */
 class ContentTabs extends React.Component {
     static propTypes = {
-        selected: PropTypes.number,
+        selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         className: PropTypes.string,
         style: PropTypes.object,
         items: PropTypes.array,
@@ -64,33 +64,35 @@ class ContentTabs extends React.Component {
         return (
             <Grid id={this.props.id}>
                 <Row>
-                <Col>
-                <h2><Message msgId="resources.contents.title" /></h2>
-                <ToolsContainer
-                style={this.props.style}
-                className={this.props.className}
-                toolCfg={{title: ""}}
-                container={(props) => <div {...props}>
-                    <div style={{marginTop: "10px"}}>
-                        <Nav bsStyle="tabs" activeKey="1" onSelect={k => this.props.onSelect(k)}>
-                            {[...this.props.items].sort((a, b) => a.position - b.position).map(
-                                ({ TitleComponent = DefaultTitle, ...item }, idx) =>
-                                    (<NavItem
-                                        active={(item.key || idx) === this.props.selected}
-                                        eventKey={item.key || idx} >
-                                            <TitleComponent index={idx} item={item} />
-                                    </NavItem>))}
-                        </Nav>
-                        </div>
-                    {props.children}
-                </div>}
-                toolStyle="primary"
-                stateSelector="contentTabs"
-                activeStyle="default"
-                tools={[...this.props.items].sort((a, b) => a.position - b.position).filter( ({key}, i) => (key || i) === this.props.selected)}
-                panels={[]}
-            /></Col>
-            </Row>
+                    <Col>
+                        <h2><Message msgId="resources.contents.title" /></h2>
+                        <ToolsContainer
+                            id="content-tabs-container"
+                            style={this.props.style}
+                            className={this.props.className}
+                            toolCfg={{title: ""}}
+                            container={(props) => <div {...props}>
+                                <div style={{marginTop: "10px"}}>
+                                    <Nav bsStyle="tabs" activeKey="1" onSelect={k => this.props.onSelect(k)}>
+                                        {[...this.props.items].sort((a, b) => a.position - b.position).map(
+                                            ({ TitleComponent = DefaultTitle, ...item }, idx) =>
+                                                (<NavItem
+                                                    key={item.key || idx}
+                                                    active={(item.key || idx) === this.props.selected}
+                                                    eventKey={item.key || idx} >
+                                                    <TitleComponent index={idx} item={item} />
+                                                </NavItem>))}
+                                    </Nav>
+                                </div>
+                                {props.children}
+                            </div>}
+                            toolStyle="primary"
+                            stateSelector="contentTabs"
+                            activeStyle="default"
+                            tools={[...this.props.items].sort((a, b) => a.position - b.position).filter( ({key}, i) => (key || i) === this.props.selected)}
+                            panels={[]}
+                        /></Col>
+                </Row>
             </Grid>
         );
     }

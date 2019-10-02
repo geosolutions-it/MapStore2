@@ -16,9 +16,9 @@ const attributePanelExpandedSelector = state => get(state, "queryform.attributeP
 const spatialPanelExpandedSelector = state => get(state, "queryform.spatialPanelExpanded");
 const crossLayerExpandedSelector = state => get(state, "queryform.crossLayerExpanded");
 const queryFormUiStateSelector = createSelector(attributePanelExpandedSelector, spatialPanelExpandedSelector, crossLayerExpandedSelector, (attributePanelExpanded, spatialPanelExpanded, crossLayerExpanded) => ({
-        attributePanelExpanded,
-        spatialPanelExpanded,
-        crossLayerExpanded
+    attributePanelExpanded,
+    spatialPanelExpanded,
+    crossLayerExpanded
 }));
 const storedFilterSelector = state => get(state, "layerFilter.persisted");
 const appliedFilterSelector = state => get(state, "layerFilter.applied");

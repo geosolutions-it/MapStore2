@@ -34,31 +34,31 @@ const {mapValues, pickBy } = require('lodash');
  */
 module.exports = (state = {}, action) => {
     switch (action.type) {
-        case UPDATE_LAYER_DIMENSION_DATA: {
-            return set(`data[${action.dimension}][${action.layerId}]`, action.data, state);
+    case UPDATE_LAYER_DIMENSION_DATA: {
+        return set(`data[${action.dimension}][${action.layerId}]`, action.data, state);
+    }
+    case SET_CURRENT_TIME: {
+        return set(`currentTime`, action.time, state);
+    }
+    case SET_OFFSET_TIME: {
+        return set('offsetTime', action.offsetTime, state);
+    }
+    case MOVE_TIME: { // same as SET_CURRENT_TIME, but if offsetTime is defined, it moves it together with time
+        if (state.offsetTime && state.currentTime) {
+            const currentRange = moment(state.offsetTime).diff(state.currentTime);
+            const nextOffsetTime = moment(action.time).add(currentRange);
+            return set(`currentTime`, action.time, set('offsetTime', nextOffsetTime.toISOString(), state));
         }
-        case SET_CURRENT_TIME: {
-            return set(`currentTime`, action.time, state);
-        }
-        case SET_OFFSET_TIME: {
-            return set('offsetTime', action.offsetTime, state);
-        }
-        case MOVE_TIME: { // same as SET_CURRENT_TIME, but if offsetTime is defined, it moves it together with time
-            if (state.offsetTime && state.currentTime) {
-                const currentRange = moment(state.offsetTime).diff(state.currentTime);
-                const nextOffsetTime = moment(action.time).add(currentRange);
-                return set(`currentTime`, action.time, set('offsetTime', nextOffsetTime.toISOString(), state));
-            }
-            return set(`currentTime`, action.time, state);
-        }
-        case REMOVE_NODE: {
-            const newData = mapValues(state.data, (o) => pickBy(o, (values, keys) => keys !== action.node));
-            return set(`data`, newData, state);
-        }
-        case RESET_CONTROLS: {
-            return set('data', undefined, set('currentTime', undefined, set('offsetTime', undefined, state)));
-        }
-        default:
-            return state;
+        return set(`currentTime`, action.time, state);
+    }
+    case REMOVE_NODE: {
+        const newData = mapValues(state.data, (o) => pickBy(o, (values, keys) => keys !== action.node));
+        return set(`data`, newData, state);
+    }
+    case RESET_CONTROLS: {
+        return set('data', undefined, set('currentTime', undefined, set('offsetTime', undefined, state)));
+    }
+    default:
+        return state;
     }
 };

@@ -28,7 +28,7 @@ module.exports = ({
         preview: disableVisibility
             ? null
             : <Glyphicon className="text-primary"
-            glyph={layer.visibility ? 'eye-open' : 'eye-close'}
+                glyph={layer.visibility ? 'eye-open' : 'eye-close'}
             />, // TODO: manage onClick
         style: {
             opacity: layer.visibility ? 1 : 0.4

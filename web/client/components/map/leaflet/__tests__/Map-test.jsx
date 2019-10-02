@@ -34,7 +34,7 @@ describe('LeafletMap', () => {
                 document.body.removeChild(attributions[0]);
             }
             document.body.innerHTML = '';
-        } catch(e) {
+        } catch (e) {
             // ignore
         }
     });
@@ -58,7 +58,7 @@ describe('LeafletMap', () => {
                 <div id="container1"><LeafletMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/></div>
                 <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/></div>
             </div>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -130,7 +130,7 @@ describe('LeafletMap', () => {
                 zoom={11}
                 onMapViewChanges={testHandlers.handler}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const leafletMap = map.map;
 
@@ -169,7 +169,7 @@ describe('LeafletMap', () => {
                 onClick={testHandlers.handler}
                 mapOptions={{zoomAnimation: false}}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const leafletMap = map.map;
         leafletMap.fire('singleclick', {
@@ -342,7 +342,7 @@ describe('LeafletMap', () => {
                 measurement={{}}
                 mapOptions={{zoomAnimation: false}}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const leafletMap = map.map;
         expect(leafletMap.getZoom()).toBe(12);
@@ -353,7 +353,7 @@ describe('LeafletMap', () => {
                 measurement={{}}
                 mapOptions={{zoomAnimation: false}}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(leafletMap.getZoom()).toBe(10);
         expect(leafletMap.getCenter().lat).toBe(44);
         expect(leafletMap.getCenter().lng).toBe(10);
@@ -366,7 +366,7 @@ describe('LeafletMap', () => {
                 zoom={11}
                 mapOptions={{zoomAnimation: false}}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const leafletMap = map.map;
         const mapDiv = leafletMap.getContainer();
@@ -381,7 +381,7 @@ describe('LeafletMap', () => {
                 mousePointer="pointer"
                 mapOptions={{zoomAnimation: false}}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const leafletMap = map.map;
         const mapDiv = leafletMap.getContainer();
@@ -421,7 +421,7 @@ describe('LeafletMap', () => {
 
         // instanciate the leaflet map
         let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10} mapOptions={{zoomAnimation: false}}/>,
-                        document.getElementById("container"));
+            document.getElementById("container"));
 
         // updating leaflet map view without updating the props
         map.map.setView([50.0, 20.0], 15);
@@ -434,17 +434,17 @@ describe('LeafletMap', () => {
 
         // since the props are the same no view changes should happend
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
-                        document.getElementById("container"));
+            document.getElementById("container"));
         expect(setViewSpy.calls.length).toBe(0);
 
         // the view view should not be updated since new props are equal to map values
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 50.0, x: 20.0}} zoom={15}/>,
-                        document.getElementById("container"));
+            document.getElementById("container"));
         expect(setViewSpy.calls.length).toBe(0);
 
         // the zoom and center values should be udpated
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
-                        document.getElementById("container"));
+            document.getElementById("container"));
         expect(setViewSpy.calls.length).toBe(1);
         expect(map.map.getZoom()).toBe(10);
         expect(map.map.getCenter().lng).toBe(10.0);
@@ -460,7 +460,7 @@ describe('LeafletMap', () => {
         expect(getCoordinatesFromPixel).toNotExist();
 
         const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks mapOptions={{zoomAnimation: false}}/>,
-                                    document.getElementById("container"));
+            document.getElementById("container"));
         expect(map).toExist();
 
         getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
@@ -513,7 +513,7 @@ describe('LeafletMap', () => {
                 right: 50,
                 bottom: 50
             }
-         });
+        });
         const bounds2 = map.map.getBounds();
         // center should be almost the same
         expect(bounds2.getCenter().lng).toBeGreaterThan(9);

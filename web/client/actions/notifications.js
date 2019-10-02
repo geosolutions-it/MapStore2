@@ -38,7 +38,7 @@ function hide(uid) {
     return {
         type: HIDE_NOTIFICATION,
         uid
- };
+    };
 }
 
 /**

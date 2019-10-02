@@ -17,8 +17,8 @@ const NumberRenderer = require('./ColorMapGridComponents/NumberRenderer');
 
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-require("ag-grid/dist/styles/ag-grid.css");
-require("ag-grid/dist/styles/theme-blue.css");
+require("ag-grid-community/dist/styles/ag-grid.css");
+require("ag-grid-community/dist/styles/ag-theme-blue.css");
 
 class ColorMapGrid extends React.Component {
     static propTypes = {

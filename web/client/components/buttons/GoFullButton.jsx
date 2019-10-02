@@ -43,10 +43,10 @@ class GoFullButton extends React.Component {
     render() {
         if (!this.display()) return null;
         return (<OverlayTrigger placement="left" overlay={<Tooltip id="gofull-tooltip"><Message msgId={this.props.tooltip}/></Tooltip>}>
-                    <Button className="square-button" bsStyle="primary" onClick={() => this.openFull(this.generateUrl())}>
-                        <Glyphicon glyph={this.props.glyph}/>
-                    </Button>
-                </OverlayTrigger>);
+            <Button className="square-button" bsStyle="primary" onClick={() => this.openFull(this.generateUrl())}>
+                <Glyphicon glyph={this.props.glyph}/>
+            </Button>
+        </OverlayTrigger>);
     }
 
     display = () => {
@@ -74,6 +74,7 @@ class GoFullButton extends React.Component {
             let next = location.href;
             return next.replace(regex, this.props.urlReplaceString);
         }
+        return null;
     };
 }
 

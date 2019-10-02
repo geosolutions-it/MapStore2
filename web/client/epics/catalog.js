@@ -52,13 +52,13 @@ import {
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 
-   /**
+/**
     * Epics for CATALOG
     * @name epics.catalog
     * @type {Object}
     */
 
-module.exports = (API) => ({
+export default (API) => ({
     /**
      * search a layer given catalog service url, format, startPosition, maxRecords and text
      * text is the name of the layer to search
@@ -66,26 +66,26 @@ module.exports = (API) => ({
      */
     recordSearchEpic: action$ =>
         action$.ofType(TEXT_SEARCH)
-        .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
-            return Rx.Observable.defer( () =>
-                API[format].textSearch(url, startPosition, maxRecords, text, options)
-            )
-            .switchMap((result) => {
-                if (result.error) {
-                    return Rx.Observable.of(recordsLoadError(result));
-                }
-                return Rx.Observable.of(recordsLoaded({
-                    url,
-                    startPosition,
-                    maxRecords,
-                    text
-                }, result));
-            })
-            .startWith(setLoading(true))
-            .catch((e) => {
-                return Rx.Observable.of(recordsLoadError(e));
-            });
-        }),
+            .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
+                return Rx.Observable.defer( () =>
+                    API[format].textSearch(url, startPosition, maxRecords, text, options)
+                )
+                    .switchMap((result) => {
+                        if (result.error) {
+                            return Rx.Observable.of(recordsLoadError(result));
+                        }
+                        return Rx.Observable.of(recordsLoaded({
+                            url,
+                            startPosition,
+                            maxRecords,
+                            text
+                        }, result));
+                    })
+                    .startWith(setLoading(true))
+                    .catch((e) => {
+                        return Rx.Observable.of(recordsLoadError(e));
+                    });
+            }),
 
     /**
      * layers specified in the mapviewer query params are added
@@ -184,71 +184,71 @@ module.exports = (API) => ({
      * @return {external:Observable}
     */
     newCatalogServiceAdded: (action$, store) =>
-    action$.ofType(ADD_SERVICE)
-        .switchMap(() => {
-            const state = store.getState();
-            const newService = newServiceSelector(state);
-            const services = servicesSelector(state);
-            const errorMessage = error({
-                title: "notification.warning",
-                message: "catalog.notification.errorServiceUrl",
-                autoDismiss: 6,
-                position: "tc"
-            });
-            const warningMessage = error({
-                title: "notification.warning",
-                message: "catalog.notification.warningAddCatalogService",
-                autoDismiss: 6,
-                position: "tc"
-            });
-            let notification = errorMessage;
-            let addNewService = null;
-            return Rx.Observable.fromPromise(
-                axios.get(API[newService.type].parseUrl(newService.url))
-                .then((result) => {
-                    if (newService.title === "" || newService.url === "") {
-                        notification = warningMessage;
-                    }
-                    if (result.error || result.data === "") {
-                        return {notification: errorMessage, addNewService};
-                    }
-                    if (newService.title !== "" && newService.url !== "") {
-                        notification = warningMessage;
-                        if (!services[newService.title] || services[newService.title] && newService.oldService === newService.title) {
-                            notification = success({
-                                title: "notification.success",
-                                message: "catalog.notification.addCatalogService",
-                                autoDismiss: 6,
-                                position: "tc"
-                            });
-                            addNewService = addCatalogService(newService);
-                        } else {
-                            notification = error({
-                                title: "notification.warning",
-                                message: "catalog.notification.duplicatedServiceTitle",
-                                autoDismiss: 6,
-                                position: "tc"
-                            });
-                        }
-                    }
-                    return {notification, addNewService};
-                }))
-                .switchMap((actions) => {
-                    return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
-                })
-                .startWith(savingService(true))
-                .catch(() => {
-                    return Rx.Observable.of(error({
+        action$.ofType(ADD_SERVICE)
+            .switchMap(() => {
+                const state = store.getState();
+                const newService = newServiceSelector(state);
+                const services = servicesSelector(state);
+                const errorMessage = error({
+                    title: "notification.warning",
+                    message: "catalog.notification.errorServiceUrl",
+                    autoDismiss: 6,
+                    position: "tc"
+                });
+                const warningMessage = error({
+                    title: "notification.warning",
+                    message: "catalog.notification.warningAddCatalogService",
+                    autoDismiss: 6,
+                    position: "tc"
+                });
+                let notification = errorMessage;
+                let addNewService = null;
+                return Rx.Observable.fromPromise(
+                    axios.get(API[newService.type].parseUrl(newService.url))
+                        .then((result) => {
+                            if (newService.title === "" || newService.url === "") {
+                                notification = warningMessage;
+                            }
+                            if (result.error || result.data === "") {
+                                return {notification: errorMessage, addNewService};
+                            }
+                            if (newService.title !== "" && newService.url !== "") {
+                                notification = warningMessage;
+                                if (!services[newService.title] || services[newService.title] && newService.oldService === newService.title) {
+                                    notification = success({
+                                        title: "notification.success",
+                                        message: "catalog.notification.addCatalogService",
+                                        autoDismiss: 6,
+                                        position: "tc"
+                                    });
+                                    addNewService = addCatalogService(newService);
+                                } else {
+                                    notification = error({
+                                        title: "notification.warning",
+                                        message: "catalog.notification.duplicatedServiceTitle",
+                                        autoDismiss: 6,
+                                        position: "tc"
+                                    });
+                                }
+                            }
+                            return {notification, addNewService};
+                        }))
+                    .switchMap((actions) => {
+                        return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
+                    })
+                    .startWith(savingService(true))
+                    .catch(() => {
+                        return Rx.Observable.of(error({
                             title: "notification.warning",
                             message: "catalog.notification.warningAddCatalogService",
                             autoDismiss: 6,
                             position: "tc"
                         }));
-                })
-                .concat(Rx.Observable.of(savingService(false)));
-        }),
-        deleteCatalogServiceEpic: (action$, store) =>
-            action$.ofType(DELETE_SERVICE)
+                    })
+                    .concat(Rx.Observable.of(savingService(false)));
+            }),
+    deleteCatalogServiceEpic: (action$, store) =>
+        action$.ofType(DELETE_SERVICE)
             .switchMap(() => {
                 const state = store.getState();
                 let selectedService = selectedServiceSelector(state);
@@ -267,58 +267,59 @@ module.exports = (API) => ({
                 let deleteServiceAction = deleteCatalogService(selectedService);
                 return services[selectedService] ? Rx.Observable.of(notification, deleteServiceAction) : Rx.Observable.of(notification);
             }),
-            /**
+    /**
             catalog opening must close other panels like:
             - GFI
             - FeatureGrid
             */
-        openCatalogEpic: (action$) =>
-            action$.ofType(SET_CONTROL_PROPERTY)
+    openCatalogEpic: (action$) =>
+        action$.ofType(SET_CONTROL_PROPERTY)
             .filter((action) => action.control === "metadataexplorer" && action.value)
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             }),
-        getMetadataRecordById: (action$, store) =>
-            action$.ofType(GET_METADATA_RECORD_BY_ID)
+    getMetadataRecordById: (action$, store) =>
+        action$.ofType(GET_METADATA_RECORD_BY_ID)
             .switchMap(() => {
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
                 return Rx.Observable.fromPromise(
                     API.csw.getRecordById(layer.catalogURL)
                 )
-                .switchMap((action) => {
-                    if (action && action.error) {
-                        return Rx.Observable.of(error({
+                    .switchMap((action) => {
+                        if (action && action.error) {
+                            return Rx.Observable.of(error({
                                 title: "notification.warning",
                                 message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
                                 autoDismiss: 6,
                                 position: "tc"
                             }), showLayerMetadata({}, false));
-                    }
-                    if (action && action.dc) {
-                        return Rx.Observable.of(
-                            showLayerMetadata(action.dc, false)
-                        );
-                    }
-                })
-                .startWith(
-                    showLayerMetadata({}, true)
-                )
-                .catch(() => {
-                    return Rx.Observable.of(error({
+                        }
+                        if (action && action.dc) {
+                            return Rx.Observable.of(
+                                showLayerMetadata(action.dc, false)
+                            );
+                        }
+                        return Rx.Observable.empty();
+                    })
+                    .startWith(
+                        showLayerMetadata({}, true)
+                    )
+                    .catch(() => {
+                        return Rx.Observable.of(error({
                             title: "notification.warning",
                             message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
                             autoDismiss: 6,
                             position: "tc"
                         }), showLayerMetadata({}, false));
-                });
+                    });
             }),
-            /**
+    /**
              * it trigger search automatically after a delay, default is 1s
              * it uses layersSearch in favor of
              */
-        autoSearchEpic: (action$, {getState = () => {}} = {}) =>
-            action$.ofType(CHANGE_TEXT)
+    autoSearchEpic: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(CHANGE_TEXT)
             .debounce(() => {
                 const state = getState();
                 const delay = delayAutoSearchSelector(state);

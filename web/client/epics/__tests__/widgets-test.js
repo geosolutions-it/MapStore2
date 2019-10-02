@@ -142,19 +142,19 @@ describe('widgets Epics', () => {
         testEpic(clearWidgetsOnLocationChange,
             1,
             [configureMap(),
-            savingMap(),
-            {
-                type: LOCATION_CHANGE,
-                payload: {
-                    pathname: "newPath"
-                }
-            },
-            mapCreated(),
-            {
-                type: LOCATION_CHANGE, payload: {
-                    pathname: "newPath"
-                }
-            }],
+                savingMap(),
+                {
+                    type: LOCATION_CHANGE,
+                    payload: {
+                        pathname: "newPath"
+                    }
+                },
+                mapCreated(),
+                {
+                    type: LOCATION_CHANGE, payload: {
+                        pathname: "newPath"
+                    }
+                }],
             checkActions,
             () => {
                 return count++
@@ -362,7 +362,7 @@ describe('widgets Epics', () => {
             done();
         };
         updateLayerOnLayerPropertiesChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
-                                          .toArray()
-                                          .subscribe(checkActions);
+            .toArray()
+            .subscribe(checkActions);
     });
 });

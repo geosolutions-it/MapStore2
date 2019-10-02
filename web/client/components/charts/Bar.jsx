@@ -33,7 +33,7 @@ class BarChartWrapper extends React.Component {
         marginLeft: 0,
         marginBottom: 0
     }
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (!isEqual(newProps.xAxisAngle, this.props.xAxisAngle)) {
             this.setState({marginLeft: 0, marginBottom: 0});
         }
@@ -73,10 +73,10 @@ class BarChartWrapper extends React.Component {
                 } : margin }>
                 {
                     seriesArray.map(({color, ...serie} = {}, i) =>
-                    <Bar
-                        key={`bar-${i}`}
-                        name={props.yAxisLabel ? props.yAxisLabel : null}
-                        fill={COLORS[i]} {...serie}/>)
+                        <Bar
+                            key={`bar-${i}`}
+                            name={props.yAxisLabel ? props.yAxisLabel : null}
+                            fill={COLORS[i]} {...serie}/>)
                 }
                 {renderCartesianTools({...props, onUpdateLabelLength})}
                 {props.children}

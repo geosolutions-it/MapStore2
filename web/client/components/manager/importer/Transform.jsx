@@ -30,10 +30,10 @@ class Transform extends React.Component {
         if (transforms[this.props.transform.type]) {
             let TransformEl = transforms[this.props.transform.type];
             return (<TransformEl
-                    ref="transformForm"
-                    transform={this.props.transform}
-                    editTransform={this.props.editTransform}
-                    updateTransform={this.props.updateTransform} />);
+                ref="transformForm"
+                transform={this.props.transform}
+                editTransform={this.props.editTransform}
+                updateTransform={this.props.updateTransform} />);
         }
         return null;
     };
@@ -44,11 +44,11 @@ class Transform extends React.Component {
 
     renderHelpLink = () => {
         const tooltip =
-          <Tooltip id="tooltip">See More information about this transformation</Tooltip>
-        ;
+          <Tooltip id="tooltip">See More information about this transformation</Tooltip>;
         if (transforms.help && transforms.help[this.props.transform.type]) {
             return <OverlayTrigger placement="left" overlay={tooltip}><a style={{"float": "right"}} href={transforms.help[this.props.transform.type]} target="_blank"><Glyphicon glyph="question-sign" /></a></OverlayTrigger>;
         }
+        return null;
     };
 
     renderHeader = () => {

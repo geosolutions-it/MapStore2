@@ -227,7 +227,7 @@ describe('Test the MapUtils', () => {
             {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
             {expanded: false, id: 'custom', name: 'custom', title: 'custom',
                 nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
-            ]}
+                ]}
         ];
 
         const mapConfig = {
@@ -563,7 +563,7 @@ describe('Test the MapUtils', () => {
                 }, {
                     id: 'custom.nested001',
                     expanded: true
-                    }],
+                }],
                 layers: [{
                     allowedSRS: {},
                     thumbURL: "THUMB_URL",
@@ -820,7 +820,7 @@ describe('Test the MapUtils', () => {
             {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
             {expanded: false, id: 'custom', name: 'custom', title: 'custom',
                 nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
-            ]}
+                ]}
         ];
 
         const mapConfig = {
@@ -1174,7 +1174,7 @@ describe('Test the MapUtils', () => {
                 }, {
                     id: 'custom.nested001', expanded: true
                 } ],
-            text_serch_config: '' }
+                text_serch_config: '' }
         });
     });
 
@@ -1220,7 +1220,7 @@ describe('Test the MapUtils', () => {
             {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
             {expanded: false, id: 'custom', name: 'custom', title: 'custom',
                 nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
-            ]}
+                ]}
         ];
         const mapConfig = {
             center: {x: 0, y: 0, crs: 'EPSG:4326'},
@@ -1360,7 +1360,7 @@ describe('Test the MapUtils', () => {
             {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
             {expanded: false, id: 'custom', name: 'custom', title: 'custom',
                 nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
-            ]}
+                ]}
         ];
         const mapConfig = {
             center: {x: 0, y: 0, crs: 'EPSG:4326'},

@@ -49,19 +49,19 @@ class Layer extends React.Component {
             />);
         } else {
             input = (<textarea
-               disabled={!this.props.edit}
-               name={name}
-               key={name}
-               type="text"
-               style={{width: "100%"}}
-               onChange={this.onChange}
-               value={this.state[name] !== undefined ? this.state[name] : this.props.layer[name]}
-               />);
+                disabled={!this.props.edit}
+                name={name}
+                key={name}
+                type="text"
+                style={{width: "100%"}}
+                onChange={this.onChange}
+                value={this.state[name] !== undefined ? this.state[name] : this.props.layer[name]}
+            />);
         }
         return [ <dt style={{marginBottom: "10px"}} key={"title-" + name}>{name}</dt>,
             <dd>
-             {input}
-        </dd>];
+                {input}
+            </dd>];
     };
 
     render() {

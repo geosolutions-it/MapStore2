@@ -21,14 +21,14 @@ function controls(state = initialState, action) {
             {
                 graticule: !state.graticule
             }
-            );
+        );
     }
     case UPDATE_MARKER: {
         return assign({}, state,
             {
                 marker: action.point
             }
-            );
+        );
     }
     default:
         return state;

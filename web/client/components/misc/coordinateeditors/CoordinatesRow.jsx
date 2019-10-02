@@ -123,37 +123,37 @@ class CoordinatesRow extends React.Component {
                         btnGroupProps={{ className: 'pull-right' }}
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
                         buttons={
-                        [
-                            {
-                                visible: this.props.removeVisible,
-                                disabled: !this.props.removeEnabled,
-                                glyph: 'trash',
-                                onClick: () => {
-                                    this.props.onRemove(idx);
-                                }
-                            },
-                            {
-                                buttonConfig: {
-                                    title: <Glyphicon glyph="cog"/>,
-                                    className: "square-button-md no-border",
-                                    pullRight: true
-                                },
-                                menuOptions: [
-                                    {
-                                        active: this.props.format === "decimal",
-                                        onClick: () => { this.props.onChangeFormat("decimal"); },
-                                        text: <Message msgId="search.decimal"/>
-                                    }, {
-                                        active: this.props.format === "aeronautical",
-                                        onClick: () => { this.props.onChangeFormat("aeronautical"); },
-                                        text: <Message msgId="search.aeronautical"/>
+                            [
+                                {
+                                    visible: this.props.removeVisible,
+                                    disabled: !this.props.removeEnabled,
+                                    glyph: 'trash',
+                                    onClick: () => {
+                                        this.props.onRemove(idx);
                                     }
-                                ],
-                                visible: this.props.formatVisible,
-                                Element: DropdownToolbarOptions
-                            }
-                        ]
-                    }/>
+                                },
+                                {
+                                    buttonConfig: {
+                                        title: <Glyphicon glyph="cog"/>,
+                                        className: "square-button-md no-border",
+                                        pullRight: true
+                                    },
+                                    menuOptions: [
+                                        {
+                                            active: this.props.format === "decimal",
+                                            onClick: () => { this.props.onChangeFormat("decimal"); },
+                                            text: <Message msgId="search.decimal"/>
+                                        }, {
+                                            active: this.props.format === "aeronautical",
+                                            onClick: () => { this.props.onChangeFormat("aeronautical"); },
+                                            text: <Message msgId="search.aeronautical"/>
+                                        }
+                                    ],
+                                    visible: this.props.formatVisible,
+                                    Element: DropdownToolbarOptions
+                                }
+                            ]
+                        }/>
                 </Col>
             </Row>
         );

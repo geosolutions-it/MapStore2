@@ -253,10 +253,10 @@ describe('annotations Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
             done();
@@ -517,10 +517,10 @@ describe('annotations Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
             done();
@@ -529,17 +529,17 @@ describe('annotations Epics', () => {
     it('export annotations fail', (done) => {
         const state = {
             layers: {
-                            flat: []
-                        }
+                flat: []
+            }
         };
         testEpic(downloadAnnotations, 1, download(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case "SHOW_NOTIFICATION":
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case "SHOW_NOTIFICATION":
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
             done();
@@ -555,11 +555,11 @@ describe('annotations Epics', () => {
             }
         });
         const action = loadAnnotations([{ "coordinates": [
-                    4.6142578125,
-                    45.67548217560647
-                ],
-                "type": "Point"
-            }]);
+            4.6142578125,
+            45.67548217560647
+        ],
+        "type": "Point"
+        }]);
         store.dispatch(action);
 
     });

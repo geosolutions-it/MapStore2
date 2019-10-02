@@ -15,7 +15,7 @@ import rxjsconfig from 'recompose/rxjsObservableConfig';
 import { setObservableConfig } from 'recompose';
 import currentPageSectionManager from '../currentPageSectionManager';
 
-import STORY from 'json-loader!../../../../../../test-resources/geostory/sampleStory_1.json';
+import STORY from '../../../../../../test-resources/geostory/sampleStory_1.json';
 const contents = STORY.sections[1].contents;
 
 setObservableConfig(rxjsconfig);

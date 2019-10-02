@@ -37,8 +37,8 @@ let Services = {
         returnFullData: false
     }) =>
         require('./Nominatim')
-        .geocode(searchText, options)
-        .then( res => {return options.returnFullData ? res : GeoCodeUtils.nominatimToGeoJson(res.data); }),
+            .geocode(searchText, options)
+            .then( res => {return options.returnFullData ? res : GeoCodeUtils.nominatimToGeoJson(res.data); }),
     wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, returnFullData = false, ...params }) => {
         const filter = fromTextToFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
         return WFS

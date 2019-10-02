@@ -19,9 +19,9 @@ import Icons from '../../../utils/openlayers/Icons';
 const blue = [0, 153, 255, 1];
 
 const image = new Circle({
-  radius: 5,
-  fill: null,
-  stroke: new Stroke({color: 'red', width: 1})
+    radius: 5,
+    fill: null,
+    stroke: new Stroke({color: 'red', width: 1})
 });
 
 /**
@@ -181,27 +181,27 @@ export const defaultStyles = {
 const strokeStyle = (options, defaultsStyle = {color: 'blue', width: 3, lineDash: [6]}) => ({
     stroke: new Stroke(
         options.style ?
-        options.style.stroke || {
-            color: options.style.color || defaultsStyle.color,
-            lineDash: isString(options.style.dashArray) && trim(options.style.dashArray).split(' ') || defaultsStyle.lineDash,
-            width: options.style.weight || defaultsStyle.width,
-            lineCap: options.style.lineCap || 'round',
-            lineJoin: options.style.lineJoin || 'round',
-            lineDashOffset: options.style.dashOffset || 0
-        }
-        :
-        {...defaultsStyle}
+            options.style.stroke || {
+                color: options.style.color || defaultsStyle.color,
+                lineDash: isString(options.style.dashArray) && trim(options.style.dashArray).split(' ') || defaultsStyle.lineDash,
+                width: options.style.weight || defaultsStyle.width,
+                lineCap: options.style.lineCap || 'round',
+                lineJoin: options.style.lineJoin || 'round',
+                lineDashOffset: options.style.dashOffset || 0
+            }
+            :
+            {...defaultsStyle}
     )
 });
 
 const fillStyle = (options, defaultsStyle = {color: 'rgba(0, 0, 255, 0.1)'}) => ({
     fill: new Fill(
         options.style ?
-        options.style.fill || {
-            color: colorToRgbaStr(options.style.fillColor, options.style.fillOpacity) || defaultsStyle.color
-        }
-        :
-        {...defaultsStyle}
+            options.style.fill || {
+                color: colorToRgbaStr(options.style.fillColor, options.style.fillOpacity) || defaultsStyle.color
+            }
+            :
+            {...defaultsStyle}
     )
 });
 
@@ -229,44 +229,44 @@ const defaultOLStyles = {
     'GeometryCollection': options => [new Style(assign({},
         strokeStyle(options),
         fillStyle(options),
-      {image: new Circle({
-        radius: 10,
-        fill: null,
-        stroke: new Stroke({
-          color: 'magenta'
+        {image: new Circle({
+            radius: 10,
+            fill: null,
+            stroke: new Stroke({
+                color: 'magenta'
+            })
         })
-      })
-    }))],
-  'Circle': () => [new Style({
-    stroke: new Stroke({
-      color: 'red',
-      width: 2
-    }),
-    fill: new Fill({
-      color: 'rgba(255,0,0,0.2)'
-    })
-})],
-  'marker': (options) => [new Style({
-    image: new Icon({
-      anchor: [14, 41],
-      anchorXUnits: 'pixels',
-      anchorYUnits: 'pixels',
-      src: markerShadow
-    })
-}), new Style({
-    image: new Icon({
-      anchor: [0.5, 1],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'fraction',
-      src: markerIcon
-    }),
-    text: new Text({
-        text: options.label,
-        scale: 1.25,
-    offsetY: 8,
-        fill: new Fill({color: '#000000'}),
-        stroke: new Stroke({color: '#FFFFFF', width: 2})
-    })
+        }))],
+    'Circle': () => [new Style({
+        stroke: new Stroke({
+            color: 'red',
+            width: 2
+        }),
+        fill: new Fill({
+            color: 'rgba(255,0,0,0.2)'
+        })
+    })],
+    'marker': (options) => [new Style({
+        image: new Icon({
+            anchor: [14, 41],
+            anchorXUnits: 'pixels',
+            anchorYUnits: 'pixels',
+            src: markerShadow
+        })
+    }), new Style({
+        image: new Icon({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: markerIcon
+        }),
+        text: new Text({
+            text: options.label,
+            scale: 1.25,
+            offsetY: 8,
+            fill: new Fill({color: '#000000'}),
+            stroke: new Stroke({color: '#FFFFFF', width: 2})
+        })
     })]
 };
 
@@ -329,9 +329,9 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
     if (geomType === "Circle" && radius ) {
         let styles = [
             new Style({
-                    stroke: options.style.useSelectedStyle ? new Stroke({
-                        color: [255, 255, 255, 1],
-                        width: tempStyle.weight + 4
+                stroke: options.style.useSelectedStyle ? new Stroke({
+                    color: [255, 255, 255, 1],
+                    width: tempStyle.weight + 4
                 }) : null
             }),
             new Style({
@@ -349,17 +349,17 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                     fill: new Fill(tempStyle.fill ? tempStyle.fill : {
                         color: blue
                     })
-              }) : null,
-              geometry: function(feature) {
-                  const geom = feature.getGeometry();
-                  const type = geom.getType();
-                  if (type === "Circle") {
-                      let coordinates = geom.getCenter();
-                      return new Point(coordinates);
-                  }
-                  return null;
-              }
-          })];
+                }) : null,
+                geometry: function(feature) {
+                    const geom = feature.getGeometry();
+                    const type = geom.getType();
+                    if (type === "Circle") {
+                        let coordinates = geom.getCenter();
+                        return new Point(coordinates);
+                    }
+                    return null;
+                }
+            })];
         return styles;
     }
     if (geomType === "Text" && tempStyle.font) {
@@ -451,11 +451,11 @@ export function getStyle(options, isDrawing = false, textValues = []) {
                 var feature = this || f;
                 type = feature.getGeometry().getType();
                 switch (type) {
-                    case "Point":
-                    case "MultiPoint":
-                        return markerStyle;
-                    default:
-                        return styleFunction(feature, options);
+                case "Point":
+                case "MultiPoint":
+                    return markerStyle;
+                default:
+                    return styleFunction(feature, options);
                 }
             };
             return style;
@@ -531,11 +531,11 @@ export function getStyle(options, isDrawing = false, textValues = []) {
         if (options.styleName === "marker") {
             type = feature.getGeometry().getType();
             switch (type) {
-                case "Point":
-                case "MultiPoint":
-                    return defaultOLStyles.marker(options);
-                default:
-                    break;
+            case "Point":
+            case "MultiPoint":
+                return defaultOLStyles.marker(options);
+            default:
+                break;
             }
         }
         return defaultOLStyles[options.styleName](options);

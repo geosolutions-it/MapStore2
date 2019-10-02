@@ -98,13 +98,13 @@ const toolButtons = {
     // remove content
     remove: ({ path, remove = () => { } }) => ({
         Element: () => (<DeleteButton
-        glyph={"trash"}
-        visible
-        className={BUTTON_CLASSES}
-        tooltipId={"geostory.contentToolbar.remove"}
-        onClick={ () => {
-            remove(path);
-        }} />)
+            glyph={"trash"}
+            visible
+            className={BUTTON_CLASSES}
+            tooltipId={"geostory.contentToolbar.remove"}
+            onClick={ () => {
+                remove(path);
+            }} />)
 
     })
 };
@@ -127,7 +127,7 @@ export default function ContentToolbar({
         <div className="ms-content-toolbar">
             <Toolbar
                 btnDefaultProps={{
-                    className: BUTTON_CLASSES,
+                    className: BUTTON_CLASSES
                 }}
                 buttons={tools
                     .filter((id) => toolButtons[id])

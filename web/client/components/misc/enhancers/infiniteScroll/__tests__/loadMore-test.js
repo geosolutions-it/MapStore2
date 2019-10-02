@@ -29,18 +29,18 @@ describe('loadMore enhancer', () => {
     });
     it('loadMore load items on callbacks', (done) => {
         const Sink = loadMore(
-                (params, page) => Observable.of({ items: Array(10), page }).catch( e => { done(e); })
-            )(createSink( props => {
-                expect(props).toExist();
-                if (props.page === undefined) {
-                    props.loadFirst();
-                } else if (props.page === 0) {
-                    props.onLoadMore(props.page + 1);
-                } else if (props.page === 1) {
-                    expect(props.items.length).toBe(20);
-                    done();
-                }
-            }));
+            (params, page) => Observable.of({ items: Array(10), page }).catch( e => { done(e); })
+        )(createSink( props => {
+            expect(props).toExist();
+            if (props.page === undefined) {
+                props.loadFirst();
+            } else if (props.page === 0) {
+                props.onLoadMore(props.page + 1);
+            } else if (props.page === 1) {
+                expect(props.items.length).toBe(20);
+                done();
+            }
+        }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
 });

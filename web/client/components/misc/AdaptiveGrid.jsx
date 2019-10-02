@@ -23,14 +23,14 @@ const ContainerDimensions = require('react-container-dimensions').default;
  * @return {[type]}       [description]
  */
 module.exports = (props) => (<ContainerDimensions>
-            { ({ width, height }) =>
-            <div className={props.className}>
-                <Grid
-                    {...props}
-                    minHeight={height}
-                    minWidth={width}
-                    enableCellAutoFocus={false}
-                    />
-            </div>
-            }
-        </ContainerDimensions>);
+    { ({ width, height }) =>
+        <div className={props.className}>
+            <Grid
+                {...props}
+                minHeight={height}
+                minWidth={width}
+                enableCellAutoFocus={false}
+            />
+        </div>
+    }
+</ContainerDimensions>);

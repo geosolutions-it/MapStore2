@@ -83,11 +83,11 @@ class PluginsContainer extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.loadPlugins(this.props.pluginsState);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         this.loadPlugins(newProps.pluginsState, newProps);
     }
 
@@ -111,7 +111,7 @@ class PluginsContainer extends React.Component {
 
     getPluginDescriptor = (plugin) => {
         return PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
-                    this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins);
+            this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins);
     };
 
     renderPlugins = (plugins) => {
@@ -141,7 +141,7 @@ class PluginsContainer extends React.Component {
             return (
                 <Component id={this.props.id} className={this.props.className} style={this.props.style} component={this.props.component} {...containerProps}>
                     {
-                       this.renderPlugins(bodyPlugins)
+                        this.renderPlugins(bodyPlugins)
                     }
                 </Component>
             );

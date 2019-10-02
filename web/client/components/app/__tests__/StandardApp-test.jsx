@@ -28,8 +28,8 @@ class mycomponent extends React.Component {
 
     render() {
         return (<div className="mycomponent">
-                {this.renderPlugins()}
-                </div>);
+            {this.renderPlugins()}
+        </div>);
     }
 }
 
@@ -64,11 +64,14 @@ describe('StandardApp', () => {
     });
 
     it('creates a default app with the given store creator', (done) => {
-        let dispatched = 0;
         const store = () => ({
             dispatch() {
-                dispatched++;
                 done();
+            },
+            getState() {
+                return {};
+            },
+            subscribe() {
             }
         });
 
@@ -86,6 +89,11 @@ describe('StandardApp', () => {
                 if (value === 10) {
                     done();
                 }
+            },
+            getState() {
+                return {};
+            },
+            subscribe() {
             }
         });
 
@@ -101,6 +109,11 @@ describe('StandardApp', () => {
             done();
             return {
                 dispatch() {
+                },
+                getState() {
+                    return {};
+                },
+                subscribe() {
                 }
             };
         };
@@ -123,6 +136,11 @@ describe('StandardApp', () => {
             done();
             return {
                 dispatch() {
+                },
+                getState() {
+                    return {};
+                },
+                subscribe() {
                 }
             };
         };
@@ -146,6 +164,11 @@ describe('StandardApp', () => {
             done();
             return {
                 dispatch() {
+                },
+                getState() {
+                    return {};
+                },
+                subscribe() {
                 }
             };
         };

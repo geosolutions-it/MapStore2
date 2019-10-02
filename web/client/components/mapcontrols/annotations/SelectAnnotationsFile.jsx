@@ -27,10 +27,10 @@ class SelectAnnotationsFile extends React.Component {
         onFileChoosen: PropTypes.func,
         error: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         errorMessage: PropTypes.string,
-        onClose: React.PropTypes.func,
+        onClose: PropTypes.func,
         title: PropTypes.node,
         closeGlyph: PropTypes.string,
-        disableOvveride: React.PropTypes.bool
+        disableOvveride: PropTypes.bool
     };
 
     static contextTypes = {
@@ -60,17 +60,17 @@ class SelectAnnotationsFile extends React.Component {
     render() {
         return (
             <ResizableModal title={this.props.title} bodyClassName="ms-flex" show={this.props.show} showClose onClose={this.props.onClose} size="sm">
-                    <div className="" style={{flexDirection: "column"}}>
+                <div className="" style={{flexDirection: "column"}}>
                     {this.state.error && this.renderError()}
-                        <Dropzone onDropRejected={this.checkfile} rejectClassName="ms-alert ms-alert-center text-center alert-danger" className="ms-alert ms-alert-center text-center" onDrop={this.checkfile}>
-                            <div className="alert alert-info" role="alert" style={{margin: 15, flex: 1}}>{this.state.loading && <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/>}{this.props.text}</div>
-                        </Dropzone>
-                        <div style={{margin: 15, flex: 1}}>
+                    <Dropzone onDropRejected={this.checkfile} rejectClassName="ms-alert ms-alert-center text-center alert-danger" className="ms-alert ms-alert-center text-center" onDrop={this.checkfile}>
+                        <div className="alert alert-info" role="alert" style={{margin: 15, flex: 1}}>{this.state.loading && <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/>}{this.props.text}</div>
+                    </Dropzone>
+                    <div style={{margin: 15, flex: 1}}>
                         <Checkbox disabled={this.props.disableOvveride} checked={this.state.override} onChange={() => this.setState(() => ({override: !this.state.override}))}>
-                                <Message msgId="annotations.loadoverride" />
+                            <Message msgId="annotations.loadoverride" />
                         </Checkbox>
-                        </div>
                     </div>
+                </div>
             </ResizableModal>
         );
     }

@@ -12,7 +12,7 @@ const {get} = require('lodash');
 const expect = require('expect');
 const CounterWizard = require('../CounterWizard');
 
-const describeStates = require('json-loader!../../../../../test-resources/wfs/describe-states.json');
+const describeStates = require('../../../../../test-resources/wfs/describe-states.json');
 describe('CounterWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

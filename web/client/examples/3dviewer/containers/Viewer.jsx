@@ -115,11 +115,11 @@ class Viewer extends React.Component {
                             onItemClick={this.onSearchClick}
                             afterItemClick={this.props.resultsPurge}
                             mapConfig={this.props.map}/>
-                            <MousePosition
-                                key="mousePosition"
-                                enabled
-                                mousePosition={this.props.mousePosition}
-                                crs="EPSG:4326"/>
+                        <MousePosition
+                            key="mousePosition"
+                            enabled
+                            mousePosition={this.props.mousePosition}
+                            crs="EPSG:4326"/>
                     </div>
                 </Localized>
             );

@@ -119,4 +119,4 @@ export default ({ sections = [], scrollTo, cardPreviewEnabled }) => (<SideGrid
     size="sm"
     items={
         sections.map(sectionToItem({cardPreviewEnabled, scrollTo }))
-} />);
+    } />);

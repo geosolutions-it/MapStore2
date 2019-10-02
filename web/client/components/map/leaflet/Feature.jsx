@@ -36,7 +36,7 @@ class Feature extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // TODO check if shallow comparison is enough properties and geometry
         if (!isEqual(nextProps.properties, this.props.properties) ||
             !isEqual(nextProps.geometry, this.props.geometry) ||

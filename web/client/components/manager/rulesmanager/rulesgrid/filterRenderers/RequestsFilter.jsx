@@ -56,8 +56,9 @@ module.exports = compose(
     }),
     withPropsOnChange(["service", "services"], ({services = {}, service}) => {
         return {
-        data: service && (services[service] || []).map(req => ({label: req, value: req.toUpperCase()}))
-    }; }),
+            data: service && (services[service] || []).map(req => ({label: req, value: req.toUpperCase()}))
+        };
+    }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
             onFilterChange({column, filterTerm});

@@ -24,7 +24,7 @@ const operators = {
  * const ogcFilter = toOgcFiler(filterObject);
  * // ogcFilter --> "<ogc:PropertyIsEqualTo><ogc:PropertyName>property</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>"
  */
-const fromObject = (filterBuilder = {}) => ({type, filters =[], value, property }) => {
+const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property }) => {
     if (includes(logical, type)) {
         return filterBuilder[type](
             ...filters.map(fromObject(filterBuilder))

@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -43,13 +43,13 @@ const ColorUtils = {
         max = Math.max( Math.max( r, g ), b );
         delta = max - min;
         switch (max) {
-            case min: h = 0; break;
-            case r: h = 60 * ( g - b ) / delta;
-                    if ( g < b ) { h += 360; }
-                    break;
-            case g: h = ( 60 * ( b - r ) / delta ) + 120; break;
-            case b: h = ( 60 * ( r - g ) / delta ) + 240; break;
-            default: break;
+        case min: h = 0; break;
+        case r: h = 60 * ( g - b ) / delta;
+            if ( g < b ) { h += 360; }
+            break;
+        case g: h = ( 60 * ( b - r ) / delta ) + 120; break;
+        case b: h = ( 60 * ( r - g ) / delta ) + 240; break;
+        default: break;
         }
         s = ( max === 0 ) ? 0 : 1 - ( min / max );
         return [Math.round( h ), s, max];
@@ -131,13 +131,13 @@ const ColorUtils = {
         let q = v * ( 1 - f * s );
         let t = v * ( 1 - ( 1 - f ) * s );
         switch (i) {
-            case 0: r = v; g = t; b = p; break;
-            case 1: r = q; g = v; b = p; break;
-            case 2: r = p; g = v; b = t; break;
-            case 3: r = p; g = q; b = v; break;
-            case 4: r = t; g = p; b = v; break;
-            case 5: r = v; g = p; b = q; break;
-            default: break;
+        case 0: r = v; g = t; b = p; break;
+        case 1: r = q; g = v; b = p; break;
+        case 2: r = p; g = v; b = t; break;
+        case 3: r = p; g = q; b = v; break;
+        case 4: r = t; g = p; b = v; break;
+        case 5: r = v; g = p; b = q; break;
+        default: break;
         }
         return [ColorUtils.realToDec( r ), ColorUtils.realToDec( g ), ColorUtils.realToDec( b )];
     },
@@ -155,6 +155,7 @@ const ColorUtils = {
             let rgb = ColorUtils.hexToRgb(hex);
             return ColorUtils.rgbToHsv(rgb);
         }
+        return null;
     },
     hexToRgb: (h) => {
         let hex = h;

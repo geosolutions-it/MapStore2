@@ -13,8 +13,8 @@ function browser(state = null, action) {
     switch (action.type) {
     case CHANGE_BROWSER_PROPERTIES: {
         return assign({}, state,
-                action.newProperties
-                );
+            action.newProperties
+        );
     }
     default:
         return state;

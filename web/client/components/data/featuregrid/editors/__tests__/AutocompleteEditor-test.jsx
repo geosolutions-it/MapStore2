@@ -6,7 +6,7 @@ const {createPagedUniqueAutompleteStream} = require('../../../../../observables/
 var expect = require('expect');
 
 let testColumn = {
-  key: 'columnKey'
+    key: 'columnKey'
 };
 const value = "1.1";
 describe('FeatureGrid AutocompleteEditor component', () => {
@@ -24,7 +24,7 @@ describe('FeatureGrid AutocompleteEditor component', () => {
         const cmp = ReactDOM.render(<AutocompleteEditor
             value={value}
             rowIdx={1}
-        column={testColumn}/>, document.getElementById("container"));
+            column={testColumn}/>, document.getElementById("container"));
         expect(cmp.getValue().columnKey).toBe(value);
         expect(cmp.validate(value)).toBe(true);
     });
@@ -33,7 +33,7 @@ describe('FeatureGrid AutocompleteEditor component', () => {
             value={value}
             rowIdx={1}
             autocompleteStreamFactory={createPagedUniqueAutompleteStream}
-        column={testColumn}/>, document.getElementById("container"));
+            column={testColumn}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 });

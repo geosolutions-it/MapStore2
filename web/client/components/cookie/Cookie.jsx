@@ -99,25 +99,25 @@ class Cookie extends React.Component {
                     {!this.props.externalCookieUrl && this.props.seeMore ? (
                         <MoreDetails html={this.props.html}/>
                     ) : (<div className="cookie-message">
-                            <Message msgId="cookie.info"/>
-                        </div>) }
+                        <Message msgId="cookie.info"/>
+                    </div>) }
                     <br/>
                     {!this.props.seeMore ?
-                    (<div className="cookie-action">
+                        (<div className="cookie-action">
 
-                        <Col xs={6} sm={4} className="action-button">
-                            {this.renderAcceptButton()}
-                        </Col>
-                        <Col xs={6} sm={4} className="action-button">
-                            {this.renderMoreDetails()}
-                        </Col>
-                        <Col xs={6} sm={4} className="action-button">
-                            {this.renderLeaveButton()}
-                        </Col>
-                        <Col xs={12}>
-                            <br></br>
-                        </Col>
-                    </div>) : null }
+                            <Col xs={6} sm={4} className="action-button">
+                                {this.renderAcceptButton()}
+                            </Col>
+                            <Col xs={6} sm={4} className="action-button">
+                                {this.renderMoreDetails()}
+                            </Col>
+                            <Col xs={6} sm={4} className="action-button">
+                                {this.renderLeaveButton()}
+                            </Col>
+                            <Col xs={12}>
+                                <br></br>
+                            </Col>
+                        </div>) : null }
                 </div>
             </div>
         ) : null;

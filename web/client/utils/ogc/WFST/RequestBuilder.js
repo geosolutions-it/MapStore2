@@ -56,15 +56,15 @@ const getPropertyName = (name, describe) => name === "geometry" || name === getG
  * propertyChange("p", 2) // <Property><Name>p</Name><Value>2</Value></Property>
  * ```
  */
-module.exports = function(describe, {wfsVersion = "1.1.0", wfsNS="wfs", ...other} = {}) {
+module.exports = function(describe, {wfsVersion = "1.1.0", wfsNS = "wfs", ...other} = {}) {
     if (wfsVersion !== "1.1.0") {
         throw new WFSVersionNotSupportedException(wfsVersion);
     }
     const toFeature = (f) => feature( describe.targetPrefix, getTypeName(describe), Object.keys(f.properties || [])
-            .filter(k => getPropertyDesciptor(k, describe))
-            .map((key) => attribute(describe.targetPrefix, key, getValue(f.properties[key], key, describe)))
-            .concat(f.geometry ? attribute(describe.targetPrefix, getGeometryName(f, describe), getValue(f.geometry, getGeometryName(f, describe), describe) ) : [])
-            );
+        .filter(k => getPropertyDesciptor(k, describe))
+        .map((key) => attribute(describe.targetPrefix, key, getValue(f.properties[key], key, describe)))
+        .concat(f.geometry ? attribute(describe.targetPrefix, getGeometryName(f, describe), getValue(f.geometry, getGeometryName(f, describe), describe) ) : [])
+    );
     const toFeatures = (f) => f.features ? f.features.map(toFeature) : toFeature(f);
     return {
         ...wfsRequestBuilder({...other, wfsVersion, wfsNS}),

@@ -16,11 +16,11 @@ const BuilderHeader = require('./BuilderHeader');
 
 const Toolbar = compose(
     connect(wizardSelector, {
-            setPage,
-            insertWidget,
-            onResetChange: onEditorChange
-        },
-        wizardStateToProps,
+        setPage,
+        insertWidget,
+        onResetChange: onEditorChange
+    },
+    wizardStateToProps,
     ),
     withProps(({ onResetChange = () => { } }) => ({
         exitButton: {
@@ -42,6 +42,6 @@ const Builder = connect(
 module.exports = ({ enabled, onClose = () => {}} = {}) =>
     (<BorderLayout
         header={<BuilderHeader onClose={onClose}><Toolbar /></BuilderHeader>}
-        >
+    >
         {enabled ? <Builder /> : null}
     </BorderLayout>);

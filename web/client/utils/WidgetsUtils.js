@@ -17,6 +17,7 @@ const getDependentWidget = (k, widgets) => {
         const widget = find(widgets, { id });
         return widget;
     }
+    return null;
 };
 
 const getWidgetDependency = (k, widgets) => {
@@ -29,21 +30,21 @@ const getWidgetDependency = (k, widgets) => {
 };
 const getConnectionList = (widgets = []) => {
     return widgets.reduce(
-    (acc, curr) => {
+        (acc, curr) => {
         // note: check mapSync because dependency map is not actually cleaned
-        const depMap = (get(curr, "mapSync") && get(curr, "dependenciesMap")) || {};
-        const dependencies = Object.keys(depMap).map(k => getDependentWidget(depMap[k], widgets)) || [];
-        return [
-            ...acc,
-            ...(dependencies
+            const depMap = (get(curr, "mapSync") && get(curr, "dependenciesMap")) || {};
+            const dependencies = Object.keys(depMap).map(k => getDependentWidget(depMap[k], widgets)) || [];
+            return [
+                ...acc,
+                ...(dependencies
                     /**
                      * This filter removes temp orphan dependencies, but can not recover connection when the value of the connected element is undefined
                      * TODO: remove this filter and clean orphan dependencies
                      */
                     .filter(d => d !== undefined)
                     .map(d => [curr.id, d.id]))
-        ];
-    }, []);
+            ];
+        }, []);
 };
 
 /**
@@ -65,20 +66,20 @@ const shortenLabel = (label, threshold = 1000, decimals = 1) => {
         let zeroNumber = (trimedDigits) / 3;
         let trimedNumber = number / Math.pow(10, trimedDigits);
         switch (zeroNumber) {
-            case 1 :
-                unit = ' K';
-                break;
-            case 2 :
-                unit = ' M';
-                break;
-            case 3 :
-                unit = ' B';
-                break;
-            case 4 :
-                unit = ' T';
-                break;
-            default:
-                unit = '';
+        case 1 :
+            unit = ' K';
+            break;
+        case 2 :
+            unit = ' M';
+            break;
+        case 3 :
+            unit = ' B';
+            break;
+        case 4 :
+            unit = ' T';
+            break;
+        default:
+            unit = '';
         }
         number = round(trimedNumber, decimals) + unit;
     } else {

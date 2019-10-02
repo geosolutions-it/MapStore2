@@ -94,7 +94,8 @@ describe('AutocompleteFieldHOC', () => {
                         label: "val2"
                     }]
                 },
-                value: "someVAlue"
+                value: "someVAlue",
+                fieldOptions: {}
             },
             maxFeaturesWPS: 5,
             pagination: {

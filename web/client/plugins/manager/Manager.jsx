@@ -39,6 +39,7 @@ class Manager extends React.Component {
         if (tool.glyph) {
             return <Glyphicon glyph={tool.glyph} />;
         }
+        return null;
     };
 
     renderNavItems = () => {
@@ -52,8 +53,8 @@ class Manager extends React.Component {
                     this.props.itemSelected(tool.id);
                     this.context.router.history.push("/manager/" + tool.id);
                 }}>
-                    {this.renderToolIcon(tool)}
-                    <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
+                {this.renderToolIcon(tool)}
+                <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
             </NavItem>));
     };
 
@@ -84,7 +85,7 @@ module.exports = {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool
     }),
-        {
-            itemSelected
-        })(Manager)
+    {
+        itemSelected
+    })(Manager)
 };

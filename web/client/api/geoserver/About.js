@@ -36,16 +36,16 @@ export const getVersion = function({ baseUrl }) {
             .then(({ data }) => get(data, 'about.resource'))
             .catch(() => null)
     ])
-    .then(([version, manifest]) => {
-        const response = {
-            version: version && toCamelCase(version),
-            manifest: manifest && toCamelCase(manifest)
-        };
-        // if one of version or manifest fails we should not cache the response
-        if (!version || !manifest) return response;
-        cache[baseUrl] = response;
-        return cache[baseUrl];
-    });
+        .then(([version, manifest]) => {
+            const response = {
+                version: version && toCamelCase(version),
+                manifest: manifest && toCamelCase(manifest)
+            };
+            // if one of version or manifest fails we should not cache the response
+            if (!version || !manifest) return response;
+            cache[baseUrl] = response;
+            return cache[baseUrl];
+        });
 };
 
 // clear local cache

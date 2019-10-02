@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
 momentLocalizer(moment);
-const utcDateWrapper = require('../../misc/enhancers/utcDateWrapper');
+const utcDateWrapper = require('../../misc/enhancers/utcDateWrapper').default;
 const Message = require('../../I18N/Message');
 const {getDateTimeFormat} = require('../../../utils/TimeUtils');
 const {DateTimePicker} = require('react-widgets');
@@ -71,48 +71,48 @@ class DateField extends React.Component {
         // needed to initialize the time parts to 00:00:00
 
         let dateRow = this.props.operator === "><" ?
-                (<div>
-                    <Row>
-                        <Col xs={6}>
-                            {this.props.showLabels && <Message msgId="queryform.from"/>}
-                            <UTCDateTimePicker
-                                type={this.props.attType}
-                                defaultValue={startdate}
-                                value={startdate}
-                                calendar={this.props.dateEnabled}
-                                time={this.props.timeEnabled}
-                                format={getDateTimeFormat(this.context.locale, this.props.attType)}
-                                onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
-                        </Col>
-                        <Col xs={6}>
-                            {this.props.showLabels && <Message msgId="queryform.to"/>}
-                            <UTCDateTimePicker
-                                type={this.props.attType}
-                                defaultValue={enddate}
-                                value={enddate}
-                                calendar={this.props.dateEnabled}
-                                time={this.props.timeEnabled}
-                                format={getDateTimeFormat(this.context.locale, this.props.attType)}
-                                onChange={(date) => this.updateValueState({startDate: startdate, endDate: date})}/>
-                        </Col>
-                    </Row>
-                </div>)
-             :
-                (<Row>
-                    <Col xs={12}>
-                        {this.props.showLabels && <Message msgId="queryform.date"/>}
+            (<div>
+                <Row>
+                    <Col xs={6}>
+                        {this.props.showLabels && <Message msgId="queryform.from"/>}
                         <UTCDateTimePicker
                             type={this.props.attType}
                             defaultValue={startdate}
                             value={startdate}
-                            time={this.props.timeEnabled}
                             calendar={this.props.dateEnabled}
+                            time={this.props.timeEnabled}
                             format={getDateTimeFormat(this.context.locale, this.props.attType)}
-                            onChange={(date) => {
-                                this.updateValueState({startDate: date, endDate: null});
-                            }}/>
+                            onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
                     </Col>
-                </Row>);
+                    <Col xs={6}>
+                        {this.props.showLabels && <Message msgId="queryform.to"/>}
+                        <UTCDateTimePicker
+                            type={this.props.attType}
+                            defaultValue={enddate}
+                            value={enddate}
+                            calendar={this.props.dateEnabled}
+                            time={this.props.timeEnabled}
+                            format={getDateTimeFormat(this.context.locale, this.props.attType)}
+                            onChange={(date) => this.updateValueState({startDate: startdate, endDate: date})}/>
+                    </Col>
+                </Row>
+            </div>)
+            :
+            (<Row>
+                <Col xs={12}>
+                    {this.props.showLabels && <Message msgId="queryform.date"/>}
+                    <UTCDateTimePicker
+                        type={this.props.attType}
+                        defaultValue={startdate}
+                        value={startdate}
+                        time={this.props.timeEnabled}
+                        calendar={this.props.dateEnabled}
+                        format={getDateTimeFormat(this.context.locale, this.props.attType)}
+                        onChange={(date) => {
+                            this.updateValueState({startDate: date, endDate: null});
+                        }}/>
+                </Col>
+            </Row>);
         return (
             dateRow
         );

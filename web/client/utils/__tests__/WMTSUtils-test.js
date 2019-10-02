@@ -24,8 +24,8 @@ describe('Test the WMTSUtils', () => {
 
     it('get matrix ids with array', () => {
         const ids = WMTSUtils.getMatrixIds([{
-                identifier: 'EPSG:4326'
-            }], 'EPSG:4326');
+            identifier: 'EPSG:4326'
+        }], 'EPSG:4326');
         expect(ids.length).toBe(1);
         expect(ids[0]).toBe('EPSG:4326');
     });

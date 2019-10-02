@@ -43,7 +43,7 @@ describe('Hours component', () => {
         const handleKeyDown = (event) => {
             timeRef.handleKeyDown(event);
         };
-        ReactDOM.render(<div onKeyDown={handleKeyDown}><Hours {...actions} ref={ref => timeRef = ref} /></div>, document.getElementById("container"));
+        ReactDOM.render(<div onKeyDown={handleKeyDown}><Hours {...actions} ref={ref => {timeRef = ref;}} /></div>, document.getElementById("container"));
 
         const container = document.getElementById('container');
         const hour = container.querySelector('.rw-list-option');

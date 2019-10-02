@@ -54,7 +54,7 @@ const Toolbar = compose(
         onChange: onEditorChange,
         insertWidget
     },
-        wizardStateToProps
+    wizardStateToProps
     ),
     legendBuilderConnect,
     withValidMap,

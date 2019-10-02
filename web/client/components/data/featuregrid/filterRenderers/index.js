@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -10,7 +10,7 @@ const {withProps} = require('recompose');
 const DefaultFilter = require('./DefaultFilter');
 const StringFilter = require('./StringFilter');
 const NumberFilter = require('./NumberFilter');
-const DateTimeFilter = require('./DateTimeFilter');
+const DateTimeFilter = require('./DateTimeFilter').default;
 
 const types = {
     "defaultFilter": (type) => withProps(() =>({type: type}))(DefaultFilter),

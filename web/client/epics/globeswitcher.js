@@ -23,6 +23,7 @@ const replaceMapType = (path, newMapType) => {
     if (match) {
         return `/viewer/${newMapType}/${match[1]}`;
     }
+    return path;
 };
 /**
  * Gets every `TOGGLE_3D` event.
@@ -37,7 +38,7 @@ const updateRouteOn3dSwitch = (action$, store) =>
             if (newPath) {
                 return Rx.Observable.from([push(newPath)]);
             }
-            Rx.Observable.empty();
+            return Rx.Observable.empty();
         });
 const updateLast2dMapTypeOnChangeEvents = (action$, store) => action$
     .ofType(LOCAL_CONFIG_LOADED).map(() => mapTypeSelector(store.getState()))

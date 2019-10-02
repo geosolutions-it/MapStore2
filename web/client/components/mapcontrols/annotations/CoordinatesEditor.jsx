@@ -82,7 +82,8 @@ class CoordinatesEditor extends React.Component {
         isDraggable: true,
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
-        properties: {}
+        properties: {},
+        type: "Point"
     };
 
     getValidationStateText = (text) => {
@@ -157,12 +158,12 @@ class CoordinatesEditor extends React.Component {
         const allValidComponents = actualValidComponents.length === actualComponents.length;
         const validationCompleteButton = this[componentsValidation[type].validation]() && allValidComponents;
         const formats = [{
-                value: 'decimal',
-                text: <Message msgId="annotations.editor.decimal"/>
-            }, {
-                value: 'aeronautical',
-                text: <Message msgId="annotations.editor.aeronautical"/>
-            }];
+            value: 'decimal',
+            text: <Message msgId="annotations.editor.decimal"/>
+        }, {
+            value: 'aeronautical',
+            text: <Message msgId="annotations.editor.aeronautical"/>
+        }];
 
         const buttons = [
             {
@@ -170,18 +171,18 @@ class CoordinatesEditor extends React.Component {
                 tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
                 visible: true
             }, {
-            Element: () => (
-                <DropdownButton
-                    noCaret
-                    title={<Glyphicon glyph="cog"/>}
-                    pullRight
-                    className="square-button-md no-border"
-                    tooltip="Format">
-                    {formats.map(({text, value}) => <MenuItem
-                        active={this.props.format === value}
-                        key={value}
-                        onClick={() => this.props.onChangeFormat(value)}>{text}</MenuItem>)}
-                </DropdownButton>
+                Element: () => (
+                    <DropdownButton
+                        noCaret
+                        title={<Glyphicon glyph="cog"/>}
+                        pullRight
+                        className="square-button-md no-border"
+                        tooltip="Format">
+                        {formats.map(({text, value}) => <MenuItem
+                            active={this.props.format === value}
+                            key={value}
+                            onClick={() => this.props.onChangeFormat(value)}>{text}</MenuItem>)}
+                    </DropdownButton>
                 )
             },
             {
@@ -221,16 +222,16 @@ class CoordinatesEditor extends React.Component {
                         </Col>
                     </Row>
                 }
-                 {!(!this.props.components || this.props.components.length === 0) &&
+                {!(!this.props.components || this.props.components.length === 0) &&
                      <Row style={{flex: 1, overflowY: 'auto'}}>
-                        <Col xs={5} xsOffset={1}>
-                            <Message msgId="annotations.editor.lat"/>
-                        </Col>
-                        <Col xs={5}>
-                            <Message msgId="annotations.editor.lon"/>
-                        </Col>
-                        <Col xs={1}/>
-                    </Row>}
+                         <Col xs={5} xsOffset={1}>
+                             <Message msgId="annotations.editor.lat"/>
+                         </Col>
+                         <Col xs={5}>
+                             <Message msgId="annotations.editor.lon"/>
+                         </Col>
+                         <Col xs={1}/>
+                     </Row>}
                 <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
@@ -292,7 +293,7 @@ class CoordinatesEditor extends React.Component {
                             }
                         }}/>)}
                 </Row>
-                 {(!this.props.components || this.props.components.length === 0) &&
+                {(!this.props.components || this.props.components.length === 0) &&
                      <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}>
                          <i><Message msgId="annotations.editor.addByClick"/></i>
                      </Col></Row>}

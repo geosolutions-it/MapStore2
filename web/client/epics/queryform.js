@@ -16,16 +16,16 @@ const {CHANGE_SPATIAL_FILTER_VALUE} = require('../actions/queryform');
 module.exports = {
     updateSpatialFilterValue: action$ =>
         action$.ofType(CHANGE_SPATIAL_FILTER_VALUE)
-        .switchMap( ({feature, srsName, style, options}) => Observable.of(
+            .switchMap( ({feature, srsName, style, options}) => Observable.of(
             // draw the filter on map
-            changeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature],
-                {
-                    editEnabled: false,
-                    stopAfterDrawing: true,
-                    featureProjection: srsName
-                }, style)
+                changeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature],
+                    {
+                        editEnabled: false,
+                        stopAfterDrawing: true,
+                        featureProjection: srsName
+                    }, style)
             // set proper filter based on options
-        ).concat((feature && options && options.autoZoom)
-            ? [zoomToExtent(bbox(feature), srsName)]
-            : []))
+            ).concat((feature && options && options.autoZoom)
+                ? [zoomToExtent(bbox(feature), srsName)]
+                : []))
 };

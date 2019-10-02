@@ -44,11 +44,11 @@ const {
     SET_UP,
     SET_TIME_SYNC
 } = require('../actions/featuregrid');
-const{
+const {
     FEATURE_TYPE_LOADED,
     QUERY_CREATE
 } = require('../actions/wfsquery');
-const{
+const {
     CHANGE_DRAWING_STATUS
 } = require('../actions/draw');
 
@@ -94,10 +94,10 @@ const applyUpdate = (f, updates, updatesGeom) => {
         };
     }
     return {...f,
-    properties: {
-        ...f.properties,
-        ...updates
-    }};
+        properties: {
+            ...f.properties,
+            ...updates
+        }};
 
 };
 const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
@@ -182,7 +182,7 @@ function featuregrid(state = emptyResultsState, action) {
     case DESELECT_FEATURES:
         return assign({}, state, {
             select: state.select.filter(f1 => !isPresent(f1, action.features))
-            });
+        });
     case SET_SELECTION_OPTIONS: {
         return assign({}, state, {multiselect: action.multiselect});
     }

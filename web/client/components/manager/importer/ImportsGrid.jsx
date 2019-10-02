@@ -72,22 +72,23 @@ class ImportsGrid extends React.Component {
         if (imp && imp.error) {
             return <Label bsStyle="danger">{"Could not delete import, please try to delete all its content first"}</Label>;
         }
+        return null;
     };
 
     renderImport = (importObj) => {
         let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
-                <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
-                <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>
+            <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
+            <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>
                 {this.renderLoadingImport(importObj)}
                 {this.renderImportErrorMessage(importObj)}
-                </td>
-                <td key="actions">
-                    <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
-                        <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteImport(importObj.id); }}><Glyphicon glyph="remove"/></Button>
-                    </OverlayTrigger>
-                </td>
-            </tr>);
+            </td>
+            <td key="actions">
+                <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
+                    <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteImport(importObj.id); }}><Glyphicon glyph="remove"/></Button>
+                </OverlayTrigger>
+            </td>
+        </tr>);
     };
 
     render() {
@@ -98,9 +99,9 @@ class ImportsGrid extends React.Component {
             <Table striped bordered condensed hover>
                 <thead>
                     <tr>
-                      <th><Message msgId="importer.number"/></th>
-                      <th><Message msgId="importer.import.status" /></th>
-                      <th><Message msgId="importer.import.actions" /></th>
+                        <th><Message msgId="importer.number"/></th>
+                        <th><Message msgId="importer.import.status" /></th>
+                        <th><Message msgId="importer.import.actions" /></th>
                     </tr>
                 </thead>
                 <tbody>

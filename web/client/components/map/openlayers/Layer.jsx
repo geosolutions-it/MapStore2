@@ -52,7 +52,7 @@ export default class OpenlayersLayer extends React.Component {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.securityToken);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility);
 
@@ -94,9 +94,9 @@ export default class OpenlayersLayer extends React.Component {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
             return (
-                <noscript>
+                <>
                     {children}
-                </noscript>
+                </>
             );
         }
 
@@ -147,7 +147,7 @@ export default class OpenlayersLayer extends React.Component {
                     !compatible) {
                     this.props.onWarning({
                         title: "warning",
-                            message: "notification.incompatibleDataAndProjection",
+                        message: "notification.incompatibleDataAndProjection",
                         action: {
                             label: "close"
                         },

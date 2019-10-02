@@ -15,12 +15,12 @@ module.exports = ({
 }) => (<div>
     <HTML msgId="mapImport.dropZone.heading" />
     {openFileDialog
-            ? <Button bsStyle="primary" onClick={openFileDialog}><Message msgId="mapImport.dropZone.selectFiles" /></Button>
+        ? <Button bsStyle="primary" onClick={openFileDialog}><Message msgId="mapImport.dropZone.selectFiles" /></Button>
         : null
     }
     <br />
     <br />
-        <HTML msgId="mapImport.dropZone.infoSupported" />
+    <HTML msgId="mapImport.dropZone.infoSupported" />
     <hr />
-        <HTML msgId="mapImport.dropZone.note" />
-    </div>);
+    <HTML msgId="mapImport.dropZone.note" />
+</div>);

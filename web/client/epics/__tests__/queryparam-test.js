@@ -34,11 +34,11 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 actions.map((action) => {
                     switch (action.type) {
-                        case TEST_TIMEOUT:
-                            done();
-                            break;
-                        default:
-                            done(new Error("Action not recognized"));
+                    case TEST_TIMEOUT:
+                        done();
+                        break;
+                    default:
+                        done(new Error("Action not recognized"));
                     }
                 });
                 done();
@@ -71,7 +71,7 @@ describe('queryparam epics', () => {
                     expect(Math.floor(actions[0].extent[2])).toBe(10);
                     expect(Math.floor(actions[0].extent[3])).toBe(46);
                     expect(actions[0].crs).toBe('EPSG:4326');
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
                 done();
@@ -100,7 +100,7 @@ describe('queryparam epics', () => {
                 try {
                     expect(actions[0].type).toBe(SHOW_NOTIFICATION);
                     expect(actions[0].level).toBe( 'warning');
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
                 done();

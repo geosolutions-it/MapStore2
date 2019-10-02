@@ -30,12 +30,12 @@ function mapConfig(state = null, action) {
         });
     case CHANGE_MAP_LIMITS:
         return assign({}, state, {
-        limits: {
-            restrictedExtent: action.restrictedExtent,
-            crs: action.crs,
-            minZoom: action.minZoom
-        }
-    });
+            limits: {
+                restrictedExtent: action.restrictedExtent,
+                crs: action.crs,
+                minZoom: action.minZoom
+            }
+        });
     case CHANGE_MAP_CRS:
         return assign({}, state, {
             projection: action.crs
@@ -44,7 +44,7 @@ function mapConfig(state = null, action) {
         if (action.scales) {
             const dpi = state && state.mapOptions && state.mapOptions.view && state.mapOptions.view.DPI || null;
             const resolutions = MapUtils.getResolutionsForScales(action.scales, state && state.projection || "EPSG:4326", dpi);
-                // add or update mapOptions.view.resolutions
+            // add or update mapOptions.view.resolutions
             return assign({}, state, {
                 mapOptions: assign({}, state && state.mapOptions,
                     {
@@ -55,14 +55,14 @@ function mapConfig(state = null, action) {
                     })
             });
         } else if (state && state.mapOptions && state.mapOptions.view && state.mapOptions.view && state.mapOptions.view.resolutions) {
-                // TODO: this block is removing empty objects from the state, check if it really needed
-                // deeper clone
+            // TODO: this block is removing empty objects from the state, check if it really needed
+            // deeper clone
             let newState = assign({}, state);
             newState.mapOptions = assign({}, newState.mapOptions);
             newState.mapOptions.view = assign({}, newState.mapOptions.view);
-                // remove resolutions
+            // remove resolutions
             delete newState.mapOptions.view.resolutions;
-                // cleanup state
+            // cleanup state
             if (Object.keys(newState.mapOptions.view).length === 0) {
                 delete newState.mapOptions.view;
             }
@@ -87,9 +87,9 @@ function mapConfig(state = null, action) {
     case PAN_TO: {
         // action.center now can be also an array (with the coord specified in 4326)
         const center = CoordinatesUtils.reproject(
-                action.center,
-                action.center.crs || 'EPSG:4326',
-                'EPSG:4326');
+            action.center,
+            action.center.crs || 'EPSG:4326',
+            'EPSG:4326');
         return assign({}, state, {
             center,
             mapStateSource: null

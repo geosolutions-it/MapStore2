@@ -61,10 +61,10 @@ class GeoStoryPage extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
-    {
-        loadResource: loadGeostory
-        // reset: resetGeostory
-    })(GeoStoryPage);
+{
+    loadResource: loadGeostory
+    // reset: resetGeostory
+})(GeoStoryPage);

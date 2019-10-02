@@ -34,7 +34,7 @@ describe('TOC Filter', () => {
         const spyFocus = expect.spyOn(actions, 'onFocus');
 
         const cmp = ReactDOM.render(<Filter onFilter={actions.onFilter}
-        onFocus={actions.onFocus}/>, document.getElementById("container"));
+            onFocus={actions.onFocus}/>, document.getElementById("container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
 
@@ -59,7 +59,7 @@ describe('TOC Filter', () => {
         const spyFilter = expect.spyOn(actions, 'onFilter');
 
         const cmp = ReactDOM.render(<Filter onFilter={actions.onFilter}
-        onFocus={actions.onFocus}/>, document.getElementById("container"));
+            onFocus={actions.onFocus}/>, document.getElementById("container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
 

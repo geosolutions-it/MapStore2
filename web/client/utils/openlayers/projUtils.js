@@ -14,11 +14,11 @@ export default {
     */
     addProjections: function(code, extent, worldExtent, axisOrientation) {
         addProjection(new Projection({
-                code,
-                extent,
-                worldExtent,
-                axisOrientation
-            })
+            code,
+            extent,
+            worldExtent,
+            axisOrientation
+        })
         );
     }
 };

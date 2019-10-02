@@ -29,7 +29,7 @@ L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
 
         let wmsParams = L.extend({}, this.defaultWmsParams);
 
-            // all keys that are not NonTiledLayer options go to WMS params
+        // all keys that are not NonTiledLayer options go to WMS params
         for (let i in options) {
             if (!this.options.hasOwnProperty(i) && i.toUpperCase() !== 'CRS' && i !== "maxNativeZoom") {
                 wmsParams[i] = options[i];

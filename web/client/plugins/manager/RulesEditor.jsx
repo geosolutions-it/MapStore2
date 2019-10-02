@@ -54,16 +54,16 @@ class RuleEditor extends React.Component {
             <BorderLayout
                 className="bg-body"
                 header={<Header
-                                disableDetails={disableDetails}
-                                layer={layer}
-                                loading={loading}
-                                type={type}
-                                onSave={this.save}
-                                onExit={this.cancelEditing}
-                                activeTab={activeEditor}
-                                disableSave={isSaveDisabled(activeRule, initRule)}
-                                rule={activeRule}
-                                onNavChange={onNavChange}/>}
+                    disableDetails={disableDetails}
+                    layer={layer}
+                    loading={loading}
+                    type={type}
+                    onSave={this.save}
+                    onExit={this.cancelEditing}
+                    activeTab={activeEditor}
+                    disableSave={isSaveDisabled(activeRule, initRule)}
+                    rule={activeRule}
+                    onNavChange={onNavChange}/>}
             >
                 <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
                 <StylesEditor styles={styles} key="styles-editor" constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
@@ -77,15 +77,15 @@ class RuleEditor extends React.Component {
         if (!isRulePristine(activeRule, initRule)) {
             this.setState( () => ({modalProps: {title: "featuregrid.toolbar.saveChanges",
                 showDialog: true, buttons: [{
-                        text: <Message msgId="no"/>,
-                        bsStyle: 'primary',
-                        onClick: this.cancel
-                    },
-                    {
-                        text: <Message msgId="yes"/>,
-                        bsStyle: 'primary',
-                        onClick: onExit
-                    }
+                    text: <Message msgId="no"/>,
+                    bsStyle: 'primary',
+                    onClick: this.cancel
+                },
+                {
+                    text: <Message msgId="yes"/>,
+                    bsStyle: 'primary',
+                    onClick: onExit
+                }
                 ], closeAction: this.cancel, msg: "map.details.sureToClose"}}));
         } else {
             onExit();
@@ -98,21 +98,21 @@ class RuleEditor extends React.Component {
         const {activeRule, onSave} = this.props;
         if (isRuleValid(activeRule)) {
             onSave(activeRule);
-        }else {
+        } else {
             this.setState( () => ({modalProps: {title: "featuregrid.toolbar.saveChanges",
                 showDialog: true, buttons: [
-                        {
-                            text: 'Ok',
-                            bsStyle: 'primary',
-                            onClick: this.cancel
-                        }
-                    ], closeAction: this.cancel, msg: "rulesmanager.invalidForm"}}));
+                    {
+                        text: 'Ok',
+                        bsStyle: 'primary',
+                        onClick: this.cancel
+                    }
+                ], closeAction: this.cancel, msg: "rulesmanager.invalidForm"}}));
         }
     }
     setOption = ({key, value}) => {
         if (askConfirm(this.props.activeRule, key, value)) {
             this.setState( () => ({modalProps: {title: "rulesmanager.resetconstraints",
-            showDialog: true, buttons: [{
+                showDialog: true, buttons: [{
                     text: <Message msgId="no"/>,
                     bsStyle: 'primary',
                     onClick: this.cancel
@@ -126,9 +126,9 @@ class RuleEditor extends React.Component {
                         this.props.cleanConstraints(key === 'grant');
                     }
                 }
-            ], closeAction: this.cancel, msg: "rulesmanager.constraintsmsg"}}));
+                ], closeAction: this.cancel, msg: "rulesmanager.constraintsmsg"}}));
 
-        }else {
+        } else {
             this.props.setOption({key, value});
         }
 

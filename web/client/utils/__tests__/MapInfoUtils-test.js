@@ -299,34 +299,34 @@ describe('MapInfoUtils', () => {
     it('getValidator for vector layer', () => {
         let response = [
             {
-            "response": {
-                "crs": null,
-                "features": [{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [10.728187343305999, 43.95330251168864]
-                    },
-                    "properties": {
-                        "OBJECTID_1": 8
-                    },
-                    "id": 0
+                "response": {
+                    "crs": null,
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [10.728187343305999, 43.95330251168864]
+                        },
+                        "properties": {
+                            "OBJECTID_1": 8
+                        },
+                        "id": 0
                     }
-                ],
-                "totalFeatures": "unknown",
-                "type": "FeatureCollection"
-            },
-            "queryParams": {
-                "lat": 43.95229339335166,
-                "lng": 10.726776123046875
-            },
-            "layerMetadata": {
-                "fields": ["OBJECTID_1"],
-                "title": "prova",
-                "resolution": 152.8740565703525,
-                "buffer": 2
-            },
-            "format": "PROPERTIES"
+                    ],
+                    "totalFeatures": "unknown",
+                    "type": "FeatureCollection"
+                },
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "PROPERTIES"
             }
         ];
 

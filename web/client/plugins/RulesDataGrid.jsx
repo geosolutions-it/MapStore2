@@ -23,7 +23,8 @@ const ruelsSelector = createSelector([selectedRules, filterSelector, triggerLoad
         selectedIds: rules.map(r => r.id),
         filters,
         triggerLoad
-}; });
+    };
+});
 const rulesGridEnhancer = compose(
     connect( ruelsSelector, {onSelect: rulesSelected, onLoadError: error, setLoading, setFilters: setFilter}),
     require('../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid'));
@@ -51,15 +52,15 @@ class RulesDataGrid extends React.Component {
      static defaultProps = {
          enabled: true
      };
-    render() {
-        return (<ContainerDimensions>{({width, height}) =>
-            (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
-                {!this.props.enabled && (<div className="ms-overlay"/>)}
-                <RulesGrid width={width} height={height}/>
-            </div>)
-        }
-        </ContainerDimensions>);
-    }
+     render() {
+         return (<ContainerDimensions>{({width, height}) =>
+             (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
+                 {!this.props.enabled && (<div className="ms-overlay"/>)}
+                 <RulesGrid width={width} height={height}/>
+             </div>)
+         }
+         </ContainerDimensions>);
+     }
 }
 const RulesDataGridPlugin = connect(
     createSelector(

@@ -83,28 +83,28 @@ export default enhance(({
                     borderBottom: "1px solid #ddd",
                     padding: 8
                 }}>
-                    <Toolbar
-                        btnGroupProps={{
-                            style: {
-                                marginBottom: 8
-                            }
-                        }}
-                        btnDefaultProps={{
-                            bsStyle: "primary",
-                            className: "square-button-md"
-                        }}
-                        buttons={[{
-                            glyph: "arrow-left",
-                            tooltipId: "mediaEditor.mediaPicker.back",
-                            onClick: () => editing ? setEditingMedia(false) : setAddingMedia(false)
-                        }, {
-                            glyph: "floppy-disk",
-                            tooltipId: "mediaEditor.mediaPicker.save",
-                            disabled: !properties.src || !properties.title,
-                            onClick: () => {
-                                onSave(properties);
-                            }
-                        }]} />
+                <Toolbar
+                    btnGroupProps={{
+                        style: {
+                            marginBottom: 8
+                        }
+                    }}
+                    btnDefaultProps={{
+                        bsStyle: "primary",
+                        className: "square-button-md"
+                    }}
+                    buttons={[{
+                        glyph: "arrow-left",
+                        tooltipId: "mediaEditor.mediaPicker.back",
+                        onClick: () => editing ? setEditingMedia(false) : setAddingMedia(false)
+                    }, {
+                        glyph: "floppy-disk",
+                        tooltipId: "mediaEditor.mediaPicker.save",
+                        disabled: !properties.src || !properties.title,
+                        onClick: () => {
+                            onSave(properties);
+                        }
+                    }]} />
             </div>
         }>
         <Form style={{ padding: 8 }}>

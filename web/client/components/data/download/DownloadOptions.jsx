@@ -24,16 +24,16 @@ const Message = require('../../I18N/Message');
  */
 module.exports = class extends React.Component {
     static propTypes = {
-            downloadOptions: PropTypes.object,
-            formatOptionsFetch: PropTypes.func,
-            wfsFormats: PropTypes.array,
-            formats: PropTypes.array,
-            srsList: PropTypes.array,
-            onChange: PropTypes.func,
-            defaultSrs: PropTypes.string,
-            layer: PropTypes.object,
-            formatsLoading: PropTypes.bool,
-            virtualScroll: PropTypes.bool
+        downloadOptions: PropTypes.object,
+        formatOptionsFetch: PropTypes.func,
+        wfsFormats: PropTypes.array,
+        formats: PropTypes.array,
+        srsList: PropTypes.array,
+        onChange: PropTypes.func,
+        defaultSrs: PropTypes.string,
+        layer: PropTypes.object,
+        formatsLoading: PropTypes.bool,
+        virtualScroll: PropTypes.bool
     };
 
     static defaultProps = {

@@ -19,16 +19,17 @@ const DummyComponent = ({ type }) => <div className="ms-content ms-content-unkno
  */
 const getComponent = type => {
     switch (type) {
-        case ContentTypes.TEXT:
-            return Text;
-        case ContentTypes.MEDIA:
-            // TODO return empty VIEW representing a media not configured
-        case MediaTypes.IMAGE:
-            return Image;
+    case ContentTypes.TEXT:
+        return Text;
+    case ContentTypes.MEDIA:
+        // TODO return empty VIEW representing a media not configured
+        return Image;
+    case MediaTypes.IMAGE:
+        return Image;
         // case MediaTypes.VIDEO:
-          //  return ...;
-        default:
-            return DummyComponent;
+        //  return ...;
+    default:
+        return DummyComponent;
     }
 };
 

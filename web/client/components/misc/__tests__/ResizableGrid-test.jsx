@@ -12,15 +12,15 @@ const ResizableGrid = require('../ResizableGrid');
 
 const state = {
     columns: [
-    {
-        key: 'id',
-        name: 'id',
-        resizable: true
-    }, {
-        key: 'name',
-        name: 'nome livello',
-        resizable: true
-    }],
+        {
+            key: 'id',
+            name: 'id',
+            resizable: true
+        }, {
+            key: 'name',
+            name: 'nome livello',
+            resizable: true
+        }],
     features: [{
         id: "1",
         name: "Edifici"
@@ -77,7 +77,7 @@ const state = {
             values: []
         }
     }
-    };
+};
 
 const defaultProps = {
     rowsCount: state.features.length,
@@ -109,15 +109,15 @@ describe("Test ResizableGrid Component", () => {
         let comp = ReactDOM.render(
             <ResizableGrid
                 {...defaultProps}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(comp).toExist();
     });
 
-    it('Test ResizableGrid re-rendering for entering in the componentWillReceiveProps', () => {
+    it('Test ResizableGrid re-rendering for entering in the UNSAFE_componentWillReceiveProps', () => {
         let comp = ReactDOM.render(
             <ResizableGrid
                 {...defaultProps}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(comp).toExist();
         let comp2 = ReactDOM.render(
             <ResizableGrid
@@ -128,7 +128,7 @@ describe("Test ResizableGrid Component", () => {
                     height: false,
                     size: 0.35
                 }}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(comp2).toExist();
 
         let comp3 = ReactDOM.render(
@@ -140,7 +140,7 @@ describe("Test ResizableGrid Component", () => {
                     height: false,
                     size: 0.5
                 }}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(comp3).toExist();
 
     });

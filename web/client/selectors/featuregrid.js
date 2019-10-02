@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -32,6 +32,7 @@ const geomTypeSelectedFeatureSelector = state => {
         const geomDesc = findGeometryProperty(desc);
         return geomDesc && geomDesc.localType;
     }
+    return null;
 };
 
 
@@ -73,7 +74,7 @@ const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLay
  * @static
  */
 module.exports = {
-  /**
+    /**
    * selects the state of featuregrid open
    * @memberof selectors.featuregrid
    * @param  {object}  state applications state
@@ -81,7 +82,7 @@ module.exports = {
    */
     isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
     getAttributeFilters,
-  /**
+    /**
    * get a filter for an attribute
    * @memberof selectors.featuregrid
    * @param  {object} state Application's state
@@ -91,7 +92,7 @@ module.exports = {
     getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
     selectedLayerIdSelector,
     getCustomAttributeSettings,
-  /**
+    /**
    * Get's the title of the selected layer
    * @memberof selectors.featuregrid
    * @param  {object} state the application's state
@@ -134,6 +135,7 @@ module.exports = {
             const layerId = selectedLayerIdSelector(state);
             return layerDimensionSelectorCreator({id: layerId}, 'time')(state);
         }
+        return null;
     },
     timeSyncActive: state => get(state, "featuregrid.timeSync", false),
     showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),

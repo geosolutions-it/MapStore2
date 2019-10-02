@@ -79,7 +79,7 @@ export default class MeasurementSupport extends React.Component {
     /**
      * we assume that only valid features are passed to the draw tools
      */
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ||
             /* check also when a measure tool is enabled
              * if so the first condition does not match
@@ -185,20 +185,20 @@ export default class MeasurementSupport extends React.Component {
         this.source = new VectorSource();
         let styles = [
             new Style({
-            fill: new Fill({
-                color: 'rgba(255, 255, 255, 0.2)'
-            }),
-            stroke: new Stroke({
-                color: '#ffcc33',
-                width: 2
-            }),
-            image: new CircleStyle({
-                radius: 7,
                 fill: new Fill({
-                    color: '#ffcc33'
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                stroke: new Stroke({
+                    color: '#ffcc33',
+                    width: 2
+                }),
+                image: new CircleStyle({
+                    radius: 7,
+                    fill: new Fill({
+                        color: '#ffcc33'
+                    })
                 })
-            })
-        })];
+            })];
         let startEndPointStyles = [];
         let applyStartEndPointStyle = startEndPoint || startEndPoint === true;
         if (applyStartEndPointStyle || startEndPoint === undefined ) {
@@ -334,7 +334,7 @@ export default class MeasurementSupport extends React.Component {
      */
     pointerMoveHandler = function(evt) {
         if (evt.dragging) {
-            return null;
+            return;
         }
         /** @type {string} */
         let helpMsg = getMessageById(this.context.messages, "measureSupport.startDrawing");

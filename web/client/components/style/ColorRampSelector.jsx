@@ -21,7 +21,7 @@ class ColorRampSelector extends React.Component {
         ramp: 'Blues'
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             ramp: this.props.ramp
         });

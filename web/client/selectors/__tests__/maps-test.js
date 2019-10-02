@@ -40,23 +40,23 @@ const mapsState = {
         start: 4,
         totalCount: 4,
         results: [
-        {
-          canDelete: true,
-          canEdit: true,
-          canCopy: true,
-          creation,
-          description,
-          id: mapId,
-          name,
-          thumbnail,
-          details,
-          detailsText,
-          owner: 'admin',
-          permissions: [
-              {name: "name"}
-          ]
-        }
-      ]
+            {
+                canDelete: true,
+                canEdit: true,
+                canCopy: true,
+                creation,
+                description,
+                id: mapId,
+                name,
+                thumbnail,
+                details,
+                detailsText,
+                owner: 'admin',
+                permissions: [
+                    {name: "name"}
+                ]
+            }
+        ]
     }
 };
 describe('Test maps selectors', () => {

@@ -60,10 +60,11 @@ module.exports = compose(
     }),
     withPropsOnChange(["service", "services"], ({services = {}, service}) => {
         return {
-        data: service && (services[service] || []).map(req => ({label: req, value: req.toUpperCase()})),
-        parentsFilter: {service},
-        disabled: !service
-    }; }),
+            data: service && (services[service] || []).map(req => ({label: req, value: req.toUpperCase()})),
+            parentsFilter: {service},
+            disabled: !service
+        };
+    }),
     withHandlers({
         onValueSelected: ({setOption = () => {}}) => filterTerm => {
             setOption({key: "request", value: filterTerm});

@@ -12,14 +12,14 @@ const parsers = {
 };
 class NumberEditor extends AttributeEditor {
     static propTypes = {
-      value: PropTypes.oneOfType([
-          PropTypes.string,
-          PropTypes.number]),
-      onBlur: PropTypes.func,
-      inputProps: PropTypes.object,
-      dataType: PropTypes.string,
-      isValid: PropTypes.func,
-      column: PropTypes.object
+        value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number]),
+        onBlur: PropTypes.func,
+        inputProps: PropTypes.object,
+        dataType: PropTypes.string,
+        isValid: PropTypes.func,
+        column: PropTypes.object
     };
     static defaultProps = {
         isValid: () => true,
@@ -32,6 +32,7 @@ class NumberEditor extends AttributeEditor {
                 if (parsers[this.props.dataType] || parsers.number) {
                     return this.props.isValid(value[this.props.column && this.props.column.key]);
                 }
+                return false;
             } catch (e) {
                 return false;
             }
@@ -49,11 +50,11 @@ class NumberEditor extends AttributeEditor {
     render() {
         return (<input
             {...this.props.inputProps}
-            ref={(node) => this.input = node}
+            ref={(node) => {this.input = node;}}
             type="number"
             className="form-control"
             defaultValue={this.props.value}
-             />);
+        />);
     }
 }
 

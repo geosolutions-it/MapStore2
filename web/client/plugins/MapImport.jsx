@@ -47,7 +47,7 @@ module.exports = {
                 updateBBox,
                 setLoading,
                 onClose: toggleControl.bind(null, 'mapimport', null)
-                })(Import);
+            })(Import);
 
             resolve(ImportPlugin);
         });

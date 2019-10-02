@@ -248,5 +248,5 @@ module.exports = {
         }
     }),
     reducers: {catalog: require('../reducers/catalog')},
-    epics: require("../epics/catalog")(API)
+    epics: require("../epics/catalog").default(API)
 };

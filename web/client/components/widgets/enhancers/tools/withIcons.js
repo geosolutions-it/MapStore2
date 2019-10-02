@@ -22,12 +22,12 @@ module.exports = () =>
             ({ icons = [], widgetTools }) => ({
                 icons: hasIcons(widgetTools)
                     ? (<Toolbar
-                            btnDefaultProps={{
-                                className: 'no-border',
-                                bsSize: 'xs',
-                                bsStyle: 'link'
-                            }}
-                            buttons={widgetTools.filter(isIcon)} />)
+                        btnDefaultProps={{
+                            className: 'no-border',
+                            bsSize: 'xs',
+                            bsStyle: 'link'
+                        }}
+                        buttons={widgetTools.filter(isIcon)} />)
                     : icons
             })
         )

@@ -113,21 +113,21 @@ class Toolbar extends React.Component {
             style={this.props.style}
             panelStyle={this.props.panelStyle}
             panelClassName={this.props.panelClassName}
-            />);
+        />);
     }
 }
 
 const toolbarSelector = stateSelector => createSelector([
-        state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
-        state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
-        isFeatureGridOpen,
-        state => mapLayoutValuesSelector(state, {right: true, bottom: true})
-    ], (active, allVisible, featuregridOpen, style) => ({
-        active,
-        allVisible,
-        stateSelector,
-        layout: featuregridOpen ? 'horizontal' : 'vertical',
-        style
+    state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
+    state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
+    isFeatureGridOpen,
+    state => mapLayoutValuesSelector(state, {right: true, bottom: true})
+], (active, allVisible, featuregridOpen, style) => ({
+    active,
+    allVisible,
+    stateSelector,
+    layout: featuregridOpen ? 'horizontal' : 'vertical',
+    style
 }));
 
 module.exports = {

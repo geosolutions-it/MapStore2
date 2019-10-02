@@ -60,7 +60,7 @@ class CesiumMap extends React.Component {
 
     state = { };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         /*
          this prevent the Safari browser to zoom and mess up with the view.
          added only for Safari's browsers (mobile and not) bescause from safari 10 it
@@ -114,7 +114,7 @@ class CesiumMap extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
@@ -128,7 +128,7 @@ class CesiumMap extends React.Component {
         this.clickStream$.complete();
         this.pauserStream$.complete();
         this.hand.destroy();
-        // see comment in componentWillMount
+        // see comment in UNSAFE_componentWillMount
         document.removeEventListener('gesturestart', this.gestureStartListener );
         this.map.destroy();
     }
@@ -181,16 +181,16 @@ class CesiumMap extends React.Component {
         if (rawOptions.terrainProvider) {
             let {type, ...tpOptions} = rawOptions.terrainProvider;
             switch (type) {
-                case "cesium": {
-                    overrides.terrainProvider = new Cesium.CesiumTerrainProvider(tpOptions);
-                    break;
-                }
-                case "ellipsoid": {
-                    overrides.terrainProvider = new Cesium.EllipsoidTerrainProvider();
-                    break;
-                }
-                default:
-                    break;
+            case "cesium": {
+                overrides.terrainProvider = new Cesium.CesiumTerrainProvider(tpOptions);
+                break;
+            }
+            case "ellipsoid": {
+                overrides.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+                break;
+            }
+            default:
+                break;
             }
         }
         return assign({}, rawOptions, overrides);
@@ -255,7 +255,7 @@ class CesiumMap extends React.Component {
                                !isNearlyEqual(newProps.center.y, currentCenter.latitude);
         const zoomChanged = newProps.zoom !== currentZoom;
 
-         // Do the change at the same time, to avoid glitches
+        // Do the change at the same time, to avoid glitches
         if (centerIsUpdate || zoomChanged) {
             const position = {
                 destination: Cesium.Cartesian3.fromDegrees(
@@ -301,26 +301,26 @@ class CesiumMap extends React.Component {
          * that othewise can not be distinguished from a normal click event.
          */
         pauserStream$
-          .filter( ev => ev.type === types.PINCH_END )
-          .switchMap( () => Rx.Observable.of(true).concat(Rx.Observable.of(false).delay(500)))
-          .startWith(false)
-          .switchMap(paused => {
-              // pause is realized by mapping the click stream or an infinite stream
-              return paused ? Rx.Observable.never() : clickStream$;
-          })
-          .filter( ev => ev.type === types.LEFT_DOWN )
-          .switchMap(({movement}) =>
-              clickStream$
-                .filter( ev => ev.type === types.LEFT_CLICK )
-                .takeUntil(
-                    Rx.Observable.timer(500).merge(
-                        clickStream$
-                            .filter( ev =>
-                                ev.type !== types.LEFT_UP && ev.type !== types.LEFT_CLICK
+            .filter( ev => ev.type === types.PINCH_END )
+            .switchMap( () => Rx.Observable.of(true).concat(Rx.Observable.of(false).delay(500)))
+            .startWith(false)
+            .switchMap(paused => {
+                // pause is realized by mapping the click stream or an infinite stream
+                return paused ? Rx.Observable.never() : clickStream$;
+            })
+            .filter( ev => ev.type === types.LEFT_DOWN )
+            .switchMap(({movement}) =>
+                clickStream$
+                    .filter( ev => ev.type === types.LEFT_CLICK )
+                    .takeUntil(
+                        Rx.Observable.timer(500).merge(
+                            clickStream$
+                                .filter( ev =>
+                                    ev.type !== types.LEFT_UP && ev.type !== types.LEFT_CLICK
                                 || ev.type === types.LEFT_UP && !samePosition(movement && movement.position, ev.movement && ev.movement.position)
-                            )
+                                )
+                        )
                     )
-                )
             ).subscribe(({movement}) => this.onClick(map, movement));
         this.clickStream$ = clickStream$;
         this.pauserStream$ = pauserStream$;

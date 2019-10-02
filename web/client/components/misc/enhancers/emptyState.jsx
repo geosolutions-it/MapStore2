@@ -27,5 +27,5 @@ const DefaultEmptyComponent = require("../EmptyView");
 */
 module.exports = (isEmpty, emptyComponentProps, EmptyComponent = DefaultEmptyComponent) => branch(
     isEmpty,
-   // TODO return proper HOC
-   () => (componentProps) => <EmptyComponent {...(emptyComponentProps && isFunction(emptyComponentProps) ? emptyComponentProps(componentProps) : emptyComponentProps)} />);
+    // TODO return proper HOC
+    () => (componentProps) => <EmptyComponent {...(emptyComponentProps && isFunction(emptyComponentProps) ? emptyComponentProps(componentProps) : emptyComponentProps)} />);

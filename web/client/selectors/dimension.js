@@ -59,7 +59,7 @@ const timeSequenceSelector = createSelector(
                 ...acc,
                 ...data[cur] && data[cur].values || []
             ],
-            [])
+        [])
         .sort() || []);
 
 
@@ -88,6 +88,7 @@ const layerDimensionRangeSelector = (state, layerId) => {
             end: values[values.length - 1]
         };
     }
+    return null;
 };
 
 module.exports = {

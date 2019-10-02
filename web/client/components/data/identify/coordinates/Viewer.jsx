@@ -24,11 +24,11 @@ const AeronauticalCoordinate = decimalToAeronautical(({
     integerFormat,
     decimalFormat
 }) => (<span className="coordinate-dms">
-        <NumberFormat key="latD" numberParams={integerFormat} value={degrees} />
-        <span>°&nbsp;</span><NumberFormat key="latM" numberParams={integerFormat} value={minutes} /><span>&apos;&nbsp;</span>
-        <NumberFormat key="latS" numberParams={decimalFormat} value={seconds} /><span>&apos;&apos;&nbsp;</span>
+    <NumberFormat key="latD" numberParams={integerFormat} value={degrees} />
+    <span>°&nbsp;</span><NumberFormat key="latM" numberParams={integerFormat} value={minutes} /><span>&apos;&nbsp;</span>
+    <NumberFormat key="latS" numberParams={decimalFormat} value={seconds} /><span>&apos;&apos;&nbsp;</span>
         &nbsp;<span>{direction}</span>
-    </span>));
+</span>));
 
 /**
  * Display coordinates in "decimal" or "aeronautical" formats.
@@ -40,20 +40,20 @@ module.exports = ({
     coordinate = {},
     formatCoord = "decimal",
     className
-    }) =>
+}) =>
     (<Row className={className}>
-            {
-                (<Col xs={12}>
-                    {(isNil(coordinate.lat) || isNil(coordinate.lon))
-                        ? null
-                        : formatCoord === "decimal"
+        {
+            (<Col xs={12}>
+                {(isNil(coordinate.lat) || isNil(coordinate.lon))
+                    ? null
+                    : formatCoord === "decimal"
                         ? <div className="ms-coordinates-decimal">Lat: <NumberFormat value={(Math.round(coordinate.lat * 100000) / 100000)} /> - Long: <NumberFormat value={coordinate.lon} /></div>
                         : <div className="ms-coordinates-aeronautical">
                             <span>Lat: <AeronauticalCoordinate integerFormat={integerFormat} decimalFormat={decimalFormat} value={coordinate.lat} /></span>
                             <span> - </span>
                             <span> Long: <AeronauticalCoordinate coordinate="lon" integerFormat={integerFormat} decimalFormat={decimalFormat} value={coordinate.lon} /></span>
                         </div>
-                        }
-                </Col>)}
-        </Row>);
+                }
+            </Col>)}
+    </Row>);
 

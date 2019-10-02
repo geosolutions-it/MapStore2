@@ -79,14 +79,14 @@ const parseRules = ({accessInfo, postProcessValue, reduceFun}) => rawRules => {
  * @param {object} [options.accessInfo="accessInfo"]: the property name of the property to use to retrieve data
  */
 module.exports = (name, { asObject = false, postProcessValue = v => v, reduceFun, accessInfo = "accessInfo" } = {}) =>
-        withPropsOnChange(
-            [name, accessInfo],
-            (props = {}) => (
-                asObject
-                    ? {
-                        [name]: mapValues(props[name], parseRules({accessInfo: props[accessInfo], postProcessValue, reduceFun}))
-                    }
-                    : {
-                        [name]: parseRules({accessInfo: props[accessInfo], postProcessValue, reduceFun })(props[name])
-                    })
-        );
+    withPropsOnChange(
+        [name, accessInfo],
+        (props = {}) => (
+            asObject
+                ? {
+                    [name]: mapValues(props[name], parseRules({accessInfo: props[accessInfo], postProcessValue, reduceFun}))
+                }
+                : {
+                    [name]: parseRules({accessInfo: props[accessInfo], postProcessValue, reduceFun })(props[name])
+                })
+    );

@@ -76,6 +76,7 @@ const readFile = (onWarnings) => (file) => {
     if (type === 'application/json') {
         return FileUtils.readJson(file).then(f => [{...f, "fileName": file.name}]);
     }
+    return null;
 };
 
 const isGeoJSON = json => json && json.features && json.features.length !== 0;
@@ -92,30 +93,30 @@ module.exports = compose(
             const { handler: onDrop, stream: drop$ } = createEventHandler();
             const { handler: onWarnings, stream: warnings$} = createEventHandler();
             return props$.combineLatest(
-                    drop$.switchMap(
-                        files => Rx.Observable.from(files)
-                            .flatMap(checkFileType) // check file types are allowed
-                            .flatMap(readFile(onWarnings)) // read files to convert to json
-                            .reduce((result, jsonObjects) => ({ // divide files by type
-                                layers: (result.layers || [])
-                                    .concat(
-                                        jsonObjects.filter(json => isGeoJSON(json))
-                                            .map(json => ({...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
-                                    ),
-                                maps: (result.maps || [])
-                                    .concat(
-                                        jsonObjects.filter(json => isMap(json))
+                drop$.switchMap(
+                    files => Rx.Observable.from(files)
+                        .flatMap(checkFileType) // check file types are allowed
+                        .flatMap(readFile(onWarnings)) // read files to convert to json
+                        .reduce((result, jsonObjects) => ({ // divide files by type
+                            layers: (result.layers || [])
+                                .concat(
+                                    jsonObjects.filter(json => isGeoJSON(json))
+                                        .map(json => ({...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
+                                ),
+                            maps: (result.maps || [])
+                                .concat(
+                                    jsonObjects.filter(json => isMap(json))
 
-                                    )
-                            }), {})
-                            .map(filesMap => ({
-                                loading: false,
-                                files: filesMap
-                            }))
-                            .catch(error => Rx.Observable.of({error, loading: false}))
-                            .startWith({ loading: true})
+                                )
+                        }), {})
+                        .map(filesMap => ({
+                            loading: false,
+                            files: filesMap
+                        }))
+                        .catch(error => Rx.Observable.of({error, loading: false}))
+                        .startWith({ loading: true})
                 )
-                .startWith({}),
+                    .startWith({}),
                 (p1, p2) => ({
                     ...p1,
                     ...p2,

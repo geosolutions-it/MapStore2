@@ -51,7 +51,7 @@ class HighlightFeatureSupport extends React.Component {
         return nx.status !== pr.status || nx.layer !== pr.layer || nx.status === 'update' && nx.features.toString() !== pr.features.toString();
     }
 
-    componentWillUpdate(np) {
+    UNSAFE_componentWillUpdate(np) {
         switch (np.status) {
         case "enabled": {
             this.setLayer();

@@ -56,20 +56,20 @@ const HomeButton = connect(() => ({}), {
 const FeedbackMaskPlugin = compose(
     connect(feedbackMaskPluginSelector),
     withMask(
-    ({loading, enabled}) => loading || enabled,
-    props => props.loading ?
-        <span>
-            <div className="_ms2_init_spinner _ms2_init_center">
-                <div/>
-            </div>
-            <div className="_ms2_init_text _ms2_init_center">
-                {props.loadingText || props.mode && <Message msgId={`${props.mode}.loadingSpinner`}/> || 'Loading MapStore'}
-            </div>
-        </span>
-        :
-        <ResourceUnavailable {...props} homeButton={<HomeButton />} />, {
-        className: 'ms2-loading-mask'
-    })
+        ({loading, enabled}) => loading || enabled,
+        props => props.loading ?
+            <span>
+                <div className="_ms2_init_spinner _ms2_init_center">
+                    <div/>
+                </div>
+                <div className="_ms2_init_text _ms2_init_center">
+                    {props.loadingText || props.mode && <Message msgId={`${props.mode}.loadingSpinner`}/> || 'Loading MapStore'}
+                </div>
+            </span>
+            :
+            <ResourceUnavailable {...props} homeButton={<HomeButton />} />, {
+            className: 'ms2-loading-mask'
+        })
 )(() => null);
 
 module.exports = {

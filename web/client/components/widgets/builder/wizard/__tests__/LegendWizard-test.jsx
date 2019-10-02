@@ -30,18 +30,18 @@ describe('LegendWizard component', () => {
     });
     it('LegendWizard rendering with layers', () => {
         const LAYERS = [{
-                name: 'layer:00',
-                title: 'Layer',
-                visibility: true,
-                type: 'wms'
-            },
-            {
-                name: 'layer:01',
-                title: 'Layer:01',
-                visibility: false,
-                type: 'wms',
-                opacity: 0.5
-            }
+            name: 'layer:00',
+            title: 'Layer',
+            visibility: true,
+            type: 'wms'
+        },
+        {
+            name: 'layer:01',
+            title: 'Layer:01',
+            visibility: false,
+            type: 'wms',
+            opacity: 0.5
+        }
         ];
         const dependencies = { layers: LAYERS };
         ReactDOM.render(<LegendWizard valid dependencies={dependencies} />, document.getElementById("container"));

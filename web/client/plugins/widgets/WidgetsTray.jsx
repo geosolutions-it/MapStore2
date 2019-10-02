@@ -74,7 +74,7 @@ class WidgetsTray extends React.Component {
         toolsOptions: PropTypes.object,
         items: PropTypes.array,
         expanded: PropTypes.bool,
-        setExpanded: PropTypes.fun
+        setExpanded: PropTypes.func
     };
     static defaultProps = {
         enabled: true,
@@ -110,8 +110,8 @@ module.exports = compose(
         trayWidgets,
         (widgets = []) => ({ widgets })
     ), {
-            toggleTray
-        }),
+        toggleTray
+    }),
     filterHiddenWidgets,
     withProps(({ widgets = [] }) => ({
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
