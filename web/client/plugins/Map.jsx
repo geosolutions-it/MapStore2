@@ -244,7 +244,7 @@ class MapPlugin extends React.Component {
         canRender: true
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {shouldLoadFont, fonts} = this.props;
 
         // load each font before rendering (see issue #3155)
@@ -258,7 +258,7 @@ class MapPlugin extends React.Component {
                     }).catch(() => {
                         this.props.onFontError({family: f});
                     }
-                ))
+                    ))
             ).then(() => {
                 this.setState({canRender: true});
             });
@@ -267,7 +267,7 @@ class MapPlugin extends React.Component {
         this.updatePlugins(this.props);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
@@ -275,16 +275,16 @@ class MapPlugin extends React.Component {
 
     getHighlightLayer = (projection, index) => {
         return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}}>
-                    {this.props.features.map( (feature) => {
-                        return (<plugins.Feature
-                            msId={feature.id}
-                            key={feature.id}
-                            crs={projection}
-                            type={feature.type}
-                            style={feature.style || null }
-                            geometry={feature.geometry}/>);
-                    })}
-                </plugins.Layer>);
+            {this.props.features.map( (feature) => {
+                return (<plugins.Feature
+                    msId={feature.id}
+                    key={feature.id}
+                    crs={projection}
+                    type={feature.type}
+                    style={feature.style || null }
+                    geometry={feature.geometry}/>);
+            })}
+        </plugins.Layer>);
     };
 
     getTool = (tool) => {
@@ -370,7 +370,7 @@ class MapPlugin extends React.Component {
                 alignItems: "center"
             }} className="mapErrorMessage">
                 <Message msgId="map.loadingerror"/>:
-                    {this.props.loadingError}
+                {this.props.loadingError}
             </div>);
         }
         return (<div style={{
@@ -379,9 +379,9 @@ class MapPlugin extends React.Component {
             display: "flex",
             justifyContent: "center",
             alignItems: "center"
-            }} className="mapLoadingMessage">
-                {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
-                <Message msgId={this.props.mapLoadingMessage}/>
+        }} className="mapLoadingMessage">
+            {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
+            <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     }
     filterLayer = (layer) => {

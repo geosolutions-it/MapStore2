@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Navigation from '../Navigation';
 import ReactTestUtils from "react-dom/test-utils";
-import STORY from 'json-loader!../../../../test-resources/geostory/sampleStory_1.json';
+import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 
 
 describe('GeoStory Navigation component', () => {

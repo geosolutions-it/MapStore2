@@ -26,27 +26,27 @@ module.exports = pages$ => props$ => props$.switchMap(({
     onLoad = () => { },
     onLoadError = () => { }
 }) => pages$.switchMap(({ pagesRange, pagination = {} }, { }) => getLayerJSONFeature(layer, filter, {
-        ...getCurrentPaginationOptions(pagesRange, pages, size),
-        timeout: 15000,
-        totalFeatures: pagination.totalFeatures, // this is needed to allow workaround of GEOS-7233
-        propertyName: options.propertyName,
-        viewParams: options.viewParams
-        // TODO: defaultSortOptions - to skip primary-key issues
+    ...getCurrentPaginationOptions(pagesRange, pages, size),
+    timeout: 15000,
+    totalFeatures: pagination.totalFeatures, // this is needed to allow workaround of GEOS-7233
+    propertyName: options.propertyName,
+    viewParams: options.viewParams
+    // TODO: defaultSortOptions - to skip primary-key issues
+})
+    .do(data => onLoad({
+        ...updatePages(data, pagesRange, { pages, features }, { ...getCurrentPaginationOptions(pagesRange, pages, size), size, maxStoredPages }),
+        pagination: {
+            totalFeatures: data.totalFeatures
+        }
+    }))
+    .map(() => ({
+        loading: false
+    }))
+    .catch((e) => Rx.Observable.of({
+        loading: false,
+        error: e
+    }).do(onLoadError))
+    .startWith({
+        loading: true
     })
-        .do(data => onLoad({
-            ...updatePages(data, pagesRange, { pages, features }, { ...getCurrentPaginationOptions(pagesRange, pages, size), size, maxStoredPages }),
-            pagination: {
-                totalFeatures: data.totalFeatures
-            }
-        }))
-        .map(() => ({
-            loading: false
-        }))
-        .catch((e) => Rx.Observable.of({
-            loading: false,
-            error: e
-        }).do(onLoadError))
-        .startWith({
-            loading: true
-        })
-    ));
+));

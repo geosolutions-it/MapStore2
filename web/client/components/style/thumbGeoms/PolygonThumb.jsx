@@ -43,17 +43,17 @@ class PolygonThumb extends React.Component {
         const {height, width, x, y} = this.props.rectParams;
         return (
             <div className="ms-thumb-geom">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox={this.props.viewBox}>
-                <rect width={width} height={height} x={x} y={y} style={{
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox={this.props.viewBox}>
+                    <rect width={width} height={height} x={x} y={y} style={{
                         fill: fillColor || this.props.fill,
                         strokeWidth: weight || this.props.strokeWidth,
                         stroke: color || this.props.stroke,
                         fillOpacity: fillOpacity || this.props.fillOpacity,
                         opacity: opacity || this.props.opacity
                     }}
-                />
-            </svg>
-        </div>
+                    />
+                </svg>
+            </div>
         );
     }
 }

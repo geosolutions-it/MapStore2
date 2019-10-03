@@ -37,19 +37,20 @@ const patterns = {
                 while (idx < len && depth > 0) {
                     idx++;
                     switch (text.charAt(idx)) {
-                        case '(':
-                            depth++;
-                            break;
-                        case ')':
-                            depth--;
-                            break;
-                        default:
+                    case '(':
+                        depth++;
+                        break;
+                    case ')':
+                        depth--;
+                        break;
+                    default:
                         // in default case, do nothing
                     }
                 }
             }
             return [text.substr(0, idx + 1)];
         }
+        return null;
     },
     END: /^$/
 };
@@ -153,48 +154,48 @@ const buildAst = (tokens) => {
     while (tokens.length) {
         let tok = tokens.shift();
         switch (tok.type) {
-            case "PROPERTY":
-            case "GEOMETRY":
-            case "VALUE":
-                postfix.push(tok);
-                break;
-            case "COMPARISON":
-            case "BETWEEN":
-            case "IS_NULL":
-            case "LOGICAL":
-                let p = precedence[tok.type];
+        case "PROPERTY":
+        case "GEOMETRY":
+        case "VALUE":
+            postfix.push(tok);
+            break;
+        case "COMPARISON":
+        case "BETWEEN":
+        case "IS_NULL":
+        case "LOGICAL":
+            let p = precedence[tok.type];
 
-                while (operatorStack.length > 0 &&
+            while (operatorStack.length > 0 &&
                     (precedence[operatorStack[operatorStack.length - 1].type] <= p)
-                ) {
-                    postfix.push(operatorStack.pop());
-                }
+            ) {
+                postfix.push(operatorStack.pop());
+            }
 
-                operatorStack.push(tok);
-                break;
-            case "SPATIAL":
-            case "NOT":
-            case "LPAREN":
-                operatorStack.push(tok);
-                break;
-            case "RPAREN":
-                while (operatorStack.length > 0 &&
+            operatorStack.push(tok);
+            break;
+        case "SPATIAL":
+        case "NOT":
+        case "LPAREN":
+            operatorStack.push(tok);
+            break;
+        case "RPAREN":
+            while (operatorStack.length > 0 &&
                     (operatorStack[operatorStack.length - 1].type !== "LPAREN")
-                ) {
-                    postfix.push(operatorStack.pop());
-                }
-                operatorStack.pop(); // toss out the LPAREN
+            ) {
+                postfix.push(operatorStack.pop());
+            }
+            operatorStack.pop(); // toss out the LPAREN
 
-                if (operatorStack.length > 0 &&
+            if (operatorStack.length > 0 &&
                     operatorStack[operatorStack.length - 1].type === "SPATIAL") {
-                    postfix.push(operatorStack.pop());
-                }
-                break;
-            case "COMMA":
-            case "END":
-                break;
-            default:
-                throw new Error("Unknown token type " + tok.type);
+                postfix.push(operatorStack.pop());
+            }
+            break;
+        case "COMMA":
+        case "END":
+            break;
+        default:
+            throw new Error("Unknown token type " + tok.type);
         }
     }
 
@@ -205,114 +206,113 @@ const buildAst = (tokens) => {
     function buildTree() {
         let tok = postfix.pop();
         switch (tok.type) {
-            case "LOGICAL":
-                let rhs = buildTree();
-                let lhs = buildTree();
+        case "LOGICAL":
+            let rhs = buildTree();
+            let lhs = buildTree();
+            return ({
+                filters: [lhs, rhs],
+                type: logical[tok.text.toUpperCase()]
+            });
+        case "NOT":
+            let operand = buildTree();
+            return ({
+                filters: [operand],
+                type: logical.NOT
+            });
+        case "BETWEEN": {
+            postfix.pop(); // unneeded AND token here
+            let max = buildTree();
+            let min = buildTree();
+            const property = buildTree();
+            return ({
+                property,
+                lowerBoundary: min,
+                upperBoundary: max,
+                type: operators.BETWEEN
+            });
+        }
+        case "COMPARISON": {
+            let value = buildTree();
+            const property = buildTree();
+            return ({
+                property,
+                value: value,
+                type: operators[tok.text.toUpperCase()]
+            });
+        }
+        case "IS_NULL": {
+            const property = buildTree();
+            return ({
+                property,
+                type: operators[tok.text.toUpperCase()]
+            });
+        }
+        case "VALUE":
+            let match = tok.text.match(/^'(.*)'$/);
+            if (match) {
+                return match[1].replace(/''/g, "'");
+            }
+            return Number(tok.text);
+        case "SPATIAL":
+            switch (tok.text.toUpperCase()) {
+            case "BBOX": {
+                let maxy = buildTree();
+                let maxx = buildTree();
+                let miny = buildTree();
+                let minx = buildTree();
+                let property = buildTree();
+
                 return ({
-                    filters: [lhs, rhs],
-                    type: logical[tok.text.toUpperCase()]
-                });
-            case "NOT":
-                let operand = buildTree();
-                return ({
-                    filters: [operand],
-                    type: logical.NOT
-                });
-            case "BETWEEN": {
-                postfix.pop(); // unneeded AND token here
-                let max = buildTree();
-                let min = buildTree();
-                const property = buildTree();
-                return ({
+                    type: spatialOperators.BBOX,
                     property,
-                    lowerBoundary: min,
-                    upperBoundary: max,
-                    type: operators.BETWEEN
+                    value: [minx, miny, maxx, maxy] // TODO: evaluate this special case
                 });
             }
-            case "COMPARISON": {
+            case "INTERSECTS": {
+                const value = buildTree();
+                const property = buildTree();
+                return ({
+                    type: spatialOperators.INTERSECTS,
+                    property,
+                    value
+                });
+            }
+            case "WITHIN": {
+                let value = buildTree();
+                let property = buildTree();
+                return ({
+                    type: spatialOperators.WITHIN,
+                    property,
+                    value
+                });
+            }
+            case "CONTAINS": {
                 let value = buildTree();
                 const property = buildTree();
                 return ({
+                    type: spatialOperators.CONTAINS,
                     property,
-                    value: value,
-                    type: operators[tok.text.toUpperCase()]
+                    value
                 });
             }
-            case "IS_NULL": {
+            case "DWITHIN": {
+                let distance = buildTree();
+                let value = buildTree();
                 const property = buildTree();
                 return ({
+                    type: spatialOperators.DWITHIN,
+                    value,
                     property,
-                    type: operators[tok.text.toUpperCase()]
+                    distance: Number(distance)
                 });
             }
-            case "VALUE":
-                let match = tok.text.match(/^'(.*)'$/);
-                if (match) {
-                    return match[1].replace(/''/g, "'");
-                }
-                return Number(tok.text);
-            case "SPATIAL":
-                switch (tok.text.toUpperCase()) {
-                    case "BBOX": {
-                        let maxy = buildTree();
-                        let maxx = buildTree();
-                        let miny = buildTree();
-                        let minx = buildTree();
-                        let property = buildTree();
-
-                        return ({
-                            type: spatialOperators.BBOX,
-                            property,
-                            value: [minx, miny, maxx, maxy] // TODO: evaluate this special case
-                        });
-                    }
-                    case "INTERSECTS": {
-                        const value = buildTree();
-                        const property = buildTree();
-                        return ({
-                            type: spatialOperators.INTERSECTS,
-                            property,
-                            value
-                        });
-                    }
-                    case "WITHIN": {
-                        let value = buildTree();
-                        let property = buildTree();
-                        return ({
-                            type: spatialOperators.WITHIN,
-                            property,
-                            value
-                        });
-                    }
-                    case "CONTAINS": {
-                        let value = buildTree();
-                        const property = buildTree();
-                        return ({
-                            type: spatialOperators.CONTAINS,
-                            property,
-                            value
-                        });
-                    }
-                    case "DWITHIN": {
-                        let distance = buildTree();
-                        let value = buildTree();
-                        const property = buildTree();
-                        return ({
-                            type: spatialOperators.DWITHIN,
-                            value,
-                            property,
-                            distance: Number(distance)
-                        });
-                    }
-                    default:
-                        break;
-                }
-                break;
-            case "GEOMETRY":
-                return fromWKT(tok.text);
             default:
-                return tok.text;
+                return null;
+            }
+        case "GEOMETRY":
+            return fromWKT(tok.text);
+        default:
+            return tok.text;
         }
     }
 

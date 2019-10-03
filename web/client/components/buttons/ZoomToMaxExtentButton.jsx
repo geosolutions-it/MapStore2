@@ -67,7 +67,7 @@ class ZoomToMaxExtentButton extends React.Component {
                 onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
                 className={this.props.className}
                 bsStyle={this.props.bsStyle}
-                >
+            >
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}

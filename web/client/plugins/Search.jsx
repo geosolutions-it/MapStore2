@@ -190,7 +190,7 @@ const SearchPlugin = connect((state) => ({
 }), {
     onUpdateResultsStyle: updateResultsStyle
 })(
-class extends React.Component {
+    class extends React.Component {
     static propTypes = {
         splitTools: PropTypes.bool,
         showOptions: PropTypes.bool,
@@ -233,7 +233,7 @@ class extends React.Component {
     };
 
     getSearchOptions = () => {
-        const{ searchOptions, textSearchConfig} = this.props;
+        const { searchOptions, textSearchConfig } = this.props;
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
             return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
         }
@@ -253,19 +253,19 @@ class extends React.Component {
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
-            />);
+        />);
         if (this.props.withToggle === true) {
             return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
         }
         if (isArray(this.props.withToggle)) {
             return (
-                    <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                        <ToggleButton/>
-                        {this.props.enabled ? search : null}
-                    </MediaQuery>
-                    <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
-                        {search}
-                    </MediaQuery>
+                <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
+                    <ToggleButton/>
+                    {this.props.enabled ? search : null}
+                </MediaQuery>
+                <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
+                    {search}
+                </MediaQuery>
                 </span>
             );
         }
@@ -278,17 +278,17 @@ class extends React.Component {
                 id="search-help"
                 key="seachBar-help"
                 helpText={<Message msgId="helptexts.searchBar"/>}>
-                    {this.getSearchAndToggleButton()}
-                </HelpWrapper>
-                <SearchResultList
-                    fitToMapSize={this.props.fitResultsToMapSize}
-                    searchOptions={this.props.searchOptions}
-                    onUpdateResultsStyle={this.props.onUpdateResultsStyle}
-                    key="nominatimresults"/>
-            </span>)
+                {this.getSearchAndToggleButton()}
+            </HelpWrapper>
+            <SearchResultList
+                fitToMapSize={this.props.fitResultsToMapSize}
+                searchOptions={this.props.searchOptions}
+                onUpdateResultsStyle={this.props.onUpdateResultsStyle}
+                key="nominatimresults"/>
+        </span>)
         ;
     }
-});
+    });
 
 module.exports = {
     SearchPlugin: assign(SearchPlugin, {

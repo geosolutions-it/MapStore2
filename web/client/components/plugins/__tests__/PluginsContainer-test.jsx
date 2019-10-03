@@ -10,8 +10,6 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PluginsContainer = require('../PluginsContainer');
-const {Provider} = require('react-redux');
-const {connect} = require('react-redux');
 
 class My extends React.Component {
     render() {
@@ -21,15 +19,7 @@ class My extends React.Component {
 }
 const plugins = {
     MyPlugin: My,
-    OtherPlugin: My,
-    WithGlobalRefPlugin: connect(
-        null,
-        null,
-        null,
-        {
-            withRef: true
-        }
-    )(My)
+    OtherPlugin: My
 };
 
 const pluginsCfg = {
@@ -43,17 +33,6 @@ const pluginsCfg = {
 
 const pluginsCfg2 = {
     desktop: ["My", "Other"]
-};
-
-const pluginsCfgRef = {
-    desktop: [
-        {
-            'name': 'WithGlobalRef',
-            'cfg': {
-                'withGlobalRef': true
-            }
-        }
-    ]
 };
 
 describe('PluginsContainer', () => {
@@ -70,7 +49,7 @@ describe('PluginsContainer', () => {
 
     it('checks filterDisabledPlugins one disabled', () => {
         const cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-                plugins={plugins} pluginsConfig={pluginsCfg}/>, document.getElementById("container"));
+            plugins={plugins} pluginsConfig={pluginsCfg}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -90,17 +69,5 @@ describe('PluginsContainer', () => {
 
         const rendered = cmpDom.getElementsByTagName("div");
         expect(rendered.length).toBe(2);
-    });
-    it('checks plugin with withRef = true connect option', () => {
-        const store = {
-            dispatch: () => {},
-            subscribe: () => {},
-            getState: () => ({})
-        };
-        const app = ReactDOM.render(<Provider store={store}><PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-                plugins={plugins} pluginsConfig={pluginsCfgRef}/></Provider>, document.getElementById("container"));
-
-        expect(app).toExist();
-        expect(window.WithGlobalRefPlugin.myFunc).toExist();
     });
 });

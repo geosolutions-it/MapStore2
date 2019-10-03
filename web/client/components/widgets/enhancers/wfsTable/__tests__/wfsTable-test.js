@@ -20,8 +20,8 @@ setObservableConfig(rxjsConfig);
 let mockAxios;
 
 const DATA = {
-    DESCRIBE: require("json-loader!../../../../../test-resources/wfs/describe-pois.json"),
-    WFS: require("json-loader!../../../../../test-resources/wfs/museam.json")
+    DESCRIBE: require("../../../../../test-resources/wfs/describe-pois.json"),
+    WFS: require("../../../../../test-resources/wfs/museam.json")
 };
 
 describe('wfsTable enhancer', () => {

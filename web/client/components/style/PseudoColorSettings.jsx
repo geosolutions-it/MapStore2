@@ -54,31 +54,31 @@ class PseudoColorSettings extends React.Component {
                                 onChange={(v) => this.props.onChange("type", v)} />
                         </Row>
                         <Row style={{paddingTop: 8}}>
-                        <label><Message msgId="pseudocolorsettings.extended"/></label>&nbsp;&nbsp;<input type="checkbox" onChange={(e) => this.props.onChange("extended", e.target.checked)} checked={this.props.extended} />
+                            <label><Message msgId="pseudocolorsettings.extended"/></label>&nbsp;&nbsp;<input type="checkbox" onChange={(e) => this.props.onChange("extended", e.target.checked)} checked={this.props.extended} />
                         </Row>
-                        </Col>
-                        <Col xsOffset={1} xs={8}>
-                            <Row> <label><Message msgId="pseudocolorsettings.colormap"/></label></Row>
-                            <Row style={{marginBottom: "10px"}}>
-                                <ColorMapGrid
-                                    selectEntry={this.selectEntry}
-                                    valueChanged={(colorMap) => this.props.onChange("colorMapEntry", colorMap)}
-                                    entries={this.props.colorMapEntry}/>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={4} xsOffset={4} style={{padding: "0px" }}>
-                            <Button onClick={this.addEntry}>
+                    </Col>
+                    <Col xsOffset={1} xs={8}>
+                        <Row> <label><Message msgId="pseudocolorsettings.colormap"/></label></Row>
+                        <Row style={{marginBottom: "10px"}}>
+                            <ColorMapGrid
+                                selectEntry={this.selectEntry}
+                                valueChanged={(colorMap) => this.props.onChange("colorMapEntry", colorMap)}
+                                entries={this.props.colorMapEntry}/>
+                        </Row>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={4} xsOffset={4} style={{padding: "0px" }}>
+                        <Button onClick={this.addEntry}>
                             <Message msgId="pseudocolorsettings.add"/></Button>
-                        </Col>
-                        <Col xs={4} style={{padding: "0px" }}>
-                            <Button disabled={this.props.selected === null ? true : false }
+                    </Col>
+                    <Col xs={4} style={{padding: "0px" }}>
+                        <Button disabled={this.props.selected === null ? true : false }
                             onClick={this.removeEntry} style={{"float": "right"}}>
                             <Message msgId="pseudocolorsettings.remove"/></Button>
-                        </Col>
-                    </Row>
-              </Grid>
+                    </Col>
+                </Row>
+            </Grid>
         );
     }
 

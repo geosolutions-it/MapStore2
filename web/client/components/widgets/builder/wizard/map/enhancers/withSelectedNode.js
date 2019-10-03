@@ -24,7 +24,7 @@ const traverse = (branch = [], filter) => {
         }
     }
 
-    return undefined; // no match found
+    return null; // no match found
 
 };
 module.exports = withProps(({ nodes = {}, editNode }) => ({

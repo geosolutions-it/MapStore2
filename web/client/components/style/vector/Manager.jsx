@@ -39,7 +39,6 @@ const {
     checkSymbolsError
 } = require('../../../utils/AnnotationsUtils');
 
-/***/
 class Manager extends React.Component {
     static propTypes = {
         style: PropTypes.object,
@@ -89,7 +88,7 @@ class Manager extends React.Component {
     state = {}
 
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         // we assume that the default symbols shape is correctly configured
 
         const styles = castArray(this.props.style);
@@ -139,7 +138,7 @@ class Manager extends React.Component {
         const fill = isFillStyle(style) && isSymbolStyle(style) &&
         (checkSymbolsError(this.props.symbolErrors) ||
         checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))
-        ? null : isFillStyle(style) && <Fill {...stylerProps} key={"fill" + i}/> || null;
+            ? null : isFillStyle(style) && <Fill {...stylerProps} key={"fill" + i}/> || null;
         const text = isTextStyle(style) && <Text {...stylerProps} /> || null;
         const markerType = (isMarkerStyle(style) || isSymbolStyle(style)) && <MarkerType {...stylerProps} pointType={isSymbolStyle(style) ? "symbol" : "marker"} onChangeType={this.changeSymbolType}/> || null;
         const markerGlyph = isMarkerStyle(style) && <MarkerGlyph {...stylerProps} markersOptions={this.props.markersOptions}/> || null;
@@ -162,7 +161,7 @@ class Manager extends React.Component {
         return (<Grid fluid style={{ width: '100%' }} className="ms-style" key={"grid" + i}>
             <SwitchPanel {...switchPanelOptions} key={"switchPanel" + i}>
                 {
-                    /*adding the separator between sections*/
+                    /* adding the separator between sections */
                     sections.reduce((prev, curr, k) => [prev, prev && curr && <span key={"separator" + k}>{separator}</span>, curr])
                 }
             </SwitchPanel>
@@ -185,7 +184,7 @@ class Manager extends React.Component {
                     this.props.onChangeStyle(newStyles);
                 },
                 title: style.title || getStylerTitle(style) + " Style"},
-             i))}</div>);
+            i))}</div>);
     }
     change = (id, values) => {
         const styles = castArray(this.props.style);
@@ -287,17 +286,17 @@ class Manager extends React.Component {
     }
     checkSymbolUrl = ({style, symbolErrors, onLoadingError = this.props.onSetErrorSymbol}) => {
         axios.get(style.symbolUrl)
-        .then(() => {
-            if (!checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape )) {
-                const errors = filter(symbolErrors, s => s !== "loading_symbol" + style.shape);
-                onLoadingError(errors);
-            }
-        })
-        .catch(() => {
-            if (!checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape )) {
-                onLoadingError(symbolErrors.concat(["loading_symbol" + style.shape]));
-            }
-        });
+            .then(() => {
+                if (!checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape )) {
+                    const errors = filter(symbolErrors, s => s !== "loading_symbol" + style.shape);
+                    onLoadingError(errors);
+                }
+            })
+            .catch(() => {
+                if (!checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape )) {
+                    onLoadingError(symbolErrors.concat(["loading_symbol" + style.shape]));
+                }
+            });
     }
 }
 

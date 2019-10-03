@@ -38,7 +38,7 @@ class LeafletLayer extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility);
 
@@ -86,12 +86,12 @@ class LeafletLayer extends React.Component {
             const layer = this.layer;
             const children = layer ? React.Children.map(this.props.children, child => {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName, onClick: this.props.onClick,
-                options: this.props.options || {}}) : null;
+                    options: this.props.options || {}}) : null;
             }) : null;
             return (
-                <noscript>
+                <>
                     {children}
-                </noscript>
+                </>
             );
         }
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.map.id, this.layer);
@@ -143,9 +143,6 @@ class LeafletLayer extends React.Component {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
             }
-            /*if (!this.layer && options.group === "background") {
-                this.props.onCreationError(options);
-            }*/
             this.forceUpdate();
         }
     };

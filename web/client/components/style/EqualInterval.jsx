@@ -70,7 +70,7 @@ class EqualInterval extends React.Component {
     renderErrorPopOver = () => {
         return (
             <Overlay
-            target={() => findDOMNode(this.refs[this.props.error.type])}
+                target={() => findDOMNode(this.refs[this.props.error.type])}
                 show placement="top" >
                 <Popover>
                     <Label bsStyle="danger" > <Message msgId={this.props.error.msg}/></Label>
@@ -95,7 +95,7 @@ class EqualInterval extends React.Component {
                                 format="-#,###.##"
                                 precision={3}
                             />
-                         {this.props.error && this.props.error.type === 'min' ? this.renderErrorPopOver() : null}
+                            {this.props.error && this.props.error.type === 'min' ? this.renderErrorPopOver() : null}
                         </Col></Row>
                     </Col>
                     <Col xs={4}>
@@ -111,7 +111,7 @@ class EqualInterval extends React.Component {
                                 precision={3}
                             />
                             {this.props.error && this.props.error.type === 'max' ? this.renderErrorPopOver() : null}
-                         </Col></Row>
+                        </Col></Row>
                     </Col>
                     <Col xs={4}>
                         <Row>
@@ -129,8 +129,8 @@ class EqualInterval extends React.Component {
                             </Col>
                         </Row>
                     </Col>
-                    </Row>
-                    <Row>
+                </Row>
+                <Row>
                     <Col xs={6} >
                         <Row><Col xs={12} >
                             <label><Message msgId="equalinterval.ramp"/></label>
@@ -145,12 +145,12 @@ class EqualInterval extends React.Component {
                     </Col>
                     <Col xs={6}>
                         <Row style={{paddingTop: "25px"}}>
-                        <Col xs={12} >
-                        <Button disabled={this.classifyDisabled()}
-                                onClick={this.generateEqualIntervalRamp}
-                                style={{"float": "right"}}>
-                        <Message msgId="equalinterval.classify"/></Button>
-                        </Col></Row>
+                            <Col xs={12} >
+                                <Button disabled={this.classifyDisabled()}
+                                    onClick={this.generateEqualIntervalRamp}
+                                    style={{"float": "right"}}>
+                                    <Message msgId="equalinterval.classify"/></Button>
+                            </Col></Row>
                     </Col>
                 </Row>
             </Grid>);

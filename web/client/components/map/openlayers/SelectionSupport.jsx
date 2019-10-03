@@ -27,7 +27,7 @@ export default class SelectionSupport extends React.Component {
         selection: {}
     };
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.selection.geomType && newProps.selection.geomType !== this.props.selection.geomType ) {
             this.addDrawInteraction(newProps);
         }

@@ -18,7 +18,7 @@ const NavItem = tooltip(BSNavItem);
 module.exports = ({
     settings, element = {}, tabs = [], activeTab, width, groups,
     setActiveTab = () => { }, onUpdateParams = () => { }, onRetrieveLayerData = () => { }, realtimeUpdate, ...props} = {}) =>
-        (<Row key="ms-toc-settings-navbar" className="ms-row-tab">
+    (<Row key="ms-toc-settings-navbar" className="ms-row-tab">
         <Col xs={12}>
             <Nav bsStyle="tabs" activeKey={activeTab} justified>
                 {tabs.map(tab =>
@@ -33,16 +33,16 @@ module.exports = ({
             </Nav>
         </Col>
         <Col xs={12}>
-                {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
-                    <tab.Component
-                        {...props}
-                        key={'ms-tab-settings-body-' + tab.id}
-                        containerWidth={width}
-                        element={element}
-                        groups={groups}
-                        nodeType={settings.nodeType}
-                        settings={settings}
-                        retrieveLayerData={onRetrieveLayerData}
-                        onChange={(key, value) => onUpdateParams({ [key]: value }, realtimeUpdate)} />
-                ))}</Col>
-        </Row>);
+            {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
+                <tab.Component
+                    {...props}
+                    key={'ms-tab-settings-body-' + tab.id}
+                    containerWidth={width}
+                    element={element}
+                    groups={groups}
+                    nodeType={settings.nodeType}
+                    settings={settings}
+                    retrieveLayerData={onRetrieveLayerData}
+                    onChange={(key, value) => onUpdateParams({ [key]: value }, realtimeUpdate)} />
+            ))}</Col>
+    </Row>);

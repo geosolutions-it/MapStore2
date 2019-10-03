@@ -73,16 +73,16 @@ const commonEditorActions = {
     onDownload: download
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
-{
-    onCancel: cancelShowAnnotation,
-    ...commonEditorActions
-})(require('../components/mapcontrols/annotations/AnnotationsEditor'));
+    {
+        onCancel: cancelShowAnnotation,
+        ...commonEditorActions
+    })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
-{
-    ...commonEditorActions,
-    onEdit: openEditor
-})(require('../components/mapcontrols/annotations/AnnotationsEditor'));
+    {
+        ...commonEditorActions,
+        onEdit: openEditor
+    })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const panelSelector = createSelector([annotationsListSelector], (list) => ({
     ...list,
@@ -160,16 +160,16 @@ class AnnotationsPanel extends React.Component {
     render() {
         return this.props.active ? (
             <ContainerDimensions>
-            { ({ width }) =>
-                <span className="ms-annotations-panel">
-                    <Dock
-                        dockStyle={this.props.dockStyle} {...this.props.dockProps}
-                        isVisible={this.props.active}
-                        size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                { ({ width }) =>
+                    <span className="ms-annotations-panel">
+                        <Dock
+                            dockStyle={this.props.dockStyle} {...this.props.dockProps}
+                            isVisible={this.props.active}
+                            size={this.props.width / width > 1 ? 1 : this.props.width / width} >
                             <Annotations {...this.props} width={this.props.width}/>
-                    </Dock>
-                </span>
-            }
+                        </Dock>
+                    </span>
+                }
             </ContainerDimensions>
         ) : null;
     }
@@ -214,8 +214,8 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 
 module.exports = {
     AnnotationsPlugin: assign(AnnotationsPlugin, {
-            disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
-        }, {
+        disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
+    }, {
         BurgerMenu: {
             name: 'annotations',
             position: 40,

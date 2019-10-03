@@ -89,7 +89,7 @@ describe('Test the measurement reducer', () => {
             lenUnit: "m",
             areaUnit: "sqm",
             feature
-    });
+        });
         let state = measurement( {feature}, testAction);
         expect(state.lineMeasureEnabled).toBe(true);
         expect(state.areaMeasureEnabled).toBe(false);
@@ -133,9 +133,9 @@ describe('Test the measurement reducer', () => {
         const coordinates = [{lon: 3, lat: 1}, {lon: 5, lat: 5}];
         let state = measurement({
             feature: {
-            geometry: {
-                type: "LineString",
-                coordinates: [[1, 3], [5, 4]]
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 3], [5, 4]]
                 }
             }
         }, changeCoordinates(coordinates));

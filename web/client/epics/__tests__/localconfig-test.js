@@ -25,11 +25,11 @@ describe('localconfig Epics', () => {
             actions.map((action) => {
                 const suppLocales = LocaleUtils.getSupportedLocales();
                 switch (action.type) {
-                    case SUPPORTED_LOCALES_REGISTERED:
-                        expect(Object.keys(suppLocales).length).toBe(10);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SUPPORTED_LOCALES_REGISTERED:
+                    expect(Object.keys(suppLocales).length).toBe(10);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -57,12 +57,12 @@ describe('localconfig Epics', () => {
             actions.map((action) => {
                 const suppLocales = LocaleUtils.getSupportedLocales();
                 switch (action.type) {
-                    case SUPPORTED_LOCALES_REGISTERED:
-                        expect(suppLocales).toBe(ita);
-                        expect(Object.keys(suppLocales).length).toBe(1);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SUPPORTED_LOCALES_REGISTERED:
+                    expect(suppLocales).toBe(ita);
+                    expect(Object.keys(suppLocales).length).toBe(1);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();

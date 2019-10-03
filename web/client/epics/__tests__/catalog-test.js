@@ -110,16 +110,16 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_LOADING:
-                        expect(action.loading).toBe(true);
-                        break;
-                    case RECORD_LIST_LOADED:
-                        expect(action.result.records.length).toBe(2);
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SET_LOADING:
+                    expect(action.loading).toBe(true);
+                    break;
+                case RECORD_LIST_LOADED:
+                    expect(action.result.records.length).toBe(2);
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -138,17 +138,17 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_LOADING:
-                        expect(action.loading).toBe(true);
-                        break;
-                    case RECORD_LIST_LOAD_ERROR:
-                        expect(action.error.status).toBe(404);
-                        expect(action.error.statusText).toBe("Not Found");
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SET_LOADING:
+                    expect(action.loading).toBe(true);
+                    break;
+                case RECORD_LIST_LOAD_ERROR:
+                    expect(action.error.status).toBe(404);
+                    expect(action.error.statusText).toBe("Not Found");
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -161,16 +161,16 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case ADD_LAYER:
-                        expect(action.layer.name).toBe("gs:us_states");
-                        expect(action.layer.title).toBe("States of US");
-                        expect(action.layer.type).toBe("wms");
-                        expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ADD_LAYER:
+                    expect(action.layer.name).toBe("gs:us_states");
+                    expect(action.layer.title).toBe("States of US");
+                    expect(action.layer.type).toBe("wms");
+                    expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -194,22 +194,22 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case ADD_LAYER:
-                        if (action.layer.name === "gs:us_states") {
-                            expect(action.layer.title).toBe("States of US");
-                            expect(action.layer.type).toBe("wms");
-                            expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
-                        } else {
-                            expect(action.layer.name).toBe("some_layer");
-                            expect(action.layer.title).toBe("some layer");
-                            expect(action.layer.type).toBe("wms");
-                            expect(action.layer.url).toBe("base/web/client/test-resources/wms/attribution.xml");
-                        }
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ADD_LAYER:
+                    if (action.layer.name === "gs:us_states") {
+                        expect(action.layer.title).toBe("States of US");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
+                    } else {
+                        expect(action.layer.name).toBe("some_layer");
+                        expect(action.layer.title).toBe("some layer");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.url).toBe("base/web/client/test-resources/wms/attribution.xml");
+                    }
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -237,20 +237,20 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case ADD_LAYER:
-                        expect(action.layer.name).toBe("gs:us_states");
-                        expect(action.layer.title).toBe("States of US");
-                        expect(action.layer.type).toBe("wms");
-                        expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
-                        break;
-                    case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("catalog.notification.errorSearchingRecords");
-                        expect(action.values).toEqual({records: "not_found"});
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ADD_LAYER:
+                    expect(action.layer.name).toBe("gs:us_states");
+                    expect(action.layer.title).toBe("States of US");
+                    expect(action.layer.type).toBe("wms");
+                    expect(action.layer.url).toBe("https://sample.server/geoserver/wms");
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe("catalog.notification.errorSearchingRecords");
+                    expect(action.values).toEqual({records: "not_found"});
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -278,16 +278,16 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                    case ADD_LAYER:
-                        expect(action.layer.name).toBe("topp:tasmania_cities_hidden");
-                        expect(action.layer.title).toBe("tasmania_cities");
-                        expect(action.layer.type).toBe("wmts");
-                        expect(action.layer.url).toBe("http://sample.server/geoserver/gwc/service/wmts");
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ADD_LAYER:
+                    expect(action.layer.name).toBe("topp:tasmania_cities_hidden");
+                    expect(action.layer.title).toBe("tasmania_cities");
+                    expect(action.layer.type).toBe("wmts");
+                    expect(action.layer.url).toBe("http://sample.server/geoserver/gwc/service/wmts");
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();

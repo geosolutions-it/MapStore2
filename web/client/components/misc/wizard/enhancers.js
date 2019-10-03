@@ -25,7 +25,7 @@ const wizardHandlers = compose(
     })
 );
 module.exports = {
-   /**
+    /**
     * Apply this enhancer to the WizardContainer to make it controlled.
     * It controls the step and the hideButtons properties
     */

@@ -275,7 +275,7 @@ describe('Test correctness of the SLDService APIs', () => {
         let error = false;
         try {
             API.readClassification(invalidClassification);
-        } catch(e) {
+        } catch (e) {
             error = true;
         }
         expect(error).toBe(true);

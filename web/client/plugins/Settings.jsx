@@ -88,21 +88,21 @@ class SettingsButton extends React.Component {
     renderSettings = () => {
         const settingsFirst = {
             language: (
-            <span key="language-label">
-                <FormGroup>
-                    <Row>
-                        <Col xs={12}>
-                            <label><Message msgId="language" /></label>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12}>
-                            <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
-                        </Col>
-                    </Row>
-                </FormGroup>
+                <span key="language-label">
+                    <FormGroup>
+                        <Row>
+                            <Col xs={12}>
+                                <label><Message msgId="language" /></label>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12}>
+                                <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                            </Col>
+                        </Row>
+                    </FormGroup>
 
-            </span>)
+                </span>)
         };
         const settingsLast = {
             history: <HistoryBar

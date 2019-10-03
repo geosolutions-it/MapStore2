@@ -59,7 +59,7 @@ class DefaultViewer extends React.Component {
         setIndex: () => {}
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // reset current page on new requests set
         if (!isEqual(nextProps.responses, this.props.responses)) {
             this.props.setIndex(0);
@@ -143,6 +143,7 @@ class DefaultViewer extends React.Component {
         if (validator) {
             return this.renderEmptyLayers(validator);
         }
+        return null;
     };
 
     render() {
@@ -150,17 +151,17 @@ class DefaultViewer extends React.Component {
         const validator = this.props.validator(this.props.format);
         const validResponses = validator.getValidResponses(this.props.responses);
         return (<div className="mapstore-identify-viewer">
-                <Container {...this.props.containerProps}
-                    onChangeIndex={(index) => { this.props.setIndex(index); }}
-                    ref="container"
-                    index={this.props.index || 0}
-                    key={"swiper"}
-                    className="swipeable-view"
-                    >
-                    {this.renderPages(validResponses)}
-                </Container>
-                {this.renderAdditionalInfo()}
-            </div>)
+            <Container {...this.props.containerProps}
+                onChangeIndex={(index) => { this.props.setIndex(index); }}
+                ref="container"
+                index={this.props.index || 0}
+                key={"swiper"}
+                className="swipeable-view"
+            >
+                {this.renderPages(validResponses)}
+            </Container>
+            {this.renderAdditionalInfo()}
+        </div>)
         ;
     }
 }

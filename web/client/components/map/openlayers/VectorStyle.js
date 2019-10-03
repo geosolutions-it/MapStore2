@@ -248,16 +248,16 @@ registerGeometryFunctions("endPoint", endPoint, "Point");
 export const getGeometryTrasformation = (style = {}) => {
     return style.geometry ?
     // then parse the geom_expression and return true or false
-    (feature) => {
-        const geomFunction = style.geometry || "centerPoint";
-        return geometryFunctions[geomFunction].func(feature);
-    } : (f) => f.getGeometry();
+        (feature) => {
+            const geomFunction = style.geometry || "centerPoint";
+            return geometryFunctions[geomFunction].func(feature);
+        } : (f) => f.getGeometry();
 };
 
 export const getFilter = (style = {}) => {
     return !isNil(style.filtering) ?
     // then parse the filter_expression and return true or false
-    style.filtering : true; // if no filter is defined, it returns true
+        style.filtering : true; // if no filter is defined, it returns true
 };
 
 

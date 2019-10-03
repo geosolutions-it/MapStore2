@@ -84,9 +84,9 @@ const mapsState = {
 };
 
 const testMap = {
-        "success": true,
-        "totalCount": 13,
-        "results": [
+    "success": true,
+    "totalCount": 13,
+    "results": [
         {
             "canDelete": false,
             "canEdit": false,
@@ -99,8 +99,8 @@ const testMap = {
             "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
             "owner": "mapstore"
         }
-        ]
-    };
+    ]
+};
 describe('maps Epics', () => {
     const oldGetDefaults = ConfigUtils.getDefaults;
     let store;
@@ -127,7 +127,7 @@ describe('maps Epics', () => {
                 expect(actions[1].type).toBe(TOGGLE_DETAILS_SHEET);
                 expect(actions[2].type).toBe(SET_DETAILS_CHANGED);
             } catch (e) {
-                return done(e);
+                done(e);
             }
             done();
         }, 50);
@@ -138,14 +138,14 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_DETAILS_CHANGED:
-                        expect(action.detailsChanged).toBe(false);
-                        break;
-                    case TOGGLE_DETAILS_SHEET:
-                        expect(action.detailsSheetReadOnly).toBe(true);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SET_DETAILS_CHANGED:
+                    expect(action.detailsChanged).toBe(false);
+                    break;
+                case TOGGLE_DETAILS_SHEET:
+                    expect(action.detailsSheetReadOnly).toBe(true);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -172,7 +172,7 @@ describe('maps Epics', () => {
                 expect(actions[1].type).toBe(TOGGLE_CONTROL);
                 expect(actions[2].type).toBe(RESET_CURRENT_MAP);
             } catch (e) {
-                return done(e);
+                done(e);
             }
             done();
         }, 50);
@@ -184,20 +184,20 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
-                    case TOGGLE_CONTROL:
-                        expect(action.control).toBe("details");
-                        expect(action.property).toBe("enabled");
-                        break;
-                    case CLOSE_FEATURE_GRID:
-                        expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                        break;
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case TOGGLE_CONTROL:
+                    expect(action.control).toBe("details");
+                    expect(action.property).toBe("enabled");
+                    break;
+                case CLOSE_FEATURE_GRID:
+                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case UPDATE_DETAILS:
+                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
+                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
+                    expect(action.doBackup).toBe(true);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -208,15 +208,15 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case TOGGLE_CONTROL:
-                        expect(action.control).toBe("details");
-                        expect(action.property).toBe("enabled");
-                        break;
-                    case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case TOGGLE_CONTROL:
+                    expect(action.control).toBe("details");
+                    expect(action.property).toBe("enabled");
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -246,13 +246,13 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText).toBe("");
-                        expect(action.originalDetails).toBe("");
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case UPDATE_DETAILS:
+                    expect(action.detailsText).toBe("");
+                    expect(action.originalDetails).toBe("");
+                    expect(action.doBackup).toBe(true);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -268,13 +268,13 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case UPDATE_DETAILS:
+                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
+                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
+                    expect(action.doBackup).toBe(true);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -291,11 +291,11 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -317,26 +317,26 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(5);
             actions.map((action, i) => {
                 switch (action.type) {
-                    case SHOW_NOTIFICATION:
-                        if (i === 1) {
-                            expect(action.message).toBe("maps.feedback.errorDeletingDetailsOfMap");
-                        }
-                        if (i === 2) {
-                            expect(action.message).toBe("maps.feedback.errorDeletingThumbnailOfMap");
-                        }
-                        if (i === 3) {
-                            expect(action.message).toBe("maps.feedback.errorDeletingMap");
-                        }
-                        break;
-                    case MAP_DELETING:
-                        expect(action.resourceId).toBe(mapId);
-                        break;
-                    case MAP_DELETED:
-                        expect(action.resourceId).toBe(mapId);
-                        expect(action.result).toBe("failure");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SHOW_NOTIFICATION:
+                    if (i === 1) {
+                        expect(action.message).toBe("maps.feedback.errorDeletingDetailsOfMap");
+                    }
+                    if (i === 2) {
+                        expect(action.message).toBe("maps.feedback.errorDeletingThumbnailOfMap");
+                    }
+                    if (i === 3) {
+                        expect(action.message).toBe("maps.feedback.errorDeletingMap");
+                    }
+                    break;
+                case MAP_DELETING:
+                    expect(action.resourceId).toBe(mapId);
+                    break;
+                case MAP_DELETED:
+                    expect(action.resourceId).toBe(mapId);
+                    expect(action.result).toBe("failure");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -360,18 +360,18 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
-                    case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("maps.feedback.allResDeleted");
-                        break;
-                    case MAP_DELETING:
-                        expect(action.resourceId).toBe(mapId8);
-                        break;
-                    case MAP_DELETED:
-                        expect(action.resourceId).toBe(mapId8);
-                        expect(action.result).toBe("success");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe("maps.feedback.allResDeleted");
+                    break;
+                case MAP_DELETING:
+                    expect(action.resourceId).toBe(mapId8);
+                    break;
+                case MAP_DELETED:
+                    expect(action.resourceId).toBe(mapId8);
+                    expect(action.result).toBe("success");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -394,26 +394,26 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(5);
             actions.filter(a => !!a.type).map((action, i) => {
                 switch (action.type) {
-                    case SHOW_NOTIFICATION:
-                        if (i === 1) {
-                            expect(action.message).toBe("maps.feedback.errorDeletingDetailsOfMap");
-                        }
-                        if (i === 2) {
-                            expect(action.message).toBe("maps.feedback.errorDeletingThumbnailOfMap");
-                        }
-                        break;
-                    case MAP_DELETING:
-                        expect(action.resourceId).toBe(mapId8);
-                        break;
-                    case MAP_DELETED:
-                        expect(action.resourceId).toBe(mapId8);
-                        expect(action.result).toBe("success");
-                        break;
-                    case TEST_TIMEOUT:
-                        expect(action.type).toBe(TEST_TIMEOUT);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SHOW_NOTIFICATION:
+                    if (i === 1) {
+                        expect(action.message).toBe("maps.feedback.errorDeletingDetailsOfMap");
+                    }
+                    if (i === 2) {
+                        expect(action.message).toBe("maps.feedback.errorDeletingThumbnailOfMap");
+                    }
+                    break;
+                case MAP_DELETING:
+                    expect(action.resourceId).toBe(mapId8);
+                    break;
+                case MAP_DELETED:
+                    expect(action.resourceId).toBe(mapId8);
+                    expect(action.result).toBe("success");
+                    break;
+                case TEST_TIMEOUT:
+                    expect(action.type).toBe(TEST_TIMEOUT);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -435,18 +435,18 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(3);
             actions.filter(a => !!a.type).map((action) => {
                 switch (action.type) {
-                    case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("maps.feedback.allResDeleted");
-                        break;
-                    case MAP_DELETING:
-                        expect(action.resourceId).toBe(mapId8);
-                        break;
-                    case MAP_DELETED:
-                        expect(action.resourceId).toBe(mapId8);
-                        expect(action.result).toBe("success");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe("maps.feedback.allResDeleted");
+                    break;
+                case MAP_DELETING:
+                    expect(action.resourceId).toBe(mapId8);
+                    break;
+                case MAP_DELETED:
+                    expect(action.resourceId).toBe(mapId8);
+                    expect(action.result).toBe("success");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -466,12 +466,12 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case DETAILS_LOADED:
-                        expect(action.mapId).toBe(mapId2);
-                        expect(action.detailsUri).toBe("rest%2Fgeostore%2Fdata%2F3983%2Fraw%3Fdecode%3Ddatauri");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case DETAILS_LOADED:
+                    expect(action.mapId).toBe(mapId2);
+                    expect(action.detailsUri).toBe("rest%2Fgeostore%2Fdata%2F3983%2Fraw%3Fdecode%3Ddatauri");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -485,16 +485,16 @@ describe('maps Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case MAPS_LIST_LOADING:
-                        expect(action.searchText).toBe('test');
-                        expect(action.params).toEqual(params);
-                        break;
-                    case MAPS_GET_MAP_RESOURCES_BY_CATEGORY:
-                        expect(action.map).toBe('MAP');
-                        expect(action.searchText).toBe('test');
-                        expect(action.opts).toEqual({baseUrl, params});
-                        break;
-                    default:
+                case MAPS_LIST_LOADING:
+                    expect(action.searchText).toBe('test');
+                    expect(action.params).toEqual(params);
+                    break;
+                case MAPS_GET_MAP_RESOURCES_BY_CATEGORY:
+                    expect(action.map).toBe('MAP');
+                    expect(action.searchText).toBe('test');
+                    expect(action.opts).toEqual({baseUrl, params});
+                    break;
+                default:
                     expect(true).toBe(false);
                 }
             });
@@ -522,13 +522,13 @@ describe('Get Map Resource By Category Epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case MAPS_LIST_LOADED:
-                        expect(action.maps).toEqual(testMap);
-                        expect(action.params).toEqual(params);
-                        expect(action.searchText).toBe('test');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case MAPS_LIST_LOADED:
+                    expect(action.maps).toEqual(testMap);
+                    expect(action.params).toEqual(params);
+                    expect(action.searchText).toBe('test');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -554,13 +554,13 @@ describe('Create and update flow using persistence api', () => {
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
-                    case SAVING_MAP:
-                    case MAP_CREATED:
-                    case DISPLAY_METADATA_EDIT:
-                    case SHOW_NOTIFICATION:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SAVING_MAP:
+                case MAP_CREATED:
+                case DISPLAY_METADATA_EDIT:
+                case SHOW_NOTIFICATION:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -571,11 +571,11 @@ describe('Create and update flow using persistence api', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case MAP_UPDATING:
-                    case SHOW_NOTIFICATION:
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case MAP_UPDATING:
+                case SHOW_NOTIFICATION:
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();

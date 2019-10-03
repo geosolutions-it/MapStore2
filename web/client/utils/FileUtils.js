@@ -76,8 +76,8 @@ const FileUtils = {
         return new Promise((resolve, reject) => {
             let reader = new FileReader();
             reader.onload = function() {
-                 resolve(parser.parseFromString(reader.result, "text/xml"));
-             };
+                resolve(parser.parseFromString(reader.result, "text/xml"));
+            };
             reader.onerror = function() {
                 reject(reader.error.name);
             };
@@ -90,7 +90,7 @@ const FileUtils = {
             reader.onload = function() {
                 try {
                     resolve(JSON.parse(reader.result));
-                }catch(e) {
+                } catch (e) {
                     reject(e);
                 }
             };
@@ -123,7 +123,7 @@ const FileUtils = {
                 try {
                     const geoJsonObj = JSON.parse(reader.result);
                     resolve({geoJSON: geoJsonObj, errors: geojsonhint(geoJsonObj).filter((e) => warnings || e.level !== 'message')});
-                }catch(e) {
+                } catch (e) {
                     reject(e);
                 }
             };

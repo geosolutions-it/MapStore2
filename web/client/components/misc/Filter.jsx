@@ -30,7 +30,7 @@ class Filter extends React.Component {
         onFilter: () => {},
         onFocus: () => {},
         tooltipClear: 'Clear'
-     };
+    };
 
     onFilter = (e) => {
         this.props.onFilter(e.target.value);

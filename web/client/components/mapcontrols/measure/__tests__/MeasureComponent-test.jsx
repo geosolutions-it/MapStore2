@@ -253,9 +253,9 @@ describe("test the MeasureComponent", () => {
             <MeasureComponent
                 areaMeasureEnabled
                 uom={{
-                length: {unit: 'km', label: 'km'},
-                area: {unit: 'sqkm', label: 'km²'}
-            }} measurement={assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }} measurement={assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
         );
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();

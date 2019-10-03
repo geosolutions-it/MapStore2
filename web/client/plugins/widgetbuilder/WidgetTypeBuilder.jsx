@@ -35,16 +35,16 @@ const Builders = {
  * Allows the selection of a widget type to start the related wizard
  */
 module.exports = compose(
-        connect(mapStateToProps),
-        withProps(({ typeFilter = () => true, availableDependencies = []}) => ({
-            typeFilter: (w = {}) => typeFilter(w) && !(w.type === 'legend' && availableDependencies.length === 0)
-        })),
-        branch(
-           ({widgetType} = {}) => !widgetType,
-           renderComponent(WidgetTypeSelector),
-           () => ({widgetType, onClose=() => {}, ...props} = {}) => {
-               const Builder = Builders[widgetType];
-               return <Builder {...props} onClose={onClose} widgetType={widgetType} />;
-           }
+    connect(mapStateToProps),
+    withProps(({ typeFilter = () => true, availableDependencies = []}) => ({
+        typeFilter: (w = {}) => typeFilter(w) && !(w.type === 'legend' && availableDependencies.length === 0)
+    })),
+    branch(
+        ({widgetType} = {}) => !widgetType,
+        renderComponent(WidgetTypeSelector),
+        () => ({widgetType, onClose = () => {}, ...props} = {}) => {
+            const Builder = Builders[widgetType];
+            return <Builder {...props} onClose={onClose} widgetType={widgetType} />;
+        }
     )
 )();

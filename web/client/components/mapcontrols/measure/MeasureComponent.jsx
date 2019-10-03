@@ -169,8 +169,8 @@ class MeasureComponent extends React.Component {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
             <Grid fluid style={{maxHeight: 400}}>
-                    {this.props.lineMeasureEnabled && <Row >
-                        <FormGroup style={{display: 'flex', alignItems: 'center'}}>
+                {this.props.lineMeasureEnabled && <Row >
+                    <FormGroup style={{display: 'flex', alignItems: 'center'}}>
                         <Col xs={6}>
                             <span>{this.props.lengthLabel}: </span>
                             <span id="measure-len-res" className="measure-value">
@@ -188,7 +188,7 @@ class MeasureComponent extends React.Component {
                                 data={this.props.uomLengthValues}
                                 textField="label"
                                 valueField="value"
-                                />
+                            />
                         </Col>
                     </FormGroup>
                 </Row>}
@@ -237,6 +237,7 @@ class MeasureComponent extends React.Component {
         if (this.props.showButtonsLabels) {
             return <span className="option-text">{LocaleUtils.getMessageById(this.context.messages, msgId)}</span>;
         }
+        return null;
     };
 
     renderText = (glyph, labelId) => {
@@ -254,92 +255,92 @@ class MeasureComponent extends React.Component {
         const geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
         let coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
         return (
-           <BorderLayout
-               id={this.props.id}
-               style={{overflow: 'visible'}}
-               header={
-                   <div>
-                       <ButtonToolbar style={{width: '100%', marginBottom: 15, marginTop: 8, display: 'flex', justifyContent: 'center'}}>
-                       <Toolbar
-                           btnDefaultProps={{
-                               className: 'square-button-md',
-                               bsStyle: 'primary'
-                           }}
-                           buttons={
-                               [
-                                   {
-                                       glyph: this.props.lineGlyph,
-                                       active: !!this.props.lineMeasureEnabled,
-                                       bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
-                                       tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
-                                       onClick: () => this.onLineClick()
-                                   },
-                                   {
-                                       active: !!this.props.areaMeasureEnabled,
-                                       bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
-                                       glyph: this.props.areaGlyph,
-                                       tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
-                                       onClick: () => this.onAreaClick()
-                                   },
-                                   {
-                                       active: !!this.props.bearingMeasureEnabled,
-                                       bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
-                                       glyph: this.props.bearingGlyph,
-                                       tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, "measureComponent.MeasureBearing"),
-                                       onClick: () => this.onBearingClick()
-                                   }
-                               ]
-                           }/>
-                           <Toolbar
-                           btnDefaultProps={{
-                               className: 'square-button-md',
-                               bsStyle: 'primary'
-                           }}
-                           buttons={
-                               [
-                                   {
-                                       glyph: 'refresh',
-                                       visible: !!this.props.withReset,
-                                       tooltip: this.props.resetButtonText,
-                                       onClick: () => this.onResetClick()
-                                   },
-                                   {
-                                       glyph: 'comment',
-                                       tooltip: <Message msgId="measureComponent.addAsAnnotation"/>,
-                                       onClick: () => this.addAsAnnotation(),
-                                       disabled: !!(this.props.measurement.feature && this.props.measurement.feature.properties && this.props.measurement.feature.properties.disabled),
-                                       visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation
-                                   }
-                               ]
-                           }/>
-                           </ButtonToolbar>
-                       {this.renderPanel()}
-                   </div>
-               }>
-               {this.props.showCoordinateEditor && (<Grid fluid style={{maxHeight: 400, borderTop: '1px solid #ddd'}}>
-                {(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled)
+            <BorderLayout
+                id={this.props.id}
+                style={{overflow: 'visible'}}
+                header={
+                    <div>
+                        <ButtonToolbar style={{width: '100%', marginBottom: 15, marginTop: 8, display: 'flex', justifyContent: 'center'}}>
+                            <Toolbar
+                                btnDefaultProps={{
+                                    className: 'square-button-md',
+                                    bsStyle: 'primary'
+                                }}
+                                buttons={
+                                    [
+                                        {
+                                            glyph: this.props.lineGlyph,
+                                            active: !!this.props.lineMeasureEnabled,
+                                            bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
+                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
+                                            onClick: () => this.onLineClick()
+                                        },
+                                        {
+                                            active: !!this.props.areaMeasureEnabled,
+                                            bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
+                                            glyph: this.props.areaGlyph,
+                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
+                                            onClick: () => this.onAreaClick()
+                                        },
+                                        {
+                                            active: !!this.props.bearingMeasureEnabled,
+                                            bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
+                                            glyph: this.props.bearingGlyph,
+                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, "measureComponent.MeasureBearing"),
+                                            onClick: () => this.onBearingClick()
+                                        }
+                                    ]
+                                }/>
+                            <Toolbar
+                                btnDefaultProps={{
+                                    className: 'square-button-md',
+                                    bsStyle: 'primary'
+                                }}
+                                buttons={
+                                    [
+                                        {
+                                            glyph: 'refresh',
+                                            visible: !!this.props.withReset,
+                                            tooltip: this.props.resetButtonText,
+                                            onClick: () => this.onResetClick()
+                                        },
+                                        {
+                                            glyph: 'comment',
+                                            tooltip: <Message msgId="measureComponent.addAsAnnotation"/>,
+                                            onClick: () => this.addAsAnnotation(),
+                                            disabled: !!(this.props.measurement.feature && this.props.measurement.feature.properties && this.props.measurement.feature.properties.disabled),
+                                            visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation
+                                        }
+                                    ]
+                                }/>
+                        </ButtonToolbar>
+                        {this.renderPanel()}
+                    </div>
+                }>
+                {this.props.showCoordinateEditor && (<Grid fluid style={{maxHeight: 400, borderTop: '1px solid #ddd'}}>
+                    {(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled)
                         ? <Row style={ this.props.isCoordinateEditorEnabled ? {} : {pointerEvents: "none", opacity: 0.5}}>
-                        <CoordinatesEditor
-                            key="measureEditor"
-                            isMouseEnterEnabled
-                            isMouseLeaveEnabled
-                            format={this.props.format}
-                            onChangeFormat={this.props.onChangeFormat}
-                            onHighlightPoint={this.props.onHighlightPoint}
-                            onChange={this.props.onChangeCoordinates}
-                            items={[]}
-                            isDraggable
-                            type={this.props.geomType}
-                            components={coords}/>
-                    </Row> :
-                 <Row>
-                     <Col xs={12} className="text-center" style={{padding: 15}}>
-                         <i><Message msgId="measureComponent.selectTool"/></i>
-                     </Col>
-                 </Row>}
+                            <CoordinatesEditor
+                                key="measureEditor"
+                                isMouseEnterEnabled
+                                isMouseLeaveEnabled
+                                format={this.props.format}
+                                onChangeFormat={this.props.onChangeFormat}
+                                onHighlightPoint={this.props.onHighlightPoint}
+                                onChange={this.props.onChangeCoordinates}
+                                items={[]}
+                                isDraggable
+                                type={this.props.geomType}
+                                components={coords}/>
+                        </Row> :
+                        <Row>
+                            <Col xs={12} className="text-center" style={{padding: 15}}>
+                                <i><Message msgId="measureComponent.selectTool"/></i>
+                            </Col>
+                        </Row>}
                 </Grid>)}
-           </BorderLayout>
-       );
+            </BorderLayout>
+        );
     }
     addAsAnnotation = () => {
         let value = this.props.measurement.area || this.props.measurement.len || this.props.measurement.bearing;

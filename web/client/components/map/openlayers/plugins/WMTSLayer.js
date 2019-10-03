@@ -78,11 +78,11 @@ const createLayer = options => {
 
     const extent = bbox
         ? applyTransform([
-                parseFloat(bbox.bounds.minx),
-                parseFloat(bbox.bounds.miny),
-                parseFloat(bbox.bounds.maxx),
-                parseFloat(bbox.bounds.maxy)
-            ], getTransform(bbox.crs, options.srs))
+            parseFloat(bbox.bounds.minx),
+            parseFloat(bbox.bounds.miny),
+            parseFloat(bbox.bounds.maxx),
+            parseFloat(bbox.bounds.maxy)
+        ], getTransform(bbox.crs, options.srs))
         : null;
 
     let queryParameters = {};

@@ -18,10 +18,10 @@ const {setControlProperty} = require('../../actions/controls');
 
 const TextWithLabel = (props) => {
     return (
-      <FormGroup>
-        {props.label && <ControlLabel>{props.label}</ControlLabel> || null}
-        <FormControl {...props}/>
-      </FormGroup>
+        <FormGroup>
+            {props.label && <ControlLabel>{props.label}</ControlLabel> || null}
+            <FormControl {...props}/>
+        </FormGroup>
     );
 };
 

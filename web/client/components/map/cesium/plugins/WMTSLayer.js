@@ -83,6 +83,7 @@ const getTilingSchema = (srs) => {
     } else if (srs.indexOf("EPSG:3857") >= 0) {
         return new Cesium.WebMercatorTilingScheme();
     }
+    return null;
 };
 
 const getMatrixOptions = (options, srs) => {

@@ -58,10 +58,10 @@ describe('widgets dependenciesToOptions enhancer', () => {
             layer={{id: 1}}
             dependencies={ {
             // retrieves the view params from layers (original list)
-            layers: [{
-                id: 1,
-                params: { viewParams: "a:b" }
-            }]
+                layers: [{
+                    id: 1,
+                    params: { viewParams: "a:b" }
+                }]
             } }
             options={options}/>, document.getElementById("container"));
     });

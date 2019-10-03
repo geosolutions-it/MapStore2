@@ -26,7 +26,7 @@ const ControlledCombobox = addState(({ toggle, select, focus, change, value, bus
         open={open}
         loading={loading}
         filter={filter}
-        />);
+    />);
 });
 
 module.exports = ControlledCombobox;

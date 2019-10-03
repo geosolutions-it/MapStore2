@@ -35,10 +35,10 @@ describe('MapOptions component', () => {
     });
     it('MapOptions rendering layers', () => {
         ReactDOM.render(<MapOptions
-            map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
-            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", options: {} }] }]}
-            layers={[{ id: "LAYER", group: "GGG", options: {} }]}
-            />, document.getElementById("container"));
+            map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }] }}
+            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }] }]}
+            layers={[{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }]}
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.mapstore-step-title')).toExist();
         // renders the TOC
@@ -49,9 +49,9 @@ describe('MapOptions component', () => {
     });
     it('MapOptions rendering node editor', () => {
         ReactDOM.render(<MapOptions
-            map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
-            nodes={[{id: 'GGG', nodes: [{id: "LAYER", group: "GGG", options: {}}]}]}
-            layers={[{ id: "LAYER", group: "GGG", options: {} }]}
+            map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }] }}
+            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {}}]}]}
+            layers={[{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }]}
             editNode={"LAYER"} />, document.getElementById("container"));
         const container = document.getElementById('container');
         // renders the editor

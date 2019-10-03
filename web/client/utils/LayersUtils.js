@@ -31,7 +31,7 @@ const initialReorderLayers = (groups, allLayers) => {
                 }
                 return layers.concat(getLayer(node, allLayers));
             }, [])
-            );
+        );
     }, []);
 };
 const reorderLayers = (groups, allLayers) => {

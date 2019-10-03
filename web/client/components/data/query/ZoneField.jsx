@@ -91,7 +91,7 @@ class ZoneField extends React.Component {
 
     state = { open: false};
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.values && !isEqual(this.props.values, nextProps.values) && nextProps.values.length > 0) {
             this.setState({open: true});
         }

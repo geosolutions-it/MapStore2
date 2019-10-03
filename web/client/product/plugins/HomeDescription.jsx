@@ -13,7 +13,7 @@ const HTML = require('../../components/I18N/HTML');
 class HomeDescription extends React.Component {
     static propTypes = {
         style: PropTypes.object,
-        className: PropTypes.object,
+        className: PropTypes.string,
         name: PropTypes.string
     };
 

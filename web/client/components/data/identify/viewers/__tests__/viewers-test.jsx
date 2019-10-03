@@ -90,22 +90,22 @@ describe('Identity Viewers', () => {
 
     it('test JSONViewer with TEMPLATE', () => {
         const cmp = ReactDOM.render(
-        <JSONViewer
-            layer={{
-                featureInfo: {
-                    format: 'TEMPLATE',
-                    template: '<p id="my-template">the property name is ${ properties.name }</p>'
-                }
-            }}
-            response={{
-                features: [{
-                    id: 1,
-                    properties: {
-                        name: 'myname',
-                        description: 'mydescription'
+            <JSONViewer
+                layer={{
+                    featureInfo: {
+                        format: 'TEMPLATE',
+                        template: '<p id="my-template">the property name is ${ properties.name }</p>'
                     }
-                }]
-            }} />, document.getElementById("container"));
+                }}
+                response={{
+                    features: [{
+                        id: 1,
+                        properties: {
+                            name: 'myname',
+                            description: 'mydescription'
+                        }
+                    }]
+                }} />, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -118,22 +118,22 @@ describe('Identity Viewers', () => {
 
     it('test JSONViewer with TEMPLATE and missing properties', () => {
         const cmp = ReactDOM.render(
-        <JSONViewer
-            layer={{
-                featureInfo: {
-                    format: 'TEMPLATE',
-                    template: '<p id="my-template">the property id is ${ properties.id }</p>'
-                }
-            }}
-            response={{
-                features: [{
-                    id: 1,
-                    properties: {
-                        name: 'myname',
-                        description: 'mydescription'
+            <JSONViewer
+                layer={{
+                    featureInfo: {
+                        format: 'TEMPLATE',
+                        template: '<p id="my-template">the property id is ${ properties.id }</p>'
                     }
-                }]
-            }} />, document.getElementById("container"));
+                }}
+                response={{
+                    features: [{
+                        id: 1,
+                        properties: {
+                            name: 'myname',
+                            description: 'mydescription'
+                        }
+                    }]
+                }} />, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -146,22 +146,22 @@ describe('Identity Viewers', () => {
 
     it('test JSONViewer with TEMPLATE with tag inside variable', () => {
         ReactDOM.render(
-        <JSONViewer
-            layer={{
-                featureInfo: {
-                    format: 'TEMPLATE',
-                    template: '<p id="my-template">the property name is ${<p>properties.name</p>}</p>'
-                }
-            }}
-            response={{
-                features: [{
-                    id: 1,
-                    properties: {
-                        name: 'myname',
-                        description: 'mydescription'
+            <JSONViewer
+                layer={{
+                    featureInfo: {
+                        format: 'TEMPLATE',
+                        template: '<p id="my-template">the property name is ${<p>properties.name</p>}</p>'
                     }
-                }]
-            }} />, document.getElementById("container"));
+                }}
+                response={{
+                    features: [{
+                        id: 1,
+                        properties: {
+                            name: 'myname',
+                            description: 'mydescription'
+                        }
+                    }]
+                }} />, document.getElementById("container"));
 
         let templateDOM = document.getElementById('my-template');
         expect(templateDOM.innerHTML).toBe('the property name is myname');
@@ -190,28 +190,28 @@ describe('Identity Viewers', () => {
 
     it('test JSONViewer with TEMPLATE multiple features', () => {
         const cmp = ReactDOM.render(
-        <JSONViewer
-            layer={{
-                featureInfo: {
-                    format: 'TEMPLATE',
-                    template: '<p class="my-template">the property id is ${ id }</p>'
-                }
-            }}
-            response={{
-                features: [{
-                    id: 1,
-                    properties: {
-                        name: 'myname',
-                        description: 'mydescription'
+            <JSONViewer
+                layer={{
+                    featureInfo: {
+                        format: 'TEMPLATE',
+                        template: '<p class="my-template">the property id is ${ id }</p>'
                     }
-                }, {
-                    id: 2,
-                    properties: {
-                        name: 'newName',
-                        description: 'newDescription'
-                    }
-                }]
-            }} />, document.getElementById("container"));
+                }}
+                response={{
+                    features: [{
+                        id: 1,
+                        properties: {
+                            name: 'myname',
+                            description: 'mydescription'
+                        }
+                    }, {
+                        id: 2,
+                        properties: {
+                            name: 'newName',
+                            description: 'newDescription'
+                        }
+                    }]
+                }} />, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);

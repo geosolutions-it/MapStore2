@@ -55,9 +55,9 @@ class SharingLink extends React.Component {
         return (
             <div className="link-sharing">
                 <FormGroup bsSize={this.props.bsSize} >
-                  <FormControl className="link-input"
-                    type="text" value={url} onChange={() => {}}/>
-                  {copyButton}
+                    <FormControl className="link-input"
+                        type="text" value={url} onChange={() => {}}/>
+                    {copyButton}
                 </FormGroup>
             </div>
         );

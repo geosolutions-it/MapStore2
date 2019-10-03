@@ -29,10 +29,10 @@ module.exports = compose(
             ...settings
         })
     ), {
-            setPlaybackRange: selectPlaybackRange,
-            onSettingChange: changeSetting,
-            toggleAnimationMode
-        }
+        setPlaybackRange: selectPlaybackRange,
+        onSettingChange: changeSetting,
+        toggleAnimationMode
+    }
 
     ),
     // playback buttons
@@ -45,8 +45,8 @@ module.exports = compose(
                 viewRange
             })
         ), {
-                moveTo: onRangeChanged
-            }),
+            moveTo: onRangeChanged
+        }),
         withHandlers({
             toggleAnimationRange: ({ fixedStep, layerRange, viewRange = {}, setPlaybackRange = () => { } }) => (enabled) => {
                 let currentPlaybackRange = fixedStep ? viewRange : layerRange;

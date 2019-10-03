@@ -18,7 +18,7 @@ const App = (props) => {
     return (
         <div className="fill">
             <Localized messages={props.messages} locale={props.current} loadingError={props.localeError}>
-               <MapViewer params={{mapType: "leaflet", mapId: "0"}} />
+                <MapViewer params={{mapType: "leaflet", mapId: "0"}} />
             </Localized>
             <Debug/>
         </div>

@@ -293,7 +293,7 @@ describe('Test the CatalogUtils', () => {
         expect(records[0].metadata.boundingBox).toEqual([ '43.718,11.348,43.84,11.145' ]);
         expect(records[0].metadata.URI).toEqual([{
             TYPE_NAME: 'DC_1_1.URI', protocol: '', name: 'Beda - Shapefile', description: '', value: 'http://www.beda.it/Beda.zip'
-            }, {
+        }, {
             TYPE_NAME: 'DC_1_1.URI', protocol: '', name: 'Beda - KML', description: '', value: 'http://www.beda.it/Beda.kmz'
         }]);
         expect(records[0].metadata.contributor).toEqual([ 'contributor' ]);
@@ -397,9 +397,9 @@ describe('Test the CatalogUtils', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{
                 dc: {
-                        URI: []
-                    }
+                    URI: []
                 }
+            }
             ]
         }, {});
         expect(records.length).toEqual(1);
@@ -622,10 +622,10 @@ describe('Test the CatalogUtils', () => {
                     alternative: "1-Hurricane Track",
                     identifier: "e5efb394-aac2-432e-b784-f18a6f663915",
                     references: [{
-                            scheme: "WWW:DOWNLOAD-REST_MAP",
-                            value: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer"
-                        }]
-                    }
+                        scheme: "WWW:DOWNLOAD-REST_MAP",
+                        value: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer"
+                    }]
+                }
             }]
         }, {});
         expect(records.length).toBe(2);

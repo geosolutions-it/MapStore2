@@ -11,13 +11,14 @@ const ChartView = require('./ChartView');
 
 const WidgetContainer = require('./WidgetContainer');
 const {
-     Glyphicon
+    Glyphicon
 } = require('react-bootstrap');
 
 const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
         return <Glyphicon onClick={() => {toggleTableView(); }} glyph="arrow-left pull-left"/>;
     }
+    return null;
 };
 
 
@@ -32,10 +33,10 @@ module.exports = ({
     icons,
     showTable,
     topRightItems,
-    confirmDelete= false,
+    confirmDelete = false,
     onDelete = () => {},
-    toggleTableView= () => {},
-    toggleDeleteConfirm= () => {},
+    toggleTableView = () => {},
+    toggleDeleteConfirm = () => {},
     ...props}) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -47,10 +48,10 @@ module.exports = ({
         onDelete={onDelete}
         toggleDeleteConfirm = {toggleDeleteConfirm}
         topRightItems={topRightItems}
-        >
+    >
         {showTable
             ? <TableView data={data} {...props}/>
-        : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
-        </WidgetContainer>
+            : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
+    </WidgetContainer>
 
-);
+    );

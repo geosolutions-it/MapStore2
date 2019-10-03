@@ -27,21 +27,21 @@ describe('Test styles rest API', () => {
             baseUrl: 'base/web/client/test-resources/geoserver/',
             styleName: 'test_TEST_LAYER_1'
         })
-        .then((response)=> {
-            try {
-                expect(response.data).toEqual({
-                    style: {
-                        filename: 'test_TEST_LAYER_1.sld',
-                        format: 'sld',
-                        languageVersion: {version: '1.0.0'},
-                        name: 'test_TEST_LAYER_1'
-                    }
-                });
-            } catch(e) {
-                done(e);
-            }
-            done();
-        });
+            .then((response)=> {
+                try {
+                    expect(response.data).toEqual({
+                        style: {
+                            filename: 'test_TEST_LAYER_1.sld',
+                            format: 'sld',
+                            languageVersion: {version: '1.0.0'},
+                            name: 'test_TEST_LAYER_1'
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
     });
     it('test getStylesInfo', (done) => {
         API.getStylesInfo({
@@ -59,8 +59,8 @@ describe('Test styles rest API', () => {
                 }
             ]
         })
-        .then((response)=> {
-            expect(response).toEqual([{
+            .then((response)=> {
+                expect(response).toEqual([{
                     filename: 'test_TEST_LAYER_1.sld',
                     format: 'sld',
                     languageVersion: {version: '1.0.0'},
@@ -73,8 +73,8 @@ describe('Test styles rest API', () => {
                     title: 'Square',
                     _abstract: 'small square'
                 }]);
-            done();
-        });
+                done();
+            });
     });
     it('test getStyleCodeByName', (done) => {
         API.getStyleCodeByName({
@@ -198,7 +198,7 @@ describe('Test styles rest API, Content Type of SLD', () => {
                         formats: [ 'sld' ],
                         availableUrls: []
                     });
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
                 done();
@@ -228,7 +228,7 @@ describe('Test styles rest API, Content Type of SLD', () => {
                         formats: [ 'css', 'sld' ],
                         availableUrls: []
                     });
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
                 done();

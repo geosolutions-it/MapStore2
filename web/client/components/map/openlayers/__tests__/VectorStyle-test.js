@@ -77,10 +77,10 @@ describe('Test VectorStyle', () => {
         };
         const fill = new Fill(fillStyle);
         const olStyle = getCircleStyle({
-                radius: 800
-            },
-            stroke,
-            fill
+            radius: 800
+        },
+        stroke,
+        fill
         );
         expect(typeof olStyle).toBe("object");
         expect(olStyle.getRadius()).toBe(800);

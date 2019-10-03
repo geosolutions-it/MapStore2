@@ -67,14 +67,14 @@ const commonEditorActions = {
 };
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
-{
-    onCancelRemove: cancelRemoveAnnotation,
-    onCancelEdit: cancelEditAnnotation,
-    onCancelClose: cancelCloseAnnotations,
-    onConfirmClose: confirmCloseAnnotations,
-    onConfirmRemove: confirmRemoveAnnotation,
-    ...commonEditorActions
-})(require('../components/mapcontrols/annotations/AnnotationsEditor'));
+    {
+        onCancelRemove: cancelRemoveAnnotation,
+        onCancelEdit: cancelEditAnnotation,
+        onCancelClose: cancelCloseAnnotations,
+        onConfirmClose: confirmCloseAnnotations,
+        onConfirmRemove: confirmRemoveAnnotation,
+        ...commonEditorActions
+    })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 
 const selector = (state) => {
@@ -114,10 +114,10 @@ const Measure = connect(
         selector,
         (state) => measureSelector(state)
     ],
-        (measure, show) => ({
-            show,
-            ...measure
-        }
+    (measure, show) => ({
+        show,
+        ...measure
+    }
     )),
     {
         toggleMeasure: changeMeasurement,

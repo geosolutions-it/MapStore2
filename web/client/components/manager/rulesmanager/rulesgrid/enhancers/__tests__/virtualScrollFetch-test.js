@@ -46,6 +46,6 @@ describe('rulegrid virtulaScrollFetch', () => {
             complete: () => {
                 axios.interceptors.request.eject(inter);
             }
-          });
+        });
     });
 });

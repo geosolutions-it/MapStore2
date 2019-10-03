@@ -43,11 +43,12 @@ export function changeFormat(format) {
  * @prop {string} options.cql_filter optional filter to apply for both requests
  * @prop {string} options.layer name of the layer with workspace
 */
+// eslint-disable-next-line camelcase
 export function searchLayerWithFilter({layer, cql_filter} = {}) {
     return {
         type: SEARCH_LAYER_WITH_FILTER,
         layer,
-        cql_filter
+        cql_filter: cql_filter
     };
 }
 /**

@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -15,6 +15,6 @@ const ContainerDimensions = require('react-container-dimensions').default;
 const React = require('react');
 module.exports = (props) => (<div className="mapstore-widget-chart">
     <ContainerDimensions>
-          <SimpleChart {...props}/>
+        <SimpleChart {...props}/>
     </ContainerDimensions>
 </div>);

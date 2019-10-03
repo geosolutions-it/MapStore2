@@ -14,58 +14,60 @@ const resetStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameParentFi
 
 // Trigger first loading when value change
 const triggerEmptyLoadDataStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameEmptyRequest(oP, nP))
-                .skip(1)
-                .debounceTime(300)
-                .switchMap(({emptySearch, loadingErrorMsg, nextPage, prevPage, onError, parentsFilter = {}, size = 10, pagination, loadData, setData = () => {}}) => {
-                    return loadData(emptySearch, 0, size, parentsFilter, true)
-                        .do(({count, data}) => {
-                            setData({
-                                pagination: {...pagination, loadNextPage: nextPage, loadPrevPage: prevPage, firstPage: true, lastPage: Math.ceil(count / size) <= 1},
-                                data,
-                                page: 0,
-                                count
-                            });
-                        }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
-                            onError(loadingErrorMsg);
-                        }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+    .skip(1)
+    .debounceTime(300)
+    .switchMap(({emptySearch, loadingErrorMsg, nextPage, prevPage, onError, parentsFilter = {}, size = 10, pagination, loadData, setData = () => {}}) => {
+        return loadData(emptySearch, 0, size, parentsFilter, true)
+            .do(({count, data}) => {
+                setData({
+                    pagination: {...pagination, loadNextPage: nextPage, loadPrevPage: prevPage, firstPage: true, lastPage: Math.ceil(count / size) <= 1},
+                    data,
+                    page: 0,
+                    count
                 });
+            }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
+                onError(loadingErrorMsg);
+            }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+    });
 
 // Trigger first loading when value change
 const triggerLoadDataStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameFilter(oP, nP))
-                .debounceTime(300)
-                .filter(({val}) => val && val.length > 0)
-                .switchMap(({loadingErrorMsg, nextPage, prevPage, onError, parentsFilter = {}, val = "", size = 10, pagination, loadData, setData = () => {}}) => {
-                    return loadData(val, 0, size, parentsFilter, true)
-                        .do(({count, data}) => {
-                            setData({
-                                pagination: {...pagination, loadNextPage: nextPage, loadPrevPage: prevPage, firstPage: true, lastPage: Math.ceil(count / size) <= 1},
-                                data,
-                                page: 0,
-                                count
-                            });
-                        }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
-                            onError(loadingErrorMsg);
-                        }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+    .debounceTime(300)
+    .filter(({val}) => val && val.length > 0)
+    .switchMap(({loadingErrorMsg, nextPage, prevPage, onError, parentsFilter = {}, val = "", size = 10, pagination, loadData, setData = () => {}}) => {
+        return loadData(val, 0, size, parentsFilter, true)
+            .do(({count, data}) => {
+                setData({
+                    pagination: {...pagination, loadNextPage: nextPage, loadPrevPage: prevPage, firstPage: true, lastPage: Math.ceil(count / size) <= 1},
+                    data,
+                    page: 0,
+                    count
                 });
+            }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
+                onError(loadingErrorMsg);
+            }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+    });
 
 const loadPageStream = page$ => page$
-        .switchMap(({pageStep, page, parentsFilter, count, val, size,
-            pagination, setData, loadData, onError, loadingErrorMsg}) => {
-                const newPage = page + pageStep;
-                return loadData(val, newPage, size, parentsFilter)
-                        .do(({data}) => {
-                            setData({
-                                pagination: {...pagination, firstPage: newPage === 0, lastPage: Math.ceil(count / size) <= newPage + 1},
-                                data,
-                                page: newPage
-                            });
-                        }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
-                            onError(loadingErrorMsg);
-                        }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
-            });
+    .switchMap(({pageStep, page, parentsFilter, count, val, size,
+        pagination, setData, loadData, onError, loadingErrorMsg}) => {
+        const newPage = page + pageStep;
+        return loadData(val, newPage, size, parentsFilter)
+            .do(({data}) => {
+                setData({
+                    pagination: {...pagination, firstPage: newPage === 0, lastPage: Math.ceil(count / size) <= newPage + 1},
+                    data,
+                    page: newPage
+                });
+            }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
+                onError(loadingErrorMsg);
+            }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+    });
 const dataStreamFactory = prop$ => {
-    const {handler: nextPage, stream: nextPage$ } = createEventHandler();
-    const {handler: prevPage, stream: prevPage$ } = createEventHandler();
+    const {handler: nextPage, stream: next$ } = createEventHandler();
+    const {handler: prevPage, stream: prev$ } = createEventHandler();
+    const nextPage$ = Rx.Observable.from(next$);
+    const prevPage$ = Rx.Observable.from(prev$);
     const page$ = Rx.Observable
         .merge(nextPage$.mapTo(1), prevPage$.mapTo(-1))
         .withLatestFrom(prop$.map(({onError, loadData, page, parentsFilter, count,
@@ -126,23 +128,25 @@ module.exports = compose(
         }}), {
         resetCombo: (state, { initialData = []}) => () => {
             return {
-            data: initialData,
-            page: 0,
-            val: undefined
-        }; },
+                data: initialData,
+                page: 0,
+                val: undefined
+            };
+        },
         setData: ({count: oldCount}) => ({pagination, data, page = 0, count = oldCount} = {}) => ({
             pagination,
             data,
             page,
             count
         }),
-        onReset: ({typing, val}, {onValueSelected, selected}) => () => {
+        onReset: ({typing}, {onValueSelected, selected}) => () => {
             if (selected) {
                 onValueSelected();
             }
             if (typing) {
                 return {typing: false};
             }
+            return {};
         },
         onChange: ({stopChange, val: oldVal, emptyReq}, {initialData = [], valueField}) => (val = "") => {
             if (stopChange) {
@@ -156,13 +160,14 @@ module.exports = compose(
             if (!clearable && !open && val === "" && selected) {
                 onValueSelected();
                 return {typing: false};
-            }else if (!open && val !== selected) {
+            } else if (!open && val !== selected) {
                 return {val: selected, data: initialData, typing: false};
-            }else if (!open) {
+            } else if (!open) {
                 return {typing: false};
-            }else if (open && val.length === 0 && data.length === 0) {
+            } else if (open && val.length === 0 && data.length === 0) {
                 return {emptyReq: emptyReq + 1};
             }
+            return {};
         },
         onSelect: (state, {onValueSelected, selected, valueField}) => (select) => {
             const selectedVal = isObject(select) && select[valueField] || select;

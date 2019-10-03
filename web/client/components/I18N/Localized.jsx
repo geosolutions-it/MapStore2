@@ -38,8 +38,8 @@ class Localized extends React.Component {
             }
 
             return (<IntlProvider key={this.props.locale} locale={this.props.locale}
-                 messages={this.flattenMessages(this.props.messages)}
-                >
+                messages={this.flattenMessages(this.props.messages)}
+            >
                 {children}
             </IntlProvider>);
             // return React.Children.only(children);

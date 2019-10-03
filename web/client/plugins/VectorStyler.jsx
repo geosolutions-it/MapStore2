@@ -90,10 +90,10 @@ class VectorStyler extends React.Component {
 
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
     }
 
-    componentWillUpdate(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
         this.bands = nextProps.layer && nextProps.layer.describeLayer ? nextProps.layer.describeLayer.bands : undefined;
 
     }
@@ -133,9 +133,9 @@ class VectorStyler extends React.Component {
         }
         case 'LineString':
         case 'MultiLineString':
-            {
-                return <StylePolyline/>;
-            }
+        {
+            return <StylePolyline/>;
+        }
         case 'Point':
         case 'MultiPoint': {
             return <StylePoint showMarker={false} showMarkSelector/>;
@@ -149,67 +149,67 @@ class VectorStyler extends React.Component {
     renderSymbolStyler = () => {
         return (
             <Panel header={(<label><Message msgId="vectorstyler.symboltitle"/></label>)} eventKey="1">
-           {this.renderStyle()}
-       </Panel>);
+                {this.renderStyle()}
+            </Panel>);
     };
 
     renderLabelStyler = () => {
         return (<Panel header={(<label><Message msgId="vectorstyler.labeltitle"/></label>)} eventKey="2">
-                <Grid fluid>
-                     <Row>
-                            <Col xs={1}>
-                                <input aria-label="..." type="checkbox" defaultChecked={false} />
-                            </Col>
-                            <Col style={{paddingLeft: 0, paddingTop: 1}} xs={4}>
-                                <label>Label Features</label>
-                            </Col>
-                        </Row>
-                </Grid>
-                </Panel>);
+            <Grid fluid>
+                <Row>
+                    <Col xs={1}>
+                        <input aria-label="..." type="checkbox" defaultChecked={false} />
+                    </Col>
+                    <Col style={{paddingLeft: 0, paddingTop: 1}} xs={4}>
+                        <label>Label Features</label>
+                    </Col>
+                </Row>
+            </Grid>
+        </Panel>);
     };
 
     renderAvancedRule = () => {
         return (<Panel header={(<label><Message msgId="vectorstyler.conditiontitle"/></label>)} eventKey="3">
-                <Grid fluid>
-                        <ScaleDenominator minValue={this.props.rule.minDenominator} maxValue={this.props.rule.maxDenominator} onChange={this.props.setRuleParameter}/>
-                </Grid>
-                </Panel>);
+            <Grid fluid>
+                <ScaleDenominator minValue={this.props.rule.minDenominator} maxValue={this.props.rule.maxDenominator} onChange={this.props.setRuleParameter}/>
+            </Grid>
+        </Panel>);
     };
 
     renderSelector = () => {
         return (<Row style={{marginBottom: "22px"}}>
-                    <Row>
-                        {!this.props.hideLayerSelector ? (<Col sm={4} >
-                        <label><Message msgId="vectorstyler.layerlabel"/></label>
-                            <Combobox data={this.props.layers.reverse()}
-                                value={(this.props.layer) ? this.props.layer.id : null}
-                                onChange={(value)=> this.props.selectLayer(value)}
-                                valueField={"id"}
-                                textField={"title"} />
-                        </Col>) : null}
-                        {this.props.layer ? (<Col sm={4}>
-                            <label><Message msgId="vectorstyler.rulelabel"/></label>
-                         <Combobox data={this.props.rules}
-                                value={this.props.rule}
-                                onChange={(value)=> this.props.selectRule(value.id)}
-                                valueField={"id"}
-                                textField={"name"} /> </Col>) : null}
-                        {this.props.rule ? (
-                            <Col sm={4}>
-                            <label><Message msgId="vectorstyler.namelabel"/></label>
-                            <FormControl type="text" onChange={(ev) => this.props.setRuleParameter('name', ev.target.value)} value={this.props.rule.name}/>
-                            </Col>) : null}
-                    </Row>
-                </Row>);
+            <Row>
+                {!this.props.hideLayerSelector ? (<Col sm={4} >
+                    <label><Message msgId="vectorstyler.layerlabel"/></label>
+                    <Combobox data={this.props.layers.reverse()}
+                        value={(this.props.layer) ? this.props.layer.id : null}
+                        onChange={(value)=> this.props.selectLayer(value)}
+                        valueField={"id"}
+                        textField={"title"} />
+                </Col>) : null}
+                {this.props.layer ? (<Col sm={4}>
+                    <label><Message msgId="vectorstyler.rulelabel"/></label>
+                    <Combobox data={this.props.rules}
+                        value={this.props.rule}
+                        onChange={(value)=> this.props.selectRule(value.id)}
+                        valueField={"id"}
+                        textField={"name"} /> </Col>) : null}
+                {this.props.rule ? (
+                    <Col sm={4}>
+                        <label><Message msgId="vectorstyler.namelabel"/></label>
+                        <FormControl type="text" onChange={(ev) => this.props.setRuleParameter('name', ev.target.value)} value={this.props.rule.name}/>
+                    </Col>) : null}
+            </Row>
+        </Row>);
     };
 
     renderVectorStyler = () => {
         return this.props.layer ?
             <Row>
-            <PanelGroup defaultActiveKey="1" accordion>
+                <PanelGroup defaultActiveKey="1" accordion>
                     {this.props.rule ? this.renderSymbolStyler() : null}
                     {this.props.rule ? this.renderAvancedRule() : null}
-            </PanelGroup>
+                </PanelGroup>
             </Row> : null;
     };
 
@@ -217,36 +217,36 @@ class VectorStyler extends React.Component {
         let disabled = !this.props.rule;
         return (
             <Row>
-            <Col sm={3} style={{padding: 0}}><Button onClick={this.props.addRule}>
-            <Glyphicon glyph="plus" /><Message msgId="vectorstyler.addrulebtn"/></Button></Col>
-            <Col sm={3} style={{padding: 0}}>
-            <Button disabled={disabled}
-            onClick={() => this.props.removeRule(this.props.rule.id)}>
-            <Glyphicon glyph="minus" /><Message msgId="vectorstyler.removerulebtn"/></Button></Col>
-            <Col sm={4} smOffset={2} style={{padding: 0}}>
-            <Button style={{"float": "right"}} onClick={this.apply}
-            disabled={disabled} ><Message msgId="vectorstyler.applybtn"/></Button>
-            </Col>
+                <Col sm={3} style={{padding: 0}}><Button onClick={this.props.addRule}>
+                    <Glyphicon glyph="plus" /><Message msgId="vectorstyler.addrulebtn"/></Button></Col>
+                <Col sm={3} style={{padding: 0}}>
+                    <Button disabled={disabled}
+                        onClick={() => this.props.removeRule(this.props.rule.id)}>
+                        <Glyphicon glyph="minus" /><Message msgId="vectorstyler.removerulebtn"/></Button></Col>
+                <Col sm={4} smOffset={2} style={{padding: 0}}>
+                    <Button style={{"float": "right"}} onClick={this.apply}
+                        disabled={disabled} ><Message msgId="vectorstyler.applybtn"/></Button>
+                </Col>
             </Row>);
     };
 
     renderBody = () => {
 
         return (<Grid fluid>
-                {this.renderError()}
-                {this.renderSelector()}
-                {this.renderVectorStyler()}
-                {this.props.layer ? this.renderApplyBtn() : null}
-                </Grid>);
+            {this.renderError()}
+            {this.renderSelector()}
+            {this.renderVectorStyler()}
+            {this.props.layer ? this.renderApplyBtn() : null}
+        </Grid>);
     };
 
     render() {
         if (this.props.forceOpen || this.props.open) {
             return this.props.withContainer ?
                 <Panel className="mapstore-vectorstyler-panel"
-                        style={this.getPanelStyle()}
-                        header={<label><Message msgId="vectorstyler.paneltitle"/></label>}>
-                        {this.renderBody()}
+                    style={this.getPanelStyle()}
+                    header={<label><Message msgId="vectorstyler.paneltitle"/></label>}>
+                    {this.renderBody()}
                 </Panel> : this.renderBody();
         }
         return null;

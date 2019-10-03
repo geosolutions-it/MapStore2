@@ -28,11 +28,11 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case 'TUTORIAL_ACTION':
-                        expect(action.value).toBe('value');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case 'TUTORIAL_ACTION':
+                    expect(action.value).toBe('value');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -61,14 +61,14 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case 'TUTORIAL_ACTION':
-                        expect(action.value).toBe('value');
-                        break;
-                    case 'TUTORIAL_ACTION_2':
-                        expect(action.value).toBe('value_2');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case 'TUTORIAL_ACTION':
+                    expect(action.value).toBe('value');
+                    break;
+                case 'TUTORIAL_ACTION_2':
+                    expect(action.value).toBe('value_2');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -93,11 +93,11 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SETUP_TUTORIAL:
-                        expect(action.id).toBe('dashboard');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SETUP_TUTORIAL:
+                    expect(action.id).toBe('dashboard');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -128,11 +128,11 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SETUP_TUTORIAL:
-                        expect(action.id).toBe('cesium');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SETUP_TUTORIAL:
+                    expect(action.id).toBe('cesium');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -163,11 +163,11 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SETUP_TUTORIAL:
-                        expect(action.id).toBe('dashboard');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SETUP_TUTORIAL:
+                    expect(action.id).toBe('dashboard');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -198,11 +198,11 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SETUP_TUTORIAL:
-                        expect(action.id).toBe('dashboard_mobile');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SETUP_TUTORIAL:
+                    expect(action.id).toBe('dashboard_mobile');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -236,11 +236,11 @@ describe('tutorial Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SETUP_TUTORIAL:
-                        expect(action.id).toBe('default');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SETUP_TUTORIAL:
+                    expect(action.id).toBe('default');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();

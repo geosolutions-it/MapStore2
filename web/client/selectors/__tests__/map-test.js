@@ -21,11 +21,11 @@ const {
 } = require('../map');
 const center = {x: 1, y: 1};
 let state = {
-        map: {center: center},
-        mapInitialConfig: {
-            mapId: 123
-        }
-    };
+    map: {center: center},
+    mapInitialConfig: {
+        mapId: 123
+    }
+};
 
 describe('Test map selectors', () => {
     it('test mapInfoDetailsUriFromIdSelector from config', () => {
@@ -37,7 +37,7 @@ describe('Test map selectors', () => {
                         details
                     }
                 }
-        }});
+            }});
 
         expect(props).toExist();
         expect(props).toBe(details);

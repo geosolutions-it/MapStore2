@@ -11,7 +11,7 @@ const {shallowEqual, branch, withPropsOnChange} = require('recompose');
  * Syncs map center
  */
 module.exports = (prop) => branch(
-    (({mapSync} = {}) => mapSync),
+    ({mapSync} = {}) => mapSync,
     withPropsOnChange(
         ({ mapSync, dependencies = {} } = {}, { mapSync: newMapSync, dependencies: newDependencies }) =>
             newDependencies && shallowEqual(dependencies[prop], newDependencies[prop])

@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- /**
+/**
   * lettable to make a stream pausable.
   *
   */
@@ -16,5 +16,5 @@ module.exports = (sem$, start = true, condition = c => c) =>
         stream$.withLatestFrom(
             sem$.startWith(start)
         )
-        .filter(([, s]) => condition(s))
-        .map(([e]) => e);
+            .filter(([, s]) => condition(s))
+            .map(([e]) => e);

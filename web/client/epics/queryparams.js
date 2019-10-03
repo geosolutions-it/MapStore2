@@ -54,6 +54,7 @@ const paramActions = {
             const actions = JSON.parse(value);
             return actions.filter(a => includes(whiteList, a.type));
         }
+        return [];
     }
 };
 /**

@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const GF_RULE1 = require('json-loader!../../test-resources/geofence/rest/rules/full_rule1.json');
-const GS_RULE1 = require('json-loader!../../test-resources/geoserver/rest/geofence/full_rule1.json');
+const GF_RULE1 = require('../../test-resources/geofence/rest/rules/full_rule1.json');
+const GS_RULE1 = require('../../test-resources/geoserver/rest/geofence/full_rule1.json');
 const { convertRuleGS2GF, convertRuleGF2GS } = require('../RuleServiceUtils');
 
 

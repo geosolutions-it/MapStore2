@@ -50,11 +50,11 @@ class SearchTarget extends React.Component {
         let d = this.getDistanceToGaol(this.props.position);
         let integerFormat = {style: "decimal", minimumFractionDigits: 3, maximumFractionDigits: 3};
         return (
-                <h5>
+            <h5>
                 <Label bsSize="lg" bsStyle="info">
                     {d < 0.1 ?
                         <div id="geoslable">
-                        <span className="font-effect-shadow-multiple">GeoSolutions</span></div> :
+                            <span className="font-effect-shadow-multiple">GeoSolutions</span></div> :
                         <div>
                             <span>Move your mouse to find the target.<br/>Distance: </span>
                             <FormattedNumber key="distance" {...integerFormat} value={d} bsSize="lg"/>
@@ -63,7 +63,7 @@ class SearchTarget extends React.Component {
                         </div>
                     }
                 </Label>
-                </h5>);
+            </h5>);
     }
 }
 

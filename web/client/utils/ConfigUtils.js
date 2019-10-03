@@ -114,11 +114,11 @@ var ConfigUtils = {
             if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
                 newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
                 return url.format(assign({}, parsed, {search: null, pathname: newPathname }, {
-                        query: assign({
-                            service: "WPS",
-                            ...options
-                        }, parsed.query)
-                    }));
+                    query: assign({
+                        service: "WPS",
+                        ...options
+                    }, parsed.query)
+                }));
             }
         }
         return null;

@@ -44,7 +44,7 @@ export default class Locate extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.status !== this.props.status) {
             this.configureLocate(newProps.status);
         }

@@ -28,7 +28,7 @@ const {
 
 const Builder = connect(
     wizardSelector,
-     {
+    {
         setPage,
         setValid: valid => changeEditorSetting("valid", valid),
         onEditorChange,
@@ -46,12 +46,12 @@ const Builder = connect(
 const BuilderHeader = require('./BuilderHeader');
 const Toolbar = compose(
     connect(wizardSelector, {
-            openFilterEditor,
-            setPage,
-            onChange: onEditorChange,
-            insertWidget
-        },
-        wizardStateToProps
+        openFilterEditor,
+        setPage,
+        onChange: onEditorChange,
+        insertWidget
+    },
+    wizardStateToProps
     ),
     viewportBuilderConnect,
     withExitButton(),
@@ -68,7 +68,7 @@ const chooseLayerEnhancer = compose(
     viewportBuilderConnectMask,
     branch(
         ({layer} = {}) => !layer,
-            renderComponent(chartLayerSelector(require('./LayerSelector')))
+        renderComponent(chartLayerSelector(require('./LayerSelector')))
     ),
 
 );
@@ -76,16 +76,16 @@ const chooseLayerEnhancer = compose(
 module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, editorData, toggleConnection, availableDependencies = [], dependencies, ...props} = {}) =>
 
     (<div className = "mapstore-chart-advance-options">
-    <BorderLayout
-        header={<BuilderHeader onClose={onClose}>
-            <Toolbar
-                exitButton={exitButton}
-                editorData={editorData}
-                toggleConnection={toggleConnection}
-                availableDependencies={availableDependencies}
-                onClose={onClose}/>
-        </BuilderHeader>}
+        <BorderLayout
+            header={<BuilderHeader onClose={onClose}>
+                <Toolbar
+                    exitButton={exitButton}
+                    editorData={editorData}
+                    toggleConnection={toggleConnection}
+                    availableDependencies={availableDependencies}
+                    onClose={onClose}/>
+            </BuilderHeader>}
         >
-        {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
-    </BorderLayout>
+            {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
+        </BorderLayout>
     </div>));

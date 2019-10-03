@@ -42,11 +42,11 @@ describe('FilterField', () => {
                 label: "Attribute1",
                 type: "list",
                 values: [
-                   {id: "attribute1", name: "attribute1"},
-                   {id: "Attribute2", name: "attribute2"},
-                   {id: "attribute3", name: "attribute3"},
-                   {id: "attribute4", name: "attribute4"},
-                   {id: "attribute5", name: "attribute5"}
+                    {id: "attribute1", name: "attribute1"},
+                    {id: "Attribute2", name: "attribute2"},
+                    {id: "attribute3", name: "attribute3"},
+                    {id: "attribute4", name: "attribute4"},
+                    {id: "attribute5", name: "attribute5"}
                 ],
                 valueId: "id",
                 valueLabel: "name"
@@ -55,11 +55,11 @@ describe('FilterField', () => {
                 label: "Attribute2",
                 type: "list",
                 values: [
-                   {id: "attribute6", name: "attribute6"},
-                   {id: "Attribute7", name: "Attribute7"},
-                   {id: "attribute8", name: "attribute8"},
-                   {id: "attribute9", name: "attribute9"},
-                   {id: "attribute10", name: "attribute10"}
+                    {id: "attribute6", name: "attribute6"},
+                    {id: "Attribute7", name: "Attribute7"},
+                    {id: "attribute8", name: "attribute8"},
+                    {id: "attribute9", name: "attribute9"},
+                    {id: "attribute10", name: "attribute10"}
                 ],
                 valueId: "id",
                 valueLabel: "name",
@@ -73,16 +73,16 @@ describe('FilterField', () => {
             <FilterField
                 attributes={attributes}
                 filterField={filterField}>
-                    <ComboField
-                        attType="list"
-                        valueField={'id'}
-                        textField={'name'}
-                        fieldOptions={attributes[0] && attributes[0].type === "list" ? [null, ...attributes[0].values] : null}/>
-                    <DateField
-                        attType="date"
-                        operator={filterField.operator}/>
-                </FilterField>,
-                document.getElementById("container"));
+                <ComboField
+                    attType="list"
+                    valueField={'id'}
+                    textField={'name'}
+                    fieldOptions={attributes[0] && attributes[0].type === "list" ? [null, ...attributes[0].values] : null}/>
+                <DateField
+                    attType="date"
+                    operator={filterField.operator}/>
+            </FilterField>,
+            document.getElementById("container"));
 
         expect(filterfield).toExist();
 
@@ -133,11 +133,11 @@ describe('FilterField', () => {
                 label: "Attribute1",
                 type: "list",
                 values: [
-                   {id: "attribute1", name: "attribute1"},
-                   {id: "Attribute2", name: "attribute2"},
-                   {id: "attribute3", name: "attribute3"},
-                   {id: "attribute4", name: "attribute4"},
-                   {id: "attribute5", name: "attribute5"}
+                    {id: "attribute1", name: "attribute1"},
+                    {id: "Attribute2", name: "attribute2"},
+                    {id: "attribute3", name: "attribute3"},
+                    {id: "attribute4", name: "attribute4"},
+                    {id: "attribute5", name: "attribute5"}
                 ],
                 valueId: "id",
                 valueLabel: "name",
@@ -149,16 +149,16 @@ describe('FilterField', () => {
             <FilterField
                 attributes={attributes}
                 filterField={filterField}>
-                    <ComboField
-                        attType="list"
-                        valueField={'id'}
-                        textField={'name'}
-                        fieldOptions={attributes[0] && attributes[0].type === "list" ? [null, ...attributes[0].values] : null}/>
-                    <DateField
-                        attType="date"
-                        operator={filterField.operator}/>
-                </FilterField>,
-                document.getElementById("container"));
+                <ComboField
+                    attType="list"
+                    valueField={'id'}
+                    textField={'name'}
+                    fieldOptions={attributes[0] && attributes[0].type === "list" ? [null, ...attributes[0].values] : null}/>
+                <DateField
+                    attType="date"
+                    operator={filterField.operator}/>
+            </FilterField>,
+            document.getElementById("container"));
 
         expect(filterfield).toExist();
 
@@ -210,11 +210,11 @@ describe('FilterField', () => {
                 label: "Attribute1",
                 type: "list",
                 values: [
-                   {id: "attribute1", name: "attribute1"},
-                   {id: "Attribute2", name: "attribute2"},
-                   {id: "attribute3", name: "attribute3"},
-                   {id: "attribute4", name: "attribute4"},
-                   {id: "attribute5", name: "attribute5"}
+                    {id: "attribute1", name: "attribute1"},
+                    {id: "Attribute2", name: "attribute2"},
+                    {id: "attribute3", name: "attribute3"},
+                    {id: "attribute4", name: "attribute4"},
+                    {id: "attribute5", name: "attribute5"}
                 ],
                 valueId: "id",
                 valueLabel: "name",
@@ -268,11 +268,11 @@ describe('FilterField', () => {
                 label: "Attribute1",
                 type: "list",
                 values: [
-                   {id: "attribute1", name: "attribute1"},
-                   {id: "Attribute2", name: "attribute2"},
-                   {id: "attribute3", name: "attribute3"},
-                   {id: "attribute4", name: "attribute4"},
-                   {id: "attribute5", name: "attribute5"}
+                    {id: "attribute1", name: "attribute1"},
+                    {id: "Attribute2", name: "attribute2"},
+                    {id: "attribute3", name: "attribute3"},
+                    {id: "attribute4", name: "attribute4"},
+                    {id: "attribute5", name: "attribute5"}
                 ],
                 valueId: "id",
                 valueLabel: "name",

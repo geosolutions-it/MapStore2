@@ -17,17 +17,17 @@ const { moveRules } = require('../../../../../observables/rulesmanager');
 module.exports = () => (prop$) =>
     prop$.distinctUntilChanged((oP, nP) => samePages(oP, nP))
         .switchMap(({ orderRule$, setLoading, setData, onLoadError, pages}) =>
-                orderRule$
+            orderRule$
                 .switchMap(({rules, targetPriority}) => {
                     setData({pages, editing: true});
                     setLoading(true);
                     return moveRules(targetPriority, rules)
-                    .catch((e) => Rx.Observable.of({
-                        error: e
-                    }).do(() => onLoadError({
-                        title: "rulesmanager.errorTitle",
-                        message: "rulesmanager.errorMovingRules"
-                    })).do(() => setLoading(false)))
-                    .do(() => setData({pages: []}));
+                        .catch((e) => Rx.Observable.of({
+                            error: e
+                        }).do(() => onLoadError({
+                            title: "rulesmanager.errorTitle",
+                            message: "rulesmanager.errorMovingRules"
+                        })).do(() => setLoading(false)))
+                        .do(() => setData({pages: []}));
                 }
-));
+                ));

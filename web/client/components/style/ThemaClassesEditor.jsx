@@ -59,10 +59,10 @@ class ThemaClassesEditor extends React.Component {
 
     render() {
         return (<div className={"thema-classes-editor " + this.props.className}><Grid fluid>
-                <Row>
-                    {this.renderClasses()}
-                </Row>
-            </Grid></div>);
+            <Row>
+                {this.renderClasses()}
+            </Row>
+        </Grid></div>);
     }
 
     updateColor = (classIndex, color) => {

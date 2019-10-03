@@ -22,7 +22,7 @@ class MousePositionLabelYX extends React.Component {
     render() {
         let format = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
-             <h5>
+            <h5>
                 <Label bsSize="lg" bsStyle="info">
                     <span>X: </span><NumberFormat key="x" numberParams={format} value={this.props.position.x} />
                     <span className="mouseposition-separator"/>

@@ -15,13 +15,13 @@ const refreshingLayers = (state) => state.layers && state.layers.refreshing || [
 const mapUpdateOptions = (state) => state.controls && state.controls.mapUpdate && state.controls.mapUpdate.options || {bbox: true, search: true, dimensions: true, title: false};
 
 const autoMapUpdateSelector = createSelector([
-     getWMSLayers,
-     refreshingLayers
- ], (layers, refreshing) => ({
-     loading: refreshing && refreshing.length > 0 ? true : false,
-     length: layers.length || 0,
-     count: (layers.length - refreshing.length) + 1 || 0
- }));
+    getWMSLayers,
+    refreshingLayers
+], (layers, refreshing) => ({
+    loading: refreshing && refreshing.length > 0 ? true : false,
+    length: layers.length || 0,
+    count: (layers.length - refreshing.length) + 1 || 0
+}));
 
 module.exports = {
     getWMSLayers,

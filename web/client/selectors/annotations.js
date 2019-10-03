@@ -14,8 +14,8 @@ const {head, get} = require('lodash');
 const assign = require('object-assign');
 
 const annotationsLayerSelector = createSelector([
-        layersSelector
-    ], (layers) => head(layers.filter(l => l.id === 'annotations'))
+    layersSelector
+], (layers) => head(layers.filter(l => l.id === 'annotations'))
 );
 
 const multiGeometrySelector = (state) => get(state, 'annotations.config.multiGeometry', false);
@@ -74,7 +74,7 @@ const annotationsInfoSelector = (state) => (assign({}, {
     unsavedGeometry: unsavedGeometrySelector(state),
     unsavedStyle: unsavedStyleSelector(state),
     symbolList: symbolListSelector(state)
-    }) );
+}) );
 
 const annotationsSelector = (state) => ({
     ...(state.annotations || {})
@@ -99,8 +99,8 @@ const annotationsListSelector = createSelector([
     current: annotations.current || null,
     editing: info.editing,
     filter: annotations.filter || ''
-    }, info.config ? {
-        config: info.config
+}, info.config ? {
+    config: info.config
 } : { })));
 
 const annotationSelector = createSelector([annotationsListSelector], (annotations) => {

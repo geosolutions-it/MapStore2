@@ -30,7 +30,7 @@ const {feedbackMaskLoading} = require('../actions/feedbackMask');
  * @return {external:Observable} emitting {@link #actions.security.refreshAccessToken} events
  */
 const refreshTokenEpic = (action$, store) =>
-        action$.ofType(LOCATION_CHANGE)
+    action$.ofType(LOCATION_CHANGE)
         .take(1)
         // do not launch the session verify is there is no stored session
         .switchMap(() => (get(store.getState(), "security.user") ?
@@ -39,11 +39,11 @@ const refreshTokenEpic = (action$, store) =>
                     (response) => sessionValid(response, AuthenticationAPI.authProviderName)
                 )
                 .catch(() => Rx.Observable.of(logout(null))) : Rx.Observable.empty()
-            )
+        )
             .merge(Rx.Observable
-            .interval(300000 /* ms */)
-            .filter(() => get(store.getState(), "security.user"))
-            .mapTo(refreshAccessToken()))
+                .interval(300000 /* ms */)
+                .filter(() => get(store.getState(), "security.user"))
+                .mapTo(refreshAccessToken()))
         );
 
 
@@ -68,23 +68,23 @@ const reloadMapConfig = (action$, store) =>
 
 const promptLoginOnMapError = (actions$, store) =>
     actions$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR)
-    .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
-    .switchMap(() => {
-        return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
-        // send to homepage if close is pressed on login modal
-        .merge(
-            actions$.ofType(SET_CONTROL_PROPERTY)
-                .filter(actn => actn.control === 'LoginForm' && actn.property === 'enabled' && actn.value === false && !isLoggedIn(store.getState()))
-                .exhaustMap(() => Rx.Observable.of(feedbackMaskLoading(), push('/')))
-                .takeUntil(actions$.ofType(LOGIN_SUCCESS))
-        );
-    });
+        .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
+        .switchMap(() => {
+            return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
+            // send to homepage if close is pressed on login modal
+                .merge(
+                    actions$.ofType(SET_CONTROL_PROPERTY)
+                        .filter(actn => actn.control === 'LoginForm' && actn.property === 'enabled' && actn.value === false && !isLoggedIn(store.getState()))
+                        .exhaustMap(() => Rx.Observable.of(feedbackMaskLoading(), push('/')))
+                        .takeUntil(actions$.ofType(LOGIN_SUCCESS))
+                );
+        });
 
 const initCatalogOnLoginOutEpic = (action$) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
-    .switchMap(() => {
-        return Rx.Observable.of(initCatalog());
-    });
+        .switchMap(() => {
+            return Rx.Observable.of(initCatalog());
+        });
 
 /**
  * Epics for login functionality

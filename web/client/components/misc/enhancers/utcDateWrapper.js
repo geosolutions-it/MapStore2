@@ -29,8 +29,8 @@ import {
  * actual timezone
 */
 
-module.exports = ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
-    withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) /*props*/ => {
+export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
+    withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) /* props */ => {
         let dateToParse = date;
         let datePart = "1970-01-01";
         let timePart = "00:00:00";
@@ -54,18 +54,18 @@ module.exports = ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSe
         let resultDate = dateToParse;
         if (dateToParse) {
             switch (type) {
-                case "time": {
-                    timePart = getUTCTimePart(dateToParse);
-                    break;
-                }
-                case "date": {
-                    datePart = getUTCDatePart(dateToParse);
-                    break;
-                }
-                default: { // both
-                    timePart = getUTCTimePart(dateToParse);
-                    datePart = getUTCDatePart(dateToParse);
-                }
+            case "time": {
+                timePart = getUTCTimePart(dateToParse);
+                break;
+            }
+            case "date": {
+                datePart = getUTCDatePart(dateToParse);
+                break;
+            }
+            default: { // both
+                timePart = getUTCTimePart(dateToParse);
+                datePart = getUTCDatePart(dateToParse);
+            }
             }
             resultDate = new Date(`${datePart}T${timePart}Z`);
             resultDate.setUTCMilliseconds(dateToParse.getUTCMilliseconds());
@@ -81,7 +81,7 @@ module.exports = ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSe
         };
     }),
     withHandlers({
-        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) /*props*/ => (date, stringDate) /*event*/ => {
+        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) /* props */ => (date, stringDate) /* event */ => {
             if (!date) {
                 changeVal(null);
             } else {
@@ -98,15 +98,15 @@ module.exports = ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSe
                 const resultDate = new Date(newDate.getTime() - tzoffset);
                 let retVal = resultDate;
                 switch (type) {
-                    case "time": {
-                        retVal = `${getUTCTimePart(retVal)}Z`;
-                        break;
-                    }
-                    case "date": {
-                        retVal = `${getUTCDatePart(retVal)}Z`;
-                        break;
-                    }
-                    default: { break; }
+                case "time": {
+                    retVal = `${getUTCTimePart(retVal)}Z`;
+                    break;
+                }
+                case "date": {
+                    retVal = `${getUTCDatePart(retVal)}Z`;
+                    break;
+                }
+                default: { break; }
                 }
                 changeVal(retVal, stringDate);
             }

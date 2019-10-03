@@ -37,7 +37,7 @@ class AddGroup extends Component {
         groupName: ""
     };
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.enabled && !this.props.enabled) {
             this.setState({
                 groupName: ""
@@ -89,8 +89,8 @@ class AddGroup extends Component {
 }
 
 const AddGroupPlugin = connect((state) => ({
-        enabled: get(state, "controls.addgroup.enabled", false),
-        parent: get(state, "controls.addgroup.parent", null)
+    enabled: get(state, "controls.addgroup.enabled", false),
+    parent: get(state, "controls.addgroup.parent", null)
 }), {
     onClose: setControlProperties.bind(null, "addgroup", "enabled", false, "parent", null),
     onAdd: addGroup

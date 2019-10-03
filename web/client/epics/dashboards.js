@@ -33,7 +33,7 @@ const calculateNewParams = state => {
 };
 
 module.exports = {
-   searchDashboardsOnMapSearch: action$ =>
+    searchDashboardsOnMapSearch: action$ =>
         action$.ofType(MAPS_LIST_LOADING)
             .switchMap(({ searchText }) => Rx.Observable.of(searchDashboards(searchText))),
     searchDashboards: (action$, { getState = () => { } }) =>
@@ -80,4 +80,4 @@ module.exports = {
                 searchTextSelector(getState()),
                 calculateNewParams(getState())
             )))
-        };
+};

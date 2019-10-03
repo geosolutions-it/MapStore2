@@ -41,7 +41,7 @@ class Manager extends React.Component {
             id="manager"
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />);
+        />);
     }
 }
 

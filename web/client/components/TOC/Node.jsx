@@ -46,6 +46,7 @@ var Node = createReactClass({
                 }, {});
                 return React.cloneElement(child, props);
             }
+            return null;
         });
     },
 

@@ -199,7 +199,7 @@ const AgentUtils = {
                             // position:relative allows the iframe's absolute
                             //   positioning to be relative to the <td>
                             '<td style=position:relative>' +
-                            // </td> is implied
+                    // </td> is implied
                         // </tr> is implied
                         '<tr>' +
                             // Inner <span> needs surrounding, equal-sized periods

@@ -99,18 +99,18 @@ class NotificationContainer extends React.Component {
                 }
 
                 this.system().addNotification({
-                  ...notification,
-                  title: LocaleUtils.getMessageById(this.context.messages, notification.title) || notification.title,
-                  message,
-                  action: notification.action && {
-                      label: LocaleUtils.getMessageById(this.context.messages, notification.action.label) || notification.action.label,
-                      callback: notification.action.dispatch ? () => { this.props.onDispatch(notification.action.dispatch); } : notification.action.callback
-                  },
-                  onRemove: () => {
-                      this.props.onRemove(notification.uid);
-                      if (notification.onRemove) notification.onRemove();
-                  }
-              });
+                    ...notification,
+                    title: LocaleUtils.getMessageById(this.context.messages, notification.title) || notification.title,
+                    message,
+                    action: notification.action && {
+                        label: LocaleUtils.getMessageById(this.context.messages, notification.action.label) || notification.action.label,
+                        callback: notification.action.dispatch ? () => { this.props.onDispatch(notification.action.dispatch); } : notification.action.callback
+                    },
+                    onRemove: () => {
+                        this.props.onRemove(notification.uid);
+                        if (notification.onRemove) notification.onRemove();
+                    }
+                });
             }
         });
     };

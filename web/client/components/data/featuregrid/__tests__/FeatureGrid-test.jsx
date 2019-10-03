@@ -12,8 +12,8 @@ const TestUtils = require('react-dom/test-utils');
 var FeatureGrid = require('../FeatureGrid');
 
 const spyOn = expect.spyOn;
-const museam = require('json-loader!../../../../test-resources/wfs/museam.json');
-const describePois = require('json-loader!../../../../test-resources/wfs/describe-pois.json');
+const museam = require('../../../../test-resources/wfs/museam.json');
+const describePois = require('../../../../test-resources/wfs/describe-pois.json');
 
 // TODO FIX ALL THESE TESTS (recompose)
 describe('Test for FeatureGrid component', () => {
@@ -102,7 +102,7 @@ describe('Test for FeatureGrid component', () => {
             mode="EDIT"
             describeFeatureType={describePois}
             features={museam.features}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         let domNode = document.getElementsByClassName('react-grid-checkbox')[1];
         TestUtils.Simulate.click(domNode);
         expect(events.onRowsSelected).toHaveBeenCalled();
@@ -113,7 +113,7 @@ describe('Test for FeatureGrid component', () => {
             describeFeatureType={describePois}
             features={museam.features}
             select={[{id: museam.features[0].id}]}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         domNode = document.getElementsByClassName('react-grid-checkbox')[1];
         TestUtils.Simulate.click(domNode);
         expect(events.onRowsDeselected).toHaveBeenCalled();

@@ -43,8 +43,8 @@ describe("Test GroupGrid Component", () => {
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
         let rows = ReactTestUtils.scryRenderedDOMComponentsWithClass(
-          comp,
-          "row"
+            comp,
+            "row"
         );
         expect(rows).toExist();
         expect(rows.length).toBe(1);
@@ -52,8 +52,8 @@ describe("Test GroupGrid Component", () => {
         expect(card).toExist();
         expect(card.length).toBe(1);
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithClass(
-          comp,
-          "square-button-md"
+            comp,
+            "square-button-md"
         );
         ReactTestUtils.Simulate.click(buttons[0]);
         ReactTestUtils.Simulate.click(buttons[1]);
@@ -66,8 +66,8 @@ describe("Test GroupGrid Component", () => {
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithClass(
-          comp,
-          "square-button-md"
+            comp,
+            "square-button-md"
         );
         expect(buttons.length).toBe(0);
     });
@@ -84,8 +84,8 @@ describe("Test GroupGrid Component", () => {
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithClass(
-          comp,
-          "square-button-md"
+            comp,
+            "square-button-md"
         );
         expect(buttons.length).toBe(2);
         ReactTestUtils.Simulate.click(buttons[0]);

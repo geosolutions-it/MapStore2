@@ -6,21 +6,21 @@ const {and} = filterBuilder({});
 
 const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, startIndex, value}) => {
     const attributeFilterObj = value
-    ? '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
+        ? '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
     + '   <ogc:PropertyName>' + attribute + '</ogc:PropertyName>'
     + '   <ogc:Literal>*' + value + '*</ogc:Literal>'
     + '</ogc:PropertyIsLike>'
-    : '';
+        : '';
 
     const layerFilterObj = layerFilter && !layerFilter.disabled && FilterUtils.isFilterValid(layerFilter)
-                         ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc")
-                         : [];
+        ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc")
+        : [];
 
     const filter = attributeFilterObj.length > 0 || layerFilterObj.length > 0
-    ? '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
+        ? '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
     + and(...layerFilterObj, attributeFilterObj)
     + '</ogc:Filter>'
-    : '';
+        : '';
 
     let requestBody =
       '<wps:Execute xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" service="WPS" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd"> '

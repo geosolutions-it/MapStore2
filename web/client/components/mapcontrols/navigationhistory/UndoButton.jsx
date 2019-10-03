@@ -62,7 +62,7 @@ class UndoBtn extends React.Component {
         );
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         // none
     }
 

@@ -115,7 +115,7 @@ class RulesGrid extends React.Component {
     reorderRows = (e) => {
         if (e.rowSource.data[this.props.rowKey] === "empty_row" || e.rowTarget.data[this.props.rowKey] === "empty_row") {
             return;
-        }else if (e.rowSource.idx === e.rowTarget.idx) {
+        } else if (e.rowSource.idx === e.rowTarget.idx) {
             return;
         }
         let selectedRows = this._getSelectedRow(this.props.rowKey, this.props.selectedIds, this.props.rows);

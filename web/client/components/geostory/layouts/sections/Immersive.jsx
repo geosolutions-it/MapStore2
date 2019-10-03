@@ -61,7 +61,7 @@ const Immersive = ({
                 background: `url(${pattern})`,
                 backgroundSize: '600px auto'
             }}/>
-         <SectionContents
+        <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
             }}

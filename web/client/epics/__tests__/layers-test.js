@@ -115,12 +115,12 @@ describe('layers Epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     switch (action.type) {
-                        case CHANGE_LAYER_PARAMS:
-                            expect(action.layer.length).toBe(2);
-                            expect(action.params.time).toBe("2016-02-24T03:00:00.000Z");
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case CHANGE_LAYER_PARAMS:
+                        expect(action.layer.length).toBe(2);
+                        expect(action.params.time).toBe("2016-02-24T03:00:00.000Z");
+                        break;
+                    default:
+                        expect(true).toBe(false);
 
                     }
                 });
@@ -153,16 +153,16 @@ describe('layers Epics', () => {
                 expect(actions.length).toBe(2);
                 actions.map((action) => {
                     switch (action.type) {
-                        case SET_CONTROL_PROPERTY:
-                            expect(action.control).toBe('layersettings');
-                            expect(action.property).toBe('originalSettings');
-                            expect(action.value).toEqual({ style: '' });
-                            break;
-                        case UPDATE_SETTINGS:
-                            expect(action.options).toEqual({style: 'generic'});
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case SET_CONTROL_PROPERTY:
+                        expect(action.control).toBe('layersettings');
+                        expect(action.property).toBe('originalSettings');
+                        expect(action.value).toEqual({ style: '' });
+                        break;
+                    case UPDATE_SETTINGS:
+                        expect(action.options).toEqual({style: 'generic'});
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
                 done();
@@ -202,21 +202,21 @@ describe('layers Epics', () => {
                 expect(actions.length).toBe(3);
                 actions.map((action) => {
                     switch (action.type) {
-                        case SET_CONTROL_PROPERTY:
-                            expect(action.control).toBe('layersettings');
-                            expect(action.property).toBe('originalSettings');
-                            expect(action.value).toEqual({ style: '' });
-                            break;
-                        case UPDATE_SETTINGS:
-                            expect(action.options).toEqual({style: 'generic'});
-                            break;
-                        case UPDATE_NODE:
-                            expect(action.node).toEqual('layerId');
-                            expect(action.nodeType).toEqual('layers');
-                            expect(action.options).toEqual({opacity: 1, style: 'generic'});
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case SET_CONTROL_PROPERTY:
+                        expect(action.control).toBe('layersettings');
+                        expect(action.property).toBe('originalSettings');
+                        expect(action.value).toEqual({ style: '' });
+                        break;
+                    case UPDATE_SETTINGS:
+                        expect(action.options).toEqual({style: 'generic'});
+                        break;
+                    case UPDATE_NODE:
+                        expect(action.node).toEqual('layerId');
+                        expect(action.nodeType).toEqual('layers');
+                        expect(action.options).toEqual({opacity: 1, style: 'generic'});
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
                 done();

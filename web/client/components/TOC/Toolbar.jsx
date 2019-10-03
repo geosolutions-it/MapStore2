@@ -181,148 +181,148 @@ class Toolbar extends React.Component {
         const epsgIsSupported = currentEPSG && Proj4js.defs(currentEPSG);
 
         const layerMetadataModal = (<LayerMetadataModal
-                                key="toollayermetadatamodal"
-                                layerMetadata={this.props.layerMetadata}
-                                metadataTemplate={this.props.metadataTemplate}
-                                hideLayerMetadata={this.props.onToolsActions.onHideLayerMetadata}
-                                layerMetadataPanelTitle={this.props.text.layerMetadataPanelTitle} />);
+            key="toollayermetadatamodal"
+            layerMetadata={this.props.layerMetadata}
+            metadataTemplate={this.props.metadataTemplate}
+            hideLayerMetadata={this.props.onToolsActions.onHideLayerMetadata}
+            layerMetadataPanelTitle={this.props.text.layerMetadataPanelTitle} />);
         return this.props.activateTool.activateToolsContainer ? (
-        <ButtonGroup>
-            <ReactCSSTransitionGroup
-                transitionName="toc-toolbar-btn-transition"
-                transitionEnterTimeout={300}
-                transitionLeaveTimeout={300}>
-                {this.props.activateTool.activateAddLayer && (status === 'DESELECT' || status === 'GROUP') ?
-                    <OverlayTrigger
-                        key="addLayer"
-                        placement="top"
+            <ButtonGroup>
+                <ReactCSSTransitionGroup
+                    transitionName="toc-toolbar-btn-transition"
+                    transitionEnterTimeout={300}
+                    transitionLeaveTimeout={300}>
+                    {this.props.activateTool.activateAddLayer && (status === 'DESELECT' || status === 'GROUP') ?
+                        <OverlayTrigger
+                            key="addLayer"
+                            placement="top"
                             overlay={<Tooltip id="toc-tooltip-addLayer">{status === 'GROUP' ? this.props.text.addLayerToGroupTooltip : this.props.text.addLayerTooltip}</Tooltip>}>
                             <Button key="addLayer" bsStyle="primary" className="square-button-md" onClick={this.addLayer}>
                                 <Glyphicon glyph="add-layer" />
                             </Button>
-                    </OverlayTrigger>
-                : null}
+                        </OverlayTrigger>
+                        : null}
                     {this.props.activateTool.activateAddGroup && (status === 'DESELECT' || status === 'GROUP') && this.getSelectedNodeDepth() <= this.props.maxDepth ?
-                    <OverlayTrigger
-                        key="addGroup"
-                        placement="top"
+                        <OverlayTrigger
+                            key="addGroup"
+                            placement="top"
                             overlay={<Tooltip id="toc-tooltip-addGroup">{status === 'GROUP' ? this.props.text.addSubGroupTooltip : this.props.text.addGroupTooltip}</Tooltip>}>
                             <Button key="addGroup" bsStyle="primary" className="square-button-md" onClick={this.addGroup}>
-                            <Glyphicon glyph="add-folder" />
-                        </Button>
-                    </OverlayTrigger>
-                    : null}
-                {this.props.activateTool.activateZoomTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && currentEPSG ?
-                    <OverlayTrigger
-                        key="zoomTo"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-zoomTo">{
-                            epsgIsSupported ? this.props.text.zoomToTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']
-                            : <Message msgId="toc.epsgNotSupported" msgParams={{epsg: currentEPSG || ' '}}/>
-                        }</Tooltip>}>
-                        <Button
-                            bsStyle="primary"
-                            className="square-button-md"
-                            style={epsgIsSupported ? {opacity: 1.0, cursor: 'pointer'} : {opacity: 0.5, cursor: 'default'}}
-                            onClick={epsgIsSupported ? this.zoomTo : () => {}}>
-                            <Glyphicon glyph="zoom-to" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYER_LOAD_ERROR') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
-                    <OverlayTrigger
-                        key="settings"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status === 'LAYER_LOAD_ERROR' ? 'LAYER' : status]}</Tooltip>}>
-                        <Button active={this.props.settings.expanded} bsStyle={this.props.settings.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => { this.showSettings(status); }}>
-                            <Glyphicon glyph="wrench"/>
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-                {this.props.activateTool.activateLayerFilterTool && (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
-                    <OverlayTrigger
-                        key="queryPanel"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-layerFilter">{this.props.text.layerFilterTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onQueryBuilder}>
-                            <Glyphicon glyph="filter-layer" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-                    {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
-                    <OverlayTrigger
-                        key="featuresGrid"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-featuresGrid">{this.props.text.featuresGridTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.browseData}>
-                            <Glyphicon glyph="features-grid" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
-                    <OverlayTrigger
-                        key="removeNode"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-trash">{
-                            this.props.selectedGroups.length ? this.props.text.trashTooltip.GROUP : (this.props.text.trashTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER'])
+                                <Glyphicon glyph="add-folder" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {this.props.activateTool.activateZoomTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && currentEPSG ?
+                        <OverlayTrigger
+                            key="zoomTo"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-zoomTo">{
+                                epsgIsSupported ? this.props.text.zoomToTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']
+                                    : <Message msgId="toc.epsgNotSupported" msgParams={{epsg: currentEPSG || ' '}}/>
                             }</Tooltip>}>
-                        <Button active={this.state.showDeleteDialog} bsStyle={this.props.settings.showDeleteDialog ? 'success' : 'primary'} className="square-button-md" onClick={this.displayDeleteDialog}>
-                            <Glyphicon glyph="trash" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-                {!this.isLoading() && status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR' ?
-                    <OverlayTrigger
-                        key="reload"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-reload">{this.props.text.reloadTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.reload}>
-                            <Glyphicon glyph="refresh" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
+                            <Button
+                                bsStyle="primary"
+                                className="square-button-md"
+                                style={epsgIsSupported ? {opacity: 1.0, cursor: 'pointer'} : {opacity: 0.5, cursor: 'default'}}
+                                onClick={epsgIsSupported ? this.zoomTo : () => {}}>
+                                <Glyphicon glyph="zoom-to" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYER_LOAD_ERROR') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                        <OverlayTrigger
+                            key="settings"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-settings">{this.props.text.settingsTooltip[status === 'LAYER_LOAD_ERROR' ? 'LAYER' : status]}</Tooltip>}>
+                            <Button active={this.props.settings.expanded} bsStyle={this.props.settings.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => { this.showSettings(status); }}>
+                                <Glyphicon glyph="wrench"/>
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {this.props.activateTool.activateLayerFilterTool && (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                        <OverlayTrigger
+                            key="queryPanel"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-layerFilter">{this.props.text.layerFilterTooltip}</Tooltip>}>
+                            <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onQueryBuilder}>
+                                <Glyphicon glyph="filter-layer" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                        <OverlayTrigger
+                            key="featuresGrid"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-featuresGrid">{this.props.text.featuresGridTooltip}</Tooltip>}>
+                            <Button bsStyle="primary" className="square-button-md" onClick={this.browseData}>
+                                <Glyphicon glyph="features-grid" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                        <OverlayTrigger
+                            key="removeNode"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-trash">{
+                                this.props.selectedGroups.length ? this.props.text.trashTooltip.GROUP : (this.props.text.trashTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER'])
+                            }</Tooltip>}>
+                            <Button active={this.state.showDeleteDialog} bsStyle={this.props.settings.showDeleteDialog ? 'success' : 'primary'} className="square-button-md" onClick={this.displayDeleteDialog}>
+                                <Glyphicon glyph="trash" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {!this.isLoading() && status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR' ?
+                        <OverlayTrigger
+                            key="reload"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-reload">{this.props.text.reloadTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']}</Tooltip>}>
+                            <Button bsStyle="primary" className="square-button-md" onClick={this.reload}>
+                                <Glyphicon glyph="refresh" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
                     {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
-                    <OverlayTrigger
-                        key="widgets"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-widgets">{this.props.text.createWidgetTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onNewWidget}>
-                            <Glyphicon glyph="stats" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-                {this.props.activateTool.activateDownloadTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
-                    <OverlayTrigger
-                        key="downloadTool"
-                        placement="top"
+                        <OverlayTrigger
+                            key="widgets"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-widgets">{this.props.text.createWidgetTooltip}</Tooltip>}>
+                            <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onNewWidget}>
+                                <Glyphicon glyph="stats" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                    {this.props.activateTool.activateDownloadTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
+                        <OverlayTrigger
+                            key="downloadTool"
+                            placement="top"
                             overlay={<Tooltip id="toc-tooltip-downloadTool">{this.props.text.downloadToolTooltip}</Tooltip>}>
                             <Button bsStyle={this.props.wfsdownload.expanded ? "success" : "primary"} className="square-button-md" onClick={this.download}>
-                            <Glyphicon glyph="download" />
-                        </Button>
-                    </OverlayTrigger>
-                    : null}
+                                <Glyphicon glyph="download" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
                     {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && this.props.selectedLayers[0].catalogURL && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
-                    <OverlayTrigger
-                        key="layerMetadata"
-                        placement="top"
-                        overlay={<Tooltip id="legend-tooltip-metadata">{this.props.text.layerMetadataTooltip}</Tooltip>}>
-                        <Button key="layer-metadata" bsStyle={this.props.layerMetadata.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => this.showMetadata()}>
-                            <Glyphicon glyph="info-sign" />
-                        </Button>
-                    </OverlayTrigger>
-                : null}
-            </ReactCSSTransitionGroup>
-            <ConfirmModal
-                ref="removelayer"
-                show= {this.state.showDeleteDialog}
-                onHide={this.closeDeleteDialog}
-                onClose={this.closeDeleteDialog}
-                onConfirm={this.removeNodes}
-                titleText={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupText : this.props.text.confirmDeleteText}
-                cancelText={this.props.text.confirmDeleteCancelText}
-                body={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupMessage : this.props.text.confirmDeleteMessage} />
-            {layerMetadataModal}
-        </ButtonGroup>) : null;
+                        <OverlayTrigger
+                            key="layerMetadata"
+                            placement="top"
+                            overlay={<Tooltip id="legend-tooltip-metadata">{this.props.text.layerMetadataTooltip}</Tooltip>}>
+                            <Button key="layer-metadata" bsStyle={this.props.layerMetadata.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => this.showMetadata()}>
+                                <Glyphicon glyph="info-sign" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
+                </ReactCSSTransitionGroup>
+                <ConfirmModal
+                    ref="removelayer"
+                    show= {this.state.showDeleteDialog}
+                    onHide={this.closeDeleteDialog}
+                    onClose={this.closeDeleteDialog}
+                    onConfirm={this.removeNodes}
+                    titleText={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupText : this.props.text.confirmDeleteText}
+                    cancelText={this.props.text.confirmDeleteCancelText}
+                    body={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupMessage : this.props.text.confirmDeleteMessage} />
+                {layerMetadataModal}
+            </ButtonGroup>) : null;
     }
 
     browseData = () => {

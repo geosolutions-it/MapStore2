@@ -37,22 +37,22 @@ const LAYER_SERVICES = {
         }
     }),
     rest: ({ addBaseUrlGS }) => ({
-        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
+        getLayers: (page = 0, size = 10, parentsFilter = {}) => {
             const { workspace = "" } = parentsFilter;
             return axios.get('/rest/layers.json', addBaseUrlGS({
                 'headers': {
                     'Accept': 'application/json'
                 }
             }))
-            .then(response => get(response, 'data.layers.layer'))
-            .then((layers = []) => castArray(layers))
+                .then(response => get(response, 'data.layers.layer'))
+                .then((layers = []) => castArray(layers))
                 .then(layers => layers.filter(l => !workspace || l && l.name && l.name.indexOf(`${workspace}:`) === 0))
-            .then(layers => ({
-                data: layers
-                    .filter((r, i) => i >= page * size && i < (page + 1) * size) // emulate pagination
-                    .map(layer => ({ name: layer.name.replace(/^.*?:/g, '') })),
-                count: layers.length
-            }));
+                .then(layers => ({
+                    data: layers
+                        .filter((r, i) => i >= page * size && i < (page + 1) * size) // emulate pagination
+                        .map(layer => ({ name: layer.name.replace(/^.*?:/g, '') })),
+                    count: layers.length
+                }));
         }
     })
 };

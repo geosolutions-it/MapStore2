@@ -17,7 +17,7 @@ import {
     selectedIdSelector,
     selectedItemSelector,
     sourceIdSelector
- } from "../mediaEditor";
+} from "../mediaEditor";
 
 describe('mediaEditor selectors', () => {
     it('currentResourcesSelector', () => { expect(currentResourcesSelector({mediaEditor: {settings: {mediaType: "image", sourceId: "id"}, data: {image: {id: {resultData: {resources: []}}}}}})).toEqual([]); });

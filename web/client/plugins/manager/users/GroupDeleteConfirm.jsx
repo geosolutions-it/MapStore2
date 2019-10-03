@@ -33,6 +33,7 @@ class GroupDeleteConfirm extends React.Component {
         if (this.props.deleteError) {
             return <Alert bsStyle="danger"><Message msgId="usergroups.errorDelete" />{this.props.deleteError.statusText}</Alert>;
         }
+        return null;
     };
 
     renderConfirmButtonContent = () => {

@@ -79,7 +79,7 @@ const DEFAULT_ANNOTATIONS_STYLES = {
 */
 const getStartEndPointsForLinestring = () => {
     return [{...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "StartPoint Style", geometry: "startPoint", filtering: false, id: uuidv1()},
-    {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "EndPoint Style", geometry: "endPoint", filtering: false, id: uuidv1()}];
+        {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "EndPoint Style", geometry: "endPoint", filtering: false, id: uuidv1()}];
 };
 
 const rgbaTorgb = (rgba = "") => {
@@ -109,92 +109,92 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
     const s = style;
     const dashArray = s.dashArray ? getDashArrayFromStyle(s.dashArray) : "solid";
     switch (type) {
-        case "MultiPolygon":
-        case "Polygon":
-        case "Circle":
-            return {
-                "strokeColor": rgbaTorgb(s.color),
-                "strokeOpacity": s.opacity,
-                "strokeWidth": s.weight,
-                "fillColor": rgbaTorgb(s.fillColor),
-                "fillOpacity": s.fillOpacity,
-                "strokeDashstyle": dashArray
-            };
-        case "LineString":
-        case "MultiLineString":
-            return {
-                "strokeColor": rgbaTorgb(s.color),
-                "strokeOpacity": s.opacity,
-                "strokeWidth": s.weight,
-                "strokeDashstyle": dashArray
-            };
-        case "Text":
-            const outline = hasOutline(s) ? {
-                "labelOutlineColor": rgbaTorgb(s.color),
-                "labelOutlineOpacity": s.opacity,
-                "labelOutlineWidth": s.weight
-            } : {};
-            return {
-                "fontStyle": s.fontStyle,
-                "fontSize": s.fontSize,   // in mapfish is in px
-                "fontFamily": s.fontFamily,
-                "fontWeight": s.fontWeight,
-                "labelAlign": textAlignTolabelAlign(s.textAlign),
-                "fontColor": rgbaTorgb(s.fillColor),
-                "fontOpacity": s.fillOpacity,
-                "label": label,
-                "stroke": true,
-                "strokeColor": rgbaTorgb(s.color),
-                "strokeOpacity": s.opacity,
-                "strokeWidth": s.weight,
-                "strokeDashstyle": dashArray,
-                ...outline
-            };
-        case "Point":
-        case "MultiPoint": {
-            // TODO TEST THIS
-            const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || extraMarkers.markerToDataUrl(s);
-            let graphicXOffset = -18;
-            let graphicYOffset = -46;
-            if (s.iconAnchor && isArray(s.iconAnchor) && s.size) {
-                if (s.anchorXUnits === "pixels") {
-                    graphicXOffset = -1 * s.iconAnchor[0];
-                } else {
-                    graphicXOffset = -1 * s.size * s.iconAnchor[0];
-                }
-                if (s.anchorYUnits === "pixels") {
-                    graphicYOffset = -1 * s.iconAnchor[1];
-                } else {
-                    graphicYOffset = -1 * s.size * s.iconAnchor[1];
-                }
+    case "MultiPolygon":
+    case "Polygon":
+    case "Circle":
+        return {
+            "strokeColor": rgbaTorgb(s.color),
+            "strokeOpacity": s.opacity,
+            "strokeWidth": s.weight,
+            "fillColor": rgbaTorgb(s.fillColor),
+            "fillOpacity": s.fillOpacity,
+            "strokeDashstyle": dashArray
+        };
+    case "LineString":
+    case "MultiLineString":
+        return {
+            "strokeColor": rgbaTorgb(s.color),
+            "strokeOpacity": s.opacity,
+            "strokeWidth": s.weight,
+            "strokeDashstyle": dashArray
+        };
+    case "Text":
+        const outline = hasOutline(s) ? {
+            "labelOutlineColor": rgbaTorgb(s.color),
+            "labelOutlineOpacity": s.opacity,
+            "labelOutlineWidth": s.weight
+        } : {};
+        return {
+            "fontStyle": s.fontStyle,
+            "fontSize": s.fontSize,   // in mapfish is in px
+            "fontFamily": s.fontFamily,
+            "fontWeight": s.fontWeight,
+            "labelAlign": textAlignTolabelAlign(s.textAlign),
+            "fontColor": rgbaTorgb(s.fillColor),
+            "fontOpacity": s.fillOpacity,
+            "label": label,
+            "stroke": true,
+            "strokeColor": rgbaTorgb(s.color),
+            "strokeOpacity": s.opacity,
+            "strokeWidth": s.weight,
+            "strokeDashstyle": dashArray,
+            ...outline
+        };
+    case "Point":
+    case "MultiPoint": {
+        // TODO TEST THIS
+        const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || extraMarkers.markerToDataUrl(s);
+        let graphicXOffset = -18;
+        let graphicYOffset = -46;
+        if (s.iconAnchor && isArray(s.iconAnchor) && s.size) {
+            if (s.anchorXUnits === "pixels") {
+                graphicXOffset = -1 * s.iconAnchor[0];
+            } else {
+                graphicXOffset = -1 * s.size * s.iconAnchor[0];
             }
-            return externalGraphic ? {
-                    "graphicWidth": s.size || 36,
-                    "graphicHeight": s.size || 46,
-                    externalGraphic,
-                    graphicXOffset,
-                    graphicYOffset,
-                    "display": s.filtering === false && "none"
-                } : {
-                    "fillColor": "#0000AE",
-                    "fillOpacity": 0.5,
-                    "strokeColor": "#0000FF",
-                    "pointRadius": 10,
-                    "strokeOpacity": 1,
-                    "strokeWidth": 1,
-                    "display": s.filtering === false && "none"
-            };
+            if (s.anchorYUnits === "pixels") {
+                graphicYOffset = -1 * s.iconAnchor[1];
+            } else {
+                graphicYOffset = -1 * s.size * s.iconAnchor[1];
+            }
         }
-        default:
-            return {
-                "fillColor": "#FF0000",
-                "fillOpacity": 0,
-                "strokeColor": "#FF0000",
-                "pointRadius": 5,
-                "strokeOpacity": 1,
-                "strokeDashstyle": dashArray,
-                "strokeWidth": 1
-            };
+        return externalGraphic ? {
+            "graphicWidth": s.size || 36,
+            "graphicHeight": s.size || 46,
+            externalGraphic,
+            graphicXOffset,
+            graphicYOffset,
+            "display": s.filtering === false && "none"
+        } : {
+            "fillColor": "#0000AE",
+            "fillOpacity": 0.5,
+            "strokeColor": "#0000FF",
+            "pointRadius": 10,
+            "strokeOpacity": 1,
+            "strokeWidth": 1,
+            "display": s.filtering === false && "none"
+        };
+    }
+    default:
+        return {
+            "fillColor": "#FF0000",
+            "fillOpacity": 0,
+            "strokeColor": "#FF0000",
+            "pointRadius": 5,
+            "strokeOpacity": 1,
+            "strokeDashstyle": dashArray,
+            "strokeWidth": 1
+        };
     }
 };
 
@@ -207,58 +207,58 @@ const AnnotationsUtils = {
     */
     convertGeoJSONToInternalModel: ({type = "Point", geometries = [], features = []}, textValues = [], circles = []) => {
         switch (type) {
-            case "Point": case "MultiPoint": {
-                return {type: textValues.length === 1 ? "Text" : type};
-            }
-            case "Polygon": {
-                return {type: circles.length === 1 ? "Circle" : type};
-            }
-            case "GeometryCollection": {
-                const onlyPoints = geometries.filter(g => g.type === "Point" || g.type === "MultiPoint");
-                const onlyMultiPolygons = geometries.filter(g => g.type === "Polygon");
-                let t = 0;
-                let p = 0;
-                return {type: "GeometryCollection", geometries: geometries.map(g => {
-                    if (g.type === "Point" || g.type === "MultiPoint") {
-                        if (onlyPoints.length === textValues.length) {
-                            return {type: "Text"};
-                        }
-                        if (textValues.length === 0) {
-                            return {type: g.type};
-                        }
-                        if (t === 0) {
-                            t++;
-                            return {type: "Text" };
-                        }
-                    }
-                    if (g.type === "Polygon") {
-                        if (onlyMultiPolygons.length === circles.length) {
-                            return {type: "Circle"};
-                        }
-                        if (circles.length === 0) {
-                            return {type: g.type};
-                        }
-                        if (p === 0) {
-                            p++;
-                            return {type: "Circle" };
-                        }
-                    }
-                    return {type: g.type};
-                })};
-            }
-            case "FeatureCollection" : {
-                const featuresTypes = features.map(f => {
-                    if (f.properties && f.properties.isCircle) {
-                        return {type: "Circle"};
-                    }
-                    if (f.properties && f.properties.isText) {
+        case "Point": case "MultiPoint": {
+            return {type: textValues.length === 1 ? "Text" : type};
+        }
+        case "Polygon": {
+            return {type: circles.length === 1 ? "Circle" : type};
+        }
+        case "GeometryCollection": {
+            const onlyPoints = geometries.filter(g => g.type === "Point" || g.type === "MultiPoint");
+            const onlyMultiPolygons = geometries.filter(g => g.type === "Polygon");
+            let t = 0;
+            let p = 0;
+            return {type: "GeometryCollection", geometries: geometries.map(g => {
+                if (g.type === "Point" || g.type === "MultiPoint") {
+                    if (onlyPoints.length === textValues.length) {
                         return {type: "Text"};
                     }
-                    return {type: f.geometry.type};
-                });
-                return {type: "FeatureCollection", features: featuresTypes};
-            }
-            default: return {type};
+                    if (textValues.length === 0) {
+                        return {type: g.type};
+                    }
+                    if (t === 0) {
+                        t++;
+                        return {type: "Text" };
+                    }
+                }
+                if (g.type === "Polygon") {
+                    if (onlyMultiPolygons.length === circles.length) {
+                        return {type: "Circle"};
+                    }
+                    if (circles.length === 0) {
+                        return {type: g.type};
+                    }
+                    if (p === 0) {
+                        p++;
+                        return {type: "Circle" };
+                    }
+                }
+                return {type: g.type};
+            })};
+        }
+        case "FeatureCollection" : {
+            const featuresTypes = features.map(f => {
+                if (f.properties && f.properties.isCircle) {
+                    return {type: "Circle"};
+                }
+                if (f.properties && f.properties.isText) {
+                    return {type: "Text"};
+                }
+                return {type: f.geometry.type};
+            });
+            return {type: "FeatureCollection", features: featuresTypes};
+        }
+        default: return {type};
         }
     },
     /**
@@ -267,35 +267,35 @@ const AnnotationsUtils = {
     */
     getAvailableStyler: ({type = "Point", geometries = [], features = []} = {}) => {
         switch (type) {
-            case "Point": case "MultiPoint": {
-                return [AnnotationsUtils.getRelativeStyler(type)];
-            }
-            case "Symbol": {
-                return [AnnotationsUtils.getRelativeStyler(type)];
-            }
-            case "LineString": case "MultiLineString": {
-                return [AnnotationsUtils.getRelativeStyler(type)];
-            }
-            case "Polygon": case "MultiPolygon": {
-                return [AnnotationsUtils.getRelativeStyler(type)];
-            }
-            case "Text": {
-                return [AnnotationsUtils.getRelativeStyler(type)];
-            }
-            case "Circle": {
-                return [AnnotationsUtils.getRelativeStyler(type)];
-            }
-            case "GeometryCollection": {
-                return geometries.reduce((p, c) => {
-                    return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
-                }, []);
-            }
-            case "FeatureCollection": {
-                return features.reduce((p, c) => {
-                    return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
-                }, []);
-            }
-            default: return [];
+        case "Point": case "MultiPoint": {
+            return [AnnotationsUtils.getRelativeStyler(type)];
+        }
+        case "Symbol": {
+            return [AnnotationsUtils.getRelativeStyler(type)];
+        }
+        case "LineString": case "MultiLineString": {
+            return [AnnotationsUtils.getRelativeStyler(type)];
+        }
+        case "Polygon": case "MultiPolygon": {
+            return [AnnotationsUtils.getRelativeStyler(type)];
+        }
+        case "Text": {
+            return [AnnotationsUtils.getRelativeStyler(type)];
+        }
+        case "Circle": {
+            return [AnnotationsUtils.getRelativeStyler(type)];
+        }
+        case "GeometryCollection": {
+            return geometries.reduce((p, c) => {
+                return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
+            }, []);
+        }
+        case "FeatureCollection": {
+            return features.reduce((p, c) => {
+                return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
+            }, []);
+        }
+        default: return [];
         }
     },
     /**
@@ -304,25 +304,25 @@ const AnnotationsUtils = {
     */
     getRelativeStyler: (type) => {
         switch (type) {
-            case "Point": case "MultiPoint": {
-                return "marker";
-            }
-            case "Symbol": {
-                return "symbol";
-            }
-            case "Circle": {
-                return "circle";
-            }
-            case "LineString": case "MultiLineString": {
-                return "lineString";
-            }
-            case "Polygon": case "MultiPolygon": {
-                return "polygon";
-            }
-            case "Text": {
-                return "text";
-            }
-            default: return "";
+        case "Point": case "MultiPoint": {
+            return "marker";
+        }
+        case "Symbol": {
+            return "symbol";
+        }
+        case "Circle": {
+            return "circle";
+        }
+        case "LineString": case "MultiLineString": {
+            return "lineString";
+        }
+        case "Polygon": case "MultiPolygon": {
+            return "polygon";
+        }
+        case "Text": {
+            return "text";
+        }
+        default: return "";
         }
     },
     /**
@@ -401,7 +401,7 @@ const AnnotationsUtils = {
     * @param {object} style
     * @return {object[]} features
     */
-    textToPoint: ({geometries= []}, {textGeometriesIndexes = [], textValues= []}, style = STYLE_TEXT) => {
+    textToPoint: ({geometries = []}, {textGeometriesIndexes = [], textValues = []}, style = STYLE_TEXT) => {
         return textGeometriesIndexes.map((tIdx, cIdx) => {
             return {type: "Feature", geometry: geometries[tIdx], properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Text", style, textValues[cIdx])}};
         });
@@ -429,10 +429,10 @@ const AnnotationsUtils = {
         let type = geometryFunctions[ft.style.geometry] && geometryFunctions[ft.style.geometry].type || ft.geometry.type;
         let coordinates = ft.geometry.coordinates || [];
         switch (ft.style.geometry ) {
-            case "startPoint": coordinates = head(coordinates); break;
-            case "endPoint": coordinates = last(coordinates); break;
-            case "centerPoint": coordinates = turfCenter(ft).geometry.coordinates; break;
-            default: break;
+        case "startPoint": coordinates = head(coordinates); break;
+        case "endPoint": coordinates = last(coordinates); break;
+        case "centerPoint": coordinates = turfCenter(ft).geometry.coordinates; break;
+        default: break;
         }
         return {type, coordinates};
     },
@@ -481,19 +481,19 @@ const AnnotationsUtils = {
     },
     getBaseCoord: (type) => {
         switch (type) {
-            case "Polygon": case "LineString": case "MultiPoint": return [];
-            default: return [[{lat: "", lon: ""}]];
+        case "Polygon": case "LineString": case "MultiPoint": return [];
+        default: return [[{lat: "", lon: ""}]];
         }
     },
     getComponents: ({type, coordinates}) => {
         switch (type) {
-            case "Polygon": {
-                return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
-            }
-            case "LineString": case "MultiPoint": {
-                return AnnotationsUtils.formatCoordinates(coordinates);
-            }
-            default: return AnnotationsUtils.formatCoordinates([coordinates]);
+        case "Polygon": {
+            return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
+        }
+        case "LineString": case "MultiPoint": {
+            return AnnotationsUtils.formatCoordinates(coordinates);
+        }
+        default: return AnnotationsUtils.formatCoordinates([coordinates]);
         }
     },
     addIds: (features) => {

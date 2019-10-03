@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -25,39 +25,39 @@ const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) =
     const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
     return urlUtil.format(
         {
-        ...parsed,
-        search: undefined, // this allows to merge parameters correctly
-        query: {
-            ...parsed.query,
+            ...parsed,
+            search: undefined, // this allows to merge parameters correctly
+            query: {
+                ...parsed.query,
 
-            service: "WFS",
-            version: "1.1.0",
-            typeName: name,
-            outputFormat: 'application/json',
-            request: "DescribeFeatureType"
-        }
-    });
+                service: "WFS",
+                version: "1.1.0",
+                typeName: name,
+                outputFormat: 'application/json',
+                request: "DescribeFeatureType"
+            }
+        });
 };
 const toLayerCapabilitiesURL = ({name, search = {}, url} = {}) => {
     const URL = getCapabilitiesUrl({name, url: search && search.url || url });
     const parsed = urlUtil.parse(URL, true);
     return urlUtil.format(
         {
-        ...parsed,
-        search: undefined, // this allows to merge parameters correctly
-        query: {
-            ...parsed.query,
-            service: "WFS",
-            version: "1.1.1",
-            request: "GetCapabilities"
-        }
-    });
+            ...parsed,
+            search: undefined, // this allows to merge parameters correctly
+            query: {
+                ...parsed.query,
+                service: "WFS",
+                version: "1.1.1",
+                request: "GetCapabilities"
+            }
+        });
 };
 const Url = require('url');
 const { isObject } = require('lodash');
 
 // this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
-const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIndex, maxFeatures } = {}, originalSize) => {
+const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIndex } = {}, originalSize) => {
     if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
         return {
             ...rest,
@@ -152,14 +152,14 @@ const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptio
             ...filter,
             typeName: name || filter.typeName
         } : getFeature(
-                query(name,
-                    [
+            query(name,
+                [
                     ...( sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []),
                     ...(pn ? [propertyName(pn)] : []),
-                        ...(filter ? castArray(filter) : [])
-                    ]),
-                options), // options contains startIndex, maxFeatures and it can be passed as it is
-    options)
+                    ...(filter ? castArray(filter) : [])
+                ]),
+            options), // options contains startIndex, maxFeatures and it can be passed as it is
+        options)
         // retry using 1st propertyNames property, if present, to workaround primary-key issues
         .catch(error => {
             if (error.name === "OGCError" && error.code === 'NoApplicableCode' && !sortOptions && pn && pn[0]) {
@@ -175,7 +175,7 @@ const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptio
                                 ...(filter ? castArray(filter) : [])
                             ]),
                         options), // options contains startIndex, maxFeatures and it can be passed as it is
-                options);
+                    options);
             }
             throw error;
         });
@@ -188,12 +188,12 @@ module.exports = {
         Rx.Observable.defer(() =>
             axios.get(toDescribeURL(layer))).let(interceptOGCError),
     getLayerWFSCapabilities: ({layer}) =>
-            Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
+        Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
             .let(interceptOGCError)
             .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
                 tagNameProcessors: [stripPrefix],
                 explicitArray: false,
                 mergeAttrs: true
             }, callback))(response.data)
-        )
+            )
 };

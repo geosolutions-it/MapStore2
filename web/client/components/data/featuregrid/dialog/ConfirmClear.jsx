@@ -17,4 +17,4 @@ module.exports = ({
     confirmButtonDisabled={saving}
     closeText={<Message msgId="featuregrid.noButton" />}>
     <Message msgId="featuregrid.clear"/>
-    </Confirm></Portal>);
+</Confirm></Portal>);

@@ -105,7 +105,7 @@ describe('Layers component', () => {
                     <Layer/>
                 </Group>
             </TOC>,
-        document.getElementById("container"));
+            document.getElementById("container"));
         expect(element).toExist();
 
         const domNode = ReactDOM.findDOMNode(element);
@@ -124,7 +124,7 @@ describe('Layers component', () => {
                     <Layer/>
                 </Group>
             </TOC>,
-        document.getElementById("container"));
+            document.getElementById("container"));
         expect(element).toExist();
 
         const domNode = ReactDOM.findDOMNode(element);
@@ -138,7 +138,7 @@ describe('Layers component', () => {
             <TOC nodes={layers}>
                 <Layer/>
             </TOC>,
-        document.getElementById("container"));
+            document.getElementById("container"));
         expect(element).toExist();
 
         const domNode = ReactDOM.findDOMNode(element);

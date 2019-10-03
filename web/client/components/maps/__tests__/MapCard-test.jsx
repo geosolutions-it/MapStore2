@@ -63,7 +63,7 @@ describe('This test for MapCard', () => {
         let spy = expect.spyOn(handlers, "onToggleDetailsSheet");
         component = TestUtils.renderIntoDocument(<MapCard id={1} detailsSheetActions={{...handlers}} map={{id: 1, name: testName, description: testDescription, detailsText: "here some details", details: "here some details"}} mapType="leaflet" />);
         const detailsTool = TestUtils.findRenderedDOMComponentWithTag(
-           component, 'button'
+            component, 'button'
         );
         expect(detailsTool).toExist();
         TestUtils.Simulate.click(detailsTool);
@@ -88,7 +88,7 @@ describe('This test for MapCard', () => {
             onEdit={handlers.onEdit}
             map={{canEdit: true, id: 1, name: testName, description: testDescription}} mapType="leaflet" />, document.getElementById("container"));
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(
-           component, 'button'
+            component, 'button'
         );
         expect(buttons.length).toBe(2);
         buttons.forEach(b => TestUtils.Simulate.click(b));
@@ -110,7 +110,7 @@ describe('This test for MapCard', () => {
             onEdit={handlers.onEdit}
             map={{canEdit: true, id: 1, name: testName, description: testDescription}} mapType="leaflet" />, document.getElementById("container"));
         const tools = TestUtils.scryRenderedDOMComponentsWithTag(
-           component, 'button'
+            component, 'button'
         );
         expect(tools.length).toBeGreaterThan(0);
 
@@ -132,7 +132,7 @@ describe('This test for MapCard', () => {
             onEdit={handlers.onEdit}
             map={{canEdit: true, id: 1, name: testName, description: testDescription, category: {name: "DASHBOARD"}}} mapType="leaflet" />, document.getElementById("container"));
         const tools = TestUtils.scryRenderedDOMComponentsWithTag(
-           component, 'button'
+            component, 'button'
         );
         expect(tools.length).toBeGreaterThan(0);
 

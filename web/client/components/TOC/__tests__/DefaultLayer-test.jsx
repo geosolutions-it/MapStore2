@@ -250,7 +250,7 @@ describe('test DefaultLayer module component', () => {
         };
 
         const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
-        document.getElementById("container"));
+            document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         const title = domNode.getElementsByClassName("toc-full-title");
@@ -299,7 +299,7 @@ describe('test DefaultLayer module component', () => {
             opacity: 0.5
         };
         const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
-        document.getElementById("container"));
+            document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         const title = domNode.getElementsByClassName("chevron-left");
@@ -316,7 +316,7 @@ describe('test DefaultLayer module component', () => {
             opacity: 0.5
         };
         const comp = ReactDOM.render(<Layer node={l}/>,
-        document.getElementById("container"));
+            document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         const tooltips = domNode.getElementsByClassName('noUi-tooltip');
@@ -334,7 +334,7 @@ describe('test DefaultLayer module component', () => {
             opacity: 0.5
         };
         const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l}/>,
-        document.getElementById("container"));
+            document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         const tooltips = domNode.getElementsByClassName('noUi-tooltip');

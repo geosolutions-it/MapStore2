@@ -80,10 +80,10 @@ const state = {
     },
     localConfig: {
         authenticationRules: [{
-        "urlPattern": "\\/geoserver.*",
-        "authkeyParamName": "ms2-authkey",
-        "method": "authkey"
-      }]
+            "urlPattern": "\\/geoserver.*",
+            "authkeyParamName": "ms2-authkey",
+            "method": "authkey"
+        }]
     }
 };
 

@@ -39,9 +39,9 @@ const Login = require('./containers/Login');
 class LoginApp extends React.Component {
     render() {
         return (
-        <Provider store={store}>
-            <Login/>
-        </Provider>);
+            <Provider store={store}>
+                <Login/>
+            </Provider>);
     }
 }
 

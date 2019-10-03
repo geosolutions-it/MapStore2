@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -24,26 +24,26 @@ const FitIcon = require('./FitIcon');
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)
  */
 module.exports = ({
-        style,
-        mainViewStyle,
-        contentStyle,
-        glyph="info-sign",
-        iconFit,
-        title,
-        tooltip,
-        tooltipId,
-        description,
-        content
-    } = {}) =>
-        (<div className="empty-state-container" style={{height: iconFit ? "100%" : undefined, ...style}}>
-            <div key="main-view" className="empty-state-main-view" style={{height: iconFit ? "100%" : undefined, ...mainViewStyle}} >
-                {glyph
-                    ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined}}>
-                        <FitIcon iconFit={iconFit} tooltip={tooltip} tooltipId={tooltipId} glyph={glyph} />
-                    </div>
-                    : null}
-                {title ? <h1 key="title" >{title}</h1> : null}
-                {description ? <p key="description" className="empty-state-description">{description}</p> : null}
-            </div>
-            <div key="content" className="empty-state-content" style={contentStyle}>{content}</div>
-        </div>);
+    style,
+    mainViewStyle,
+    contentStyle,
+    glyph = "info-sign",
+    iconFit,
+    title,
+    tooltip,
+    tooltipId,
+    description,
+    content
+} = {}) =>
+    (<div className="empty-state-container" style={{height: iconFit ? "100%" : undefined, ...style}}>
+        <div key="main-view" className="empty-state-main-view" style={{height: iconFit ? "100%" : undefined, ...mainViewStyle}} >
+            {glyph
+                ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined}}>
+                    <FitIcon iconFit={iconFit} tooltip={tooltip} tooltipId={tooltipId} glyph={glyph} />
+                </div>
+                : null}
+            {title ? <h1 key="title" >{title}</h1> : null}
+            {description ? <p key="description" className="empty-state-description">{description}</p> : null}
+        </div>
+        <div key="content" className="empty-state-content" style={contentStyle}>{content}</div>
+    </div>);

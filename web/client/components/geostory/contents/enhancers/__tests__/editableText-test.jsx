@@ -48,7 +48,7 @@ describe('editableText enhancer', () => {
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
-    it('save is called and editor is called when blur', (done) => {
+    it.skip('save is called and editor is called when blur', (done) => {
         const actions = {
             save: (html) => {
                 expect(html.indexOf('<p>test</p>')).toBeGreaterThanOrEqualTo(0);

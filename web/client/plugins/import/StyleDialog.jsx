@@ -80,7 +80,7 @@ class StyleDialog extends React.Component {
             uploadMessage={<Message msgId={this.props.uploadMessage}/>}
             cancelMessage={<Message msgId="shapefile.cancel"/>}
             addMessage={<Message msgId="shapefile.add"/>}
-            />);
+        />);
 
 
         if (this.props.layers) {

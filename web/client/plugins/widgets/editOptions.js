@@ -19,15 +19,15 @@ const accessRuleParser = require('../../components/misc/enhancers/security/acces
  * handle tools options and editing options
  */
 module.exports = (...args) => compose(
-        connect(
-            createSelector(
-                mapIdSelector,
-                mapInfoSelector,
-                userSelector,
-                (mapId, mapInfo, user) => ({
-                    accessInfo: { mapId, mapInfo, user}
-                })
-            )
-        ),
-        accessRuleParser(...args)
-    );
+    connect(
+        createSelector(
+            mapIdSelector,
+            mapInfoSelector,
+            userSelector,
+            (mapId, mapInfo, user) => ({
+                accessInfo: { mapId, mapInfo, user}
+            })
+        )
+    ),
+    accessRuleParser(...args)
+);

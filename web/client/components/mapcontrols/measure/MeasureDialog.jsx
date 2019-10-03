@@ -49,7 +49,7 @@ class MeasureDialog extends React.Component {
         this.props.onClose(false);
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         /* this is used to set up defaults instead of putting them in the initial state,
          * beacuse in measurement state is updated when controls are updates
         */
@@ -64,27 +64,27 @@ class MeasureDialog extends React.Component {
         // TODO FIX TRANSALATIONS TITLE
         return this.props.show ? (
             this.props.showCoordinateEditor ?
-            <DockablePanel
-            dock
-            bsStyle="primary"
-            position="right"
-            title={<Message key="title" msgId="measureComponent.Measure"/>}
-            glyph="1-ruler"
-            size={660}
-            open={this.props.show}
-            onClose={this.onClose}
-            style={this.props.style}>
-                <MeasureComponent id="measure-panel" {...this.props}/>
-            </DockablePanel>
-        : (<Dialog id="measure-dialog">
-            <div key="header" role="header">
-                <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
-                <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
-            </div>
-            <div key="body" role="body">
-                <MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props}/>
-            </div>
-        </Dialog>)
+                <DockablePanel
+                    dock
+                    bsStyle="primary"
+                    position="right"
+                    title={<Message key="title" msgId="measureComponent.Measure"/>}
+                    glyph="1-ruler"
+                    size={660}
+                    open={this.props.show}
+                    onClose={this.onClose}
+                    style={this.props.style}>
+                    <MeasureComponent id="measure-panel" {...this.props}/>
+                </DockablePanel>
+                : (<Dialog id="measure-dialog">
+                    <div key="header" role="header">
+                        <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
+                        <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+                    </div>
+                    <div key="body" role="body">
+                        <MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props}/>
+                    </div>
+                </Dialog>)
         ) : null;
     }
 }

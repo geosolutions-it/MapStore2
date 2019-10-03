@@ -20,31 +20,31 @@ const id = 1833;
 const name = 'teo';
 const role = 'ADMIN';
 const user = {
-  enabled: true,
-  groups: {
-    group: {
-      description: 'description',
-      enabled: true,
-      groupName: 'everyone',
-      id: 479
-    }
-  },
-  id,
-  name,
-  role
+    enabled: true,
+    groups: {
+        group: {
+            description: 'description',
+            enabled: true,
+            groupName: 'everyone',
+            id: 479
+        }
+    },
+    id,
+    name,
+    role
 };
 
 let initialState = {
-  security: {
-    user,
-    errorCause: null,
-    token: 'c8cecaeb-0fac-43b9-9c50-8a1984d86c34',
-    authHeader: 'Basic dGVvOnRlbw==',
-    loginError: null,
-    refresh_token: '5beb9639-8cff-48d1-8a41-023b692eaa42',
-    expires: 1501145853,
-    rules: []
-  }
+    security: {
+        user,
+        errorCause: null,
+        token: 'c8cecaeb-0fac-43b9-9c50-8a1984d86c34',
+        authHeader: 'Basic dGVvOnRlbw==',
+        loginError: null,
+        refresh_token: '5beb9639-8cff-48d1-8a41-023b692eaa42',
+        expires: 1501145853,
+        rules: []
+    }
 };
 
 describe('Test security selectors', () => {

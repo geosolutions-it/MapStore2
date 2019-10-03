@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- /**
+/**
  * Get data all in one request.
  * @param {Observable} props$ stream of props
  */

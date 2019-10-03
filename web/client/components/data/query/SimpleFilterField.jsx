@@ -169,7 +169,7 @@ class SimpleFilterField extends React.Component {
                         value={opt}
                         name={this.props.attribute}
                         checked={findIndex(this.props.values, (val) => { return val === opt; }) !== -1}/>
-                        {this.renderLabel(opt)}
+                    {this.renderLabel(opt)}
                 </label>);
         }, this);
     };
@@ -186,12 +186,12 @@ class SimpleFilterField extends React.Component {
                     key={idx}
                     style={{marginLeft: "0px", marginRight: "10px", width: 100, ...this.props.checkboxStyle}}
                     className="checkbox-inline">
-                        <input
-                            value={opt}
-                            type="checkbox"
-                            onChange={this.onCheckChange}
-                            checked={findIndex(this.props.values, (val) => { return val === opt; }) !== -1}/>
-                        {this.renderLabel(opt)}
+                    <input
+                        value={opt}
+                        type="checkbox"
+                        onChange={this.onCheckChange}
+                        checked={findIndex(this.props.values, (val) => { return val === opt; }) !== -1}/>
+                    {this.renderLabel(opt)}
                 </label>
             );
         }, this);
@@ -199,19 +199,19 @@ class SimpleFilterField extends React.Component {
 
     renderToolbar = () => {
         return (
-        <ButtonToolbar style={{ marginTop: 10}}>
-            <Button style={{marginTop: 5}} bsSize="small" onClick={this.selectAll}>Select All</Button>
-            <Button style={{marginTop: 5}} bsSize="small" onClick={this.clearAll}>Clear All</Button>
-      </ButtonToolbar>
+            <ButtonToolbar style={{ marginTop: 10}}>
+                <Button style={{marginTop: 5}} bsSize="small" onClick={this.selectAll}>Select All</Button>
+                <Button style={{marginTop: 5}} bsSize="small" onClick={this.clearAll}>Clear All</Button>
+            </ButtonToolbar>
         );
     };
 
     renderCheckboxPanel = () => {
         return (
-                <div>
-                    {this.renderCheckboxElements()}
-                    {this.props.toolbar ? this.renderToolbar() : null}
-                </div>
+            <div>
+                {this.renderCheckboxElements()}
+                {this.props.toolbar ? this.renderToolbar() : null}
+            </div>
         );
     };
 
@@ -223,7 +223,7 @@ class SimpleFilterField extends React.Component {
         let val = this.props.values && this.props.values.length > 0 ? {fieldValue: this.props.multivalue ? this.props.values : this.props.values[0] } : {};
         return (
             <div>
-                    <ComboField
+                <ComboField
                     valueField="val"
                     textField="text"
                     style={this.props.comboStyle}
@@ -234,8 +234,8 @@ class SimpleFilterField extends React.Component {
                     multivalue={this.props.multivalue}
                     onUpdateField={this.onComboChange}
                     {...val}
-                    />
-                 {this.props.toolbar && this.props.multivalue ? this.renderToolbar() : null}
+                />
+                {this.props.toolbar && this.props.multivalue ? this.renderToolbar() : null}
             </div>
         );
     };
@@ -246,34 +246,34 @@ class SimpleFilterField extends React.Component {
 
     renderText = () => {
         return (
-                <TextField
-                    operator={this.props.operator}
-                    fieldName={this.props.attribute}
-                    fieldRowId={this.props.fieldId}
-                    fieldValue={this.props.values}
-                    attType={this.props.type}
-                    onUpdateField={this.onTextChange}
-                    />
+            <TextField
+                operator={this.props.operator}
+                fieldName={this.props.attribute}
+                fieldRowId={this.props.fieldId}
+                fieldValue={this.props.values}
+                attType={this.props.type}
+                onUpdateField={this.onTextChange}
+            />
         );
 
     };
 
     renderNumber = () => {
         return (
-                <NumberField
-                    operator={"><"}
-                    lowLabel={this.props.optionsLabels.lowLabel}
-                    upLabel={this.props.optionsLabels.upLabel}
-                    fieldName={this.props.attribute}
-                    fieldRowId={this.props.fieldId}
-                    fieldValue={this.props.values}
-                    attType={this.props.type}
-                    onUpdateField={this.onNumberChange}
-                    onUpdateExceptionField={this.onNumberException}
-                    fieldException={this.props.exception}
-                    options={this.props.options}
+            <NumberField
+                operator={"><"}
+                lowLabel={this.props.optionsLabels.lowLabel}
+                upLabel={this.props.optionsLabels.upLabel}
+                fieldName={this.props.attribute}
+                fieldRowId={this.props.fieldId}
+                fieldValue={this.props.values}
+                attType={this.props.type}
+                onUpdateField={this.onNumberChange}
+                onUpdateExceptionField={this.onNumberException}
+                fieldException={this.props.exception}
+                options={this.props.options}
 
-                />);
+            />);
     };
 
     renderList = () => {
@@ -306,7 +306,7 @@ class SimpleFilterField extends React.Component {
                 collapsible={this.props.collapsible}
                 defaultExpanded={this.props.defaultExpanded}
                 bsStyle={this.props.exception ? "danger" : "default"}>
-                    {comp}
+                {comp}
             </Panel>
         );
     }

@@ -28,7 +28,7 @@ const getLinkedAttributesIds = (id, filterFunction = () => true, API = GeoStoreD
             // find out which attributes match the resource ids
             .map(({ value }) => getResourceIdFromURL(value))
             .filter(rid => !isNil(rid))
-);
+        );
 
 /**
  * Merges the permission. Now conflicts are not possible (default permission are for users, configured for groups)
@@ -46,10 +46,10 @@ const mergePermission = (p1 = [], p2 = []) => p1.concat(p2);
 const updateResourcePermissions = (id, permission, API = GeoStoreDAO) =>
     permission
         ? Rx.Observable.defer( () => API.updateResourcePermissions(id, {
-                SecurityRuleList: {
-                    SecurityRule: permission
-                }
-            }))
+            SecurityRuleList: {
+                SecurityRule: permission
+            }
+        }))
         : Rx.Observable.empty()
 ;
 /**
@@ -91,8 +91,8 @@ const createLinkedResource = (id, attributeName, linkedResource, permission, API
         API.createResource({
             name: `${id}-${attributeName}-${uuid()}`
         },
-            linkedResource.data,
-            linkedResource.category
+        linkedResource.data,
+        linkedResource.category
         ))
         .pluck('data')
         .switchMap( (linkedResourceId) =>
@@ -120,11 +120,11 @@ const updateLinkedResource = (id, attributeName, linkedResource, permission, API
     Rx.Observable.defer(
         () => API.getResourceAttribute(id, attributeName)
     ).pluck('data')
-    .switchMap(
-        attributeValue => getResourceIdFromURL(attributeValue)
-            ? updateOrDeleteLinkedResource(id, attributeName, linkedResource, getResourceIdFromURL(attributeValue), permission, API)
-            : createLinkedResource(id, attributeName, linkedResource, permission, API)
-    ).catch(
+        .switchMap(
+            attributeValue => getResourceIdFromURL(attributeValue)
+                ? updateOrDeleteLinkedResource(id, attributeName, linkedResource, getResourceIdFromURL(attributeValue), permission, API)
+                : createLinkedResource(id, attributeName, linkedResource, permission, API)
+        ).catch(
         /* if the attribute doesn't exists or if the linked resource update gave an error
          * you have to create a new resource for the linked resource.
          * This error can occur if:
@@ -134,8 +134,8 @@ const updateLinkedResource = (id, attributeName, linkedResource, permission, API
          *  - The resource is not writable by the user. It happens when a user changes the permission of a resource and doesn't update
          *    the resource permission.
          */
-        (e) => createLinkedResource(id, attributeName, linkedResource, permission, API, e)
-    );
+            (e) => createLinkedResource(id, attributeName, linkedResource, permission, API, e)
+        );
 /**
  * Updates the permission of the linkedResources that are not modified.
  * It checks the resource's attribute to find out resources that have to be updated.
@@ -148,11 +148,11 @@ const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, 
     getLinkedAttributesIds(id, name => !includes(Object.keys(linkedResources), name))
         .switchMap((ids = []) =>
             ids.length === 0
-            ? Rx.Observable.of([])
-            : Rx.Observable.forkJoin(
-                ids.map(rid => updateResourcePermissions(rid, permission, API))
+                ? Rx.Observable.of([])
+                : Rx.Observable.forkJoin(
+                    ids.map(rid => updateResourcePermissions(rid, permission, API))
 
-        ));
+                ));
 /**
  * Retrieves a resource with data with all information about user's permission on that resource, attributes and data.
  * @param {number} id the id of the resource to get
@@ -241,7 +241,7 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
  * @param {object} API the API to use
  * @return an observable that emits the id of the updated resource
  */
-const updateResource = ({ id, data, category, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
+const updateResource = ({ id, data, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
         // update metadata
         Rx.Observable.defer(
@@ -252,7 +252,7 @@ const updateResource = ({ id, data, category, permission, metadata, linkedResour
                 ? Rx.Observable.defer(
                     () => API.putResource(id, data)
                 )
-            : Rx.Observable.of(res)),
+                : Rx.Observable.of(res)),
         // update data
         // update permission
         ...(permission ? [updateResourcePermissions(id, permission, API)] : []),
@@ -273,12 +273,12 @@ const updateResource = ({ id, data, category, permission, metadata, linkedResour
  */
 const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoStoreDAO) =>
     (deleteLinkedResources
-            ? getLinkedAttributesIds(id, () => true, API)
-            : Rx.Observable.of([])
-        ).map( (ids = []) =>
-            Rx.Observable.forkJoin(
-                [id, ...ids].map(i => API.deleteResource(i))
-            )
+        ? getLinkedAttributesIds(id, () => true, API)
+        : Rx.Observable.of([])
+    ).map( (ids = []) =>
+        Rx.Observable.forkJoin(
+            [id, ...ids].map(i => API.deleteResource(i))
+        )
     );
 
 /**
@@ -289,10 +289,10 @@ const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoS
 * @return an observable that emits the id of the updated resource
  */
 const updateResourceAttribute = ({ id, name, value } = {}, API = GeoStoreDAO) =>
-            // update metadata
-            Rx.Observable.defer(
-                () => API.updateResourceAttribute(id, name, value)
-            ).switchMap(() => Rx.Observable.of(id));
+// update metadata
+    Rx.Observable.defer(
+        () => API.updateResourceAttribute(id, name, value)
+    ).switchMap(() => Rx.Observable.of(id));
 
 module.exports = {
     getResource,

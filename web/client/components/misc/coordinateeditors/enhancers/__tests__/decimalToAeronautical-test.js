@@ -39,18 +39,18 @@ describe("test the Annotations enahncers", () => {
         }));
         // lat
         ReactDOM.render((<Sink
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
         ReactDOM.render((<Sink
             value={0}
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
         // lon
         ReactDOM.render((<Sink
             coordinate="lon"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
         ReactDOM.render((<Sink
             value={0}
             coordinate="lon"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
     it('decimalToAeronautical conversion', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
@@ -63,7 +63,7 @@ describe("test the Annotations enahncers", () => {
         ReactDOM.render((<Sink
             value = {1.50}
             coordinate="lon"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
     it('decimalToAeronautical conversion to 4 decimals as seconds', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
@@ -79,7 +79,7 @@ describe("test the Annotations enahncers", () => {
                 decimals: 4
             }}}
             coordinate="lon"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
     it('decimalToAeronautical conversion correctly step on minutes and seconds', (done) => {
         // 13.3333333333 should be 13 degrees, 20 minutes

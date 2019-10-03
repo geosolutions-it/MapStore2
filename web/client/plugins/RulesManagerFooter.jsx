@@ -26,9 +26,9 @@ class RulesManagerFooter extends React.Component {
     render() {
         return (
             <div className="mapstore-footer">
-                        <div style={{'float': "left"}}>
-                            <div className={this.props.loading ? 'ms-circle-loader-md' : ''}></div>
-                        </div>
+                <div style={{'float': "left"}}>
+                    <div className={this.props.loading ? 'ms-circle-loader-md' : ''}></div>
+                </div>
                 <div className="m-center">
                 </div>
                 <div style={{'float': "rigth"}}>

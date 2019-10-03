@@ -30,10 +30,10 @@ module.exports = ({ addBaseUrlGS, getUserService = () => {} }) => {
 
     // retrieves users from rest API
     const getUsers = (service) => axios.get(`/rest/security/usergroup/${service ? `service/${service}/` : ''}users.json`, addBaseUrlGS({
-            'headers': {
-                'Accept': 'application/json'
-            }
-        })).then(response => response && response.data && response.data.users || []);
+        'headers': {
+            'Accept': 'application/json'
+        }
+    })).then(response => response && response.data && response.data.users || []);
 
 
     return {
@@ -68,9 +68,9 @@ module.exports = ({ addBaseUrlGS, getUserService = () => {} }) => {
                 // convert into the expected format
                 .then(users => ({
                     users: users.map(({ userName, enabled}) => ({
-                    userName,
-                    enabled
-                })) }));
+                        userName,
+                        enabled
+                    })) }));
         }
     };
 };

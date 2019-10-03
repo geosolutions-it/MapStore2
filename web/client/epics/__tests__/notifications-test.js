@@ -37,7 +37,7 @@ describe('notifications Epics', () => {
                 expect(actions.length).toBe(2);
                 expect(actions[1].type).toBe(CLEAR_NOTIFICATIONS);
             } catch (e) {
-                return done(e);
+                done(e);
             }
             done();
         }, 500);

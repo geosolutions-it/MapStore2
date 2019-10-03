@@ -188,7 +188,7 @@ function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapReso
     const resolutions = mapResolutions || getResolutionsForScales(getGoogleMercatorScales(
         minZoom, maxZoom, dpi || DEFAULT_SCREEN_DPI), "EPSG:3857", dpi);
 
-    const {zoom, ...other} = resolutions.reduce((previous, resolution, index) => {
+    const {zoom} = resolutions.reduce((previous, resolution, index) => {
         const diff = Math.abs(resolution - extentResolution);
         return diff > previous.diff ? previous : {diff: diff, zoom: index};
     }, {diff: Number.POSITIVE_INFINITY, zoom: 0});
@@ -357,6 +357,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
             if (feature.properties.geometryGeodesic) {
                 return set("properties.geometryGeodesic", null, feature);
             }
+            return {};
         });
         formattedLayers[annotationsLayerIndex] = set("features", featuresLayer, formattedLayers[annotationsLayerIndex]);
     }
@@ -371,19 +372,19 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
 
 function isSimpleGeomType(geomType) {
     switch (geomType) {
-        case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": case "Text": return false;
-        case "Point": case "Circle": case "LineString": case "Polygon": default: return true;
+    case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": case "Text": return false;
+    case "Point": case "Circle": case "LineString": case "Polygon": default: return true;
     }
 }
 function getSimpleGeomType(geomType = "Point") {
     switch (geomType) {
-        case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
-        case "MultiPoint": case "Marker": return "Point";
-        case "MultiLineString": return "LineString";
-        case "MultiPolygon": return "Polygon";
-        case "GeometryCollection": return "GeometryCollection";
-        case "Text": return "Point";
-        default: return geomType;
+    case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
+    case "MultiPoint": case "Marker": return "Point";
+    case "MultiLineString": return "LineString";
+    case "MultiPolygon": return "Polygon";
+    case "GeometryCollection": return "GeometryCollection";
+    case "Text": return "Point";
+    default: return geomType;
     }
 }
 

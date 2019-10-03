@@ -29,7 +29,7 @@ const spatialMethodOptions = [
 ];
 
 
-module.exports = filtersEnhancer(({onMapReady, geometryState = {}, spatialField = {}, layer = {}, constraints = {}, active = false, setOption= () => {}, mapActive = false, actions = {}}) => {
+module.exports = filtersEnhancer(({onMapReady, geometryState = {}, spatialField = {}, layer = {}, constraints = {}, active = false, setOption = () => {}, mapActive = false, actions = {}}) => {
     const enabled = !isEmpty(layer);
     return enabled && (
         <Grid className="ms-rule-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
@@ -41,29 +41,29 @@ module.exports = filtersEnhancer(({onMapReady, geometryState = {}, spatialField 
                                 value={constraints.cqlFilterRead}
                                 onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterRead", value})}
                                 options={{
-                                mode: {name: "sql"},
-                                lineNumbers: true,
-                                lineWrapping: true
-                            }}/>
+                                    mode: {name: "sql"},
+                                    lineNumbers: true,
+                                    lineWrapping: true
+                                }}/>
                         </div>}
-                        </ContainerDimensions>
-                        </div>
+                    </ContainerDimensions>
+                </div>
             </SwitchPanel>
-                    <SwitchPanel reset={() => setOption({key: "cqlFilterWrite", value: ""})} title={<Message msgId="rulesmanager.cqlWrite"/>} initExpanded={!!constraints.cqlFilterWrite}>
-                        <div style={{width: '100%'}}>
-                            <ContainerDimensions>
-                                {({width}) => <div style={{width}}>
-                                    <Codemirror
-                                        value={constraints.cqlFilterWrite}
-                                        onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterWrite", value})}
-                                        options={{
-                                        mode: {name: "sql"},
-                                        lineNumbers: true,
-                                        lineWrapping: true
-                                    }}/>
-                                </div>}
-                                </ContainerDimensions>
-                         </div>
+            <SwitchPanel reset={() => setOption({key: "cqlFilterWrite", value: ""})} title={<Message msgId="rulesmanager.cqlWrite"/>} initExpanded={!!constraints.cqlFilterWrite}>
+                <div style={{width: '100%'}}>
+                    <ContainerDimensions>
+                        {({width}) => <div style={{width}}>
+                            <Codemirror
+                                value={constraints.cqlFilterWrite}
+                                onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterWrite", value})}
+                                options={{
+                                    mode: {name: "sql"},
+                                    lineNumbers: true,
+                                    lineWrapping: true
+                                }}/>
+                        </div>}
+                    </ContainerDimensions>
+                </div>
             </SwitchPanel>
 
             <SpatialFilter

@@ -31,8 +31,8 @@ module.exports = enhanceTOC(({
     onSort,
     onSelect,
     selectedNodes,
-    nodes =[]} = {}
-    ) => <TOC
+    nodes = []} = {}
+) => <TOC
     onSort={onSort}
     selectedNodes={selectedNodes}
     onSelect={onSelect}

@@ -39,5 +39,6 @@ Layers.registerType('marker', {
             layer.remove();
             return this.create(newOptions, map);
         }
+        return null;
     }
 });

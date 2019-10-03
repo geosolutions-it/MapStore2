@@ -9,7 +9,7 @@ let TileConfigProvider = {
         var providerName = parts[0];
         var variantName = parts[1];
         if (!providers[providerName]) {
-            throw 'No such provider (' + providerName + ')';
+            throw new Error('No such provider (' + providerName + ')');
         }
         let provider = {
             url: providers[providerName].url,
@@ -18,7 +18,7 @@ let TileConfigProvider = {
             // overwrite values in provider from variant.
         if (variantName && 'variants' in providers[providerName]) {
             if (!(variantName in providers[providerName].variants)) {
-                throw 'No such variant of ' + providerName + ' (' + variantName + ')';
+                throw new Error('No such variant of ' + providerName + ' (' + variantName + ')');
             }
             let variant = providers[providerName].variants[variantName];
             let variantOptions;
@@ -41,7 +41,7 @@ let TileConfigProvider = {
         if (provider.url.indexOf('//') === 0 && forceHTTP) {
             provider.url = 'http:' + provider.url;
         }
-            // If retina option is set
+        // If retina option is set
         if (provider.options.retina) {
         // Check retina screen
             if (options.detectRetina && CoordinatesUtils.getBrowserProperties().retina) {
@@ -54,21 +54,21 @@ let TileConfigProvider = {
             }
         }
 
-            // replace attribution placeholders with their values from toplevel provider attribution,
-            // recursively
+        // replace attribution placeholders with their values from toplevel provider attribution,
+        // recursively
         let attributionReplacer = function(attr) {
             if (attr.indexOf('{attribution.') === -1) {
                 return attr;
             }
             return attr.replace(/\{attribution.(\w*)\}/,
-                    function(match, attributionName) {
-                        return attributionReplacer(providers[attributionName].options.attribution);
-                    }
-                );
+                function(match, attributionName) {
+                    return attributionReplacer(providers[attributionName].options.attribution);
+                }
+            );
         };
         provider.options.attribution = attributionReplacer(provider.options.attribution);
 
-    // Compute final options combining provider options with any user overrides
+        // Compute final options combining provider options with any user overrides
         let layerOpts = assign({}, provider.options, options);
         return [provider.url, layerOpts];
     }

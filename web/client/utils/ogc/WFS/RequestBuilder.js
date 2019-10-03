@@ -65,7 +65,7 @@ const getStaticAttributesWFS2 = (ver) => 'service="WFS" version="' + ver + '" ' 
  * query("layerName", filter..., {options})
  * ```
  */
-module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wfs"} = {}) {
+module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS = "wfs"} = {}) {
     let gmlV = gmlVersion;
     if (!gmlV && wfsVersion) {
         gmlV = wfsToGmlVersion(wfsVersion);
@@ -97,7 +97,7 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
         getFeature: (content, opts) => `<${wfsNS}:GetFeature ${requestAttributes(opts)}>${Array.isArray(content) ? content.join("") : content}</${wfsNS}:GetFeature>`,
         sortBy: (property, order = "ASC") =>
             `<${wfsNS}:SortBy><${wfsNS}:SortProperty>${propertyName(property)}<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder></${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
-        query: (featureName, content, {srsName ="EPSG:4326"} = {}) =>
+        query: (featureName, content, {srsName = "EPSG:4326"} = {}) =>
             `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="${srsName}">`
             + `${Array.isArray(content) ? content.join("") : content}`
             + `</${wfsNS}:Query>`
