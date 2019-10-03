@@ -323,6 +323,7 @@ export default class DrawSupport extends React.Component {
                         });
                         return null;
                     }
+                    const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
                     return parseStyles({style: defaultStyles[styleType]});
                 });
             }

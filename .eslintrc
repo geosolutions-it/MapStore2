@@ -6,7 +6,8 @@
   ],
   "env": {                           // http://eslint.org/docs/user-guide/configuring.html#specifying-environments
     "browser": true,                 // browser global variables
-    "node": true                     // Node.js global variables and Node.js-specific rules
+    "node": true,                    // Node.js global variables and Node.js-specific rules
+    "es6": true                      // Node.js global variables and Node.js-specific rules
   },
   "globals"   : {
     /* MOCHA */
@@ -51,6 +52,9 @@
     "no-cond-assign": [2, "always"], // http://eslint.org/docs/rules/no-cond-assign
     "no-console": 1,                 // http://eslint.org/docs/rules/no-console
     "no-debugger": 1,                // http://eslint.org/docs/rules/no-debugger
+    "no-undef": 2,                   // https://eslint.org/docs/rules/no-undef
+    "no-const-assign": 2,            // https://eslint.org/docs/rules/no-const-assign
+    "no-duplicate-imports": 2,       // https://eslint.org/docs/rules/no-duplicate-imports
     "no-alert": 1,                   // http://eslint.org/docs/rules/no-alert
     "no-constant-condition": 1,      // http://eslint.org/docs/rules/no-constant-condition
     "no-dupe-keys": 2,               // http://eslint.org/docs/rules/no-dupe-keys
