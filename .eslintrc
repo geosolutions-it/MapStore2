@@ -7,7 +7,7 @@
   "env": {                           // http://eslint.org/docs/user-guide/configuring.html#specifying-environments
     "browser": true,                 // browser global variables
     "node": true,                    // Node.js global variables and Node.js-specific rules
-    "es6": true                      // Node.js global variables and Node.js-specific rules
+    "es6": true                      // enable all ECMAScript 6 features except for modules (this automatically sets the ecmaVersion parser option to 6).
   },
   "globals"   : {
     /* MOCHA */
