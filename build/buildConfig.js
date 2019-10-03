@@ -168,7 +168,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                     path.join(paths.base, "node_modules", "query-string"),
                     path.join(paths.base, "node_modules", "strict-uri-encode"),
                     path.join(paths.base, "node_modules", "split-on-first"),
-                    path.join(paths.base, "node_modules", "react-grid-layout")
+                    path.join(paths.base, "node_modules", "react-draggable")
                 ]
             }
         ].concat(prod ? [{
