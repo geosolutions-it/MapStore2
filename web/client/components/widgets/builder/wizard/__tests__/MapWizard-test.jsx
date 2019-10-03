@@ -7,11 +7,13 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
+const dragDropContext = require('react-dnd').DragDropContext;
+const testBackend = require('react-dnd-test-backend');
 const {Provider} = require('react-redux');
 
 const expect = require('expect');
 
-const MapWizard = require('../MapWizard');
+const MapWizard = dragDropContext(testBackend)(require('../MapWizard'));
 describe('MapWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

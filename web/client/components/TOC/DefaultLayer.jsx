@@ -81,7 +81,10 @@ class DefaultLayer extends React.Component {
         filter: () => true,
         titleTooltip: false,
         showFullTitleOnExpand: false,
-        hideOpacityTooltip: false
+        hideOpacityTooltip: false,
+        connectDragPreview: (x) => x,
+        connectDragSource: (x) => x,
+        connectDropTarget: (x) => x
     };
 
     getTitle = (layer) => {

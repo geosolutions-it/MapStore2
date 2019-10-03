@@ -9,12 +9,12 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DragDropContext as dragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import TestBackend from 'react-dnd-test-backend';
 
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
 
-const dndContext = dragDropContext(HTML5Backend);
+const dndContext = dragDropContext(TestBackend);
 
 describe('TOCPlugin Plugin', () => {
     beforeEach((done) => {

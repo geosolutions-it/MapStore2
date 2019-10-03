@@ -443,17 +443,17 @@ class LayerTree extends React.Component {
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
                     }/>
-                    <div className={'mapstore-toc' + bodyClass}>
-                        {this.props.noFilterResults && this.props.filterText ?
-                            <div>
-                                <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
-                            </div>
-                            :
-                            <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
-                                <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
-                            </TOC>
-                        }
-                    </div>
+                <div className={'mapstore-toc' + bodyClass}>
+                    {this.props.noFilterResults && this.props.filterText ?
+                        <div>
+                            <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
+                        </div>
+                        :
+                        <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
+                            <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
+                        </TOC>
+                    }
+                </div>
             </div>
         );
     };

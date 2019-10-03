@@ -168,6 +168,7 @@
     "react-data-grid": "5.0.4",
     "react-data-grid-addons": "5.0.4",
     "react-dnd": "2.6.0",
+    "react-dnd-test-backend": "2.6.0",
     "react-dnd-html5-backend": "2.6.0",
     "react-dock": "0.2.4",
     "react-dom": "16.10.1",

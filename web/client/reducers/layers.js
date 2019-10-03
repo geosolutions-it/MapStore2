@@ -75,8 +75,8 @@ const updateGroupIds = (node, parentGroupId, newLayers) => {
         if (isString(node.id)) {
             const lastDot = node.id.lastIndexOf('.');
             const newId = lastDot !== -1 ?
-                 parentGroupId + node.id.slice(lastDot + (parentGroupId === '' ? 1 : 0)) :
-                 parentGroupId + (parentGroupId === '' ? '' : '.') + node.id;
+                parentGroupId + node.id.slice(lastDot + (parentGroupId === '' ? 1 : 0)) :
+                parentGroupId + (parentGroupId === '' ? '' : '.') + node.id;
             return assign({}, node, {id: newId, nodes: node.nodes.map(x => updateGroupIds(x, newId, newLayers))});
         } else if (isString(node)) {
             // if it's just a string it means it is a layer id

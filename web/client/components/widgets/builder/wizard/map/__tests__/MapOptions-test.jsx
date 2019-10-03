@@ -8,10 +8,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const dragDropContext = require('react-dnd').DragDropContext;
-const html5Backend = require('react-dnd-html5-backend');
+const testBackend = require('react-dnd-test-backend');
 
 const expect = require('expect');
-const MapOptions = dragDropContext(html5Backend)(require('../MapOptions'));
+const MapOptions = dragDropContext(testBackend)(require('../MapOptions'));
 
 describe('MapOptions component', () => {
     beforeEach((done) => {

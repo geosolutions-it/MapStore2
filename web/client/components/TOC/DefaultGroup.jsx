@@ -57,6 +57,9 @@ class DefaultGroup extends React.Component {
         selectedNodes: [],
         onSelect: () => {},
         titleTooltip: false,
+        connectDragPreview: (x) => x,
+        connectDragSource: (x) => x,
+        connectDropTarget: (x) => x,
         isDraggable: false,
         isDragging: false,
         isOver: false
