@@ -4,7 +4,9 @@ services:
 language: node_js
 node_js:
   - 8.6.0
-script: npm run travis
+script: 
+  - cat package-lock.json
+  - npm run travis
 addons:
   firefox: latest
 before_install:
