@@ -51,12 +51,13 @@ module.exports = ({
         topRightItems={topRightItems}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
-                    <div style={{ height: "30px", overflow: "hidden"}}>
+                <div style={{ height: "30px", overflow: "hidden"}}>
                     {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
+                    {error === undefined &&
                     <span style={{ "float": "left", margin: "5px" }} ><Message
-                            msgId={"featuregrid.resultInfoVirtual"}
-                            msgParams={{ total: pagination.totalFeatures }} /></span>
-                    </div>) : null}
+                        msgId={"featuregrid.resultInfoVirtual"}
+                        msgParams={{ total: pagination.totalFeatures }} /></span>}
+                </div>) : null}
         >
         <FeatureGrid
             emptyRowsView={() => <EmptyRowsView loading={loading} />}
