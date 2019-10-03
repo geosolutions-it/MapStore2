@@ -3,7 +3,7 @@ services:
   - xvfb
 language: node_js
 node_js:
-  - 8.15.1
+  - 8.6.0
 script: npm run travis
 addons:
   firefox: latest
