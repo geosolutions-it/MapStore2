@@ -5,13 +5,17 @@ language: node_js
 node_js:
   - 8.15.1
 script: 
-  - cat package-lock.json
   - npm run travis
 addons:
   firefox: latest
 before_install:
     - node -v
     - npm -v
+install:
+  # Tell npm to ignore package-lock.json to avoid making local file
+  # changes that would dirty the git workspace.
+  - npm config set package-lock false
+  - npm install
 branches:
   only:
     - master
