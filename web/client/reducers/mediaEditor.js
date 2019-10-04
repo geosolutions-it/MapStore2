@@ -60,7 +60,7 @@ export const DEFAULT_STATE = {
             geostoreMap: {
                 name: "Geostore Dev",
                 type: SourceTypes.GEOSTORE,
-                baseURL: "/rest/geostore/",
+                baseURL: "/mapstore/rest/geostore/",
                 category: "MAP"
             }
         }
