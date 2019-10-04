@@ -31,31 +31,34 @@ try {
         cssTemplate: cssTemplate
     }, function(error) {
         if (error) {
+            console.log(' ');
+            console.log('\x1b[41m', '\x1b[37m', 'ICONS GENERATOR - PROCESS ERROR', '\x1b[0m');
+            console.log(' ');
             console.log(error);
             console.log(' ');
-            console.log(' -------------------------------------------------------------------------------');
-            console.log('  ICONS GENERATOR - PROCESS ERROR');
-            console.log(' -------------------------------------------------------------------------------');
-            console.log(' ');
         } else {
+            console.log(' ');
+            console.log('\x1b[42m', '\x1b[30m', 'ICONS GENERATOR - SUCCESS', '\x1b[0m');
+            console.log(' ');
             console.log(`  Generated fonts in eot, svg, ttf, woff and woff2 formats from ${files.length} icons`);
             console.log(' ');
             console.log(`  - fonts      -> ${dest}`);
             console.log(`  - icons.less -> ${cssDest}`);
             console.log(' ');
-            console.log(' ');
-            console.log(' -------------------------------------------------------------------------------');
-            console.log('  ICONS GENERATOR - SUCCESS');
-            console.log(' -------------------------------------------------------------------------------');
-            console.log(' ');
-
         }
+        console.log(' -------------------------------------------------------------------------------');
+        console.log('  ICONS GENERATOR - PROCESS END');
+        console.log(' -------------------------------------------------------------------------------');
+        console.log(' ');
     });
 } catch (error) {
+    console.log(' ');
+    console.log('\x1b[41m', '\x1b[37m', 'ICONS GENERATOR - PROCESS ERROR', '\x1b[0m');
+    console.log(' ');
     console.log(error);
     console.log(' ');
     console.log(' -------------------------------------------------------------------------------');
-    console.log('  ICONS GENERATOR - SCRIPT ERROR');
+    console.log('  ICONS GENERATOR - PROCESS END');
     console.log(' -------------------------------------------------------------------------------');
     console.log(' ');
 }
