@@ -14,17 +14,12 @@ const Preview = ({
     selectedItem
 }) => {
     const src = selectedItem && selectedItem.data && selectedItem.data.src;
-    return (
-        <div key="preview" style = {{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            { src && <img src={src }
-                style={{
-                    objectFit: "contain",
-                    width: "100%",
-                    height: "100%"
-                }}/>
-            }
-        </div>
-    );
+    return src && <img src={src }
+        style={{
+            objectFit: "contain",
+            width: "100%",
+            height: "100%"
+        }}/>;
 };
 
 

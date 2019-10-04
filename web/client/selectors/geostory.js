@@ -103,4 +103,3 @@ export const resourcesSelector = state => get(currentStorySelector(state), "reso
  * @returns {function} function that returns a selector
  */
 export const resourceByIdSelectorCreator = id => state => find(resourcesSelector(state), {id});
-

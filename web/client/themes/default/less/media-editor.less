@@ -1,11 +1,24 @@
+@ms-story-bg: @ms2-color-background;
 
 .ms-mediaEditor {
     /* render the scrollbar on the list */
-    .ms-imageList {
+    .ms-mediaList {
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
+        .ms-media-toolbar {
+            padding: 8px;
+            padding-bottom: 0px;
+            text-align: center;
+        }
+        .ms-imageList, .ms-mapList {
+            position: relative;
+            .mapstore-filter.form-group {
+                margin: 0;
+                padding: 8px;
+            }
+        }
         .msSideGrid {
             position: relative;
             overflow: auto;
@@ -21,14 +34,45 @@
                 padding: 0;
             }
         }
+        .ms-image-filter {
+            padding: 8px;
+        }
+        .map-catalog {
+            .catalog-form {
+                padding-top: 15px;
+            }
+            .ms2-border-layout-body {
+                .ms2-border-layout-content {
+                    width: 100%;
+                }
+            }
+        }
+    }
+    .ms2-border-layout-body {
+        .ms-mediaSelector {
+            z-index: 1;
+            order: -1;
+            width: 300px;
+            background-color: @ms-story-bg;
+        }
     }
     // move service selector in top right corner
     .ms-border-layout-header {
-        .Select.Select--single {
-            flex: 5;
-        }
-        .ms-label-services {
-            flex: 1;
+        .shadow-soft();
+        .ms-mediaEditor-services {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 240px; // todo think about this
+            display: flex;
+            align-items: center;
+
+            .Select.Select--single {
+                flex: 5;
+            }
+            .ms-mediaEditor-label {
+                flex: 1;
+            }
         }
     }
 }

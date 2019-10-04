@@ -86,10 +86,16 @@ describe('Test correctness of the GeoStore APIs', () => {
         const result = API.addBaseUrl(null);
         expect(result).toIncludeKey("baseURL");
         expect(result.baseURL).toNotBe(null);
+
         const result2 = API.addBaseUrl({otherOption: 3});
-        expect(result2).toIncludeKey("baseURL")
+        expect(result2)
+            .toIncludeKey("baseURL")
             .toIncludeKey('otherOption');
         expect(result2.baseURL).toNotBe(null);
+
+        const baseURL = "/test/geostore/rest";
+        const withCustomBaseUrl = API.addBaseUrl({otherOption: 3, baseURL});
+        expect(withCustomBaseUrl.baseURL).toBe(baseURL);
     });
 
     it('test user creation utils', () => {

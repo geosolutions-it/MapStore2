@@ -8,8 +8,9 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
 
-import { ContentTypes, EMPTY_CONTENT, Modes } from '../../../../utils/GeoStoryUtils';
+import { ContentTypes, EMPTY_CONTENT, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
 import Content from '../Content';
 
 describe('Content component', () => {
@@ -61,6 +62,28 @@ describe('Content component', () => {
         const h1 = container.querySelector('h1');
         expect(h1).toExist();
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
+    });
+    it('Content rendering placeholder for paragraph', () => {
+        ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="paragraph"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const h1 = container.querySelector('h1');
+        expect(h1).toExist();
+        expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
+    });
+    it('Content rendering Media IMAGE', () => {
+        ReactDOM.render(<Content type={ContentTypes.MEDIA} mediaType={MediaTypes.IMAGE} src="http:/" />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const imageContent = container.querySelector('.ms-media.ms-media-image');
+        expect(imageContent).toExist();
+    });
+    it('Content rendering Media MAP', () => {
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}} >
+                <Content type={ContentTypes.MEDIA} mediaType={MediaTypes.MAP} />
+            </Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const imageContent = container.querySelector('.ms-media.ms-media-map');
+        expect(imageContent).toExist();
     });
 
 });

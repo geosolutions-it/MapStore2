@@ -17,6 +17,9 @@ import {
     saveMedia, SAVE_MEDIA,
     saveMediaSuccess, SAVE_MEDIA_SUCCESS,
     selectItem, SELECT_ITEM,
+    updateItem, UPDATE_ITEM,
+    setMediaService, SET_MEDIA_SERVICE,
+    setMediaType, SET_MEDIA_TYPE,
     setAddingMedia, ADDING_MEDIA,
     setEditingMedia, EDITING_MEDIA,
     show, SHOW
@@ -90,6 +93,12 @@ describe('mediaEditor actions', () => {
         expect(action.id).toEqual(id);
         expect(action.type).toEqual(SELECT_ITEM);
     });
+    it('updateItem', () => {
+        const map = {id: "val"};
+        const action = updateItem(map);
+        expect(action.item).toEqual(map);
+        expect(action.type).toEqual(UPDATE_ITEM);
+    });
     it('setAddingMedia', () => {
         const adding = true;
         const action = setAddingMedia(adding);
@@ -101,6 +110,18 @@ describe('mediaEditor actions', () => {
         const action = setEditingMedia(editing);
         expect(action.editing).toEqual(editing);
         expect(action.type).toEqual(EDITING_MEDIA);
+    });
+    it('setMediaService', () => {
+        const value = "geostory";
+        const action = setMediaService({value});
+        expect(action.id).toEqual(value);
+        expect(action.type).toEqual(SET_MEDIA_SERVICE);
+    });
+    it('setMediaType', () => {
+        const mediaType = "image";
+        const action = setMediaType(mediaType);
+        expect(action.mediaType).toEqual(mediaType);
+        expect(action.type).toEqual(SET_MEDIA_TYPE);
     });
     it('show', () => {
         const owner = "geostory";

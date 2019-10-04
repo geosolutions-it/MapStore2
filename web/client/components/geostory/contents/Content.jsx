@@ -7,11 +7,9 @@
  */
 import React from 'react';
 import Text from './Text';
-import Image from '../media/Image';
 import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
-
+import {Media} from '../media';
 const DummyComponent = ({ type }) => <div className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
-
 
 /**
  * Returns the Component to use for the given type
@@ -22,12 +20,9 @@ const getComponent = type => {
     case ContentTypes.TEXT:
         return Text;
     case ContentTypes.MEDIA:
-        // TODO return empty VIEW representing a media not configured
-        return Image;
     case MediaTypes.IMAGE:
-        return Image;
-        // case MediaTypes.VIDEO:
-        //  return ...;
+    case MediaTypes.MAP:
+        return Media;
     default:
         return DummyComponent;
     }

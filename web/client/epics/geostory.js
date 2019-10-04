@@ -7,8 +7,9 @@
  */
 
 import { Observable } from 'rxjs';
-import {isNaN, isString, isNil, lastIndexOf} from 'lodash';
+import {head, isNaN, isString, isNil, lastIndexOf} from 'lodash';
 import { push, LOCATION_CHANGE } from 'react-router-redux';
+import uuid from 'uuid/v1';
 
 import axios from '../libs/ajax';
 
@@ -19,6 +20,7 @@ const {
 } = require('../api/persistence');
 
 import {
+    addResource,
     ADD,
     REMOVE,
     LOAD_GEOSTORY,
@@ -49,13 +51,14 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector } from '../selectors/geostory';
-import { mediaTypeSelector } from '../selectors/mediaEditor';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector} from '../selectors/geostory';
+import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, MediaTypes } from '../utils/GeoStoryUtils';
 
 import { getEffectivePath } from '../reducers/geostory';
+import { SourceTypes } from './../utils/GeoStoryUtils';
 
 
 /**
@@ -63,7 +66,7 @@ import { getEffectivePath } from '../reducers/geostory';
  * then it waits for chose media for updating the resourceId
  * @param {*} action$
  */
-export const openMediaEditorForNewMedia = action$ =>
+export const openMediaEditorForNewMedia = (action$, store) =>
     action$.ofType(ADD)
         .filter(({ element = {} }) => {
             const isMediaContent = element.type === ContentTypes.MEDIA;
@@ -92,7 +95,7 @@ export const openMediaEditorForNewMedia = action$ =>
                                 Observable.of(
                                     update(
                                         path,
-                                        { resourceId: resource.id, type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        { resourceId: resource.id, type: currentMediaTypeSelector(store.getState()) }, // TODO take type from mediaEditor state or from resource
                                         "merge"
                                     )
                                 );
@@ -164,21 +167,37 @@ export const scrollToContentEpic = action$ =>
 export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
-            const state = store.getState();
-            const resourceId = resourceIdSelectorCreator(path)(state);
+            const selectedResource = resourceIdSelectorCreator(path)(store.getState());
             return Observable.of(
                 showMediaEditor(owner),
-                selectItem(resourceId)
+                selectItem(selectedResource)
             )
                 .merge(
                     action$.ofType(CHOOSE_MEDIA)
                         .switchMap( ({resource = {}}) => {
-                            const type = mediaTypeSelector(state);
-                            return Observable.of(
-                                update(`${path}`, {resourceId: resource.id, type}, "merge" )
-                            );
+                            let actions = [];
+                            const state = store.getState();
+                            const mediaType = currentMediaTypeSelector(state);
+                            const sourceId = sourceIdSelector(state);
+
+                            // if resources comes from geostory the id is at root level
+                            // otherwise it checks for the original resource id present in data
+                            const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
+
+                            let resourceId = resource.id;
+                            if (!resourceAlreadyPresent && resource.type === MediaTypes.MAP && sourceId !== SourceTypes.GEOSTORY) {
+                                // if using a geostore map that is not present in the story => add it
+                                resourceId = uuid();
+                                actions = [...actions, addResource(resourceId, mediaType, resource)];
+                            }
+                            if (resourceAlreadyPresent) {
+                                resourceId = resourceAlreadyPresent.id;
+                            }
+                            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
+                            return Observable.from(actions);
                         })
-                        .takeUntil(action$.ofType(HIDE, ADD))
+                        .takeUntil(action$.ofType(HIDE, ADD)
+                        )
                 );
         });
 /**
