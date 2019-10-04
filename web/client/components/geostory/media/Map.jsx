@@ -44,7 +44,6 @@ export default compose(
             id={"media" + id}
             map={{
                 ...m,
-                center: m.center || [0, 0],
                 id
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
