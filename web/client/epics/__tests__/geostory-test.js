@@ -553,7 +553,7 @@ describe('Geostory Epics', () => {
                     expect(a.owner).toEqual("geostore");
                     break;
                 case SELECT_ITEM:
-                    expect(a.id).toEqual("resource_id");
+                    expect(a.id).toEqual("resourceId");
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -564,13 +564,16 @@ describe('Geostory Epics', () => {
             geostory: {
                 currentStory: {
                     resources: [{
-                        id: "geostoreMap-resource_id"
+                        id: "resourceId",
+                        data: {
+                            id: "resource_id"
+                        }
                     }],
                     sections: [{
                         id: "section_id",
                         contents: [{
                             id: "content_id",
-                            resourceId: "resource_id"
+                            resourceId: "resourceId"
                         }]
                     }]
                 }
