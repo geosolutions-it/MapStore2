@@ -100,8 +100,8 @@ describe('Immersive component', () => {
         expect(backgroundToolbar).toExist();
         expect(backgroundToolbar.querySelectorAll('button').length).toBe(5);
         expect(backgroundToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
-        expect(backgroundToolbar.querySelector('button .glyphicon-1-full-screen')).toExist(); // align tool
-        expect(backgroundToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-fit-contain')).toExist(); // fit tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-size-extra-large')).toExist(); // resize tool
         expect(backgroundToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(backgroundToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
@@ -111,6 +111,7 @@ describe('Immersive component', () => {
         expect(columnToolbar.querySelectorAll('button').length).toBe(3);
         expect(columnToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(columnToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
         // inner media and image contents must have edit, resize and align tools
         const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');

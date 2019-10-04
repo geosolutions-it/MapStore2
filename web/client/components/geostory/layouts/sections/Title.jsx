@@ -95,21 +95,21 @@ export default backgroundPropWithHandler(({
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
-                glyph: 'font',
+                glyph: 'story-title-section',
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.TITLE);
                 }
             },
             {
-                glyph: 'sheet',
+                glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.PARAGRAPH);
                 }
             },
             {
-                glyph: 'book',
+                glyph: 'story-immersive-section',
                 tooltipId: 'geostory.addImmersiveSection',
                 onClick: () => {
                     // TODO: add
@@ -117,7 +117,7 @@ export default backgroundPropWithHandler(({
                 }
             },
             {
-                glyph: 'picture',
+                glyph: 'story-media-section',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.MEDIA);

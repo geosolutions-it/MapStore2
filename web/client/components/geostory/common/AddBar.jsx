@@ -24,7 +24,8 @@ class AddBar extends React.Component {
         type: PropTypes.string,
         buttons: PropTypes.array,
         containerWidth: PropTypes.oneOf(PropTypes.number, PropTypes.string),
-        containerHeight: PropTypes.oneOf(PropTypes.number, PropTypes.string)
+        containerHeight: PropTypes.oneOf(PropTypes.number, PropTypes.string),
+        addButtonClassName: PropTypes.string
     };
 
     static defaultProps = {
@@ -32,7 +33,8 @@ class AddBar extends React.Component {
         type: '',
         buttons: [],
         containerWidth: 0,
-        containerHeight: 0
+        containerHeight: 0,
+        addButtonClassName: ''
     };
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -66,9 +68,9 @@ class AddBar extends React.Component {
                 ref={(popover) => {
                     if (popover) this.trigger = popover.trigger;
                 }}
-                placement="top"
-            >
-                <Button>
+                placement="top">
+                <Button
+                    className={this.props.addButtonClassName}>
                     <Glyphicon
                         glyph="plus"/>
                 </Button>
