@@ -7,12 +7,11 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createSink } from 'recompose';
+import { createSink, setObservableConfig } from 'recompose';
 import expect from 'expect';
 
 // config for recompose usage of RXJS
 import rxjsconfig from 'recompose/rxjsObservableConfig';
-import { setObservableConfig } from 'recompose';
 import immersiveBackgroundManager from '../immersiveBackgroundManager';
 
 import STORY from '../../../../../../test-resources/geostory/sampleStory_1.json';
