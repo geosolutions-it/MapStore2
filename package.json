@@ -238,7 +238,7 @@
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "postinstall": "node utility/build/checkCesium.js && rimraf node_modules/leaflet-simple-graticule/node_modules && rimraf node_modules/react-sortable-items/node_modules/react-dom",
     "clean": "rimraf ./web/client/dist",
-    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=1600 ./node_modules/webpack/bin/webpack.js --progress  --colors --config build/prod-webpack.config.js",
+    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress  --colors --config build/prod-webpack.config.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline  --config build/webpack.config.js --content-base web/client",
     "startprod": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
