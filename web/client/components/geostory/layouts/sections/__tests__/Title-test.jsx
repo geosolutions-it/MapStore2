@@ -54,8 +54,8 @@ describe('Title component', () => {
 
         const buttonsInToolbar = container.querySelectorAll('.ms-section-background-container .btn-group .glyphicon');
         expect(buttonsInToolbar).toExist();
-        expect(buttonsInToolbar.length).toBe(5);
-        testToolbarButtons(["pencil", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
+        expect(buttonsInToolbar.length).toBe(6);
+        testToolbarButtons(["pencil", "1-full-screen", "resize-vertical", "resize-horizontal", "align-center", "dropper"], container);
 
     });
     it('Title rendering cover set to true', () => {
@@ -139,6 +139,6 @@ describe('Title component', () => {
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
-        testToolbarButtons(["pencil", "resize-horizontal", "align-center", "dropper"], container);
+        testToolbarButtons(["pencil", "resize-vertical", "resize-horizontal", "align-center", "dropper"], container);
     });
 });

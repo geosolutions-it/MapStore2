@@ -1864,6 +1864,8 @@
             "emptyDescription": "Commencez à créer une géostory géniale en ajoutant du nouveau contenu",
             "contentToolbar": {
                 "contentSize": "Changer la taille",
+                "contentHeightAuto": "Hauteur automatique",
+                "contentHeightView": "Hauteur de la vue",
                 "smallSizeLabel": "Petit",
                 "mediumSizeLabel": "Moyen",
                 "largeSizeLabel": "Large",

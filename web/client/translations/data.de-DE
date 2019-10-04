@@ -1864,6 +1864,8 @@
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {
                 "contentSize": "Größe ändern",
+                "contentHeightAuto": "Höhe anzeigen",
+                "contentHeightView": "Height View",
                 "smallSizeLabel": "Klein",
                 "mediumSizeLabel": "Mittel",
                 "largeSizeLabel": "Groß",

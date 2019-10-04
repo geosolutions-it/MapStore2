@@ -33,6 +33,7 @@ export default backgroundPropWithHandler(({
     inViewRef,
     add = () => {},
     update = () => {},
+    updateSection = () => {},
     remove = () => {},
     updateBackground = () => {},
     editMedia = () => {}
@@ -59,6 +60,8 @@ export default backgroundPropWithHandler(({
                     update={updateBackground}
                     add={add}
                     editMedia={editMedia}
+                    updateSection={updateSection}
+                    cover={cover}
                     remove={remove}
                     width={viewWidth}
                     sectionType={sectionType}
@@ -67,8 +70,8 @@ export default backgroundPropWithHandler(({
                         backgroundSize: `${cover ? 64 : 600 }px auto`
                     }}
                     tools={{
-                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
-                        [MediaTypes.MAP]: ['editMedia', 'size', 'align', 'theme']
+                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'cover', 'size', 'align', 'theme'],
+                        [MediaTypes.MAP]: ['editMedia', 'size', 'cover', 'align', 'theme']
                     }}
                     height={height >= viewHeight
                         ? viewHeight
@@ -81,6 +84,7 @@ export default backgroundPropWithHandler(({
             mode={mode}
             add={add}
             sectionType={sectionType}
+            updateSection={updateSection}
             update={update}
             remove={remove}
             sectionId={id}

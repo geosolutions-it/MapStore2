@@ -35,6 +35,7 @@ class Section extends React.Component {
         storyType: PropTypes.oneOf(lists.StoryTypes),
         add: PropTypes.func,
         update: PropTypes.func,
+        updateSection: PropTypes.func,
         editMedia: PropTypes.func,
         remove: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
@@ -50,6 +51,7 @@ class Section extends React.Component {
         id: '',
         add: () => {},
         update: () => {},
+        updateSection: () => {},
         editMedia: () => {},
         remove: () => {},
         storyType: StoryTypes.CASCADE,
@@ -72,6 +74,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
+                updateSection={(element) => this.props.updateSection(`sections[{"id": "${this.props.id}"}]`, element, "merge")}
                 remove={this.props.remove}
                 mode={this.props.mode}
                 cover={this.props.cover}

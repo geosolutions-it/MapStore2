@@ -37,6 +37,7 @@ class Background extends Component {
         width: PropTypes.number,
         tools: PropTypes.object,
         style: PropTypes.object,
+        updateSection: PropTypes.func,
         add: PropTypes.func,
         editMedia: PropTypes.func,
         update: PropTypes.func,
