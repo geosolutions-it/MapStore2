@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import {testEpic} from './epicTestUtils';
+import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
 
 import {
     loadMediaEditorDataEpic,
@@ -34,8 +34,8 @@ describe('MediaEditor Epics', () => {
         const params = {mediaType: "image"};
         const mediaType = "image";
         const resultData = {
-            resources: [],
-            totalCount: 0
+            resources: [{id: "resId", type: "image"}],
+            totalCount: 1
         };
         const sourceId = "geostory";
         testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, loadMedia(params, mediaType, sourceId), (actions) => {
@@ -54,37 +54,45 @@ describe('MediaEditor Epics', () => {
             });
             done();
         }, {
-            geostory: {},
-            mediaEditor: {}
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resId",
+                        type: "image"
+                    }]}
+            },
+            mediaEditor: {
+                settings: {
+                    sourceId
+                }
+            }
         });
     });
-    it('loadMediaEditorDataEpic with show ', (done) => {
+    it('loadMediaEditorDataEpic with show and 0 resources', (done) => {
         const NUM_ACTIONS = 1;
-        const params = {};
-        const mediaType = "image";
-        const resultData = {
-            resources: [],
-            totalCount: 0
-        };
         const sourceId = "geostory";
-        testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, show("geostory"), (actions) => {
+        testEpic(addTimeoutEpic(loadMediaEditorDataEpic, 10), NUM_ACTIONS, show("geostory"), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                case LOAD_MEDIA_SUCCESS:
-                    expect(a.params).toEqual(params);
-                    expect(a.mediaType).toEqual(mediaType);
-                    expect(a.sourceId).toEqual(sourceId);
-                    expect(a.resultData).toEqual(resultData);
+                case TEST_TIMEOUT:
+                    done();
                     break;
                 default: expect(true).toEqual(false);
                     break;
                 }
             });
-            done();
         }, {
-            geostory: {},
-            mediaEditor: {}
+            geostory: {
+                currentStory: {
+                    resources: []
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    sourceId
+                }
+            }
         });
     });
     it('editorSaveUpdateMediaEpic add new media', (done) => {
@@ -123,7 +131,10 @@ describe('MediaEditor Epics', () => {
                 saveState: {
                     adding: true
                 },
-                selected: "id"
+                selected: "id",
+                settings: {
+                    sourceId: "geostory"
+                }
             }
         });
     });
@@ -170,7 +181,10 @@ describe('MediaEditor Epics', () => {
                     editing: true,
                     adding: true
                 },
-                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                settings: {
+                    sourceId: "geostory"
+                }
             }
         });
     });

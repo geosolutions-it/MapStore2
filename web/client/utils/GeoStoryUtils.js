@@ -10,7 +10,7 @@
  * Utils for geostory
  */
 
-import { isArray, values } from 'lodash';
+import { isArray, values, filter, merge } from 'lodash';
 import uuid from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
@@ -60,7 +60,6 @@ export const lists = {
     Modes: values(Modes)
 };
 
-
 /**
  * Return a class name from props of a content
  * @prop {string} theme one of 'bright', 'dark', 'dark-transparent' or 'bright-transparent'
@@ -101,6 +100,51 @@ export const scrollToContent = (id, scrollOptions) => {
 };
 
 
+export const DEFAULT_MAP_OPTIONS = {
+    zoomControl: true,
+    style: {width: "100%", height: "100%"},
+    mapOptions: {
+        interactions: {
+            mouseWheelZoom: false
+        }
+    }
+};
+
+/**
+ * generate map defaults
+ * @param {object} options to merge with defaults
+ * @return {object} options merged with defaults
+ */
+export const applyDefaults = (options = {}) => merge({}, options, DEFAULT_MAP_OPTIONS);
+/**
+ * create map object
+ * @param {object} baseMap initial map object
+ * @param {object} overrides object to override with
+ * @return {object} options merged with defaults
+ */
+export const createMapObject = (baseMap = {}, overrides = {}) => {
+    return merge({}, baseMap, overrides);
+};
+/**
+ * check if a string matches a regex
+ * @param {string} title string to test
+ * @param {string} filterText used to generate regex
+ * @param {RegExp} [regex] used to test input string, default it uses the filterText
+ * @return {boolean} true if it matches, false otherwise
+ */
+export const testRegex = (title, filterText, regex = RegExp(filterText, "i")) => {
+    return filterText ? regex.test(title) : true;
+};
+/**
+ * filter resources based on their title and a filter string
+ * @param {object[]} resources resources to filter
+ * @param {string} filterText string used to generate regex
+ * @param {RegExp} [regex] regex used to test input string, default it uses the filterText
+ * @return {object[]} filtered resources
+ */
+export const filterResources = (resources = [], filterText, regex = RegExp(filterText, "i") ) => {
+    return filter(resources, r => testRegex(r.data && r.data.title, filterText, regex));
+};
 /**
  * Creates a default template for the given type
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)

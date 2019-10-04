@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Background from '../Background';
 import {Provider} from 'react-redux';
+import { testToolbarButtons } from './testUtils';
 
 describe('Background component', () => {
     beforeEach((done) => {
@@ -56,5 +57,26 @@ describe('Background component', () => {
         expect(contentToolbar).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         expect(image.getAttribute('src')).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+        testToolbarButtons(["pencil"], container);
+    });
+    it('render background with media (map)', () => {
+        const VIEW_HEIGHT = 800;
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
+                <Background
+                    width={1024}
+                    mode="edit"
+                    height={VIEW_HEIGHT}
+                    type="map"
+                />
+            </Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        const mapMedia = container.querySelector('.ms-media-map');
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(backgroundContainer).toExist();
+        expect(mapMedia).toExist();
+        expect(contentToolbar).toExist();
+        expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
 });

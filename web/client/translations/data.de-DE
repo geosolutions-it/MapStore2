@@ -1860,8 +1860,8 @@
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
-            "emptyTitle": "This story is empty",
-            "emptyDescription": "Start creating an awesome geostory by adding new content",
+            "emptyTitle": "Diese Geschichte ist leer",
+            "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {
                 "contentSize": "Größe ändern",
                 "smallSizeLabel": "Klein",
@@ -1942,6 +1942,7 @@
             "modalTitle": "Medien",
             "images": "Bilder",
             "videos": "Videos",
+            "maps": "Karten",
             "preview": "Vorschau",
             "apply": "Sich bewerben",
             "mediaPicker": {
@@ -1962,7 +1963,10 @@
                 "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
                 "description": "Beschreibung",
                 "creditsPlaceholder": "Geben Sie Credits ein",
-                "credits": "Credits"
+                "credits": "Credits",
+                "mapFilter": "Karten filtern",
+                "videoFilter": "Filtern Sie Videos",
+                "imageFilter": "Filtern Sie Bilder"
             }
         },
         "tutorial": {

@@ -49,6 +49,19 @@ describe('MapCatalog component', () => {
         expect(document.querySelectorAll('.mapstore-side-card').length).toBe(1);
     });
 
+    it('MapCatalog rendering with items and text, with null title', () => {
+        ReactDOM.render(<MapCatalog searchText="MAP" title={null} items={[{
+            title: "",
+            description: "description"
+        }]}/>, document.getElementById("container"));
+        expect(document.querySelector('input')).toExist();
+        expect(document.querySelector('input').value).toBe("MAP");
+        expect(document.querySelector('.map-catalog')).toExist();
+        const h4 = document.querySelector('.text-center h4');
+        expect(h4).toNotExist();
+        expect(document.querySelectorAll('.mapstore-side-card').length).toBe(1);
+    });
+
     it('mapCatalog enhancer', (done) => {
         const Sink = mapCatalog(createSink( props => {
             if (props.items && props.items.length > 0) {

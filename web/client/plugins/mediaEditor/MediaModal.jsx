@@ -16,7 +16,9 @@ import {
     setMediaType,
     setMediaService,
     saveMedia,
-    selectItem
+    selectItem,
+    updateItem,
+    loadMediaSuccess
 } from '../../actions/mediaEditor';
 import {
     availableSourcesSelector,
@@ -24,6 +26,7 @@ import {
     editingSelector,
     saveStateSelector,
     sourceIdSelector,
+    selectedSourceSelector,
     selectedItemSelector
 } from '../../selectors/mediaEditor';
 
@@ -37,15 +40,18 @@ const Editor = connect(createStructuredSelector({
     saveState: saveStateSelector,
     selectedItem: selectedItemSelector,
     selectedService: sourceIdSelector,
+    selectedSource: selectedSourceSelector,
     services: availableSourcesSelector,
     editing: editingSelector,
     resources: currentResourcesSelector
 }), {
     selectItem,
+    updateItem,
     setMediaService,
     setAddingMedia,
     setMediaType,
     setEditingMedia,
+    loadItems: loadMediaSuccess,
     saveMedia
 })(MediaEditor);
 
@@ -60,6 +66,7 @@ const MediaModal = ({
     mediaType,
     chooseMedia,
     selectedItem,
+    editing,
     hide = () => { }
 }) => {
 
@@ -75,7 +82,7 @@ const MediaModal = ({
                     {
                         text: <Message msgId="mediaEditor.apply"/>,
                         bsSize: 'sm',
-                        disabled: !selectedItem,
+                        disabled: !selectedItem || editing,
                         onClick: () => chooseMedia(selectedItem)
                     }
                 ]}>

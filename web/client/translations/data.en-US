@@ -1943,6 +1943,7 @@
             "modalTitle": "Media",
             "images": "Images",
             "videos": "Videos",
+            "maps": "Maps",
             "preview": "Preview",
             "apply": "Apply",
             "mediaPicker": {
@@ -1963,7 +1964,10 @@
                 "descriptionPlaceholder": "Enter a description",
                 "description": "Description",
                 "creditsPlaceholder": "Enter credits",
-                "credits": "Credits"
+                "credits": "Credits",
+                "mapFilter": "Filter maps",
+                "videoFilter": "Filter videos",
+                "imageFilter": "Filter images"
             }
         },
         "tutorial": {
