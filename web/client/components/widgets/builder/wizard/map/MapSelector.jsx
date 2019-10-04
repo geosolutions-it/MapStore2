@@ -14,8 +14,10 @@ import BuilderHeader from '../../BuilderHeader';
 
 import mcEnhancer from '../../../../maps/enhancers/mapCatalogWithEmptyMap';
 import Message from '../../../../I18N/Message';
-const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
+import MapCatalogComp from '../../../../maps/MapCatalog';
 import handleMapSelect from './enhancers/handleMapSelect';
+
+const MapCatalog = mcEnhancer(MapCatalogComp);
 
 /**
  * Builder page that allows layer's selection

@@ -14,7 +14,8 @@ import handleMapSelect from '../../widgets/builder/wizard/map/enhancers/handleMa
 import Filter from '../../misc/Filter';
 import withLocal from "../../misc/enhancers/localizedProps";
 import SideGrid from '../../misc/cardgrids/SideGrid';
-import { SourceTypes, filterResources } from '../../../utils/GeoStoryUtils';
+import { filterResources } from '../../../utils/GeoStoryUtils';
+import { SourceTypes } from '../../../utils/MediaEditorUtils';
 import withFilter from '../enhancers/withFilter';
 
 

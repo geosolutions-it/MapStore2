@@ -55,10 +55,10 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, MediaTypes } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
 
 import { getEffectivePath } from '../reducers/geostory';
-import { SourceTypes } from './../utils/GeoStoryUtils';
+import { SourceTypes } from './../utils/MediaEditorUtils';
 
 
 /**
@@ -89,7 +89,7 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                                 Observable.of(
                                     update(
                                         path,
-                                        { type: "image" }, // TODO take type from mediaEditor state or from resource
+                                        { type: currentMediaTypeSelector(store.getState()) },
                                         "merge" )
                                 ) :
                                 Observable.of(
@@ -185,14 +185,14 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                             const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
 
                             let resourceId = resource.id;
-                            if (!resourceAlreadyPresent && resource.type === MediaTypes.MAP && sourceId !== SourceTypes.GEOSTORY) {
-                                // if using a geostore map that is not present in the story => add it
+                            if (resourceAlreadyPresent) {
+                                resourceId = resourceAlreadyPresent.id;
+                            } else {
+                                // if the resource is new, add it to the story resources list
                                 resourceId = uuid();
                                 actions = [...actions, addResource(resourceId, mediaType, resource)];
                             }
-                            if (resourceAlreadyPresent) {
-                                resourceId = resourceAlreadyPresent.id;
-                            }
+
                             actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
                             return Observable.from(actions);
                         })

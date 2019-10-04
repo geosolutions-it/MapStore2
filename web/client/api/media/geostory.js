@@ -12,8 +12,7 @@ import uuid from 'uuid';
 import { addResource, editResource } from '../../actions/geostory';
 import { resourcesSelector } from '../../selectors/geostory';
 import { selectedIdSelector } from '../../selectors/mediaEditor';
-import { SourceTypes } from '../../utils/GeoStoryUtils';
-
+import { SourceTypes } from '../../utils/MediaEditorUtils';
 /**
  * API to save in local resources. All the methods must implement the same interface.
  * TODO: bring the interface documentation into mediaAPI

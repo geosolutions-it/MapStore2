@@ -53,27 +53,11 @@ export const Controls = {
     LOADING: 'loading'
 };
 
-export const SourceTypes = {
-    GEOSTORY: 'geostory',
-    GEOSTORE: 'geostore'
-};
 export const lists = {
     StoryTypes: values(StoryTypes),
     SectionTypes: values(SectionTypes),
     MediaTypes: values(MediaTypes),
     Modes: values(Modes)
-};
-
-export const defaultLayerMapPreview = {
-    type: 'osm',
-    title: 'Open Street Map',
-    name: 'mapnik',
-    source: 'osm',
-    group: 'background',
-    visibility: true,
-    id: 'mapnik__0',
-    loading: false,
-    loadingError: false
 };
 
 /**

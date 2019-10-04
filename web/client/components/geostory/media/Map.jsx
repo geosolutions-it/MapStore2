@@ -13,7 +13,8 @@ import { compose, withProps, branch } from 'recompose';
 
 import { resourcesSelector } from '../../../selectors/geostory';
 import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
-import {createMapObject, applyDefaults, defaultLayerMapPreview } from '../../../utils/GeoStoryUtils';
+import {createMapObject, applyDefaults } from '../../../utils/GeoStoryUtils';
+import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
 
 export default compose(
     branch(
@@ -41,7 +42,11 @@ export default compose(
         }}>
         <MapView
             id={"media" + id}
-            map={{...m, id}} // if map id is passed as number, the resource id, ol throws an error
+            map={{
+                ...m,
+                center: m.center || [0, 0],
+                id
+            }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
             options={applyDefaults(options)}
         />

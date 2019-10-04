@@ -7,8 +7,8 @@
  */
 
 import { get, findIndex, find, merge } from 'lodash';
-import { SourceTypes, MediaTypes } from '../utils/GeoStoryUtils';
-
+import { MediaTypes } from '../utils/GeoStoryUtils';
+import { SourceTypes } from '../utils/MediaEditorUtils';
 import {
     ADDING_MEDIA,
     CHOOSE_MEDIA,

@@ -7,7 +7,9 @@
  */
 import React from "react";
 
-import { applyDefaults, MediaTypes, defaultLayerMapPreview } from '../../../utils/GeoStoryUtils';
+import { applyDefaults, MediaTypes } from '../../../utils/GeoStoryUtils';
+import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
+
 import emptyState from '../../misc/enhancers/emptyState';
 import PreviewMap from '../../widgets/builder/wizard/map/PreviewMap';
 import { isEmpty } from 'lodash';
