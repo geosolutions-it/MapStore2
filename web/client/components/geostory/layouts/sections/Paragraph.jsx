@@ -21,8 +21,8 @@ export default ({
     contents,
     mode,
     add = () => {},
-    update= () => {},
-    editMedia= () => {},
+    update = () => {},
+    editMedia = () => {},
     remove = () => {},
     inViewRef,
     viewWidth,
@@ -31,7 +31,7 @@ export default ({
     <section
         className="ms-section ms-section-paragraph"
         id={id}
-            ref={inViewRef}
+        ref={inViewRef}
     >
         <SectionContents
             className="ms-section-contents"
@@ -44,7 +44,7 @@ export default ({
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
-            />
+        />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}

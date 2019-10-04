@@ -88,7 +88,7 @@ const SecurityUtils = {
         let userAttributes = this.getUserAttributes();
         if (!userAttributes || !attributeName ) {
             // the user as no attributes or the provided attribute name is undefined
-            return undefined;
+            return null;
         }
         return head(userAttributes.filter(attribute => attribute.name
             && attribute.name.toLowerCase() === attributeName.toLowerCase()));

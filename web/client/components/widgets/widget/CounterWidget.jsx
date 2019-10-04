@@ -15,6 +15,7 @@ const renderHeaderLeftTopItem = ({showTable, toggleTableView = () => {}} = {}) =
     if (showTable) {
         return <Glyphicon onClick={() => {toggleTableView(); }} glyph="arrow-left pull-left"/>;
     }
+    return null;
 };
 
 
@@ -26,13 +27,13 @@ module.exports = ({
     series = [],
     loading,
     showTable,
-    confirmDelete= false,
+    confirmDelete = false,
     headerStyle,
     icons,
     topRightItems,
-    toggleTableView= () => {},
-    toggleDeleteConfirm= () => {},
-    onDelete=() => {},
+    toggleTableView = () => {},
+    toggleDeleteConfirm = () => {},
+    onDelete = () => {},
     ...props}) =>
     (<WidgetContainer
         className="counter-widget"

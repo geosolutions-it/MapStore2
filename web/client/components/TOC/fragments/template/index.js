@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/*eslint-disable */
-
+/* eslint-disable */
 const Bootstrap = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 
@@ -17,6 +16,6 @@ const RenderTemplate = function(comp, props) {
     let model = props.model;
     return eval(comp);
 };
+/* eslint-enable */
 
-/*eslint-enable */
 module.exports = RenderTemplate;

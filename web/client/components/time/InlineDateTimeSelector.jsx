@@ -135,12 +135,12 @@ class InlineDateTimeSelector extends React.Component {
                 <FormGroup controlId="inlineDateTime">
                     {this.props.glyph &&
                         <div style={this.props.clickable ? { "cursor": "pointer" } : {}} onClick={() => this.props.clickable && this.props.onIconClick(this.props.date, this.props.glyph) }>
-                        <Glyphicon
-                        tooltip={this.props.clickable ? this.props.tooltip : undefined}
-                        tooltipId={this.props.clickable ? this.props.tooltipId : undefined}
-                        className="ms-inline-datetime-icon"
-                        glyph={this.props.glyph}/>
-                    </div>
+                            <Glyphicon
+                                tooltip={this.props.clickable ? this.props.tooltip : undefined}
+                                tooltipId={this.props.clickable ? this.props.tooltipId : undefined}
+                                className="ms-inline-datetime-icon"
+                                glyph={this.props.glyph}/>
+                        </div>
                     }
                     {formStructure.map(el =>
                         el.type === 'icon' &&

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
+/**
  * This definition of DC add the dc:URI to the possible Dublin core elements
  * originally available in the ogc-schemas mappings.
  */
@@ -114,32 +114,32 @@ module.exports = {
         en: 'DC-element',
         ti: '.SimpleLiteral'
     }, {
-          en: 'rights',
-          ti: '.SimpleLiteral',
-          sh: 'DC-element'
-      }, {
-          en: 'creator',
-          ti: '.SimpleLiteral',
-          sh: 'DC-element'
-      }, {
-          en: 'publisher',
-          ti: '.SimpleLiteral',
-          sh: 'DC-element'
-      }, {
-          en: 'contributor',
-          ti: '.SimpleLiteral',
-          sh: 'DC-element'
-      }, {
-          en: 'subject',
-          ti: '.SimpleLiteral',
-          sh: 'DC-element'
-      }, {
-          en: 'coverage',
-          ti: '.SimpleLiteral',
-          sh: 'DC-element'
-      }, {
-          en: 'URI',
-          ti: '.URI',
-          sh: 'DC-element'
-      }]
+        en: 'rights',
+        ti: '.SimpleLiteral',
+        sh: 'DC-element'
+    }, {
+        en: 'creator',
+        ti: '.SimpleLiteral',
+        sh: 'DC-element'
+    }, {
+        en: 'publisher',
+        ti: '.SimpleLiteral',
+        sh: 'DC-element'
+    }, {
+        en: 'contributor',
+        ti: '.SimpleLiteral',
+        sh: 'DC-element'
+    }, {
+        en: 'subject',
+        ti: '.SimpleLiteral',
+        sh: 'DC-element'
+    }, {
+        en: 'coverage',
+        ti: '.SimpleLiteral',
+        sh: 'DC-element'
+    }, {
+        en: 'URI',
+        ti: '.URI',
+        sh: 'DC-element'
+    }]
 };

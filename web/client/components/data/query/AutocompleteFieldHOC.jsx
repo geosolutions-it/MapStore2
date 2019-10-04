@@ -43,7 +43,10 @@ class AutocompleteFieldHOC extends React.Component {
             prevPageIcon: "chevron-left"
         },
         itemComponent: AutocompleteListItem,
-        toggleMenu: () => {}
+        toggleMenu: () => {},
+        filterField: {
+            fieldOptions: {}
+        }
     };
 
     getOptions = () => {

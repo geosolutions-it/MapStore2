@@ -35,7 +35,7 @@ module.exports = ({
     className = '',
     description,
     fullText,
-    onClick=() => {},
+    onClick = () => {},
     onMouseEnter = () => {},
     onMouseLeave = () => {},
     preview,

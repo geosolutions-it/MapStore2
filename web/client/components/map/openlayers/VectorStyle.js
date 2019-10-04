@@ -20,7 +20,7 @@ import {reproject, transformLineToArcs} from '../../../utils/CoordinatesUtils';
 import Icons from '../../../utils/openlayers/Icons';
 import {
     isMarkerStyle, isTextStyle, isStrokeStyle, isFillStyle, isCircleStyle, isSymbolStyle,
-    registerGeometryFunctions, geometryFunctions
+    registerGeometryFunctions, geometryFunctions, getStyleParser
 } from '../../../utils/VectorStyleUtils';
 
 import CircleStyle from 'ol/style/Circle';
@@ -30,7 +30,6 @@ import {Point, LineString} from 'ol/geom';
 import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
 
-import { getStyleParser } from '../../../utils/VectorStyleUtils';
 import OlStyleParser from 'geostyler-openlayers-parser';
 
 const olStyleParser = new OlStyleParser();
@@ -248,16 +247,16 @@ registerGeometryFunctions("endPoint", endPoint, "Point");
 export const getGeometryTrasformation = (style = {}) => {
     return style.geometry ?
     // then parse the geom_expression and return true or false
-    (feature) => {
-        const geomFunction = style.geometry || "centerPoint";
-        return geometryFunctions[geomFunction].func(feature);
-    } : (f) => f.getGeometry();
+        (feature) => {
+            const geomFunction = style.geometry || "centerPoint";
+            return geometryFunctions[geomFunction].func(feature);
+        } : (f) => f.getGeometry();
 };
 
 export const getFilter = (style = {}) => {
     return !isNil(style.filtering) ?
     // then parse the filter_expression and return true or false
-    style.filtering : true; // if no filter is defined, it returns true
+        style.filtering : true; // if no filter is defined, it returns true
 };
 
 

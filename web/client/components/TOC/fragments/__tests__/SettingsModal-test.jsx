@@ -31,7 +31,7 @@ describe('TOC SettingsModal', () => {
         expect(el).toExist();
     });
 
-    it('trigger retrieveLayerData in componentWillReceiveProps', () => {
+    it('trigger retrieveLayerData in UNSAFE_componentWillReceiveProps', () => {
         const cmp = ReactDOM.render(<SettingsModal element={{id: 'layer001', capabilitiesLoading: true}} settings={{expanded: false}}/>, document.getElementById("container"));
         const cmp2 = ReactDOM.render(<SettingsModal element={{id: 'layer001', type: "wms", capabilitiesLoading: true}} settings={{expanded: true}}/>, document.getElementById("container"));
         const el = document.getElementById('mapstore-layer-settings');

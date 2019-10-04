@@ -56,12 +56,12 @@ describe('Test WFS3 API', () => {
             boundingBox: {
                 crs: 'http://www.opengis.net/def/crs/EPSG/0/3857',
                 lowerCorner: [
-                  -20037508.34,
-                  -20037508.34
+                    -20037508.34,
+                    -20037508.34
                 ],
                 upperCorner: [
-                  20037508.34,
-                  20037508.34
+                    20037508.34,
+                    20037508.34
                 ],
                 type: 'BoundingBox'
             },
@@ -145,12 +145,12 @@ describe('Test WFS3 API', () => {
             boundingBox: {
                 crs: 'http://www.opengis.net/def/crs/EPSG/0/3857',
                 lowerCorner: [
-                  -20037508.34,
-                  -20037508.34
+                    -20037508.34,
+                    -20037508.34
                 ],
                 upperCorner: [
-                  20037508.34,
-                  20037508.34
+                    20037508.34,
+                    20037508.34
                 ],
                 type: 'BoundingBox'
             },

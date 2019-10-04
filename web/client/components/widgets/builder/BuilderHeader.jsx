@@ -16,24 +16,24 @@ const Message = require('../../I18N/Message');
  * @prop {function} onClose
  */
 module.exports = ({onClose = () => {}, children} = {}) =>
-(<div className="mapstore-flex-container">
-    <div className="m-header bg-body widgets-builder-header">
-        <Row>
-        <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
-             <Button onClick={() => onClose()} className="pull-left on-close-btn square-button no-border ">
-                <Glyphicon glyph="1-close"/>
-            </Button>
-        <span style={{padding: '50px 0 0 0', fontSize: 16}}><Message msgId="widgets.builder.header.title" /></span>
-            {<div style={{display: "flex"}} className="square-button pull-right no-border">
-                <Glyphicon glyph="stats" className="text-primary"/>
-            </div>}
-        </Col>
-        </Row>
-        <Row className="text-center">
-            <div className="m-padding-md">
-                {children}
-            </div>
-        </Row>
+    (<div className="mapstore-flex-container">
+        <div className="m-header bg-body widgets-builder-header">
+            <Row>
+                <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
+                    <Button onClick={() => onClose()} className="pull-left on-close-btn square-button no-border ">
+                        <Glyphicon glyph="1-close"/>
+                    </Button>
+                    <span style={{padding: '50px 0 0 0', fontSize: 16}}><Message msgId="widgets.builder.header.title" /></span>
+                    {<div style={{display: "flex"}} className="square-button pull-right no-border">
+                        <Glyphicon glyph="stats" className="text-primary"/>
+                    </div>}
+                </Col>
+            </Row>
+            <Row className="text-center">
+                <div className="m-padding-md">
+                    {children}
+                </div>
+            </Row>
+        </div>
     </div>
-</div>
-);
+    );

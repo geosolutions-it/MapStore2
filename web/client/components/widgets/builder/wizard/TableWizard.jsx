@@ -18,7 +18,7 @@ const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 const { compose, lifecycle } = require('recompose');
 
 const triggerValidationReset = compose(lifecycle({
-    componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
+    UNSAFE_componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
         if (valid && !isChartOptionsValid(data.options)) {
             setValid(false);
         }

@@ -146,7 +146,7 @@ const wfsQueryEpic = (action$, store) =>
                 ...queryOptions
             };
             return Rx.Observable.merge(
-                    (typeof filterObj === 'object' && getJSONFeatureWA(queryUrl, filterObj, options) || getLayerJSONFeature(layer, filterObj, options))
+                (typeof filterObj === 'object' && getJSONFeatureWA(queryUrl, filterObj, options) || getLayerJSONFeature(layer, filterObj, options))
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
@@ -180,25 +180,25 @@ const viewportSelectedEpic = (action$, store) =>
 
 const redrawSpatialFilterEpic = (action$, store) =>
     action$.ofType(INIT_QUERY_PANEL)
-    .switchMap(() => {
-        const state = store.getState();
-        const spatialField = spatialFieldSelector(state);
-        const feature = {
-            type: "Feature",
-            geometry: {
-                type: spatialFieldGeomTypeSelector(state),
-                coordinates: spatialFieldGeomCoordSelector(state)
-            }
-        };
-        let drawSpatialFilter = spatialFieldGeomSelector(state) ?
-            changeDrawingStatus("drawOrEdit", spatialField.method || '', "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) :
-            changeDrawingStatus("clean", spatialField.method || '', "queryform", [], {drawEnabled: false, editEnabled: false});
-         // if a geometry is present it will redraw the spatial field
-        return Rx.Observable.of(drawSpatialFilter);
-    });
+        .switchMap(() => {
+            const state = store.getState();
+            const spatialField = spatialFieldSelector(state);
+            const feature = {
+                type: "Feature",
+                geometry: {
+                    type: spatialFieldGeomTypeSelector(state),
+                    coordinates: spatialFieldGeomCoordSelector(state)
+                }
+            };
+            let drawSpatialFilter = spatialFieldGeomSelector(state) ?
+                changeDrawingStatus("drawOrEdit", spatialField.method || '', "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) :
+                changeDrawingStatus("clean", spatialField.method || '', "queryform", [], {drawEnabled: false, editEnabled: false});
+            // if a geometry is present it will redraw the spatial field
+            return Rx.Observable.of(drawSpatialFilter);
+        });
 
 
- /**
+/**
   * Epics for WFS query requests
   * @name epics.wfsquery
   * @type {Object}

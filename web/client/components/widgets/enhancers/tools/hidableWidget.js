@@ -12,20 +12,20 @@ const {compose, withProps} = require('recompose');
  * Widgets `hide` property hides the widget and it is typically used to hide the widget to certain users.
  */
 module.exports = () =>
-compose(
-    withProps(({ widgetTools = [], toolsOptions = {}, canEdit, updateProperty = () => { }, hide= false}) => ({
-        widgetTools: !!toolsOptions.showHide
-            ? [
-            ...widgetTools,
-            {
-                glyph: "lock",
-                target: "menu",
-                active: hide,
-                textId: hide ? "widgets.widget.menu.unhide" : "widgets.widget.menu.hide",
-                tooltipId: hide ? "widgets.widget.menu.unhideDescription" : "widgets.widget.menu.hideDescription",
-                visible: canEdit,
-                onClick: () => updateProperty("hide", !hide)
-            }
-        ] : widgetTools}
-    ))
-);
+    compose(
+        withProps(({ widgetTools = [], toolsOptions = {}, canEdit, updateProperty = () => { }, hide = false}) => ({
+            widgetTools: !!toolsOptions.showHide
+                ? [
+                    ...widgetTools,
+                    {
+                        glyph: "lock",
+                        target: "menu",
+                        active: hide,
+                        textId: hide ? "widgets.widget.menu.unhide" : "widgets.widget.menu.hide",
+                        tooltipId: hide ? "widgets.widget.menu.unhideDescription" : "widgets.widget.menu.hideDescription",
+                        visible: canEdit,
+                        onClick: () => updateProperty("hide", !hide)
+                    }
+                ] : widgetTools}
+        ))
+    );

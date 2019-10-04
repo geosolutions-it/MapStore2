@@ -30,7 +30,7 @@ class LayerMetadataModal extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         maskLoading: PropTypes.bool,
-        layerMetadataPanelTitle: PropTypes.string
+        layerMetadataPanelTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     };
 
     static defaultProps = {
@@ -59,7 +59,7 @@ class LayerMetadataModal extends React.Component {
             return (<Template
                 model={this.props.layerMetadata.metadataRecord}
                 template={templateString}
-            renderContent={RenderTemplate} />);
+                renderContent={RenderTemplate} />);
         }
         const CustomTemplate = template;
         return <CustomTemplate model={this.props.layerMetadata.metadataRecord}/>;

@@ -65,7 +65,7 @@ describe("test the Locate Button", () => {
 
     it('test permission denied state', () => {
         const component = ReactDOM.render(<LocateBtn locate="PERMISSION_DENIED"/>,
-                        document.getElementById("container"));
+            document.getElementById("container"));
         expect(component).toExist();
         // check if the button was correctly disabled
         const button = ReactTestUtils.findRenderedDOMComponentWithTag(component, "button");

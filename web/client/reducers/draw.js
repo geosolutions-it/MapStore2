@@ -21,25 +21,25 @@ const initialState = {
 
 function draw(state = initialState, action) {
     switch (action.type) {
-        case CHANGE_DRAWING_STATUS:
-            return assign({}, state, {
-                drawStatus: action.status,
-                drawOwner: action.owner,
-                drawMethod: action.method,
-                options: action.options,
-                features: action.features,
-                style: action.style
-            });
-        case SET_CURRENT_STYLE:
-            return assign({}, state, {
-                currentStyle: action.currentStyle
-            });
-        case GEOMETRY_CHANGED:
-            return assign({}, state, {tempFeatures: action.features});
-        case DRAW_SUPPORT_STOPPED:
-            return assign({}, state, {tempFeatures: []});
-        default:
-            return state;
+    case CHANGE_DRAWING_STATUS:
+        return assign({}, state, {
+            drawStatus: action.status,
+            drawOwner: action.owner,
+            drawMethod: action.method,
+            options: action.options,
+            features: action.features,
+            style: action.style
+        });
+    case SET_CURRENT_STYLE:
+        return assign({}, state, {
+            currentStyle: action.currentStyle
+        });
+    case GEOMETRY_CHANGED:
+        return assign({}, state, {tempFeatures: action.features});
+    case DRAW_SUPPORT_STOPPED:
+        return assign({}, state, {tempFeatures: []});
+    default:
+        return state;
     }
 }
 

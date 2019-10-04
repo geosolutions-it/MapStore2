@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- // Disable ESLint because some of the names to include are not in camel case
+// Disable ESLint because some of the names to include are not in camel case
 const expect = require('expect');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators, logical, spatial, comparison, literal, propertyName} = require('../operators');
 
@@ -46,12 +46,12 @@ describe('OGC Operators', () => {
     it('logical functions with array', () => {
         expect(logical.and("ogc",
             [ogcComparisonOperators["="]("ogc", "TEST"),
-            ogcComparisonOperators[">"]("ogc", "TEST")
-        ])).toBe('<ogc:And><ogc:PropertyIsEqualTo>TEST</ogc:PropertyIsEqualTo><ogc:PropertyIsGreaterThan>TEST</ogc:PropertyIsGreaterThan></ogc:And>');
+                ogcComparisonOperators[">"]("ogc", "TEST")
+            ])).toBe('<ogc:And><ogc:PropertyIsEqualTo>TEST</ogc:PropertyIsEqualTo><ogc:PropertyIsGreaterThan>TEST</ogc:PropertyIsGreaterThan></ogc:And>');
         expect(logical.or("ogc",
             [ogcComparisonOperators["="]("ogc", "TEST"),
-            ogcComparisonOperators[">"]("ogc", "TEST")
-        ])).toBe('<ogc:Or><ogc:PropertyIsEqualTo>TEST</ogc:PropertyIsEqualTo><ogc:PropertyIsGreaterThan>TEST</ogc:PropertyIsGreaterThan></ogc:Or>');
+                ogcComparisonOperators[">"]("ogc", "TEST")
+            ])).toBe('<ogc:Or><ogc:PropertyIsEqualTo>TEST</ogc:PropertyIsEqualTo><ogc:PropertyIsGreaterThan>TEST</ogc:PropertyIsGreaterThan></ogc:Or>');
         expect(logical.not("ogc",
             [ogcComparisonOperators["="]("ogc", "TEST")]
         )).toBe('<ogc:Not><ogc:PropertyIsEqualTo>TEST</ogc:PropertyIsEqualTo></ogc:Not>');

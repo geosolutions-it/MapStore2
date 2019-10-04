@@ -13,9 +13,9 @@ var I18N = require('../../../components/I18N/I18N');
 class Description extends React.Component {
     render() {
         return (<Panel className="mapstore-presentation-panel">
-             <p>
-                 <I18N.HTML msgId="home.description" />
-             </p>
+            <p>
+                <I18N.HTML msgId="home.description" />
+            </p>
         </Panel>);
     }
 }

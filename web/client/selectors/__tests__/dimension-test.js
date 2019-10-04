@@ -20,15 +20,15 @@ describe('Test dimension selectors', () => {
                     time: {
                         'TEST_LAYER': {
                             source: { // describes the source of dimension
-                            type: 'multidim-extension',
-                            url: 'http://domain.com:80/geoserver/wms'
+                                type: 'multidim-extension',
+                                url: 'http://domain.com:80/geoserver/wms'
                             },
                             name: 'time',
                             domain: '2016-09-01T00:00:00.000Z--2017-04-11T00:00:00.000Z'
                         }
-                        }
                     }
                 }
+            }
         };
         const layerDim = layerDimensionRangeSelector(state, "TEST_LAYER");
         expect(layerDim.start).toBe('2016-09-01T00:00:00.000Z');
@@ -99,9 +99,9 @@ describe('Test dimension selectors', () => {
         const layerDim = layerTimeSequenceSelectorCreator({
             id: "TEST_LAYER",
             dimensions: [{
-                    name: "time",
-                    values: ['2016-09-01T00:00:00.000Z']
-                }]
+                name: "time",
+                values: ['2016-09-01T00:00:00.000Z']
+            }]
         })(state);
         expect(layerDim.length).toBe(1);
         expect(layerDim[0]).toBe('2016-09-01T00:00:00.000Z');

@@ -17,15 +17,15 @@ module.exports = ({
     id, title, text,
     headerStyle,
     topRightItems,
-    confirmDelete= false,
-    onDelete=() => {}
+    confirmDelete = false,
+    onDelete = () => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
-    icons={icons}
-    topLeftItems={topLeftItems}
-    topRightItems={topRightItems}
-        >
-    <TextView text={text} />
+        icons={icons}
+        topLeftItems={topLeftItems}
+        topRightItems={topRightItems}
+    >
+        <TextView text={text} />
     </WidgetContainer>
 
-);
+    );

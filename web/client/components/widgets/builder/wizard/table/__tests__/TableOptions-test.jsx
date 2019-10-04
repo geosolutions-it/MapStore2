@@ -9,7 +9,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const { get } = require('lodash');
-const describeStates = require('json-loader!../../../../../../test-resources/wfs/describe-states.json');
+const describeStates = require('../../../../../../test-resources/wfs/describe-states.json');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 

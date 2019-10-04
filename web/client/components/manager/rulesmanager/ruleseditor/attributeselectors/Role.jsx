@@ -18,14 +18,14 @@ const {error} = require('../../../../../actions/notifications');
 const Message = require('../../../../I18N/Message');
 
 const RoleSelector = (props) => (
-        <Row className={props.disabled ? 'ms-disabled' : ''}>
-            <Col xs={12} sm={6}>
-                <Message msgId="rulesmanager.role"/>
-            </Col>
-            <Col xs={12} sm={6}>
-                <PagedCombo {...props}/>
-            </Col>
-        </Row>);
+    <Row className={props.disabled ? 'ms-disabled' : ''}>
+        <Col xs={12} sm={6}>
+            <Message msgId="rulesmanager.role"/>
+        </Col>
+        <Col xs={12} sm={6}>
+            <PagedCombo {...props}/>
+        </Col>
+    </Row>);
 
 module.exports = compose(
     connect(() => ({}), {onError: error}),

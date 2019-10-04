@@ -70,13 +70,13 @@ class InfoButton extends React.Component {
         var btn;
         if (this.props.btnType === 'normal') {
             btn = (<Button
-                    bsStyle="info"
-                    bsSize={this.props.btnSize}
-                    onClick={this.open}>
-                    {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : ""}
-                    {!this.props.hiddenText && this.props.glyphicon ? "\u00A0" : ""}
-                    {!(this.props.hiddenText && this.props.glyphicon) ? (this.props.text || this.props.help) : ""}
-                </Button>);
+                bsStyle="info"
+                bsSize={this.props.btnSize}
+                onClick={this.open}>
+                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : ""}
+                {!this.props.hiddenText && this.props.glyphicon ? "\u00A0" : ""}
+                {!(this.props.hiddenText && this.props.glyphicon) ? (this.props.text || this.props.help) : ""}
+            </Button>);
         } else {
             btn = <ImageButton image={this.props.image} onClick={this.open}/>;
         }

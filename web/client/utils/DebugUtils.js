@@ -12,9 +12,9 @@ var thunkMiddleware = require('redux-thunk');
 
 
 const urlQuery = url.parse(window.location.href, true).query;
-/*eslint-disable */
+/* eslint-disable */
 var warn = console.warn;
-/*eslint-enable */
+/* eslint-enable */
 
 var warningFilterKey = function(warning) {
     // avoid React 0.13.x warning about nested context. Will remove in 0.14
@@ -25,18 +25,18 @@ var DebugUtils = {
     createDebugStore: function(reducer, initialState, userMiddlewares, enhancer) {
         let finalCreateStore;
         if (urlQuery && urlQuery.debug && __DEVTOOLS__) {
-            let logger = require('redux-logger')();
-            let immutable = require('redux-immutable-state-invariant')();
+            let logger = require('redux-logger').default;
+            let immutable = require('redux-immutable-state-invariant').default();
             let middlewares = [immutable, thunkMiddleware, logger].concat(userMiddlewares || []);
             const {persistState} = require('redux-devtools');
             const DevTools = require('../components/development/DevTools');
 
             finalCreateStore = compose(
-              applyMiddleware.apply(null, middlewares),
-              persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/)),
-              window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument()
+                applyMiddleware.apply(null, middlewares),
+                persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/)),
+                window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument()
 
-          )(createStore);
+            )(createStore);
         } else {
             let middlewares = [thunkMiddleware].concat(userMiddlewares || []);
             finalCreateStore = applyMiddleware.apply(null, middlewares)(createStore);
@@ -45,7 +45,7 @@ var DebugUtils = {
     }
 };
 
-/*eslint-disable */
+/* eslint-disable */
 console.warn = function() {
     if ( arguments && arguments.length > 0 && typeof arguments[0] === "string" && warningFilterKey(arguments[0]) ) {
         // do not warn
@@ -53,6 +53,6 @@ console.warn = function() {
         warn.apply(console, arguments);
     }
 };
-/*eslint-enable */
+/* eslint-enable */
 
 module.exports = DebugUtils;

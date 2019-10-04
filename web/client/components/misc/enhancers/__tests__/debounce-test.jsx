@@ -41,6 +41,6 @@ describe('debounce enhancer', () => {
             props.onChangeDrawingStatus("replace", undefined, "queryform", "geom2");
         }));
         ReactDOM.render((<Sink onChangeDrawingStatus={action}
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
 });

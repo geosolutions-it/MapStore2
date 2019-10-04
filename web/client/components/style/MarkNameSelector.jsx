@@ -30,18 +30,18 @@ class MarkNameSelector extends React.Component {
     render() {
         return (
             <DropdownList data={
-            [
+                [
                     {value: "circle", name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.circle") || "Circle"},
                     {value: 'square', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.square") || "Square"},
                     {value: 'triangle', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.triangle") || "Triangle"},
                     {value: 'star', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.star") || "Star"},
                     {value: 'cross', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.cross") || "Cross"},
                     {value: 'x', 'name': LocaleUtils.getMessageById(this.context.messages, "markNameSelector.x") || "X"}
-            ]}
-                valueField="value"
-                textField="name"
-                value={this.props.markName}
-                onChange={(v) => this.props.onChange("markName", v.value)}/>);
+                ]}
+            valueField="value"
+            textField="name"
+            value={this.props.markName}
+            onChange={(v) => this.props.onChange("markName", v.value)}/>);
     }
 }
 

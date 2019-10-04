@@ -28,7 +28,7 @@ describe('map layout epics', () => {
                         bottom: 30
                     }});
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -47,7 +47,7 @@ describe('map layout epics', () => {
                         bottom: undefined
                     }} );
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -63,7 +63,7 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();

@@ -49,11 +49,11 @@ describe('Test LegacyVectorStyle', () => {
 
     it('guess image point style', () => {
         const feature = {
-              geometry: {
-                  type: 'Point',
-                  coordinates: [13.0, 43.0]
-              },
-              name: 'My Point'
+            geometry: {
+                type: 'Point',
+                coordinates: [13.0, 43.0]
+            },
+            name: 'My Point'
         };
         const style = getStyle({
             features: [feature],

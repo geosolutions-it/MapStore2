@@ -9,7 +9,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const expect = require('expect');
-const { Responsive } = require('react-grid-layout-resize-prevent-collision');
+const { Responsive } = require('react-grid-layout');
 const WidgetsView = require('../WidgetsView');
 const ReactTestUtils = require('react-dom/test-utils');
 

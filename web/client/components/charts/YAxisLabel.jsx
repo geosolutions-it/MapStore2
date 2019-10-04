@@ -13,10 +13,10 @@ import {shortenLabel} from '../../utils/WidgetsUtils';
 const YAxisLabel = ({x = 0, y = 0, threshold, payload = {}}) => (
     <g transform={`translate(0,3)`}>
         <text
-        style={{fill: '#666'}}
-        x={x - 5}
-        y={y}
-        textAnchor="end" >
+            style={{fill: '#666'}}
+            x={x - 5}
+            y={y}
+            textAnchor="end" >
             {shortenLabel(payload.value, threshold)}
         </text>
     </g>

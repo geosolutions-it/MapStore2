@@ -158,30 +158,30 @@ class QueryToolbar extends React.Component {
                 || !this.props.toolbarEnabled;
             buttons = buttons.concat([
                 {
-                tooltipId: "queryform.save",
-                disabled: disableSave,
-                noTooltipWhenDisabled: true,
-                glyph: "floppy-disk",
-                id: "query-toolbar-save",
-                onClick: this.props.actions.onSaveFilter
-            },
-            {
-                tooltipId: "queryform.discard",
-                disabled: disableRestore,
-                noTooltipWhenDisabled: true,
-                glyph: "undo",
-                id: "query-toolbar-discard",
-                onClick: this.restorePersistedFilter
-            },
-            {
-                tooltipId: "queryform.reset",
-                glyph: "clear-filter",
-                noTooltipWhenDisabled: true,
-                id: "reset",
-                disabled: disableReset,
-                onClick: this.reset
-            }]);
-        }else {
+                    tooltipId: "queryform.save",
+                    disabled: disableSave,
+                    noTooltipWhenDisabled: true,
+                    glyph: "floppy-disk",
+                    id: "query-toolbar-save",
+                    onClick: this.props.actions.onSaveFilter
+                },
+                {
+                    tooltipId: "queryform.discard",
+                    disabled: disableRestore,
+                    noTooltipWhenDisabled: true,
+                    glyph: "undo",
+                    id: "query-toolbar-discard",
+                    onClick: this.restorePersistedFilter
+                },
+                {
+                    tooltipId: "queryform.reset",
+                    glyph: "clear-filter",
+                    noTooltipWhenDisabled: true,
+                    id: "reset",
+                    disabled: disableReset,
+                    onClick: this.reset
+                }]);
+        } else {
             buttons = [{
                 tooltipId: "queryform.reset",
                 glyph: "clear-filter",
@@ -247,8 +247,8 @@ class QueryToolbar extends React.Component {
                 groupFields: [],
                 filterFields: [],
                 spatialField: {
-                        attribute: this.props.spatialField && this.props.spatialField.attribute
-                    },
+                    attribute: this.props.spatialField && this.props.spatialField.attribute
+                },
 
                 pagination: this.props.pagination,
                 filterType: this.props.filterType,

@@ -13,7 +13,7 @@ const {getContext, mapProps, compose} = require('recompose');
 const {getLocalizedProp} = require('../../../utils/LocaleUtils');
 
 const accumulate = (props, locale) => (acc = {}, propName) => ({
-            ...acc,
+    ...acc,
     [propName]: props[propName] && getLocalizedProp(locale, props[propName])
 });
 /**
@@ -42,4 +42,4 @@ module.exports = (propNames) => compose(
         ...props,
         ...(castArray(propNames).reduce(accumulate(props, locale), {}))
     })
-));
+    ));

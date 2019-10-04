@@ -4,7 +4,7 @@ const AttributeEditor = require('../AttributeEditor');
 var expect = require('expect');
 
 let testColumn = {
-  key: 'columnKey'
+    key: 'columnKey'
 };
 
 
@@ -24,7 +24,7 @@ describe('FeatureGrid AttributeEditor component', () => {
         const cmp = ReactDOM.render(<AttributeEditor
             value={"A"}
             rowIdx={1}
-        column={testColumn}/>, document.getElementById("container"));
+            column={testColumn}/>, document.getElementById("container"));
         expect(cmp.getValue().columnKey).toBe("A");
     });
     it('Test onTemporaryChanges triggered on render', (done) => {
@@ -34,6 +34,6 @@ describe('FeatureGrid AttributeEditor component', () => {
             dataType="int"
             value={1.1}
             rowIdx={2}
-        column={testColumn}/>, document.getElementById("container"));
+            column={testColumn}/>, document.getElementById("container"));
     });
 });

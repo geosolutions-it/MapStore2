@@ -11,7 +11,7 @@ const {connect} = require("react-redux");
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped} = require('../../../actions/draw');
 
 const defaultDrawConnect = connect((state) =>
-state.draw || {}, {
+    state.draw || {}, {
     onChangeDrawingStatus: changeDrawingStatus,
     onEndDrawing: endDrawing,
     onGeometryChanged: geometryChanged,
@@ -26,7 +26,7 @@ state.draw || {}, {
  */
 module.exports = (connectFunction = defaultDrawConnect) => withPropsOnChange(
     ['plugins'],
-    ({plugins}= {}) => {
+    ({plugins} = {}) => {
         const {DrawSupport, tools = {}, ...rest} = plugins;
         if (!DrawSupport) {
             return {};

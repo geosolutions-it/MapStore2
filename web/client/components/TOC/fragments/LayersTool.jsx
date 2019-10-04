@@ -29,12 +29,12 @@ class LayersTool extends React.Component {
     render() {
         const cn = this.props.className ? " " + this.props.className : "";
         const tool = (<Glyphicon className={"toc-layer-tool" + cn} style={this.props.style}
-                   glyph={this.props.glyph}
-                   onClick={() => this.props.onClick(this.props.node)}/>);
+            glyph={this.props.glyph}
+            onClick={() => this.props.onClick(this.props.node)}/>);
         return this.props.tooltip ?
-           <OverlayTrigger placement="bottom" overlay={(<Tooltip id={"Tooltip-" + this.props.tooltip}><strong><Message msgId={this.props.tooltip}/></strong></Tooltip>)}>
-               {tool}
-           </OverlayTrigger> : tool;
+            <OverlayTrigger placement="bottom" overlay={(<Tooltip id={"Tooltip-" + this.props.tooltip}><strong><Message msgId={this.props.tooltip}/></strong></Tooltip>)}>
+                {tool}
+            </OverlayTrigger> : tool;
 
     }
 }

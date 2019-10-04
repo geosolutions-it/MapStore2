@@ -45,7 +45,7 @@ describe("Test the MapViewerCmp component", () => {
     it('testing creation with mapId = new', () => {
         const match = {params: {mapId: "new"}};
         const mapViewerPros = { match, location, onInit: () => {},
-        wrappedContainer: MapViewerContainer,
+            wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe("new.json");
                 expect(mapId).toBe(null);

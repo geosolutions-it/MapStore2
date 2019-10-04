@@ -41,7 +41,7 @@ describe("Test Layer Metadata JSX Template", () => {
         let comp = ReactDOM.render(
             <MetadataTemplate
                 model={layerMetadata.metadataRecord}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);
@@ -82,8 +82,8 @@ describe("Test Layer Metadata JSX Template", () => {
         let comp = ReactDOM.render(
             <Localized locale="en" messages={messages}>
                 <MetadataTemplate
-                model={layerMetadata.metadataRecord}
-                 /></Localized>, document.getElementById("container"));
+                    model={layerMetadata.metadataRecord}
+                /></Localized>, document.getElementById("container"));
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);

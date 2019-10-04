@@ -49,14 +49,14 @@ const DEFAULT_TYPES = [{
     className: "ms-widget-selector-legend"
 }];
 
-module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect= () => {}}) =>
-(
-    <SideGrid
-    key="content"
-    onItemClick={item => {onSelect(item.type); }}
-    items={widgetTypes &&
+module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect = () => {}}) =>
+    (
+        <SideGrid
+            key="content"
+            onItemClick={item => {onSelect(item.type); }}
+            items={widgetTypes &&
         widgetTypes.filter(typeFilter).map( item =>
             ({
                 ...item,
                 preview: <FitIcon glyph={item.glyph} padding={20} />
-        }))} />);
+            }))} />);

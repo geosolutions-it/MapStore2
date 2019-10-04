@@ -16,15 +16,15 @@ import { Modes, getClassNameFromProps } from "../../../utils/GeoStoryUtils";
  *  - Add inViewRef property, to apply IntersectionObserver
  */
 export default ({ id, inViewRef, children, type, contentWrapperStyle, mode, ...props }) =>
-(<div
-    id={id}
-    ref={inViewRef}
-    style={contentWrapperStyle}
-    className={`ms-content ms-content-${type}${getClassNameFromProps(props)}`}>
+    (<div
+        id={id}
+        ref={inViewRef}
+        style={contentWrapperStyle}
+        className={`ms-content ms-content-${type}${getClassNameFromProps(props)}`}>
         <div className="ms-content-body">
             {mode === Modes.EDIT
                 && <ContentToolbar
                     {...props}/>}
             {children}
         </div>
-</div>);
+    </div>);

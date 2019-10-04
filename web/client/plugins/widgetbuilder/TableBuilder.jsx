@@ -47,13 +47,13 @@ const Builder = connect(
         props$
             .distinctUntilChanged(({ featureTypeProperties: oldFT } = {}, { featureTypeProperties: newFT } = {}) => oldFT === newFT)
             // set propTypes to all attributes when
-            .do(({ featureTypeProperties = [], onChange = () => { }, data={} } = {}) => {
+            .do(({ featureTypeProperties = [], onChange = () => { }, data = {} } = {}) => {
                 // initialize attribute list if empty (first time)
                 if (onChange && featureTypeProperties.length > 0 && !get(data, "options.propertyName")) {
                     onChange("options.propertyName", featureTypeProperties.filter(a => !isGeometryType(a)).map(ft => ft.name));
                 }
             }).ignoreElements()
-        ))
+    ))
 )(require('../../components/widgets/builder/wizard/TableWizard')));
 
 const BuilderHeader = require('./BuilderHeader');
@@ -64,7 +64,7 @@ const Toolbar = compose(
         onChange: onEditorChange,
         insertWidget
     },
-        wizardStateToProps
+    wizardStateToProps
     ),
     viewportBuilderConnect,
     withExitButton(),

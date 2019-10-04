@@ -70,7 +70,7 @@ class Background extends Component {
                     label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
                 }]}
                 tools={this.props.tools && this.props.tools[this.props.type] || [ 'editMedia' ]}
-                />
+            />
         );
         return (
             <div
@@ -87,14 +87,14 @@ class Background extends Component {
                     }}>
                     {MediaType && <MediaType { ...this.props } enableFullscreen={false} descriptionEnabled={false}/>}
                     { this.props.mode === Modes.EDIT && (
-                    parentNode
-                    ? (
-                        <Portal
-                            container={parentNode}>
-                            {toolbar}
-                        </Portal>
-                    )
-                    : toolbar)}
+                        parentNode
+                            ? (
+                                <Portal
+                                    container={parentNode}>
+                                    {toolbar}
+                                </Portal>
+                            )
+                            : toolbar)}
                 </div>
             </div>
         );

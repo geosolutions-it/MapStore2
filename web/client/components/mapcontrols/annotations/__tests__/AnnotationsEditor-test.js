@@ -202,7 +202,7 @@ describe("test the AnnotationsEditor Panel", () => {
             editing={{
                 properties: feature,
                 geometry: {type: "MultiPoint"}
-                }}
+            }}
             onAddGeometry={testHandlers.onAddHandler}
             onDeleteGeometry={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
@@ -267,7 +267,7 @@ describe("test the AnnotationsEditor Panel", () => {
             properties: feature,
             geometry: {}
         }} onSave={testHandlers.onSaveHandler}
-           onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
+        onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
         let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[0]);
@@ -328,7 +328,7 @@ describe("test the AnnotationsEditor Panel", () => {
             properties: feature,
             features: [{}]
         }} onSave={testHandlers.onSaveHandler}
-           onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
+        onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[3]);
@@ -360,7 +360,7 @@ describe("test the AnnotationsEditor Panel", () => {
             properties: feature,
             features: null
         }} onSave={testHandlers.onSaveHandler}
-           onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
+        onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[2]);

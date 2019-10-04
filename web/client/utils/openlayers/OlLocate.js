@@ -31,13 +31,13 @@ const OlLocate = function(map, optOptions) {
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
         stopFollowingOnDrag: false, // if follow is true, stop following when map is dragged (deprecated)
-            // if true locate control remains active on click even if the user's location is in view.
-            // clicking control will just pan to location not implemented
+        // if true locate control remains active on click even if the user's location is in view.
+        // clicking control will just pan to location not implemented
         remainActive: true,
         locateStyle: this._getDefaultStyles(),
         metric: true,
         onLocationError: this.onLocationError,
-            // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
+        // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
         keepCurrentZoomLevel: false,
         showPopup: true, // display a popup when the user click on the inner marker
         strings: {
@@ -187,14 +187,14 @@ OlLocate.prototype._updatePopUpCnt = function() {
 };
 
 OlLocate.prototype.onLocationError = function(err) {
-    /*eslint-disable */
+    /* eslint-disable */
     alert(err.message);
-    /*eslint-enable */
+    /* eslint-enable */
 };
 
 OlLocate.prototype.mapClick = function(evt) {
     let feature = this.map.forEachFeatureAtPixel(evt.pixel,
-                    function(ft) {return ft; });
+        function(ft) {return ft; });
     if (feature && feature.get('id') === '_locate-pos' && this.popup.hidden) {
         this._updatePopUpCnt();
     } else if (!this.popup.hidden ) {

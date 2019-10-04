@@ -51,7 +51,7 @@ describe("This test for PagedCombobox component", () => {
 
     it('creates PagedCombobox with functional itemComponent', () => {
         const AutocompleteListItemFunctional = ({item, textField}) => (
-        !!item.pagination ? <span>{item[textField]} {item.pagination} </span> : <span>{item[textField]}</span>
+            !!item.pagination ? <span>{item[textField]} {item.pagination} </span> : <span>{item[textField]}</span>
         );
         const comp = ReactDOM.render(<PagedCombobox pagination={{paginated: false}} itemComponent={AutocompleteListItemFunctional} textField="label" data={[{value: "value", label: "label"}]} />, document.getElementById("container"));
         expect(comp).toExist();

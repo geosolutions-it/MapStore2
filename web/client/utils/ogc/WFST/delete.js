@@ -20,7 +20,7 @@ const deleteFeaturesByFilter = (ns, content, typeName) =>
 const deleteById = (ns, fid, typeName) => deleteFeaturesByFilter(ns, fidFilter("ogc", fid), typeName);
 const deleteFeature = (ns, feature, typeName) => deleteById(ns, feature.features && feature.features.length === 1 ? feature.features[0].id : feature.id, typeName);
 module.exports = {
-      deleteFeaturesByFilter,
-      deleteById,
-      deleteFeature
+    deleteFeaturesByFilter,
+    deleteById,
+    deleteFeature
 };

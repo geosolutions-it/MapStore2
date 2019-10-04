@@ -54,7 +54,7 @@ class FeatureInfoEditor extends React.Component {
         template: ' '
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             template: this.props.element && this.props.element.featureInfo && this.props.element.featureInfo.template || ' '
         });

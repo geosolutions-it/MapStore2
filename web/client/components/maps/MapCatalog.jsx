@@ -33,7 +33,7 @@ module.exports = ({ setSearchText = () => { }, selected, skip = 0, onSelected, l
             <span>{loading ? <LoadingSpinner /> : null}</span>
             {!isNil(total) ?
                 <span className="res-info"><Message msgId="catalog.pageInfoInfinite"
-                msgParams={{ loaded: items.length - skip, total }} /></span> : null}
+                    msgParams={{ loaded: items.length - skip, total }} /></span> : null}
         </div>}>
         <SideGrid
             items={items.map(i =>

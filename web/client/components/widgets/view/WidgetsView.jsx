@@ -10,11 +10,7 @@ const React = require('react');
 const { pure, branch } = require('recompose');
 const { find, mapValues } = require('lodash');
 
-/*
-react-grid-layout-resize-prevent-collision is a fork of react-grid-layout deployed on npmjs.org to fix https://github.com/STRML/react-grid-layout/issues/655
-You can install and use react-grid-layout again when the issue is fixed
-*/
-const { Responsive, WidthProvider: widthProvider } = require('react-grid-layout-resize-prevent-collision');
+const { Responsive, WidthProvider: widthProvider } = require('react-grid-layout');
 const ResponsiveReactGridLayout =
     branch(
         ({ useDefaultWidthProvider = true }) => useDefaultWidthProvider,
@@ -23,7 +19,7 @@ const ResponsiveReactGridLayout =
 const withGroupColor = require('../enhancers/withGroupColor');
 const DefaultWidget = withGroupColor(require('../widget/DefaultWidget'));
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
-require('react-grid-layout-resize-prevent-collision/css/styles.css');
+require('react-grid-layout/css/styles.css');
 
 const WIDGET_MOBILE_RIGHT_SPACE = 34;
 const getResponsiveWidgetWidth = width => width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width;
@@ -40,6 +36,7 @@ module.exports = pure(({
     layouts,
     dependencies,
     verticalCompact = false,
+    compactMode,
     useDefaultWidthProvider = true,
     measureBeforeMount,
     width,
@@ -70,6 +67,7 @@ module.exports = pure(({
         rowHeight={rowHeight}
         autoSize
         verticalCompact={verticalCompact}
+        compactMode={compactMode}
         breakpoints={breakpoints}
         cols={cols}
         layouts={layouts ?

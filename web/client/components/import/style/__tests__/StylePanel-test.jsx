@@ -11,7 +11,7 @@ const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 const StylePanel = require('../StylePanel');
 
-const MY_JSON = require('json-loader!../../../../test-resources/wfs/museam.json');
+const MY_JSON = require('../../../../test-resources/wfs/museam.json');
 const L1 = { name: "L1", features: MY_JSON.features };
 const L2 = { name: "L2" };
 const W1 = { name: "TEST", "message": "M1" };

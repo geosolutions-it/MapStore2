@@ -164,7 +164,7 @@ function toggleSelection(features) {
         features
     };
 }
-function setSelectionOptions({multiselect= false} = {}) {
+function setSelectionOptions({multiselect = false} = {}) {
     return {
         type: SET_SELECTION_OPTIONS,
         multiselect

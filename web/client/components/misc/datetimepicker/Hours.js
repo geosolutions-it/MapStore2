@@ -39,7 +39,7 @@ class Hours extends Component {
         const { focusedItemIndex, times } = this.state;
         return (
             <ul id="rw_1_time_listbox" style={{ position: 'relative' }} ref={this.attachListRef} tabIndex="0" className="rw-list" role="listbox" aria-labelledby="rw_1_input" aria-live="false" aria-hidden="true" aria-activedescendant="rw_1_time_listbox__option__11">
-                {times.map((time, index) => <li key={time.label} onMouseDown={this.props.onMouseDown} onClick={() => this.props.onSelect(time)} ref={instance => this.itemsRef[index] = instance} role="option" tabIndex="0" aria-selected="false" className={`rw-list-option ${focusedItemIndex === index ? 'rw-state-focus' : ''}`} id="rw_1_time_listbox__option__0">{time.label}</li>)}
+                {times.map((time, index) => <li key={time.label} onMouseDown={this.props.onMouseDown} onClick={() => this.props.onSelect(time)} ref={instance => {this.itemsRef[index] = instance;}} role="option" tabIndex="0" aria-selected="false" className={`rw-list-option ${focusedItemIndex === index ? 'rw-state-focus' : ''}`} id="rw_1_time_listbox__option__0">{time.label}</li>)}
             </ul>
         );
     }

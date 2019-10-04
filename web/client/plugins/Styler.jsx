@@ -88,11 +88,11 @@ class Styler extends React.Component {
         counter: 1
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.reset();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // intial setup
         if (!nextProps.layer && this.props.layers.length === 1) {
             this.props.reset();
@@ -147,24 +147,24 @@ class Styler extends React.Component {
     renderStyler = () => {
         switch (this.props.layer.describeLayer && this.props.layer.describeLayer.owsType) {
         case 'WFS':
-            {
-                return (
-                    <div style={this.getStylerStyle()}>
+        {
+            return (
+                <div style={this.getStylerStyle()}>
                     <Vector forceOpen hideLayerSelector withContainer={false} />
-                    </div>);
-            }
+                </div>);
+        }
         case 'WCS':
-            {
-                return (
-                    <div style={this.getStylerStyle()}>
+        {
+            return (
+                <div style={this.getStylerStyle()}>
                     <Raster forceOpen hideLayerSelector withContainer={false}/>
-                    </div>);
-            }
+                </div>);
+        }
         default: {
             if (this.props.layer.describeLayer && this.props.layer.describeLayer.error) {
                 return this.renderError(this.props.layer.describeLayer.error);
             }
-            break;
+            return null;
         }
         }
     };
@@ -182,17 +182,17 @@ class Styler extends React.Component {
 
     renderSelector = () => {
         return (<Row style={{marginBottom: "5px", marginLeft: "10px", marginRight: "10px"}}>
-                    {!this.props.hideLayerSelector && !(this.props.layers.length === 1) ? (<Row>
+            {!this.props.hideLayerSelector && !(this.props.layers.length === 1) ? (<Row>
 
-                        <label><Message msgId="styler.layerlabel"/></label>
-                            <Combobox data={this.props.layers.reverse()}
-                                value={(this.props.layer) ? this.props.layer.id : (this.state.layer && this.state.layer.id)}
-                                onChange={this.setLayer}
-                                valueField={"id"}
-                                textField={"title"} />
+                <label><Message msgId="styler.layerlabel"/></label>
+                <Combobox data={this.props.layers.reverse()}
+                    value={(this.props.layer) ? this.props.layer.id : (this.state.layer && this.state.layer.id)}
+                    onChange={this.setLayer}
+                    valueField={"id"}
+                    textField={"title"} />
 
-                    </Row>) : null}
-                </Row>);
+            </Row>) : null}
+        </Row>);
     };
 
     renderSave = () => {
@@ -203,7 +203,7 @@ class Styler extends React.Component {
                 <Button style={{marginRight: "4px"}} onClick={this.saveStyle}>Save</Button>
             );
         }
-
+        return null;
     };
 
     renderReset = () => {
@@ -212,6 +212,7 @@ class Styler extends React.Component {
                 <Button key="reset-btn" onClick={this.reset}>Reset</Button>
             );
         }
+        return null;
     };
 
     renderZoom = () => {
@@ -221,33 +222,34 @@ class Styler extends React.Component {
                 "float": "right"
             }}onClick={this.zoomToLayerExtent} ><Glyphicon glyph="zoom-in" />Zoom To Layer</Button>);
         }
+        return null;
     };
 
     renderBody = () => {
 
         return (<Grid fluid>
-                {this.renderSelector()}
-                {this.props.layer ? this.renderStyler() : this.renderWaitOrError()}
-                <Row style={{margin: "4px 0"}}>
-                    {this.props.layer && this.props.canSave ? this.renderSave() : null}
-                    {this.renderReset()}{this.renderZoom()}
-                </Row>
-                </Grid>);
+            {this.renderSelector()}
+            {this.props.layer ? this.renderStyler() : this.renderWaitOrError()}
+            <Row style={{margin: "4px 0"}}>
+                {this.props.layer && this.props.canSave ? this.renderSave() : null}
+                {this.renderReset()}{this.renderZoom()}
+            </Row>
+        </Grid>);
     };
 
     render() {
         if (this.props.open || this.props.forceOpen) {
             return this.props.withContainer ?
                 <Dialog id="wms-styler-dialog" className="mapstore-styler-panel"
-                        style={this.getPanelStyle()}
-                        >
-                        <span role="header"><span className="metadataexplorer-panel-title">
-                            <Message msgId="styler.paneltitle"/></span><button onClick={this.props.toggleControl.bind(null, 'styler', null)} className="print-panel-close close">
-                                {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
-                            </button></span>
-                            <div role="body">
-                                {this.renderBody()}
-                            </div>
+                    style={this.getPanelStyle()}
+                >
+                    <span role="header"><span className="metadataexplorer-panel-title">
+                        <Message msgId="styler.paneltitle"/></span><button onClick={this.props.toggleControl.bind(null, 'styler', null)} className="print-panel-close close">
+                        {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
+                    </button></span>
+                    <div role="body">
+                        {this.renderBody()}
+                    </div>
                 </Dialog> : this.renderBody();
         }
         return null;

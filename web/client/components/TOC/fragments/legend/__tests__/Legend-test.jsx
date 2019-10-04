@@ -69,13 +69,13 @@ describe("test the Layer legend", () => {
         };
         var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
         const sub = Rx.Observable.interval(100)
-        .filter(() => tb && tb.state.error)
-        .subscribe(() => {
-            let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
-            expect(thumbs.length).toBe(0);
-            sub.unsubscribe();
-            done();
-        });
+            .filter(() => tb && tb.state.error)
+            .subscribe(() => {
+                let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+                expect(thumbs.length).toBe(0);
+                sub.unsubscribe();
+                done();
+            });
     });
     it('test legend img error reload', (done) => {
         let layer = {
@@ -88,17 +88,17 @@ describe("test the Layer legend", () => {
         };
         var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
         const sub = Rx.Observable.interval(100)
-        .filter(() => tb && tb.state.error)
-        .subscribe(() => {
-            let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
-            expect(thumbs.length).toBe(0);
-            const newLayer = {...layer, url: "http://test2/reflector/open/service"};
-            tb = ReactDOM.render(<Legend layer={newLayer} />, document.getElementById("container"));
-            thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
-            expect(thumbs.length).toBe(1);
-            sub.unsubscribe();
-            done();
-        });
+            .filter(() => tb && tb.state.error)
+            .subscribe(() => {
+                let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+                expect(thumbs.length).toBe(0);
+                const newLayer = {...layer, url: "http://test2/reflector/open/service"};
+                tb = ReactDOM.render(<Legend layer={newLayer} />, document.getElementById("container"));
+                thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+                expect(thumbs.length).toBe(1);
+                sub.unsubscribe();
+                done();
+            });
     });
     it('test legend with small 1px x 2px img error reload', (done) => {
         let layer = {
@@ -111,15 +111,15 @@ describe("test the Layer legend", () => {
         };
         var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
         const sub = Rx.Observable.interval(100)
-        .filter(() => tb && tb.state.error)
-        .subscribe(() => {
-            let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
-            let spans = TestUtils.scryRenderedDOMComponentsWithTag(tb, "span");
+            .filter(() => tb && tb.state.error)
+            .subscribe(() => {
+                let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+                let spans = TestUtils.scryRenderedDOMComponentsWithTag(tb, "span");
 
-            expect(spans[0].innerText).toBe("layerProperties.legenderror");
-            expect(thumbs.length).toBe(0);
-            sub.unsubscribe();
-            done();
-        });
+                expect(spans[0].innerText).toBe("layerProperties.legenderror");
+                expect(thumbs.length).toBe(0);
+                sub.unsubscribe();
+                done();
+            });
     });
 });

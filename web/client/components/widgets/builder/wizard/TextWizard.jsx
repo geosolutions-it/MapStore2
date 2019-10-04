@@ -12,8 +12,8 @@ const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 
 module.exports = ({
-    onChange = () => {}, onFinish = () => {}, setPage= () => {},
-    step=0,
+    onChange = () => {}, onFinish = () => {}, setPage = () => {},
+    step = 0,
     editorData = {}
 } = {}) => (
     <Wizard
@@ -26,5 +26,5 @@ module.exports = ({
             data={editorData}
             onChange={onChange}
         />
-</Wizard>
-    );
+    </Wizard>
+);

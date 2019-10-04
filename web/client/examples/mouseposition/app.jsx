@@ -58,37 +58,37 @@ function startApp() {
                 return <div className="error">This example does not work on mobile</div>;
             }
             return (<Localized locale="it-IT" messages={{}}>
-            <div id="viewer" >
-            <Modal show={this.state.showAlert} onHide={this.closeAlert}>
-              <Modal.Header closeButton>
-                <Modal.Title>Clipboard</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
+                <div id="viewer" >
+                    <Modal show={this.state.showAlert} onHide={this.closeAlert}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Clipboard</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
                 Succesfully copied to clipboard!
-              </Modal.Body>
-              <Modal.Footer>
-                <Button onClick={this.closeAlert}>Close</Button>
-              </Modal.Footer>
-            </Modal>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button onClick={this.closeAlert}>Close</Button>
+                        </Modal.Footer>
+                    </Modal>
                     <Grid fluid={false} className="mousepositionsbar">
-                    <Row>
-                        <Col lg={4} md={6} xs={12}>
-                            <MousePosition id="sGeoS" key="sGeoS"
-                                mousePosition={this.props.mousePosition} crs="EPSG:4326"
-                                degreesTemplate={SearchGeoS}/>
-                        </Col>
-                        <Col lg={4} md={6} xs={12}>
-                            <MousePosition
-                                copyToClipboardEnabled
-                                onCopy={this.onCopy}
-                                id="wgs84" key="wgs84" mousePosition={this.props.mousePosition} crs="EPSG:4326"/>
-                        </Col>
-                        <Col lg={4} md={4} xs={6}>
-                            <MousePosition id="degreedecimal" key="degreedecimal" enabled
-                        mousePosition={this.props.mousePosition} crs="EPSG:4326"
-                        degreesTemplate={LabelDD}/>
-                        </Col>
-                    </Row></Grid>
+                        <Row>
+                            <Col lg={4} md={6} xs={12}>
+                                <MousePosition id="sGeoS" key="sGeoS"
+                                    mousePosition={this.props.mousePosition} crs="EPSG:4326"
+                                    degreesTemplate={SearchGeoS}/>
+                            </Col>
+                            <Col lg={4} md={6} xs={12}>
+                                <MousePosition
+                                    copyToClipboardEnabled
+                                    onCopy={this.onCopy}
+                                    id="wgs84" key="wgs84" mousePosition={this.props.mousePosition} crs="EPSG:4326"/>
+                            </Col>
+                            <Col lg={4} md={4} xs={6}>
+                                <MousePosition id="degreedecimal" key="degreedecimal" enabled
+                                    mousePosition={this.props.mousePosition} crs="EPSG:4326"
+                                    degreesTemplate={LabelDD}/>
+                            </Col>
+                        </Row></Grid>
                     <MousePosition id="google"
                         copyToClipboardEnabled
                         onCopy={this.onCopy}
@@ -105,7 +105,7 @@ function startApp() {
                             y: 43.878160,
                             x: 10.276508,
                             crs: "EPSG:4326"
-                            }}
+                        }}
                         zoom={13}
                         projection="EPSG:900913"
                         onMouseMove={ (posi) => { store.dispatch(changeMousePosition(posi)); }}
@@ -113,9 +113,9 @@ function startApp() {
                     >
                         <LLayer type="osm" position={0} key="osm" options={{name: "osm"}} />
                     </LMap>
-              </div>
-              </Localized>)
-               ;
+                </div>
+            </Localized>)
+            ;
         }
 
         closeAlert = () => {
@@ -126,7 +126,7 @@ function startApp() {
     ReactDOM.render(<App/>, document.getElementById('container'));
     store.subscribe(() =>
         ReactDOM.render(<App mousePosition={store.getState().mouseposition.position}
-        browser={store.getState().browser}/>, document.getElementById('container')));
+            browser={store.getState().browser}/>, document.getElementById('container')));
 }
 
 if (!global.Intl ) {

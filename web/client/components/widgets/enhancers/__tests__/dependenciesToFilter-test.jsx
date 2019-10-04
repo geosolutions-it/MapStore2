@@ -82,8 +82,8 @@ describe('widgets dependenciesToFilter enhancer', () => {
             mapSync
             geomProp={"geometry"}
             dependencies={ {
-            viewport: {"bounds": {"minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1"}, "crs": "EPSG:4326", "rotation": 0}
-        } } filter={filterObj}/>, document.getElementById("container"));
+                viewport: {"bounds": {"minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1"}, "crs": "EPSG:4326", "rotation": 0}
+            } } filter={filterObj}/>, document.getElementById("container"));
     });
     it('dependenciesToFilter with mapsync, spatial filter and cql_filter', (done) => {
         const Sink = dependenciesToFilter(createSink(props => {

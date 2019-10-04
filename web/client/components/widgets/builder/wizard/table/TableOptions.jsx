@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -31,7 +31,7 @@ const AttributeSelector = compose(
                     attribute: a.name,
                     hide: options.propertyName && (options.propertyName.indexOf( a.name ) < 0)
                 })
-            )
+                )
         })),
     noAttributes(({ attributes = []}) => attributes.length === 0),
     withHandlers({
@@ -42,13 +42,13 @@ const AttributeSelector = compose(
 
 module.exports = ({ data = { options: {} }, onChange = () => { }, featureTypeProperties, sampleChart}) => (<Row>
     <StepHeader title={<Message msgId={`widgets.builder.wizard.configureTableOptions`} />} />
-          <Col xs={12}>
-              <div >
-                  {sampleChart}
-              </div>
-          </Col>
-          <Col xs={12}>
-          <Form className="chart-options-form" horizontal>
+    <Col xs={12}>
+        <div >
+            {sampleChart}
+        </div>
+    </Col>
+    <Col xs={12}>
+        <Form className="chart-options-form" horizontal>
             <AttributeSelector
                 options={data.options}
                 onChange={onChange}
@@ -57,6 +57,6 @@ module.exports = ({ data = { options: {} }, onChange = () => { }, featureTypePro
                 ? <Button style={{"float": "right"}} onClick={() => onChange("options.columnSettings", undefined)}><Message msgId="widgets.builder.wizard.resetColumnsSizes" /></Button>
                 : null
             }
-      </Form>
-  </Col>
+        </Form>
+    </Col>
 </Row>);

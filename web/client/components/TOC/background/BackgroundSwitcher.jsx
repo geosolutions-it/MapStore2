@@ -85,17 +85,17 @@ class BackgroundSwitcher extends React.Component {
             let thumb = thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
             if (layer.invalid) {
                 items.push(<Col {...this.props.columnProperties} key={i}>
-              <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle="warning" src={thumb} alt={layer.source + " " + layer.name}>
-                      <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
-              </Thumbnail>
-          </Col>);
+                    <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle="warning" src={thumb} alt={layer.source + " " + layer.name}>
+                        <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
+                    </Thumbnail>
+                </Col>);
             } else {
                 items.push(<Col {...this.props.columnProperties} key={i}>
-              <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name}
-                  onClick={this.changeLayerVisibility}>
-                      <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
-              </Thumbnail>
-          </Col>);
+                    <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name}
+                        onClick={this.changeLayerVisibility}>
+                        <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
+                    </Thumbnail>
+                </Col>);
             }
 
         }
@@ -104,7 +104,7 @@ class BackgroundSwitcher extends React.Component {
 
     render() {
         return (
-           <Grid id={this.props.id} className="BackgroundSwitcherComponent" fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
+            <Grid id={this.props.id} className="BackgroundSwitcherComponent" fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
         );
     }
 

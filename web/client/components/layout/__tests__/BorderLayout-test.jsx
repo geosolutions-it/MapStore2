@@ -34,7 +34,7 @@ describe("Test BorderLayout Component", () => {
                 header={<div className="header"></div>}
                 footer={<div className="footer"></div>}
                 columns={[<div className="left" style={{order: -1}}></div>, <div className="right"></div>]}
-                >
+            >
                 <div className="content"></div>
             </BorderLayout>), document.getElementById("container"));
 

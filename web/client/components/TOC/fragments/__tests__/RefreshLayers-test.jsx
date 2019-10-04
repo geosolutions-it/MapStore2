@@ -34,9 +34,8 @@ describe('test RefreshLayers module component', () => {
             url: 'fakeurl'
         };
         const comp = ReactDOM.render(<RefreshLayers layers={[l]} show/>, document.getElementById("container"));
-
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toNotExist();
+        expect(domNode).toExist();
         const modal = document.getElementById('mapstore-refresh-layers');
         expect(modal).toExist();
     });

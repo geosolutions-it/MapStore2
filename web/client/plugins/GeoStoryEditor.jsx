@@ -19,9 +19,8 @@ import geostory from '../reducers/geostory';
 import { setEditing, toggleCardPreview } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
-import { Modes } from '../utils/GeoStoryUtils';
+import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { createPlugin } from '../utils/PluginsUtils';
-import { scrollToContent } from '../utils/GeoStoryUtils';
 
 
 const GeoStoryEditor = ({
@@ -43,7 +42,7 @@ const GeoStoryEditor = ({
         setEditing={setEditingMode}
         cardPreviewEnabled={cardPreviewEnabled}
         onToggleCardPreview={onToggleCardPreview}
-        />
+    />
 </div> : null);
 /**
  * Plugin for GeoStory side panel editor

@@ -40,6 +40,6 @@ describe('mapToNodes enhancer', () => {
         }));
         ReactDOM.render(<Sink
             map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", name: "LAYER", group: "GGG", options: {} }] }}
-             />, document.getElementById("container"));
+        />, document.getElementById("container"));
     });
 });

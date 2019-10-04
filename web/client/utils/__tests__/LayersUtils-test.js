@@ -743,19 +743,19 @@ describe('LayersUtils', () => {
     });
     it('test findGeoServerName with array url', () => {
         const matched = LayersUtils
-        .findGeoServerName({url: ['https://1maps.geo-solutions.it/geoserver/wms'], regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
+            .findGeoServerName({url: ['https://1maps.geo-solutions.it/geoserver/wms'], regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
         expect(matched).toExist();
     });
 
     it('test findGeoServerName with string url', () => {
         const matched = LayersUtils
-        .findGeoServerName({url: 'https://1maps.geo-solutions.it/geoserver/wms', regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
+            .findGeoServerName({url: 'https://1maps.geo-solutions.it/geoserver/wms', regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
         expect(matched).toExist();
     });
 
     it('test getCapabilitiesUrl', () => {
         const capabilities = LayersUtils
-        .getCapabilitiesUrl({url: ['https://1maps.geo-solutions.it/geoserver/wms'], name: 'states'});
+            .getCapabilitiesUrl({url: ['https://1maps.geo-solutions.it/geoserver/wms'], name: 'states'});
         expect(capabilities).toExist();
     });
     it('getAuthenticationParam', () => {

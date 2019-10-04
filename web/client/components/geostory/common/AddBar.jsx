@@ -37,7 +37,7 @@ class AddBar extends React.Component {
         addButtonClassName: ''
     };
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         // popover is displayed on wrong position when container change size
         // so hide popover when container width or height change
         if (this.trigger
@@ -52,24 +52,23 @@ class AddBar extends React.Component {
             <ToolbarPopover
                 className="add-bar"
                 content={(
-                <Toolbar
-                    btnDefaultProps={{ className: 'square-button btn-tray' }}
-                    buttons={this.props.buttons.map( ({onClick = () => {}, ...button}) => ({
-                    ...button,
-                    // auto-close popover on button click
-                    onClick: (...args) => {
-                        onClick(...args);
-                        this.trigger.hide();
-                        if (args[0] && args[0].preventDefault) {
-                            args[0].preventDefault();
-                        }
-                    }
-                }))}/>)}
+                    <Toolbar
+                        btnDefaultProps={{ className: 'square-button btn-tray' }}
+                        buttons={this.props.buttons.map( ({onClick = () => {}, ...button}) => ({
+                            ...button,
+                            // auto-close popover on button click
+                            onClick: (...args) => {
+                                onClick(...args);
+                                this.trigger.hide();
+                                if (args[0] && args[0].preventDefault) {
+                                    args[0].preventDefault();
+                                }
+                            }
+                        }))}/>)}
                 ref={(popover) => {
                     if (popover) this.trigger = popover.trigger;
                 }}
-                placement="top"
-                >
+                placement="top">
                 <Button
                     className={this.props.addButtonClassName}>
                     <Glyphicon

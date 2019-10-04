@@ -64,7 +64,7 @@ export default class HighlightFeatureSupport extends React.Component {
              nx.features.toString() !== pr.features.toString();
     }
 
-    componentWillUpdate(np) {
+    UNSAFE_componentWillUpdate(np) {
         switch (np.status) {
         case "enabled": {
             this.setSelectInteraction(np);

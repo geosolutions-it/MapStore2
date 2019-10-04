@@ -184,7 +184,7 @@ class PagedCombobox extends React.Component {
             textField={this.props.textField}
             valueField={this.props.valueField}
             value={this.props.selectedValue}
-            />);
+        />);
         return this.props.tooltip && this.props.tooltip.enabled ? this.renderWithTooltip(field) : field;
     }
     render() {

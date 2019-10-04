@@ -47,7 +47,7 @@ describe('test Layer Properties Elevation Chart component', () => {
         const comp = ReactDOM.render(
             <ElevationChart
                 positive
-                values={l.elevations.values}/>,
+                elevations={l.elevations}/>,
             document.getElementById("container")
         );
 

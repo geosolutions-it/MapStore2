@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {Panel, Button, Glyphicon} = require('react-bootstrap');
 const SwitchButton = require('./SwitchButton');
-const SwitchToolbar = require('./SwitchToolbar');
+const SwitchToolbar = require('./SwitchToolbar').default;
 const Toolbar = require('../toolbar/Toolbar');
 const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
 const LoadingView = require('../LoadingView');
@@ -32,7 +32,7 @@ class SwitchPanel extends React.Component {
         error: PropTypes.any,
         errorMsgId: PropTypes.string,
         transitionProps: PropTypes.object,
-        useToolbar: PropTypes.object
+        useToolbar: PropTypes.bool
     };
 
     static defaultProps = {
@@ -62,8 +62,8 @@ class SwitchPanel extends React.Component {
     }
     render() {
         return (<Panel className="mapstore-switch-panel" collapsible expanded={this.props.expanded} defaultExpanded={this.props.defaultExpanded} header={this.renderHeader()}>
-                {this.props.children}
-            </Panel>
+            {this.props.children}
+        </Panel>
         );
     }
 }

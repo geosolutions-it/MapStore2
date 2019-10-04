@@ -29,34 +29,34 @@ export default ({
     mode,
     add = () => {},
     editMedia = () => {},
-    update= () => {},
+    update = () => {},
     remove = () => {}
 }) => (
-        <Contents
-            className="ms-column-contents"
-            ContentComponent={ColumnContent}
-            contents={contents}
-            mode={mode}
-            add={add}
-            editMedia={editMedia}
-            update={update}
-            remove={remove}
-            viewWidth={viewWidth}
-            viewHeight={viewHeight}
-            tools={{
-                [ContentTypes.TEXT]: ['remove'],
-                [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
-                [MediaTypes.VIDEO]: ['editMedia', 'remove'] // TODO change this list for video
-            }}
-            addButtons={[{
-                glyph: 'sheet',
-                tooltipId: 'geostory.addTextContent',
-                template: ContentTypes.TEXT
-            },
-            {
-                glyph: 'picture',
-                tooltipId: 'geostory.addMediaContent',
-                template: ContentTypes.MEDIA
-            }]}
-            />
+    <Contents
+        className="ms-column-contents"
+        ContentComponent={ColumnContent}
+        contents={contents}
+        mode={mode}
+        add={add}
+        editMedia={editMedia}
+        update={update}
+        remove={remove}
+        viewWidth={viewWidth}
+        viewHeight={viewHeight}
+        tools={{
+            [ContentTypes.TEXT]: ['remove'],
+            [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
+            [MediaTypes.VIDEO]: ['editMedia', 'remove'] // TODO change this list for video
+        }}
+        addButtons={[{
+            glyph: 'sheet',
+            tooltipId: 'geostory.addTextContent',
+            template: ContentTypes.TEXT
+        },
+        {
+            glyph: 'picture',
+            tooltipId: 'geostory.addMediaContent',
+            template: ContentTypes.MEDIA
+        }]}
+    />
 );

@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- /**
+/**
   * Buttons for Identify Tool Toolbar
   */
 module.exports = ({

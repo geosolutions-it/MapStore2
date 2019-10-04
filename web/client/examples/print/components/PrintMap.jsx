@@ -25,12 +25,12 @@ const PrintMap = (props) => {
     let features = props.features;
     return props.map ?
 
-            <WMap {...props.map} {...props.actions}>
-                {props.layers.map((layer, index) =>
-                    (<Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, layer, {srs: props.map.projection})}/>)
-                )}
-                <Layer type="vector" position={1} options={{name: "States"}}>
+        <WMap {...props.map} {...props.actions}>
+            {props.layers.map((layer, index) =>
+                (<Layer key={layer.name} position={index} type={layer.type}
+                    options={assign({}, layer, {srs: props.map.projection})}/>)
+            )}
+            <Layer type="vector" position={1} options={{name: "States"}}>
                 {
                     features.map( (feature) => {
                         return (<Feature
@@ -39,9 +39,9 @@ const PrintMap = (props) => {
                             geometry={feature.geometry}/>);
                     })
                 }
-                </Layer>
-            </WMap>
-         : <span/>;
+            </Layer>
+        </WMap>
+        : <span/>;
 };
 
 PrintMap.propTypes = {

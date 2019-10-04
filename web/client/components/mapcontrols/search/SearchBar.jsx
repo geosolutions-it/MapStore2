@@ -248,7 +248,7 @@ class SearchBar extends React.Component {
         return null;
     }
 
-/**
+    /**
  * if one tool is disabled the other one is enabled
 */
     getActiveTool = () => {
@@ -338,57 +338,57 @@ class SearchBar extends React.Component {
                             visible: !!this.props.error,
                             onClick: this.clearSearch
                         }, {
-                        buttonConfig: {
-                            title: <Glyphicon glyph="menu-hamburger"/>,
-                            tooltipId: "search.changeSearchInputField",
-                            tooltipPosition: "bottom",
-                            className: "square-button-md no-border",
-                            pullRight: true
-                        },
-                        menuOptions: [
-                            ...searchMenuOptions, {
-                                onClick: () => {
-                                    if (!this.props.enabledSearchServicesConfig) {
-                                        this.props.onToggleControl("searchservicesconfig");
-                                    }
-                                },
-                                glyph: "cog",
-                                text: <Message msgId="search.searchservicesbutton"/>
-                            }
-                        ],
-                        visible: this.props.showOptions,
-                        Element: DropdownToolbarOptions
-                    }]}
-                    />
+                            buttonConfig: {
+                                title: <Glyphicon glyph="menu-hamburger"/>,
+                                tooltipId: "search.changeSearchInputField",
+                                tooltipPosition: "bottom",
+                                className: "square-button-md no-border",
+                                pullRight: true
+                            },
+                            menuOptions: [
+                                ...searchMenuOptions, {
+                                    onClick: () => {
+                                        if (!this.props.enabledSearchServicesConfig) {
+                                            this.props.onToggleControl("searchservicesconfig");
+                                        }
+                                    },
+                                    glyph: "cog",
+                                    text: <Message msgId="search.searchservicesbutton"/>
+                                }
+                            ],
+                            visible: this.props.showOptions,
+                            Element: DropdownToolbarOptions
+                        }]}
+                />
                 {
                     this.props.showOptions && activeTool === "coordinatesSearch" ? <Toolbar
-                    btnGroupProps = {{ className: 'btn-group-menu-options-format'}}
-                    transitionProps = {null}
-                    btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
-                    buttons={[
-                        {
-                        buttonConfig: {
-                            title: <Glyphicon glyph="cog"/>,
-                            tooltipId: "search.changeSearchInputField",
-                            tooltipPosition: "bottom",
-                            className: "square-button-md no-border",
-                            pullRight: true
-                        },
-                        menuOptions: [
+                        btnGroupProps = {{ className: 'btn-group-menu-options-format'}}
+                        transitionProps = {null}
+                        btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
+                        buttons={[
                             {
-                                active: this.props.format === "decimal",
-                                onClick: () => { this.props.onChangeFormat("decimal"); },
-                                text: <Message msgId="search.decimal"/>
-                            }, {
-                                active: this.props.format === "aeronautical",
-                                onClick: () => { this.props.onChangeFormat("aeronautical"); },
-                                text: <Message msgId="search.aeronautical"/>
+                                buttonConfig: {
+                                    title: <Glyphicon glyph="cog"/>,
+                                    tooltipId: "search.changeSearchInputField",
+                                    tooltipPosition: "bottom",
+                                    className: "square-button-md no-border",
+                                    pullRight: true
+                                },
+                                menuOptions: [
+                                    {
+                                        active: this.props.format === "decimal",
+                                        onClick: () => { this.props.onChangeFormat("decimal"); },
+                                        text: <Message msgId="search.decimal"/>
+                                    }, {
+                                        active: this.props.format === "aeronautical",
+                                        onClick: () => { this.props.onChangeFormat("aeronautical"); },
+                                        text: <Message msgId="search.aeronautical"/>
+                                    }
+                                ],
+                                visible: this.props.showOptions && activeTool === "coordinatesSearch",
+                                Element: DropdownToolbarOptions
                             }
-                        ],
-                        visible: this.props.showOptions && activeTool === "coordinatesSearch",
-                        Element: DropdownToolbarOptions
-                    }
-                    ]}
+                        ]}
                     /> : null
                 }
             </span>);
@@ -398,49 +398,49 @@ class SearchBar extends React.Component {
         let activeTool = this.getActiveTool();
         return activeTool !== "addressSearch" && this.props.showCoordinatesSearchOption &&
             (<div className="coordinateEditor">
-            <Row className="entryRow">
-                <Col xs="3" className="coordinateLabel">
-                    <Message msgId="latitude"/>
-                </Col>
-                <Col xs="9">
-                    <CoordinateEntry
-                        format={this.props.format}
-                        aeronauticalOptions={this.props.aeronauticalOptions}
-                        coordinate="lat"
-                        idx={1}
-                        value={this.props.coordinate.lat}
-                        constraints={this.props.constraintsCoordEditor}
-                        onChange={(dd) => this.changeCoord("lat", dd)}
-                        onKeyDown={(e) => {
-                            if (this.areValidCoordinates() && e.keyCode === 13) {
-                                this.zoomToPoint();
-                            }
-                        }}
-                    />
-                </Col>
-            </Row>
-            <Row className="entryRow">
-                <Col xs="3" className="coordinateLabel">
-                    <Message msgId="longitude"/>
-                </Col>
-                <Col xs="9">
-                    <CoordinateEntry
-                        format={this.props.format}
-                        aeronauticalOptions={this.props.aeronauticalOptions}
-                        coordinate="lon"
-                        idx={2}
-                        value={this.props.coordinate.lon}
-                        constraints={this.props.constraintsCoordEditor}
-                        onChange={(dd) => this.changeCoord("lon", dd)}
-                        onKeyDown={(e) => {
-                            if (this.areValidCoordinates() && e.keyCode === 13) {
-                                this.zoomToPoint();
-                            }
-                        }}
-                    />
-                </Col>
-            </Row>
-        </div>);
+                <Row className="entryRow">
+                    <Col xs="3" className="coordinateLabel">
+                        <Message msgId="latitude"/>
+                    </Col>
+                    <Col xs="9">
+                        <CoordinateEntry
+                            format={this.props.format}
+                            aeronauticalOptions={this.props.aeronauticalOptions}
+                            coordinate="lat"
+                            idx={1}
+                            value={this.props.coordinate.lat}
+                            constraints={this.props.constraintsCoordEditor}
+                            onChange={(dd) => this.changeCoord("lat", dd)}
+                            onKeyDown={(e) => {
+                                if (this.areValidCoordinates() && e.keyCode === 13) {
+                                    this.zoomToPoint();
+                                }
+                            }}
+                        />
+                    </Col>
+                </Row>
+                <Row className="entryRow">
+                    <Col xs="3" className="coordinateLabel">
+                        <Message msgId="longitude"/>
+                    </Col>
+                    <Col xs="9">
+                        <CoordinateEntry
+                            format={this.props.format}
+                            aeronauticalOptions={this.props.aeronauticalOptions}
+                            coordinate="lon"
+                            idx={2}
+                            value={this.props.coordinate.lon}
+                            constraints={this.props.constraintsCoordEditor}
+                            onChange={(dd) => this.changeCoord("lon", dd)}
+                            onKeyDown={(e) => {
+                                if (this.areValidCoordinates() && e.keyCode === 13) {
+                                    this.zoomToPoint();
+                                }
+                            }}
+                        />
+                    </Col>
+                </Row>
+            </div>);
     }
 
     renderInputSearch = () => {
@@ -482,7 +482,7 @@ class SearchBar extends React.Component {
                         {this.renderInputSearch()}
                         {this.renderCoordinateTool()}
                         {this.renderSearchToolbar()}
-                        </div>
+                    </div>
                 </FormGroup>
             </div>
         );

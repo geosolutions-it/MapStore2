@@ -43,6 +43,7 @@ module.exports = compose(
                 onMapReady(map);
                 return {initialized: true};
             }
+            return {};
         },
         centerLayer: (state, {layer: l}) => (map) => {
             if (isEmpty(l)) {
@@ -57,7 +58,8 @@ module.exports = compose(
             const {bbox: omit, ...om} = map;
             return {map: {...om, zoom, center, extent, mapStateSource: "mapModal"}};
         }
-    }),
+    }
+    ),
     withPropsOnChange("layer", props => {
         return {layers: props.layers.concat(props.layer || [])};
     }),

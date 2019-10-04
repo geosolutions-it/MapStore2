@@ -19,8 +19,8 @@ const { compose, branch } = require('recompose');
 
 const Catalog = compose(
     branch(
-       ({catalog} = {}) => !catalog,
-       connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
+        ({catalog} = {}) => !catalog,
+        connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
     ),
 )(require('./Catalog'));
 /**
@@ -31,14 +31,14 @@ module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice 
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
-        <Toolbar stepButtons={stepButtons} canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
-        {selected && !canProceed && error ? <InfoPopover
-            trigger={false}
-            glyph="warning-sign"
-            bsStyle="warning"
-            title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
-            text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
-    </BuilderHeader>}
-        >
+            <Toolbar stepButtons={stepButtons} canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
+            {selected && !canProceed && error ? <InfoPopover
+                trigger={false}
+                glyph="warning-sign"
+                bsStyle="warning"
+                title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
+                text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
+        </BuilderHeader>}
+    >
         <Catalog services={catalogServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
     </BorderLayout>);

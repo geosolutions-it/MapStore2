@@ -25,28 +25,28 @@ const ConfirmModal = require('../../maps/modals/ConfirmModal');
 module.exports = ({
     id,
     title,
-    confirmDelete= false,
+    confirmDelete = false,
     className,
     handle = "draggableHandle",
     toggleDeleteConfirm = () => {},
-    onDelete=() => {},
+    onDelete = () => {},
     icons,
     topLeftItems,
     topRightItems,
     headerStyle = {},
     children
-    }) =>
+}) =>
     (<div className="mapstore-widget-card" id={id}>
         <BorderLayout className={className} header={(<div style={headerStyle} className={`mapstore-widget-info ${handle ? handle : ""}`}>
-                <div className="mapstore-widget-header">
-                    <span className="widget-icons">{icons}</span>
-                    {topLeftItems}
-                    <span className="widget-title">{title}</span>
-                    <span className="mapstore-widget-options">
-                        {topRightItems}
-                    </span>
-                </div>
-            </div>)}>
+            <div className="mapstore-widget-header">
+                <span className="widget-icons">{icons}</span>
+                {topLeftItems}
+                <span className="widget-title">{title}</span>
+                <span className="mapstore-widget-options">
+                    {topRightItems}
+                </span>
+            </div>
+        </div>)}>
             {children}
         </BorderLayout>
         {confirmDelete ? <ConfirmModal
@@ -57,4 +57,4 @@ module.exports = ({
             onClose={() => toggleDeleteConfirm(false)}
             onConfirm={() => onDelete(id) }/> : null}
     </div>
-);
+    );

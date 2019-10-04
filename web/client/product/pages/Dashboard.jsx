@@ -32,7 +32,7 @@ class DashboardPage extends React.Component {
         reset: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const id = get(this.props, "match.params.did");
         if (id) {
             this.props.reset();
@@ -61,14 +61,14 @@ class DashboardPage extends React.Component {
             includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />);
+        />);
     }
 }
 
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
-    {
-        loadResource: loadDashboard,
-        reset: resetDashboard
-    })(DashboardPage);
+{
+    loadResource: loadDashboard,
+    reset: resetDashboard
+})(DashboardPage);

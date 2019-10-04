@@ -36,9 +36,9 @@ export default {
      */
     save: (mediaType, source, data, store) =>
         Observable.of(uuid()).do(
-                (id) => store.dispatch(addResource(id, mediaType, data)
+            (id) => store.dispatch(addResource(id, mediaType, data)
             )).map(id => ({id, mediaType, data, source})),
-/**
+    /**
      * Updates a media with passed data and returns the object shaped as {id, mediaType, data, source}
      * @param {string} mediaType type of the media (image, video...)
      * @param {object} source source object

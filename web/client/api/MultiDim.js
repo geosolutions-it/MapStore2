@@ -22,7 +22,7 @@ const trimUndefinedParams = o =>
         (o[k] !== undefined && o[k] !== null)
             ? {...acc, [k]: o[k]}
             : acc,
-        {});
+    {});
 /**
  * Provides support for [DescribeDomains](http://docs.geoserver.org/latest/en/user/community/wmts-multidimensional/index.html#describedomains)
  * @memberof api.MultiDim
@@ -53,11 +53,11 @@ const describeDomains = (url, layer, dimensionIdentifiers = {}, {
             ...dimensionIdentifiers
         })
     }))
-    .let(interceptOGCError)
-    .switchMap(response => parseXML(response.data));
+        .let(interceptOGCError)
+        .switchMap(response => parseXML(response.data));
 const getHistogram = (url, layer, histogram, dimensionIdentifiers, resolution, {
     service = "WMTS",
-    version="1.1.0",
+    version = "1.1.0",
     tileMatrixSet = "EPSG:4326",
     bbox
 
@@ -75,8 +75,8 @@ const getHistogram = (url, layer, histogram, dimensionIdentifiers, resolution, {
             ...dimensionIdentifiers
         })
     }))
-    .let(interceptOGCError)
-    .switchMap(response => parseXML(response.data));
+        .let(interceptOGCError)
+        .switchMap(response => parseXML(response.data));
 
 // http://localhost:8080/geoserver/gwc/service/wmts?request=GetDomainValues&Version=1.0.0&Layer=sampleLayer&domain=elevation&limit=2
 
@@ -101,20 +101,20 @@ const getDomainValues = (url, layer, domain, {
     // tileMatrixSet = "EPSG:4326" // this is required because this is an option of WMTS,
 
 } = {}) => Observable.defer(() => ajax.get(toMultiDimURL(url), {
-        params: trimUndefinedParams({
-            service,
-            version,
-            request: "GetDomainValues",
-            tileMatrixSet,
-            bbox,
-            layer,
-            domain,
-            fromValue,
-            sort,
-            limit,
-            time
-        })
-    }))
+    params: trimUndefinedParams({
+        service,
+        version,
+        request: "GetDomainValues",
+        tileMatrixSet,
+        bbox,
+        layer,
+        domain,
+        fromValue,
+        sort,
+        limit,
+        time
+    })
+}))
     .let(interceptOGCError)
     .switchMap(response => parseXML(response.data));
 /**

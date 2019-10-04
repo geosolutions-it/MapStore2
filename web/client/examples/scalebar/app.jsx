@@ -72,49 +72,49 @@ class MyMap extends React.Component {
 
     render() {
         return (<div id="viewer" >
-                    <LMap key="map"
-                        center={this.props.mapConfig.center}
-                        zoom={this.props.mapConfig.zoom}
-                        projection={this.props.mapConfig.projection}
-                        onMapViewChanges={this.manageNewMapView}
-                    >
-                        <LLayer type="tileprovider" position={0} key="Staeman" options={{name: "Stamen", provider: "Stamen.TonerBackground"}} />
-                    </LMap>
-                <Grid fluid={false} className="scalebargrid">
-                    <Row>
-                        <Col lg={2} md={3} xs={4}>
-                            <ScaleBox
-                                id="scaleBox"
-                                key="scaleBox"
-                                onChange={this.props.changeZoomLevel}
-                                currentZoomLvl={this.props.mapConfig.zoom} />
-                        </Col>
-                        <Col lg={2} lgOffset={3} md={3} mdOffset={1} xs={4}>
-                            <ScaleBox
-                                id="scaleBox2"
-                                key="scaleBox2"
-                                template={ (scale, index) => {
-                                    return index + 1;
-                                }
-                        }
-                                onChange={this.props.changeZoomLevel}
-                                currentZoomLvl={this.props.mapConfig.zoom} />
-                        </Col>
-                        <Col lg={2} lgOffset={3} md={3} mdOffset={2} xs={4} className="scaleBox1">
-                            <ScaleBox
-                                id="scaleBox1"
-                                key="scaleBox1"
-                                template={ (scale, index) => {
-                                    return zoomLabelArray[index];
-                                }
-                        }
-                                onChange={this.props.changeZoomLevel}
-                                currentZoomLvl={this.props.mapConfig.zoom} />
-                        </Col>
-                    </Row>
-                </Grid>
-          </div>)
-           ;
+            <LMap key="map"
+                center={this.props.mapConfig.center}
+                zoom={this.props.mapConfig.zoom}
+                projection={this.props.mapConfig.projection}
+                onMapViewChanges={this.manageNewMapView}
+            >
+                <LLayer type="tileprovider" position={0} key="Staeman" options={{name: "Stamen", provider: "Stamen.TonerBackground"}} />
+            </LMap>
+            <Grid fluid={false} className="scalebargrid">
+                <Row>
+                    <Col lg={2} md={3} xs={4}>
+                        <ScaleBox
+                            id="scaleBox"
+                            key="scaleBox"
+                            onChange={this.props.changeZoomLevel}
+                            currentZoomLvl={this.props.mapConfig.zoom} />
+                    </Col>
+                    <Col lg={2} lgOffset={3} md={3} mdOffset={1} xs={4}>
+                        <ScaleBox
+                            id="scaleBox2"
+                            key="scaleBox2"
+                            template={ (scale, index) => {
+                                return index + 1;
+                            }
+                            }
+                            onChange={this.props.changeZoomLevel}
+                            currentZoomLvl={this.props.mapConfig.zoom} />
+                    </Col>
+                    <Col lg={2} lgOffset={3} md={3} mdOffset={2} xs={4} className="scaleBox1">
+                        <ScaleBox
+                            id="scaleBox1"
+                            key="scaleBox1"
+                            template={ (scale, index) => {
+                                return zoomLabelArray[index];
+                            }
+                            }
+                            onChange={this.props.changeZoomLevel}
+                            currentZoomLvl={this.props.mapConfig.zoom} />
+                    </Col>
+                </Row>
+            </Grid>
+        </div>)
+        ;
     }
 
     manageNewMapView = (center, zoom, bbox, size, mapStateSource) => {
@@ -132,11 +132,11 @@ let App = connect((state) => {
 })(MyMap);
 
 ReactDOM.render(
-        <Provider store={store}>
-            <div>
-                <App />
-                <Debug/>
-            </div>
-        </Provider>,
-        document.getElementById('container')
-    );
+    <Provider store={store}>
+        <div>
+            <App />
+            <Debug/>
+        </div>
+    </Provider>,
+    document.getElementById('container')
+);

@@ -64,30 +64,30 @@ const StyleList = ({
     filterText,
     onFilter = () => {}
 }) => (
-        <BorderLayout
-            className="ms-style-editor-list"
-            header={
-                <Filter
-                    filterPlaceholder="styleeditor.styleListfilterPlaceholder"
-                    filterText={filterText}
-                    onFilter={onFilter}/>
-            }>
-            <SideGrid
-                size="sm"
-                onItemClick={({ name }) => onSelect({ style: defaultStyle === name ? '' : name }, true)}
-                items={availableStyles
-                    .filter(({name = '', title = '', _abstract = ''}) => !filterText
+    <BorderLayout
+        className="ms-style-editor-list"
+        header={
+            <Filter
+                filterPlaceholder="styleeditor.styleListfilterPlaceholder"
+                filterText={filterText}
+                onFilter={onFilter}/>
+        }>
+        <SideGrid
+            size="sm"
+            onItemClick={({ name }) => onSelect({ style: defaultStyle === name ? '' : name }, true)}
+            items={availableStyles
+                .filter(({name = '', title = '', _abstract = ''}) => !filterText
                     || filterText && (
                         name.indexOf(filterText) !== -1
                         || title.indexOf(filterText) !== -1
                         || _abstract.indexOf(filterText) !== -1
                     ))
-                    .map(style => ({
-                        ...style,
-                        title: style.label || style.title || style.name,
-                        description: style._abstract,
-                        selected: enabledStyle === style.name,
-                        preview: style.format &&
+                .map(style => ({
+                    ...style,
+                    title: style.label || style.title || style.name,
+                    description: style._abstract,
+                    selected: enabledStyle === style.name,
+                    preview: style.format &&
                             <SVGPreview
                                 backgroundColor="#333333"
                                 texts={[
@@ -99,9 +99,9 @@ const StyleList = ({
                                             fontWeight: 'bold'
                                         }
                                     }]}/> || <Glyphicon glyph="geoserver" />,
-                        tools: showDefaultStyleIcon && defaultStyle === style.name ? <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/> : null
-                    }))} />
-        </BorderLayout>
-    );
+                    tools: showDefaultStyleIcon && defaultStyle === style.name ? <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/> : null
+                }))} />
+    </BorderLayout>
+);
 
 module.exports = StyleList;

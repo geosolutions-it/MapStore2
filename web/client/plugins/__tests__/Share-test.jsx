@@ -98,7 +98,7 @@ describe('Share Plugin', () => {
                 expect(query).toBe('bbox=9,45,10,46');
                 done();
             }, 100);
-        } catch(e) {
+        } catch (e) {
             done(e);
         }
     });

@@ -57,7 +57,7 @@ describe('This test for GridCard', () => {
         const testDescription = "testDescription";
         var component = TestUtils.renderIntoDocument(<GridCard header={testName} actions={[{glyph: "test", onClick: () => {}}]}>{testDescription}></GridCard>);
         var button = TestUtils.findRenderedDOMComponentWithTag(
-           component, 'button'
+            component, 'button'
         );
         expect(button).toExist();
     });

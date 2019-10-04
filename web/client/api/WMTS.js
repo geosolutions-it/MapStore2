@@ -15,7 +15,7 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray, castArray} = require('lodash');
+const {castArray} = require('lodash');
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const { getOperations, getOperation, getRequestEncoding, getDefaultStyleIdentifier, getDefaultFormat} = require('../utils/WMTSUtils');
@@ -28,12 +28,6 @@ const parseUrl = (url) => {
             REQUEST: "getcapabilities"
         }, parsed.query)
     }));
-};
-
-const flatLayers = (root) => {
-    return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
-        return previous.concat(flatLayers(current)).concat(current.Layer && current["ows:Identifier"] ? [current] : []);
-    }, []) : root.ows.Title && [root] || [];
 };
 
 const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {

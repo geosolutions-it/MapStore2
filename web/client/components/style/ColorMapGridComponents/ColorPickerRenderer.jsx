@@ -53,27 +53,27 @@ class ColorPickerRenderer extends React.Component {
         return (
             <div>
                 <div className="cpr-color"
-                style={{ backgroundColor: bkgColor}}
-                onClick={ (e) => {
-                    if (!this.props.disabled) {
-                        this.setState({
-                            displayColorPicker: !this.state.displayColorPicker,
-                            y: e.pageY
-                        });
-                    }
-                }}
+                    style={{ backgroundColor: bkgColor}}
+                    onClick={ (e) => {
+                        if (!this.props.disabled) {
+                            this.setState({
+                                displayColorPicker: !this.state.displayColorPicker,
+                                y: e.pageY
+                            });
+                        }
+                    }}
                 />
                 { this.state.displayColorPicker ?
                     <div className="cpe-popover" style={{top: this.calculateTop(this.state.y)}}>
-                    <div className="cpe-cover" onClick={ () => {
-                        this.setState({ displayColorPicker: false});
-                        this.onChangeColor();
-                    }}/>
+                        <div className="cpe-cover" onClick={ () => {
+                            this.setState({ displayColorPicker: false});
+                            this.onChangeColor();
+                        }}/>
                         <SketchPicker
                             color={ this.state.color ? this.state.color.rgb : colorValue}
                             onChangeComplete={ (color) => { this.setState({ color: color }); }} />
                     </div>
-                : null }
+                    : null }
             </div>
         );
     }

@@ -28,7 +28,7 @@ class Legend extends React.Component {
     state = {
         error: false
     }
-    componentWillReceiveProps(nProps) {
+    UNSAFE_componentWillReceiveProps(nProps) {
         if ( this.state.error && this.getUrl(nProps, 0) !== this.getUrl(this.props, 0)) {
             this.setState(() => ({error: false}));
         }

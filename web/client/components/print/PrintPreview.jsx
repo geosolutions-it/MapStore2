@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 const {Button, Glyphicon} = require('react-bootstrap');
-const ReactPDF = require('react-pdf').default;
+const {Document, Page} = require('react-pdf');
 
 class PrintPreview extends React.Component {
     static propTypes = {
@@ -45,7 +45,7 @@ class PrintPreview extends React.Component {
     };
 
     onDocumentComplete = (pages) => {
-        this.props.setPages(pages && pages.total || 0);
+        this.props.setPages(pages && pages.numPages || 0);
     };
 
     render() {
@@ -53,7 +53,10 @@ class PrintPreview extends React.Component {
             return (
                 <div>
                     <div style={this.props.style}>
-                        <ReactPDF file={this.props.url} scale={this.props.scale} pageIndex={this.props.currentPage} onDocumentLoad={this.onDocumentComplete}/>
+                        <Document file={this.props.url}
+                            onLoadSuccess={this.onDocumentComplete}>
+                            <Page pageNumber={this.props.currentPage + 1} scale={this.props.scale}/>
+                        </Document>
                     </div>
                     <div style={{marginTop: "10px"}}>
                         <Button bsStyle={this.props.buttonStyle} style={{marginRight: "10px"}} onClick={this.props.back}><Glyphicon glyph="arrow-left"/></Button>

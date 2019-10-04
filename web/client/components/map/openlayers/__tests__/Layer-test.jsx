@@ -188,7 +188,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                  map={map}/>, document.getElementById("container"));
+                map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -206,7 +206,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -224,7 +224,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -235,7 +235,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -251,7 +251,7 @@ describe('Openlayers layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <OpenlayersLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -270,7 +270,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -607,7 +607,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -628,7 +628,7 @@ describe('Openlayers layer', () => {
         // create layers
         const layer = ReactDOM.render(
             <OpenlayersLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -685,7 +685,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -707,7 +707,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -727,7 +727,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -767,7 +767,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -789,7 +789,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -805,7 +805,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="graticule"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -869,7 +869,7 @@ describe('Openlayers layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
 
@@ -898,7 +898,7 @@ describe('Openlayers layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const overlayElement = document.getElementById('overlay-1-overlay');
@@ -958,7 +958,7 @@ describe('Openlayers layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const overlayElement = document.getElementById('overlay-1-overlay');
@@ -984,10 +984,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -997,7 +997,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1023,10 +1023,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -1036,9 +1036,9 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer.layer.values_.opacity).toEqual(opacity);
+        expect(layer.layer.getOpacity()).toEqual(opacity);
     });
 
     it('creates a vector layer specifying the feature CRS for openlayers map', () => {
@@ -1059,10 +1059,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [1447153.3803125600, 5311971.8469454700],
-                              [1669792.3618991000, 5311971.8469454700],
-                              [1669792.3618991000, 5465442.1833227500],
-                              [1447153.3803125600, 5465442.1833227500]
+                                [1447153.3803125600, 5311971.8469454700],
+                                [1669792.3618991000, 5311971.8469454700],
+                                [1669792.3618991000, 5465442.1833227500],
+                                [1447153.3803125600, 5465442.1833227500]
                             ]]
                         }
                     }
@@ -1072,7 +1072,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1108,10 +1108,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -1121,7 +1121,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1164,7 +1164,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1189,10 +1189,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -1202,7 +1202,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1386,7 +1386,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1396,7 +1396,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
 
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
@@ -1414,7 +1414,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" position={10}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1424,7 +1424,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" position={2}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getZIndex()).toBe(2);
     });
 
@@ -1444,7 +1444,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1456,7 +1456,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                 options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
+                options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
     it('changes wms params causes cache drop', () => {
@@ -1652,7 +1652,7 @@ describe('Openlayers layer', () => {
             type="wmts"
             options={options}
             map={map}
-             />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(layer.layer.getVisible()).toBe(false);
     });
 
@@ -1992,12 +1992,12 @@ describe('Openlayers layer', () => {
                         boundingBox: {
                             crs: 'http://www.opengis.net/def/crs/EPSG/0/3857',
                             lowerCorner: [
-                              -20037508.34,
-                              -20037508.34
+                                -20037508.34,
+                                -20037508.34
                             ],
                             upperCorner: [
-                              20037508.34,
-                              20037508.34
+                                20037508.34,
+                                20037508.34
                             ],
                             type: 'BoundingBox'
                         },

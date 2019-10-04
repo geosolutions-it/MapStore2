@@ -38,7 +38,7 @@ describe("test the SelectAnnotationsFile modal", () => {
                 "type": "Point"
             }`
         ], "file.json", {
-          type: "application/json"
+            type: "application/json"
         });
         const onFileChoosen = (features, override) => {
             expect(features instanceof Array).toBe(true);
@@ -68,7 +68,7 @@ describe("test the SelectAnnotationsFile modal", () => {
             "type": "Feature"
             }]`
         ], "file.txt", {
-          type: "text/plain"
+            type: "text/plain"
         });
         const annotations = ReactDOM.render(<SelectAnnotationsFile show/>, document.getElementById("container"));
         expect(annotations).toExist();

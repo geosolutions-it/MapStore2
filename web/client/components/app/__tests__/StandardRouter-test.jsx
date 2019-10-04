@@ -30,8 +30,8 @@ class mycomponent extends React.Component {
 
     render() {
         return (<div className="mycomponent">
-                {this.renderPlugins()}
-                </div>);
+            {this.renderPlugins()}
+        </div>);
     }
 }
 
@@ -52,7 +52,10 @@ describe('StandardRouter', () => {
     it('creates a default router app', () => {
         const store = {
             dispatch: () => {},
-            subscribe: () => {},
+            subscribe: () => {
+                return () => {};
+            },
+            unsubscribe: () => {},
             getState: () => ({})
         };
         const app = ReactDOM.render(<Provider store={store}><StandardRouter/></Provider>, document.getElementById("container"));
@@ -62,7 +65,9 @@ describe('StandardRouter', () => {
     it('creates a default router app with pages', () => {
         const store = {
             dispatch: () => {},
-            subscribe: () => {},
+            subscribe: () => {
+                return () => { };
+            },
             getState: () => ({})
         };
         const pages = [{
@@ -84,7 +89,9 @@ describe('StandardRouter', () => {
 
         const store = {
             dispatch: () => {},
-            subscribe: () => {},
+            subscribe: () => {
+                return () => { };
+            },
             getState: () => ({})
         };
         const pages = [{

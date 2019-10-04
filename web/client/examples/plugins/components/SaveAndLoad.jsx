@@ -54,7 +54,7 @@ class SaveButton extends React.Component {
                     {this.renderSaved()}
                 </FormControl>
             </FormGroup>
-            </div>);
+        </div>);
     }
 
     load = () => {

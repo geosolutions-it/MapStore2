@@ -99,17 +99,17 @@ class UserMenu extends React.Component {
             itemArray.push(<MenuItem key="logout" onClick={() => this.props.onLogout()}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
         }
         return (
-        <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >
-            <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
-            {itemArray}
-        </DropDown>);
+            <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >
+                <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
+                {itemArray}
+            </DropDown>);
     };
 
     renderButtonText = () => {
 
         return this.props.renderButtonContent ?
-          this.props.renderButtonContent() :
-          [<Glyphicon glyph="user" />, this.props.renderButtonText ? this.props.user && this.props.user[this.props.displayName] || "Guest" : null];
+            this.props.renderButtonContent() :
+            [<Glyphicon glyph="user" />, this.props.renderButtonText ? this.props.user && this.props.user[this.props.displayName] || "Guest" : null];
     };
 
     render() {

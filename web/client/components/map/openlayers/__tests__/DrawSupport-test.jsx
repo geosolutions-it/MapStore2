@@ -53,7 +53,7 @@ const renderDrawSupport = (props = {}) => {
 */
 const renderAndClick = (props = {}, options = {}) => {
     let support = renderDrawSupport();
-    // entering componentWillReceiveProps
+    // entering UNSAFE_componentWillReceiveProps
     support = renderDrawSupport({
         drawStatus: "drawOrEdit",
         features: [props.feature],
@@ -230,8 +230,8 @@ describe('Test DrawSupport', () => {
                 options={{editEnabled: true, selectEnabled: true}}
                 onSelectFeatures={testHandlers.onStatusChange}/>, document.getElementById("container"));
         const feature = new Feature({
-              geometry: new Point(13.0, 43.0),
-              name: 'My Point'
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
         });
         support.selectInteraction.dispatchEvent({
             type: 'select',
@@ -258,10 +258,10 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{editEnabled: true}}
-                 onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+                onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
         const feature = new Feature({
-              geometry: new Point(13.0, 43.0),
-              name: 'My Point'
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
         });
         support.translateInteraction.dispatchEvent({
             type: 'translateend',
@@ -294,10 +294,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             properties: {
@@ -311,8 +311,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Some" options={{
-                    drawEnabled: false, editEnabled: false}}
-                />, document.getElementById("container"));
+                drawEnabled: false, editEnabled: false}}
+            />, document.getElementById("container"));
         expect(support.translateInteraction).toNotExist();
     });
     it('translate disabled when Polygon', () => {
@@ -339,10 +339,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             properties: {
@@ -356,8 +356,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon" options={{
-                    drawEnabled: false, editEnabled: true}}
-                />, document.getElementById("container"));
+                drawEnabled: false, editEnabled: true}}
+            />, document.getElementById("container"));
         expect(support.translateInteraction).toExist();
     });
 
@@ -376,8 +376,8 @@ describe('Test DrawSupport', () => {
             })
         };
         const feature = new Feature({
-              geometry: new Point(13.0, 43.0),
-              name: 'My Point'
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
@@ -414,8 +414,8 @@ describe('Test DrawSupport', () => {
             })
         };
         const feature = new Feature({
-              geometry: new Circle([13.0, 43.0], 100),
-              name: 'My Point'
+            geometry: new Circle([13.0, 43.0], 100),
+            name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
@@ -424,10 +424,10 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Circle" options={{
-                    stopAfterDrawing: true,
-                    geodesic: true
-                }}
-                onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+                stopAfterDrawing: true,
+                geodesic: true
+            }}
+            onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
         support.drawInteraction.dispatchEvent({
             type: 'drawstart',
             feature: feature
@@ -455,8 +455,8 @@ describe('Test DrawSupport', () => {
             })
         };
         const feature = new Feature({
-              geometry: new Point(13.0, 43.0),
-              name: 'My Point'
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
@@ -496,10 +496,10 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="stop" drawMethod="Point" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyRemove.calls.length).toBe(1);
     });
 
@@ -524,10 +524,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             featureProjection: "EPSG:4326",
@@ -542,11 +542,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="Polygon" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyAddFeature = expect.spyOn(support.drawSource, "addFeature");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="Polygon" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
@@ -571,10 +571,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             featureProjection: "EPSG:4326",
@@ -588,11 +588,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="MultiPolygon" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyAddFeature = expect.spyOn(support.drawSource, "addFeature");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="MultiPolygon" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
@@ -629,11 +629,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="Point" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyAddFeature = expect.spyOn(support.drawSource, "addFeature");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="Point" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
@@ -670,11 +670,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="LineString" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyAddFeature = expect.spyOn(support.drawSource, "addFeature");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="LineString" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
@@ -711,11 +711,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="MultiLineString" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyAddFeature = expect.spyOn(support.drawSource, "addFeature");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="MultiLineString" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
@@ -752,7 +752,7 @@ describe('Test DrawSupport', () => {
         const spyAddInteraction = expect.spyOn(support, "addInteractions");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="MultiLineString" options={{drawEnabled: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddInteraction.calls.length).toBe(0);
     });
 
@@ -789,7 +789,7 @@ describe('Test DrawSupport', () => {
         const spyAddInteraction = expect.spyOn(support, "addInteractions");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="MultiLineString" options={{drawEnabled: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddInteraction.calls.length).toBe(1);
     });
 
@@ -826,11 +826,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="Circle" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyAddFeature = expect.spyOn(support.drawSource, "addFeature");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="Circle" options={{stopAfterDrawing: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
@@ -855,10 +855,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             featureProjection: "EPSG:4326",
@@ -872,11 +872,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="create" drawMethod="Polygon" options={{stopAfterDrawing: false}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         const spyStyle = expect.spyOn(support.drawLayer, "setStyle");
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="Polygon" options={{stopAfterDrawing: true}} style={{}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyStyle.calls.length).toBe(1);
     });
 
@@ -886,8 +886,8 @@ describe('Test DrawSupport', () => {
 
         expect(support).toExist();
         const style = support.toOlStyle({
-                fillColor: '#ff0'
-            });
+            fillColor: '#ff0'
+        });
         expect(style).toExist();
         expect(style.getFill().getColor()).toExist();
         expect(style.getFill().getColor()[0]).toBe(255);
@@ -902,9 +902,9 @@ describe('Test DrawSupport', () => {
 
         expect(support).toExist();
         const style = support.toOlStyle({
-                fillColor: '#ff0',
-                fillTransparency: 0.5
-            });
+            fillColor: '#ff0',
+            fillTransparency: 0.5
+        });
         expect(style).toExist();
         expect(style.getFill().getColor()).toExist();
         expect(style.getFill().getColor()[0]).toBe(255);
@@ -919,8 +919,8 @@ describe('Test DrawSupport', () => {
 
         expect(support).toExist();
         const style = support.toOlStyle({
-                strokeColor: '#ff0'
-            });
+            strokeColor: '#ff0'
+        });
         expect(style).toExist();
         expect(style.getStroke().getColor().length).toBe(4);
         expect(style.getStroke().getColor()[0]).toBe(255);
@@ -935,9 +935,9 @@ describe('Test DrawSupport', () => {
 
         expect(support).toExist();
         const style = support.toOlStyle({
-                iconUrl: '#myUrl',
-                shadowUrl: 'otherurl'
-            });
+            iconUrl: '#myUrl',
+            shadowUrl: 'otherurl'
+        });
         expect(style).toExist();
         expect(style.length).toBe(2);
     });
@@ -948,8 +948,8 @@ describe('Test DrawSupport', () => {
 
         expect(support).toExist();
         const style = support.toOlStyle({
-                iconGlyph: 'comment'
-            });
+            iconGlyph: 'comment'
+        });
         expect(style).toExist();
         expect(style.length).toBe(2);
     });
@@ -983,10 +983,10 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Polygon" options={{editEnabled: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="clean" drawMethod="Polygon" options={{stopAfterDrawing: true}} style={{}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyRemoveLayer.calls.length).toBe(1);
         expect(spyRemoveInteraction.calls.length).toBe(4);
     });
@@ -1018,10 +1018,10 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Polygon" options={{editEnabled: true}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="cleanAndContinueDrawing" drawMethod="Polygon" options={{stopAfterDrawing: true}} style={{}}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(spyRemoveLayer.calls.length).toBe(1);
         expect(spyRemoveInteraction.calls.length).toBe(0);
     });
@@ -1050,10 +1050,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             properties: {
@@ -1069,8 +1069,8 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon" options={{
-                    drawEnabled: true}}
-                />, document.getElementById("container"));
+                drawEnabled: true}}
+            />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
         expect(spyAddInteraction.calls.length).toBe(1);
     });
@@ -1099,10 +1099,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             properties: {
@@ -1118,10 +1118,10 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon" options={{
-                    drawEnabled: true,
-                    editEnabled: true
-                }}
-                />, document.getElementById("container"));
+                drawEnabled: true,
+                editEnabled: true
+            }}
+            />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
         expect(spyAddInteraction.calls.length).toBe(3);
     });
@@ -1155,8 +1155,8 @@ describe('Test DrawSupport', () => {
             }
         };
         const feature = new Feature({
-              geometry: new Point(13.0, 43.0),
-              name: 'My Point'
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
         const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
@@ -1167,11 +1167,11 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[geoJSON]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Point" options={{
-                    drawEnabled: true}}
-                    onEndDrawing={testHandlers.onEndDrawing}
-                    onChangeDrawingStatus={testHandlers.onStatusChange}
-                    onGeometryChanged={testHandlers.onGeometryChanged}
-                />, document.getElementById("container"));
+                drawEnabled: true}}
+            onEndDrawing={testHandlers.onEndDrawing}
+            onChangeDrawingStatus={testHandlers.onStatusChange}
+            onGeometryChanged={testHandlers.onGeometryChanged}
+            />, document.getElementById("container"));
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: feature
@@ -1209,8 +1209,8 @@ describe('Test DrawSupport', () => {
             }
         };
         const feature = new Feature({
-              geometry: new Point(13.0, 43.0),
-              name: 'My Point'
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
         });
         const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
         const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
@@ -1221,13 +1221,13 @@ describe('Test DrawSupport', () => {
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[geoJSON]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Point" options={{
-                    drawEnabled: true,
-                    updateSpatialField: true
-                }}
-                    onEndDrawing={testHandlers.onEndDrawing}
-                    onChangeDrawingStatus={testHandlers.onStatusChange}
-                    onGeometryChanged={testHandlers.onGeometryChanged}
-                />, document.getElementById("container"));
+                drawEnabled: true,
+                updateSpatialField: true
+            }}
+            onEndDrawing={testHandlers.onEndDrawing}
+            onChangeDrawingStatus={testHandlers.onStatusChange}
+            onGeometryChanged={testHandlers.onGeometryChanged}
+            />, document.getElementById("container"));
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: feature
@@ -1523,10 +1523,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 44]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
                 ]]
             },
             properties: {
@@ -1561,13 +1561,13 @@ describe('Test DrawSupport', () => {
             <DrawSupport
                 features={[{
                     ...feature,
-                style: [{
-                    id: "style-id",
-                    color: "#FFFFFF",
-                    opacity: 0.5,
-                    fillColor: "#FFFFFF",
-                    fillOpacity: 0.5
-                }]}]}
+                    style: [{
+                        id: "style-id",
+                        color: "#FFFFFF",
+                        opacity: 0.5,
+                        fillColor: "#FFFFFF",
+                        fillOpacity: 0.5
+                    }]}]}
                 map={fakeMap}
                 drawStatus="updateStyle"
                 drawMethod="Polygon"
@@ -1575,7 +1575,7 @@ describe('Test DrawSupport', () => {
                     drawEnabled: false,
                     editEnabled: true
                 }}
-        />, document.getElementById("container"));
+            />, document.getElementById("container"));
 
         setTimeout( () => {
             const drawnFt = support.drawLayer.getSource().getFeatures()[0];
@@ -1593,10 +1593,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'Polygon',
                 coordinates: [[
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 43]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 43]
                 ]]
             },
             properties: {
@@ -1635,10 +1635,10 @@ describe('Test DrawSupport', () => {
             geometry: {
                 type: 'LineString',
                 coordinates: [
-                  [13, 43],
-                  [15, 43],
-                  [15, 44],
-                  [13, 43]
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 43]
                 ]
             },
             properties: {

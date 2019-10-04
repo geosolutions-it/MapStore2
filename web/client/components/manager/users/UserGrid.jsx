@@ -65,13 +65,13 @@ class UsersGrid extends React.Component {
                 background: "rgba(255, 255, 255, 0.5)",
                 zIndex: 2
             }}><div style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -40%)"
-            }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -40%)"
+                }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
-
+        return null;
     };
 
     renderUsers = (users) => {
@@ -97,13 +97,13 @@ class UsersGrid extends React.Component {
 
     render() {
         return (
-                <Grid style={{position: "relative"}} fluid={this.props.fluid}>
-                    {this.renderLoading()}
-                    <Row key="users">
-                        {this.renderUsers(this.props.users || [])}
-                    </Row>
-                    {this.props.bottom}
-                </Grid>
+            <Grid style={{position: "relative"}} fluid={this.props.fluid}>
+                {this.renderLoading()}
+                <Row key="users">
+                    {this.renderUsers(this.props.users || [])}
+                </Row>
+                {this.props.bottom}
+            </Grid>
         );
     }
 }

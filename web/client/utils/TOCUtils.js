@@ -43,23 +43,23 @@ const TOCUtils = {
      */
     getTooltipFragment: (fragment = "title", node, currentLocale, separator = " - ") => {
         switch (fragment) {
-            case "title": {
-                const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
-                const title = translation || node.name || "";
-                return title;
-            }
-            case "description": {
-                const description = node.description || "";
-                return description;
-            }
-            case "both": {
-                const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
-                const title = translation || node.nam || "";
-                const description = node.description || "";
-                return `${title}${separator && description ? separator : ""}${description}`;
-            }
-            // default is the name of the property passed
-            default: return node[fragment];
+        case "title": {
+            const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
+            const title = translation || node.name || "";
+            return title;
+        }
+        case "description": {
+            const description = node.description || "";
+            return description;
+        }
+        case "both": {
+            const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
+            const title = translation || node.nam || "";
+            const description = node.description || "";
+            return `${title}${separator && description ? separator : ""}${description}`;
+        }
+        // default is the name of the property passed
+        default: return node[fragment];
         }
     },
     /**

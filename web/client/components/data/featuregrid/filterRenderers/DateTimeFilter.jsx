@@ -9,7 +9,7 @@
 import { compose, withHandlers, defaultProps } from 'recompose';
 import BaseDateTimeFilter from './BaseDateTimeFilter';
 
-module.exports = compose(
+export default compose(
     defaultProps({
         onValueChange: () => { },
         value: null

@@ -25,24 +25,24 @@ const {Glyphicon} = require('react-bootstrap');
 
 module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalReverse, revGeocodeDisplayName}) => {
     return enableRevGeocode && latlng ? (
-            <Portal>
-                <ResizableModal
-                    fade
-                    title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
-                    size="xs"
-                    show={showModalReverse}
-                    onClose={hideRevGeocode}
-                    buttons={[{
-                        text: <Message msgId="close"/>,
-                        onClick: hideRevGeocode,
-                        bsStyle: 'primary'
-                    }]}>
-                    <div className="ms-alert" style={{padding: 15}}>
-                        <div className="ms-alert-center text-center">
-                            <div>{revGeocodeDisplayName}</div>
-                        </div>
+        <Portal>
+            <ResizableModal
+                fade
+                title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
+                size="xs"
+                show={showModalReverse}
+                onClose={hideRevGeocode}
+                buttons={[{
+                    text: <Message msgId="close"/>,
+                    onClick: hideRevGeocode,
+                    bsStyle: 'primary'
+                }]}>
+                <div className="ms-alert" style={{padding: 15}}>
+                    <div className="ms-alert-center text-center">
+                        <div>{revGeocodeDisplayName}</div>
                     </div>
-                </ResizableModal>
-            </Portal>
+                </div>
+            </ResizableModal>
+        </Portal>
     ) : null;
 };

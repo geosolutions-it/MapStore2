@@ -11,20 +11,20 @@ const Toolbar = require('../../misc/toolbar/Toolbar');
 const getWidgetIcon = ({widgetType, type} = {}) => {
     const iconType = !widgetType || widgetType === "chart" ? type : widgetType;
     switch (iconType) {
-        case "text":
-            return "sheet";
-        case "table":
-            return "features-grid";
-        case "pie":
-            return "pie-chart";
-        case "line":
-            return "1-line";
-        case "map":
-            return "1-map";
-        case "counter":
-            return "counter";
-        default:
-            return "stats";
+    case "text":
+        return "sheet";
+    case "table":
+        return "features-grid";
+    case "pie":
+        return "pie-chart";
+    case "line":
+        return "1-line";
+    case "map":
+        return "1-map";
+    case "counter":
+        return "counter";
+    default:
+        return "stats";
     }
 };
 

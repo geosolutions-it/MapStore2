@@ -75,35 +75,35 @@ const scrollSpyOptions = {querySelector: ".ms2-border-layout-body", pageSize: PA
  * @prop {function} [setSearchText] handler to get search text changes (if not defined, the component will control the text by it's own)
  */
 module.exports = compose(
-        withControllableState('searchText', "setSearchText", ""),
-        withVirtualScroll({loadPage, scrollSpyOptions}),
-        mapPropsStream( props$ =>
-            props$.merge(props$.take(1).switchMap(({catalog, loadFirst = () => {} }) =>
-                props$
-                    .debounceTime(500)
-                    .startWith({searchText: "", catalog})
-                    .distinctUntilKeyChanged('searchText')
-                    .do(({searchText, catalog: nextCatalog} = {}) => loadFirst({text: searchText, catalog: nextCatalog}))
-                    .ignoreElements() // don't want to emit props
+    withControllableState('searchText', "setSearchText", ""),
+    withVirtualScroll({loadPage, scrollSpyOptions}),
+    mapPropsStream( props$ =>
+        props$.merge(props$.take(1).switchMap(({catalog, loadFirst = () => {} }) =>
+            props$
+                .debounceTime(500)
+                .startWith({searchText: "", catalog})
+                .distinctUntilKeyChanged('searchText')
+                .do(({searchText, catalog: nextCatalog} = {}) => loadFirst({text: searchText, catalog: nextCatalog}))
+                .ignoreElements() // don't want to emit props
         )))
 
 )(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector}) => {
     return (<BorderLayout
-                className="compat-catalog"
+        className="compat-catalog"
         header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
-                footer={<div className="catalog-footer">
-                    <span>{loading ? <LoadingSpinner /> : null}</span>
-                    {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
-                </div>}>
-                <SideGrid
-                    items={items.map(i =>
-                        i === selected
+        footer={<div className="catalog-footer">
+            <span>{loading ? <LoadingSpinner /> : null}</span>
+            {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
+        </div>}>
+        <SideGrid
+            items={items.map(i =>
+                i === selected
                         || selected
                         && i && i.record
                         && selected.identifier === i.record.identifier
-                            ? {...i, selected: true}
-                            : i)}
-                    loading={loading}
-                    onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
-            </BorderLayout>);
+                    ? {...i, selected: true}
+                    : i)}
+            loading={loading}
+            onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
+    </BorderLayout>);
 });

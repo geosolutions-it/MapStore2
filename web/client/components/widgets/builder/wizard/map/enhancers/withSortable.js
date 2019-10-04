@@ -20,23 +20,23 @@ const { deepChange, sortLayers: DEFAULT_SORT_LAYERS, splitMapAndLayers, getNode}
 module.exports = withHandlers({
     onSort: ({ map = {}, activateSortLayers = true, filterText, sortLayers = DEFAULT_SORT_LAYERS, updateMapEntries = () => {}}) =>
         activateSortLayers && !filterText
-        ? (nodeId, order = []) => {
+            ? (nodeId, order = []) => {
             // get the groups in form {nodes: ["layer1_id", "layer2_id", {id: nestedGroup, nodes: [...]}]}
-            const { flat: layers, groups = [] } = get(splitMapAndLayers(map), 'layers') || {};
-            // get the list of nodes to change order
-            const node = getNode(groups || [], nodeId);
-            const nodes = nodeId === 'root' ? groups : node.nodes;
-            if (nodes) {
+                const { flat: layers, groups = [] } = get(splitMapAndLayers(map), 'layers') || {};
+                // get the list of nodes to change order
+                const node = getNode(groups || [], nodeId);
+                const nodes = nodeId === 'root' ? groups : node.nodes;
+                if (nodes) {
                 // modify the groups object to apply sortLayers
-                const reorderedGroups = order.map(idx => nodes[idx]);
-                const newGroups = nodeId === 'root' ? reorderedGroups :
-                    deepChange(groups, nodeId, 'nodes', reorderedGroups);
-                // modify layer's order
-                const newLayers = sortLayers ? sortLayers(newGroups, layers || []) : layers || [];
-                updateMapEntries({
-                    layers: newLayers
-                });
+                    const reorderedGroups = order.map(idx => nodes[idx]);
+                    const newGroups = nodeId === 'root' ? reorderedGroups :
+                        deepChange(groups, nodeId, 'nodes', reorderedGroups);
+                    // modify layer's order
+                    const newLayers = sortLayers ? sortLayers(newGroups, layers || []) : layers || [];
+                    updateMapEntries({
+                        layers: newLayers
+                    });
+                }
             }
-        }
-        : null
+            : null
 });

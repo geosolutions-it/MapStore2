@@ -33,7 +33,7 @@ class WFSOptionalProps extends React.Component {
         const {options = {}} = service;
         return (
             <form>
-              <span className="wfs-required-props-title"><Message msgId="search.s_wfs_opt_props_label" /></span>
+                <span className="wfs-required-props-title"><Message msgId="search.s_wfs_opt_props_label" /></span>
                 <FormGroup>
                     <ControlLabel>
                         <Message msgId="search.s_sort" />
@@ -51,7 +51,7 @@ class WFSOptionalProps extends React.Component {
                     <Slider key="maxFeatures" start={[options.maxFeatures || 1]}
                         range={{min: 1, max: 50}}
                         onSlide={this.updateMaxFeatures}
-                        />
+                    />
                     <Label key="maxFeatures-labeel" className="slider-label" >{options.maxFeatures || 1}</Label>
                 </FormGroup>
             </form>);

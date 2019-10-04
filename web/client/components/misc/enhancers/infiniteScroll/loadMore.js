@@ -40,7 +40,7 @@ const loadMoreStream = (initialStream$, loadMore$, loadPage, {dataProp = "items"
                 ...res
             }))
     )
-    .catch(error => Rx.Observable.of({ loading: false, error }));
+        .catch(error => Rx.Observable.of({ loading: false, error }));
 /**
  * Enhancer that implements paginated data retrival in append mode for the enhanced component.
  * Currently is made to work with `withInfiniteScroll` (see `withInfiniteScroll` enhancer.

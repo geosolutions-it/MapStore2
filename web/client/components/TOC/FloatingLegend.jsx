@@ -130,58 +130,58 @@ class FloatingLegend extends React.Component {
                 </div>
             || !this.props.disabled && (
                 <ContainerDimensions>
-                {({height: containerHeight}) =>
-                    <Resizable
-                        height={this.props.height}
-                        axis="y"
-                        minConstraints={[
-                            this.props.width,
-                            this.props.minHeight
-                        ]}
-                        maxConstraints={[
-                            this.props.width,
-                            this.state.listHeight && this.state.listHeight < this.props.maxHeight && this.state.listHeight
+                    {({height: containerHeight}) =>
+                        <Resizable
+                            height={this.props.height}
+                            axis="y"
+                            minConstraints={[
+                                this.props.width,
+                                this.props.minHeight
+                            ]}
+                            maxConstraints={[
+                                this.props.width,
+                                this.state.listHeight && this.state.listHeight < this.props.maxHeight && this.state.listHeight
                             || containerHeight && containerHeight < this.props.maxHeight && containerHeight
                             || this.props.maxHeight
-                        ]}
-                        onResize={(e, data) =>
-                            this.props.onResize({
-                                height: data.size && data.size.height
-                            })
-                        }>
-                        <Panel
-                            id="ms-legend-action"
-                            className="ms-legend-action"
-                            collapsible
-                            header={
-                                <Grid fluid>
-                                    <Row>
-                                        <Col xs={12} className="ms-legend-header">
-                                            {this.props.toggleButton}
-                                            <div>
-                                                <h5>{this.props.title}</h5>
-                                            </div>
-                                            {this.props.layers && this.props.layers.length > 0 && <Button
-                                                tooltipId={this.props.expanded ? 'floatinglegend.hideLegend' : 'floatinglegend.showLegend'}
-                                                tooltipPosition="bottom"
-                                                className="no-border square-button-md"
-                                                onClick={() => this.props.onExpand(!this.props.expanded)}>
-                                                <Glyphicon glyph={this.props.expanded ? "chevron-down" : "chevron-left"} />
-                                            </Button>}
-                                        </Col>
-                                    </Row>
-                                </Grid>
-                            }
-                            expanded={expanded}
-                            footer={expanded && <Grid fluid/>}
-                            style={{
-                                width: this.props.width,
-                                ...(this.props.height && expanded ? {height: this.props.minHeight > this.props.height ? this.props.minHeight : this.props.height} : {})
-                            }}>
-                            <SideGrid
-                                ref={list => { this.list = list; }}
-                                size="sm"
-                                items={this.props.layers.map(layer => ({
+                            ]}
+                            onResize={(e, data) =>
+                                this.props.onResize({
+                                    height: data.size && data.size.height
+                                })
+                            }>
+                            <Panel
+                                id="ms-legend-action"
+                                className="ms-legend-action"
+                                collapsible
+                                header={
+                                    <Grid fluid>
+                                        <Row>
+                                            <Col xs={12} className="ms-legend-header">
+                                                {this.props.toggleButton}
+                                                <div>
+                                                    <h5>{this.props.title}</h5>
+                                                </div>
+                                                {this.props.layers && this.props.layers.length > 0 && <Button
+                                                    tooltipId={this.props.expanded ? 'floatinglegend.hideLegend' : 'floatinglegend.showLegend'}
+                                                    tooltipPosition="bottom"
+                                                    className="no-border square-button-md"
+                                                    onClick={() => this.props.onExpand(!this.props.expanded)}>
+                                                    <Glyphicon glyph={this.props.expanded ? "chevron-down" : "chevron-left"} />
+                                                </Button>}
+                                            </Col>
+                                        </Row>
+                                    </Grid>
+                                }
+                                expanded={expanded}
+                                footer={expanded && <Grid fluid/>}
+                                style={{
+                                    width: this.props.width,
+                                    ...(this.props.height && expanded ? {height: this.props.minHeight > this.props.height ? this.props.minHeight : this.props.height} : {})
+                                }}>
+                                <SideGrid
+                                    ref={list => { this.list = list; }}
+                                    size="sm"
+                                    items={this.props.layers.map(layer => ({
                                         title: !layer.title || layer.title === '' ? layer.name : layer.title,
                                         preview: <Glyphicon className="text-primary"
                                             glyph={layer.visibility ? 'eye-open' : 'eye-close'}
@@ -213,12 +213,12 @@ class FloatingLegend extends React.Component {
                                                 </div>
                                             )
                                     })
-                                )}/>
-                        </Panel>
-                    </Resizable>
-                }
+                                    )}/>
+                            </Panel>
+                        </Resizable>
+                    }
                 </ContainerDimensions>
-        );
+            );
     }
 
     findListHeight = () => {

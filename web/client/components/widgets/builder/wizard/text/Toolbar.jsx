@@ -18,12 +18,12 @@ const getSaveTooltipId = (step, {id} = {}) => {
 };
 
 module.exports = ({ step = 0, editorData = {}, stepButtons = [], onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
-        bsStyle: "primary",
-        bsSize: "sm"
-    }}
-    buttons={[...stepButtons, {
-        onClick: () => onFinish(Math.min(step + 1, 1)),
-        visible: step === 0,
-        glyph: "floppy-disk",
-        tooltipId: getSaveTooltipId(step, editorData)
-    }]} />);
+    bsStyle: "primary",
+    bsSize: "sm"
+}}
+buttons={[...stepButtons, {
+    onClick: () => onFinish(Math.min(step + 1, 1)),
+    visible: step === 0,
+    glyph: "floppy-disk",
+    tooltipId: getSaveTooltipId(step, editorData)
+}]} />);

@@ -44,60 +44,60 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
-    .delay(500)
-    .filter(a => {
-        const currentBackground = currentBackgroundLayerSelector(store.getState());
-        return currentBackground && a.options.id === currentBackground.id && a.options.group === "background";
-    })
-    .switchMap((a) => {
-        const maptype = mapTypeSelector(store.getState());
-        // consider only the supported backgrounds, removing the layer that generated an error on creation
-        const firstSupportedBackgroundLayer = head(allBackgroundLayerSelector(store.getState()).filter(l => {
-            return isSupportedLayer(l, maptype) && l.id !== a.options.id;
-        }));
+        .delay(500)
+        .filter(a => {
+            const currentBackground = currentBackgroundLayerSelector(store.getState());
+            return currentBackground && a.options.id === currentBackground.id && a.options.group === "background";
+        })
+        .switchMap((a) => {
+            const maptype = mapTypeSelector(store.getState());
+            // consider only the supported backgrounds, removing the layer that generated an error on creation
+            const firstSupportedBackgroundLayer = head(allBackgroundLayerSelector(store.getState()).filter(l => {
+                return isSupportedLayer(l, maptype) && l.id !== a.options.id;
+            }));
 
-        return !!firstSupportedBackgroundLayer ?
-        Rx.Observable.from([
-            changeLayerProperties(firstSupportedBackgroundLayer.id, {visibility: true}),
-            setControlProperty('backgroundSelector', 'currentLayer', firstSupportedBackgroundLayer),
-            setControlProperty('backgroundSelector', 'tempLayer', firstSupportedBackgroundLayer),
-            warning({
-                title: "warning",
-                message: "notification.backgroundLayerNotSupported",
-                action: {
-                    label: "close"
-                },
-                position: "tc"
-            })
-        ]) : Rx.Observable.of(warning({
-            title: "warning",
-            message: "notification.noBackgroundLayerSupported",
-            action: {
-                label: "close"
-            },
-            position: "tc"
-        }));
-    });
+            return !!firstSupportedBackgroundLayer ?
+                Rx.Observable.from([
+                    changeLayerProperties(firstSupportedBackgroundLayer.id, {visibility: true}),
+                    setControlProperty('backgroundSelector', 'currentLayer', firstSupportedBackgroundLayer),
+                    setControlProperty('backgroundSelector', 'tempLayer', firstSupportedBackgroundLayer),
+                    warning({
+                        title: "warning",
+                        message: "notification.backgroundLayerNotSupported",
+                        action: {
+                            label: "close"
+                        },
+                        position: "tc"
+                    })
+                ]) : Rx.Observable.of(warning({
+                    title: "warning",
+                    message: "notification.noBackgroundLayerSupported",
+                    action: {
+                        label: "close"
+                    },
+                    position: "tc"
+                }));
+        });
 const handleCreationLayerError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
-    .delay(500)
-    .switchMap((a) => {
-        const maptype = mapTypeSelector(store.getState());
-        const layer = getLayerFromId(store.getState(), a.options.id);
-        return !!layer && isSupportedLayer(layer, maptype) ? Rx.Observable.from([
-            changeLayerProperties(a.options.id, {invalid: true})
-        ]) : Rx.Observable.empty();
-    });
+        .delay(500)
+        .switchMap((a) => {
+            const maptype = mapTypeSelector(store.getState());
+            const layer = getLayerFromId(store.getState(), a.options.id);
+            return !!layer && isSupportedLayer(layer, maptype) ? Rx.Observable.from([
+                changeLayerProperties(a.options.id, {invalid: true})
+            ]) : Rx.Observable.empty();
+        });
 
 const resetLimitsOnInit = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED, CHANGE_MAP_CRS)
-    .switchMap(() => {
-        const confExtentCrs = configuredExtentCrsSelector(store.getState());
-        const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
-        const minZoom = configuredMinZoomSelector(store.getState());
-        return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
-    });
+        .switchMap(() => {
+            const confExtentCrs = configuredExtentCrsSelector(store.getState());
+            const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
+            const minZoom = configuredMinZoomSelector(store.getState());
+            return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
+        });
 
 const resetMapOnInit = action$ =>
     action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(removeAllAdditionalLayers(), resetControls(), clearLayers()));
@@ -131,6 +131,7 @@ const toBoundsArray = extent => {
             numericExtent.maxy
         ];
     }
+    return null;
 };
 /**
  * Base implementation of zoom To Extent that becomes a changeMapView operation.
@@ -169,7 +170,7 @@ const legacyZoomToExtent = (action, mapState) => {
             mapState.viewerOptions
         ));
     }
-    Rx.Observable.empty();
+    return Rx.Observable.empty();
 };
 
 
@@ -203,7 +204,7 @@ const zoomToExtentEpic = (action$, {getState = () => {} }) =>
  * @param {object} action$
  */
 const checkMapPermissions = (action$, {getState = () => {} }) =>
-        action$.ofType(LOGIN_SUCCESS)
+    action$.ofType(LOGIN_SUCCESS)
         .filter(() => {
             const mapId = mapIdSelector(getState());
             return mapId; // sometimes mapId is null

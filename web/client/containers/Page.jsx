@@ -40,7 +40,7 @@ class Page extends React.Component {
         includeCommon: true
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.onMount();
     }
 
@@ -67,7 +67,7 @@ class Page extends React.Component {
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.params}
-            />);
+        />);
     }
 }
 

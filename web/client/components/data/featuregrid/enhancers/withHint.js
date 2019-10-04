@@ -9,7 +9,7 @@ module.exports = compose(
         return renderPopover ? {renderPopover, popoverOptions, ...props} : {...props};
     }),
     branch(
-        (({renderPopover, popoverOptions} = {}) => renderPopover && !!popoverOptions),
+        ({renderPopover, popoverOptions} = {}) => renderPopover && !!popoverOptions,
         withPopover,
         tooltip
     )

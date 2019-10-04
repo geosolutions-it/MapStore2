@@ -19,8 +19,8 @@ module.exports = compose(
                 .filter(({ layers }) => layers && layers.length > 0)
                 .exhaustMap(() =>
                     props$.filter(({ layers }) => !layers || layers.length === 0)
-                    .take(1)
-                    .do(({ onClose = () => { } }) => onClose && onClose()).ignoreElements()
+                        .take(1)
+                        .do(({ onClose = () => { } }) => onClose && onClose()).ignoreElements()
                 )
         )),
     branch(

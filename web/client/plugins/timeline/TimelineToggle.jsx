@@ -36,37 +36,37 @@ const togglePopover = props$ =>
         // show popover for 5 seconds
         .switchMap(({ collapseHintPopoverOptions }) =>
             Rx.Observable.timer(5000)
-            .startWith({
-                popoverOptions: collapseHintPopoverOptions
-            })
-            .concat(Rx.Observable.of({
-            }))
+                .startWith({
+                    popoverOptions: collapseHintPopoverOptions
+                })
+                .concat(Rx.Observable.of({
+                }))
         ).startWith({});
 
 /**
  * Combine render props with ones coming from the stream
  */
 const withTempHintPopover = () =>
-        compose(
-            withProps({
-                collapseHintPopoverOptions: {
-                    placement: 'top',
-                    props: {
-                        title: <span><Glyphicon glyph="time" /> <strong><Message msgId="timeline.collapsed.title" /></strong></span>
-                    },
-                    content: <Message msgId="timeline.collapsed.tooltip" />
-                }
-            }),
-            mapPropsStream(props$ =>
-                props$.combineLatest(
-                    togglePopover(props$),
-                    (p1, p2) => ({
-                        ...p1, ...p2
-                    })
-                )
+    compose(
+        withProps({
+            collapseHintPopoverOptions: {
+                placement: 'top',
+                props: {
+                    title: <span><Glyphicon glyph="time" /> <strong><Message msgId="timeline.collapsed.title" /></strong></span>
+                },
+                content: <Message msgId="timeline.collapsed.tooltip" />
+            }
+        }),
+        mapPropsStream(props$ =>
+            props$.combineLatest(
+                togglePopover(props$),
+                (p1, p2) => ({
+                    ...p1, ...p2
+                })
+            )
         ),
         branch(({ popoverOptions }) => popoverOptions, withPopover, tooltip)
-);
+    );
 
 const Button = withTempHintPopover()(RButton);
 const ToggleButton = (props) => (<Button
@@ -99,6 +99,6 @@ module.exports = compose(
     withProps(({collapsed}) => ({
         bsStyle: collapsed ? "primary" : "success",
         tooltipId: collapsed ? "timeline.show" : "timeline.hide"
-        })
+    })
     )
 )(ToggleButton);

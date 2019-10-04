@@ -58,21 +58,21 @@ class UserCard extends React.Component {
 
     renderStatus = () => {
         return (<div key="status" className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
-           <div><strong><Message msgId="users.statusTitle"/></strong></div>
-           {this.props.user.enabled ?
-               <Glyphicon glyph="ok-sign"/> :
-               <Glyphicon glyph="minus-sign"/>}
-       </div>);
+            <div><strong><Message msgId="users.statusTitle"/></strong></div>
+            {this.props.user.enabled ?
+                <Glyphicon glyph="ok-sign"/> :
+                <Glyphicon glyph="minus-sign"/>}
+        </div>);
     };
 
     renderGroups = () => {
         return (<div key="groups" className="groups-container" style={this.props.innerItemStyle}><div><strong><Message msgId="users.groupTitle"/></strong></div>
             <div className="groups-list">
                 {this.props.user && this.props.user.groups ? this.props.user.groups
-                .filter(({ groupName } = {}) => groupName)
-                .map(({ id, groupName } = {}) => (<div className="group-item" key={"group-" + id}>{groupName}</div>)) : null}
+                    .filter(({ groupName } = {}) => groupName)
+                    .map(({ id, groupName } = {}) => (<div className="group-item" key={"group-" + id}>{groupName}</div>)) : null}
             </div>
-     </div>);
+        </div>);
     };
 
     renderRole = () => {
@@ -84,7 +84,7 @@ class UserCard extends React.Component {
     renderAvatar = () => {
         return (<div key="avatar" className="avatar-containter" style={this.props.avatarStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="user" />
-            </Button></div>);
+        </Button></div>);
     };
 
     renderName = () => {
@@ -93,17 +93,17 @@ class UserCard extends React.Component {
 
     render() {
         return (
-           <GridCard className="user-thumb" style={this.props.style} header={this.props.user.name}
+            <GridCard className="user-thumb" style={this.props.style} header={this.props.user.name}
                 actions={this.props.actions}
-               >
-            <div className="user-data-container">
-                {this.renderAvatar()}
-                {this.renderName()}
-                {this.renderRole()}
-                {this.renderGroups()}
-            </div>
-            {this.renderStatus()}
-           </GridCard>
+            >
+                <div className="user-data-container">
+                    {this.renderAvatar()}
+                    {this.renderName()}
+                    {this.renderRole()}
+                    {this.renderGroups()}
+                </div>
+                {this.renderStatus()}
+            </GridCard>
         );
     }
 }

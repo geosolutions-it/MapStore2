@@ -18,23 +18,23 @@ describe('Test correctness of the close actions', () => {
     it('loginSuccess', () => {
         const retval = security.loginSuccess();
         expect(retval).toExist().toIncludeKey('type')
-        .toIncludeKey('userDetails')
-        .toIncludeKey('authHeader')
-        .toIncludeKey('username')
-        .toIncludeKey('password')
-        .toIncludeKey('authProvider');
+            .toIncludeKey('userDetails')
+            .toIncludeKey('authHeader')
+            .toIncludeKey('username')
+            .toIncludeKey('password')
+            .toIncludeKey('authProvider');
         expect(retval.type).toBe(security.LOGIN_SUCCESS);
     });
     it('loginFail', () => {
         const retval = security.loginFail();
         expect(retval).toExist().toIncludeKey('type')
-        .toIncludeKey('error');
+            .toIncludeKey('error');
         expect(retval.type).toBe(security.LOGIN_FAIL);
     });
     it('logout', () => {
         const retval = security.logout();
         expect(retval).toExist().toIncludeKey('type')
-        .toIncludeKey('redirectUrl');
+            .toIncludeKey('redirectUrl');
         expect(retval.type).toBe(security.LOGOUT);
     });
     /* These are not exposed by the API
@@ -55,8 +55,8 @@ describe('Test correctness of the close actions', () => {
     it('sessionValid', () => {
         const retval = security.sessionValid("aaa", "bbb");
         expect(retval).toExist().toIncludeKey('type')
-        .toIncludeKey('userDetails')
-        .toIncludeKey('authProvider');
+            .toIncludeKey('userDetails')
+            .toIncludeKey('authProvider');
         expect(retval.type).toBe(security.SESSION_VALID);
         expect(retval.userDetails).toBe("aaa");
         expect(retval.authProvider).toBe("bbb");

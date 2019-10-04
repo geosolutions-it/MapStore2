@@ -29,20 +29,20 @@ class GroupManager extends React.Component {
 
     render() {
         return (
-           <div key="groups-manager">
-               <Button key="create-btn" bsStyle="success" bsSize="small"><Glyphicon glyph="sign-plus" />Create New Group</Button>
-               <ListGroup style={this.props.style} key="groups-available" bsSize="small">
-                   {this.props.groups.map( group => (<ListGroupItem>
-                       {group.groupName}
-                       <Button style={{
-                               "float": "right",
-                               padding: "1px 5px",
-                               fontSize: "12px",
-                               lineHeight: 1.5
-                       }} bsStyle="danger">X</Button>
-                       </ListGroupItem>))}
-               </ListGroup>
-         </div>
+            <div key="groups-manager">
+                <Button key="create-btn" bsStyle="success" bsSize="small"><Glyphicon glyph="sign-plus" />Create New Group</Button>
+                <ListGroup style={this.props.style} key="groups-available" bsSize="small">
+                    {this.props.groups.map( group => (<ListGroupItem>
+                        {group.groupName}
+                        <Button style={{
+                            "float": "right",
+                            padding: "1px 5px",
+                            fontSize: "12px",
+                            lineHeight: 1.5
+                        }} bsStyle="danger">X</Button>
+                    </ListGroupItem>))}
+                </ListGroup>
+            </div>
         );
     }
 }

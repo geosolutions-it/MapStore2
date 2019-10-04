@@ -29,39 +29,39 @@ class StylePolygon extends React.Component {
 
     render() {
         return (<Grid fluid>
-                <Row>
-                    <Col xs={4} style={{padding: 0}}>
-                        <StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
-                            shapeStyle={this.props.shapeStyle}
-                            geomType="Polygon"
-                        />
-                    </Col>
-                    <Col xs={7}>
-                        <Row style={{marginTop: 7}}>
-                            <Col xs={4}>
-                                <ColorPicker
-                                    value={this.props.shapeStyle.color}
-                                    line={false}
-                                    text="Stroke"
-                                    onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
-                            </Col>
-                            <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
-                                <NumberPicker onChange={(number) => {this.props.setStyleParameter("width", number); }} min={1} max={15} step={1} value={this.props.shapeStyle.width}/>
-                            </Col>
-                        </Row>
-                        <Row style={{marginTop: 4}}>
-                            <Col xs={6}>
-                                <ColorPicker
-                                    value={this.props.shapeStyle.fill}
-                                    line={false}
-                                    text="Fill"
-                                    onChangeColor={(color) => { if (color) { this.props.setStyleParameter("fill", color); } }} />
-                            </Col>
+            <Row>
+                <Col xs={4} style={{padding: 0}}>
+                    <StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
+                        shapeStyle={this.props.shapeStyle}
+                        geomType="Polygon"
+                    />
+                </Col>
+                <Col xs={7}>
+                    <Row style={{marginTop: 7}}>
+                        <Col xs={4}>
+                            <ColorPicker
+                                value={this.props.shapeStyle.color}
+                                line={false}
+                                text="Stroke"
+                                onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
+                        </Col>
+                        <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
+                            <NumberPicker onChange={(number) => {this.props.setStyleParameter("width", number); }} min={1} max={15} step={1} value={this.props.shapeStyle.width}/>
+                        </Col>
+                    </Row>
+                    <Row style={{marginTop: 4}}>
+                        <Col xs={6}>
+                            <ColorPicker
+                                value={this.props.shapeStyle.fill}
+                                line={false}
+                                text="Fill"
+                                onChangeColor={(color) => { if (color) { this.props.setStyleParameter("fill", color); } }} />
+                        </Col>
 
-                        </Row>
-                    </Col>
-                </Row>
-                </Grid>);
+                    </Row>
+                </Col>
+            </Row>
+        </Grid>);
     }
 }
 

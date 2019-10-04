@@ -16,7 +16,7 @@ const {createSelector} = require("reselect");
 const {filterSelector} = require("../../../../../selectors/rulesmanager");
 const workspaceSelector = createSelector(filterSelector, (filter) => filter.workspace);
 const parentFiltersSel = createSelector(workspaceSelector, (workspace) => ({
-      workspace
+    workspace
 }));
 const selector = createSelector([filterSelector, parentFiltersSel], (filter, parentsFilter) => ({
     selected: filter.layer,
