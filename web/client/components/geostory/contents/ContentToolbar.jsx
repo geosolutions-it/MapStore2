@@ -90,7 +90,7 @@ const toolButtons = {
     cover: ({ cover, updateSection = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: cover,
-        glyph: "resize-vertical" || cover ? "height-auto" : "height-view",
+        glyph: cover ? "height-auto" : "height-view",
         visible: true,
         tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
         onClick: () => updateSection({cover: !cover}) // toggle
