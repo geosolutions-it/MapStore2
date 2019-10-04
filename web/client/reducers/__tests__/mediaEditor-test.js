@@ -18,7 +18,8 @@ const {
     setEditingMedia,
     setMediaService,
     setMediaType,
-    show
+    show,
+    updateItem
 } = require('../../actions/mediaEditor');
 
 describe('Test the mediaEditor reducer', () => {
@@ -58,8 +59,7 @@ describe('Test the mediaEditor reducer', () => {
         expect(state.open).toEqual(false);
         expect(state.owner).toEqual(undefined);
         expect(state.settings).toEqual(undefined);
-        expect(state.settings).toEqual(undefined);
-        expect(state.selected).toEqual("");
+        expect(state.selected).toEqual(undefined);
         expect(state.saveState).toEqual({editing: false, addingMedia: false});
         expect(state.stashedSettings).toEqual(undefined);
 
@@ -112,5 +112,30 @@ describe('Test the mediaEditor reducer', () => {
         let state = mediaEditor({}, show(owner));
         expect(state.open).toEqual(open);
         expect(state.owner).toEqual(owner);
+    });
+    it('UPDATE_ITEM', () => {
+        const map = {
+            id: "resId",
+            layers: [{id: "layerId"}]
+        };
+
+        let state = mediaEditor({
+            settings: {
+                mediaType: "map",
+                sourceId: "geostoreMap"
+            },
+            data: {
+                map: {
+                    geostoreMap: {
+                        resultData: {
+                            resources: [{
+                                id: "resId"
+                            }]
+                        }
+                    }
+                }
+            }
+        }, updateItem(map));
+        expect(state.data.map.geostoreMap.resultData.resources[0]).toEqual(map);
     });
 });

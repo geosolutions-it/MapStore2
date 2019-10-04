@@ -35,6 +35,7 @@ class BaseMap extends React.Component {
         map: PropTypes.object,
         mapStateSource: PropTypes.string,
         eventHandlers: PropTypes.object,
+        styleMap: PropTypes.object,
         layers: PropTypes.array,
         plugins: PropTypes.any,
         tools: PropTypes.array,
@@ -45,6 +46,7 @@ class BaseMap extends React.Component {
         id: '__base_map__',
         options: {},
         map: {},
+        styleMap: {},
         tools: [],
         eventHandlers: {
             onMapViewChanges: () => {},
@@ -126,6 +128,7 @@ class BaseMap extends React.Component {
         if (this.props.map) {
             return (
                 <Map
+                    style={this.props.styleMap}
                     id={this.props.id}
                     zoomControl={false}
                     center={{ x: 0, y: 0 }}

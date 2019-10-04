@@ -20,8 +20,9 @@ const BuilderHeader = require('./BuilderHeader');
 const { compose, branch, renderComponent, withState, withHandlers, withProps } = require('recompose');
 const handleNodeSelection = require('../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection');
 
-
 const Toolbar = mapToolbar(require('../../components/widgets/builder/wizard/map/Toolbar'));
+const MapSelector = require('./MapSelector');
+
 
 /*
  * Prompts Map Selection or Layer selector (to add layers)
@@ -33,7 +34,7 @@ const chooseMapEnhancer = compose(
     // map selector
     branch(
         ({ editorData = {} } = {}) => !editorData.map,
-        renderComponent(require('./MapSelector'))
+        renderComponent(MapSelector)
     ),
     // layer selector - to add layers to the map
     withState('layerSelectorOpen', 'toggleLayerSelector', false),

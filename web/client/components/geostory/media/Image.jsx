@@ -14,8 +14,9 @@ import objectFitImages from 'object-fit-images';
 import { connect } from "react-redux";
 import { compose, withState, withProps, branch } from 'recompose';
 
-import { resourcesSelector } from '../../../selectors/geostory';
 import emptyState from '../../misc/enhancers/emptyState';
+import { resourcesSelector } from '../../../selectors/geostory';
+import { SectionTypes } from '../../../utils/GeoStoryUtils';
 
 
 /**
@@ -111,7 +112,7 @@ export default compose(
             )
         ),
         emptyState(
-            ({src = ""} = {}) => !src,
+            ({src = "", sectionType} = {}) => !src && sectionType !== SectionTypes.TITLE,
             () => ({
                 glyph: "picture"
             })

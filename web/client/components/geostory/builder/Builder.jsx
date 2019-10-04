@@ -77,8 +77,8 @@ class Builder extends React.Component {
                             },
                             {
                                 tooltipId: "geostory.builder.settings.tooltip",
-                                glyph: "cog"
-
+                                glyph: "cog",
+                                disabled: true // TODO: restore when implemented
                             },
                             {
                                 tooltipId: `geostory.builder.${cardPreviewEnabled ? "hide" : "show"}`,

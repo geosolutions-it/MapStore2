@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const uuid = require('uuid/v1');
-const { includes, isNil } = require('lodash');
-const GeoStoreDAO = require('../api/GeoStoreDAO');
+import {Observable} from 'rxjs';
+import uuid from 'uuid/v1';
+import { includes, isNil } from 'lodash';
+import GeoStoreDAO from '../api/GeoStoreDAO';
 
 const createLinkedResourceURL = (id, tail = "") => encodeURIComponent(encodeURIComponent(`rest/geostore/data/${id}${tail}`));
 const LINKED_RESOURCE_REGEX = /rest\/geostore\/data\/(\d+)/;
@@ -21,7 +21,7 @@ const getResourceIdFromURL = path => {
 
 
 const getLinkedAttributesIds = (id, filterFunction = () => true, API = GeoStoreDAO) =>
-    Rx.Observable.defer(() => API.getResourceAttributes(id))
+    Observable.defer(() => API.getResourceAttributes(id))
         .map((attributes = []) => attributes
             // excludes resources that are going to be updated
             .filter(({ name } = {}) => filterFunction(name) )
@@ -45,12 +45,12 @@ const mergePermission = (p1 = [], p2 = []) => p1.concat(p2);
  */
 const updateResourcePermissions = (id, permission, API = GeoStoreDAO) =>
     permission
-        ? Rx.Observable.defer( () => API.updateResourcePermissions(id, {
+        ? Observable.defer( () => API.updateResourcePermissions(id, {
             SecurityRuleList: {
                 SecurityRule: permission
             }
         }))
-        : Rx.Observable.empty()
+        : Observable.empty()
 ;
 /**
  * If the resource is "NODATA", the resource will be deleted and the attribute link will contain NODATA.
@@ -66,15 +66,15 @@ const updateResourcePermissions = (id, permission, API = GeoStoreDAO) =>
 const updateOrDeleteLinkedResource = (id, attributeName, linkedResource = {}, resourceId, permission, API) =>
     linkedResource.data === "NODATA"
         // cancellation flow
-        ? Rx.Observable.fromPromise(API.deleteResource(resourceId))
+        ? Observable.fromPromise(API.deleteResource(resourceId))
             // even if the resource is not present(i.e. due to a previous cancellation not completed for network errors)
             // continue setting the attribute to NODATA
-            .catch(() => Rx.Observable.of("DUMMY"))
-            .switchMap( () => Rx.Observable.fromPromise( API.updateResourceAttribute(id, attributeName, "NODATA")))
+            .catch(() => Observable.of("DUMMY"))
+            .switchMap( () => Observable.fromPromise( API.updateResourceAttribute(id, attributeName, "NODATA")))
         // update flow.
-        : Rx.Observable.forkJoin([
+        : Observable.forkJoin([
             API.putResource(resourceId, linkedResource.data)
-                .switchMap(() => Rx.Observable.defer(() => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(resourceId, linkedResource.tail)))),
+                .switchMap(() => Observable.defer(() => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(resourceId, linkedResource.tail)))),
             ...(permission ? [updateResourcePermissions(resourceId, permission, API)] : [])
         ]);
 
@@ -87,7 +87,7 @@ const updateOrDeleteLinkedResource = (id, attributeName, linkedResource = {}, re
  * @param {object} API the API to use (default GeoStoreDAO)
  */
 const createLinkedResource = (id, attributeName, linkedResource, permission, API = GeoStoreDAO) =>
-    Rx.Observable.defer(() =>
+    Observable.defer(() =>
         API.createResource({
             name: `${id}-${attributeName}-${uuid()}`
         },
@@ -96,9 +96,9 @@ const createLinkedResource = (id, attributeName, linkedResource, permission, API
         ))
         .pluck('data')
         .switchMap( (linkedResourceId) =>
-            Rx.Observable.forkJoin([
+            Observable.forkJoin([
                 // update URL of the main resource
-                Rx.Observable.defer( () => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(linkedResourceId, linkedResource.tail))),
+                Observable.defer( () => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(linkedResourceId, linkedResource.tail))),
                 // set permission
                 ...(permission ? [updateResourcePermissions(linkedResourceId, permission, API)] : [])
 
@@ -117,7 +117,7 @@ const createLinkedResource = (id, attributeName, linkedResource, permission, API
  * @return Observable
  */
 const updateLinkedResource = (id, attributeName, linkedResource, permission, API = GeoStoreDAO) =>
-    Rx.Observable.defer(
+    Observable.defer(
         () => API.getResourceAttribute(id, attributeName)
     ).pluck('data')
         .switchMap(
@@ -148,24 +148,26 @@ const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, 
     getLinkedAttributesIds(id, name => !includes(Object.keys(linkedResources), name))
         .switchMap((ids = []) =>
             ids.length === 0
-                ? Rx.Observable.of([])
-                : Rx.Observable.forkJoin(
+                ? Observable.of([])
+                : Observable.forkJoin(
                     ids.map(rid => updateResourcePermissions(rid, permission, API))
-
                 ));
 /**
- * Retrieves a resource with data with all information about user's permission on that resource, attributes and data.
+ * Retrieves a resource with all information about user's permission on that resource, attributes and data.
  * @param {number} id the id of the resource to get
- * @param {options} param1 `includeAttributes` and `withData` flags, both true by default
- * @param {object} API the API to use
+ * @param {options} params params to pass to the underlying api
+ * @param {boolean} params.includeAttributes if true, resource will contain resource attributes
+ * @param {boolean} params.withData if true, resource will contain resource data
+ * @param {boolean} params.withPermissions if true, resource will contain resource permission
+ * @param {object} API the API to use, default GeoStoreDAO
  * @return an observable that emits the resource
  */
-const getResource = (id, { includeAttributes = true, withData = true, withPermissions = false } = {}, API = GeoStoreDAO) =>
-    Rx.Observable.forkJoin([
-        Rx.Observable.defer(() => API.getShortResource(id)).pluck("ShortResource"),
-        ...(includeAttributes ? [ Rx.Observable.defer(() => API.getResourceAttributes(id))] : []),
-        ...(withData ? [Rx.Observable.defer(() =>API.getData(id))] : []),
-        ...(withPermissions ? [Rx.Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [])
+export const getResource = (id, { includeAttributes = true, withData = true, withPermissions = false } = {}, API = GeoStoreDAO) =>
+    Observable.forkJoin([
+        Observable.defer(() => API.getShortResource(id)).pluck("ShortResource"),
+        ...(includeAttributes ? [ Observable.defer(() => API.getResourceAttributes(id))] : []),
+        ...(withData ? [Observable.defer(() =>API.getData(id))] : []),
+        ...(withPermissions ? [Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [])
     ]).map(([resource, attributes, data, permissions]) => ({
         ...resource,
         attributes: (attributes || []).reduce((acc, curr) => ({
@@ -176,6 +178,46 @@ const getResource = (id, { includeAttributes = true, withData = true, withPermis
         permissions
     }));
 
+/**
+ * Retrieves an array of resources with all information about user's permission on that resource, attributes and data.
+ * @param {number} id the id of the resource to get
+ * @param {options} params params to pass to the underlying api
+ * @param {string} params.query text to use for filtering resources by name, default "*" means all
+ * @param {number} params.category category to use for filtering resources
+ * @param {object} params.options axios options
+ * @param {number} params.options.start initial offset to start the search, default 0
+ * @param {number} params.options.limit max number of records fetched, default 10
+ * @param {boolean} params.options.includeAttributes if true, in fetches also the attributes of the resources, default true
+ * @param {boolean} params.options.withData if true, in fetches also the data of the resources, default true
+ * @param {boolean} params.options.withPermissions if true, in fetches also the permissions of the resources, default false
+ * @param {object} API the API to use, default GeoStoreDAO
+ * @return an observable that emits the resource
+ */
+
+export const getResources = ({
+    query = "*",
+    category,
+    options = {
+        params: {
+            start: 0,
+            limit: 10
+        },
+        includeAttributes: false,
+        withData: false,
+        withPermission: false
+    }
+} = {},
+API = GeoStoreDAO ) => {
+    return Observable.defer(
+        () => API.getResourcesByCategory(category, query, options)
+    ).map(({ results = [], totalCount = 0 }) => {
+        const { includeAttributes, withData, withPermission} = options;
+        //  if one of the includeAttributes or withData or withPermissions is true then it searches for those related info
+        return (includeAttributes || withData || withPermission) ?
+            {totalCount, results: results.map(({id}) => getResource(id, options, API))} :
+            {totalCount, results};
+    });
+};
 
 /**
  * Returns an observable for saving a "Resource" and it's linked resources.
@@ -207,9 +249,9 @@ const getResource = (id, { includeAttributes = true, withData = true, withPermis
  * @param {object} API the API to use
  * @return an observable that emits the id of the resource
  */
-const createResource = ({ data, category, metadata, permission: configuredPermission, linkedResources = {} }, API = GeoStoreDAO) =>
+export const createResource = ({ data, category, metadata, permission: configuredPermission, linkedResources = {} }, API = GeoStoreDAO) =>
     // create resource
-    Rx.Observable.defer(
+    Observable.defer(
         () => API.createResource(metadata, data, category)
     )
         .pluck('data') // get the id
@@ -217,7 +259,7 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
         .switchMap(id =>
             // on creation owner some permission are assigned by default to the resources.
             // only on creation they have to be merged with configuredPermission.
-            Rx.Observable.defer( () => API.getResourcePermissions(id))
+            Observable.defer( () => API.getResourcePermissions(id))
                 .map(defaultPermission => mergePermission(defaultPermission, configuredPermission))
                 .switchMap( permission =>
                     updateResourcePermissions(id, permission, API)
@@ -226,14 +268,14 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
         // create linkedResources
         .switchMap(({id, permission}) =>
             Object.keys(linkedResources).length > 0
-                ? Rx.Observable.forkJoin(
+                ? Observable.forkJoin(
                     Object.keys(linkedResources)
                         .filter(k => linkedResources[k].data && linkedResources[k].data !== "NODATA")
                         .map(attributeName =>
                             createLinkedResource(id, attributeName, linkedResources[attributeName], permission, API)
                         )
                 ).map(() => id)
-                : Rx.Observable.of(id)
+                : Observable.of(id)
         );
 /**
  * Updates a resource setting up permission and linked resources
@@ -241,18 +283,18 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
  * @param {object} API the API to use
  * @return an observable that emits the id of the updated resource
  */
-const updateResource = ({ id, data, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
-    Rx.Observable.forkJoin([
+export const updateResource = ({ id, data, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
+    Observable.forkJoin([
         // update metadata
-        Rx.Observable.defer(
+        Observable.defer(
             () => API.putResourceMetadataAndAttributes(id, metadata)
         ).switchMap(res =>
             // update data if present. NOTE: sequence instead of parallel because of geostore issue #179
             data
-                ? Rx.Observable.defer(
+                ? Observable.defer(
                     () => API.putResource(id, data)
                 )
-                : Rx.Observable.of(res)),
+                : Observable.of(res)),
         // update data
         // update permission
         ...(permission ? [updateResourcePermissions(id, permission, API)] : []),
@@ -271,12 +313,12 @@ const updateResource = ({ id, data, permission, metadata, linkedResources = {} }
  * @param {object} API the API to use
  * @return an observable that emits axios response for the deleted resource and for each of its deleted attributes
  */
-const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoStoreDAO) =>
+export const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoStoreDAO) =>
     (deleteLinkedResources
         ? getLinkedAttributesIds(id, () => true, API)
-        : Rx.Observable.of([])
+        : Observable.of([])
     ).map( (ids = []) =>
-        Rx.Observable.forkJoin(
+        Observable.forkJoin(
             [id, ...ids].map(i => API.deleteResource(i))
         )
     );
@@ -288,16 +330,8 @@ const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoS
 * @param {string} value the attribute value
 * @return an observable that emits the id of the updated resource
  */
-const updateResourceAttribute = ({ id, name, value } = {}, API = GeoStoreDAO) =>
-// update metadata
-    Rx.Observable.defer(
+export const updateResourceAttribute = ({ id, name, value } = {}, API = GeoStoreDAO) =>
+    // update metadata
+    Observable.defer(
         () => API.updateResourceAttribute(id, name, value)
-    ).switchMap(() => Rx.Observable.of(id));
-
-module.exports = {
-    getResource,
-    createResource,
-    updateResource,
-    deleteResource,
-    updateResourceAttribute
-};
+    ).switchMap(() => Observable.of(id));

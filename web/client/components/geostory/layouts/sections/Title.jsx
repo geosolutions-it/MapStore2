@@ -61,16 +61,19 @@ export default backgroundPropWithHandler(({
                     editMedia={editMedia}
                     remove={remove}
                     width={viewWidth}
+                    sectionType={sectionType}
                     backgroundPlaceholder={{
                         background: `url(${cover ? coverPattern : titlePattern })`,
                         backgroundSize: `${cover ? 64 : 600 }px auto`
                     }}
                     tools={{
-                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
+                        [MediaTypes.MAP]: ['editMedia', 'size', 'align', 'theme']
                     }}
                     height={height >= viewHeight
                         ? viewHeight
-                        : height}/>}
+                        : height}
+                />}
         </ContainerDimensions>
         <SectionContents
             className="ms-section-contents"
