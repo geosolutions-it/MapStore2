@@ -24,12 +24,12 @@ class BasicSpinner extends React.Component {
 
     render() {
         return (
-                <div className="spinner">
-                    <div className={ "spinner-card " + this.props.sSize}>
-                        <div className="spinner-bg spinner-loader" >Loading..</div>
-                        <div className="spinner-fg">{this.props.value}</div>
-                    </div>
+            <div className="spinner">
+                <div className={ "spinner-card " + this.props.sSize}>
+                    <div className="spinner-bg spinner-loader" >Loading..</div>
+                    <div className="spinner-fg">{this.props.value}</div>
                 </div>
+            </div>
         );
     }
 }

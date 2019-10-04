@@ -43,8 +43,8 @@ const searchFeaturedMaps = (start, limit, searchText = '') => {
             limit
         }
     })
-    .then(results => results)
-    .catch(() => null);
+        .then(results => results)
+        .catch(() => null);
 };
 /*
  * parse attributes returned from records
@@ -57,12 +57,12 @@ const parseAttributes = (record) => {
 const getIcon = record => {
     const cat = get(record, "category.name");
     switch (cat) {
-        case "MAP":
-            return "1-map";
-        case "DASHBOARD":
-            return "dashboard";
-        default:
-            return undefined;
+    case "MAP":
+        return "1-map";
+    case "DASHBOARD":
+        return "dashboard";
+    default:
+        return null;
     }
 };
 /*
@@ -114,7 +114,6 @@ const updateItemsLifecycle = compose(
             if (!isEqual(newProps.items, items)) {
 
                 onUpdatePreviousItems(items);
-
                 if (newProps.items.length > 0) {
                     onChangeSize(Math.ceil(newProps.items.length / pageSize) * pageSize);
                 } else if (newProps.items.length === 0 && newProps.searchText !== '*' && newProps.searchText) {

@@ -9,14 +9,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Node = require('./Node');
-const {isObject} = require('lodash');
-const {castArray, find} = require('lodash');
+
+const { isObject, castArray, find} = require('lodash');
 const { Grid, Row, Col, Glyphicon} = require('react-bootstrap');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
 const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
 const OpacitySlider = require('./fragments/OpacitySlider');
+const ToggleFilter = require('./fragments/ToggleFilter');
 const withTooltip = require('../data/featuregrid/enhancers/withTooltip');
 const localizedProps = require('../misc/enhancers/localizedProps');
 
@@ -144,11 +145,12 @@ class DefaultLayer extends React.Component {
     renderNode = (grab, hide, selected, error, warning, other) => {
         const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
         || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
-        return (
+        return this.props.node.showComponent !== false ? (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
+                    <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                     <Title
                         tooltipOptions={this.props.tooltipOptions}
                         tooltip={this.props.titleTooltip}
@@ -158,13 +160,14 @@ class DefaultLayer extends React.Component {
                         onClick={this.props.onSelect}
                         onContextMenu={this.props.onContextMenu}
                     />
+
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                     {this.props.indicators ? this.renderIndicators() : null}
                 </div>
                 {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
-        );
+        ) : null;
     }
 
     render() {

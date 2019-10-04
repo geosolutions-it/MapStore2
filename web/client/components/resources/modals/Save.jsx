@@ -81,7 +81,7 @@ class SaveModal extends React.Component {
         return (<Portal key="saveDialog">
             {<ResizableModal
                 loading={this.props.loading}
-                title={<Message msgId="dashboard.saveDialog.title"/>}
+                title={<Message msgId="saveDialog.title"/>}
                 show={this.props.show}
                 clickOutEnabled
                 bodyClassName="ms-flex modal-properties-container"
@@ -92,29 +92,29 @@ class SaveModal extends React.Component {
                 }, {
                     text: <span><Message msgId="save"/></span>,
                     onClick: () => { this.onSave(); },
-                        disabled: !this.isValidForm() || this.props.loading
+                    disabled: !this.isValidForm() || this.props.loading
                 }]}
                 showClose={!this.props.resource.loading}
                 onClose={this.onCloseMapPropertiesModal}>
-            <Grid fluid>
-                <div className="ms-map-properties">
-                    <ErrorBox errors={this.props.errors} />
-                    <MainForm
-                        resource={this.props.resource}
-                        onUpdateLinkedResource={this.props.onUpdateLinkedResource}
-                        linkedResources={this.props.linkedResources}
-                        onMetadataChanged={this.props.metadataChanged}
-                        onError={this.props.onError}
-                        onUpdate={this.props.onUpdate} />
-                    <PermissionEditor
-                        rules={this.props.rules}
-                        onUpdateRules={this.props.onUpdateRules}
-                        availableGroups={this.props.availableGroups}
-                    />
-                </div>
-            </Grid>
-        </ResizableModal>}
-    </Portal>);
+                <Grid fluid>
+                    <div className="ms-map-properties">
+                        <ErrorBox errors={this.props.errors} />
+                        <MainForm
+                            resource={this.props.resource}
+                            onUpdateLinkedResource={this.props.onUpdateLinkedResource}
+                            linkedResources={this.props.linkedResources}
+                            onMetadataChanged={this.props.metadataChanged}
+                            onError={this.props.onError}
+                            onUpdate={this.props.onUpdate} />
+                        <PermissionEditor
+                            rules={this.props.rules}
+                            onUpdateRules={this.props.onUpdateRules}
+                            availableGroups={this.props.availableGroups}
+                        />
+                    </div>
+                </Grid>
+            </ResizableModal>}
+        </Portal>);
     }
     isValidForm = () => get(this.props.resource, "metadata.name");
 }

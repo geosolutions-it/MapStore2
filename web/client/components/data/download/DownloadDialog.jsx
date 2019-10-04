@@ -47,7 +47,8 @@ class DownloadDialog extends React.Component {
             {name: "native", label: "Native"},
             {name: "EPSG:4326", label: "WGS84"}
         ],
-        virtualScroll: true
+        virtualScroll: true,
+        downloadOptions: {}
     };
 
     componentDidMount() {
@@ -67,11 +68,11 @@ class DownloadDialog extends React.Component {
     };
 
     render() {
-        return (<Dialog id="mapstore-export" style={{display: this.props.enabled ? "block" : "none"}}>
+        return (<Dialog id="mapstore-export" style={{display: this.props.enabled ? "block" : "none"}} draggable={false} modal>
             <span role="header">
                 <span className="about-panel-title"><Message msgId="wfsdownload.title" /></span>
                 <button onClick={this.props.onClose} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
-                </span>
+            </span>
             <div role="body">
                 <DownloadOptions
                     downloadOptions={this.props.downloadOptions}
@@ -84,14 +85,14 @@ class DownloadDialog extends React.Component {
                     defaultSrs={this.props.defaultSrs}
                     layer={this.props.layer}
                     virtualScroll={this.props.virtualScroll}/>
-                </div>
+            </div>
             <div role="footer">
                 <Button
                     bsStyle="primary"
                     className="download-button"
                     disabled={!this.props.downloadOptions.selectedFormat || this.props.loading}
                     onClick={this.handelExport}>
-                     {this.renderIcon()} <Message msgId="wfsdownload.export" />
+                    {this.renderIcon()} <Message msgId="wfsdownload.export" />
                 </Button>
             </div>
         </Dialog>);

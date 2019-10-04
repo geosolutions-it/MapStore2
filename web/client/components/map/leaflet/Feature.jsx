@@ -1,124 +1,19 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
+const PropTypes = require('prop-types');
 const React = require('react');
-const L = require('leaflet');
-const {isEqual} = require('lodash');
+const {isEqual, isArray, castArray} = require('lodash');
+const assign = require('object-assign');
+const axios = require('axios');
 
-const VectorUtils = require('../../../utils/leaflet/Vector');
-
-const coordsToLatLngF = function(coords) {
-    return new L.LatLng(coords[1], coords[0], coords[2]);
-};
-
-const coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
-    var latlngs = [];
-    var len = coords.length;
-    for (let i = 0, latlng; i < len; i++) {
-        latlng = levelsDeep ?
-                coordsToLatLngs(coords[i], levelsDeep - 1, coordsToLatLng) :
-                (coordsToLatLng || this.coordsToLatLng)(coords[i]);
-
-        latlngs.push(latlng);
-    }
-
-    return latlngs;
-};
-// Create a new Leaflet layer with custom icon marker or circleMarker
-const getPointLayer = function(pointToLayer, geojson, latlng, options) {
-    if (pointToLayer) {
-        return pointToLayer(geojson, latlng);
-    }
-    return VectorUtils.pointToLayer(latlng, geojson, options.style);
-};
-
-const geometryToLayer = function(geojson, options) {
-
-    var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
-    var coords = geometry ? geometry.coordinates : null;
-    var layers = [];
-    var pointToLayer = options && options.pointToLayer;
-    var latlng;
-    var latlngs;
-    var i;
-    var len;
-    let coordsToLatLng = options && options.coordsToLatLng || coordsToLatLngF;
-
-    if (!coords && !geometry) {
-        return null;
-    }
-
-    const style = options.style && options.style[geometry.type] || options.style;
-    let layer;
-    switch (geometry.type) {
-    case 'Point':
-        latlng = coordsToLatLng(coords);
-        layer = getPointLayer(pointToLayer, geojson, latlng, options);
-        layer.msId = geojson.id;
-        return layer;
-    case 'MultiPoint':
-        for (i = 0, len = coords.length; i < len; i++) {
-            latlng = coordsToLatLng(coords[i]);
-            layer = getPointLayer(pointToLayer, geojson, latlng, options);
-            layer.msId = geojson.id;
-            layers.push(layer);
-        }
-        return new L.FeatureGroup(layers);
-
-    case 'LineString':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        layer = new L.Polyline(latlngs, style);
-        layer.msId = geojson.id;
-        return layer;
-    case 'MultiLineString':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        for (i = 0, len = latlngs.length; i < len; i++) {
-            layer = new L.Polyline(latlngs[i], style);
-            layer.msId = geojson.id;
-            if (layer) {
-                layers.push(layer);
-            }
-        }
-        return new L.FeatureGroup(layers);
-    case 'Polygon':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        layer = new L.Polygon(latlngs, style);
-        layer.msId = geojson.id;
-        return layer;
-    case 'MultiPolygon':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        for (i = 0, len = latlngs.length; i < len; i++) {
-            layer = new L.Polygon(latlngs[i], style);
-            layer.msId = geojson.id;
-            if (layer) {
-                layers.push(layer);
-            }
-        }
-        return new L.FeatureGroup(layers);
-    case 'GeometryCollection':
-        for (i = 0, len = geometry.geometries.length; i < len; i++) {
-            layer = geometryToLayer({
-                geometry: geometry.geometries[i],
-                type: 'Feature',
-                properties: geojson.properties
-            }, options);
-
-            if (layer) {
-                layers.push(layer);
-            }
-        }
-        return new L.FeatureGroup(layers);
-
-    default:
-        throw new Error('Invalid GeoJSON object.');
-    }
-};
+const {geometryToLayer} = require('../../../utils/leaflet/Vector');
+const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -128,64 +23,86 @@ class Feature extends React.Component {
         properties: PropTypes.object,
         container: PropTypes.object, // TODO it must be a L.GeoJSON
         geometry: PropTypes.object, // TODO check for geojson format for geometry
+        features: PropTypes.array,
         style: PropTypes.object,
         onClick: PropTypes.func,
         options: PropTypes.object
     };
 
     componentDidMount() {
-        if (this.props.container && this.props.geometry) {
+        this._layers = [];
+        if (this.props.container && this.props.geometry || this.props.features) {
             this.createLayer(this.props);
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
-            this.props.container.removeLayer(this._layer);
-            this.createLayer(newProps);
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        // TODO check if shallow comparison is enough properties and geometry
+        if (!isEqual(nextProps.properties, this.props.properties) ||
+            !isEqual(nextProps.geometry, this.props.geometry) ||
+            (nextProps.features !== this.props.features) ||
+            (nextProps.style !== this.props.style)) {
+            this.removeLayer(nextProps);
+            this.createLayer(nextProps);
         }
     }
 
     shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry);
+        // TODO check if shallow comparison is enough properties and geometry
+        return !isEqual(nextProps.properties, this.props.properties) ||
+            !isEqual(nextProps.geometry, this.props.geometry) ||
+            (nextProps.features !== this.props.features);
     }
 
     componentWillUnmount() {
-        if (this._layer) {
-            this.props.container.removeLayer(this._layer);
-        }
+        this.removeLayer(this.props);
     }
 
     render() {
         return null;
     }
 
-    isMarker = (props) => {
-        return props.styleName === "marker" || (props.style && (props.style.iconUrl || props.style.iconGlyph));
+    createLayer = (props) => {
+        if (props.geometry) {
+            this.addFeature({...props, style: props.style && castArray(props.style) || undefined});
+        }
+        if (props.features) {
+            // supporting FeatureCollection
+            props.features.forEach(f => {
+                let newProps = assign({}, props, {
+                    type: f.type,
+                    geometry: f.geometry,
+                    style: f.style && castArray(f.style) || undefined,
+                    properties: f.properties
+                });
+                this.addFeature(newProps);
+            });
+        }
     };
 
-    createLayer = (props) => {
-        this._layer = geometryToLayer({
+    addFeature(props) {
+        if (isArray(props.style)) {
+            let promises = createStylesAsync(props.style);
+            axios.all(promises).then((styles) => {
+                this.addLayer(props, styles);
+            });
+        } else {
+            this.addLayer(props, props.style);
+        }
+    }
+
+    addLayer(props, styles) {
+        const layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
+            styleName: props.styleName,
             properties: props.properties,
             msId: props.msId
         }, {
-            style: props.style,
-            pointToLayer: !this.isMarker(props) ? function(feature, latlng) {
-                return L.circleMarker(latlng, props.style || {
-                    radius: 5,
-                    color: "red",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0
-                });
-            } : null
-        }
-        );
-        props.container.addLayer(this._layer);
-
-        this._layer.on('click', (event) => {
+            style: styles
+        });
+        props.container.addLayer(layer);
+        layer.on('click', (event) => {
             if (props.onClick) {
                 props.onClick({
                     pixel: {
@@ -196,7 +113,19 @@ class Feature extends React.Component {
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });
-    };
+        this._layers.push(layer);
+    }
+    /* it removes the layer from a container otherwise we would create and add more
+     * layer with same features causing some unintended style override
+    */
+    removeLayer = (props) => {
+        if (this._layers) {
+            this._layers.forEach(l => {
+                props.container.removeLayer(l);
+            });
+            this._layers = [];
+        }
+    }
 }
 
 module.exports = Feature;

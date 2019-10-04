@@ -28,7 +28,7 @@ module.exports = {
     standard: {
         getIcon: (style) => {
             return L.icon({
-                iconUrl: style.iconUrl,
+                iconUrl: style.iconUrl || style.symbolUrlCustomized || style.symbolUrl,
                 shadowUrl: style.shadowUrl,
                 iconSize: style.iconSize,
                 shadowSize: style.shadowSize,

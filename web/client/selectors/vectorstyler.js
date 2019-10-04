@@ -12,9 +12,9 @@ const {head} = require('lodash');
 const ruleselctor = (state) => state.vectorstyler && state.vectorstyler.rule && head(state.vectorstyler.rules.filter((r) => {return r.id === state.vectorstyler.rule; }));
 
 const symbolselector = createSelector([ruleselctor],
-     (rule) => ({
-         shapeStyle: rule && rule.symbol || {}
-     }));
+    (rule) => ({
+        shapeStyle: rule && rule.symbol || {}
+    }));
 
 module.exports = {
     ruleselctor,

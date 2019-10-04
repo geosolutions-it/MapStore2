@@ -6,8 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var API = require('../Styles');
+import expect from 'expect';
+import API from '../Styles';
+import { clearCache } from '../About';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../libs/ajax';
+
+let mockAxios;
 
 describe('Test styles rest API', () => {
     it('save style', (done) => {
@@ -22,21 +27,21 @@ describe('Test styles rest API', () => {
             baseUrl: 'base/web/client/test-resources/geoserver/',
             styleName: 'test_TEST_LAYER_1'
         })
-        .then((response)=> {
-            try {
-                expect(response.data).toEqual({
-                    style: {
-                        filename: 'test_TEST_LAYER_1.sld',
-                        format: 'sld',
-                        languageVersion: {version: '1.0.0'},
-                        name: 'test_TEST_LAYER_1'
-                    }
-                });
-            } catch(e) {
-                done(e);
-            }
-            done();
-        });
+            .then((response)=> {
+                try {
+                    expect(response.data).toEqual({
+                        style: {
+                            filename: 'test_TEST_LAYER_1.sld',
+                            format: 'sld',
+                            languageVersion: {version: '1.0.0'},
+                            name: 'test_TEST_LAYER_1'
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
     });
     it('test getStylesInfo', (done) => {
         API.getStylesInfo({
@@ -54,8 +59,8 @@ describe('Test styles rest API', () => {
                 }
             ]
         })
-        .then((response)=> {
-            expect(response).toEqual([{
+            .then((response)=> {
+                expect(response).toEqual([{
                     filename: 'test_TEST_LAYER_1.sld',
                     format: 'sld',
                     languageVersion: {version: '1.0.0'},
@@ -68,8 +73,8 @@ describe('Test styles rest API', () => {
                     title: 'Square',
                     _abstract: 'small square'
                 }]);
-            done();
-        });
+                done();
+            });
     });
     it('test getStyleCodeByName', (done) => {
         API.getStyleCodeByName({
@@ -85,5 +90,148 @@ describe('Test styles rest API', () => {
             });
             done();
         });
+    });
+});
+
+describe('Test styles rest API, Content Type of SLD', () => {
+
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
+    it('test createStyle with sld version 1.1.0', (done) => {
+
+        mockAxios.onPost(/\/styles/).reply((config) => {
+            expect(config.headers['Content-Type']).toBe('application/vnd.ogc.se+xml');
+            expect(config.url).toBe('/geoserver/rest/styles.json');
+            done();
+            return [ 200, {}];
+        });
+
+        API.createStyle({
+            baseUrl: '/geoserver/',
+            code: '<StyledLayerDescriptor></StyledLayerDescriptor>',
+            format: 'sld',
+            styleName: 'style_name',
+            languageVersion: { version: '1.1.0' }
+        });
+    });
+
+    it('test createStyle with sld version 1.0.0', (done) => {
+
+        mockAxios.onPost(/\/styles/).reply((config) => {
+            expect(config.headers['Content-Type']).toBe('application/vnd.ogc.sld+xml');
+            expect(config.url).toBe('/geoserver/rest/styles.json');
+            done();
+            return [ 200, {}];
+        });
+
+        API.createStyle({
+            baseUrl: '/geoserver/',
+            code: '<StyledLayerDescriptor></StyledLayerDescriptor>',
+            format: 'sld',
+            styleName: 'style_name',
+            languageVersion: { version: '1.0.0' }
+        });
+    });
+
+    it('test updateStyle with sld version 1.1.0', (done) => {
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            expect(config.headers['Content-Type']).toBe('application/vnd.ogc.se+xml');
+            expect(config.url).toBe('/geoserver/rest/styles/style_name');
+            done();
+            return [ 200, {}];
+        });
+
+        API.updateStyle({
+            baseUrl: '/geoserver/',
+            code: '<StyledLayerDescriptor></StyledLayerDescriptor>',
+            format: 'sld',
+            styleName: 'style_name',
+            languageVersion: { version: '1.1.0' }
+        });
+    });
+
+    it('test updateStyle with sld version 1.0.0', (done) => {
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            expect(config.headers['Content-Type']).toBe('application/vnd.ogc.sld+xml');
+            expect(config.url).toBe('/geoserver/rest/styles/style_name');
+            done();
+            return [ 200, {}];
+        });
+
+        API.updateStyle({
+            baseUrl: '/geoserver/',
+            code: '<StyledLayerDescriptor></StyledLayerDescriptor>',
+            format: 'sld',
+            styleName: 'style_name',
+            languageVersion: { version: '1.0.0' }
+        });
+    });
+
+    it('test getStyleService', (done) => {
+        clearCache();
+        const baseUrl = '/host-style/geoserver/';
+
+        mockAxios.onGet(/\/manifest/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/manifest`);
+            return [ 200, { about: { resource: [{ '@name': 'module' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/version`);
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        API.getStyleService({ baseUrl })
+            .then((styleService) => {
+                try {
+                    expect(styleService).toEqual({
+                        baseUrl,
+                        version: '2.16',
+                        formats: [ 'sld' ],
+                        availableUrls: []
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+    });
+
+    it('test getStyleService with GeoCSS', (done) => {
+        clearCache();
+        const baseUrl = '/host-style/geoserver/';
+
+        mockAxios.onGet(/\/manifest/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/manifest`);
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/about/version`);
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        API.getStyleService({ baseUrl })
+            .then((styleService) => {
+                try {
+                    expect(styleService).toEqual({
+                        baseUrl,
+                        version: '2.16',
+                        formats: [ 'css', 'sld' ],
+                        availableUrls: []
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
     });
 });

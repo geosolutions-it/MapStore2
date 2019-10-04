@@ -230,13 +230,15 @@
     }
 
     .toc-status-icon,
-    .visibility-check {
+    .visibility-check,
+    .toc-filter-icon {
         cursor: pointer;
     }
 
     .toc-legend,
     .toc-status-icon,
-    .visibility-check {
+    .visibility-check,
+    .toc-filter-icon {
         cursor: pointer;
     }
 
@@ -244,6 +246,10 @@
     .toc-status-icon {
         float: right;
         margin-right: 10px;
+    }
+    
+    .toc-filter-icon.disabled {
+        opacity: 0.5;
     }
 
     .toc-legend {
@@ -793,4 +799,8 @@
         padding-right: 0;
 
     }
+}
+
+#mapstore-add-toc-group {
+    padding: 15px;
 }

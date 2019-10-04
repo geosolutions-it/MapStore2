@@ -11,8 +11,9 @@ const triggerFetch = require('../triggerFetch');
 const Rx = require("rxjs");
 const axios = require('../../../../../../libs/ajax');
 const triggerInterceptors = (config) => {
-    if (config.url.indexOf("geofence/rest/rules/count") !== -1) {
+    if (config.url.indexOf("rules/count") !== -1) {
         config.url = "base/web/client/test-resources/geofence/rest/rules/count";
+        config.baseURL = "";
     }
     return config;
 };
@@ -33,6 +34,26 @@ describe('rulegrid triggerFetch', () => {
             complete: () => {
                 axios.interceptors.request.eject(inter);
             }
-          });
+        });
+    });
+
+    it('handle error', (done) => {
+        const inter = axios.interceptors.request.use(triggerInterceptors);
+        const onLoad = () => {
+            throw new Error("ERROR");
+        };
+        const onLoadError = (e) => {
+            expect(e.title).toExist();
+            expect(e.message).toExist();
+            done();
+        };
+        const prop$ = Rx.Observable.of({ version: 0, filters: {}, setLoading: () => { }, onLoad, onLoadError });
+        triggerFetch(prop$).subscribe({
+            next: () => { },
+            error: () => { },
+            complete: () => {
+                axios.interceptors.request.eject(inter);
+            }
+        });
     });
 });

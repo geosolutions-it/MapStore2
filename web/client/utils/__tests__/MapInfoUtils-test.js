@@ -20,9 +20,7 @@ var {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
-    filterRequestParams,
-    validateStringAttribute,
-    getCleanTemplate
+    filterRequestParams
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -301,34 +299,34 @@ describe('MapInfoUtils', () => {
     it('getValidator for vector layer', () => {
         let response = [
             {
-            "response": {
-                "crs": null,
-                "features": [{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [10.728187343305999, 43.95330251168864]
-                    },
-                    "properties": {
-                        "OBJECTID_1": 8
-                    },
-                    "id": 0
+                "response": {
+                    "crs": null,
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [10.728187343305999, 43.95330251168864]
+                        },
+                        "properties": {
+                            "OBJECTID_1": 8
+                        },
+                        "id": 0
                     }
-                ],
-                "totalFeatures": "unknown",
-                "type": "FeatureCollection"
-            },
-            "queryParams": {
-                "lat": 43.95229339335166,
-                "lng": 10.726776123046875
-            },
-            "layerMetadata": {
-                "fields": ["OBJECTID_1"],
-                "title": "prova",
-                "resolution": 152.8740565703525,
-                "buffer": 2
-            },
-            "format": "PROPERTIES"
+                    ],
+                    "totalFeatures": "unknown",
+                    "type": "FeatureCollection"
+                },
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "PROPERTIES"
             }
         ];
 
@@ -389,30 +387,6 @@ describe('MapInfoUtils', () => {
         }, includeOptions, excludeParams)).toEqual({ buffer: 'buffer', cql_filter: 'cql_filter', filter: 'filter', propertyName: 'propertyName' });
     });
 
-    it('validateStringAttribute', () => {
-        const testObj = {
-            properties: {
-                name: 'object-name'
-            }
-        };
-        expect(validateStringAttribute(testObj, 'properties.name')).toBe(true);
-        expect(validateStringAttribute(testObj, ' properties.name ')).toBe(true);
-        expect(validateStringAttribute(testObj, '${properties.name}')).toBe(false);
-        expect(validateStringAttribute(testObj, '${properties.name}', 2, 1)).toBe(true);
-        expect(validateStringAttribute(testObj, '${ properties.name }', 2, 1)).toBe(true);
-        expect(validateStringAttribute(testObj, 'properties.desc')).toBe(false);
-    });
-
-    it('getCleanTemplate', () => {
-        const template = '<p>the name is ${ properties.name } and the description ${ properties.desc } and again the name is ${ <strong>properties.name</strong> }</p>';
-        const testObj = {
-            properties: {
-                name: 'object-name'
-            }
-        };
-        expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
-
-    });
     it('buildIdentifyRequest cql_filter management for wms and wmts2', () => {
         let props = {
             map: {
@@ -486,4 +460,3 @@ describe('MapInfoUtils', () => {
     });
 
 });
-

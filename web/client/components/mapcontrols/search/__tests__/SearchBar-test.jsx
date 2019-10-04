@@ -63,12 +63,12 @@ describe("test the SearchBar", () => {
         const renderSearchBar = (testHandlers, text) => {
             return ReactDOM.render(
                 <SearchBar
-                searchText={text}
-                delay={0}
-                typeAhead={false}
-                onSearch={testHandlers.onSearchHandler}
-                onSearchReset={testHandlers.onSearchResetHandler}
-                onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+                    searchText={text}
+                    delay={0}
+                    typeAhead={false}
+                    onSearch={testHandlers.onSearchHandler}
+                    onSearchReset={testHandlers.onSearchResetHandler}
+                    onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
 
         const testHandlers = {
@@ -160,7 +160,18 @@ describe("test the SearchBar", () => {
         let searchOptions = {displaycrs: "EPSG:3857"};
 
         const renderSearchBar = (testHandlers, text) => {
-            return ReactDOM.render(<SearchBar searchOptions={searchOptions} searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+            return ReactDOM.render(
+                <SearchBar
+                    searchOptions={searchOptions}
+                    searchText={text}
+                    delay={0}
+                    maxResults={23}
+                    typeAhead={false}
+                    onSearch={testHandlers.onSearchHandler}
+                    onSearchReset={testHandlers.onSearchResetHandler}
+                    onSearchTextChange={testHandlers.onSearchTextChangeHandler}
+                />, document.getElementById("container")
+            );
         };
 
         const testHandlers = {
@@ -177,7 +188,7 @@ describe("test the SearchBar", () => {
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
         expect(spy.calls.length).toEqual(1);
-        expect(spy).toHaveBeenCalledWith('test', searchOptions);
+        expect(spy).toHaveBeenCalledWith('test', searchOptions, 23);
     });
     it('test error and loading status', () => {
         const tb = ReactDOM.render(<SearchBar loading error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
@@ -240,27 +251,102 @@ describe("test the SearchBar", () => {
         expect(reset).toExist();
         expect(search.length).toBe(1);
     });
-    it('test zoomToPoint and reset, with decimal, with reset', () => {
+    it('test zoomToPoint, with search, with decimal, with reset', () => {
         const tb = ReactDOM.render(<SearchBar format="decimal" coordinate={{"lat": 2, "lon": 2}} activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
         expect(reset.length).toBe(1);
-        expect(search.length).toBe(1);
+        expect(search.length).toBe(2);
         expect(cog.length).toBe(2);
     });
 
-    it('test zoomToPoint and reset, with aeronautical', () => {
+    it('test zoomToPoint, with search, with aeronautical, with reset', () => {
         const tb = ReactDOM.render(<SearchBar format="aeronautical" activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
         let inputs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input");
         expect(reset.length).toBe(0);
-        expect(search.length).toBe(1);
+        expect(search.length).toBe(2);
         expect(cog.length).toBe(2);
         expect(inputs.length).toBe(6);
     });
+
+    it('test calling zoomToPoint with onKeyDown event', (done) => {
+        const tb = ReactDOM.render(
+            <SearchBar
+                format="decimal"
+                activeSearchTool="coordinatesSearch"
+                showOptions
+                onZoomToPoint={(point, zoom, crs) => {
+                    expect(point).toEqual({x: 15, y: 15});
+                    expect(zoom).toEqual(12);
+                    expect(crs).toEqual("EPSG:4326");
+                    done();
+                }}
+                coordinate={{lat: 15, lon: 15}}
+                typeAhead={false} />, document.getElementById("container")
+        );
+        expect(tb).toExist();
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        TestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 13
+        });
+    });
+    it('Test SearchBar with not allowed e char for keyDown event', (done) => {
+        const tb = ReactDOM.render(
+            <SearchBar
+                format="decimal"
+                activeSearchTool="coordinatesSearch"
+                showOptions
+                onZoomToPoint={() => {
+                    expect(true).toBe(false);
+                }}
+                coordinate={{lat: 15, lon: 15}}
+                typeAhead={false} />, document.getElementById("container")
+        );
+        expect(tb).toExist();
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(2);
+        expect(elements[0].value).toBe('15');
+
+        TestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 69, // char e
+            preventDefault: () => {
+                expect(true).toBe(true);
+                done();
+            }
+        });
+    });
+    it('Test SearchBar with valid onKeyDown event by pressing number 8', () => {
+        const tb = ReactDOM.render(
+            <SearchBar
+                format="decimal"
+                activeSearchTool="coordinatesSearch"
+                showOptions
+                onZoomToPoint={() => {
+                    expect(true).toBe(false);
+                }}
+                coordinate={{lat: 1, lon: 1}}
+                typeAhead={false} />, document.getElementById("container")
+        );
+        expect(tb).toExist();
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(2);
+        expect(elements[0].value).toBe('1');
+
+        TestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 56,
+            preventDefault: () => {
+                expect(true).toBe(false);
+            }
+        });
+    });
+
     it('test showOptions false, only address tool visible', () => {
         const tb = ReactDOM.render(<SearchBar showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-search");

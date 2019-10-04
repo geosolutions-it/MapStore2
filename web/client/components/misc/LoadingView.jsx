@@ -21,7 +21,7 @@ const Loader = require('./Loader');
  */
 module.exports = ({width: ww, height: hh, className = "loader-container", contentStyle = {}}) => (<div className={className} >
     <ContainerDimensions>
-        {({width = 200, height= 200}) => {
+        {({width = 200, height = 200}) => {
             const w = ww || (height > 0 ? Math.min(width, height) : width);
             const h = hh || (height > 0 ? Math.min(width, height) : width);
             const size = Math.min(w, h);

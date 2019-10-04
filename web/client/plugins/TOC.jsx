@@ -12,16 +12,17 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
-       browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
+    sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+    browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
+const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
-const {generalInfoFormatSelector} = require("../selectors/mapinfo");
+const {generalInfoFormatSelector} = require("../selectors/mapInfo");
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -34,12 +35,13 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 
 const {isObject, head} = require('lodash');
 
-const {setControlProperty} = require('../actions/controls');
+const { setControlProperties} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
 
 const {getMetadataRecordById} = require("../actions/catalog");
 
 const {activeSelector} = require("../selectors/catalog");
+const {isCesium} = require('../selectors/maptype');
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -48,9 +50,9 @@ const addFilteredAttributesGroups = (nodes, filters) => {
             node = assign({}, node, {nodes: addFilteredAttributesGroups(node.nodes, filters)});
         }
         filters.forEach(filter => {
-            if (node.nodes && filter.func(node)) {
+            if (filter.func(node)) {
                 node = assign({}, node, filter.options);
-            } else if (node.nodes) {
+            } else {
                 node = assign({}, node);
             }
         });
@@ -80,8 +82,9 @@ const tocSelector = createSelector(
         mapNameSelector,
         activeSelector,
         widgetBuilderAvailable,
-        generalInfoFormatSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
+        generalInfoFormatSelector,
+        isCesium
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive) => ({
         enabled,
         groups,
         settings,
@@ -107,15 +110,19 @@ const tocSelector = createSelector(
             },
             {
                 options: {loadingError: true},
-                func: (node) => head(node.nodes.filter(n => n.loadingError && n.loadingError !== 'Warning'))
+                func: (node) => head((node.nodes || []).filter(n => n.loadingError && n.loadingError !== 'Warning'))
             },
             {
                 options: {expanded: true, showComponent: true},
-                func: (node) => filterText && head(node.nodes.filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
+                func: (node) => filterText && head((node.nodes || []).filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
             },
             {
                 options: { showComponent: false },
-                func: (node) => head(node.nodes.filter(l => l.hidden))
+                func: (node) => head((node.nodes || []).filter(l => l.hidden || l.id === "annotations" && isCesiumActive)) && node.nodes.length === 1
+            },
+            {
+                options: { showComponent: false },
+                func: (node) => node.id === "annotations" && isCesiumActive
             }
         ]),
         catalogActive,
@@ -147,6 +154,7 @@ class LayerTree extends React.Component {
         onToggleLayer: PropTypes.func,
         onContextMenu: PropTypes.func,
         onBrowseData: PropTypes.func,
+        onQueryBuilder: PropTypes.func,
         onDownload: PropTypes.func,
         onSelectNode: PropTypes.func,
         selectedNodes: PropTypes.array,
@@ -175,6 +183,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: PropTypes.bool,
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
+        maxDepth: PropTypes.number,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
         chartStyle: PropTypes.object,
@@ -194,9 +203,12 @@ class LayerTree extends React.Component {
         filteredGroups: PropTypes.array,
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
+        onAddGroup: PropTypes.func,
         onGetMetadataRecord: PropTypes.func,
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
+        activateAddGroupButton: PropTypes.bool,
+        activateLayerFilterTool: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool
@@ -234,9 +246,11 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateMetedataTool: true,
         activateRemoveLayer: true,
-        activateQueryTool: false,
+        activateQueryTool: true,
         activateDownloadTool: false,
         activateWidgetTool: false,
+        activateLayerFilterTool: true,
+        maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -266,9 +280,11 @@ class LayerTree extends React.Component {
         filteredGroups: [],
         noFilterResults: false,
         onAddLayer: () => {},
+        onAddGroup: () => {},
         onGetMetadataRecord: () => {},
         hideLayerMetadata: () => {},
         activateAddLayerButton: false,
+        activateAddGroupButton: false,
         catalogActive: false,
         refreshLayerVersion: () => {},
         metadataTemplate: null
@@ -314,7 +330,7 @@ class LayerTree extends React.Component {
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
-                />);
+            />);
     }
 
     renderTOC = () => {
@@ -327,7 +343,7 @@ class LayerTree extends React.Component {
                 <Header
                     title={this.props.mapName}
                     showTitle={this.props.activateMapTitle}
-                    showFilter={this.props.activateFilterLayer}
+                    showFilter={this.props.activateFilterLayer && (this.props.groups.filter(g => (g.nodes || []).length) || []).length}
                     showTools={this.props.activateToolsContainer}
                     onClear={() => { this.props.onSelectNode(); }}
                     onFilter={this.props.onFilter}
@@ -344,6 +360,7 @@ class LayerTree extends React.Component {
                             layerMetadata={this.props.layerMetadata}
                             wfsdownload={this.props.wfsdownload}
                             metadataTemplate={this.props.metadataTemplate}
+                            maxDepth={this.props.maxDepth}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
@@ -352,9 +369,11 @@ class LayerTree extends React.Component {
                                 activateDownloadTool: this.props.activateDownloadTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
+                                activateAddGroup: this.props.activateAddGroupButton,
                                 includeDeleteButtonInSettings: false,
                                 activateMetedataTool: this.props.activateMetedataTool,
-                                activateWidgetTool: this.props.activateWidgetTool
+                                activateWidgetTool: this.props.activateWidgetTool,
+                                activateLayerFilterTool: this.props.activateLayerFilterTool
                             }}
                             options={{
                                 modalOptions: {},
@@ -371,8 +390,14 @@ class LayerTree extends React.Component {
                                 closeText: <Message msgId="close"/>,
                                 confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
+                                confirmDeleteLayerGroupText: <Message msgId="layerProperties.deleteLayerGroup" />,
+                                confirmDeleteLayerGroupMessage: <Message msgId="layerProperties.deleteLayerGroupMessage" />,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
+                                addLayerTooltip: <Message msgId="toc.addLayer" />,
+                                addLayerToGroupTooltip: <Message msgId="toc.addLayerToGroup" />,
+                                addGroupTooltip: <Message msgId="toc.addGroup" />,
+                                addSubGroupTooltip: <Message msgId="toc.addSubGroup" />,
                                 createWidgetTooltip: <Message msgId="toc.createWidget"/>,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
@@ -386,19 +411,23 @@ class LayerTree extends React.Component {
                                 downloadToolTooltip: <Message msgId="toc.toolDownloadTooltip" />,
                                 trashTooltip: {
                                     LAYER: <Message msgId="toc.toolTrashLayerTooltip"/>,
-                                    LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>
+                                    LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>,
+                                    GROUP: <Message msgId="toc.toolTrashGroupTooltip"/>
                                 },
                                 reloadTooltip: {
                                     LAYER: <Message msgId="toc.toolReloadLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolReloadLayersTooltip"/>
                                 },
                                 layerMetadataTooltip: <Message msgId="toc.layerMetadata.toolLayerMetadataTooltip"/>,
-                                layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>
+                                layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>,
+                                layerFilterTooltip: <Message msgId="toc.layerFilterTooltip"/>
+
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
                                 onNewWidget: this.props.onNewWidget,
                                 onBrowseData: this.props.onBrowseData,
+                                onQueryBuilder: this.props.onQueryBuilder,
                                 onDownload: this.props.onDownload,
                                 onUpdate: this.props.updateNode,
                                 onRemove: this.props.removeNode,
@@ -409,6 +438,7 @@ class LayerTree extends React.Component {
                                 onHideSettings: this.props.hideSettings,
                                 onReload: this.props.refreshLayerVersion,
                                 onAddLayer: this.props.onAddLayer,
+                                onAddGroup: this.props.onAddGroup,
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
@@ -436,6 +466,7 @@ class LayerTree extends React.Component {
     }
 }
 
+
 /**
  * Provides Table Of Content visualization.
  * @memberof plugins
@@ -454,6 +485,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
+ * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `false`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
@@ -547,7 +579,7 @@ class LayerTree extends React.Component {
  *   }
  * }
  * ```
-  */
+ */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
@@ -556,6 +588,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
     onBrowseData: browseData,
+    onQueryBuilder: openQueryBuilder,
     onDownload: download,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
@@ -566,7 +599,8 @@ const TOCPlugin = connect(tocSelector, {
     removeNode,
     onSelectNode: selectNode,
     onFilter: filterLayers,
-    onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onAddLayer: setControlProperties.bind(null, "metadataexplorer", "enabled", true, "group"),
+    onAddGroup: setControlProperties.bind(null, "addgroup", "enabled", true, "parent"),
     onGetMetadataRecord: getMetadataRecordById,
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
@@ -574,7 +608,9 @@ const TOCPlugin = connect(tocSelector, {
 })(LayerTree);
 
 const API = {
-    csw: require('../api/CSW')
+    csw: require('../api/CSW'),
+    wms: require('../api/WMS'),
+    wmts: require('../api/WMTS')
 };
 
 module.exports = {
@@ -607,5 +643,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: require("../epics/catalog")(API)
+    epics: require("../epics/catalog").default(API)
 };

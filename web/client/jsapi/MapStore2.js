@@ -24,9 +24,9 @@ const ThemeUtils = require('../utils/ThemeUtils');
 const assign = require('object-assign');
 const {partialRight, merge} = require('lodash');
 
-const defaultConfig = require('json-loader!../config.json');
+const defaultConfig = require('../config.json');
 
-const localConfig = require('json-loader!../localConfig.json');
+const localConfig = require('../localConfig.json');
 
 const defaultPlugins = {
     "mobile": localConfig.plugins.embedded,
@@ -189,7 +189,7 @@ const MapStore2 = {
         });
         const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
-            storeOpts: assign({}, storeOpts, {notify: true}),
+            storeOpts: assign({}, storeOpts, {notify: true, noRouter: true}),
             appStore,
             pluginsDef,
             initialActions,

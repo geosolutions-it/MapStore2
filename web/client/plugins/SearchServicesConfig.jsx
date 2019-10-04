@@ -17,8 +17,6 @@ const {isEqual} = require('lodash');
 const {toggleControl} = require('../actions/controls');
 const {setSearchConfigProp, updateService, restServiceConfig} = require('../actions/searchconfig');
 
-require('../components/mapcontrols/searchservicesconfig/SearchServices.css');
-
 const ServiceList = require('../components/mapcontrols/searchservicesconfig/ServicesList.jsx');
 const WFSServiceProps = require('../components/mapcontrols/searchservicesconfig/WFSServiceProps.jsx');
 const ResultsProps = require('../components/mapcontrols/searchservicesconfig/ResultsProps.jsx');
@@ -48,8 +46,8 @@ class SearchServicesConfigPanel extends React.Component {
         titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         toggleControl: PropTypes.func,
         pages: PropTypes.arrayOf(PropTypes.shape({
-                Element: PropTypes.func.isRequired,
-                validate: PropTypes.func.isRequired
+            Element: PropTypes.func.isRequired,
+            validate: PropTypes.func.isRequired
         })),
         page: PropTypes.number,
         service: PropTypes.object,
@@ -116,7 +114,7 @@ class SearchServicesConfigPanel extends React.Component {
                         <Message msgId="search.addbtn" />
                     </Button>
                 </span>);
-        }else if (page === pages.length - 1) {
+        } else if (page === pages.length - 1) {
             return (
                 <span role="footer">
                     <Button onClick={this.prev} bsStyle="primary">
@@ -131,9 +129,9 @@ class SearchServicesConfigPanel extends React.Component {
             <span role="footer">
                 {page === 1 && this.isDirty() ? (
                     <ConfirmButton onConfirm={this.prev} bsStyle="primary"
-                    confirming={{text: <Message msgId="search.cancelconfirm" />}}
+                        confirming={{text: <Message msgId="search.cancelconfirm" />}}
                         text={(<Message msgId="search.cancelbtn" />)}/>
-                    ) : (
+                ) : (
                     <Button onClick={this.prev} bsStyle="primary">
                         <Message msgId={page === 1 ? "search.cancelbtn" : "search.prevbtn"} />
                     </Button>)
@@ -145,20 +143,24 @@ class SearchServicesConfigPanel extends React.Component {
     };
 
     render() {
-        const {enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}} = this.props;
+        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}} = this.props;
         const Section = pages && pages[page] || null;
         return enabled ? (
             <Portal>
-                <Dialog id={id} style={panelStyle} className={panelClassName}>
+                <Dialog id={id} style={{...panelStyle, display: enabled ? 'block' : 'none'}} className={panelClassName} draggable={false} modal>
                     <span role="header">
                         <span>{titleText}</span>
                         { this.isDirty() ? (
                             <ConfirmButton className="close" confirming={{
                                 text: <Message msgId="search.cancelconfirm" />, className: "btn btn-sm btn-warning services-config-editor-confirm-close"}} onConfirm={this.onClose} bsStyle="primary" text={(<Glyphicon glyph={closeGlyph}/>)}/>) : (<button onClick={this.onClose} className="close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>)
-                            }
+                        }
                     </span>
                     <div role="body" className="services-config-editor">
-                        <Section.Element services={textSearchConfig.services} override={textSearchConfig.override} onPropertyChange={onPropertyChange} service={service}/>
+                        <Section.Element
+                            services={textSearchConfig.services}
+                            override={textSearchConfig.override}
+                            onPropertyChange={onPropertyChange}
+                            service={service}/>
                     </div>
                     {this.renderFooter()}
                 </Dialog>
@@ -181,7 +183,7 @@ class SearchServicesConfigPanel extends React.Component {
         const {page} = this.props;
         if (page > 1) {
             this.props.onPropertyChange("page", page - 1);
-        }else if (page === 1 ) {
+        } else if (page === 1 ) {
             this.props.restServiceConfig(0);
         }
     };
@@ -207,11 +209,11 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
     initServiceValues: searchconfig && searchconfig.init_service_values,
     textSearchConfig: searchconfig && searchconfig.textSearchConfig,
     editIdx: searchconfig && searchconfig.editIdx
-    }), {
-        toggleControl,
-        onPropertyChange: setSearchConfigProp,
-        restServiceConfig,
-        updateService})(SearchServicesConfigPanel);
+}), {
+    toggleControl,
+    onPropertyChange: setSearchConfigProp,
+    restServiceConfig,
+    updateService})(SearchServicesConfigPanel);
 
 module.exports = {
     SearchServicesConfigPlugin: SearchServicesPlugin,

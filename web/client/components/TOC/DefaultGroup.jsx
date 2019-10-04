@@ -56,6 +56,7 @@ class DefaultGroup extends React.Component {
             (<VisibilityCheck
                 node={this.props.node}
                 key="visibility"
+                tooltip="toc.toggleGroupVisibility"
                 checkType={this.props.visibilityCheckType}
                 propertiesChangeHandler={this.props.propertiesChangeHandler}/>)
             :

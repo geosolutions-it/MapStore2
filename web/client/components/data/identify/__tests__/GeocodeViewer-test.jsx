@@ -24,55 +24,6 @@ describe('GeocodeViewer', () => {
         setTimeout(done);
     });
 
-    it('creates the GeocodeViewer component with defaults', () => {
-        ReactDOM.render(
-            <GeocodeViewer />,
-            document.getElementById("container")
-        );
-        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
-        expect(geocodeViewer.length).toBe(0);
-    });
-
-    it('creates the GeocodeViewer no lat lng', () => {
-        ReactDOM.render(
-            <GeocodeViewer enableRevGeocode/>,
-            document.getElementById("container")
-        );
-        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
-        expect(geocodeViewer.length).toBe(0);
-    });
-
-    it('creates the GeocodeViewer enable, showCoordinateEditor=false', () => {
-        ReactDOM.render(
-            <GeocodeViewer
-                enableRevGeocode
-                showCoordinateEditor={false}
-                latlng={{lat: 40, lng: 10}}
-                lngCorrected={10}/>,
-            document.getElementById("container")
-        );
-        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
-        expect(geocodeViewer.length).toBe(1);
-        const coords = document.getElementsByClassName('ms-geocode-coords')[0];
-        expect(coords.innerHTML.indexOf('Lat:') !== -1).toBe(true);
-        expect(coords.innerHTML.indexOf('Long:') !== -1).toBe(true);
-    });
-
-    it('creates the GeocodeViewer enable, showCoordinateEditor=true', () => {
-        ReactDOM.render(
-            <GeocodeViewer
-                enableRevGeocode
-                showCoordinateEditor
-                latlng={{lat: 40, lng: 10}}
-                lngCorrected={10}/>,
-            document.getElementById("container")
-        );
-        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
-        expect(geocodeViewer.length).toBe(1);
-        const coords = document.getElementsByClassName('ms-geocode-coords')[0];
-        expect(coords).toNotExist();
-    });
-
     it('creates the GeocodeViewer hide', () => {
         ReactDOM.render(
             <GeocodeViewer

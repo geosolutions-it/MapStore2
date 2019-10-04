@@ -127,20 +127,21 @@ class MapGrid extends React.Component {
                 onErrorCurrentMap={this.props.errorCurrentMap}
                 onUpdateCurrentMap={this.props.updateCurrentMap}/>);
         }
+        return null;
     };
 
     render() {
         return (
-                <Grid id={this.props.id} fluid={this.props.fluid} className={'ms-grid-container ' + this.props.className} style={this.props.style}>
-                    {this.props.title && <Row>
-                        {this.props.title}
-                    </Row>}
-                    <Row className="ms-grid">
-                        {this.props.loading && this.props.maps.length === 0 ? this.renderLoading() : this.renderMaps(this.props.maps || [], this.props.mapType)}
-                    </Row>
-                    {this.props.bottom}
-                    {this.renderMetadataModal()}
-                </Grid>
+            <Grid id={this.props.id} fluid={this.props.fluid} className={'ms-grid-container ' + this.props.className} style={this.props.style}>
+                {this.props.title && <Row>
+                    {this.props.title}
+                </Row>}
+                <Row className="ms-grid">
+                    {this.props.loading && this.props.maps.length === 0 ? this.renderLoading() : this.renderMaps(this.props.maps || [], this.props.mapType)}
+                </Row>
+                {this.props.bottom}
+                {this.renderMetadataModal()}
+            </Grid>
         );
     }
 }

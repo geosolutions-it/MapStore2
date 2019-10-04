@@ -61,6 +61,7 @@ const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
 const BACKGROUND_THUMBNAIL_CREATED = "BACKGROUND_THUMBNAIL_CREATED";
+const FEATURED_MAPS_SET_LATEST_RESOURCE = "FEATURED_MAPS:SET_LATEST_RESOURCE";
 
 
 /**
@@ -636,8 +637,6 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
         }
         if (isNil(dataThumbnail) && isNil(metadataMap) && !detailsChanged) {
             dispatch(resetUpdating(resourceIdMap));
-            /*dispatch(onDisplayMetadataEdit(false));
-            dispatch(resetCurrentMap());*/
         }
     };
 }
@@ -660,8 +659,6 @@ function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
                     dispatch(resetUpdating(resourceIdMap));
                 }
             }
-            /*dispatch(onDisplayMetadataEdit(false));
-            dispatch(resetCurrentMap());*/
         }).catch((e) => {
             // Even if is not possible to delete the Thumbnail from geostore -> reset the attribute in order to display the default thumbnail
             if (e.status === 403) {
@@ -884,6 +881,15 @@ const saveMapResource = (resource) => ({
     type: SAVE_MAP_RESOURCE,
     resource
 });
+/**
+ * Set the latestResource prop of featuredmaps
+ * @memberof actions.maps
+ * @param {boolean} enabled the `enabled` flag
+ */
+const setFeaturedMapsLatestResource = (resource) => ({
+    type: FEATURED_MAPS_SET_LATEST_RESOURCE,
+    resource
+});
 
 /**
  * Actions for maps
@@ -915,6 +921,7 @@ module.exports = {
     METADATA_CHANGED,
     NO_DETAILS_AVAILABLE,
     SAVE_MAP_RESOURCE,
+    FEATURED_MAPS_SET_LATEST_RESOURCE,
     toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
     toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
     toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
@@ -966,5 +973,6 @@ module.exports = {
     mapsSearchTextChanged,
     updateAttribute,
     saveMapResource,
-    backgroundThumbnailsCreated, BACKGROUND_THUMBNAIL_CREATED
+    backgroundThumbnailsCreated, BACKGROUND_THUMBNAIL_CREATED,
+    setFeaturedMapsLatestResource
 };

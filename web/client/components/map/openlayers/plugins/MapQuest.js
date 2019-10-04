@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/openlayers/Layers');
+import Layers from '../../../../utils/openlayers/Layers';
 
 Layers.registerType('mapquest', {
     create: (options) => {

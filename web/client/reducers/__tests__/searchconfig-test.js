@@ -14,7 +14,7 @@ describe('Test the searchconfig reducer', () => {
     it('Map config loaded with textSearchConfig', () => {
 
         const action = {type: 'MAP_CONFIG_LOADED',
-        config: { version: 2, map: {layers: [], text_serch_config: {override: true}}}};
+            config: { version: 2, map: {layers: [], text_serch_config: {override: true}}}};
 
         const state = searchconfig({}, action);
         expect(state.textSearchConfig).toExist();
@@ -23,7 +23,7 @@ describe('Test the searchconfig reducer', () => {
     it('Map config loaded without textSearchConfig', () => {
 
         const action = {type: 'MAP_CONFIG_LOADED',
-        config: { version: 2, map: {layers: []}}};
+            config: { version: 2, map: {layers: []}}};
 
         const state = searchconfig({}, action);
         expect(state.textSearchConfig).toBe(undefined);
@@ -32,9 +32,9 @@ describe('Test the searchconfig reducer', () => {
         const state = searchconfig(
             {service: "test", page: 1, init_service_values: "test", editIdx: 2, textSearchConfig: {}}
             , {
-            type: RESET_SEARCH_CONFIG,
-            page: 0
-        });
+                type: RESET_SEARCH_CONFIG,
+                page: 0
+            });
         expect(state.page).toBe(0);
         expect(state.service).toBe(undefined);
         expect(state.init_service_values).toBe(undefined);

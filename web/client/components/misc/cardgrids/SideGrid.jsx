@@ -22,13 +22,13 @@ const {Row, Col} = require('react-bootstrap');
  * @prop {object} colProps props for react-bootstrap col component
  */
 class SideGrid extends React.Component {
-    /* React class needed to retrive ref of current component */
+    /* React class needed to retrieve ref of current component */
     static propTypes = {
         size: PropTypes.string,
         onItemClick: PropTypes.func,
         colProps: PropTypes.object,
         items: PropTypes.array,
-        cardComponent: PropTypes.element,
+        cardComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         className: PropTypes.string
     };
 

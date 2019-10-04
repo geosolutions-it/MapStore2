@@ -86,13 +86,13 @@ class SettingsModal extends React.Component {
         originalSettings: {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             initialState: this.props.element,
             originalSettings: this.props.element
         });
     }
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         // an empty description does not trigger the single layer getCapabilites,
         // it does only for missing description
         if (!this.props.settings.expanded && newProps.settings.expanded && isNil(newProps.element.description) && newProps.element.type === "wms") {
@@ -100,7 +100,7 @@ class SettingsModal extends React.Component {
         }
     }
 
-    componentWillUpdate(newProps, newState) {
+    UNSAFE_componentWillUpdate(newProps, newState) {
         if (this.props.settings.expanded && !newProps.settings.expanded && !newState.save) {
             this.props.updateNode(
                 this.props.settings.node,
@@ -141,46 +141,49 @@ class SettingsModal extends React.Component {
 
     renderDisplay = () => {
         return (<Display
-           opacityText={this.props.opacityText}
-           element={this.props.element}
-           settings={this.props.settings}
-           onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+            opacityText={this.props.opacityText}
+            element={this.props.element}
+            settings={this.props.settings}
+            onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
     };
 
     renderStyleTab = () => {
         if (this.props.element.type === "wms") {
             return (<WMSStyle
-                    retrieveLayerData={this.props.retrieveLayerData}
-                    updateSettings={this.updateParams}
-                    element={this.props.element}
-                    key="style"/>);
+                retrieveLayerData={this.props.retrieveLayerData}
+                updateSettings={this.updateParams}
+                element={this.props.element}
+                key="style"/>);
         }
+        return null;
     };
 
     renderElevationTab = () => {
         const elevationDim = this.props.getDimension(this.props.element.dimensions, 'elevation');
         if (this.props.element.type === "wms" && this.props.element.dimensions && elevationDim) {
             return (<Elevation
-               elevationText={this.props.elevationText}
-               chartStyle={this.props.chartStyle}
-               showElevationChart={this.props.showElevationChart}
-               element={this.props.element}
-               elevations={elevationDim}
-               appState={this.state || {}}
-               onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+                elevationText={this.props.elevationText}
+                chartStyle={this.props.chartStyle}
+                showElevationChart={this.props.showElevationChart}
+                element={this.props.element}
+                elevations={elevationDim}
+                appState={this.state || {}}
+                onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
         }
+        return null;
     };
 
     renderFeatureInfoTab = () => {
         if (this.props.showFeatureInfoTab) {
             if (this.props.element.type === "wms") {
                 return (<FeatureInfoFormat
-                   label= {<Message msgId="layerProperties.featureInfoFormatLbl"/>}
-                   element={this.props.element}
-                   generalInfoFormat={this.props.generalInfoFormat}
-                   onInfoFormatChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+                    label= {<Message msgId="layerProperties.featureInfoFormatLbl"/>}
+                    element={this.props.element}
+                    generalInfoFormat={this.props.generalInfoFormat}
+                    onInfoFormatChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
             }
         }
+        return null;
     };
 
     render() {
@@ -199,13 +202,13 @@ class SettingsModal extends React.Component {
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
             {this.props.includeDeleteButton ?
                 <ConfirmButton
-                  onConfirm={this.onDelete}
-                  text={this.props.deleteText}
-                  confirming={{
-                      text: this.props.confirmDeleteText
-                  }}
+                    onConfirm={this.onDelete}
+                    text={this.props.deleteText}
+                    confirming={{
+                        text: this.props.confirmDeleteText
+                    }}
                 />
-            : <span/>}
+                : <span/>}
             <Button bsSize={this.props.buttonSize} bsStyle="primary" onClick={() => {
                 this.updateParams(this.props.settings.options.opacity, true);
                 this.props.hideSettings();

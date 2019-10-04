@@ -1,5 +1,4 @@
 div.record-grid {
-    overflow-x: hidden;
     padding-left: 0;
     padding-right: 0;
 }
@@ -18,6 +17,9 @@ div.record-grid .record-item .panel-body{
 #mapstore-catalog-panel .record-item {
     min-height: 150px;
 }
+#catalog-root {
+    position: static!important;
+}
 
 /*
 !important is needed because the library we used
@@ -32,8 +34,3 @@ we use !important*/
 #mapstore-metadata-explorer{
     margin-bottom: 0
 }
-/*
-
-.catalog-root {
-    z-index: 1
-}*/

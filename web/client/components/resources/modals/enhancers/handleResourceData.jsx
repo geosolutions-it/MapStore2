@@ -52,25 +52,25 @@ module.exports = compose(
     branch(
         ({ confirmClose }) => confirmClose,
         renderComponent(({ onCloseConfirm, onClose }) =>
-        (<ConfirmDialog
-            show
-            confirmText={<Message msgId="dashboard.saveDialog.close" />}
-            cancelText={<Message msgId="dashboard.saveDialog.cancel" />}
-            onConfirm={() => onClose()}
-            onClose={() => onCloseConfirm(false)}
+            (<ConfirmDialog
+                show
+                confirmText={<Message msgId="saveDialog.close" />}
+                cancelText={<Message msgId="saveDialog.cancel" />}
+                onConfirm={() => onClose()}
+                onClose={() => onCloseConfirm(false)}
             >
-            <Message msgId="map.details.fieldsChanged" />
-            <br/>
-            <Message msgId="map.details.sureToClose" />
+                <Message msgId="map.details.fieldsChanged" />
+                <br/>
+                <Message msgId="map.details.sureToClose" />
             </ConfirmDialog>))
     ),
     withHandlers({
         onClose: ({
-                hasChanges,
-                onClose = () => {},
-                onCloseConfirm = () => {}}
-            ) => () =>
-                hasChanges
+            hasChanges,
+            onClose = () => {},
+            onCloseConfirm = () => {}}
+        ) => () =>
+            hasChanges
                 ? onCloseConfirm(true)
                 : onClose()
     }),

@@ -144,7 +144,7 @@ class SpatialFilter extends React.Component {
                     collapsible
                     expanded={this.props.spatialPanelExpanded}
                     onSwitch={(expanded) => this.props.actions.onExpandSpatialFilterPanel(expanded)}
-                    >
+                >
                     {this.renderSpatialPanel()}
                 </SwitchPanel>
             </div>
@@ -153,18 +153,16 @@ class SpatialFilter extends React.Component {
 
     updateSpatialMethod = (id, name, value) => {
         const method = this.props.spatialMethodOptions.filter((opt) => {
-            if (value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name)) {
-                return opt;
-            }
+            return value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name);
         })[0].id;
 
         this.props.actions.onSelectSpatialMethod(method, name);
         switch (method) {
-            case "CQL":
-             return;
-            default: {
-                this.changeDrawingStatus('start', method, {stopAfterDrawing: true});
-            }
+        case "CQL":
+            break;
+        default: {
+            this.changeDrawingStatus('start', method, {stopAfterDrawing: true});
+        }
         }
 
     };
@@ -199,11 +197,11 @@ class SpatialFilter extends React.Component {
                     this.props.owner,
                     [geometry],
                     {});
-            }else {
+            } else {
                 throw new Error();
             }
 
-        }catch (err) {
+        } catch (err) {
             this.props.actions.onError({title: "rulesmanager.errorTitle", message: "rulesmanager.errorCQL"});
         }
     }

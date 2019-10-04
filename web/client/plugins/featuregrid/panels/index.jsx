@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -12,7 +12,7 @@ const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {widgetBuilderAvailable, wfsDownloadAvailable} = require('../../../selectors/controls');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive, featureCollectionResultSelector} = require('../../../selectors/query');
-const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector} = require('../../../selectors/featuregrid');
+const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector, timeSyncActive, showTimeSync} = require('../../../selectors/featuregrid');
 const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
 const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
@@ -56,7 +56,9 @@ const Toolbar = connect(
         isSearchAllowed: (state) => !isCesium(state),
         isEditingAllowed: (state) => (filterEditingAllowedUser(userRoleSelector(state), editingAllowedRolesSelector(state)) || canEditSelector(state)) && !isCesium(state),
         hasSupportedGeometry,
-        isFilterActive
+        isFilterActive,
+        showTimeSyncButton: showTimeSync,
+        timeSync: timeSyncActive
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(require('../../../components/data/featuregrid/toolbars/Toolbar'));
@@ -73,32 +75,32 @@ const Header = connect(
 
 // loading={props.featureLoading} totalFeatures={props.totalFeatures} resultSize={props.resultSize}/
 const Footer = connect(
-        createSelector(
-            createStructuredSelector(paginationInfo),
-            featureLoadingSelector,
-            state => state && state.featuregrid && !!state.featuregrid.virtualScroll,
-            (pagination, loading, virtualScroll) => ({
-                ...pagination,
-                loading,
-                virtualScroll
-            })),
+    createSelector(
+        createStructuredSelector(paginationInfo),
+        featureLoadingSelector,
+        state => state && state.featuregrid && !!state.featuregrid.virtualScroll,
+        (pagination, loading, virtualScroll) => ({
+            ...pagination,
+            loading,
+            virtualScroll
+        })),
     pageEvents
 )(require('../../../components/data/featuregrid/Footer'));
 const DeleteDialog = connect(
     createSelector(selectedFeaturesCount, (count) => ({count})), {
-    onClose: () => toggleTool("deleteConfirm", false),
-    onConfirm: () => deleteFeatures()
-})(require('../../../components/data/featuregrid/dialog/ConfirmDelete'));
+        onClose: () => toggleTool("deleteConfirm", false),
+        onConfirm: () => deleteFeatures()
+    })(require('../../../components/data/featuregrid/dialog/ConfirmDelete'));
 const ClearDialog = connect(
     createSelector(selectedFeaturesCount, (count) => ({count})), {
-    onClose: () => toggleTool("clearConfirm", false),
-    onConfirm: () => clearChangeConfirmed()
-})(require('../../../components/data/featuregrid/dialog/ConfirmClear'));
+        onClose: () => toggleTool("clearConfirm", false),
+        onConfirm: () => clearChangeConfirmed()
+    })(require('../../../components/data/featuregrid/dialog/ConfirmClear'));
 const FeatureCloseDialog = connect(() => {}
     , {
-    onClose: () => closeFeatureGridConfirmed(),
-    onConfirm: () => closeFeatureGrid()
-})(require('../../../components/data/featuregrid/dialog/ConfirmFeatureClose'));
+        onClose: () => closeFeatureGridConfirmed(),
+        onConfirm: () => closeFeatureGrid()
+    })(require('../../../components/data/featuregrid/dialog/ConfirmFeatureClose'));
 
 const panels = {
     settings: require('./AttributeSelector')
@@ -134,24 +136,24 @@ module.exports = {
     },
     getFilterRenderers: createSelector((d) => d,
         (describe) =>
-        describe ? getAttributeFields(describe).reduce( (out, cur) => ({
-            ...out,
-            [cur.name]: connect(
-                createSelector(
-                    (state) => getAttributeFilter(state, cur.name),
-                    modeSelector,
-                    (filter, mode) => {
-                        const props = {
-                            value: filter && (filter.rawValue || filter.value)
-                        };
-                        const editProps = {
-                            disabled: true,
-                            tooltipMsgId: "featuregrid.filter.tooltips.editMode"
-                        };
-                        return mode === "EDIT" ? {...props, ...editProps} : props;
-                    }
-        ))(getFilterRenderer(cur.localType, {name: cur.name}))
-        }), {}) : {}),
+            describe ? getAttributeFields(describe).reduce( (out, cur) => ({
+                ...out,
+                [cur.name]: connect(
+                    createSelector(
+                        (state) => getAttributeFilter(state, cur.name),
+                        modeSelector,
+                        (filter, mode) => {
+                            const props = {
+                                value: filter && (filter.rawValue || filter.value)
+                            };
+                            const editProps = {
+                                disabled: true,
+                                tooltipMsgId: "featuregrid.filter.tooltips.editMode"
+                            };
+                            return mode === "EDIT" ? {...props, ...editProps} : props;
+                        }
+                    ))(getFilterRenderer(cur.localType, {name: cur.name}))
+            }), {}) : {}),
     getDialogs: (tools = {}) => {
         return Object.keys(tools)
             .filter(t => tools[t] && dialogs[t])

@@ -1,4 +1,3 @@
-
 {
     "locale": "fr-FR",
     "messages": {
@@ -18,7 +17,7 @@
         "about_a0": "ceci",
         "about_p5-1": "page.",
         "about_h21": "Crédits",
-        "about_p6": "MapStore2 est développé par:",
+        "about_p6": "MapStore est développé par:",
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
@@ -26,6 +25,8 @@
         "errorDefault": "Une erreur est survenue",
         "pageInfoShowMore": "Résultats {count} de {total}",
         "showMore": "Montrer plus...",
+        "collapse": "réduire",
+        "expand": "étendre",
         "version": {
             "label": "Version"
         },
@@ -40,6 +41,8 @@
         "details": {
             "title": "Info sur cette carte"
         },
+        "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GFI",
+        "remove": "Effacer",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -59,6 +62,8 @@
             "delete": "Effacer",
             "deleteLayer":"Supprimer le calque",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
+            "deleteLayerGroup":"Supprimer le groupe",
+            "deleteLayerGroupMessage": "Voulez-vous vraiment supprimer ce groupe et toutes ses couches?",
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
             "featureTypeErrorInvalidJSON": "Impossible de charger les attributs de calque. La réponse n'est pas valide",
@@ -106,7 +111,9 @@
             "noBackgroundLayerSupported": "Il n'y a pas de couches de fond supportées pour ce type de carte.",
             "updateOldMap": "Ceci est une carte ancienne, toutes les fonctionnalités ne peuvent pas s'y retrouver. Cliquez sur le bouton de mise à jour pour rafraîchir la carte ou ne tenez pas compte de cet avertissement pour ne pas rafraîchir la carte.",
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
-            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour"
+            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"la couche(s) actuelle et la projection cartographique ne sont pas totalement compatibles. Certaines ou toutes les données risquent de ne pas apparaître sur la carte"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",
@@ -165,6 +172,8 @@
                 "red": "{number, plural, =0 {Rouge} =1 {Rouge} other {Rouges}}",
                 "blue": "{number, plural, =0 {Bleu} =1 {Bleu} other {Bleus}}",
                 "green": "{number, plural, =0 {Vert} =1 {Vert} other {Verts}}",
+                "gray": "{number, plural, =0 {Gris} =1 {Gris} other {Gris}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Brun} =1 {Brun} other {Bruns}}",
                 "purple": "{number, plural, =0 {Pourpre} =1 {Pourpre} other {Pourpre}}",
                 "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
@@ -220,7 +229,7 @@
                     "html":"<h3>Plugins</h3><p>Contruire sa propre application</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore2 dans votre application</p>"
+                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore dans votre application</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
@@ -299,7 +308,9 @@
                 "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des tableaux de bord"
             },
             "maps": {
-                "title": "Cartes ({count})"
+                "title": "Cartes ({count})",
+                "noMapAvailable": "Aucune carte disponible",
+                "createNewOne": "Créer un nouveau"
             }
         },
         "map": {
@@ -362,9 +373,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Erreur lors du chargement de la carte",
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte non accessible",
-                    "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li><ul> <p>"
+                    "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "title" : "La carte ne peut pas être vue"
                 }
             }
         },
@@ -373,18 +386,28 @@
             "showLegend": "Afficher la légende",
             "hideLegend": "Cacher la légende"
         },
+        "addgroup": {
+            "addbtn": "Ajouter",
+            "groupName": "Nom de groupe"
+        },
         "toc": {
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
+            "toggleGroupVisibility": "Basculer la visibilité du groupe",
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
             "addLayer": "Ajouter la couche",
+            "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
+            "addGroup": "Ajouter un groupe",
+            "addSubGroup": "Ajouter un sous-groupe au groupe sélectionné",
             "toolZoomToLayerTooltip": "Zoomer sur l'extension de la couche sélectionnée",
             "toolZoomToLayersTooltip": "Zoomer sur l'extension des couches sélectionnées",
             "toolLayerSettingsTooltip": "Réglages de la couche sélectionnée",
             "toolGroupSettingsTooltip": "Réglages du groupe de couches sélectionné",
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
+            "toolTrashGroupTooltip": "Supprimer le groupe sélectionné",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Pas de résultats",
             "filterPlaceholder": "Filtrer les couches",
@@ -410,6 +433,8 @@
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(s) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches: ",
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
+            "filterIconEnabled": "Désactiver le filtre de calque",
+            "filterIconDisabled": "Activer le filtre de calque",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -506,6 +531,9 @@
         "identifyTitle": "Informations de l'objet",
         "identifyNoQueryableLayers": "Aucune couche active rencontrée",
         "identifyRevGeocodeHeader": "Coordonnées",
+        "identifyZoomToFeature": "Zoom aud to feature",
+        "identifyStopHighlightingFeatures": "Arrêtez de mettre en évidence les fonctionnalités",
+        "identifyHighlightFeatures": "Caractéristiques marquantes",
         "identifyShowCoordinateEditor": "Afficher l'éditeur de coordonnées",
         "identifyHideCoordinateEditor": "Masquer l'éditeur de coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
@@ -543,7 +571,10 @@
             "areaLabel": "Surface",
             "bearingLabel": "Direction",
             "formula": "Formule pour le calcul de la distance",
-            "showLabel": "Afficher l'étiquette de mesure"
+            "showLabel": "Afficher l'étiquette de mesure",
+            "addAsAnnotation": "Ajouter comme annotation",
+            "newMeasure": "Nouvelle annotation",
+            "selectTool": "Sélectionnez un outil de mesure"
         },
         "search":{
             "decimal": "Décimal",
@@ -574,8 +605,48 @@
             "s_wfs_props_label" : "WFS accessoires du service",
             "s_wfs_opt_props_label" : "Supports optionnels",
             "s_result_props_label": "Propriétés d'affichage des résultats",
-            "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5",
-            "serviceslistempty": "Aucun service personnalisé n'a été défini"
+            "s_priority_info": "Utilisé pour trier les résultats de recherche, valeurs inférieures en premier. Les résultats Nominatim ont priorité = 5",
+            "serviceslistempty": "Aucun service personnalisé n'a été défini",
+            "service_missing": "Le service {serviceType} n'est pas configuré",
+            "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur: {message}",
+            "errors": {
+                "nonQueriableLayers": "La couche fournie dans l'URL n'est ni interrogeable ni visible sur la carte",
+                "serverError": "Le serveur a renvoyé une erreur lors de l'exécution de la demande GetFeatureInfo. Vérifiez si les paramètres sont corrects"
+            },
+            "s_launch_info_panel": {
+                "label": "Lancer le panneau d'information",
+                "no_info": "Pas d'info",
+                "all_layers": "Toutes les couches",
+                "single_layer": "Une seule couche",
+                "no_info_description": "Le panneau d'identification n'apparaîtra pas dans la recherche",
+                "all_layers_description": "Le panneau Identifier affichera des informations sur toutes les couches visibles sur la carte.",
+                "single_layer_description": "Le panneau Identify apparaîtra avec les données déjà disponibles via la recherche WFS"
+            }
+        },
+        "draw": {
+            "fill": "Remplissage",
+            "text": "Texte",
+            "fontTitle": "Font",
+            "color": "Couleur",
+            "lineDash": "Ligne tiret",
+            "stroke": "Ligne",
+            "opacity": "Opacité",
+            "width": "Largeur",
+            "font": {
+                "textColor": "Couleur",
+                "family": "Famille",
+                "size": "Taille",
+                "style": "Style",
+                "weight": "Poids",
+                "textAlign": "Alignement"
+            },
+            "marker": {
+                "layout": "Disposition",
+                "shape": "Forme",
+                "size": "Taille",
+                "type": "Type",
+                "icon": "Icône"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -712,7 +783,10 @@
         "queryform": {
             "title": "Recherche Avancée",
             "query": "Recherche",
-            "reset": "Recommencer",
+            "apply": "Appliquer",
+            "reset": "Annuler",
+            "save": "Enregistrer",
+            "discard": "Supprimer les modifications du filtre",
             "query_request_exception": "Erreur de requête",
             "config": {
                 "load_config_exception": "Erreur lors du chargement de la configuration"
@@ -795,33 +869,90 @@
                 "targetLayer": "Couche cible",
                 "clear": "Effacer le filtre",
                 "operation": "Opération",
+                "placeholder": "Sélectionner une couche",
                 "errors": {
                     "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
                 }
-            }
+            },
+            "changedFilter": "Filtre modifié",
+            "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver?",
+            "resetFilter": "Supprimer le filtre",
+            "confirmReset": "Confirmer",
+            "loadingError": "Le filtre actuel a posé un problème de rendu pour la couche sur la carte. Vérifiez la configuration de la couche sur le serveur ou corrigez le filtre.",
+            "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer?"
         },
         "annotations": {
+            "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",
             "edit": "Modifier",
             "remove": "Effacer",
             "save": "Enregistrer",
             "cancel": "Annuler",
             "back": "Arrière",
-            "addMarker": "Ajouter un nouveau point sur la carte",
-            "styleGeometry": "Choisissez un style différent pour les points",
-            "deleteGeometry": "Supprimer les points existants",
-            "removeannotation": "Voulez-vous supprimer l'annotation?",
+            "applyStyle": "Appliquer le style",
+            "addMarker": "Ajouter une géométrie",
+            "styleGeometry": "Changer le style",
+            "deleteGeometry": "Supprimer toutes les géométries d'annotations",
+            "removeannotation": "Voulez-vous supprimer l'annotation avec titre: {title}?",
             "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
-            "confirm": "confirmer",
+            "confirm": "Confirmer",
             "title": "Annotations",
             "mandatory": "champ obligatoire",
             "emptygeometry": "La géométrie ne peut pas être vide",
             "add": "Nouvelle",
             "filter": "Filtrer les annotations...",
+            "titleUndoGeom": "La géométrie a changé",
+            "undoGeom": "Êtes-vous sûr de quitter sans enregistrer? (Vous perdrez tous les changements)",
+            "confirmGeom": "Confirmer",
+            "cancelModalGeom": "Annuler",
+            "deleteFeature": "Supprimer cette fonctionnalité",
+            "undoDeleteFeature": "Êtes-vous sûr de supprimer cette fonctionnalité?",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
+            "insertText": "Veuillez insérer l'annotation de texte",
+            "downloadtooltip": "Télécharger les annotations",
+            "downloadcurrenttooltip": "Télécharger l'annotation en cours",
+            "downloadError": "Erreur d'exportation",
+            "loadtooltip": "Importer des annotations",
+            "loadtitle": "Importer des Annotations",
+            "selectfiletext": "Déposez votre fichier ici ou cliquez pour sélectionner le fichier d'annotation à importer. (fichiers supportés: JSON)",
+            "loadoverride": "Remplacer les annotations",
+            "loaderror": "Sélectionnez un ou plusieurs fichiers d'annotations. (fichiers supportés: json)",
+            "defaulttitle": "Modifier le titre par défaut",
             "field": {
-                "title": "titre",
+                "title": "Titre",
                 "description": "Description"
+            },
+            "titles": {
+                "marker": " Marqueur",
+                "line": " Ligne",
+                "polygon": " Polygone",
+                "text": " Texte",
+                "circle": " Cercle"
+            },
+            "editor": {
+                "decimal": "Décimal",
+                "aeronautical": "Aéronautique",
+                "title": {
+                    "Polygon": "Éditeur de polygone",
+                    "LineString": "Éditeur de ligne",
+                    "Bearing": "éditeur de relèvement",
+                    "Circle": "Éditeur de cercle",
+                    "Point": "Éditeur de marqueur",
+                    "MultiPoint": "Éditeur de ligne",
+                    "Text": "Éditeur de texte"
+                },
+                "center": "Centre",
+                "add": "Ajouter de nouvelles coordonnées",
+                "addByClick": "Ajouter de nouvelles coordonnées en cliquant sur le bouton plus ou sur la carte",
+                "valid": "La géométrie est valide",
+                "radius": "Rayon",
+                "text": "Texte",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{
@@ -838,6 +969,7 @@
             "passwordInvalid": "Mot de passe incorrect",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
+            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères",
             "passwordChanged": "Mot de passe changé",
             "passwordError": "Erreur de changement de mot de passe",
             "signIn":"S'authentifier",
@@ -876,7 +1008,8 @@
             "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
             "errorDelete": "Une erreur s'est produite lors de la suppression de cet utilisateur:",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de cet utilisateur:",
-            "selectedGroups": "CERTAINS GROUPES"
+            "selectedGroups": "CERTAINS GROUPES",
+            "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires"
         },
         "usergroups": {
           "searchGroups": "rechercher des groupes...",
@@ -950,7 +1083,26 @@
             "cancel": "Annuler",
             "success": " Import correct"
         },
+        "mapImport": {
+            "title": "Importer",
+            "dropZone": {
+                "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
+                "selectFiles": "Sélectionnez les fichiers...",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Fichier non pris en charge",
+                "unknownError": "il y avait une erreur inconnue lors de l'importation"
+            }
+        },
+        "mapExport": {
+            "title": "Exporter la carte"
+        },
         "catalog": {
+            "start": "Date de début ",
+            "end": "Date de fin ",
+            "notAvailable": "Indisponible",
             "title": "Catalogue",
             "autoload": "Recherche sur la sélection du service",
             "clearValueText": "Effacer la sélection",
@@ -985,7 +1137,14 @@
             "missingReference": "Les métadonnées des références OGC manquent",
             "showDescription": "Afficher la description complète",
             "hideDescription": "Masquer la description complète",
+            "templateFormatDescriptionExample": "La description de la couche est",
+            "showTemplate": "Afficher le modèle de métadonnées",
+            "showPreview": "Afficher l'aperçu",
+            "advancedSettings": "Réglages avancés",
+            "templateMetadataAvailable": "Métadonnées disponibles au format Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Erreur",
+                "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . S'il vous plaît vérifier la requête param url",
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
                 "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
@@ -1164,7 +1323,8 @@
                     "editMode": "La recherche rapide n'est pas disponible en mode édition",
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
-                    "number": "Tapez un nombre ou une expression..."
+                    "number": "Tapez un nombre ou une expression...",
+                    "date": "Tapez une date ou une expression. Utilisez {format} pour la date."
                 }
             },
             "toolbar": {
@@ -1188,6 +1348,8 @@
                 "hideShowColumns": "Masquer / afficher les colonnes",
                 "zoomAll": "Zoom sur la page",
                 "syncOnMap": "Synchroniser la carte avec un filtre",
+                "enableTimeSync": "Synchroniser avec l'heure ou l'intervalle de temps sélectionné",
+                "disableTimeSync": "Ne pas synchroniser avec l'heure ou l'intervalle sélectionné",
                 "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
@@ -1392,7 +1554,12 @@
             "displayCartesian": {
                 "line": "Masquer la grille",
                 "bar": "Masquer la grille"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Axe X: Angle de rotation de l'étiquette °",
+                "bar": "Axe X: Angle de rotation de l'étiquette °"
+            },
+            "yAxis":{
                 "line": "Masquer l'axe Y",
                 "bar": "Masquer l'axe Y"
             },
@@ -1409,23 +1576,18 @@
                 "expandTray": "Développer le plateau de widgets",
                 "collapseTray": "Réduire le tiroir des widgets",
                 "expandAll": "Développer tous les widgets",
-                "collapseAll": "Réduire tous les widgets"
+                "collapseAll": "Réduire tous les widgets",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La chronologie et les widgets ne peuvent pas rester en même temps. Utilisez-le sur le plateau du widget pour basculer entre la timeline et les widgets",
+                        "timelineTitle": "La chronologie a été réduite",
+                        "widgetsTitle": "Les widgets ont été réduits"
+                    }
+                }
             }
         },
         "dashboard": {
             "loadingSpinner": "Chargement du tableau de bord",
-            "saveDialog": {
-                "title": "Modifier les propriétés du tableau de bord",
-                "name": "Nom",
-                "description": "Description",
-                "namePlaceholder": "Tapez un nom...",
-                "descriptionPlaceholder": "Tapez une description...",
-                "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
-                "close": "Fermer",
-                "cancel": "Annuler",
-                "saveSuccessTitle": "Succès",
-                "saveSuccessMessage": "Tableau de bord enregistré avec succès"
-            },
             "errors":{
                 "loading": {
                     "title":  "Erreur lors du chargement du tableau de bord",
@@ -1526,6 +1688,7 @@
             "createStyleErrorMessage": "Le style n'a pas pu être enregistré sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
             "updateStyleErrorTitle": "Modifier le style",
             "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "validationErrorTitle": "Erreur de validation",
             "genericValidationError": "Le style n'est pas valide et il n'a pas pu être appliqué.",
             "setDefaultStyle": "Définir le style sélectionné par défaut pour le calque actuel",
             "setDefaultStyleSuccessTitle": "Succès sur le style par défaut",
@@ -1576,6 +1739,10 @@
                 "snapToGuideLayer": "Aligner sur le calque guide",
                 "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données du calque sélectionné. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
             },
+            "hide": "Masquer la timeline",
+            "show": "Afficher la timeline",
+            "mapSyncOn": "Afficher toutes les heures, sans filtrage par fenêtre",
+            "mapSyncOff": "Afficher uniquement les heures disponibles dans la fenêtre actuelle",
             "currentTime": "Aller à l'heure actuelle",
             "rangeStart": "Aller à la plage de temps actuelle",
             "rangeEnd": "Aller à la plage de temps actuelle",
@@ -1587,6 +1754,10 @@
             "disablePlayBack": "Désactiver les contrôles de lecture",
             "expand" : "Augmenter le curseur temporel",
             "collapse" : "Réduire le curseur temporel",
+            "collapsed": {
+                "title": "La chronologie a été réduite",
+                "tooltip": "Cliquez ici pour l'agrandir à nouveau"
+            },
             "errors": {
                 "multidim_error_title": "Le service principal ne répond pas",
                 "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur."
@@ -1679,6 +1850,121 @@
             "missingconfig": "Le gestionnaire de règles n'est pas configuré. Accès refusé!",
             "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées."
         },
+        "geostory": {
+            "loadingSpinner": "Chargement de GeoStory",
+            "addTitleSection": "Ajouter une section de titre",
+            "addParagraphSection": "Ajouter une section de paragraphe",
+            "addImmersiveSection": "Ajouter une section immersive",
+            "addMediaSection": "Ajouter une section multimédia",
+            "addImmersiveContent": "Ajouter du contenu immersif",
+            "addTextContent": "Ajouter du contenu texte",
+            "addMediaContent": "Ajouter du contenu multimédia",
+            "zoomToContent": "Zoom sur le contenu",
+            "emptyTitle": "This story is empty",
+            "emptyDescription": "Start creating an awesome geostory by adding new content",
+            "contentToolbar": {
+                "contentSize": "Changer la taille",
+                "smallSizeLabel": "Petit",
+                "mediumSizeLabel": "Moyen",
+                "largeSizeLabel": "Large",
+                "fullSizeLabel": "Plein",
+                "contentAlign": "Aligner le contenu",
+                "leftAlignLabel": "Gauche",
+                "centerAlignLabel": "Centre",
+                "rightAlignLabel": "Droite",
+                "contentTheme": "Changer de thème de champ",
+                "brightThemeLabel": "Brillant",
+                "brightTextThemeLabel": "Texte clair",
+                "darkThemeLabel": "Sombre",
+                "darkTextThemeLabel": "Texte sombre",
+                "cover": "Couvrir l'espace conteneur",
+                "fit": "Adapter l'espace conteneur",
+                "editMedia": "Changer de source média",
+                "remove": "Supprimer"
+            },
+            "builder": {
+                "defaults": {
+                    "htmlTitlePlaceholder": "Insérer un titre",
+                    "htmlPlaceholder": "insérer du texte ici...",
+                    "titleTitle": "Section de titre",
+                    "titleParagraph": "Section de paragraphe",
+                    "titleImmersive": "Section immersive",
+                    "titleMedia": "Section multimédia",
+                    "titleUnknown": "UNKNOWN"
+                },
+                "delete": "Supprimer la section sélectionnée",
+                "preview": "Afficher l'aperçu",
+                "edit": "Modifier l'histoire",
+                "hide": "Masquer l'aperçu dans les cartes",
+                "show": "Afficher l'aperçu en cartes",
+                "fullscreen": "Afficher l'aperçu en plein écran",
+                "settings": {
+                    "tooltip": "Réglages",
+                    "back": "Retour au constructeur",
+                    "save": "Enregistrer les paramètres",
+                    "headerTitle" : "Paramètres de l'histoire",
+                    "title" : "Titre",
+                    "titlePlaceholder" : "Entrez le titre",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Entrez le logo source (format d'image)",
+                    "autoplay" : "Lecture automatique",
+                    "enableAutoplay" : "Activer la lecture automatique",
+                    "autoplayInterval" : "Intervalle de lecture automatique (secondes)",
+                    "autoplayIntervalPlaceholder" : "Activer l'intervalle de lecture automatique",
+                    "navbar" : "Barre de navigation",
+                    "showNavbar" : "Afficher la barre de navigation"
+                }
+            },
+            "errors": {
+                "loading": {
+                    "title": "Erreur",
+                    "unknownError": "Erreur inconnue",
+                    "pleaseLogin": "Veuillez vous connecter",
+                    "notAccessible": "Cette histoire n'est pas accessible",
+                    "geostoryNotAccessible": "Vous n'avez pas la permission d'accéder à cette histoire. Veuillez contacter le propriétaire de la ressource",
+                    "geostoryDoesNotExist": "Cette histoire n'existe pas"
+                }
+            }
+        },
+        "saveDialog": {
+            "title": "Modifier les propriétés",
+            "name": "Nom",
+            "description": "Description",
+            "namePlaceholder": "Tapez un nom...",
+            "descriptionPlaceholder": "Tapez une description...",
+            "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
+            "close": "Fermer",
+            "cancel": "Annuler",
+            "saveSuccessTitle": "Succès",
+            "saveSuccessMessage": "Enregistré avec succès"
+        },
+        "mediaEditor": {
+            "modalTitle": "Médias",
+            "images": "Images",
+            "videos": "Vidéos",
+            "preview": "Aperçu",
+            "apply": "Appliquer",
+            "mediaPicker": {
+                "services": "Services: ",
+                "clean": "Résultats nets",
+                "noResults": "Aucun résultat",
+                "selectService": "Sélectionnez un service",
+                "add": "Ajouter",
+                "back": "Retour",
+                "save": "Sauver",
+                "edit": "Modifier",
+                "sourcePlaceholder": "Entrez une source",
+                "source": "Source",
+                "titlePlaceholder": "Entrez un titre",
+                "title": "Titre",
+                "altTextPlaceholder": "Entrez un texte alternatif",
+                "altText": "Texte alternatif",
+                "descriptionPlaceholder": "Entrez une description",
+                "description": "Description",
+                "creditsPlaceholder": "Entrez des crédits",
+                "credits": "Crédits"
+            }
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",
@@ -1690,7 +1976,7 @@
             "checkbox": "Ne plus me montrer ce message",
             "error": "Erreur: ressource non trouvée",
             "intro": {
-                "title": "Bienvenue dans MapStore2",
+                "title": "Bienvenue dans MapStore",
                 "text": "Environnement de développement d'applications cartographiques en ligne utilisant des librairies cartographiques standards, telles qu'OpenLayers 3 et Leaflet."
             },
             "drawerMenu": {
@@ -1711,7 +1997,7 @@
             },
             "burgerMenu": {
                 "title": "Menu Options",
-                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de BruGIS se trouvent ici"
+                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de MapStore se trouvent ici"
             },
             "zoomInButton": {
                 "title": "Zoom In",
@@ -1735,11 +2021,11 @@
             },
             "mapsGrid": {
                 "title": "Cartes",
-                "text": "Quelques exemples de MapStore2. Cliquez sur une image pour lancer la démo."
+                "text": "Quelques exemples de MapStore. Cliquez sur une image pour lancer la démo."
             },
             "examples": {
                 "title": "Application sur mesure",
-                "text": "Utilisez les composants et outils de MapStore2 pour construire votre application personnalisée"
+                "text": "Utilisez les composants et outils de MapStore pour construire votre application personnalisée"
             },
             "introCesium": {
                 "title": "Instructions carte 3D",
@@ -1778,7 +2064,7 @@
             },
             "dashboardContainer": {
                 "title": "Tableau de bord",
-                "text": "<p> Un tableau de bord dans MapStore2 fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
+                "text": "<p> Un tableau de bord dans MapStore fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
             },
             "dashboardAddWidget": {
                 "title": "Ajouter un widget",

@@ -10,7 +10,7 @@ const React = require('react');
 const { wizardHandlers } = require('../../../misc/wizard/enhancers');
 const loadingState = require('../../../misc/enhancers/loadingState')(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const noAttribute = require('./common/noAttributesEmptyView');
-const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type =""} = {}) => type.indexOf("gml:") !== 0).length === 0;
+const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = ""} = {}) => type.indexOf("gml:") !== 0).length === 0;
 const ChartType = noAttribute(
     hasNoAttributes
 )(require('./chart/ChartType'));
@@ -48,7 +48,7 @@ const isChartOptionsValid = (options = {}) => options.aggregateFunction && optio
 const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 
-const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { } }) => isChartOptionsValid(data.options)
+const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, shortenChartLabelThreshold }) => isChartOptionsValid(data.options)
     ? (<PreviewChart
         key="preview-chart"
         onLoad={() => setValid(true)}
@@ -67,7 +67,9 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         autoColorOptions={data.autoColorOptions}
         options={data.options}
         yAxis={data.yAxis}
+        xAxisAngle={data.xAxisAngle}
         yAxisLabel={data.yAxisLabel}
+        shortenChartLabelThreshold={shortenChartLabelThreshold}
     />)
     : (<SampleChart
         key="sample-chart"
@@ -78,28 +80,29 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         legend={data.legend}
         cartesian={data.cartesian}
         yAxis={data.yAxis}
-        />);
+        shortenChartLabelThreshold={shortenChartLabelThreshold}
+    />);
 
 const enhanceWizard = compose(lifecycle({
-    componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
+    UNSAFE_componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
         if (valid && !isChartOptionsValid(data.options)) {
             setValid(false);
         }
     }
 })
 );
-module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
+module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, shortenChartLabelThreshold }) =>
     (<Wizard
         step={step}
         setPage={setPage}
         onFinish={onFinish}
         isStepValid={n =>
-                n === 0
-                    ? data.chartType
-                    : n === 1
-                        ? isChartOptionsValid(data.options)
-                        : true
-                } hideButtons>
+            n === 0
+                ? data.chartType
+                : n === 1
+                    ? isChartOptionsValid(data.options)
+                    : true
+        } hideButtons>
         <ChartType
             key="type"
             featureTypeProperties={featureTypeProperties}
@@ -115,13 +118,13 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
             data={data}
             onChange={onChange}
             layer={data.layer || layer}
-            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)) })}
+            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)), shortenChartLabelThreshold })}
         />
         <WidgetOptions
             key="widget-options"
             data={data}
             onChange={onChange}
             layer={data.layer || layer}
-            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)) })}
+            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)), shortenChartLabelThreshold })}
         />
     </Wizard>));

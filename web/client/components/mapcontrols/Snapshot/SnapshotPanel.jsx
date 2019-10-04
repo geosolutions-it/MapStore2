@@ -21,6 +21,7 @@ const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 const Dialog = require('../../misc/Dialog');
 
 const Message = require('../../I18N/Message');
+const Portal = require('../../misc/Portal');
 
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
@@ -88,14 +89,15 @@ class SnapshotPanel extends React.Component {
         },
         panelClassName: "snapshot-panel",
         closeGlyph: "1-close",
-        buttonStyle: "primary"
+        buttonStyle: "primary",
+        bounds: '#container'
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType) {
             SnapshotSupport = require('./SnapshotSupport')(newProps.mapType);
         }
@@ -110,28 +112,29 @@ class SnapshotPanel extends React.Component {
             if (layer.visibility) {
                 return <li key={i}>{layer.title}</li>;
             }
+            return null;
         });
         return items;
     };
 
     renderButton = (enabled) => {
         return (<Button bsStyle={this.props.buttonStyle} bsSize="xs" disabled={!enabled}
-                onClick={this.onClick}>
-                <Glyphicon glyph="floppy-save" disabled={{}}/>&nbsp;<Message msgId={this.props.saveBtnText}/>
-                </Button>);
+            onClick={this.onClick}>
+            <Glyphicon glyph="floppy-save" disabled={{}}/>&nbsp;<Message msgId={this.props.saveBtnText}/>
+        </Button>);
     };
 
     renderError = () => {
         if (this.props.snapshot.error) {
             return (<Row className="text-center" style={{marginTop: "5px"}}>
-                    <h4><span className="label label-danger"> {this.props.snapshot.error}
-                    </span></h4></Row>);
+                <h4><span className="label label-danger"> {this.props.snapshot.error}
+                </span></h4></Row>);
         } else if (this.isBingOrGoogle()) {
             return (<Row className="text-center" style={{marginTop: "5px"}}>
-                    <h4><span className="label label-danger">{this.getgoogleBingError()}
-                    </span></h4></Row>);
+                <h4><span className="label label-danger">{this.getgoogleBingError()}
+                </span></h4></Row>);
         }
-
+        return null;
     };
 
     mapIsLoading = (layers) => {
@@ -156,16 +159,16 @@ class SnapshotPanel extends React.Component {
         return [
             <div style={{display: snapshotReady && !bingOrGoogle ? "block" : "none" }} key="snapshotPreviewContainer">
                 { !bingOrGoogle ? <SnapshotSupport.Preview
-                ref="snapshotPreview"
-                timeout={this.props.timeout}
-                config={this.props.map}
-                layers={this.props.layers.filter((l) => {return l.visibility; })}
-                snapstate={this.props.snapshot}
-                onStatusChange={this.props.onStatusChange}
-                active={this.props.active && !bingOrGoogle}
-                allowTaint
-                drawCanvas={snapshotReady && !bingOrGoogle}
-                browser={this.props.browser}/> : null}
+                    ref="snapshotPreview"
+                    timeout={this.props.timeout}
+                    config={this.props.map}
+                    layers={this.props.layers.filter((l) => {return l.visibility; })}
+                    snapstate={this.props.snapshot}
+                    onStatusChange={this.props.onStatusChange}
+                    active={this.props.active && !bingOrGoogle}
+                    allowTaint
+                    drawCanvas={snapshotReady && !bingOrGoogle}
+                    browser={this.props.browser}/> : null}
             </div>,
             <Image key="snapshotLoader" src={replaceImage} style={{margin: "0 auto", display: snapshotReady && !bingOrGoogle ? "none" : "block" }} responsive/>
         ];
@@ -180,6 +183,7 @@ class SnapshotPanel extends React.Component {
         if (this.props.snapshot.queue && this.props.snapshot.queue.length > 0) {
             return <div key="counter" style={{margin: "20px"}}>{this.renderDownloadMessage()}<BasicSpinner value={this.props.snapshot.queue.length} /> </div>;
         }
+        return null;
     };
 
     renderDownloadMessage = () => {
@@ -193,10 +197,14 @@ class SnapshotPanel extends React.Component {
                     {panel}
                 </Panel>);
             }
-            return (<Dialog id="mapstore-snapshot-panel" style={this.props.style}>
-                <span role="header"><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-                {panel}
-            </Dialog>);
+            return (
+                <Portal>
+                    <Dialog id="mapstore-snapshot-panel" style={this.props.panelStyle} bounds={this.props.bounds}>
+                        <span role="header"><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                        {panel}
+                    </Dialog>
+                </Portal>
+            );
         }
         return panel;
     };
@@ -205,6 +213,7 @@ class SnapshotPanel extends React.Component {
         if (this.props.snapshot && this.props.snapshot && this.props.snapshot.tainted) {
             return <Alert bsStyle="warning"><Message msgId="snapshot.taintedMessage" /></Alert>;
         }
+        return null;
     };
 
     render() {
@@ -215,10 +224,10 @@ class SnapshotPanel extends React.Component {
                 <Row key="main">
                     <Col key="previewCol" xs={7} sm={7} md={7}>{this.renderPreview()}</Col>
                     <Col key="dataCol" xs={5} sm={5} md={5}>
-                       <Table responsive>
+                        <Table responsive>
                             <tbody>
-                               <tr>
-                                <td><Message msgId="snapshot.date"/></td><td> <DateFormat dateParams={this.props.dateFormat}/></td>
+                                <tr>
+                                    <td><Message msgId="snapshot.date"/></td><td> <DateFormat dateParams={this.props.dateFormat}/></td>
                                 </tr>
                                 <tr><td><Message msgId="snapshot.layers"/></td><td><ul>{this.renderLayers()}</ul></td></tr>
                                 <tr><td><Message msgId="snapshot.size"/></td><td>{this.renderSize()}</td>

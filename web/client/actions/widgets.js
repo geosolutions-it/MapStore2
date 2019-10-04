@@ -14,6 +14,7 @@ const EDITOR_CHANGE = "WIDGETS:EDITOR_CHANGE";
 const EDITOR_SETTING_CHANGE = "WIDGETS:EDITOR_SETTING_CHANGE";
 const UPDATE = "WIDGETS:UPDATE";
 const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
+const UPDATE_LAYER = "WIDGETS:UPDATE_LAYER";
 const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 const DELETE = "WIDGETS:DELETE";
 const CLEAR_WIDGETS = "WIDGETS:CLEAR_WIDGETS";
@@ -91,6 +92,15 @@ const updateWidgetProperty = (id, key, value, target = DEFAULT_TARGET) => ({
     target,
     key,
     value
+});
+/**
+ * Update a layer property of all widgets with that layer
+ * @param {object} layer New layer object
+ * @return {object} action with type `WIDGETS:UPDATE_LAYER`
+ */
+const updateWidgetLayer = (layer) => ({
+    type: UPDATE_LAYER,
+    layer
 });
 /**
  * Deletes a widget from the passed target
@@ -212,7 +222,7 @@ const setPage = (step) => changeEditorSetting("step", step);
  * ex
  * @return {[type]} [description]
  */
-const exportCSV = ({data= [], title = "export"}) => ({
+const exportCSV = ({data = [], title = "export"}) => ({
     type: EXPORT_CSV,
     data,
     title
@@ -280,6 +290,7 @@ module.exports = {
     INSERT,
     UPDATE,
     UPDATE_PROPERTY,
+    UPDATE_LAYER,
     DELETE,
     CLEAR_WIDGETS,
     CHANGE_LAYOUT,
@@ -304,6 +315,7 @@ module.exports = {
     insertWidget,
     updateWidget,
     updateWidgetProperty,
+    updateWidgetLayer,
     deleteWidget,
     clearWidgets,
     changeLayout,

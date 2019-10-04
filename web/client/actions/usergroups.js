@@ -127,6 +127,7 @@ function editGroupError(group, error) {
 function editNewGroup(group) {
     return {
         type: EDITGROUP,
+        status: STATUS_SUCCESS,
         group
     };
 }
@@ -135,14 +136,15 @@ function editGroup(group, options = {params: {includeattributes: true}} ) {
     return (dispatch) => {
         if (group && group.id) {
             dispatch(editGroupLoading(group));
-            return API.getGroup(group.id, options).then((groupLoaded) => {
+            API.getGroup(group.id, options).then((groupLoaded) => {
                 // the service returns restUsers = "", skip this to avoid overriding
                 dispatch(editGroupSuccess(groupLoaded));
             }).catch((error) => {
                 dispatch(editGroupError(group, error));
             });
+        } else {
+            dispatch(editNewGroup(group));
         }
-        dispatch(editNewGroup(group));
     };
 }
 function changeGroupMetadata(key, newValue) {
@@ -273,6 +275,7 @@ function deleteGroup(id, status = "confirm") {
             });
         };
     }
+    return () => {};
 }
 
 function groupSearchTextChanged(text) {

@@ -51,26 +51,3 @@ L.Evented.include({
     }
 
 });
-
-/*L.Map.addInitHook( function() {
-    var that = this;
-    var h;
-    function clearH() {
-        if (h !== null) {
-            clearTimeout( h );
-            h = null;
-        }
-    }
-    if (that.on) {
-        that.on( 'click', checkLater );
-        that.on( 'dblclick', function() { setTimeout(clearH, 0 ); });
-    }
-
-    function checkLater( e ) {
-        clearH();
-        function check() {
-            that.fire( 'singleclick', L.Util.extend( e, { type: 'singleclick' } ) );
-        }
-        h = setTimeout( check, 500 );
-    }
-});*/

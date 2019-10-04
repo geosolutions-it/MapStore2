@@ -187,10 +187,7 @@ module.exports = (CodeMirror) => {
                 } else if (startsWith(trim(stream.string), '[')) {
                     override = "filter";
                     return 'maybeprop';
-                } /*else if (allowNested) {
-                    override = stream.match(/^\s*:(?:\s|$)/, false) ? 'property' : 'tag';
-                    return 'block';
-                }*/
+                }
                 override += ' error';
                 return 'maybeprop';
             } else if (currentType === 'meta') {

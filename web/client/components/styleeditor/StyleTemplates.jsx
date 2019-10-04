@@ -21,6 +21,7 @@ const Filter = withLocal('filterPlaceholder')(require('../misc/Filter'));
 const FormControl = withLocal('placeholder')(FormControlRB);
 
 const ResizableModal = require('../misc/ResizableModal');
+const Portal = require('../misc/Portal');
 const Message = require('../I18N/Message');
 const HTML = require('../I18N/HTML');
 
@@ -85,41 +86,42 @@ const StyleTemplates = ({
     onUpdate = () => {},
     loading
 }) => (
-        <BorderLayout
-            header={
-                <div>
-                    <Filter
-                        filterPlaceholder="styleeditor.templateFilterPlaceholder"
-                        filterText={filterText}
-                        onFilter={onFilter}/>
-                    <div className="text-center">
-                        <small>{loading ? <Loader size={15} style={{ display: 'inline-block' }}/> : <Message msgId="styleeditor.createStyleFromTemplate"/>}</small>
-                    </div>
+    <BorderLayout
+        header={
+            <div>
+                <Filter
+                    filterPlaceholder="styleeditor.templateFilterPlaceholder"
+                    filterText={filterText}
+                    onFilter={onFilter}/>
+                <div className="text-center">
+                    <small>{loading ? <Loader size={15} style={{ display: 'inline-block' }}/> : <Message msgId="styleeditor.createStyleFromTemplate"/>}</small>
                 </div>
-            }>
-            <SideGrid
-                colProps={{}}
-                cardComponent={SquareCard}
-                onItemClick={({
+            </div>
+        }>
+        <SideGrid
+            colProps={{}}
+            cardComponent={SquareCard}
+            onItemClick={({
+                code,
+                styleId: templateId,
+                format
+            }) => {
+                onSelect({
                     code,
-                    styleId: templateId,
-                    format
-                }) => {
-                    onSelect({
-                        code,
-                        templateId,
-                        format: format || 'css'
-                    });
-                    onUpdate({...styleSettings, title: head(templates.filter(({styleId}) => styleId === templateId).map(({title}) => title))});
-                }}
-                items={templates
-                    .filter(({title}) => !filterText || filterText && title.indexOf(filterText) !== -1)
-                    .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
-                    .map(styleTemplate => ({
-                        ...styleTemplate,
-                        selected: styleTemplate.styleId === selectedStyle,
-                        disabled: loading
-                        }))}/>
+                    templateId,
+                    format: format || 'css'
+                });
+                onUpdate({...styleSettings, title: head(templates.filter(({styleId}) => styleId === templateId).map(({title}) => title))});
+            }}
+            items={templates
+                .filter(({title}) => !filterText || filterText && title.indexOf(filterText) !== -1)
+                .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
+                .map(styleTemplate => ({
+                    ...styleTemplate,
+                    selected: styleTemplate.styleId === selectedStyle,
+                    disabled: loading
+                }))}/>
+        <Portal>
             <ResizableModal
                 show={!!add}
                 fitContent
@@ -149,7 +151,8 @@ const StyleTemplates = ({
                     </Alert>}
                 </Form>
             </ResizableModal>
-        </BorderLayout>
-    );
+        </Portal>
+    </BorderLayout>
+);
 
 module.exports = StyleTemplates;

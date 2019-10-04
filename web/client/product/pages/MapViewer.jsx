@@ -22,7 +22,7 @@ class MapViewerPage extends React.Component {
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
-        wrappedComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
 
@@ -43,7 +43,7 @@ class MapViewerPage extends React.Component {
 module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
-    {
-        loadMapConfig,
-        onInit: initMap
-    })(MapViewerPage);
+{
+    loadMapConfig,
+    onInit: initMap
+})(MapViewerPage);

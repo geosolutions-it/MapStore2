@@ -5,25 +5,33 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ol = require('openlayers');
-var OpenlayersLayer = require('../Layer.jsx');
-var expect = require('expect');
-var assign = require('object-assign');
-require('../../../../utils/openlayers/Layers');
-require('../plugins/OSMLayer');
-require('../plugins/WMSLayer');
-require('../plugins/WMTSLayer');
-require('../plugins/GoogleLayer');
-require('../plugins/BingLayer');
-require('../plugins/MapQuest');
-require('../plugins/VectorLayer');
-require('../plugins/GraticuleLayer');
-require('../plugins/OverlayLayer');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import OpenlayersLayer from '../Layer';
 
-const SecurityUtils = require('../../../../utils/SecurityUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+import assign from 'object-assign';
+import '../../../../utils/openlayers/Layers';
+import '../plugins/OSMLayer';
+import '../plugins/WMSLayer';
+import '../plugins/WMTSLayer';
+import '../plugins/GoogleLayer';
+import '../plugins/BingLayer';
+import '../plugins/MapQuest';
+import '../plugins/VectorLayer';
+import '../plugins/GraticuleLayer';
+import '../plugins/OverlayLayer';
+
+import SecurityUtils from '../../../../utils/SecurityUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+
+import { Map, View } from 'ol';
+import { defaults as defaultControls } from 'ol/control';
+
+import axios from "../../../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
+
+let mockAxios;
 
 const sampleTileMatrixConfig900913 = {
     "matrixIds": {
@@ -150,17 +158,18 @@ describe('Openlayers layer', () => {
     let map;
 
     beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
-        map = new ol.Map({
+        map = new Map({
             layers: [
             ],
-            controls: ol.control.defaults({
-                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
+            controls: defaultControls({
+                attributionOptions: {
                     collapsible: false
                 }
             }),
             target: 'map',
-            view: new ol.View({
+            view: new View({
                 center: [0, 0],
                 zoom: 5
             })
@@ -168,6 +177,7 @@ describe('Openlayers layer', () => {
     });
 
     afterEach(() => {
+        mockAxios.restore();
         map.setTarget(null);
         document.body.innerHTML = '';
     });
@@ -178,7 +188,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                  map={map}/>, document.getElementById("container"));
+                map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -196,7 +206,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -214,7 +224,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -225,7 +235,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -241,7 +251,7 @@ describe('Openlayers layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <OpenlayersLayer type="osm"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -260,7 +270,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -268,6 +278,151 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
         expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+    });
+
+    it('test wms vector formats', () => {
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/vnd.mapbox-vector-tile'
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=topojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
+    });
+
+    it('test wms vector formats styles are applied', (done) => {
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://sample.server/geoserver/wms",
+            "vectorStyle": {
+                "color": "#ff0000",
+                "fillColor": "#ffff00",
+                "fillOpacity": 0.5
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+        setTimeout(() => {
+            const style = layer.layer.getStyle();
+            expect(style).toExist();
+            expect(style.getStroke().getColor()).toBe('rgb(255, 0, 0)');
+            expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
+            done();
+        }, 0);
+    });
+
+    it('test wms vector formats remote styles are applied', (done) => {
+        const SLD = `<?xml version="1.0" encoding="ISO-8859-1"?>
+            <StyledLayerDescriptor version="1.0.0"
+                xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"
+                xmlns="http://www.opengis.net/sld"
+                xmlns:ogc="http://www.opengis.net/ogc"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <NamedLayer>
+                <Name>Simple Polygon</Name>
+                <UserStyle>
+                <Title>Simple Polygon</Title>
+                <FeatureTypeStyle>
+                    <Rule>
+                    <PolygonSymbolizer>
+                        <Stroke>
+                            <CssParameter name="stroke">#FF0000</CssParameter>
+                            <CssParameter name="stroke-width">2</CssParameter>
+                        </Stroke>
+                        <Fill>
+                            <CssParameter name="fill">#FFFF00</CssParameter>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                        </Fill>
+                    </PolygonSymbolizer>
+                    </Rule>
+                </FeatureTypeStyle>
+                </UserStyle>
+            </NamedLayer>
+            </StyledLayerDescriptor>`;
+        mockAxios.onGet().reply(200, SLD);
+        const options = {
+            "type": 'wms',
+            "visibility": true,
+            "name": 'osm:vector_tile',
+            "group": 'Vector',
+            "url": "http://sample.server/geoserver/wms",
+            "vectorStyle": {
+                "url": "http://mystyle",
+                "format": "sld"
+            }
+        };
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options,
+                format: 'application/json;type=geojson'
+            }}
+            map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+        setTimeout(() => {
+            const style = layer.layer.getStyle();
+            expect(style).toExist();
+            expect(style.getStroke().getColor()).toBe('#FF0000');
+            expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
+            done();
+        }, 0);
     });
 
     it('wms layer attribution with credits - create and update layer', () => {
@@ -294,13 +449,12 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-
         expect(layer).toExist();
         // check creation
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT1);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT1);
         // check remove
         ReactDOM.render(
             <OpenlayersLayer type="wms"
@@ -311,19 +465,19 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={{ ...options, credits: {title: TEXT2} }} map={map} />, document.getElementById("container"));
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT2);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT2);
         // check content update
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe(TEXT1);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT1);
         // check complex contents
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={{...options, credits: CREDITS1}} map={map} />, document.getElementById("container"));
         expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()[0].getHTML()).toBe('<img src="test.jpg" title="test">');
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe('<img src="test.jpg" title="test">');
     });
 
     it('creates a wms elevation layer for openlayers map', () => {
@@ -453,7 +607,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -474,7 +628,7 @@ describe('Openlayers layer', () => {
         // create layers
         const layer = ReactDOM.render(
             <OpenlayersLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -531,7 +685,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wmts"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -553,7 +707,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -573,14 +727,33 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
     });
+    it('test correct wms origin', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": ["http://sample.server/geoserver/wms"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
 
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().getTileGrid().getOrigin()).toEqual([-20037508.342789244, -20037508.342789244]);
+    });
     it('creates a wms layer with custom origin', () => {
         var options = {
             "type": "wms",
@@ -594,7 +767,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -616,7 +789,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -632,7 +805,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="graticule"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -696,7 +869,7 @@ describe('Openlayers layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
 
@@ -725,7 +898,7 @@ describe('Openlayers layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const overlayElement = document.getElementById('overlay-1-overlay');
@@ -785,7 +958,7 @@ describe('Openlayers layer', () => {
         // create layers
         let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+                options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const overlayElement = document.getElementById('overlay-1-overlay');
@@ -811,10 +984,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -824,11 +997,48 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
+    });
+
+    it('creates a vector layer with opacity for openlayers map', () => {
+        const opacity = 0.45;
+        var options = {
+            crs: 'EPSG:4326',
+            opacity,
+            features: {
+                'type': 'FeatureCollection',
+                'crs': {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Polygon',
+                            'coordinates': [[
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
+                            ]]
+                        }
+                    }
+                ]
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="vector"
+                options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer.layer.getOpacity()).toEqual(opacity);
     });
 
     it('creates a vector layer specifying the feature CRS for openlayers map', () => {
@@ -849,10 +1059,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [1447153.3803125600, 5311971.8469454700],
-                              [1669792.3618991000, 5311971.8469454700],
-                              [1669792.3618991000, 5465442.1833227500],
-                              [1447153.3803125600, 5465442.1833227500]
+                                [1447153.3803125600, 5311971.8469454700],
+                                [1669792.3618991000, 5311971.8469454700],
+                                [1669792.3618991000, 5465442.1833227500],
+                                [1447153.3803125600, 5465442.1833227500]
                             ]]
                         }
                     }
@@ -862,7 +1072,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -898,10 +1108,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -911,7 +1121,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -954,7 +1164,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -979,10 +1189,10 @@ describe('Openlayers layer', () => {
                         'geometry': {
                             'type': 'Polygon',
                             'coordinates': [[
-                              [13, 43],
-                              [15, 43],
-                              [15, 44],
-                              [13, 44]
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
                             ]]
                         }
                     }
@@ -992,7 +1202,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1176,7 +1386,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1186,7 +1396,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
 
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
@@ -1204,7 +1414,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" position={10}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1214,7 +1424,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" position={2}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getZIndex()).toBe(2);
     });
 
@@ -1234,7 +1444,7 @@ describe('Openlayers layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                 options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -1246,8 +1456,80 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                 options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
+                options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+    });
+    it('changes wms params causes cache drop', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://sample.server/geoserver/wms",
+            "params": {
+                "cql_filter": "INCLUDE"
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        const source = layer.layer.getSource();
+        const spy = expect.spyOn(source, "refresh");
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+
+        // this prevents old cache to be rendered while loading
+        expect(spy).toHaveBeenCalled();
+    });
+    it('dimensions triggers params change', () => {
+        // this tests if dimension parameter changes, this triggers updateParams
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://sample.server/geoserver/wms",
+            "params": {
+                "cql_filter": "INCLUDE"
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        const source = layer.layer.getSource();
+        const spyRefresh = expect.spyOn(source, "refresh");
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
+
+        expect(spyRefresh).toHaveBeenCalled();
+        expect(layer.layer.getSource().getParams().time).toBe("2019-01-01T00:00:00Z");
     });
     it('test wms security token on SLD param', () => {
         const options = {
@@ -1370,7 +1652,7 @@ describe('Openlayers layer', () => {
             type="wmts"
             options={options}
             map={map}
-             />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(layer.layer.getVisible()).toBe(false);
     });
 
@@ -1610,5 +1892,141 @@ describe('Openlayers layer', () => {
         expect(layer).toExist();
 
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
+    });
+
+
+    it('test wmts vector formats', () => {
+
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'osm:vector_tile',
+            group: 'Vector',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+
+        const GeoJSON = 'application/json;type=geojson';
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: GeoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
+
+
+        const MVT = 'application/vnd.mapbox-vector-tile';
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: MVT
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
+
+        const TopoJSON = 'application/json;type=topojson';
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={{
+                ...options,
+                format: TopoJSON
+            }}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
+
+    });
+
+    it('test render a wfs3 layer', () => {
+
+        const options = {
+            id: 'layer_id',
+            name: 'layer_name',
+            title: 'Layer Title',
+            type: 'wfs3',
+            visibility: true,
+            url: '/geoserver/wfs3/collections/layer_name/tiles/{tilingSchemeId}/{level}/{row}/{col}',
+            format: 'application/vnd.mapbox-vector-tile',
+            tilingScheme: '/geoserver/wfs3/collections/layer_name/tiles/{tilingSchemeId}',
+            tilingSchemes: {
+                url: '/geoserver/wfs3/collections/layer_name/tiles',
+                schemes: [
+                    {
+                        type: 'TileMatrixSet',
+                        identifier: 'GoogleMapsCompatible',
+                        title: 'GoogleMapsCompatible',
+                        supportedCRS: 'EPSG:3857',
+                        tileMatrix: [{
+                            matrixHeight: 1,
+                            matrixWidth: 1,
+                            tileHeight: 256,
+                            tileWidth: 256,
+                            identifier: '0',
+                            scaleDenominator: 559082263.9508929,
+                            topLeftCorner: [
+                                -20037508.34,
+                                20037508
+                            ],
+                            type: 'TileMatrix'
+                        }],
+                        boundingBox: {
+                            crs: 'http://www.opengis.net/def/crs/EPSG/0/3857',
+                            lowerCorner: [
+                                -20037508.34,
+                                -20037508.34
+                            ],
+                            upperCorner: [
+                                20037508.34,
+                                20037508.34
+                            ],
+                            type: 'BoundingBox'
+                        },
+                        wellKnownScaleSet: 'http://www.opengis.net/def/wkss/OGC/1.0/GoogleMapsCompatible'
+                    }
+                ]
+            },
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -156.2575,
+                    miny: -90,
+                    maxx: 123.33333333333333,
+                    maxy: 46.5475
+                }
+            },
+            allowedSRS: {
+                'EPSG:3857': true
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs3"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getType()).toBe('VECTOR_TILE');
+        expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
     });
 });

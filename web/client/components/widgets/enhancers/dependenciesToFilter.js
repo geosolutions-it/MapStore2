@@ -18,7 +18,7 @@ const getCqlFilter = (layer, dependencies) => {
     return params && cqlFilterKey && params[cqlFilterKey];
 };
 const { read } = require('../../../utils/ogc/Filter/CQL/parser');
-
+const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
 /**
  * Merges filter object and dependencies map into an ogc filter
@@ -30,15 +30,21 @@ module.exports = compose(
             || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport)
             || geomProp !== nextProps.geomProp
             || filter !== nextProps.filter
-            || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies),
+            || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
+            || getLayerFilter(layer) !== getLayerFilter(nextProps.layer),
         ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer} = {}) => {
             const viewport = dependencies.viewport;
             const fb = filterBuilder({ gmlVersion: "3.1.1" });
             const toFilter = fromObject(fb);
             const {filter, property, and} = fb;
+            const {layerFilter} = layer || {};
+
             if (!mapSync || !dependencies.viewport) {
                 return {
-                    filter: filterObj ? filter(and((FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") || []))) : undefined
+                    filter: filterObj || layerFilter ? filter(and(
+                        ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(filterObj ? FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") : [])
+                    )) : undefined
                 };
             }
 
@@ -53,6 +59,7 @@ module.exports = compose(
             return {
                 filter: filter(and(
                     ...cqlFilterRules,
+                    ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                     ...(filterObj ? FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") : []),
                     property(geomProp).intersects(geom)))
             };

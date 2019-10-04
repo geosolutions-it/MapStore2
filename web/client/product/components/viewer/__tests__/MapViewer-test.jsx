@@ -45,7 +45,7 @@ describe("Test the MapViewerCmp component", () => {
     it('testing creation with mapId = new', () => {
         const match = {params: {mapId: "new"}};
         const mapViewerPros = { match, location, onInit: () => {},
-        wrappedContainer: MapViewerContainer,
+            wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe("new.json");
                 expect(mapId).toBe(null);
@@ -87,6 +87,28 @@ describe("Test the MapViewerCmp component", () => {
                 expect(mapId).toBe(1);
             }};
         const component = renderMapViewerComp(mapViewerPros);
+        expect(component).toExist();
+    });
+    it('testing update of map on mapId change', (done) => {
+        let count = 1;
+        const match = { params: { mapId: 1 } };
+        const match2 = { params: { mapId: 2 } };
+        const mapViewerPros = {
+            match, location, onInit: () => { },
+            wrappedContainer: MapViewerContainer,
+            loadMapConfig: (cfgUrl, mapId) => {
+                expect(cfgUrl).toBe(`/mapstore/rest/geostore/data/${count}`);
+                expect(mapId).toBe(count);
+                count++;
+                if (count === 3) {
+                    done();
+                }
+            }
+        };
+        // override location force re-render. (not sure check location is correct)
+        renderMapViewerComp({ ...mapViewerPros, location: { ...location }});
+        // render second time
+        const component = renderMapViewerComp({ ...mapViewerPros, match: match2, location: {...location}});
         expect(component).toExist();
     });
 

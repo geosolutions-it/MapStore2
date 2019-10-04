@@ -1,4 +1,4 @@
-In cartography, a map is any two-dimensional graphic representation of the spatial relationships of the whole or a part of the earth. In digital cartography as in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/), a map consists in overlaying various layers of geographic data and their styles in data frames, it contains various map elements such as a legend and a scale bar.
+In cartography, a map is any two-dimensional graphic representation of the spatial relationships of the whole or a part of the earth. In digital cartography as in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a map consists in overlaying various layers of geographic data and their styles in data frames, it contains various map elements such as a legend and a scale bar.
 
 Let us discover the WebGIS portal interface and its main components by creating a simple map and adding a layer.
 
@@ -13,7 +13,7 @@ To better explain the map viewer, we have specially added a layer. You will lear
 
 <img src="../img/gui.jpg" style="max-width:700px;" />
 
-The portal interface of [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/)  consists of the following blocks which will be often referred during the documentation.
+The portal interface of [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)  consists of the following blocks which will be often referred during the documentation.
 
 * The <span style="color:red">Table of Contents (TOC)</span> includes the map contents such as layer groups, layers and functions to manage the added layers.
 

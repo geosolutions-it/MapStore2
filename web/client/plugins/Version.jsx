@@ -13,7 +13,7 @@ const {versionSelector} = require('../selectors/version');
 const Message = require('../components/I18N/Message');
 
 /**
-  * Version Plugin. Shows current MapStore2 version
+  * Version Plugin. Shows current MapStore2 version in settings panel
   * @class  Version
   * @memberof plugins
   * @static
@@ -22,7 +22,7 @@ const Message = require('../components/I18N/Message');
 const Version = connect((state) => ({
     version: versionSelector(state)
 }))(
-class extends React.Component {
+    class extends React.Component {
     static propTypes = {
         version: PropTypes.string
     };
@@ -34,7 +34,7 @@ class extends React.Component {
     render() {
         return <span className="application-version"><span className="application-version-label"><Message msgId="version.label"/></span>: {this.props.version}</span>;
     }
-});
+    });
 
 const assign = require('object-assign');
 

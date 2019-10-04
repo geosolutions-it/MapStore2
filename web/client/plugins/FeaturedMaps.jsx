@@ -13,6 +13,7 @@ const {defaultProps, compose, mapPropsStream} = require('recompose');
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const {isEqual} = require('lodash');
+const {NavItem, Glyphicon} = require('react-bootstrap');
 const { setFeaturedMapsEnabled} = require('../actions/maps');
 
 const Message = require("../components/I18N/Message");
@@ -20,12 +21,16 @@ const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {userRoleSelector} = require('../selectors/security');
 const {mapTypeSelector} = require('../selectors/maptype');
-const {resourceSelector, searchTextSelector} = require('../selectors/featuredmaps');
+const {resourceSelector, searchTextSelector, isFeaturedMapsEnabled} = require('../selectors/featuredmaps');
 const {loadPage, updateItemsLifecycle} = require('../components/maps/enhancers/featuredMaps');
 const gridPagination = require('../components/misc/enhancers/gridPagination');
+const tooltip = require('../components/misc/enhancers/tooltip');
 
 const MapsGrid = require('./maps/MapsGrid');
 const MetadataModal = require('./maps/MetadataModal');
+const {scrollIntoViewId} = require('../utils/DOMUtil');
+
+const ToolTipedNavItem = tooltip(NavItem);
 
 const PAGE_SIZE = 4;
 
@@ -39,15 +44,16 @@ class FeaturedMaps extends React.Component {
         bottom: PropTypes.node,
         className: PropTypes.string,
         previousItems: PropTypes.array,
-        onStart: PropTypes.func
+        enableFeaturedMaps: PropTypes.func
     };
 
     static contextTypes = {
         router: PropTypes.object
     };
 
-    componentWillMount() {
-        this.props.onStart();
+
+    UNSAFE_componentWillMount() {
+        this.props.enableFeaturedMaps(true);
     }
 
     render() {
@@ -77,24 +83,27 @@ const featuredMapsPluginSelector = createSelector([
     userRoleSelector,
     state => state.browser && state.browser.mobile,
     searchTextSelector,
-    resourceSelector
-], (mapType, role, isMobile, searchText, resource) => ({
+    resourceSelector,
+    isFeaturedMapsEnabled
+], (mapType, role, isMobile, searchText, resource, isFeaturedEnabled) => ({
     mapType,
+    role,
     permission: role === 'ADMIN',
     pagination: isMobile ? 'virtual-scroll-horizontal' : 'show-more',
     searchText,
-    resource
+    resource,
+    isFeaturedEnabled
 }));
 
 const updateFeaturedMapsStream = mapPropsStream(props$ =>
     props$.merge(props$.take(1).switchMap(({searchText = '', permission, viewSize, pageSize, loadFirst = () => {} }) => {
         return props$
-            .debounceTime(500)
             .startWith({searchText, permission, viewSize, pageSize, loading: true})
             .distinctUntilChanged((previous, next) =>
                 isEqual(previous.resource, next.resource)
                 && previous.searchText === next.searchText
                 && previous.permission === next.permission
+                && previous.role === next.role
             )
             .do(({permission: newPermission, viewSize: newViewSize, searchText: newSearchText, pageSize: newPageSize} = {}) =>
                 loadFirst({permission: newPermission, viewSize: newViewSize, searchText: newSearchText, pageSize: newPageSize})
@@ -111,7 +120,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
 
 const FeaturedMapsPlugin = compose(
     connect(featuredMapsPluginSelector, {
-        onStart: () => setFeaturedMapsEnabled( true )
+        enableFeaturedMaps: setFeaturedMapsEnabled
     }),
     defaultProps({
         mapType: 'leaflet',
@@ -142,13 +151,30 @@ const FeaturedMapsPlugin = compose(
     updateFeaturedMapsStream
 )((FeaturedMaps));
 
+const LabeledNavItem = connect(featuredMapsPluginSelector)(({ isFeaturedEnabled }) =>
+    isFeaturedEnabled ? (<NavItem
+        target="_blank"
+        onClick={() => scrollIntoViewId('ms-featured-maps')}
+    >
+        <Message msgId="manager.featuredMaps" />
+    </NavItem>) : null);
+
+const IconNavItem = connect(featuredMapsPluginSelector)(({ isFeaturedEnabled }) =>
+    isFeaturedEnabled ? (<ToolTipedNavItem
+        target="_blank"
+        tooltip={<Message msgId="manager.featuredMaps" />}
+        tooltipPosition="bottom"
+        onClick={() => scrollIntoViewId('ms-featured-maps')}
+    >
+        <Glyphicon glyph="star" />
+    </ToolTipedNavItem>) : null);
+
 module.exports = {
     FeaturedMapsPlugin: assign(FeaturedMapsPlugin, {
         NavMenu: {
             position: 1,
-            label: <Message msgId="manager.featuredMaps" />,
-            linkId: '#ms-featured-maps',
-            glyph: 'star'
+            labelComponent: <LabeledNavItem key="featured-maps-label"/>,
+            iconComponent: <IconNavItem key="featured-maps-icon"/>
         }
     }),
     epics: {

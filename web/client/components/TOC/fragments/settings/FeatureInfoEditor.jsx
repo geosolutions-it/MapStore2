@@ -7,6 +7,7 @@
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const ReactQuill = require('react-quill');
 const ResizableModal = require('../../../misc/ResizableModal');
 const Portal = require('../../../misc/Portal');
@@ -31,38 +32,76 @@ Quill.register({
  * @prop {bool} enableIFrameModule enable iframe in editor, default true
  */
 
-module.exports = ({onShowEditor = () => {}, showEditor, element = {}, onChange = () => {}, enableIFrameModule = true}) =>(
-    <Portal>
-        <ResizableModal
-            fade
-            show={showEditor}
-            title={<Message msgId="layerProperties.editCustomFormat"/>}
-            size="lg"
-            showFullscreen
-            clickOutEnabled={false}
-            onClose={() => onShowEditor(!showEditor)}
-            buttons={[
-                {
-                    bsStyle: 'primary',
-                    text: <Message msgId="close"/>,
-                    onClick: () => onShowEditor(!showEditor)
-                }
-            ]}>
-            <div id="ms-template-editor" className="ms-editor">
-                <ReactQuill
-                    bounds="#ms-template-editor"
-                    modules={enableIFrameModule ? {
-                        resizeModule: {},
-                        toolbar: toolbarConfig
-                    } : {}}
-                    defaultValue={element.featureInfo && element.featureInfo.template || ' '}
-                    onChange={template => {
-                        onChange('featureInfo', {
-                            ...(element && element.featureInfo || {}),
-                            template
-                        });
-                    }}/>
-            </div>
-        </ResizableModal>
-    </Portal>
-);
+class FeatureInfoEditor extends React.Component {
+
+    static propTypes = {
+        showEditor: PropTypes.bool,
+        element: PropTypes.object,
+        onChange: PropTypes.func,
+        onShowEditor: PropTypes.func,
+        enableIFrameModule: PropTypes.bool
+    };
+
+    static defaultProps = {
+        showEditor: false,
+        element: {},
+        enableIFrameModule: false,
+        onChange: () => {},
+        onShowEditor: () => {}
+    };
+
+    state = {
+        template: ' '
+    };
+
+    UNSAFE_componentWillMount() {
+        this.setState({
+            template: this.props.element && this.props.element.featureInfo && this.props.element.featureInfo.template || ' '
+        });
+    }
+
+    render() {
+        const { showEditor, enableIFrameModule = true } = this.props;
+        return (
+            <Portal>
+                <ResizableModal
+                    fade
+                    show={showEditor}
+                    title={<Message msgId="layerProperties.editCustomFormat"/>}
+                    size="lg"
+                    showFullscreen
+                    clickOutEnabled={false}
+                    onClose={() => this.close()}
+                    buttons={[
+                        {
+                            bsStyle: 'primary',
+                            text: <Message msgId="close"/>,
+                            onClick: () => this.close()
+                        }
+                    ]}>
+                    <div id="ms-template-editor" className="ms-editor">
+                        <ReactQuill
+                            bounds="#ms-template-editor"
+                            ref={(quill) => { if (quill) { this.quill = quill; } } }
+                            modules={enableIFrameModule ? {
+                                resizeModule: {},
+                                toolbar: toolbarConfig
+                            } : {}}
+                            defaultValue={this.state.template}
+                            onChange={template => this.setState({ template })}/>
+                    </div>
+                </ResizableModal>
+            </Portal>
+        );
+    }
+
+    close = () => {
+        this.props.onShowEditor(!this.props.showEditor);
+        this.props.onChange('featureInfo', {
+            ...(this.props.element && this.props.element.featureInfo || {}),
+            template: this.state.template
+        });
+    };
+}
+
+module.exports = FeatureInfoEditor;

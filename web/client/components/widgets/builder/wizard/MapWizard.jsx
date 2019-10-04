@@ -15,9 +15,9 @@ const Preview = require('./map/PreviewMap');
 
 
 module.exports = ({
-    onChange = () => {}, onFinish = () => {}, setPage= () => {},
-    step=0,
-    selectedNodes=[],
+    onChange = () => {}, onFinish = () => {}, setPage = () => {},
+    step = 0,
+    selectedNodes = [],
     onNodeSelect = () => {},
     editorData = {},
     editNode,
@@ -48,4 +48,4 @@ module.exports = ({
             data={editorData}
             onChange={onChange}
         />
-</Wizard>);
+    </Wizard>);

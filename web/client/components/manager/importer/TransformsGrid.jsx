@@ -39,14 +39,14 @@ class TransformsGrid extends React.Component {
     renderTransform = (transform, index) => {
         let tooltip = <Tooltip id="transform-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={index}>
-                <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadTransform(index); }}>{index}</a></td>
-                <td key="type">{transform.type}</td>
-                <td key="actions">
-                    <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
-                        <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTransform(index); }}><Glyphicon glyph="remove"/></Button>
-                    </OverlayTrigger>
-                </td>
-            </tr>);
+            <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadTransform(index); }}>{index}</a></td>
+            <td key="type">{transform.type}</td>
+            <td key="actions">
+                <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
+                    <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTransform(index); }}><Glyphicon glyph="remove"/></Button>
+                </OverlayTrigger>
+            </td>
+        </tr>);
     };
 
     render() {
@@ -55,18 +55,18 @@ class TransformsGrid extends React.Component {
         }
         return (
             <Panel {...this.props.panProps} header={<span><Message msgId="importer.task.transforms" /></span>}>
-            <Table striped bordered condensed hover>
-                <thead>
-                  <tr>
-                    <th><Message msgId="importer.number"/></th>
-                    <th><Message msgId="importer.transforms.type" /></th>
-                    <th><Message msgId="importer.transforms.actions" /></th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {this.props.transforms.map(this.renderTransform)}
-                </tbody>
-            </Table>
+                <Table striped bordered condensed hover>
+                    <thead>
+                        <tr>
+                            <th><Message msgId="importer.number"/></th>
+                            <th><Message msgId="importer.transform.type" /></th>
+                            <th><Message msgId="importer.transform.actions" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.props.transforms.map(this.renderTransform)}
+                    </tbody>
+                </Table>
             </Panel>
         );
     }

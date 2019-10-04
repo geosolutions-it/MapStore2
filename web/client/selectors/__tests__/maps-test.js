@@ -17,7 +17,9 @@ const {
     showMapDetailsSelector,
     mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector,
-    mapThumbnailsUriFromIdSelector
+    mapThumbnailsUriFromIdSelector,
+    searchTextSelector,
+    searchParamsSelector
 } = require('../maps');
 
 const name = "name";
@@ -34,24 +36,27 @@ const mapsState = {
             name,
             description
         },
+        searchText: '*',
+        start: 4,
+        totalCount: 4,
         results: [
-        {
-          canDelete: true,
-          canEdit: true,
-          canCopy: true,
-          creation,
-          description,
-          id: mapId,
-          name,
-          thumbnail,
-          details,
-          detailsText,
-          owner: 'admin',
-          permissions: [
-              {name: "name"}
-          ]
-        }
-      ]
+            {
+                canDelete: true,
+                canEdit: true,
+                canCopy: true,
+                creation,
+                description,
+                id: mapId,
+                name,
+                thumbnail,
+                details,
+                detailsText,
+                owner: 'admin',
+                permissions: [
+                    {name: "name"}
+                ]
+            }
+        ]
     }
 };
 describe('Test maps selectors', () => {
@@ -98,5 +103,13 @@ describe('Test maps selectors', () => {
     it('test mapThumbnailsUriFromIdSelector no state', () => {
         const props = mapThumbnailsUriFromIdSelector(mapsState, mapId);
         expect(props).toBe(thumbnail);
+    });
+    it('test searchTextSelector no state', () => {
+        const searchText = searchTextSelector(mapsState);
+        expect(searchText).toBe(mapsState.maps.searchText);
+    });
+    it('test searchParamsSelector no state', () => {
+        const params = searchParamsSelector(mapsState);
+        expect(params.start).toBe(4);
     });
 });

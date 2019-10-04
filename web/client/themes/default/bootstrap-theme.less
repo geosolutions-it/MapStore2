@@ -141,6 +141,9 @@ button.close {
         margin: auto;
         margin-top: 150px;
     }
+    .modal-dialog-draggable {
+        margin-top: 0;
+    }
 }
 
 // Dropdown
@@ -152,6 +155,13 @@ button.close {
     word-wrap: break-word;
 }
 
+.btn {
+    &.no-events {
+        pointer-events: none;
+        // this class removes the border from the button
+        .no-border;
+    }
+}
 //popover
 .popover-title{
     word-wrap: break-word;
@@ -160,4 +170,3 @@ button.close {
 .popover-content{
     word-wrap: break-word;
 }
-

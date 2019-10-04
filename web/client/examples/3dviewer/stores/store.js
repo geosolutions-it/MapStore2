@@ -15,7 +15,7 @@ const {searchEpic, searchItemSelected} = require('../../../epics/search');
 const rootEpic = combineEpics(searchEpic, searchItemSelected);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 
- // reducers
+// reducers
 const reducers = combineReducers({
     mapConfig,
     map,

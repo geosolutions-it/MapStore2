@@ -8,9 +8,9 @@
 
 const expect = require('expect');
 
-const {toggleControl} = require('../../actions/controls');
+const { toggleControl, setControlProperty, setControlProperties } = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
-const {closeIdentify, purgeMapInfoResults} = require('../../actions/mapInfo');
+const {closeIdentify, purgeMapInfoResults, noQueryableLayers} = require('../../actions/mapInfo');
 
 const {updateMapLayoutEpic} = require('../maplayout');
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
@@ -28,7 +28,7 @@ describe('map layout epics', () => {
                         bottom: 30
                     }});
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -47,7 +47,7 @@ describe('map layout epics', () => {
                         bottom: undefined
                     }} );
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -63,7 +63,7 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                 });
-            } catch(e) {
+            } catch (e) {
                 done(e);
             }
             done();
@@ -87,5 +87,66 @@ describe('map layout epics', () => {
         const state = {};
         testEpic(addTimeoutEpic(updateMapLayoutEpic, 10), 1, purgeMapInfoResults(), epicResult, state);
 
+    });
+
+    it('tests resizable drawer', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        left: 512, right: 0, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            left: 512,
+                            right: 0,
+                            bottom: 30
+                        }
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = { controls: { drawer: { enabled: true, resizedWidth: 512} } };
+        testEpic(updateMapLayoutEpic, 1, setControlProperty("drawer", "resizedWidth", 512), epicResult, state);
+    });
+
+    it('tests layout updated on setControlProperties', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        left: 0, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            left: 0,
+                            right: 658,
+                            bottom: 30
+                        }
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = { controls: { metadataexplorer: { enabled: true, group: "parent" } } };
+        testEpic(updateMapLayoutEpic, 1, setControlProperties("metadataexplorer", "enabled", true, "group", "parent"), epicResult, state);
+    });
+
+    it('tests layout updated on noQueryableLayers', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(updateMapLayoutEpic, 1, noQueryableLayers(), epicResult, {});
     });
 });

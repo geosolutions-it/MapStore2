@@ -57,28 +57,28 @@ class NumberRenderer extends React.Component {
                     this.setState({displayNumberPicker: !this.state.displayNumberPicker});
                 }
             } }
-                >
+            >
                 { this.state.displayNumberPicker ?
                     <div>
                         <div style={{position: "fixed", top: 0, right: 0, bottom: 0, left: 0}}
                             onClick={this.stopEditing}/>
-                    <div className="numberpicker" onClickCapture={ (e) => {e.stopPropagation(); }}>
-                        <NumberPicker ref="colorMapNumberPicker"
-                        format="-#,###.##"
-                        precision={3}
-                        value={this.state.value === undefined ? this.props.params.value : this.state.value}
-                        onChange={this.changeNumber}
-                        />
-                    <Overlay
-                        target={() => findDOMNode(this.refs.colorMapNumberPicker)}
-                        show={this.state.showError} placement="top" >
-                        <Popover id="quantitypickererror" style={{maxWidht: 400}}>
-                            <Label bsStyle="danger" >{this.props.errorMessage}</Label>
-                        </Popover>
-                    </Overlay>
-                    </div>
+                        <div className="numberpicker" onClickCapture={ (e) => {e.stopPropagation(); }}>
+                            <NumberPicker ref="colorMapNumberPicker"
+                                format="-#,###.##"
+                                precision={3}
+                                value={this.state.value === undefined ? this.props.params.value : this.state.value}
+                                onChange={this.changeNumber}
+                            />
+                            <Overlay
+                                target={() => findDOMNode(this.refs.colorMapNumberPicker)}
+                                show={this.state.showError} placement="top" >
+                                <Popover id="quantitypickererror" style={{maxWidht: 400}}>
+                                    <Label bsStyle="danger" >{this.props.errorMessage}</Label>
+                                </Popover>
+                            </Overlay>
+                        </div>
                     </div> :
-                <span>{this.props.params.value.toFixed ? this.props.params.value.toFixed(2) : this.props.params.value}</span> }
+                    <span>{this.props.params.value.toFixed ? this.props.params.value.toFixed(2) : this.props.params.value}</span> }
             </div>
         );
     }

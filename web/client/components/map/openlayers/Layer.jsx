@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,15 +5,22 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var Layers = require('../../../utils/openlayers/Layers');
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-var assign = require('object-assign');
-const _ = require('lodash');
-const Rx = require('rxjs');
 
-class OpenlayersLayer extends React.Component {
+import PropTypes from 'prop-types';
+import React from 'react';
+import Layers from '../../../utils/openlayers/Layers';
+import CoordinatesUtils from '../../../utils/CoordinatesUtils';
+import assign from 'object-assign';
+import Rx from 'rxjs';
+import isNumber from 'lodash/isNumber';
+import isArray from 'lodash/isArray';
+import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
+
+export default class OpenlayersLayer extends React.Component {
     static propTypes = {
+        onWarning: PropTypes.func,
+        maxExtent: PropTypes.array,
         map: PropTypes.object,
         mapId: PropTypes.string,
         srs: PropTypes.string,
@@ -34,7 +40,9 @@ class OpenlayersLayer extends React.Component {
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
-        onCreationError: () => {}
+        onCreationError: () => {},
+        onWarning: () => {},
+        srs: "EPSG:3857"
     };
 
     componentDidMount() {
@@ -44,7 +52,7 @@ class OpenlayersLayer extends React.Component {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.securityToken);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility);
 
@@ -86,9 +94,9 @@ class OpenlayersLayer extends React.Component {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
             return (
-                <noscript>
+                <>
                     {children}
-                </noscript>
+                </>
             );
         }
 
@@ -110,7 +118,7 @@ class OpenlayersLayer extends React.Component {
     };
 
     generateOpts = (options, position, srs, securityToken) => {
-        return assign({}, options, _.isNumber(position) ? {zIndex: position} : null, {
+        return assign({}, options, isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
                 this.props.onCreationError(options);
@@ -123,9 +131,33 @@ class OpenlayersLayer extends React.Component {
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
+            const compatible = Layers.isCompatible(type, layerOptions);
             if (this.layer && !this.layer.detached) {
+                const parentMap = this.props.map;
+                const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
+                const layerExtent = options && options.bbox && options.bbox.bounds;
+                const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
+                let layerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
+                if (layerBboxPolygon && layerBboxPolygon.length === 2 && isArray(layerBboxPolygon[1])) {
+                    layerBboxPolygon = layerBboxPolygon[1];
+                }
+
+                if (mapBboxPolygon && layerBboxPolygon &&
+                    !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(layerBboxPolygon)) ||
+                    !compatible) {
+                    this.props.onWarning({
+                        title: "warning",
+                        message: "notification.incompatibleDataAndProjection",
+                        action: {
+                            label: "close"
+                        },
+                        position: "tc",
+                        uid: "1"
+                    });
+                }
                 this.addLayer(options);
             }
+
             if (this.layer && this.layer.get && this.layer.get('getElevation')) {
                 this.props.map.set('elevationLayer', this.layer);
             }
@@ -138,7 +170,7 @@ class OpenlayersLayer extends React.Component {
         if (newProps.position === oldProps.position && newProps.srs === oldProps.srs && newProps.securityToken === oldProps.securityToken ) {
             // check if options are the same, except loading
             if (newProps.options === oldProps.options) return;
-            if (_.isEqual( _.omit(newProps.options, ["loading"]), _.omit(oldProps.options, ["loading"]) ) ) {
+            if (isEqual( omit(newProps.options, ["loading"]), omit(oldProps.options, ["loading"]) ) ) {
                 return;
             }
         }
@@ -264,5 +296,3 @@ class OpenlayersLayer extends React.Component {
         return valid;
     };
 }
-
-module.exports = OpenlayersLayer;

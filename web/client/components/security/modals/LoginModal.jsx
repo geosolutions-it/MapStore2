@@ -64,7 +64,7 @@ class LoginModal extends React.Component {
             onLoginSuccess={this.props.onLoginSuccess}
             onSubmit={this.props.onSubmit}
             onError={this.props.onError}
-      />);
+        />);
     };
 
     getFooter = () => {
@@ -78,17 +78,17 @@ class LoginModal extends React.Component {
                 onClick={this.loginSubmit}
                 key="submit">{LocaleUtils.getMessageById(this.context.messages, "user.signIn")}</Button>
             {this.props.includeCloseButton ? <Button
-              key="closeButton"
-              ref="closeButton"
-              bsSize={this.props.buttonSize}
-              onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
+                key="closeButton"
+                ref="closeButton"
+                bsSize={this.props.buttonSize}
+                onClick={this.handleOnHide}><Message msgId="close"/></Button> : <span/>}
         </span>);
     };
 
     render() {
-        return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
+        return (<Modal {...this.props.options} show={this.props.show} onHide={this.handleOnHide}>
             <Modal.Header key="passwordChange" closeButton>
-              <Modal.Title><Message msgId="user.login"/></Modal.Title>
+                <Modal.Title><Message msgId="user.login"/></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {this.getForm()}
@@ -97,6 +97,19 @@ class LoginModal extends React.Component {
                 {this.getFooter()}
             </Modal.Footer>
         </Modal>);
+    }
+
+    /**
+     * This is called when close button clicked or
+     * when user click out(modal overlay). Hide when
+     * it is triggered from button otherwise don't hide the
+     * modal
+     */
+    handleOnHide = (event) => {
+        if (event) {
+            // it is coming from the hide or close button
+            this.props.onClose();
+        }
     }
 
     loginSubmit = () => {

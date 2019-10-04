@@ -44,26 +44,26 @@ const DownloadDialog = require('../components/data/download/DownloadDialog');
  */
 module.exports = {
     WFSDownloadPlugin: connect(createSelector(
-            wfsURL,
-            wfsFilter,
-            state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
-            state => state && state.wfsdownload && state.wfsdownload.downloadOptions,
-            state => state && state.wfsdownload && state.wfsdownload.loading,
-            state => state && state.wfsdownload && state.wfsdownload.wfsFormats,
-            state => state && state.wfsdownload && state.wfsdownload.formatsLoading,
-            getSelectedLayer,
-            state => state && state.featuregrid && state.featuregrid.virtualScroll,
-            (url, filterObj, enabled, downloadOptions, loading, wfsFormats, formatsLoading, layer, virtualScroll) => ({
-                url,
-                filterObj,
-                enabled,
-                downloadOptions,
-                loading,
-                wfsFormats,
-                formatsLoading,
-                layer,
-                virtualScroll
-            })
+        wfsURL,
+        wfsFilter,
+        state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
+        state => state && state.wfsdownload && state.wfsdownload.downloadOptions,
+        state => state && state.wfsdownload && state.wfsdownload.loading,
+        state => state && state.wfsdownload && state.wfsdownload.wfsFormats,
+        state => state && state.wfsdownload && state.wfsdownload.formatsLoading,
+        getSelectedLayer,
+        state => state && state.featuregrid && state.featuregrid.virtualScroll,
+        (url, filterObj, enabled, downloadOptions, loading, wfsFormats, formatsLoading, layer, virtualScroll) => ({
+            url,
+            filterObj,
+            enabled,
+            downloadOptions,
+            loading,
+            wfsFormats,
+            formatsLoading,
+            layer,
+            virtualScroll
+        })
     ), {
         onExport: downloadFeatures,
         onDownloadOptionChange,
@@ -72,7 +72,7 @@ module.exports = {
         onUnmount: () => setControlProperty("wfsdownload", "available", false),
         onClose: () => toggleControl("wfsdownload")
     }
-)(DownloadDialog),
+    )(DownloadDialog),
     epics: require('../epics/wfsdownload'),
     reducers: {
         wfsdownload: require('../reducers/wfsdownload')

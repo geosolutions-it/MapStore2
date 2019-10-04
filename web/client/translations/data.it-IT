@@ -17,7 +17,7 @@
         "about_a0": "questa",
         "about_p5-1": "pagina.",
         "about_h21": "Crediti",
-        "about_p6": "MapStore2 è sviluppato da:",
+        "about_p6": "MapStore è sviluppato da:",
         "enable": "Abilita",
         "layers": "Livelli",
         "warning": "Attenzione",
@@ -25,6 +25,8 @@
         "errorDefault": "Si è verificato un errore",
         "pageInfoShowMore": "Elementi {count} di {total}",
         "showMore": "Mostra altri...",
+        "collapse": "Collassa",
+        "expand": "Espandi",
         "version": {
             "label": "Versione"
         },
@@ -39,6 +41,8 @@
         "details": {
             "title": "Info su questa mappa"
         },
+        "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
+        "remove": "Rimuovi",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -58,6 +62,8 @@
             "delete": "Elimina",
             "deleteLayer":"Elimina Livello",
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
+            "deleteLayerGroup":"Elimina gruppo",
+            "deleteLayerGroupMessage": "Vuoi veramente cancellare questo gruppo e tutti i suoi livelli?",
             "confirmDelete": "Sei sicuro?",
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
@@ -105,7 +111,9 @@
             "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa.",
             "updateOldMap": "Questa è una vecchia mappa perciò non tutte le funzionalità sono abilitate. Clicca su Aggiorna per aggiornare la mappa o semplicemnte chiudi la notifica se non desideri aggiornarla",
             "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
-            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo"
+            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"Uno o più livelli non sono completamente compatibili con la proiezione selezionata. I dati potrebbero essere (tutti o in parte) non visibili in mappa"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",
@@ -164,6 +172,8 @@
                 "red": "{number, plural, =0 {Rosso} =1 {Rosso} other {Rossi}}",
                 "blue": "{number, plural, =0 {Blu} =1 {Blu} other {Blu}}",
                 "green": "{number, plural, =0 {Verde} =1 {Verde} other {Verdi}}",
+                "gray": "{number, plural, =0 {Grigio} =1 {Grigio} other {Grigi}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Marrone} =1 {Marrone} other {Marroni}}",
                 "purple": "{number, plural, =0 {Porpora} =1 {Porpora} other {Porpora}}",
                 "random": "{number, plural, =0 {Casuale} =1 {Casuale} other {Casuale}}"
@@ -219,7 +229,7 @@
                     "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore2 nella tua applicazione</p>"
+                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore nella tua applicazione</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
@@ -279,7 +289,7 @@
             "deleteCancelButtonText": "Chiudi",
             "resource": {
                 "deleteResource": "Elimina",
-                "editResource": "Modifica properietà",
+                "editResource": "Modifica proprietà",
                 "addToFeatured": "Metti in evidenza",
                 "removeFromFeatured": "Rimuovi da 'in evidenza'",
                 "showDetails": "mostra dettagli"
@@ -298,7 +308,9 @@
                 "errorLoadingDashboards": "C'è stato un errore caricando le dashboards"
             },
             "maps": {
-                "title": "Mappe ({count})"
+                "title": "Mappe ({count})",
+                "noMapAvailable": "Nessuna mappa disponibile",
+                "createNewOne": "Creane una nuova"
             }
         },
         "map": {
@@ -361,9 +373,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Errore di caricamento della mappa",
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
-                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
+                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
+                    "title" : "La mappa non può essere visualizzata"
                 }
             }
         },
@@ -372,18 +386,28 @@
             "showLegend": "Mostra legenda",
             "hideLegend": "Nascondi legenda"
         },
+        "addgroup": {
+            "addbtn": "Aggiungi",
+            "groupName": "Nome del gruppo"
+        },
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
+            "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
             "addLayer": "Aggiungi Livello",
+            "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
+            "addGroup": "Aggiungi Gruppo",
+            "addSubGroup": "Aggiungi sotto gruppo al gruppo selezionato",
             "toolZoomToLayerTooltip": "Zoom all' estensione del livello",
             "toolZoomToLayersTooltip": "Zoom all' estensione del livelli",
             "toolLayerSettingsTooltip": "Modifica proprietà del livello selezionato",
             "toolGroupSettingsTooltip": "Modifica proprietà del gruppo selezionato",
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
+            "toolTrashGroupTooltip": "Rimuovi gruppo selezionato",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
+            "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
             "filterPlaceholder": "Filtra layers",
@@ -409,6 +433,8 @@
             "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
             "refreshError": "Errore di aggiornamento sui layer: ",
             "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
+            "filterIconEnabled": "Disattiva il filtro",
+            "filterIconDisabled": "Attiva il filtro",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -505,6 +531,9 @@
         "identifyTitle": "Informazioni Sulle Feature",
         "identifyNoQueryableLayers": "Nessun livello interrogabile attivo",
         "identifyRevGeocodeHeader": "Coordinate",
+        "identifyZoomToFeature": "Zoom alla feature",
+        "identifyStopHighlightingFeatures": "Non evidenziare le feature interrogate",
+        "identifyHighlightFeatures": "Evidenzia le features interrogate",
         "identifyShowCoordinateEditor": "Mostra l'editor",
         "identifyHideCoordinateEditor": "Nascondi l'editor",
         "identifyRevGeocodeModalTitle": "Indirizzo",
@@ -542,7 +571,10 @@
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
             "formula": "Formula per il calcolo della distanza",
-            "showLabel": "Mostra etichetta di misurazione"
+            "showLabel": "Mostra etichetta di misurazione",
+            "addAsAnnotation": "Aggiungi come annotazione",
+            "newMeasure": "Nuova annotazione",
+            "selectTool": "Seleziona uno strumento di misura"
         },
         "search":{
             "decimal": "Decimali",
@@ -574,7 +606,47 @@
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
-            "serviceslistempty": "Nessun servizio definito"
+            "serviceslistempty": "Nessun servizio definito",
+            "service_missing": "Il servizio {serviceType} non è configurato",
+            "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}",
+            "errors": {
+                "nonQueriableLayers": "Il layer indicato nell'url non è queriable o non è visibile in mappa",
+                "serverError": "Il server ha ritornato un errore durante la richiesta GetFeatureInfo. Controlla se i parametri sono corretti"
+            },
+            "s_launch_info_panel": {
+                "label": "Avvia ricerca per feature",
+                "no_info": "Non cercare",
+                "all_layers": "Tutti i livelli",
+                "single_layer": "Singolo livello",
+                "no_info_description": "Il pannello Informazioni Sulle Feature non comparirà",
+                "all_layers_description": "Il pannello Informazioni Sulle Feature mostrerà informazioni di tutti i layer presenti in mappa",
+                "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà i dati disponibili relativi all'elemento selezionato"
+            }
+        },
+        "draw": {
+            "fill": "Riempimento",
+            "text": "Testo",
+            "fontTitle": "Font",
+            "color": "Colore",
+            "lineDash": "Tratteggio",
+            "stroke": "Bordo",
+            "opacity": "Opacità",
+            "width": "Larghezza",
+            "font": {
+                "textColor": "Colore",
+                "family": "Famiglia",
+                "size": "Dimensione",
+                "style": "Stile",
+                "weight": "Spessore",
+                "textAlign": "Allineamento"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Forma",
+                "size": "Grandezza",
+                "type": "Tipo",
+                "icon": "Icona"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -711,7 +783,10 @@
         "queryform": {
             "title": "Ricerca Avanzata",
             "query": "Ricerca",
+            "apply": "Applica",
             "reset": "Reimposta",
+            "save": "Salva",
+            "discard": "Ripristina",
             "query_request_exception": "Errore nella richiesta",
             "config": {
                 "load_config_exception": "Errore Caricamento Configurazione"
@@ -794,9 +869,90 @@
                 "targetLayer": "Livello Filtro",
                 "clear": "Pulisci Filtro",
                 "operation": "Operazione",
+                "placeholder": "Seleziona il livello",
                 "errors": {
                     "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
                 }
+            },
+            "changedFilter": "Filtero modificato",
+            "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
+            "resetFilter": "Reset",
+            "confirmReset": "Conferma",
+            "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+            "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
+        },
+        "annotations": {
+            "errorLoadingSymbols": "Si è verificato un problema durante il caricamento dell'elenco dei simboli. Per favore, contatta l'amministratore per verificare le opzioni di configurazione",
+            "edit": "Modifica",
+            "remove": "Rimuovi",
+            "save": "Salva",
+            "cancel": "Annulla",
+            "back": "Indietro",
+            "applyStyle": "Applica stile",
+            "addMarker": "Aggiungi una geometria",
+            "styleGeometry": "Cambia stile",
+            "deleteGeometry": "Rimuovi tutte le feature",
+            "removeannotation": "Vuoi rimuovere l'annotazione con titolo: {title}?",
+            "removegeometry": "Vuoi rimuovere tutti i punti dell'annotazione?",
+            "confirm": "Conferma",
+            "mandatory": "Campo obbligatorio",
+            "emptygeometry": "La geometria non può essere vuota",
+            "add": "Nuova",
+            "filter": "Filtra le annotazioni...",
+            "titleUndoGeom": "La geometria è cambiata",
+            "undoGeom": "Sei sicuro di uscire senza salvare? (Perderai ogni modifica)",
+            "confirmGeom": "Conferma",
+            "deleteFeature": "Elimina questa feature",
+            "undoDeleteFeature": "Sei sicuro di eliminare questa feature?",
+            "cancelModalGeom": "Annulla",
+            "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
+            "title": "Annotazioni",
+            "zoomTo": "Zoom",
+            "insertText": "Inserisci il testo dell'annotatzione",
+            "downloadtooltip": "Esporta annotazioni",
+            "downloadcurrenttooltip": "Esporta annotazione corrente",
+            "downloadError": "Errore di esportazione",
+            "loadtooltip": "Importa annotazioni",
+            "loadtitle": "Importa Annotazioni",
+            "selectfiletext": "Rilascia il file qui o fai clic per selezionare il file di annotazione da importare. (file supportati: JSON)",
+            "loadoverride": "Sostituisci annotazioni",
+            "loaderror": "Seleziona uno o più file di annotazioni. (formati supportati: json)",
+            "defaulttitle": "Edita il titolo",
+            "field": {
+                "title": "Titolo",
+                "description": "Descrizione"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Linea",
+                "polygon": " Poligono",
+                "text": " Testo",
+                "circle": " Cerchio"
+            },
+            "editor": {
+                "decimal": "Decimali",
+                "aeronautical": "Aeronautiche",
+                "title": {
+                    "Polygon": "Editor del poligono",
+                    "LineString": "Editor della linea",
+                    "Bearing": "Editor della direzione",
+                    "Circle": "Editor del cerchio",
+                    "Point": "Editor del marker",
+                    "MultiPoint": "Editor della linea",
+                    "Text": "Editor del testo"
+                },
+                "center": "Centro",
+                "add": "Aggiungi una nuova coordinata",
+                "addByClick": "Aggiungi nuove coordinate cliccando sul pulsante + o sulla mappa",
+                "valid": "La geometria è valida",
+                "radius": "Raggio",
+                "text": "Testo",
+                "lat": "Latitudine",
+                "lon": "Longitudine",
+                "notValidMarker": "Inserisci una coordinata valida (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Tutte le coordinate devono essere valide (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{
@@ -813,6 +969,7 @@
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
@@ -827,30 +984,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Company",
             "detailsNotes": "Note"
-        },
-        "annotations": {
-            "edit": "Modifica",
-            "remove": "Rimuovi",
-            "save": "Salva",
-            "cancel": "Annulla",
-            "back": "Indietro",
-            "addMarker": "Aggiungi un punto sulla mappa",
-            "styleGeometry": "Scegli lo stile per il punto",
-            "deleteGeometry": "Rimuovi i punti esistenti",
-            "removeannotation": "Vuoi rimuovere l'annotazione?",
-            "removegeometry": "Vuoi rimuovere tutti i punti dell'annotazione?",
-            "confirm": "Conferma",
-            "mandatory": "Campo obbligatorio",
-            "emptygeometry": "La geometria non può essere vuota",
-            "add": "Nuova",
-            "filter": "Filtra le annotazioni...",
-            "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
-            "title": "Annotazioni",
-            "zoomTo": "Zoom",
-            "field": {
-                "title": "Titolo",
-                "description": "Descrizione"
-            }
         },
         "users": {
             "title": "Gestione Account",
@@ -875,7 +1008,8 @@
             "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
             "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
             "errorSaving": "Si è verificato un errore salvando questo utente:",
-            "selectedGroups": "GRUPPI SELEZIONATI"
+            "selectedGroups": "GRUPPI SELEZIONATI",
+            "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
         },
         "usergroups": {
           "searchGroups": "Cerca gruppi...",
@@ -949,7 +1083,26 @@
             "cancel": "Annulla",
             "success": " correttamente importato"
         },
+        "mapImport": {
+            "title": "Importa",
+            "dropZone": {
+                "heading": "<p> <h4> Rilascia qui la configurazione o i file vettoriali </h4> <small> o </small> </p>",
+                "selectFiles": "Seleziona i file...",
+                "infoSupported": "<p> <small> File di configurazione supportati: formato legacy di MapStore<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di file di configurazione </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "File non supportato",
+                "unknownError": "si è verificato un errore sconosciuto durante l'importazione"
+            }
+        },
+        "mapExport": {
+            "title": "Esporta mappa"
+        },
         "catalog": {
+            "start": "Data d'inizio ",
+            "end": "Data di fine ",
+            "notAvailable": "Non disponibile",
             "title": "Catalogo",
             "autoload": "Ricerca alla selezione del servizio",
             "clearValueText": "Cancella selezione",
@@ -984,7 +1137,14 @@
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",
             "hideDescription": "Nascondi descrizione completa",
+            "templateFormatDescriptionExample": "La descrizione del layer è",
+            "showTemplate": "Mostra il modello dei metadati",
+            "showPreview": "Mostra la preview",
+            "advancedSettings": "Impostazioni avanzante",
+            "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Errore",
+                "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
                 "duplicatedServiceTitle": "Un servizio con quel titolo esiste già, Per favore cambia titolo",
@@ -1163,7 +1323,8 @@
                     "editMode": "La ricerca veloce non è disponibile in modalità editing",
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
-                    "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10"
+                    "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
+                    "date":"Digita una data o un'espressione. Utilizza {format} per la data"
                 }
             },
             "toolbar": {
@@ -1187,6 +1348,8 @@
                 "hideShowColumns": "Nascondi/mostra colonne",
                 "zoomAll": "Zoom all'estensione della pagina",
                 "syncOnMap": "Sincronizza la mappa con i filtri",
+                "enableTimeSync": "Sincronizza con l'istante o l'intervallo temporale selezionato",
+                "disableTimeSync": "Non sincronizzare con l'istante o l'intervallo temporale selezionato",
                 "createNewChart": "crea un grafico per il livello selezionato"
             }
         },
@@ -1391,7 +1554,12 @@
             "displayCartesian": {
                 "line": "Nascondi griglia",
                 "bar": "Nascondi griglia"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "Asse X: Angolo di rotazione °",
+                "bar": "Asse X: Angolo di rotazione °"
+            },
+            "yAxis":{
                 "line": "Nascondi l'asse Y",
                 "bar": "Nascondi l'asse Y"
             },
@@ -1408,27 +1576,22 @@
                 "expandTray": "Espandi il vassoio dei widget",
                 "collapseTray": "Minimizza vassoio dei widget",
                 "expandAll": "Espandi tutti i widget",
-                "collapseAll": "Minimizza tutti i widget"
+                "collapseAll": "Minimizza tutti i widget",
+                "notifications": {
+                    "collapsed": {
+                        "message": "La timeline e i widget non possono essere visualizzati allo stesso tempo. Utilizzare il la barra degli widget per visualizzare uno o l'altro",
+                        "timelineTitle": "La timeline è stata minimizzata",
+                        "widgetsTitle": "I widget sono stati minimizzati"
+                    }
+                }
             }
         },
         "dashboard": {
             "loadingSpinner": "Caricamento Dashboard",
-            "saveDialog": {
-                "title": "Modifica proprietà dashboard",
-                "name": "Nome",
-                "description": "Descrizione",
-                "namePlaceholder": "Inserisci un nome..",
-                "descriptionPlaceholder": "Inserisci una descrizione...",
-                "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
-                "close": "Chiudi",
-                "cancel": "Annulla",
-                "saveSuccessTitle": "Successo",
-                "saveSuccessMessage": "Dashboard salvata"
-            },
             "errors":{
                 "loading": {
                     "title": "Errore di caricamento della dashboard",
-                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
+                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il proprietario",
                     "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
                     "dashboardDoesNotExist": "La dashboard richiesta non esiste",
                     "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore",
@@ -1525,6 +1688,7 @@
             "createStyleErrorMessage": "Lo stile non può essere salvato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
             "updateStyleErrorTitle": "Modifica stile",
             "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione.",
+            "validationErrorTitle": "Errore di validazione",
             "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo.",
             "setDefaultStyle": "Imposta lo stile selezionato come predefinito per il layer corrente",
             "setDefaultStyleSuccessTitle": "Stile predefinito aggiornamento",
@@ -1575,6 +1739,10 @@
                 "snapToGuideLayer": "Aggancia al livello guida",
                 "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
             },
+            "hide": "Nascondi timeline",
+            "show": "Mostra timeline",
+            "mapSyncOn": "Mostra tutti i tempi, senza filtrare per zona di mappa visibile",
+            "mapSyncOff": "Mostra solo i tempi nella zona di mappa visibile",
             "currentTime": "Istante corrente",
             "rangeStart": "Vai all'intervallo di tempo corrente",
             "rangeEnd": "Vai all'intervallo di tempo corrente",
@@ -1586,6 +1754,10 @@
             "disablePlayBack": "Disabilita i controlli di riproduzione",
             "expand" : "Espandi",
             "collapse" : "Riduci",
+            "collapsed": {
+                "title": "La timeline è stata collassata",
+                "tooltip": "Clicca qui per espanderla di nuovo"
+            },
             "errors": {
                 "multidim_error_title": "Il servizio di backend non risponde",
                 "multidim_error_message": "I servizi richiesti per il supporto multidimensionale non rispondono. Si prega di riprovare più tardi o contattare l'amministratore."
@@ -1612,7 +1784,7 @@
                 "ip": "###.###.###.###/##",
                 "priority": "Seleziona Priorità"
             },
-            "menutitle": "Configura GeoFence Rules",
+            "menutitle": "Configura Regole di Accesso",
             "tooltip": {
                 "addT": "Crea regola",
                 "editT": "Modifica regola selezionata",
@@ -1678,135 +1850,250 @@
             "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
             "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
-            "tutorial": {
-                "title": "Tutorial",
-                "back": "Indietro",
-                "next": "Avanti",
-                "close": "Chiudi",
-                "skip": "Salta",
-                "last": "Fine",
-                "start": "Inizia",
-                "checkbox": "non mostrare più questo messaggio",
-                "error": "Errore: oggetto non trovato",
-                "intro": {
-                    "title": "Benvenuto su MapStore2",
-                    "text": "framework per costruire applicazioni di web mapping usando librerie standard di mappatura, come OpenLayers 3 e Leaflet."
+        "geostory": {
+            "loadingSpinner": "Caricamento Storia",
+            "addTitleSection": "Aggiungi sezione titolo",
+            "addParagraphSection": "Aggiungi sezione paragrafo",
+            "addImmersiveSection": "Aggiungi sezione immersiva",
+            "addMediaSection": "Aggiungi sezione media",
+            "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
+            "addTextContent": "Aggiungi testo",
+            "addMediaContent": "Aggiungi Media",
+            "zoomToContent": "Zoom al contenuto",
+            "emptyTitle": "Questa storia è vuota",
+            "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
+            "contentToolbar": {
+                "contentSize": "Cambia larghezza",
+                "smallSizeLabel": "Piccola",
+                "mediumSizeLabel": "Media",
+                "largeSizeLabel": "Grande",
+                "fullSizeLabel": "Piena",
+                "contentAlign": "Allinea il contenuto",
+                "leftAlignLabel": "Sinistra",
+                "centerAlignLabel": "Centro",
+                "rightAlignLabel": "Destra",
+                "contentTheme": "Cambia il tema",
+                "brightThemeLabel": "Chiaro",
+                "brightTextThemeLabel": "Testo chiaro",
+                "darkThemeLabel": "Scuro",
+                "darkTextThemeLabel": "Testo scuro",
+                "cover": "Copri lo spazio del contenitore",
+                "fit": "Riempi lo spazio del contenitore",
+                "editMedia": "Cambia la sorgente del media",
+                "remove": "Elimina"
+            },
+            "builder": {
+                "defaults": {
+                    "titleTitle": "Sezione Titolo",
+                    "htmlTitlePlaceholder": "Inserisci Titolo",
+                    "htmlPlaceholder": "Inserisci del testo qui...",
+                    "titleParagraph": "Sezione Paragrafo",
+                    "titleImmersive": "Sezione Immersiva",
+                    "titleMedia": "Sezione Media",
+                    "titleUnknown": "UNKNOWN"
                 },
-                "drawerMenu": {
-                    "title": "Menu principale",
-                    "text": "Puoi trovare informazioni e strumenti per controllare i layer"
-                },
-                "searchBar": {
-                    "title": "Barra di ricerca",
-                    "text": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
-                },
-                "home": {
-                    "title": "Home",
-                    "text": "Clicca per raggiungere la homepage"
-                },
-                "searchButton": {
-                    "title": "Ricerca",
-                    "text": "Premi il pulsante per aprire la barra di ricerca, poi scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
-                },
-                "burgerMenu": {
-                    "title": "Menu delle opzioni",
-                    "text": "Puoi trovare opzioni, impostazioni e aiuti"
-                },
-                "zoomInButton": {
-                    "title": "Zoom In",
-                    "text": "Premi per allargare la mappa"
-                },
-                "zoomOutButton": {
-                    "title": "Zoom Out",
-                    "text": "Premi per ridurre la mappa"
-                },
-                "fullscreen": {
-                    "title": "Schermo Intero",
-                    "text": "Premi per passare a schermo intero"
-                },
-                "identifyButton": {
-                    "title": "Info",
-                    "text": "Premi il pulsante per attivare lo strumento, poi fai click sulla mappa per ottenere informazioni dal layer"
-                },
-                "mapType": {
-                    "title": "Libreria",
-                    "text": "Puoi scegliere tra Leaflet o OpenLayers per visualizzare le mappe"
-                },
-                "mapsGrid": {
-                    "title": "Mappe",
-                    "text": "Qui alcuni esempi di MapStore2. Fai click su un'immagine per provare la demo"
-                },
-                "examples": {
-                    "title": "Applicazioni personalizzate",
-                    "text": "Puoi utilizzare componenti e plugins di MapStore2 per costruire applicazioni personalizzate"
-                },
-                "introCesium": {
-                    "title": "Istruzioni della mappa 3D",
-                    "text": "Premi il pulsante avanti per aprire il tutorial"
-                },
-                "cesium": {
-                    "title": "Interazioni con la mappa",
-                    "pan": "Vista Pan",
-                    "zoom": "Vista Zoom",
-                    "tilt": "Vista Tilt",
-                    "rotate": "Vista Rotazione",
-                    "oneDrag": "Trascina con un dito",
-                    "twoPinch": "Pinch con due dita",
-                    "twoDragSame": "Trascina con due dita nella stessa direzione",
-                    "twoDragOpposite": "Trascina con due dita in direzione opposta",
-                    "leftClick": "Click pulsante sinistro + trascina",
-                    "rightClick": "Click pulsante destro + trascina, o scroll con il pulsante centrale",
-                    "middleClick": "Click pulsante centrale + trascina, o CTRL + Click sinistro/destro + trascina"
-
-                },
-                "cesiumCompass": {
-                    "title": "Bussola",
-                    "text": "Puoi usare la bussola per orbitare intorno al globo. Trascina per ruotare la mappa"
-                },
-                "cesiumNavigation": {
-                    "title": "Navigazione",
-                    "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
-                },
-                "dashboardIntro": {
-                    "title": "Dashboard Tutorial",
-                    "text": "Panoramica delle funzionalità della dashboard"
-                },
-                "dashboardNav": {
-                    "title": "Barra di navigazione",
-                    "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
-                },
-                "dashboardContainer": {
-                    "title": "Cruscotto",
-                    "text": "<p> Una Dashboard in MapStore2 fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
-                },
-                "dashboardAddWidget": {
-                    "title": "Aggiungi widget",
-                    "text": "Per aggiungere un widget alla dashboard, puoi cliccare sul pulsante +"
-                },
-                "dashboardBuilder": {
-                    "title": "Crea un nuovo widget",
-                    "text": "È possibile selezionare il tipo di widget desiderato e quindi aggiungerlo alla dashboard selezionando uno degli elementi nell'elenco"
-                },
-                "dashboardAddChart": {
-                    "title": "Widget Grafico",
-                    "text": "<p> È un widget che mostra e aggrega i dati in grafici a torta, linea o a istogramma. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddText": {
-                    "title": "Widget Testo",
-                    "text": "<p> Aggiungi un testo alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddTable": {
-                    "title": "Widget Tabella ",
-                    "text": "<p> Aggiungi una tabella di attributi alla dashboard che contiene dati di un livello vettoriale selezionato. Puoi anche filtrare i dati per personalizzare la tabella. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura dati tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddCounter": {
-                    "title": "Widget Contatore",
-                    "text": "<p> Aggiungi un nuovo contatore alla dashboard. Il contatore mostrerà il valore numerico aggregando i dati da un livello vettoriale selezionato. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura i dati del contatore </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
-                },
-                "dashboardAddMap": {
-                    "title": "Widget Mappa",
-                    "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                "delete": "Elimina la sezione selezionata",
+                "preview": "Mostra anteprima storia",
+                "edit": "Modifica la storia",
+                "hide": "Nascondi le anteprime nell'editor",
+                "show": "Mostra le anteprime nell'editor",
+                "fullscreen": "Mostra antemprima a schermo pieno",
+                "settings": {
+                    "tooltip": "Impostazioni",
+                    "back": "Torna all'editor",
+                    "save": "Salva impostazioni",
+                    "headerTitle" : "Impostazioni della storia",
+                    "title" : "Titolo",
+                    "titlePlaceholder" : "Inserisci titolo",
+                    "logo" : "Logo",
+                    "logoPlaceholder" : "Inserisci sorgente del logo (formato immagine)",
+                    "autoplay" : "Autoplay",
+                    "enableAutoplay" : "Abilita Autoplay",
+                    "autoplayInterval" : "Intervallo dell'autoplay (secondi)",
+                    "autoplayIntervalPlaceholder" : "Abilita l'intervallo dell'autoplay",
+                    "navbar" : "Barra di navigazione",
+                    "showNavbar" : "Mostra barra di navigazione"
+                }
+            },
+            "errors": {
+                "loading": {
+                    "title": "Errore",
+                    "unknownError": "Error sconosciuto",
+                    "pleaseLogin": "Per favore effettua il login",
+                    "notAccessible": "Questa storia non è accessibile",
+                    "geostoryNotAccessible": "Non sei autorizzato ad accedere a questa storia. Si prega di contattare il proprietario della risorsa",
+                    "geostoryDoesNotExist": "Questa storia non esiste"
                 }
             }
+        },
+         "saveDialog": {
+            "title": "Modifica proprietà",
+            "name": "Nome",
+            "description": "Descrizione",
+            "namePlaceholder": "Inserisci un nome..",
+            "descriptionPlaceholder": "Inserisci una descrizione...",
+            "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
+            "close": "Chiudi",
+            "cancel": "Annulla",
+            "saveSuccessTitle": "Successo",
+            "saveSuccessMessage": "Salvata con successo"
+        },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Immagini",
+            "videos": "Video",
+            "maps": "Mappe",
+            "preview": "Anteprima",
+            "apply": "Applica",
+            "mediaPicker": {
+                "services": "Servizi: ",
+                "clean": "Pulisci",
+                "noResults": "Nessun risultato",
+                "selectService": "Seleziona un servizio",
+                "add": "Aggiungi",
+                "back": "Indietro",
+                "save": "Salva",
+                "edit": "Modifica",
+                "sourcePlaceholder": "Inserisci una sorgente",
+                "source": "Sorgente",
+                "titlePlaceholder": "Inserisci un titolo",
+                "title": "Titolo",
+                "altTextPlaceholder": "Inserisci un testo alternativo",
+                "altText": "Testo alternativo",
+                "descriptionPlaceholder": "Inserisci una descrizione",
+                "description": "Descrizione",
+                "creditsPlaceholder": "Inserisci i crediti",
+                "credits": "Crediti"
+            }
+        },
+        "tutorial": {
+            "title": "Tutorial",
+            "back": "Indietro",
+            "next": "Avanti",
+            "close": "Chiudi",
+            "skip": "Salta",
+            "last": "Fine",
+            "start": "Inizia",
+            "checkbox": "non mostrare più questo messaggio",
+            "error": "Errore: oggetto non trovato",
+            "intro": {
+                "title": "Benvenuto su MapStore",
+                "text": "framework per costruire applicazioni di web mapping usando librerie standard di mappatura, come OpenLayers 3 e Leaflet."
+            },
+            "drawerMenu": {
+                "title": "Menu principale",
+                "text": "Puoi trovare informazioni e strumenti per controllare i layer"
+            },
+            "searchBar": {
+                "title": "Barra di ricerca",
+                "text": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
+            },
+            "home": {
+                "title": "Home",
+                "text": "Clicca per raggiungere la homepage"
+            },
+            "searchButton": {
+                "title": "Ricerca",
+                "text": "Premi il pulsante per aprire la barra di ricerca, poi scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "Menu delle opzioni",
+                "text": "Puoi trovare opzioni, impostazioni e aiuti"
+            },
+            "zoomInButton": {
+                "title": "Zoom In",
+                "text": "Premi per allargare la mappa"
+            },
+            "zoomOutButton": {
+                "title": "Zoom Out",
+                "text": "Premi per ridurre la mappa"
+            },
+            "fullscreen": {
+                "title": "Schermo Intero",
+                "text": "Premi per passare a schermo intero"
+            },
+            "identifyButton": {
+                "title": "Info",
+                "text": "Premi il pulsante per attivare lo strumento, poi fai click sulla mappa per ottenere informazioni dal layer"
+            },
+            "mapType": {
+                "title": "Libreria",
+                "text": "Puoi scegliere tra Leaflet o OpenLayers per visualizzare le mappe"
+            },
+            "mapsGrid": {
+                "title": "Mappe",
+                "text": "Qui alcuni esempi di MapStore. Fai click su un'immagine per provare la demo"
+            },
+            "examples": {
+                "title": "Applicazioni personalizzate",
+                "text": "Puoi utilizzare componenti e plugins di MapStore per costruire applicazioni personalizzate"
+            },
+            "introCesium": {
+                "title": "Istruzioni della mappa 3D",
+                "text": "Premi il pulsante avanti per aprire il tutorial"
+            },
+            "cesium": {
+                "title": "Interazioni con la mappa",
+                "pan": "Vista Pan",
+                "zoom": "Vista Zoom",
+                "tilt": "Vista Tilt",
+                "rotate": "Vista Rotazione",
+                "oneDrag": "Trascina con un dito",
+                "twoPinch": "Pinch con due dita",
+                "twoDragSame": "Trascina con due dita nella stessa direzione",
+                "twoDragOpposite": "Trascina con due dita in direzione opposta",
+                "leftClick": "Click pulsante sinistro + trascina",
+                "rightClick": "Click pulsante destro + trascina, o scroll con il pulsante centrale",
+                "middleClick": "Click pulsante centrale + trascina, o CTRL + Click sinistro/destro + trascina"
+            },
+            "cesiumCompass": {
+                "title": "Bussola",
+                "text": "Puoi usare la bussola per orbitare intorno al globo. Trascina per ruotare la mappa"
+            },
+            "cesiumNavigation": {
+                "title": "Navigazione",
+                "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Panoramica delle funzionalità della dashboard"
+            },
+            "dashboardNav": {
+                "title": "Barra di navigazione",
+                "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
+            },
+            "dashboardContainer": {
+                "title": "Cruscotto",
+                "text": "<p> Una Dashboard in MapStore fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Aggiungi widget",
+                "text": "Per aggiungere un widget alla dashboard, puoi cliccare sul pulsante +"
+            },
+            "dashboardBuilder": {
+                "title": "Crea un nuovo widget",
+                "text": "È possibile selezionare il tipo di widget desiderato e quindi aggiungerlo alla dashboard selezionando uno degli elementi nell'elenco"
+            },
+            "dashboardAddChart": {
+                "title": "Widget Grafico",
+                "text": "<p> È un widget che mostra e aggrega i dati in grafici a torta, linea o a istogramma. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Widget Testo",
+                "text": "<p> Aggiungi un testo alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Widget Tabella ",
+                "text": "<p> Aggiungi una tabella di attributi alla dashboard che contiene dati di un livello vettoriale selezionato. Puoi anche filtrare i dati per personalizzare la tabella. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura dati tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Widget Contatore",
+                "text": "<p> Aggiungi un nuovo contatore alla dashboard. Il contatore mostrerà il valore numerico aggregando i dati da un livello vettoriale selezionato. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura i dati del contatore </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Widget Mappa",
+                "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            }
+        }
     }
 }

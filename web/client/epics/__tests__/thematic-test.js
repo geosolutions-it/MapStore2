@@ -63,14 +63,14 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case FIELDS_LOADED:
-                        expect(action.layer).toExist();
-                        expect(action.fields).toExist();
-                        expect(action.fields.length).toBe(1);
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case FIELDS_LOADED:
+                    expect(action.layer).toExist();
+                    expect(action.fields).toExist();
+                    expect(action.fields.length).toBe(1);
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -83,14 +83,14 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case FIELDS_ERROR:
-                        expect(action.layer).toExist();
-                        expect(action.fields).toNotExist();
-                        expect(action.error).toExist();
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case FIELDS_ERROR:
+                    expect(action.layer).toExist();
+                    expect(action.fields).toNotExist();
+                    expect(action.error).toExist();
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -103,14 +103,14 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case CLASSIFICATION_LOADED:
-                        expect(action.layer).toExist();
-                        expect(action.classification).toExist();
-                        expect(action.classification.length).toBe(1);
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case CLASSIFICATION_LOADED:
+                    expect(action.layer).toExist();
+                    expect(action.classification).toExist();
+                    expect(action.classification.length).toBe(1);
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -123,14 +123,14 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case CLASSIFICATION_ERROR:
-                        expect(action.layer).toExist();
-                        expect(action.classification).toNotExist();
-                        expect(action.error).toExist();
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case CLASSIFICATION_ERROR:
+                    expect(action.layer).toExist();
+                    expect(action.classification).toNotExist();
+                    expect(action.error).toExist();
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -143,15 +143,15 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case CHANGE_LAYER_PARAMS:
-                        expect(action.layer).toExist();
-                        expect(action.params).toExist();
-                        expect(action.params.SLD).toNotExist();
-                        expect(action.params.viewparams).toNotExist();
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case CHANGE_LAYER_PARAMS:
+                    expect(action.layer).toExist();
+                    expect(action.params).toExist();
+                    expect(action.params.SLD).toNotExist();
+                    expect(action.params.viewparams).toNotExist();
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -164,15 +164,15 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case CHANGE_LAYER_PARAMS:
-                        expect(action.layer).toExist();
-                        expect(action.params).toExist();
-                        expect(action.params.SLD).toNotExist();
-                        expect(action.params.viewparams).toNotExist();
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case CHANGE_LAYER_PARAMS:
+                    expect(action.layer).toExist();
+                    expect(action.params).toExist();
+                    expect(action.params.SLD).toNotExist();
+                    expect(action.params.viewparams).toNotExist();
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -185,11 +185,11 @@ describe('thematic epic', () => {
             expect(actions.length).toBe(1);
             actions.forEach((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();

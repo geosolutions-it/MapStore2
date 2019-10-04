@@ -9,6 +9,8 @@
 const CoordinatesUtils = require('./CoordinatesUtils');
 const SecurityUtils = require('./SecurityUtils');
 const MapUtils = require('./MapUtils');
+const {optionsToVendorParams} = require('./VendorParamsUtils');
+const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 
 const {isArray} = require('lodash');
@@ -19,8 +21,10 @@ const defaultScales = MapUtils.getGoogleMercatorScales(0, 21);
 
 const assign = require('object-assign');
 
+// Non è detto che sia uniforme!!
 const getGeomType = function(layer) {
-    return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
+    return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
+        layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
 };
 /**
  * Utilities for Print
@@ -51,6 +55,7 @@ const PrintUtils = {
         if (uri.search(/^\//) !== -1) {
             return (origin || window.location.origin) + uri;
         }
+        return uri;
     },
     /**
      * Tranform the original URL configuration of the layer into a URL
@@ -199,34 +204,40 @@ const PrintUtils = {
                     "TILED": true,
                     "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                     "scaleMethod": "accurate"
-                }, layer.baseParams || {}, layer.params || {}))
-            }),
+                }, layer.baseParams || {}, layer.params || {}, {
+                    ...optionsToVendorParams({
+                        nativeCrs: layer.nativeCrs,
+                        layerFilter: layer.layerFilter,
+                        filterObj: layer.filterObj
+                    })
+                }
+                ))}),
             legend: (layer, spec) => ({
                 "name": layer.title || layer.name,
                 "classes": [
-                   {
-                      "name": "",
-                      "icons": [
-                         PrintUtils.normalizeUrl(layer.url) + url.format({
-                             query: SecurityUtils.addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
-                                 TRANSPARENT: true,
-                                 EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                 VERSION: "1.1.1",
-                                 SERVICE: "WMS",
-                                 REQUEST: "GetLegendGraphic",
-                                 LAYER: layer.name,
-                                 STYLE: layer.style || '',
-                                 SCALE: spec.scale,
-                                 height: spec.iconSize,
-                                 width: spec.iconSize,
-                                 minSymbolSize: spec.iconSize,
-                                 LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
-                                 format: "image/png",
-                                 ...assign({}, layer.params)
-                             })
-                         })
-                      ]
-                   }
+                    {
+                        "name": "",
+                        "icons": [
+                            PrintUtils.normalizeUrl(layer.url) + url.format({
+                                query: SecurityUtils.addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
+                                    TRANSPARENT: true,
+                                    EXCEPTIONS: "application/vnd.ogc.se_xml",
+                                    VERSION: "1.1.1",
+                                    SERVICE: "WMS",
+                                    REQUEST: "GetLegendGraphic",
+                                    LAYER: layer.name,
+                                    STYLE: layer.style || '',
+                                    SCALE: spec.scale,
+                                    height: spec.iconSize,
+                                    width: spec.iconSize,
+                                    minSymbolSize: spec.iconSize,
+                                    LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
+                                    format: "image/png",
+                                    ...assign({}, layer.params)
+                                })
+                            })
+                        ]
+                    }
                 ]
             })
         },
@@ -237,15 +248,21 @@ const PrintUtils = {
                 "opacity": layer.opacity || 1.0,
                 styleProperty: "ms_style",
                 styles: {
-                    1: PrintUtils.toOpenLayers2Style(layer, layer.style)
+                    1: PrintUtils.toOpenLayers2Style(layer, layer.style),
+                    "Polygon": PrintUtils.toOpenLayers2Style(layer, layer.style, "Polygon"),
+                    "LineString": PrintUtils.toOpenLayers2Style(layer, layer.style, "LineString"),
+                    "Point": PrintUtils.toOpenLayers2Style(layer, layer.style, "Point"),
+                    "FeatureCollection": PrintUtils.toOpenLayers2Style(layer, layer.style, "FeatureCollection")
                 },
                 geoJson: CoordinatesUtils.reprojectGeoJson({
                     type: "FeatureCollection",
-                    features: layer.features.map( f => ({...f, properties: {...f.properties, ms_style: 1}}))
+                    features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) ||
+                                    layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
                 },
                 "EPSG:4326",
                 spec.projection)
-            })
+            }
+            )
         },
         osm: {
             map: () => ({
@@ -331,95 +348,96 @@ const PrintUtils = {
     rgbaTorgb: (rgba = "") => {
         return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
     },
+
     /**
      * Useful for print (Or generic Openlayers 2 conversion style)
      * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
      */
-    toOpenLayers2Style: function(layer, style) {
+    toOpenLayers2Style: function(layer, style, styleType) {
         if (!style) {
-            return PrintUtils.getOlDefaultStyle(layer);
+            return PrintUtils.getOlDefaultStyle(layer, styleType);
         }
         // commented the available options.
         return {
             "fillColor": colorToHexStr(style.fillColor),
             "fillOpacity": style.fillOpacity,
-             // "rotation": "30",
+            // "rotation": "30",
             "externalGraphic": style.iconUrl,
-             // "graphicName": "circle",
-             // "graphicOpacity": 0.4,
+            // "graphicName": "circle",
+            // "graphicOpacity": 0.4,
             "pointRadius": style.radius,
             "strokeColor": colorToHexStr(style.color),
             "strokeOpacity": style.opacity,
             "strokeWidth": style.weight
-             // "strokeLinecap": "round",
-             // "strokeDashstyle": "dot",
-             // "fontColor": "#000000",
-             // "fontFamily": "sans-serif",
-             // "fontSize": "12px",
-             // "fontStyle": "normal",
-             // "fontWeight": "bold",
-             // "haloColor": "#123456",
-             // "haloOpacity": "0.7",
-             // "haloRadius": "3.0",
-             // "label": "${name}",
-             // "labelAlign": "cm",
-             // "labelRotation": "45",
-             // "labelXOffset": "-25.0",
-             // "labelYOffset": "-35.0"
+            // "strokeLinecap": "round",
+            // "strokeDashstyle": "dot",
+            // "fontColor": "#000000",
+            // "fontFamily": "sans-serif",
+            // "fontSize": "12px",
+            // "fontStyle": "normal",
+            // "fontWeight": "bold",
+            // "haloColor": "#123456",
+            // "haloOpacity": "0.7",
+            // "haloRadius": "3.0",
+            // "label": "${name}",
+            // "labelAlign": "cm",
+            // "labelRotation": "45",
+            // "labelXOffset": "-25.0",
+            // "labelYOffset": "-35.0"
         };
     },
     /**
      * Provides the default style for
      * each vector type.
      */
-    getOlDefaultStyle(layer) {
-        switch (getGeomType(layer)) {
-            case 'Polygon':
-            case 'MultiPolygon': {
-                return {
-                    "fillColor": "#0000FF",
-                    "fillOpacity": 0.1,
-                    "strokeColor": "#0000FF",
-                    "strokeOpacity": 1,
-                    "strokeWidth": 3,
-                    "strokeDashstyle": "dash",
-                    "strokeLinecap": "round"
-                };
-            }
-            case 'MultiLineString':
-            case 'LineString':
-                return {
-                    "strokeColor": "#0000FF",
-                    "strokeOpacity": 1,
-                    "strokeWidth": 3
-                };
-            case 'Point':
-            case 'MultiPoint': {
-                return layer.styleName === "marker" ? {
-                    "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
-                    "graphicWidth": 25,
-                    "graphicHeight": 41,
-                    "graphicXOffset": -12, // different offset
-                    "graphicYOffset": -41
-                } : {
-                    "fillColor": "#FF0000",
-                    "fillOpacity": 0,
-                    "strokeColor": "#FF0000",
-                    "pointRadius": 5,
-                    "strokeOpacity": 1,
-                    "strokeWidth": 1
-                };
-            }
-            default: {
-                return {
-                    "fillColor": "#0000FF",
-                    "fillOpacity": 0.1,
-                    "strokeColor": "#0000FF",
-                    "pointRadius": 5,
-                    "strokeOpacity": 1,
-                    "strokeWidth": 1
-                };
-            }
+    getOlDefaultStyle(layer, styleType) {
+        switch (styleType || getGeomType(layer) || "") {
+        case 'Polygon':
+        case 'MultiPolygon': {
+            return {
+                "fillColor": "#0000FF",
+                "fillOpacity": 0.1,
+                "strokeColor": "#0000FF",
+                "strokeOpacity": 1,
+                "strokeWidth": 3,
+                "strokeDashstyle": "dash",
+                "strokeLinecap": "round"
+            };
+        }
+        case 'MultiLineString':
+        case 'LineString':
+            return {
+                "strokeColor": "#0000FF",
+                "strokeOpacity": 1,
+                "strokeWidth": 3
+            };
+        case 'Point':
+        case 'MultiPoint': {
+            return layer.styleName === "marker" ? {
+                "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
+                "graphicWidth": 25,
+                "graphicHeight": 41,
+                "graphicXOffset": -12, // different offset
+                "graphicYOffset": -41
+            } : {
+                "fillColor": "#FF0000",
+                "fillOpacity": 0,
+                "strokeColor": "#FF0000",
+                "pointRadius": 5,
+                "strokeOpacity": 1,
+                "strokeWidth": 1
+            };
+        }
+        default: {
+            return {
+                "fillColor": "#0000FF",
+                "fillOpacity": 0.1,
+                "strokeColor": "#0000FF",
+                "pointRadius": 5,
+                "strokeOpacity": 1,
+                "strokeWidth": 1
+            };
+        }
         }
     }
 };

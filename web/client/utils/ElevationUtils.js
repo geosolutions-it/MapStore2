@@ -41,7 +41,7 @@ const getValueAtXY = (ncols, tile, x, y, nodata = -9999) => {
         //
     }
 
-    return undefined;
+    return null;
 };
 
 module.exports = {
@@ -68,6 +68,7 @@ module.exports = {
                 });
             });
         }
+        return null;
     },
     /**
      * Returns the elevation for:

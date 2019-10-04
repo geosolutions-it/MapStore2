@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 const {get, isArray} = require('lodash');
-const {searchEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
+const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 
 const {
@@ -107,16 +107,16 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *          "fillColor": "#3388ff",
  *          "fillOpacity": 0.2,
  *          "LineString": {
- *              // custom style for LineString, it overrides deafult/general style (optional)
+ *              // custom style for LineString, it overrides default/general style (optional)
  *          },
  *          "MultiLineString": {
- *              // custom style for MultiLineString, it overrides deafult/general style (optional)
+ *              // custom style for MultiLineString, it overrides default/general style (optional)
  *          },
  *          "Polygon": {
- *              // custom style for Polygon, it overrides deafult/general style (optional)
+ *              // custom style for Polygon, it overrides default/general style (optional)
  *          },
  *          "MultiPolygon": {
- *              // custom style for MultiPolygon, it overrides deafult/general style (optional)
+ *              // custom style for MultiPolygon, it overrides default/general style (optional)
  *          }
  *      }
  *    }
@@ -125,6 +125,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
+ * @prop {object} cfg.maxResults number of max items present in the result list
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
@@ -174,6 +175,12 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * ```
  * **note:** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
  * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
+ * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
+ * it has the following values:
+ * - undefined | not configured, it does not perform the GFI request
+ * Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
+ * - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
+ * - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
  */
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
@@ -183,7 +190,7 @@ const SearchPlugin = connect((state) => ({
 }), {
     onUpdateResultsStyle: updateResultsStyle
 })(
-class extends React.Component {
+    class extends React.Component {
     static propTypes = {
         splitTools: PropTypes.bool,
         showOptions: PropTypes.bool,
@@ -201,7 +208,7 @@ class extends React.Component {
 
     static defaultProps = {
         searchOptions: {
-            services: [{type: "nominatim"}]
+            services: [{type: "nominatim", priority: 5}]
         },
         isSearchClickable: false,
         splitTools: true,
@@ -226,7 +233,7 @@ class extends React.Component {
     };
 
     getSearchOptions = () => {
-        const{ searchOptions, textSearchConfig} = this.props;
+        const { searchOptions, textSearchConfig } = this.props;
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
             return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
         }
@@ -246,19 +253,19 @@ class extends React.Component {
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
-            />);
+        />);
         if (this.props.withToggle === true) {
             return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
         }
         if (isArray(this.props.withToggle)) {
             return (
-                    <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                        <ToggleButton/>
-                        {this.props.enabled ? search : null}
-                    </MediaQuery>
-                    <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
-                        {search}
-                    </MediaQuery>
+                <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
+                    <ToggleButton/>
+                    {this.props.enabled ? search : null}
+                </MediaQuery>
+                <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
+                    {search}
+                </MediaQuery>
                 </span>
             );
         }
@@ -270,18 +277,18 @@ class extends React.Component {
             <HelpWrapper
                 id="search-help"
                 key="seachBar-help"
-                    helpText={<Message msgId="helptexts.searchBar"/>}>
-                    {this.getSearchAndToggleButton()}
-                </HelpWrapper>
-                <SearchResultList
-                    fitToMapSize={this.props.fitResultsToMapSize}
-                    searchOptions={this.props.searchOptions}
-                    onUpdateResultsStyle={this.props.onUpdateResultsStyle}
-                    key="nominatimresults"/>
-            </span>)
+                helpText={<Message msgId="helptexts.searchBar"/>}>
+                {this.getSearchAndToggleButton()}
+            </HelpWrapper>
+            <SearchResultList
+                fitToMapSize={this.props.fitResultsToMapSize}
+                searchOptions={this.props.searchOptions}
+                onUpdateResultsStyle={this.props.onUpdateResultsStyle}
+                key="nominatimresults"/>
+        </span>)
         ;
     }
-});
+    });
 
 module.exports = {
     SearchPlugin: assign(SearchPlugin, {
@@ -292,7 +299,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: {searchEpic, searchItemSelected, zoomAndAddPointEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic},
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')

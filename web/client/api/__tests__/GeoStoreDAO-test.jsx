@@ -14,34 +14,34 @@ const MockAdapter = require("axios-mock-adapter");
 let mockAxios;
 
 const SAMPLE_RULES = {
-   "SecurityRuleList": {
-      "SecurityRule": [
-         {
-            "canRead": true,
-            "canWrite": true,
-            "user": {
-               "id": 3,
-               "name": "admin"
+    "SecurityRuleList": {
+        "SecurityRule": [
+            {
+                "canRead": true,
+                "canWrite": true,
+                "user": {
+                    "id": 3,
+                    "name": "admin"
+                }
+            },
+            {
+                "canRead": true,
+                "canWrite": true,
+                "group": {
+                    "groupName": "geosolutions",
+                    "id": 524
+                }
+            },
+            {
+                "canRead": true,
+                "canWrite": false,
+                "group": {
+                    "groupName": "testers",
+                    "id": 3956
+                }
             }
-         },
-         {
-            "canRead": true,
-            "canWrite": true,
-            "group": {
-               "groupName": "geosolutions",
-               "id": 524
-            }
-         },
-         {
-            "canRead": true,
-            "canWrite": false,
-            "group": {
-               "groupName": "testers",
-               "id": 3956
-            }
-         }
-      ]
-   }
+        ]
+    }
 };
 const SAMPLE_XML_RULES = "<SecurityRuleList>"
     + "<SecurityRule>"
@@ -88,7 +88,7 @@ describe('Test correctness of the GeoStore APIs', () => {
         expect(result.baseURL).toNotBe(null);
         const result2 = API.addBaseUrl({otherOption: 3});
         expect(result2).toIncludeKey("baseURL")
-        .toIncludeKey('otherOption');
+            .toIncludeKey('otherOption');
         expect(result2.baseURL).toNotBe(null);
     });
 
@@ -143,6 +143,134 @@ describe('Test correctness of the GeoStore APIs', () => {
             expect(mockAxios.history.post[0].auth.username).toBe('user');
             expect(mockAxios.history.post[0].auth.password).toBe("password");
             done();
+        });
+    });
+    it("test generateMetadata default", () => {
+        const metadata = API.generateMetadata();
+        const name = "";
+        const description = "";
+        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name>`);
+    });
+    it("test generateMetadata with name and desc", () => {
+        const name = "Map 1";
+        const description = "this map shows high traffic zones";
+        const metadata = API.generateMetadata(name, description);
+        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name>`);
+    });
+    it("test createAttributeList default", () => {
+        expect(API.createAttributeList()).toEqual("");
+    });
+    it("test createAttributeList no attributes", () => {
+        expect(API.createAttributeList({attributes: {}})).toEqual("");
+    });
+    it("test createAttributeList with attributes", () => {
+        const name = "name";
+        const description = "description";
+        let metadata = {
+            name,
+            description,
+            attributes: {
+                nina: "nina",
+                eating: "eating",
+                plastic: "plastic"
+            }
+        };
+        metadata = API.createAttributeList(metadata);
+        expect(metadata).toEqual(
+            "<Attributes>" +
+                "<attribute><name>nina</name><value>nina</value><type>STRING</type></attribute>" +
+                "<attribute><name>eating</name><value>eating</value><type>STRING</type></attribute>" +
+                "<attribute><name>plastic</name><value>plastic</value><type>STRING</type></attribute>" +
+            "</Attributes>"
+        );
+    });
+    it("test getAvailableGroups for ADMIN multiple groups", () => {
+        const sampleResponse = {
+            "UserGroupList": {
+                "UserGroup": [
+                    {
+                        "groupName": "everyone",
+                        "id": 1,
+                        "restUsers": {
+                            "User": [
+                                {
+                                    "groupsNames": "everyone",
+                                    "id": 3,
+                                    "name": "user",
+                                    "role": "USER"
+                                },
+                                {
+                                    "groupsNames": "everyone",
+                                    "id": 2,
+                                    "name": "admin",
+                                    "role": "ADMIN"
+                                },
+                                {
+                                    "groupsNames": "everyone",
+                                    "id": 1,
+                                    "name": "guest",
+                                    "role": "GUEST"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "description": "test",
+                        "groupName": "test",
+                        "id": 5,
+                        "restUsers": ""
+                    }
+                ]
+            }
+        };
+
+        mockAxios.onGet().reply(200, sampleResponse);
+        API.getAvailableGroups({role: "ADMIN"}).then((data) => {
+            expect(data).toExist();
+            expect(data.length).toBe(2);
+            const everyoneGroup = data.find(g => g.id === 1);
+            expect(everyoneGroup).toEqual({id: 1, groupName: "everyone"});
+            const testGroup = data.find(g => g.id === 5);
+            expect(testGroup).toEqual({id: 5, groupName: "test"});
+        });
+    });
+    it("test getAvailableGroups for ADMIN single group", () => {
+        const sampleResponse = {
+            "UserGroupList": {
+                "UserGroup": {
+                    "groupName": "everyone",
+                    "id": 1,
+                    "restUsers": {
+                        "User": [
+                            {
+                                "groupsNames": "everyone",
+                                "id": 3,
+                                "name": "user",
+                                "role": "USER"
+                            },
+                            {
+                                "groupsNames": "everyone",
+                                "id": 2,
+                                "name": "admin",
+                                "role": "ADMIN"
+                            },
+                            {
+                                "groupsNames": "everyone",
+                                "id": 1,
+                                "name": "guest",
+                                "role": "GUEST"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        mockAxios.onGet().reply(200, sampleResponse);
+        API.getAvailableGroups({role: "ADMIN"}).then((data) => {
+            expect(data).toExist();
+            expect(data.length).toBe(1);
+            expect(data[0]).toEqual({id: 1, groupName: "everyone"});
         });
     });
 });

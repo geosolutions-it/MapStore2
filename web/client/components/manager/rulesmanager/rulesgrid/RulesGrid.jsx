@@ -9,7 +9,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const RuleRenderer = require('./renderers/RuleRenderer');
 
-const { Draggable} = require('react-data-grid-addons');
+const EmptyView = require('../../../misc/EmptyView');
+
+
+const { Draggable } = require('react-data-grid-addons');
 
 const DataGrid = require('../../../data/grid/DataGrid');
 const { Container: DraggableContainer, DropTargetRowContainer: dropTargetRowContainer } = Draggable;
@@ -77,6 +80,7 @@ class RulesGrid extends React.Component {
                     displayFilters
                     ref={(grid) => { this.grid = grid; }}
                     enableCellSelection={false}
+                    emptyRowsView={() => <EmptyView glyph="inbox" />}
                     rowActionsCell={PriorityActionCell}
                     columns={this.props.columns}
                     rowGetter={this.props.rowGetter}
@@ -111,7 +115,7 @@ class RulesGrid extends React.Component {
     reorderRows = (e) => {
         if (e.rowSource.data[this.props.rowKey] === "empty_row" || e.rowTarget.data[this.props.rowKey] === "empty_row") {
             return;
-        }else if (e.rowSource.idx === e.rowTarget.idx) {
+        } else if (e.rowSource.idx === e.rowTarget.idx) {
             return;
         }
         let selectedRows = this._getSelectedRow(this.props.rowKey, this.props.selectedIds, this.props.rows);

@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -8,10 +8,11 @@
 const React = require('react');
 const {compose} = require('recompose');
 const Message = require('../../I18N/Message');
+const { omit } = require('lodash');
 
 const {Button, Glyphicon} = require('react-bootstrap');
 const Loader = require('../Loader');
-const tooltip = require('../enhancers/tooltip');
+const tooltip = require('../enhancers/buttonTooltip');
 const popover = require('../enhancers/popover');
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text
@@ -27,8 +28,8 @@ const popover = require('../enhancers/popover');
  * @prop {string} [tooltipId] @see components.misc.enhancers.tooltip
  */
 
-module.exports = compose(tooltip, popover)(({ glyph, loading, text = "", textId, glyphClassName="", loaderProps = {}, ...props} = {}) =>
-    <Button {...props}>
+module.exports = compose(tooltip, popover)(({ glyph, loading, text = "", textId, glyphClassName = "", loaderProps = {}, ...props} = {}) =>
+    <Button {...omit(props, ["pullRight"])}>
         {glyph && !loading ? <Glyphicon glyph={glyph} className={glyphClassName}/> : null}
         {textId ? <Message msgId={textId} /> : text}
         {loading ? <Loader className={`ms-loader${props.bsStyle && ' ms-loader-' + props.bsStyle || ''}${props.bsSize && ' ms-loader-' + props.bsSize || ''}`} {...loaderProps}/> : null}

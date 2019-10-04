@@ -36,6 +36,7 @@ describe("test the PreviewIcon", () => {
         };
 
         const layer = {
+            type: "empty",
             visibility: true,
             id: 'layer'
         };

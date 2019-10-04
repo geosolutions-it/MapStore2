@@ -43,23 +43,23 @@ const TOCUtils = {
      */
     getTooltipFragment: (fragment = "title", node, currentLocale, separator = " - ") => {
         switch (fragment) {
-            case "title": {
-                const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
-                const title = translation || node.name || "";
-                return title;
-            }
-            case "description": {
-                const description = node.description || "";
-                return description;
-            }
-            case "both": {
-                const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
-                const title = translation || node.nam || "";
-                const description = node.description || "";
-                return `${title}${separator && description ? separator : ""}${description}`;
-            }
-            // default is the name of the property passed
-            default: return node[fragment];
+        case "title": {
+            const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
+            const title = translation || node.name || "";
+            return title;
+        }
+        case "description": {
+            const description = node.description || "";
+            return description;
+        }
+        case "both": {
+            const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
+            const title = translation || node.nam || "";
+            const description = node.description || "";
+            return `${title}${separator && description ? separator : ""}${description}`;
+        }
+        // default is the name of the property passed
+        default: return node[fragment];
         }
     },
     /**
@@ -69,8 +69,9 @@ const TOCUtils = {
      * @return {string} separator
      * @return {number} maxLength
     */
-    getTitleAndtooltip: ({node, currentLocale, tooltipOptions = {separator: " - ", maxLength: 807}}) => {
-        let tooltipText = TOCUtils.getTooltip(node, currentLocale, tooltipOptions.separator).substring(0, tooltipOptions.maxLength);
+    getTitleAndTooltip: ({node, currentLocale, tooltipOptions = {separator: " - ", maxLength: 807}}) => {
+        let tooltipText = TOCUtils.getTooltip(node, currentLocale, tooltipOptions.separator) || "";
+        tooltipText = tooltipText && tooltipText.substring(0, tooltipOptions.maxLength);
         if (tooltipText.length === tooltipOptions.maxLength) {
             tooltipText += "...";
         }

@@ -60,7 +60,8 @@ class AutocompleteField extends React.Component {
         paginated: true,
         valueField: "value",
         textField: "label",
-        toggleMenu: () => {}
+        toggleMenu: () => {},
+        filterField: {}
     };
 
     getOptions = () => {
@@ -120,10 +121,10 @@ class AutocompleteField extends React.Component {
             textField={this.props.textField}
             valueField={this.props.valueField}
             value={selectedValue && selectedValue.value}
-            />);
+        />);
         return isLikeOrIlike(this.props.filterField.operator) ? (<OverlayTrigger key={"autocompleteField-overlay" + (this.props.filterField && this.props.filterField.rowId)} placement="top" overlay={tooltip}>
-        { field }
-    </OverlayTrigger>) : field;
+            { field }
+        </OverlayTrigger>) : field;
     }
     render() {
         let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);

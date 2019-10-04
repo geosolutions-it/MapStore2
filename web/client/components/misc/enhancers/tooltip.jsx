@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -10,7 +10,7 @@ const {branch} = require('recompose');
 const { Tooltip } = require('react-bootstrap');
 const OverlayTrigger = require('../OverlayTrigger');
 const Message = require('../../I18N/Message');
-
+const {omit} = require('lodash');
 /**
  * Tooltip enhancer. Enhances an object adding a tooltip (with i18n support).
  * It is applied only if props contains `tooltip` or `tooltipId`. It have to be applied to a React (functional) component
@@ -30,8 +30,12 @@ const Message = require('../../I18N/Message');
  */
 module.exports = branch(
     ({tooltip, tooltipId} = {}) => tooltip || tooltipId,
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, ...props} = {}) => (<OverlayTrigger
+    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, ...props} = {}) => (<OverlayTrigger
         trigger={tooltipTrigger}
+        id={idDropDown}
         key={keyProp}
         placement={tooltipPosition}
-        overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>));
+        overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
+    // avoid to pass non needed props
+    (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip"]))}>{props.children}</Wrapped>
+);

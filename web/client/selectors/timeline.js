@@ -1,9 +1,10 @@
 const { get, head } = require('lodash');
 const {createSelector} = require('reselect');
 const { createShallowSelector } = require('../utils/ReselectUtils');
+const { reprojectBbox } = require('../utils/CoordinatesUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-const moment = require('moment');
-const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector } = require('../selectors/dimension');
+const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector, layersWithTimeDataSelector, layerDimensionDataSelectorCreator } = require('../selectors/dimension');
+const { mapSelector, projectionSelector } = require('../selectors/map');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
@@ -11,7 +12,15 @@ const rangeDataSelector = state => get(state, 'timeline.rangeData');
 // items
 const MAX_ITEMS = 50;
 
+const isCollapsed = state => get(state, 'timeline.settings.collapsed');
+
 const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
+
+/**
+ * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
+ * @return the flag of sync of the timeline with the map viewport
+ */
+const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get live filter enabled flag
 /**
  * Converts the list of timestamps into timeline items.
  * If a timestamp is a start/end/resolution, and items in viewRange are less than MAX_ITEMS, returns tha array of items,
@@ -88,7 +97,7 @@ const rangeDataToItems = (rangeData = {}, range) => {
 };
 /**
  * Transforms time values from layer state or rangeData (histogram,values) into items for timeline.
- * @param {object} data layer timedimension data
+ * @param {object} data layer time dimension data
  * @param {object} range start/end object that represent the view range
  * @param {object} rangeData object that contains domain or histogram
  */
@@ -101,6 +110,12 @@ const getTimeItems = (data = {}, range, rangeData) => {
     return [];
 };
 
+/**
+ * Selector that retrieves the time data from the state (layer configuration, dimension state...) and convert it
+ * into timeline object data.
+ * @param {object} state the state
+ * @return {object[]} items to show in the timeline in the [visjs timeline data object format](http://visjs.org/docs/timeline/#Data_Format)
+ */
 const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
@@ -119,18 +134,11 @@ const itemsSelector = createShallowSelector(
 );
 const loadingSelector = state => get(state, "timeline.loading");
 const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
-const calculateOffsetTimeSelector = (state) => {
-    const offset = get(state, "timeline.offsetTime");
-    const time = currentTimeSelector(state);
-    return time && offset && moment(time).add(offset) || time && moment(time).add(1, 'month');
-};
 
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
 const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
 const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(state), "source.url");
-
-const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
 const currentTimeRangeSelector = createSelector(
     currentTimeSelector,
@@ -139,20 +147,82 @@ const currentTimeRangeSelector = createSelector(
 );
 const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
+/**
+ * Select layers visible in the timeline
+ */
+const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
+
+const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
+const isVisible = state => !isCollapsed(state) && hasLayers(state);
+
+
+/**
+ * This selector returns additional parameters for multidimensional extension requests for timeline/playback tools.
+ * When the liveFilterByViewport is active, returns the bbox, re-projected in the CRS of `SpaceDomain`.
+ * TODO: add cql_filter when supported on back-end.
+ * @param {string} layerId The layer ID
+ * @returns a selector for multidimensional requests options (`bbox`)
+ */
+const multidimOptionsSelectorCreator = layerId => state => {
+    const { bbox: viewport } = mapSelector(state) || {};
+    if (!viewport ) {
+        return {};
+    }
+    const timeDimensionData = layerDimensionDataSelectorCreator(layerId, "time")(state);
+    const sourceVersion = get(timeDimensionData, 'source.version');
+    // clean up possible string values.
+    const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
+        return { ...p, [c]: parseFloat(viewport.bounds[c]) };
+    }, {});
+    if (!bounds || !isMapSync(state)) { // TODO: optional filtering
+        return {};
+    }
+    if (sourceVersion !== "1.1") {
+        const spaceDimension = layerDimensionDataSelectorCreator(layerId, "space")(state);
+        const crs = get(spaceDimension, 'domain.CRS');
+
+        if (!crs || !bounds || !isMapSync(state)) { // TODO: optional filtering
+            return {};
+        }
+        // TODO: reprojectBbox (and the view)
+        let [minx, miny, maxx, maxy] = reprojectBbox(bounds, projectionSelector(state), crs);
+        // workaround for dateline issues. anyway it takes only half of the data.
+        // Only version 1.1 of the extension supports cross-dateline queries
+        if (maxx < minx && crs === "EPSG:4326") {
+            maxx = maxx + 360;
+        }
+        const bbox = `${minx},${miny},${maxx},${maxy}`;
+        return {
+            bbox,
+            crs
+        };
+    }
+    // version 1.1 supports bbox in form minx,miny,maxx,maxy,crs
+    let {minx, miny, maxx, maxy} = bounds;
+    const crs = viewport.crs;
+    return {
+        bbox: `${minx},${miny},${maxx},${maxy},${crs}`
+    };
+
+};
 
 module.exports = {
+    isVisible,
+    isCollapsed,
     currentTimeRangeSelector,
-    mouseEventSelector,
+    timelineLayersSelector,
+    hasLayers,
     itemsSelector,
     rangeSelector,
     isAutoSelectEnabled,
     loadingSelector,
     selectedLayerSelector,
-    calculateOffsetTimeSelector,
     selectedLayerData,
     selectedLayerTimeDimensionConfiguration,
     selectedLayerDataRangeSelector,
     selectedLayerName,
     selectedLayerUrl,
-    rangeDataSelector
+    rangeDataSelector,
+    isMapSync,
+    multidimOptionsSelectorCreator
 };

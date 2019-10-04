@@ -18,7 +18,8 @@ const nl = require('react-intl/locale-data/nl');
 const zh = require('react-intl/locale-data/zh');
 const hr = require('react-intl/locale-data/hr');
 const pt = require('react-intl/locale-data/pt');
-addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt]);
+const vi = require('react-intl/locale-data/vi');
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt, ...vi]);
 
 /*
  * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
@@ -60,16 +61,21 @@ let supportedLocales = {
     "pt": {
         code: "pt-PT",
         description: "Português"
+    },
+    "vi": {
+        code: "vi-VN",
+        description: "tiếng Việt"
     }
 };
 const DATE_FORMATS = {
-    "default": "yyyy/MM/dd",
-    "en-US": "MM/dd/yyyy",
-    "it-IT": "dd/MM/yyyy",
-    "nl-NL": "dd/MM/yyyy",
-    "zh-ZH": "yyyy/MM/dd",
-    "hr-HR": "dd/MM/yyyy",
-    "pt-PT": "dd/MM/yyyy"
+    "default": "YYYY/MM/DD",
+    "en-US": "MM/DD/YYYY",
+    "it-IT": "DD/MM/YYYY",
+    "nl-NL": "DD/MM/YYYY",
+    "zh-ZH": "YYYY/MM/DD",
+    "hr-HR": "DD/MM/YYYY",
+    "pt-PT": "DD/MM/YYYY",
+    "vi-VN": "DD/MM/YYYY"
 };
 
 let errorParser = {};
@@ -80,7 +86,7 @@ let errorParser = {};
  */
 const LocaleUtils = {
     ensureIntl(callback) {
-        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js', 'intl/locale-data/jsonp/hr.js'], (require) => {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js', 'intl/locale-data/jsonp/hr.js', 'intl/locale-data/jsonp/vi.js'], (require) => {
             global.Intl = require('intl');
             require('intl/locale-data/jsonp/en.js');
             require('intl/locale-data/jsonp/it.js');
@@ -91,6 +97,7 @@ const LocaleUtils = {
             require('intl/locale-data/jsonp/zh.js');
             require('intl/locale-data/jsonp/hr.js');
             require('intl/locale-data/jsonp/pt.js');
+            require('intl/locale-data/jsonp/vi.js');
             if (callback) {
                 callback();
             }
@@ -131,6 +138,7 @@ const LocaleUtils = {
     getDateFormat(locale) {
         return DATE_FORMATS[locale] || DATE_FORMATS.default;
     },
+    DATE_FORMATS,
     getMessageById: function(messages, msgId) {
         var message = messages;
         msgId.split('.').forEach(part => {
@@ -139,7 +147,7 @@ const LocaleUtils = {
         return message || msgId;
     },
     /**
-     * Registre a parser to translate error services
+     * Register a parser to translate error services
      * @param type {string} name of the service
      * @param parser {object} custom parser of the service
      */

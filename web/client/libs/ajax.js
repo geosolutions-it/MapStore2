@@ -7,11 +7,13 @@
  */
 
 const axios = require('axios');
+const combineURLs = require('axios/lib/helpers/combineURLs');
+const url = require('url');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const SecurityUtils = require('../utils/SecurityUtils');
 const assign = require('object-assign');
-const {isObject} = require('lodash');
+const {isObject, omitBy, isNil} = require('lodash');
 const urlUtil = require('url');
 
 /**
@@ -31,6 +33,8 @@ function addHeaderToAxiosConfig(axiosConfig, headerName, headerValue) {
     axiosConfig.headers = assign({}, axiosConfig.headers, {[headerName]: headerValue});
 }
 
+const corsDisabled = [];
+
 /**
  * Internal helper that will add to the axios config object the correct
  * authentication method based on the request URL.
@@ -39,49 +43,50 @@ function addAuthenticationToAxios(axiosConfig) {
     if (!axiosConfig || !axiosConfig.url || !SecurityUtils.isAuthenticationActivated()) {
         return axiosConfig;
     }
-    const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
+    const axiosUrl = combineURLs(axiosConfig.baseURL || '', axiosConfig.url);
+    const rule = SecurityUtils.getAuthenticationRule(axiosUrl);
 
     switch (rule && rule.method) {
-        case 'browserWithCredentials':
-        {
-            axiosConfig.withCredentials = true;
+    case 'browserWithCredentials':
+    {
+        axiosConfig.withCredentials = true;
+        return axiosConfig;
+    }
+    case 'authkey':
+    {
+        const token = SecurityUtils.getToken();
+        if (!token) {
             return axiosConfig;
         }
-        case 'authkey':
-        {
-            const token = SecurityUtils.getToken();
-            if (!token) {
-                return axiosConfig;
-            }
-            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        return axiosConfig;
+    }
+    case 'test': {
+        const token = rule ? rule.token : "";
+        if (!token) {
             return axiosConfig;
         }
-        case 'test': {
-            const token = rule ? rule.token : "";
-            if (!token) {
-                return axiosConfig;
-            }
-            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+        return axiosConfig;
+    }
+    case 'basic':
+        const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
+        if (!basicAuthHeader) {
             return axiosConfig;
         }
-        case 'basic':
-            const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
-            if (!basicAuthHeader) {
-                return axiosConfig;
-            }
-            addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
-            return axiosConfig;
-        case 'bearer':
-        {
-            const token = SecurityUtils.getToken();
-            if (!token) {
-                return axiosConfig;
-            }
-            addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
+        addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
+        return axiosConfig;
+    case 'bearer':
+    {
+        const token = SecurityUtils.getToken();
+        if (!token) {
             return axiosConfig;
         }
-        default:
-            // we cannot handle the required authentication method
+        addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
+        return axiosConfig;
+    }
+    default:
+        // we cannot handle the required authentication method
         return axiosConfig;
     }
 }
@@ -107,26 +112,46 @@ axios.interceptors.request.use(config => {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
             let useCORS = [];
+            let autoDetectCORS = false;
             if (isObject(proxyUrl)) {
                 useCORS = proxyUrl.useCORS || [];
+                autoDetectCORS = proxyUrl.autoDetectCORS || false;
                 proxyUrl = proxyUrl.url;
             }
             const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
-            if (!isCORS) {
+            const cannotUseCORS = corsDisabled.reduce((found, current) => found || uri.indexOf(current) === 0, false);
+            if (!isCORS && (!autoDetectCORS || cannotUseCORS)) {
                 const parsedUri = urlUtil.parse(uri, true, true);
+                const params = omitBy(config.params, isNil);
                 config.url = proxyUrl + encodeURIComponent(
                     urlUtil.format(
                         assign({}, parsedUri, {
                             search: null,
-                            query: assign({}, parsedUri.query, config.params )
+                            query: assign({}, parsedUri.query, params)
                         })
                     )
                 );
                 config.params = undefined;
+            } else if (autoDetectCORS) {
+                config.autoDetectCORS = true;
             }
         }
     }
     return config;
+});
+
+axios.interceptors.response.use(response => response, (error) => {
+    if (error.config && error.config.autoDetectCORS) {
+        const urlParts = url.parse(error.config.url);
+        const baseUrl = urlParts.protocol + "//" + urlParts.host + urlParts.pathname;
+        if (corsDisabled.indexOf(baseUrl) === -1) {
+            corsDisabled.push(baseUrl);
+            return new Promise((resolve, reject) => {
+                axios({ ...error.config, autoDetectCORS: false}).then(resolve).catch(reject);
+            });
+        }
+    }
+    return Promise.reject(error.response ? {...error.response, originalError: error} : error);
 });
 
 module.exports = axios;

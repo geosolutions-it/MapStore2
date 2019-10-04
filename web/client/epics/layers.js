@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams} = require('../actions/layers');
+const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams } = require('../actions/layers');
 const {getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
 
 const { setControlProperty } = require('../actions/controls');
@@ -77,19 +77,19 @@ const refresh = action$ =>
                     })
                 )
             )
-            .mergeAll()
-            .map((layer) => {
-                if (layer.error) {
-                    return Rx.Observable.of(layersRefreshError([layer], layer.error.message));
-                }
-                return Rx.Observable.from([layersRefreshed([layer]), updateNode(layer.layer, "id", getUpdates({
-                    bbox: layer.bbox,
-                    search: layer.search,
-                    title: layer.title,
-                    dimensions: layer.dimensions
-                }, action.options))]);
-            })
-            .mergeAll();
+                .mergeAll()
+                .map((layer) => {
+                    if (layer.error) {
+                        return Rx.Observable.of(layersRefreshError([layer], layer.error.message));
+                    }
+                    return Rx.Observable.from([layersRefreshed([layer]), updateNode(layer.layer, "id", getUpdates({
+                        bbox: layer.bbox,
+                        search: layer.search,
+                        title: layer.title,
+                        dimensions: layer.dimensions
+                    }, action.options))]);
+                })
+                .mergeAll();
         });
 
 /**

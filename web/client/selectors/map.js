@@ -7,7 +7,6 @@
 */
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const MapUtils = require('../utils/MapUtils');
 const {createSelector} = require('reselect');
 const {get} = require('lodash');
 
@@ -26,13 +25,28 @@ const {get} = require('lodash');
  * @return {object} the map configuration
  */
 const mapSelector = (state) => state.map && state.map.present || state.map || state.config && state.config.map || null;
-const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
 
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
 const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseInt(get(mapSelector(state), "mapId"), 10) || null;
 const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
 const mapInfoSelector = state => get(mapSelector(state), "info");
 const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
+
+// TODO: move these in selectors/localConfig.js or selectors/config.js
+const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
+const mapConstraintsSelector = state => state.localConfig && state.localConfig.mapConstraints || {};
+const configuredRestrictedExtentSelector = (state) => mapConstraintsSelector(state).restrictedExtent;
+const configuredExtentCrsSelector = (state) => mapConstraintsSelector(state).crs;
+const configuredMinZoomSelector = state => {
+    const constraints = mapConstraintsSelector(state);
+    const projection = projectionSelector(state);
+    return projection && get(constraints, `projectionsConstraints["${projection}"].minZoom`) || get(constraints, 'minZoom');
+};
+// END localConfig selectors
+
+const mapLimitsSelector = state => get(mapSelector(state), "limits");
+const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom" );
+const resolutionsSelector = state => get(mapSelector(state), "resolutions");
 
 /**
  * Get the scales of the current map
@@ -42,10 +56,9 @@ const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "de
  * @return {number[]} the scales of the map
  */
 const scalesSelector = createSelector(
-    [projectionSelector],
-    (projection) => {
-        if (projection) {
-            const resolutions = MapUtils.getResolutions();
+    [resolutionsSelector, projectionSelector],
+    (resolutions, projection) => {
+        if (resolutions && projection) {
             const units = CoordinatesUtils.getUnits(projection);
             const dpm = 96 * (100 / 2.54);
             return resolutions.map((resolution) => resolution * dpm * (units === 'degrees' ? 111194.87428468118 : 1));
@@ -75,9 +88,13 @@ module.exports = {
     mapSelector,
     scalesSelector,
     projectionSelector,
+    minZoomSelector,
     mapIdSelector,
     projectionDefsSelector,
     mapVersionSelector,
-    mapInfoSelector,
-    mapNameSelector
+    mapNameSelector,
+    configuredMinZoomSelector,
+    configuredExtentCrsSelector,
+    configuredRestrictedExtentSelector,
+    mapInfoSelector
 };

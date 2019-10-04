@@ -53,7 +53,7 @@ class AutoMapUpdate extends React.Component {
         onUpdateOptions: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.onUpdateOptions(this.props.options);
     }
 

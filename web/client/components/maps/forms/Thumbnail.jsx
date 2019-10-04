@@ -195,19 +195,19 @@ class Thumbnail extends React.Component {
             this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
 
                 <div className="dropzone-thumbnail-container" style={{
-                        pointerEvents: this.props.map.saving ? "none" : "auto"
-                    }}>
-
+                    pointerEvents: this.props.map.saving ? "none" : "auto"
+                }}>
+                    <label className="control-label"><Message msgId="map.thumbnail"/></label>
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
-                    { this.getThumbnailUrl() ?
-                        <div>
-                            <img src={this.getThumbnailUrl()} ref="imgThumbnail"/>
-                            <div className="dropzone-content-image-added">{this.props.message}<br/>{this.props.suggestion}</div>
-                            <div className="dropzone-remove" onClick={this.onRemoveThumbnail}>
-                                <Glyphicon glyph={this.props.glyphiconRemove} />
-                            </div>
-                        </div> : withoutThumbnail
-                    }
+                        { this.getThumbnailUrl() ?
+                            <div>
+                                <img src={this.getThumbnailUrl()} ref="imgThumbnail"/>
+                                <div className="dropzone-content-image-added">{this.props.message}<br/>{this.props.suggestion}</div>
+                                <div className="dropzone-remove" onClick={this.onRemoveThumbnail}>
+                                    <Glyphicon glyph={this.props.glyphiconRemove} />
+                                </div>
+                            </div> : withoutThumbnail
+                        }
                     </Dropzone>
                 </div>
 

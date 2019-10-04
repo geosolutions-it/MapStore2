@@ -47,9 +47,9 @@ function getDescribeLayer(url, layer, options) {
             return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
 
         })
-        .catch((error) => {
-            return dispatch(updateNode(layer.id, "id", {describeLayer: {"error": error.status}}));
-        });
+            .catch((error) => {
+                return dispatch(updateNode(layer.id, "id", {describeLayer: {"error": error.status}}));
+            });
     };
 }
 
@@ -65,13 +65,7 @@ function getLayerCapabilities(layer, options) {
             const layerCapability = WMS.parseLayerCapabilities(capabilities, layer);
 
             if (layerCapability) {
-                dispatch(updateNode(layer.id, "id", {
-                    capabilities: layerCapability,
-                    capabilitiesLoading: null,
-                    description: layerCapability._abstract,
-                    boundingBox: layerCapability.latLonBoundingBox,
-                    availableStyles: layerCapability.style && (Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style])
-                }));
+                dispatch(updateNode(layer.id, "id", LayersUtils.formatCapabitiliesOptions(layerCapability)));
             } else {
                 dispatch(updateNode(layer.id, "id", { capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: "no layer info" }, description: null }));
             }

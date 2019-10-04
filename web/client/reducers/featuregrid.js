@@ -41,13 +41,14 @@ const {
     STORE_ADVANCED_SEARCH_FILTER,
     GRID_QUERY_RESULT,
     LOAD_MORE_FEATURES,
-    SET_SHOW_CURRENT_FILTER
+    SET_UP,
+    SET_TIME_SYNC
 } = require('../actions/featuregrid');
-const{
+const {
     FEATURE_TYPE_LOADED,
     QUERY_CREATE
 } = require('../actions/wfsquery');
-const{
+const {
     CHANGE_DRAWING_STATUS
 } = require('../actions/draw');
 
@@ -58,7 +59,9 @@ const emptyResultsState = {
     filters: {},
     editingAllowedRoles: ["ADMIN"],
     enableColumnFilters: true,
-    showFilteredObject: true,
+    showFilteredObject: false,
+    timeSync: false,
+    showTimeSync: false,
     open: false,
     canEdit: false,
     focusOnEdit: true,
@@ -91,10 +94,10 @@ const applyUpdate = (f, updates, updatesGeom) => {
         };
     }
     return {...f,
-    properties: {
-        ...f.properties,
-        ...updates
-    }};
+        properties: {
+            ...f.properties,
+            ...updates
+        }};
 
 };
 const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
@@ -105,7 +108,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  * @prop {string[]} editingAllowedRoles array of user roles allowed to enter in edit mode
  * @prop {boolean} canEdit flag used to enable editing on the feature grid
  * @prop {object} filters filters for quick search. `{attribute: "name", value: "filter_value", opeartor: "=", rawValue: "the fitler raw value"}`
- * @prop {boolan} enableColumnFilters enables column filter. [configurable]
+ * @prop {boolean} enableColumnFilters enables column filter. [configurable]
  * @prop {boolean} open feature grid open or close
  * @prop {string} mode `VIEW` or `EDIT`
  * @prop {array} changes list of current changes in editing
@@ -115,6 +118,8 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  * @prop {boolean} drawing flag set during drawing
  * @prop {array} newFeatures array of new features created in editing
  * @prop {array} features list of the features currently loaded in the feature grid
+ * @prop {boolean} timeSync false by default. If true, enables the time sync on the timeline
+ * @prop {boolean} showTimeSync false by default. If true, shows the time sync button. Its disabled by default because WFS do not support officially time.
  * @example
  *  {
  *     editingAllowedRoles: ["ADMIN"],
@@ -177,12 +182,12 @@ function featuregrid(state = emptyResultsState, action) {
     case DESELECT_FEATURES:
         return assign({}, state, {
             select: state.select.filter(f1 => !isPresent(f1, action.features))
-            });
+        });
     case SET_SELECTION_OPTIONS: {
         return assign({}, state, {multiselect: action.multiselect});
     }
-    case SET_SHOW_CURRENT_FILTER: {
-        return assign({}, state, { showFilteredObject: action.showFilteredObject});
+    case SET_UP: {
+        return assign({}, state, action.options || {});
     }
     case CLEAR_SELECTION:
         return assign({}, state, {select: [], changes: []});
@@ -384,6 +389,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case TOGGLE_SHOW_AGAIN_FLAG: {
         return assign({}, state, {showAgain: !state.showAgain});
+    }
+    case SET_TIME_SYNC: {
+        return assign({}, state, {timeSync: action.value});
     }
     default:
         return state;

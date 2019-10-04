@@ -4,7 +4,7 @@ const {Panel, Nav, NavItem} = require('react-bootstrap');
 
 const {layersSelector} = require('../../../selectors/layers');
 const {selectedLayerIdSelector} = require('../../../selectors/featuregrid');
-const LayerSelector = ({layers = [], selectedLayerId, onLayerSelect= () => {}} = {}) =>
+const LayerSelector = ({layers = [], selectedLayerId, onLayerSelect = () => {}} = {}) =>
     (<Panel key="layer-selctor" style={{
         position: "absolute",
         top: "10px",
@@ -16,7 +16,7 @@ const LayerSelector = ({layers = [], selectedLayerId, onLayerSelect= () => {}} =
         <Nav bsStyle="pills" activeKey={selectedLayerId} stacked onSelect={onLayerSelect}>
             {layers.map(l => <NavItem eventKey={l.id} >{l.title}</NavItem>)}
         </Nav>
-        </Panel>);
+    </Panel>);
 
 const LayerSelectorPlugin = connect((state) => ({
     layers: layersSelector(state).filter(l => l.group === "Vector"),

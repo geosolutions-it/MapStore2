@@ -1,0 +1,70 @@
+{
+  "description": "Sample story with 1 title section 1 paragraph section and 1 immersive section with two columns",
+  "type": "cascade",
+  "sections": [
+    {
+      "type": "paragraph",
+      "id": "SomeID",
+      "title": "Abstract",
+      "contents": [
+        {
+          "id": "SomeID",
+          "type": "text",
+          "background": {},
+          "html": "<p>this is some html content</p>"
+        },
+        {
+          "id": "SomeID2",
+          "type": "image",
+          "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        }
+      ]
+    },
+    {
+      "type": "immersive",
+      "id": "SomeID2",
+      "title": "Abstract",
+      "contents": [
+        {
+          "id": "col1",
+          "type": "column",
+          "background": {},
+          "contents": [
+            {
+              "type": "text"
+            },
+            {
+              "type": "media"
+            }
+          ]
+        },
+        {
+          "id": "col2",
+          "type": "column",
+          "background": {},
+          "contents": [
+            {
+              "type": "text"
+            },
+            {
+              "type": "media"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "id": "SomeID_title",
+      "title": "Abstract",
+      "contents": [
+        {
+          "id": "SomeID",
+          "type": "text",
+          "background": {},
+          "html": "<p>this is some html content</p>"
+        }
+      ]
+    }
+  ]
+}

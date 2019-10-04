@@ -11,9 +11,10 @@ const { get, head, isArray, template } = require('lodash');
 const { success, error } = require('../actions/notifications');
 const { UPDATE_NODE, updateNode, updateSettingsParams } = require('../actions/layers');
 const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = require('../actions/additionallayers');
-const { getDescribeLayer, getLayerCapabilities } = require('../actions/layerCapabilities');
+const { getDescribeLayer } = require('../actions/layerCapabilities');
+const { getLayerCapabilities } = require('../observables/wms');
 const { setControlProperty } = require('../actions/controls');
-const url = require('url');
+const { findGeoServerName, formatCapabitiliesOptions } = require('../utils/LayersUtils');
 
 const {
     SELECT_STYLE_TEMPLATE,
@@ -32,16 +33,18 @@ const {
     EDIT_STYLE_CODE,
     DELETE_STYLE,
     setEditPermissionStyleEditor,
-    SET_DEFAULT_STYLE
+    SET_DEFAULT_STYLE,
+    initStyleService
 } = require('../actions/styleeditor');
 
-const StylesAPI = require('../api/geoserver/Styles');
+const StylesAPI = require('../api/geoserver/Styles').default;
 const LayersAPI = require('../api/geoserver/Layers');
 
 const {
     temporaryIdSelector,
     codeStyleSelector,
     formatStyleSelector,
+    languageVersionStyleSelector,
     statusStyleSelector,
     selectedStyleSelector,
     enabledStyleEditorSelector,
@@ -52,7 +55,6 @@ const {
 
 const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
-const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 /*
  * Observable to get code of a style, it works only in edit status
@@ -65,45 +67,29 @@ const getStyleCodeObservable = ({status, styleName, baseUrl}) =>
                 styleName
             })
         )
-        .switchMap(style => Rx.Observable.of(
-            selectStyleTemplate({
-                code: style.code,
-                templateId: '',
-                format: style.format,
-                init: true
-            })
-        ))
-        .catch(err => Rx.Observable.of(errorStyle('edit', err)))
+            .switchMap(style => Rx.Observable.of(
+                selectStyleTemplate({
+                    languageVersion: style.languageVersion,
+                    code: style.code,
+                    templateId: '',
+                    format: style.format,
+                    init: true
+                })
+            ))
+            .catch(err => Rx.Observable.of(errorStyle('edit', err)))
         : Rx.Observable.empty();
 /*
- * Observable delete styles.
- * silent to false hide notifications
+ * This function returns an observable that delete styles.
  */
-const deleteStyleObservable = ({styleName, baseUrl}, silent) =>
+const deleteStyle = ({styleName, baseUrl, onSuccess$, onError$}) =>
     Rx.Observable.defer(() =>
         StylesAPI.deleteStyle({
             baseUrl,
             styleName
         })
     )
-    .switchMap(() => silent ? Rx.Observable.empty() : Rx.Observable.of(
-            success({
-                title: "styleeditor.deletedStyleSuccessTitle",
-                message: "styleeditor.deletedStyleSuccessMessage",
-                uid: "deletedStyleSuccess",
-                autoDismiss: 5
-            })
-        )
-    )
-    .catch(() => silent ? Rx.Observable.empty() : Rx.Observable.of(
-        error({
-            title: "styleeditor.deletedStyleErrorTitle",
-            message: "styleeditor.deletedStyleErrorMessage",
-            uid: "deletedStyleError",
-            autoDismiss: 5
-        })
-    )
-);
+        .switchMap(() => onSuccess$ || Rx.Observable.empty())
+        .catch(() => onError$ || Rx.Observable.empty());
 /*
  * Observable to delete temporary style from server and reset state of style editor
  */
@@ -111,10 +97,10 @@ const resetStyleEditorObservable = state => {
     const styleName = temporaryIdSelector(state);
     const { baseUrl = '' } = styleServiceSelector(state);
     return Rx.Observable.of(
-            resetStyleEditor(),
-            removeAdditionalLayer({ owner: STYLE_OWNER_NAME })
-        )
-        .merge(styleName ? deleteStyleObservable({styleName, baseUrl}, true) : Rx.Observable.empty());
+        resetStyleEditor(),
+        removeAdditionalLayer({ owner: STYLE_OWNER_NAME })
+    )
+        .merge(styleName ? deleteStyle({styleName, baseUrl}) : Rx.Observable.empty());
 };
 /*
  * Observable to add a style to available style list and update the layer object on the server
@@ -127,58 +113,60 @@ const updateAvailableStylesObservable = ({baseUrl, layer, styleName, format, tit
             styles: [{ name: styleName }]
         })
     )
-    .switchMap(() => {
-        const newStyle = {
-            filename: `${styleName}.${format}`,
-            format,
-            name: styleName,
-            title,
-            _abstract
-        };
-        const defaultStyle = head(layer.availableStyles);
-        const availableStyles = layer.availableStyles && [defaultStyle, newStyle, ...layer.availableStyles.filter((sty, idx) => idx > 0)] || [newStyle];
-        return Rx.Observable.of(
-            updateSettingsParams({ availableStyles }, true),
-            loadedStyle()
-        );
-    })
-    .catch(() => Rx.Observable.of(loadedStyle()))
-    .startWith(loadingStyle('global'));
+        .switchMap(() => {
+            const newStyle = {
+                filename: `${styleName}.${format}`,
+                format,
+                name: styleName,
+                title,
+                _abstract
+            };
+            const defaultStyle = head(layer.availableStyles);
+            const availableStyles = layer.availableStyles && [defaultStyle, newStyle, ...layer.availableStyles.filter((sty, idx) => idx > 0)] || [newStyle];
+            return Rx.Observable.of(
+                updateSettingsParams({ availableStyles }, true),
+                loadedStyle()
+            );
+        })
+        .catch(() => Rx.Observable.of(loadedStyle()))
+        .startWith(loadingStyle('global'));
 
 /*
  * Observable to create/update style
  */
-const createUpdateStyleObservable = ({baseUrl, update, code, format, styleName, status}, successActions = [], errorActions = []) =>
+const createUpdateStyleObservable = ({baseUrl, update, code, format, styleName, status, languageVersion, options}, successActions = [], errorActions = []) =>
     Rx.Observable.defer(() =>
         StylesAPI[update ? 'updateStyle' : 'createStyle']({
             baseUrl,
             code,
             format,
-            styleName
+            styleName,
+            languageVersion,
+            options
         })
     )
-    .switchMap(() => isArray(successActions) && Rx.Observable.of(loadedStyle(), ...successActions) || successActions)
-    .catch((err) => Rx.Observable.of(errorStyle(status, err), loadedStyle(), ...errorActions))
-    .startWith(loadingStyle(status));
+        .switchMap(() => isArray(successActions) && Rx.Observable.of(loadedStyle(), ...successActions) || successActions)
+        .catch((err) => Rx.Observable.of(errorStyle(status, err), loadedStyle(), ...errorActions))
+        .startWith(loadingStyle(status));
 
 /*
  * Observable to verify if getLayerCapabilities/getDescribeLayer are correctly updated
  */
 const updateLayerSettingsObservable = (action$, store, filter = () => true, startActions = [], endObservable = () => {}) =>
     Rx.Observable.of(loadingStyle('global'), ...startActions)
-    .merge(
-        action$.ofType(UPDATE_NODE)
-            .filter(() => {
-                const layer = getSelectedLayer(store.getState());
-                return filter(layer);
-            })
-            .switchMap(() => {
-                const layer = getSelectedLayer(store.getState());
-                return endObservable(layer);
-            })
-            .catch(err => Rx.Observable.of(errorStyle('global', err), loadedStyle()))
-            .takeUntil(action$.ofType(LOADED_STYLE))
-    );
+        .merge(
+            action$.ofType(UPDATE_NODE)
+                .filter(() => {
+                    const layer = getSelectedLayer(store.getState());
+                    return filter(layer);
+                })
+                .switchMap(() => {
+                    const layer = getSelectedLayer(store.getState());
+                    return endObservable(layer);
+                })
+                .catch(err => Rx.Observable.of(errorStyle('global', err), loadedStyle()))
+                .takeUntil(action$.ofType(LOADED_STYLE))
+        );
 
 /**
  * Epics for Style Editor
@@ -210,34 +198,47 @@ module.exports = {
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();
 
-                const normalizedUrl = normalizeUrl(layer.url);
-                const parsedUrl = url.parse(normalizedUrl);
+                const geoserverName = findGeoServerName(layer);
+                if (!geoserverName) return Rx.Observable.empty();
 
-                return updateLayerSettingsObservable(action$, store,
-                    updatedLayer => updatedLayer && updatedLayer.capabilities,
-                    [getLayerCapabilities(layer)],
-                    (updatedLayer) => {
+                const layerUrl = layer.url.split(geoserverName);
+                const baseUrl = `${layerUrl[0]}${geoserverName}`;
+                const lastStyleService = styleServiceSelector(state);
 
-                        if (!updatedLayer.availableStyles) {
-                            return Rx.Observable.of(errorStyle('availableStyles', { status: 401 }));
-                        }
-
-                        const setAdditionalLayers = (availableStyles = []) => Rx.Observable.of(
-                            updateAdditionalLayer(updatedLayer.id, STYLE_OWNER_NAME, 'override', {}),
-                            updateSettingsParams({ availableStyles }),
-                            loadedStyle()
-                        );
-                        return Rx.Observable.defer(() =>
-                            StylesAPI.getStylesInfo({
-                                baseUrl: `${parsedUrl.protocol}//${parsedUrl.host}/geoserver/`,
-                                styles: updatedLayer && updatedLayer.availableStyles || []
+                return Rx.Observable
+                    .defer(() => lastStyleService.isStatic
+                        ? new Promise((resolve) => resolve(null))
+                        : StylesAPI.getStyleService({ baseUrl }))
+                    .switchMap((styleService) => {
+                        const initialAction = lastStyleService.isStatic ? [ ] : [ initStyleService(styleService) ];
+                        return getLayerCapabilities(layer)
+                            .switchMap((capabilities) => {
+                                const layerCapabilities = formatCapabitiliesOptions(capabilities);
+                                if (!layerCapabilities.availableStyles) {
+                                    return Rx.Observable.of(
+                                        errorStyle('availableStyles', { status: 401 }),
+                                        loadedStyle()
+                                    );
+                                }
+                                const setAdditionalLayers = (availableStyles = []) =>
+                                    Rx.Observable.of(
+                                        updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
+                                        updateSettingsParams({ availableStyles }),
+                                        updateNode(layer.id, 'layer', {...layerCapabilities, availableStyles}),
+                                        loadedStyle()
+                                    );
+                                return Rx.Observable.defer(() =>
+                                    StylesAPI.getStylesInfo({
+                                        baseUrl,
+                                        styles: layerCapabilities && layerCapabilities.availableStyles || []
+                                    })
+                                )
+                                    .switchMap(availableStyles => setAdditionalLayers(availableStyles));
                             })
-                        )
-                        .switchMap(availableStyles => {
-                            return setAdditionalLayers(availableStyles);
-                        });
-                    }
-                );
+                            .startWith(...initialAction)
+                            .catch((err) => Rx.Observable.of(errorStyle('global', err), loadedStyle()));
+                    })
+                    .startWith(loadingStyle('global'));
             }),
     /**
      * Gets every `UPDATE_STATUS` event.
@@ -263,28 +264,28 @@ module.exports = {
                 const { baseUrl = '' } = styleServiceSelector(state);
 
                 return describeAction && updateLayerSettingsObservable(action$, store,
-                        updatedLayer => updatedLayer && updatedLayer.describeLayer,
-                        [ describeAction ],
-                        (updatedLayer) => {
-                            return Rx.Observable.concat(
-                                getStyleCodeObservable({
-                                    status: action.status,
-                                    styleName,
-                                    baseUrl
-                                }),
-                                Rx.Observable.of(
-                                    setEditPermissionStyleEditor(!(updatedLayer
+                    updatedLayer => updatedLayer && updatedLayer.describeLayer,
+                    [ describeAction ],
+                    (updatedLayer) => {
+                        return Rx.Observable.concat(
+                            getStyleCodeObservable({
+                                status: action.status,
+                                styleName,
+                                baseUrl
+                            }),
+                            Rx.Observable.of(
+                                setEditPermissionStyleEditor(!(updatedLayer
                                         && updatedLayer.describeLayer
                                         && updatedLayer.describeLayer.error === 401)),
-                                    loadedStyle()
-                                )
-                            );
-                        }
-                    ) || getStyleCodeObservable({
-                        status: action.status,
-                        styleName,
-                        baseUrl
-                    });
+                                loadedStyle()
+                            )
+                        );
+                    }
+                ) || getStyleCodeObservable({
+                    status: action.status,
+                    styleName,
+                    baseUrl
+                });
             }),
     /**
      * Gets every `SELECT_STYLE_TEMPLATE`, `EDIT_STYLE_CODE` events.
@@ -302,29 +303,45 @@ module.exports = {
 
                 const layer = getUpdatedLayer(state);
                 const { workspace } = getNameParts(layer.name);
+                const isChangedFormat = action.format && action.format !== formatStyleSelector(state);
 
                 const styleName = temporaryId || `${workspace ? `${workspace}:` : ''}${generateTemporaryStyleId()}`;
                 const format = action.format || formatStyleSelector(state);
                 const status = statusStyleSelector(state);
-                const { baseUrl = '', formats } = styleServiceSelector(state);
+                const { baseUrl = '' } = styleServiceSelector(state);
 
-                const updateTmpCode = createUpdateStyleObservable(
+                // check if previous version of temporary style is changed
+                // if so it add 'raw=true' param to the request to eansure SLD is updated correctly
+                const previousLanguageVersion = languageVersionStyleSelector(state);
+                const currentLanguageVersion = format === 'sld'
+                    && (action.code || '').match(/version=\"1\.1\.0\"/) && { version: '1.1.0' }
+                    || action.format && !action.languageVersion && { version: '1.0.0' }
+                    || action.languageVersion
+                    || { version: '1.0.0' };
+                const options = previousLanguageVersion.version !== currentLanguageVersion.version
+                    ? { params: { raw: true } }
+                    : { };
+                const languageVersion = currentLanguageVersion;
+                const updateTmpCode = (name) => createUpdateStyleObservable(
                     {
                         update: true,
                         code: action.code,
                         format,
-                        styleName,
+                        styleName: name,
                         status,
-                        baseUrl
+                        baseUrl,
+                        languageVersion,
+                        options
                     },
                     [
-                        updateOptionsByOwner(STYLE_OWNER_NAME, [{ style: styleName, _v_: Date.now(), singleTile: true }]),
+                        updateOptionsByOwner(STYLE_OWNER_NAME, [{ style: name, _v_: Date.now(), singleTile: true }]),
                         updateTemporaryStyle({
-                            temporaryId: styleName,
+                            temporaryId: name,
                             templateId: action.templateId || '',
                             code: action.code,
                             format,
-                            init: action.init
+                            init: action.init,
+                            languageVersion
                         })
                     ],
                     status === 'edit' ? [] : [
@@ -337,30 +354,50 @@ module.exports = {
                     ]
                 );
 
-                const availableFormat = isArray(formats) && formats.indexOf('css') !== -1 && 'css' || 'sld';
                 // valid code needed to initialize and create temp style
-                const baseCode = availableFormat === 'css' && '* { stroke: #888888; }' ||
-                availableFormat === 'sld' && '<?xml version="1.0" encoding="ISO-8859-1"?>\n<StyledLayerDescriptor version="1.0.0"\n\t\txsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"\n\t\txmlns="http://www.opengis.net/sld"\n\t\txmlns:ogc="http://www.opengis.net/ogc"\n\t\txmlns:xlink="http://www.w3.org/1999/xlink"\n\t\txmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n\n\t<NamedLayer>\n\t\t<Name>Default Style</Name>\n\t\t<UserStyle>\n\t\t\t<Title>${styleTitle}</Title>\n\t\t\t<Abstract>${styleAbstract}</Abstract>\n\t\t\t<FeatureTypeStyle>\n\t\t\t\t<Rule>\n\t\t\t\t\t<Name>Rule Name</Name>\n\t\t\t\t\t<Title>Rule Title</Title>\n\t\t\t\t\t<Abstract>Rule Abstract</Abstract>\n\t\t\t\t\t<LineSymbolizer>\n\t\t\t\t\t\t<Stroke>\n\t\t\t\t\t\t\t<CssParameter name="stroke">#0000FF</CssParameter>\n\t\t\t\t\t\t</Stroke>\n\t\t\t\t\t\t</LineSymbolizer>\n\t\t\t\t\t<PointSymbolizer>\n\t\t\t\t\t\t<Graphic>\n\t\t\t\t\t\t\t<Mark>\n\t\t\t\t\t\t\t\t<WellKnownName>square</WellKnownName>\n\t\t\t\t\t\t\t\t<Fill>\n\t\t\t\t\t\t\t\t\t<CssParameter name="fill">#FF0000</CssParameter>\n\t\t\t\t\t\t\t\t</Fill>\n\t\t\t\t\t\t\t</Mark>\n\t\t\t\t\t\t</Graphic>\n\t\t\t\t\t</PointSymbolizer>\n\t\t\t\t\t</Rule>\n\t\t\t\t</FeatureTypeStyle>\n\t\t\t</UserStyle>\n\t\t</NamedLayer>\n\t</StyledLayerDescriptor>\n'
+                const baseCode = format === 'css' && '* { stroke: #888888; }' ||
+                format === 'sld' && '<?xml version="1.0" encoding="ISO-8859-1"?>\n<StyledLayerDescriptor version="1.0.0"\n\t\txsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"\n\t\txmlns="http://www.opengis.net/sld"\n\t\txmlns:ogc="http://www.opengis.net/ogc"\n\t\txmlns:xlink="http://www.w3.org/1999/xlink"\n\t\txmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n\n\t<NamedLayer>\n\t\t<Name>Default Style</Name>\n\t\t<UserStyle>\n\t\t\t<Title>${styleTitle}</Title>\n\t\t\t<Abstract>${styleAbstract}</Abstract>\n\t\t\t<FeatureTypeStyle>\n\t\t\t\t<Rule>\n\t\t\t\t\t<Name>Rule Name</Name>\n\t\t\t\t\t<Title>Rule Title</Title>\n\t\t\t\t\t<Abstract>Rule Abstract</Abstract>\n\t\t\t\t\t<LineSymbolizer>\n\t\t\t\t\t\t<Stroke>\n\t\t\t\t\t\t\t<CssParameter name="stroke">#0000FF</CssParameter>\n\t\t\t\t\t\t</Stroke>\n\t\t\t\t\t\t</LineSymbolizer>\n\t\t\t\t\t<PointSymbolizer>\n\t\t\t\t\t\t<Graphic>\n\t\t\t\t\t\t\t<Mark>\n\t\t\t\t\t\t\t\t<WellKnownName>square</WellKnownName>\n\t\t\t\t\t\t\t\t<Fill>\n\t\t\t\t\t\t\t\t\t<CssParameter name="fill">#FF0000</CssParameter>\n\t\t\t\t\t\t\t\t</Fill>\n\t\t\t\t\t\t\t</Mark>\n\t\t\t\t\t\t</Graphic>\n\t\t\t\t\t</PointSymbolizer>\n\t\t\t\t\t</Rule>\n\t\t\t\t</FeatureTypeStyle>\n\t\t\t</UserStyle>\n\t\t</NamedLayer>\n\t</StyledLayerDescriptor>\n'
                 || '';
 
-                return temporaryId && updateTmpCode ||
+                const createTmpCode = (name) =>
                     createUpdateStyleObservable({
                         code: baseCode,
-                        format: availableFormat,
-                        styleName,
+                        format,
+                        styleName: name,
                         status,
                         baseUrl
                     },
-                    updateTmpCode,
+                    updateTmpCode(name),
                     [
                         error({
                             title: "styleeditor.createTmpErrorTitle",
                             message: "styleeditor.createTmpStyleErrorMessage",
                             uid: "createTmpStyleError",
                             autoDismiss: 5
+                        }),
+                        // reset temporary style properties
+                        // when it's not possible to create it
+                        // so next time it creates a new temporary id
+                        updateTemporaryStyle({
+                            temporaryId: null,
+                            templateId: '',
+                            code: '',
+                            format: '',
+                            init: '',
+                            languageVersion: null
                         })
                     ]
-                );
+                    );
+
+                // delete and replace current temporary style if format is changed
+                return (isChangedFormat && temporaryId) && deleteStyle({
+                    styleName: temporaryId,
+                    baseUrl,
+                    onSuccess$: createTmpCode(`${workspace ? `${workspace}:` : ''}${generateTemporaryStyleId()}`),
+                    onError$: updateTmpCode(styleName)
+                })
+                || temporaryId && updateTmpCode(styleName)
+                || createTmpCode(styleName);
             }),
     /**
      * Gets every `CREATE_STYLE` event.
@@ -383,31 +420,31 @@ module.exports = {
                 const { baseUrl = '' } = styleServiceSelector(state);
 
                 return createUpdateStyleObservable(
-                        {
-                            code: template(code)({styleTitle: title, styleAbstract: _abstract}),
-                            format,
-                            styleName,
-                            status,
-                            baseUrl
-                        },
-                        Rx.Observable.of(
-                            updateOptionsByOwner(STYLE_OWNER_NAME, [{}]),
-                            updateSettingsParams({style: styleName || ''}, true),
-                            updateStatus(''),
-                            loadedStyle()
-                        )
+                    {
+                        code: template(code)({styleTitle: title, styleAbstract: _abstract}),
+                        format,
+                        styleName,
+                        status,
+                        baseUrl
+                    },
+                    Rx.Observable.of(
+                        updateOptionsByOwner(STYLE_OWNER_NAME, [{}]),
+                        updateSettingsParams({style: styleName || ''}, true),
+                        updateStatus(''),
+                        loadedStyle()
+                    )
                         .merge(
                             updateAvailableStylesObservable({layer, styleName, format, title, _abstract, baseUrl})
                         ),
-                        [
-                            error({
-                                title: "styleeditor.createStyleErrorTitle",
-                                message: "styleeditor.createStyleErrorMessage",
-                                uid: "createStyleError",
-                                autoDismiss: 5
-                            })
-                        ]
-                    );
+                    [
+                        error({
+                            title: "styleeditor.createStyleErrorTitle",
+                            message: "styleeditor.createStyleErrorMessage",
+                            uid: "createStyleError",
+                            autoDismiss: 5
+                        })
+                    ]
+                );
             }),
     /**
      * Gets every `UPDATE_STYLE_CODE` event.
@@ -423,6 +460,7 @@ module.exports = {
                 const state = store.getState();
 
                 const format = formatStyleSelector(state);
+                const languageVersion = languageVersionStyleSelector(state);
                 const code = codeStyleSelector(state);
                 const styleName = selectedStyleSelector(state);
                 const temporaryId = temporaryIdSelector(state);
@@ -436,7 +474,10 @@ module.exports = {
                         format,
                         styleName,
                         status: 'global',
-                        baseUrl
+                        baseUrl,
+                        // add 'raw=true' param to ensure correct update of SLD style
+                        // in case of update of version (SLD/SLDSE)
+                        options: { params: { raw: true } }
                     },
                     [
                         updateNode(layer.id, 'layer', { _v_: Date.now() }),
@@ -445,7 +486,8 @@ module.exports = {
                             templateId: '',
                             code,
                             format,
-                            init: true
+                            init: true,
+                            languageVersion
                         }),
                         success({
                             title: "styleeditor.savedStyleTitle",
@@ -489,21 +531,40 @@ module.exports = {
                         styles: [{ name: styleName }]
                     })
                 )
-                .switchMap(() => {
-                    const availableStyles = layer.availableStyles && layer.availableStyles.filter(({name}) => name !== styleName) || [];
-                    return Rx.Observable.concat(
-                        Rx.Observable.of(
-                            updateSettingsParams({style: '', availableStyles}, true),
-                            loadedStyle(),
-                            // style has been deleted so original and initial settings must be overrided
-                            setControlProperty('layersettings', 'originalSettings', {...originalSettings, style: ''}),
-                            setControlProperty('layersettings', 'initialSettings', {...initialSettings, style: ''})
-                        ),
-                        deleteStyleObservable({styleName, baseUrl})
-                    );
-                })
-                .catch(() => Rx.Observable.of(loadedStyle()))
-                .startWith(() => Rx.Observable.of(loadingStyle('global')));
+                    .switchMap(() => {
+                        const availableStyles = layer.availableStyles && layer.availableStyles.filter(({name}) => name !== styleName) || [];
+                        return Rx.Observable.concat(
+                            Rx.Observable.of(
+                                updateSettingsParams({style: '', availableStyles}, true),
+                                loadedStyle(),
+                                // style has been deleted so original and initial settings must be overrided
+                                setControlProperty('layersettings', 'originalSettings', {...originalSettings, style: ''}),
+                                setControlProperty('layersettings', 'initialSettings', {...initialSettings, style: ''})
+                            ),
+                            deleteStyle({
+                                styleName,
+                                baseUrl,
+                                onSuccess$: Rx.Observable.of(
+                                    success({
+                                        title: "styleeditor.deletedStyleSuccessTitle",
+                                        message: "styleeditor.deletedStyleSuccessMessage",
+                                        uid: "deletedStyleSuccess",
+                                        autoDismiss: 5
+                                    })
+                                ),
+                                onError$: Rx.Observable.of(
+                                    error({
+                                        title: "styleeditor.deletedStyleErrorTitle",
+                                        message: "styleeditor.deletedStyleErrorMessage",
+                                        uid: "deletedStyleError",
+                                        autoDismiss: 5
+                                    })
+                                )
+                            })
+                        );
+                    })
+                    .catch(() => Rx.Observable.of(loadedStyle()))
+                    .startWith(() => Rx.Observable.of(loadingStyle('global')));
             }),
     /**
      * Gets every `SET_DEFAULT_STYLE` event.
@@ -526,33 +587,33 @@ module.exports = {
                         styleName
                     })
                 )
-                .switchMap(() => {
-                    const defaultStyle = layer.availableStyles.filter(({ name }) => styleName === name);
-                    const filteredStyles = layer.availableStyles.filter(({ name }) => styleName !== name);
-                    const availableStyles = [...defaultStyle, ...filteredStyles];
-                    return Rx.Observable.of(
-                        updateSettingsParams({ availableStyles }, true),
-                        success({
-                            title: "styleeditor.setDefaultStyleSuccessTitle",
-                            message: "styleeditor.setDefaultStyleSuccessMessage",
-                            uid: "setDefaultStyleSuccess",
-                            autoDismiss: 5
-                        }),
-                        loadedStyle()
-                    );
-                })
-                .startWith(loadingStyle('global'))
-                .catch(() => {
-                    return Rx.Observable.of(
-                        error({
-                            title: "styleeditor.setDefaultStyleErrorTitle",
-                            message: "styleeditor.setDefaultStyleErrorMessage",
-                            uid: "setDefaultStyleError",
-                            autoDismiss: 5
-                        }),
-                        loadedStyle()
-                    );
-                });
+                    .switchMap(() => {
+                        const defaultStyle = layer.availableStyles.filter(({ name }) => styleName === name);
+                        const filteredStyles = layer.availableStyles.filter(({ name }) => styleName !== name);
+                        const availableStyles = [...defaultStyle, ...filteredStyles];
+                        return Rx.Observable.of(
+                            updateSettingsParams({ availableStyles }, true),
+                            success({
+                                title: "styleeditor.setDefaultStyleSuccessTitle",
+                                message: "styleeditor.setDefaultStyleSuccessMessage",
+                                uid: "setDefaultStyleSuccess",
+                                autoDismiss: 5
+                            }),
+                            loadedStyle()
+                        );
+                    })
+                    .startWith(loadingStyle('global'))
+                    .catch(() => {
+                        return Rx.Observable.of(
+                            error({
+                                title: "styleeditor.setDefaultStyleErrorTitle",
+                                message: "styleeditor.setDefaultStyleErrorMessage",
+                                uid: "setDefaultStyleError",
+                                autoDismiss: 5
+                            }),
+                            loadedStyle()
+                        );
+                    });
             })
 };
 

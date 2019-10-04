@@ -11,13 +11,16 @@ const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 const {
     clearWidgetsOnLocationChange,
     alignDependenciesToWidgets,
-    toggleWidgetConnectFlow
+    toggleWidgetConnectFlow,
+    updateLayerOnLayerPropertiesChange,
+    updateLayerOnLoadingErrorChange
 } = require('../widgets');
 const {
     CLEAR_WIDGETS,
     insertWidget,
     toggleConnection,
     selectWidget,
+    UPDATE_LAYER,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
     LOAD_DEPENDENCIES,
@@ -30,7 +33,14 @@ const {
 const {
     configureMap
 } = require('../../actions/config');
+const {
+    changeLayerProperties,
+    layerLoad,
+    layerError
+} = require('../../actions/layers');
 const { LOCATION_CHANGE } = require('react-router-redux');
+const { ActionsObservable } = require('redux-observable');
+const Rx = require('rxjs');
 
 describe('widgets Epics', () => {
     it('clearWidgetsOnLocationChange triggers CLEAR_WIDGETS on LOCATION_CHANGE', (done) => {
@@ -135,19 +145,19 @@ describe('widgets Epics', () => {
         testEpic(clearWidgetsOnLocationChange,
             1,
             [configureMap(),
-            savingMap(),
-            {
-                type: LOCATION_CHANGE,
-                payload: {
-                    pathname: "newPath"
-                }
-            },
-            mapCreated(),
-            {
-                type: LOCATION_CHANGE, payload: {
-                    pathname: "newPath"
-                }
-            }],
+                savingMap(),
+                {
+                    type: LOCATION_CHANGE,
+                    payload: {
+                        pathname: "newPath"
+                    }
+                },
+                mapCreated(),
+                {
+                    type: LOCATION_CHANGE, payload: {
+                        pathname: "newPath"
+                    }
+                }],
             checkActions,
             () => {
                 return count++
@@ -299,5 +309,159 @@ describe('widgets Epics', () => {
             )],
             checkActions,
             {});
+    });
+    it('changeLayerPropertiesEpic triggers updateWidgetLayer on filterLayer change', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "1",
+                name: "layer"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLayerPropertiesChange,
+            1,
+            [changeLayerProperties(
+                "1",
+                {layerFilter: {rowId: 1567705038414}}
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        filterLayer: {rowId: 1567705038414}
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('changeLayerPropertiesEpic does not triger updateWidgetLayer on visibility change', (done) => {
+        const action = changeLayerProperties("1", {visibility: false});
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer"
+                }, {
+                    id: "2",
+                    name: "layer2",
+                    filterLayer: {rowId: 1567705038414}
+                }, {
+                    id: "3",
+                    name: "layer3"
+                }]
+            }
+        };
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        updateLayerOnLayerPropertiesChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
+    });
+    it('updateLayerOnLoadingErrorChange triggers updateWidgetLayer on LAYER_LOAD error', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "2",
+                name: "layer2",
+                loadingError: "Error"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLoadingErrorChange,
+            1,
+            [layerLoad(
+                "2",
+                "Error"
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        loadingError: "Error"
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('updateLayerOnLoadingErrorChange triggers updateWidgetLayer on LAYER_ERROR error', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "2",
+                name: "layer2",
+                loadingError: "Error"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLoadingErrorChange,
+            1,
+            [layerError(
+                "2",
+                10,
+                10
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        loadingError: "Error"
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('updateLayerOnLoadingErrorChange does not trigger updateWidgetLayer if loadingError does not change', (done) => {
+        const action = layerLoad("3", "Error");
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer"
+                }, {
+                    id: "2",
+                    name: "layer2",
+                    loadingError: "Error"
+                }, {
+                    id: "3",
+                    name: "layer3",
+                    previousLoadingError: "Error",
+                    loadingError: "Error"
+                }]
+            }
+        };
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        updateLayerOnLoadingErrorChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
     });
 });

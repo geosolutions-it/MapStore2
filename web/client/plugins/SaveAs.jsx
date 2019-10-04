@@ -13,7 +13,6 @@ const {createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
-const {loadMapInfo} = require('../actions/config');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
 const {saveMapResource, createThumbnail, onDisplayMetadataEdit, metadataChanged, createBackgroundThumbnail, backgroundThumbnailsCreated} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
@@ -37,21 +36,21 @@ const saveAsStateSelector = createStructuredSelector({
 });
 
 const selector = createSelector(
-        mapSelector,
-        layersSelector,
-        groupsSelector,
-        mapOptionsToSaveSelector,
-        saveAsStateSelector,
-        backgroundListSelector,
-        (map, layers, groups, additionalOptions, saveAsState, backgrounds) => ({
-    currentZoomLvl: map && map.zoom,
-    map,
-    layers,
-    groups,
-    additionalOptions,
-    ...saveAsState,
-    backgrounds
-}));
+    mapSelector,
+    layersSelector,
+    groupsSelector,
+    mapOptionsToSaveSelector,
+    saveAsStateSelector,
+    backgroundListSelector,
+    (map, layers, groups, additionalOptions, saveAsState, backgrounds) => ({
+        currentZoomLvl: map && map.zoom,
+        map,
+        layers,
+        groups,
+        additionalOptions,
+        ...saveAsState,
+        backgrounds
+    }));
 
 class SaveAs extends React.Component {
     static propTypes = {
@@ -101,11 +100,11 @@ class SaveAs extends React.Component {
         displayMetadataEdit: false
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.onMissingInfo(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.onMissingInfo(nextProps);
     }
 
@@ -192,7 +191,6 @@ module.exports = {
             onUpdateCurrentMap: updateCurrentMap,
             onErrorCurrentMap: errorCurrentMap,
             onMapSave: saveMapResource,
-            loadMapInfo,
             metadataChanged,
             editMap,
             resetCurrentMap,
@@ -201,18 +199,18 @@ module.exports = {
             onCreateThumbnail: createThumbnail,
             backgroundThumbnailsCreated
         })(assign(SaveAs, {
-            BurgerMenu: {
-                name: 'saveAs',
-                position: 31,
-                text: <Message msgId="saveAs"/>,
-                icon: <Glyphicon glyph="floppy-open"/>,
+        BurgerMenu: {
+            name: 'saveAs',
+            position: 31,
+            text: <Message msgId="saveAs"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
             action: editMap.bind(null, {}, true),
-                selector: (state) => {
-                    if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
-                        return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
-                    }
-                    return state && state.security && state.security.user ? {} : { style: {display: "none"} };
+            selector: (state) => {
+                if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
+                    return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
                 }
+                return state && state.security && state.security.user ? {} : { style: {display: "none"} };
             }
-        }))
+        }
+    }))
 };

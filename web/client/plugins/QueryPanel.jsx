@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,21 +12,29 @@ const {connect} = require('react-redux');
 const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+    sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
 const Message = require('./locale/Message');
 
+
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
+
+const {storeCurrentFilter, discardCurrentFilter, applyFilter} = require('../actions/layerFilter');
+
 
 const {zoomToExtent} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 
-const {groupsSelector} = require('../selectors/layers');
+const {groupsSelector, selectedLayerLoadingErrorSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
+const {isDashboardAvailable} = require('../selectors/dashboard');
 const {
     crossLayerFilterSelector,
-    availableCrossLayerFilterLayersSelector
+    availableCrossLayerFilterLayersSelector,
+    storedFilterSelector,
+    appliedFilterSelector
 } = require('../selectors/queryform');
 
+const {isEqual} = require('lodash');
 const LayersUtils = require('../utils/LayersUtils');
 
 // include application component
@@ -36,6 +44,11 @@ const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatia
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const layerFilterEpics = require('../epics/layerfilter');
+
+const ResizableModal = require('../components/misc/ResizableModal');
+const Portal = require('../components/misc/Portal');
+
 
 const {
     // QueryBuilder action functions
@@ -110,7 +123,8 @@ const SmartQueryForm = connect((state) => {
         allowEmptyFilter: true,
         emptyFilterWarning: true,
         maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height,
-        zoom: (mapSelector(state) || {}).zoom
+        zoom: (mapSelector(state) || {}).zoom,
+        projection: (mapSelector(state) || {}).projection
     };
 }, dispatch => {
     return {
@@ -143,7 +157,11 @@ const SmartQueryForm = connect((state) => {
         queryToolbarActions: bindActionCreators({
             onQuery: search,
             onReset,
+            onSaveFilter: storeCurrentFilter,
+            onRestoreFilter: discardCurrentFilter,
+            storeAppliedFilter: applyFilter,
             onChangeDrawingStatus: changeDrawingStatus
+
         }, dispatch),
         crossLayerFilterActions: bindActionCreators({
             expandCrossLayerFilterPanel,
@@ -162,13 +180,22 @@ const tocSelector = createSelector(
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
         (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
-        state => mapLayoutValuesSelector(state, {height: true})
-    ], (enabled, groups, settings, querypanelEnabled, layout) => ({
+        state => mapLayoutValuesSelector(state, {height: true}),
+        isDashboardAvailable,
+        appliedFilterSelector,
+        storedFilterSelector,
+        (state) => state && state.query && state.query.isLayerFilter,
+        selectedLayerLoadingErrorSelector
+    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError) => ({
         enabled,
         groups,
         settings,
         querypanelEnabled,
-        layout
+        layout: !dashboardAvailable ? layoutHeight : {},
+        appliedFilter,
+        storedFilter,
+        advancedToolbar,
+        loadingError
     })
 );
 
@@ -201,7 +228,12 @@ class QueryPanel extends React.Component {
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
         layout: PropTypes.object,
-        toolsOptions: PropTypes.object
+        toolsOptions: PropTypes.object,
+        appliedFilter: PropTypes.object,
+        storedFilter: PropTypes.object,
+        advancedToolbar: PropTypes.bool,
+        onSaveFilter: PropTypes.func,
+        onRestoreFilter: PropTypes.func
     };
 
     static defaultProps = {
@@ -224,10 +256,15 @@ class QueryPanel extends React.Component {
         settingsOptions: {},
         querypanelEnabled: false,
         layout: {},
-        toolsOptions: {}
+        toolsOptions: {},
+        onSaveFilter: () => {},
+        onRestoreFilter: () => {}
     };
-
-    componentWillReceiveProps(newProps) {
+    constructor(props) {
+        super(props);
+        this.state = {showModal: false};
+    }
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.querypanelEnabled === true && this.props.querypanelEnabled === false) {
             this.props.onInit();
         }
@@ -261,20 +298,66 @@ class QueryPanel extends React.Component {
                         overflowY: 'auto'
                     }
                 }}
-                >
+            >
                 <div/>
             </Sidebar>
         );
     };
-
+    onToggle = () => {
+        if (this.props.advancedToolbar && !isEqual(this.props.appliedFilter, this.props.storedFilter)) {
+            this.setState(() => ({showModal: true}));
+        } else {
+            this.props.onToggleQuery();
+        }
+    }
+    restoreAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onRestoreFilter();
+        this.props.onToggleQuery();
+    }
+    storeAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onSaveFilter();
+        this.props.onToggleQuery();
+    }
     renderQueryPanel = () => {
         return (<div className="mapstore-query-builder">
             <SmartQueryForm
-                header={<QueryPanelHeader onToggleQuery={this.props.onToggleQuery} />}
+                header={<QueryPanelHeader loadingError={this.props.loadingError} onToggleQuery={this.onToggle} />}
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}
                 toolsOptions={this.props.toolsOptions}
-                featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
+                featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}
+                appliedFilter={this.props.appliedFilter}
+                storedFilter={this.props.storedFilter}
+                advancedToolbar={this.props.advancedToolbar}
+                loadingError={this.props.loadingError}/>
+            <Portal>
+                <ResizableModal
+                    fade
+                    show={this.state.showModal}
+                    title={<Message msgId="queryform.changedFilter"/>}
+                    size="xs"
+                    onClose={() => this.setState(() => ({showModal: false}))}
+                    buttons={[
+                        {
+                            bsStyle: 'primary',
+                            text: <Message msgId="yes"/>,
+                            onClick: this.storeAndClose
+                        },
+                        {
+                            bsStyle: 'primary',
+                            text: <Message msgId="no" />,
+                            onClick: this.restoreAndClose
+                        }
+                    ]}>
+                    <div className="ms-alert">
+                        <div className="ms-alert-center">
+                            <Message msgId={this.props.loadingError && "queryform.changedFilterWithErrorAlert" || "queryform.changedFilterAlert"}/>
+                        </div>
+                    </div>
+                </ResizableModal>
+            </Portal>
         </div>);
     };
 
@@ -361,14 +444,18 @@ const QueryPanelPlugin = connect(tocSelector, {
     hideSettings,
     updateSettings,
     updateNode,
-    removeNode
+    removeNode,
+    onSaveFilter: storeCurrentFilter,
+    onRestoreFilter: discardCurrentFilter
 })(QueryPanel);
+
 
 module.exports = {
     QueryPanelPlugin,
     reducers: {
         queryform: require('../reducers/queryform'),
-        query: require('../reducers/query')
+        query: require('../reducers/query'),
+        layerFilter: require('../reducers/layerFilter')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform')}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
 };

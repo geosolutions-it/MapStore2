@@ -42,8 +42,9 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(lineString._layer).toExist();
-        expect({...lineString._layer.options}).toEqual({});
+        expect(lineString._layers).toExist();
+        expect(lineString._layers[0]).toExist();
+        expect({...lineString._layers[0].options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -55,27 +56,12 @@ describe('leaflet Feature component', () => {
             container={container}
             style={style}
             geometry={geometry}/>, document.getElementById("container"));
+        setTimeout(() => {
+            expect(lineString._layers).toExist();
+            expect(lineString._layers[0]).toExist();
+            expect({...lineString._layers[0].options}).toEqual({...style});
+        }, 0);
 
-        expect(lineString._layer).toExist();
-        expect({...lineString._layer.options}).toEqual(style);
-
-        const styleWithFeatureType = {
-            color: '#3388ff',
-            weight: 4,
-            LineString: {
-                color: '#ffaa33',
-                weight: 10
-            }
-        };
-
-        lineString = ReactDOM.render(<Feature
-            type={type}
-            container={container}
-            style={styleWithFeatureType}
-            geometry={geometry}/>, document.getElementById("container"));
-
-        expect(lineString._layer).toExist();
-        expect({...lineString._layer.options}).toEqual(styleWithFeatureType.LineString);
     });
 
 
@@ -93,49 +79,30 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(multiLineString._layer).toExist();
+        expect(multiLineString._layers).toExist();
+        expect(multiLineString._layers[0]).toExist();
 
-        let layersKeys = Object.keys(multiLineString._layer._layers);
-        let firstLayer = multiLineString._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual({});
+        let layersKeys = Object.keys(multiLineString._layers[0]._layers);
+        let firstLayer = multiLineString._layers[0]._layers[layersKeys[0]];
+        expect({...firstLayer.options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
             weight: 4
         };
-
         multiLineString = ReactDOM.render(<Feature
             type={type}
             container={container}
             style={style}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(multiLineString._layer).toExist();
-
-        layersKeys = Object.keys(multiLineString._layer._layers);
-        firstLayer = multiLineString._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(style);
-
-        const styleWithFeatureType = {
-            color: '#3388ff',
-            weight: 4,
-            MultiLineString: {
-                color: '#ffaa33',
-                weight: 10
-            }
-        };
-
-        multiLineString = ReactDOM.render(<Feature
-            type={type}
-            container={container}
-            style={styleWithFeatureType}
-            geometry={geometry}/>, document.getElementById("container"));
-
-        expect(multiLineString._layer).toExist();
-
-        layersKeys = Object.keys(multiLineString._layer._layers);
-        firstLayer = multiLineString._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(styleWithFeatureType.MultiLineString);
+        setTimeout(() => {
+            expect(multiLineString._layers).toExist();
+            expect(multiLineString._layers[0]).toExist();
+            layersKeys = Object.keys(multiLineString._layers[0]._layers);
+            firstLayer = multiLineString._layers[0]._layers[layersKeys[0]];
+            expect({...firstLayer.options}).toEqual({...style});
+        }, 0);
     });
 
     it('test Polygon style', () => {
@@ -152,8 +119,9 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(polygon._layer).toExist();
-        expect({...polygon._layer.options}).toEqual({});
+        expect(polygon._layers).toExist();
+        expect(polygon._layers[0]).toExist();
+        expect({...polygon._layers[0].options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -168,30 +136,12 @@ describe('leaflet Feature component', () => {
             style={style}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(polygon._layer).toExist();
-        expect({...polygon._layer.options}).toEqual(style);
+        setTimeout(() => {
+            expect(polygon._layers).toExist();
+            expect(polygon._layers[0]).toExist();
+            expect({...polygon._layers[0].options}).toEqual({...style});
+        }, 0);
 
-        const styleWithFeatureType = {
-            color: '#3388ff',
-            weight: 4,
-            dashArray: '',
-            fillColor: 'rgba(51, 136, 255, 0.2)',
-            Polygon: {
-                color: '#ffaa33',
-                weight: 10,
-                dashArray: '10 5',
-                fillColor: '#333333'
-            }
-        };
-
-        polygon = ReactDOM.render(<Feature
-            type={type}
-            container={container}
-            style={styleWithFeatureType}
-            geometry={geometry}/>, document.getElementById("container"));
-
-        expect(polygon._layer).toExist();
-        expect({...polygon._layer.options}).toEqual(styleWithFeatureType.Polygon);
     });
 
     it('test MultiPolygon style', () => {
@@ -214,11 +164,12 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(multiPolygon._layer).toExist();
+        expect(multiPolygon._layers).toExist();
+        expect(multiPolygon._layers[0]).toExist();
 
-        let layersKeys = Object.keys(multiPolygon._layer._layers);
-        let firstLayer = multiPolygon._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual({});
+        let layersKeys = Object.keys(multiPolygon._layers[0]._layers);
+        let firstLayer = multiPolygon._layers[0]._layers[layersKeys[0]];
+        expect({...firstLayer.options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -233,33 +184,64 @@ describe('leaflet Feature component', () => {
             style={style}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(multiPolygon._layer).toExist();
+        setTimeout(() => {
+            expect(multiPolygon._layers).toExist();
+            expect(multiPolygon._layers[0]).toExist();
+            layersKeys = Object.keys(multiPolygon._layers[0]._layers);
+            firstLayer = multiPolygon._layers[0]._layers[layersKeys[0]];
+            expect({...firstLayer.options}).toEqual({...style});
+        }, 0);
 
-        layersKeys = Object.keys(multiPolygon._layer._layers);
-        firstLayer = multiPolygon._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(style);
 
-        const styleWithFeatureType = {
-            color: '#3388ff',
-            weight: 4,
-            dashArray: '',
-            fillColor: 'rgba(51, 136, 255, 0.2)',
-            MultiPolygon: {
-                color: '#ffaa33',
-                weight: 10,
-                dashArray: '10 5',
-                fillColor: '#333333'
-            }
+    });
+
+    it('test FeatureCollection style', () => {
+        const geometry1 = {
+            type: 'LineString',
+            coordinates: [
+                [100.0, 0.0], [101.0, 1.0]
+            ]
+        };
+        const geometry2 = {
+            type: 'LineString',
+            coordinates: [
+                [200.0, 0.0], [201.0, 1.0]
+            ]
         };
 
-        multiPolygon = ReactDOM.render(<Feature
+        const features = [{
+            type: 'Feature',
+            geometry: geometry1
+        }, {
+            type: 'Feature',
+            geometry: geometry2
+        }];
+        const type = 'FeatureCollection';
+        let collection = ReactDOM.render(<Feature
             type={type}
             container={container}
-            style={styleWithFeatureType}
-            geometry={geometry}/>, document.getElementById("container"));
+            features={features} />, document.getElementById("container"));
 
-        layersKeys = Object.keys(multiPolygon._layer._layers);
-        firstLayer = multiPolygon._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(styleWithFeatureType.MultiPolygon);
+        expect(collection._layers).toExist();
+        expect(collection._layers.length).toBe(2);
+        expect({ ...collection._layers[0].options }).toEqual({ highlight: undefined });
+
+        const style = {
+            color: '#3388ff',
+            weight: 4
+        };
+
+        collection = ReactDOM.render(<Feature
+            type={type}
+            container={container}
+            style={style}
+            features={features} />, document.getElementById("container"));
+        setTimeout(() => {
+            expect(collection._layers).toExist();
+            expect(collection._layers.length).toBe(2);
+            expect({ ...collection._layers[0].options }).toEqual({ ...style });
+            expect({ ...collection._layers[1].options }).toEqual({ ...style });
+        }, 0);
+
     });
 });

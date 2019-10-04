@@ -78,7 +78,7 @@ class SharePanel extends React.Component {
         eventKey: 1
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const tabs = {
             link: 1,
             social: 2,
@@ -91,7 +91,7 @@ class SharePanel extends React.Component {
         });
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const bbox = join(this.props.bbox, ',');
         const newBbox = join(newProps.bbox, ',');
         if (bbox !== newBbox) {
@@ -130,16 +130,16 @@ class SharePanel extends React.Component {
         const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = <div><ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/><ShareQRCode shareUrl={shareUrl}/></div>;
         const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
-        {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
+            {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
 
         const tabs = (<Tabs defaultActiveKey={this.state.eventKey} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
             <Tab eventKey={1} title={<Message msgId="share.direct" />}>{this.state.eventKey === 1 && direct}</Tab>
             <Tab eventKey={2} title={<Message msgId="share.social" />}>{this.state.eventKey === 2 && social}</Tab>
             <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab>
-          </Tabs>);
+        </Tabs>);
 
         let sharePanel =
-            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win">
+            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win" style={{zIndex: 1993}}>
                 <span role="header">
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>

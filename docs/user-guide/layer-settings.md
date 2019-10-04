@@ -12,7 +12,18 @@ General Settings Form
 On the first page of the form, you can change the Title of the layer,
 translate it in several languages, add a description and assign it to a new Layer Group as seen in the [TOC](toc.md).
 
-<img src="../img/general-settings-1.jpg" style="max-width:350px;"/>
+<img src="../img/layer_general_settings.png" style="max-width:500px;"/>
+
+It is also possible to configure the **Tooltip** content displayed when moving the mouse over the TOC elements.
+The *Tooltip* combobox lets you decide what information to display (`Title`, `Description` or both), the *Placement* value indicates the information text position (`Top`, `Right` or `Bottom`).
+
+<img src="../img/tooltip_options.png" style="max-width:350px;"/>
+
+Let's type a *Description* (for example "My first description"), select the `Title and Description` *Tooltip* and the `Right` *Placement*, save this configuration by clicking the *Save* <img src="../img/save_button.png" style="max-width:25px;"/> button and see the results.
+
+<img src="../img/custom_tooltip.png" style="max-width:600px;"/>
+
+So [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) lets you configure a different tooltip for each layer in the TOC.
 
 Display Form
 ------------
@@ -36,8 +47,8 @@ If you have any *editing grants* on the styles' source, you can customize layers
 <img src="../img/style_editor.jpg" alt="style_editor"/>
 
 The Style Editor tool provides its functionalities on top of [GeoServer](http://geoserver.org/) REST APIs, so the styling
-functionalities are available only for those layers that are loaded in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) from GeoServer.
-By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore](https://github.com/geosolutions-it/MapStore2/wiki/MapStore2-users-GeoServer-integration-with-Authkey) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
+functionalities are available only for those layers that are loaded in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) from GeoServer.
+By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore](../../developer-guide/integrations/users/geoserver/) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
 <br>
 Once done these requirements' checks you can edit an existing style or create a new one from scratch.
 
@@ -52,7 +63,7 @@ Once done these requirements' checks you can edit an existing style or create a 
 
 ***Create new styles***
 
-* **Click** on the **Create new style** button <img src="../img/style_editor_new_style_button.jpg" style="max-width:25px;" alt="style_editor_new_style_button"/> if you want to create your style from scratch.   [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) shows you some style templates from which you can start your customization. Those templates can be:
+* **Click** on the **Create new style** button <img src="../img/style_editor_new_style_button.jpg" style="max-width:25px;" alt="style_editor_new_style_button"/> if you want to create your style from scratch.   [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) shows you some style templates from which you can start your customization. Those templates can be:
 
     * ***CSS - Cascading Style Sheet*** (a language used for describing the presentation of a document written in a markup language like the HTML)
 

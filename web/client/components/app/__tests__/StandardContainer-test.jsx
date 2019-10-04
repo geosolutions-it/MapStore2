@@ -30,8 +30,8 @@ class mycomponent extends React.Component {
 
     render() {
         return (<div className="mycomponent">
-                {this.renderPlugins()}
-                </div>);
+            {this.renderPlugins()}
+        </div>);
     }
 }
 

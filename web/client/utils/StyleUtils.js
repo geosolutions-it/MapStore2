@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +7,8 @@
  */
 
 module.exports = (mapType) => {
+    const StyleUtils = require('./' + mapType + '/StyleUtils');
     return {
-        toVectorStyle: require('./' + mapType + '/StyleUtils')
+        toVectorStyle: StyleUtils.default || StyleUtils
     };
 };

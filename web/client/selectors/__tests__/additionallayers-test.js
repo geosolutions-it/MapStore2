@@ -13,7 +13,7 @@ const {
 } = require('../additionallayers');
 
 const state = {
-   additionallayers: [
+    additionallayers: [
         {
             id: 'layer_001',
             owner: 'styleeditor',

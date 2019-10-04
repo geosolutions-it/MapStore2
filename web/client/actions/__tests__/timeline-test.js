@@ -17,7 +17,11 @@ const {
     LOADING,
     timeDataLoading,
     ENABLE_OFFSET,
-    enableOffset
+    enableOffset,
+    SET_COLLAPSED,
+    setCollapsed,
+    SET_MAP_SYNC,
+    setMapSync
 } = require('../timeline');
 
 describe('timeline actions', () => {
@@ -46,5 +50,17 @@ describe('timeline actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(ENABLE_OFFSET);
         expect(retval.enabled).toBe(true);
+    });
+    it('setCollapsed', () => {
+        const retval = setCollapsed(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_COLLAPSED);
+        expect(retval.collapsed).toBe(true);
+    });
+    it('setMapSync', () => {
+        const retval = setMapSync(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_MAP_SYNC);
+        expect(retval.mapSync).toBe(true);
     });
 });

@@ -20,39 +20,39 @@ let feature1 = {
     }
 };
 let feature2 = {
-     type: "Feature",
-     geometry: {
-         type: "Point",
-         coordinates: [1, 2]
-     },
-     id: idFt2,
-     properties: {
-         someProp: "someValue"
-     }
- };
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [1, 2]
+    },
+    id: idFt2,
+    properties: {
+        someProp: "someValue"
+    }
+};
 let newfeature3 = {
-     type: "Feature",
-     geometry: {
-         type: "Point",
-         coordinates: [1, 2]
-     },
-     _new: true,
-     id: idFt2,
-     properties: {
-         someProp: "someValue"
-     }
- };
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [1, 2]
+    },
+    _new: true,
+    id: idFt2,
+    properties: {
+        someProp: "someValue"
+    }
+};
 const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
     deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid,
-    toggleShowAgain, hideSyncPopover, initPlugin, sizeChange, storeAdvancedSearchFilter, setShowCurrentFilter} = require('../../actions/featuregrid');
+    toggleShowAgain, hideSyncPopover, initPlugin, sizeChange, storeAdvancedSearchFilter, setUp, setTimeSync} = require('../../actions/featuregrid');
 const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
 
 const {changeDrawingStatus} = require('../../actions/draw');
 
-const museam = require('json-loader!../../test-resources/wfs/museam.json');
+const museam = require('../../test-resources/wfs/museam.json');
 describe('Test the featuregrid reducer', () => {
 
     it('returns original state on unrecognized action', () => {
@@ -302,12 +302,12 @@ describe('Test the featuregrid reducer', () => {
     it('featureTypeLoaded', () => {
         let state = featuregrid( {}, featureTypeLoaded("typeName", {
             original: {featureTypes: [
-            {
-                properties: [
-                    {},
-                    {localType: "Point"}
-                ]
-            }]}}));
+                {
+                    properties: [
+                        {},
+                        {localType: "Point"}
+                    ]
+                }]}}));
         expect(state.localType).toBe("Point");
 
     });
@@ -326,8 +326,13 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid({selectedLayer: "test_layer"}, storeAdvancedSearchFilter(filterObj));
         expect(state.advancedFilters.test_layer).toBe(filterObj);
     });
-    it('SET_SHOW_CURRENT_FILTER', () => {
-        let state = featuregrid({}, setShowCurrentFilter(true));
-        expect(state.showFilteredObject).toBe(true);
+    it('setUp', () => {
+        expect(featuregrid({}, setUp({ showFilteredObject: true })).showFilteredObject).toBe(true);
+        expect(featuregrid({}, setUp({ timeSync: true })).timeSync).toBe(true);
+        expect(featuregrid({}, setUp({ showTimeSync: true })).showTimeSync).toBe(true);
+    });
+    it('setTimeSync ', () => {
+        expect(featuregrid({}, setTimeSync(true)).timeSync).toBe(true);
+        expect(featuregrid({}, setTimeSync(false)).timeSync).toBe(false);
     });
 });

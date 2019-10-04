@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -10,7 +10,7 @@ const data = [
     {name: 'B', variable: 0.5, pv: 0.5, amt: 0.5},
     {name: 'C', variable: 3, pv: 3, amt: 3},
     {name: 'D', variable: 1, pv: 1, amt: 2}
-  ];
+];
 const series = [{dataKey: "variable", color: `#078aa3`}];
 const xAxis = {dataKey: "name", show: false};
 

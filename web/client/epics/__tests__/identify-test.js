@@ -9,11 +9,12 @@
 const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker } = require('../identify');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature } = require('../../actions/mapInfo');
+const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic } = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 const { registerHook } = require('../../utils/MapUtils');
+const { setControlProperties } = require('../../actions/controls');
 
 const TEST_MAP_STATE = {
     present: {
@@ -66,7 +67,15 @@ describe('identify Epics', () => {
             layers: {
                 flat: [{
                     id: "TEST",
-                    "title": "TITLE",
+                    title: "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    title: "TITLE2",
                     type: "wms",
                     visibility: true,
                     url: 'base/web/client/test-resources/featureInfo-response.json'
@@ -74,6 +83,63 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        const NUM_ACTIONS = 5;
+        testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
+            try {
+                expect(actions.length).toBe(5);
+                const [a0, a1, a2, a3, a4] = actions;
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a2).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.reqId).toExist();
+                expect(a2.request).toExist();
+                expect(a3).toExist();
+                expect(a3.type).toBe(LOAD_FEATURE_INFO);
+                expect(a3.data).toExist();
+                expect(a3.requestParams).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[a3.requestParams.id === "TEST" ? 0 : 1].title);
+                expect(a4).toExist();
+                expect(a4.layerMetadata.title).toBe(state.layers.flat[a4.requestParams.id === "TEST" ? 0 : 1].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
+    it('getFeatureInfoOnFeatureInfoClick WMS with filteredList and override params', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5")];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
                 expect(a0).toExist();
@@ -82,9 +148,13 @@ describe('identify Epics', () => {
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a1.reqId).toExist();
                 expect(a1.request).toExist();
+                expect(a1.request.cql_filter).toExist();
+                expect(a1.request.cql_filter).toBe("id>1");
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
+                expect(a2.data.features).toExist();
+                expect(a2.data.features.length).toBe(1);
                 expect(a2.requestParams).toExist();
                 expect(a2.reqId).toExist();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
@@ -92,7 +162,10 @@ describe('identify Epics', () => {
             } catch (ex) {
                 done(ex);
             }
-        }, state);
+        }, {...state, mapInfo: {
+            ...state.mapInfo,
+            itemId: "province_view.5"
+        }});
     });
     it('getFeatureInfoOnFeatureInfoClick with multiSelection', (done) => {
         // remove previous hook
@@ -131,6 +204,7 @@ describe('identify Epics', () => {
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a1.reqId).toExist();
                 expect(a1.request).toExist();
+                expect(a1.request.cql_filter).toNotExist();
                 expect(a2).toExist();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
                 expect(a2.data).toExist();
@@ -279,7 +353,46 @@ describe('identify Epics', () => {
             }
         }, state);
     });
-
+    it('getFeatureInfoOnFeatureInfoClick with highlight', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                highlight: true
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a2).toExist();
+                expect(a2.type).toBe(LOAD_FEATURE_INFO);
+                expect(a2.data).toExist();
+                expect(a2.requestParams).toExist();
+                expect(a2.reqId).toExist();
+                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
     it('handleMapInfoMarker show', done => {
         testEpic(handleMapInfoMarker, 1, featureInfoClick({}), ([ a ]) => {
             expect(a.type).toBe(SHOW_MAPINFO_MARKER);
@@ -315,16 +428,16 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case ZOOM_TO_POINT:
-                        expect(action.zoom).toBe(4);
-                        expect({ x: parseFloat(action.pos.x.toFixed(2)), y: parseFloat(action.pos.y.toFixed(2)) }).toEqual({ x: -101.81, y: 27.68 });
-                        expect(action.crs).toBe('EPSG:4326');
-                        break;
-                    case UPDATE_CENTER_TO_MARKER:
-                        expect(action.status).toBe('enabled');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ZOOM_TO_POINT:
+                    expect(action.zoom).toBe(4);
+                    expect({ x: parseFloat(action.pos.x.toFixed(2)), y: parseFloat(action.pos.y.toFixed(2)) }).toEqual({ x: -101.81, y: 27.68 });
+                    expect(action.crs).toBe('EPSG:4326');
+                    break;
+                case UPDATE_CENTER_TO_MARKER:
+                    expect(action.status).toBe('enabled');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -357,11 +470,11 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case UPDATE_CENTER_TO_MARKER:
-                        expect(action.status).toBe('disabled');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case UPDATE_CENTER_TO_MARKER:
+                    expect(action.status).toBe('disabled');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -369,16 +482,17 @@ describe('identify Epics', () => {
 
         testEpic(zoomToVisibleAreaEpic, 1, sentActions, expectedAction, state);
     });
+
     it('onMapClick triggers featureinfo when selected', done => {
         testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
             expect(action.type === FEATURE_INFO_CLICK);
             done();
         }, {
-                mapInfo: {
-                    enabled: true,
-                    disableAlwaysOn: false
-                }
-            });
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false
+            }
+        });
     });
     it('onMapClick do not trigger when mapinfo is not elabled', done => {
         testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
@@ -386,11 +500,11 @@ describe('identify Epics', () => {
                 done();
             }
         }, {
-                mapInfo: {
-                    enabled: false,
-                    disableAlwaysOn: false
-                }
-            });
+            mapInfo: {
+                enabled: false,
+                disableAlwaysOn: false
+            }
+        });
     });
     it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
 
@@ -400,11 +514,11 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CLOSE_ANNOTATIONS:
-                        done();
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CLOSE_ANNOTATIONS:
+                    done();
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
         };
@@ -419,16 +533,81 @@ describe('identify Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case PURGE_MAPINFO_RESULTS:
-                        done();
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case PURGE_MAPINFO_RESULTS:
+                    done();
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
         };
 
         testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
+    });
+
+    it('featureInfoClickOnHighligh with layer', (done) => {
+        const sentActions = toggleHighlightFeature(true);
+        const NUM_ACTIONS = 2;
+        const expectedAction = actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case FEATURE_INFO_CLICK:
+                    expect(action.point).toEqual({latlng: {lng: -110.05255, lat: 46.67685}});
+                    break;
+                case SHOW_MAPINFO_MARKER:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        };
+
+        testEpic(featureInfoClickOnHighligh, NUM_ACTIONS, sentActions, expectedAction, {
+            mapInfo: {
+                clickPoint: {
+                    "latlng": {
+                        lng: -110.05255,
+                        lat: 46.67685
+                    }
+                },
+                clickLayer: "gs:us_states"
+            }
+        });
+    });
+
+    it('enable metadataexplorer control is enabled', (done) => {
+        const state = {controls: {}};
+        const NUMBER_OF_ACTIONS = 2;
+        const callback = actions => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            expect(actions[0].type).toEqual(PURGE_MAPINFO_RESULTS);
+            expect(actions[1].type).toEqual(HIDE_MAPINFO_MARKER);
+            done();
+        };
+        testEpic(
+            closeFeatureInfoOnCatalogOpenEpic,
+            NUMBER_OF_ACTIONS,
+            setControlProperties('metadataexplorer', "enabled", true),
+            callback,
+            state
+        );
+    });
+
+    it('disable metadataexplorer should not affect mapinfo', (done) => {
+        const state = {controls: {}};
+        const NUMBER_OF_ACTIONS = 1;
+        const callback = actions => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            done();
+        };
+        testEpic(
+            addTimeoutEpic(closeFeatureInfoOnCatalogOpenEpic),
+            NUMBER_OF_ACTIONS,
+            setControlProperties('metadataexplorer', "enabled", false),
+            callback,
+            state);
     });
 
 });

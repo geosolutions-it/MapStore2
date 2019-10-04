@@ -26,7 +26,7 @@ class MyApp extends React.Component {
         if (this.props.mapConfig && this.props.mapConfig.map) {
             return (
                 <LMap id="map" center={this.props.mapConfig.map.center} zoom={this.props.mapConfig.map.zoom}>
-                     {this.renderLayers(this.props.mapConfig.layers)}
+                    {this.renderLayers(this.props.mapConfig.layers)}
                 </LMap>
             );
         }

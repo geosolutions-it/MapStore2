@@ -11,6 +11,8 @@ const CesiumMap = require('../Map.jsx');
 const CesiumLayer = require('../Layer.jsx');
 const expect = require('expect');
 const Cesium = require('../../../../libs/cesium');
+const MapUtils = require('../../../../utils/MapUtils');
+
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
@@ -24,15 +26,14 @@ describe('CesiumMap', () => {
         setTimeout(done);
     });
     afterEach((done) => {
-        /*eslint-disable */
+        /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         } catch(e) {}
-        /*eslint-enable */
+        /* eslint-enable */
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('creates a div for cesium map with given id', () => {
         const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
         expect(map).toExist();
@@ -52,7 +53,7 @@ describe('CesiumMap', () => {
                 <div id="container1"><CesiumMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><CesiumMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -92,7 +93,6 @@ describe('CesiumMap', () => {
         expect(map.map.terrainProvider).toExist();
         expect(map.map.terrainProvider.layerName).toBe('mylayer');
     });
-
     it('check if the handler for "moveend" event is called', (done) => {
         const expectedCalls = 1;
         const precision = 1000000000;
@@ -115,7 +115,7 @@ describe('CesiumMap', () => {
                 }}
 
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const cesiumMap = map.map;
         cesiumMap.camera.moveEnd.addEventListener(() => {
@@ -163,7 +163,7 @@ describe('CesiumMap', () => {
                 zoom={11}
                 onClick={testHandlers.handler}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
         expect(map.map).toExist();
         map.onClick(map.map, {position: {x: 100, y: 100 }});
         setTimeout(() => {
@@ -172,14 +172,13 @@ describe('CesiumMap', () => {
             done();
         }, 800);
     });
-
     it('check if the map changes when receive new props', () => {
         let map = ReactDOM.render(
             <CesiumMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={10}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         const cesiumMap = map.map;
 
@@ -188,11 +187,37 @@ describe('CesiumMap', () => {
                 center={{y: 44, x: 10}}
                 zoom={12}
             />
-        , document.getElementById("container"));
+            , document.getElementById("container"));
 
         expect(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12))).toBe(0);
         expect(Math.round(cesiumMap.camera.positionCartographic.latitude * 180.0 / Math.PI)).toBe(44);
         expect(Math.round(cesiumMap.camera.positionCartographic.longitude * 180.0 / Math.PI)).toBe(10);
+    });
+    it('test ZOOM_TO_EXTENT_HOOK', (done) => {
+        // instanciating the map that will be used to compute the bounfing box
+        const testHandlers = {
+            onMapViewChanges: (args) => {
+                expect(args).toExist();
+                expect(args.x).toBeGreaterThan(14);
+                expect(args.y).toBeGreaterThan(14);
+                expect(args.x).toBeLessThan(16);
+                expect(args.y).toBeLessThan(16);
+                done();
+            }
+        };
+        ReactDOM.render(<CesiumMap
+            center={{ y: 43.9, x: 10.3 }}
+            zoom={11}
+            onMapViewChanges={testHandlers.onMapViewChanges}
+        />, document.getElementById("container"));
+        // computing the bounding box for the new center and the new zoom
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        // update the map with the new center and the new zoom so we can check our computed bouding box
+        expect(hook).toExist();
+
+        hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0});
+        // unregister hook
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
     });
 
 });

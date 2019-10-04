@@ -10,9 +10,8 @@ const assign = require('object-assign');
 const wk = require('wellknown');
 const {isEmpty} = require("lodash");
 
-const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
-        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
-        LOADING, EDIT_RULE, SET_FILTER, CLEAN_EDITING, RULE_SAVED} = require('../actions/rulesmanager');
+const { RULES_SELECTED, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
+    LOADING, EDIT_RULE, SET_FILTER, CLEAN_EDITING, RULE_SAVED} = require('../actions/rulesmanager');
 const {
     CHANGE_DRAWING_STATUS
 } = require('../actions/draw');
@@ -43,12 +42,12 @@ const defaultState = {
 
 const getPosition = ({targetPosition = {}}, priority) => {
     switch (priority) {
-        case -1:
-            return targetPosition.offsetFromTop;
-        case +1:
-            return targetPosition.offsetFromTop + 1;
-        default:
-            return 0;
+    case -1:
+        return targetPosition.offsetFromTop;
+    case +1:
+        return targetPosition.offsetFromTop + 1;
+    default:
+        return 0;
     }
 };
 // GEOFENCE ACCEPTS ONLY MULTYPOLYGON
@@ -77,53 +76,16 @@ function rulesmanager(state = defaultState, action) {
         if (action.unselect) {
             return assign({}, state, {
                 selectedRules: _(existingRules).filter(
-                        rule => !_.head(newRules.filter(unselected => unselected.id === rule.id))).value()
+                    rule => !_.head(newRules.filter(unselected => unselected.id === rule.id))).value()
             });
         }
         return assign({}, state, {
             selectedRules: _(existingRules).concat(newRules).uniq(rule => rule.id).value()});
     }
-    case RULES_LOADED: {
-        return assign({}, state, {
-            rules: action.rules,
-            rulesCount: action.count,
-            rulesPage: action.page,
-            selectedRules: action.keepSelected ? state.selectedRules : [],
-            activeRule: {},
-            error: {}
-        });
-    }
-    case UPDATE_ACTIVE_RULE: {
-        if (!action.merge) {
-            return assign({}, state, {
-                error: {},
-                activeRule: {
-                    rule: action.rule,
-                    status: action.status
-                }
-            });
-        }
-        const rule = state.activeRule || {};
-        return assign({}, state, {
-            error: {},
-            activeRule: {
-                rule: assign({}, rule.rule, action.rule),
-                status: action.status
-            }
-        });
-    }
     case UPDATE_FILTERS_VALUES: {
         const filtersValues = state.filtersValues || {};
         return assign({}, state, {
             filtersValues: assign({}, filtersValues, action.filtersValues)
-        });
-    }
-    case ACTION_ERROR: {
-        return assign({}, state, {
-            error: {
-                msgId: action.msgId,
-                context: action.context
-            }
         });
     }
     case OPTIONS_LOADED: {
@@ -155,8 +117,8 @@ function rulesmanager(state = defaultState, action) {
             wkt: activeRule.constraints.restrictedAreaWkt,
             geometry: wk.parse(activeRule.constraints.restrictedAreaWkt)} || {};
         return assign({}, state, {activeRule,
-                position: {value: state.targetPosition.offsetFromTop, position: "offsetFromTop"},
-                geometryState});
+            position: {value: state.targetPosition.offsetFromTop, position: "offsetFromTop"},
+            geometryState});
     }
     case RULE_SAVED: {
         return assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, geometryState: undefined, activeRule: undefined, selectedRules: [], targetPosition: undefined });

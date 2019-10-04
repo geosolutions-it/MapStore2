@@ -6,8 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var API = require('../Layers');
+import expect from 'expect';
+import API from '../Layers';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../libs/ajax';
+
+let mockAxios;
 
 describe('Test layers rest API', () => {
     it('get layer', (done) => {
@@ -57,12 +61,152 @@ describe('Test layers rest API', () => {
         }).then((layerObj)=> {
             expect(layerObj).toExist();
             expect(layerObj.layer.defaultStyle.name).toBe(newDefaultStyle);
-            expect(layerObj.layer.styles.style.length).toBe(2);
+            expect(layerObj.layer.styles.style.length).toBe(3);
             expect(layerObj.layer.styles.style[0].name).toBe('test_TEST_LAYER_1');
-            expect(layerObj.layer.styles.style[1].name).toBe('generic');
+            expect(layerObj.layer.styles.style[1].name).toBe('point');
+            expect(layerObj.layer.styles.style[2].name).toBe('generic');
             done();
         }).catch(e => {
             done(e);
+        });
+    });
+});
+
+describe('Test default style update with layers rest API', () => {
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
+    it('test updateDefaultStyle, move old default style to available style', (done) => {
+
+        const OLD_DEFAULT_STYLE = {
+            name: 'workspace001:old_default_style',
+            workspace: 'workspace001',
+            href: '/geoserver/rest/workspaces/workspace001/styles/old_default_style.json'
+        };
+
+        mockAxios.onGet(/\/layers/).reply((config) => {
+            expect(config.url).toBe('/geoserver/rest/workspaces/workspace001/layers/layer001.json');
+            return [ 200, {
+                "layer": {
+                    "name": "layer001",
+                    "defaultStyle": OLD_DEFAULT_STYLE,
+                    "styles": {
+                        "@class": "linked-hash-set",
+                        "style": [{
+                            "name": "workspace001:new_default_style",
+                            "workspace": "workspace001",
+                            "href": "\/geoserver\/rest\/workspaces\/workspace001\/styles\/new_default_style.json"
+                        }]
+                    }
+                }
+            }];
+        });
+
+        mockAxios.onPut(/\/layers/).reply((config) => {
+            try {
+                const layer = JSON.parse(config.data).layer;
+                expect(layer.defaultStyle).toEqual({ "name": "workspace001:new_default_style" });
+                expect(layer.styles.style).toEqual([
+                    OLD_DEFAULT_STYLE,
+                    {
+                        "name": "workspace001:new_default_style",
+                        "workspace": "workspace001",
+                        "href": "/geoserver/rest/workspaces/workspace001/styles/new_default_style.json"
+                    }
+                ]);
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [ 200, {}];
+        });
+
+        API.updateDefaultStyle({
+            baseUrl: '/geoserver/',
+            layerName: 'workspace001:layer001',
+            styleName: 'workspace001:new_default_style'
+        });
+    });
+
+    it('test updateDefaultStyle, available style must have unique name', (done) => {
+
+        const OLD_DEFAULT_STYLE = {
+            name: 'workspace001:old_default_style',
+            workspace: 'workspace001',
+            href: '/geoserver/rest/workspaces/workspace001/styles/old_default_style.json'
+        };
+
+        mockAxios.onGet(/\/layers/).reply((config) => {
+            expect(config.url).toBe('/geoserver/rest/workspaces/workspace001/layers/layer001.json');
+            return [ 200, {
+                layer: {
+                    name: 'layer001',
+                    defaultStyle: OLD_DEFAULT_STYLE,
+                    styles: {
+                        '@class': 'linked-hash-set',
+                        style: [
+                            OLD_DEFAULT_STYLE,
+                            {
+                                name: 'workspace001:new_default_style',
+                                workspace: 'workspace001',
+                                href: '/geoserver/rest/workspaces/workspace001/styles/new_default_style.json'
+                            },
+                            {
+                                name: 'workspace001:other_style',
+                                workspace: 'workspace001',
+                                href: '/geoserver/rest/workspaces/workspace001/styles/other_style.json'
+                            },
+                            {
+                                name: 'workspace001:other_style',
+                                workspace: 'workspace001',
+                                href: '/geoserver/rest/workspaces/workspace001/styles/other_style.json'
+                            },
+                            {
+                                name: 'workspace001:other_style',
+                                workspace: 'workspace001',
+                                href: '/geoserver/rest/workspaces/workspace001/styles/other_style.json'
+                            }
+                        ]
+                    }
+                }
+            }];
+        });
+
+        mockAxios.onPut(/\/layers/).reply((config) => {
+            try {
+                const layer = JSON.parse(config.data).layer;
+                expect(layer.defaultStyle).toEqual({ "name": "workspace001:new_default_style" });
+                expect(layer.styles.style).toEqual([
+                    OLD_DEFAULT_STYLE,
+                    {
+                        "name": "workspace001:new_default_style",
+                        "workspace": "workspace001",
+                        "href": "/geoserver/rest/workspaces/workspace001/styles/new_default_style.json"
+                    },
+                    {
+                        "name": "workspace001:other_style",
+                        "workspace": "workspace001",
+                        "href": "/geoserver/rest/workspaces/workspace001/styles/other_style.json"
+                    }
+                ]);
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [ 200, {}];
+        });
+
+        API.updateDefaultStyle({
+            baseUrl: '/geoserver/',
+            layerName: 'workspace001:layer001',
+            styleName: 'workspace001:new_default_style'
         });
     });
 });

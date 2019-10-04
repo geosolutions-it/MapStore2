@@ -9,7 +9,6 @@ const expect = require('expect');
 const PropTypes = require('prop-types');
 const React = require('react');
 const ReactDOM = require('react-dom');
-
 const StandardApp = require('../StandardApp');
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
@@ -29,8 +28,8 @@ class mycomponent extends React.Component {
 
     render() {
         return (<div className="mycomponent">
-                {this.renderPlugins()}
-                </div>);
+            {this.renderPlugins()}
+        </div>);
     }
 }
 
@@ -55,22 +54,24 @@ describe('StandardApp', () => {
 
     it('creates a default app with onInit', (done) => {
         const init = {
-            onInit: () => { }
+            onInit: (cfg) => {
+                expect(cfg).toExist();
+                done();
+            }
         };
-        const spy = expect.spyOn(init, 'onInit');
-        ReactDOM.render(<StandardApp onInit={init.onInit}/>, document.getElementById("container"));
-        setTimeout(() => {
-            expect(spy).toHaveBeenCalled();
-            done();
-        }, 100);
+        let app = ReactDOM.render(<StandardApp onInit={init.onInit}/>, document.getElementById("container"));
+        expect(app).toExist();
     });
 
     it('creates a default app with the given store creator', (done) => {
-        let dispatched = 0;
         const store = () => ({
             dispatch() {
-                dispatched++;
                 done();
+            },
+            getState() {
+                return {};
+            },
+            subscribe() {
             }
         });
 
@@ -88,6 +89,11 @@ describe('StandardApp', () => {
                 if (value === 10) {
                     done();
                 }
+            },
+            getState() {
+                return {};
+            },
+            subscribe() {
             }
         });
 
@@ -103,6 +109,11 @@ describe('StandardApp', () => {
             done();
             return {
                 dispatch() {
+                },
+                getState() {
+                    return {};
+                },
+                subscribe() {
                 }
             };
         };
@@ -125,6 +136,11 @@ describe('StandardApp', () => {
             done();
             return {
                 dispatch() {
+                },
+                getState() {
+                    return {};
+                },
+                subscribe() {
                 }
             };
         };
@@ -148,6 +164,11 @@ describe('StandardApp', () => {
             done();
             return {
                 dispatch() {
+                },
+                getState() {
+                    return {};
+                },
+                subscribe() {
                 }
             };
         };

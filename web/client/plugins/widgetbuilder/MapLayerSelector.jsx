@@ -19,8 +19,8 @@ const {compose, branch} = require('recompose');
 
 const Catalog = compose(
     branch(
-       ({catalog} = {}) => !catalog,
-       connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
+        ({catalog} = {}) => !catalog,
+        connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
     ),
 )(require('./Catalog'));
 /**
@@ -35,22 +35,22 @@ module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice 
                 bsStyle: "primary",
                 bsSize: "sm"
             }}
-                buttons={[{
-                    onClick: () => toggleLayerSelector(false),
-                    tooltipId: "close",
-                    glyph: "1-close"
-                }, {
-                    onClick: () => onLayerChoice(layer),
-                    disabled: !selected || !canProceed,
-                    tooltipId: "widgets.builder.wizard.useTheSelectedLayer",
-                    glyph: "plus"
-                }]} />
-        { selected && !canProceed ? <InfoPopover
-            glyph="exclamation-mark"
-            bsStyle="warning"
-            title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
-            text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
-    </BuilderHeader>}
-        >
+            buttons={[{
+                onClick: () => toggleLayerSelector(false),
+                tooltipId: "close",
+                glyph: "1-close"
+            }, {
+                onClick: () => onLayerChoice(layer),
+                disabled: !selected || !canProceed,
+                tooltipId: "widgets.builder.wizard.useTheSelectedLayer",
+                glyph: "plus"
+            }]} />
+            { selected && !canProceed ? <InfoPopover
+                glyph="exclamation-mark"
+                bsStyle="warning"
+                title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
+                text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
+        </BuilderHeader>}
+    >
         <Catalog services={catalogServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
     </BorderLayout>);

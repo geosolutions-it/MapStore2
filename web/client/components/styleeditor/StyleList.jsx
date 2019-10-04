@@ -9,7 +9,6 @@
 const React = require('react');
 
 const { Glyphicon: GlyphiconRB } = require('react-bootstrap');
-
 const BorderLayout = require('../layout/BorderLayout');
 const emptyState = require('../misc/enhancers/emptyState');
 const withLocal = require("../misc/enhancers/localizedProps");
@@ -26,6 +25,16 @@ const SideGrid = emptyState(
         glyph: '1-stilo'
     }
 )(require('../misc/cardgrids/SideGrid'));
+
+// get the text to use in the icon
+const getFormatText = (format) => {
+    const text = {
+        sld: 'SLD',
+        css: 'CSS',
+        mbstyle: 'MBS'
+    };
+    return text[format] || format || '';
+};
 
 /**
  * Component for rendering a grid of style templates.
@@ -55,44 +64,44 @@ const StyleList = ({
     filterText,
     onFilter = () => {}
 }) => (
-        <BorderLayout
-            className="ms-style-editor-list"
-            header={
-                <Filter
-                    filterPlaceholder="styleeditor.styleListfilterPlaceholder"
-                    filterText={filterText}
-                    onFilter={onFilter}/>
-            }>
-            <SideGrid
-                size="sm"
-                onItemClick={({ name }) => onSelect({ style: defaultStyle === name ? '' : name }, true)}
-                items={availableStyles
-                    .filter(({name = '', title = '', _abstract = ''}) => !filterText
+    <BorderLayout
+        className="ms-style-editor-list"
+        header={
+            <Filter
+                filterPlaceholder="styleeditor.styleListfilterPlaceholder"
+                filterText={filterText}
+                onFilter={onFilter}/>
+        }>
+        <SideGrid
+            size="sm"
+            onItemClick={({ name }) => onSelect({ style: defaultStyle === name ? '' : name }, true)}
+            items={availableStyles
+                .filter(({name = '', title = '', _abstract = ''}) => !filterText
                     || filterText && (
                         name.indexOf(filterText) !== -1
                         || title.indexOf(filterText) !== -1
                         || _abstract.indexOf(filterText) !== -1
                     ))
-                    .map(style => ({
-                        ...style,
-                        title: style.label || style.title || style.name,
-                        description: style._abstract,
-                        selected: enabledStyle === style.name,
-                        preview: style.format &&
+                .map(style => ({
+                    ...style,
+                    title: style.label || style.title || style.name,
+                    description: style._abstract,
+                    selected: enabledStyle === style.name,
+                    preview: style.format &&
                             <SVGPreview
                                 backgroundColor="#333333"
                                 texts={[
                                     {
-                                        text: style.format.toUpperCase(),
+                                        text: getFormatText(style.format).toUpperCase(),
                                         fill: formatColors[style.format] || '#f2f2f2',
                                         style: {
                                             fontSize: 70,
                                             fontWeight: 'bold'
                                         }
                                     }]}/> || <Glyphicon glyph="geoserver" />,
-                        tools: showDefaultStyleIcon && defaultStyle === style.name ? <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/> : null
-                    }))} />
-        </BorderLayout>
-    );
+                    tools: showDefaultStyleIcon && defaultStyle === style.name ? <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/> : null
+                }))} />
+    </BorderLayout>
+);
 
 module.exports = StyleList;

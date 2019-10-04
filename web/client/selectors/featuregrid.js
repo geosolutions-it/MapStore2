@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -7,13 +7,15 @@
   */
 
 const { head, get, isObject} = require('lodash');
-const {layersSelector} = require('./layers');
+const { getLayerFromId} = require('./layers');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const {toChangesMap} = require('../utils/FeatureGridUtils');
+const { layerDimensionSelectorCreator } = require('./dimension');
 
-const getLayerById = (state, id) => head(layersSelector(state).filter(l => l.id === id));
+
+const getLayerById = getLayerFromId;
 const getTitle = (layer = {}) => layer.title || layer.name;
 const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
 const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);
@@ -30,6 +32,7 @@ const geomTypeSelectedFeatureSelector = state => {
         const geomDesc = findGeometryProperty(desc);
         return geomDesc && geomDesc.localType;
     }
+    return null;
 };
 
 
@@ -71,7 +74,7 @@ const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLay
  * @static
  */
 module.exports = {
-  /**
+    /**
    * selects the state of featuregrid open
    * @memberof selectors.featuregrid
    * @param  {object}  state applications state
@@ -79,7 +82,7 @@ module.exports = {
    */
     isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
     getAttributeFilters,
-  /**
+    /**
    * get a filter for an attribute
    * @memberof selectors.featuregrid
    * @param  {object} state Application's state
@@ -89,7 +92,7 @@ module.exports = {
     getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
     selectedLayerIdSelector,
     getCustomAttributeSettings,
-  /**
+    /**
    * Get's the title of the selected layer
    * @memberof selectors.featuregrid
    * @param  {object} state the application's state
@@ -123,6 +126,18 @@ module.exports = {
     newFeaturesSelector,
     hasNewFeaturesSelector,
     showAgainSelector: state => get(state, "featuregrid.showAgain", false),
+    /**
+     * determines if the time sync button should be shown
+     */
+    showTimeSync: state => {
+        const showEnabled = get(state, "featuregrid.showTimeSync", false);
+        if (showEnabled) {
+            const layerId = selectedLayerIdSelector(state);
+            return layerDimensionSelectorCreator({id: layerId}, 'time')(state);
+        }
+        return null;
+    },
+    timeSyncActive: state => get(state, "featuregrid.timeSync", false),
     showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
     editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),

@@ -10,7 +10,7 @@ const React = require('react');
 const {connect} = require('../utils/PluginsUtils');
 const {createSelector} = require('reselect');
 
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, minZoomSelector} = require('../selectors/map');
 const {changeZoomLevel} = require('../actions/map');
 
 const HelpWrapper = require('./help/HelpWrapper');
@@ -20,12 +20,13 @@ const ScaleBox = require("../components/mapcontrols/scale/ScaleBox");
 const mapUtils = require('../utils/MapUtils');
 const assign = require('object-assign');
 
-const selector = createSelector([mapSelector], (map) => ({
+const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) => ({
+    minZoom,
     currentZoomLvl: map && map.zoom,
     scales: mapUtils.getScales(
         map && map.projection || 'EPSG:3857',
         map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
-     )
+    )
 }));
 
 require('./scalebox/scalebox.css');
@@ -35,7 +36,7 @@ class ScaleBoxTool extends React.Component {
         return (<HelpWrapper id="mapstore-scalebox-container"
             key="scalebox-help"
             helpText={<Message msgId="helptexts.scaleBox"/>}>
-                <ScaleBox key="scaleBox" label={<Message msgId="mapScale"/>} {...this.props}/>
+            <ScaleBox key="scaleBox" label={<Message msgId="mapScale"/>} {...this.props}/>
         </HelpWrapper>);
     }
 }

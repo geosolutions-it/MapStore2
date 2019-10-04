@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 const assign = require('object-assign');
@@ -22,6 +22,8 @@ const Container = connect(() => ({
 
 const ToolsContainer = require('./containers/ToolsContainer');
 const Message = require('./locale/Message');
+
+const { createPlugin } = require('../utils/PluginsUtils');
 
 require('./burgermenu/burgermenu.css');
 
@@ -97,16 +99,19 @@ class BurgerMenu extends React.Component {
     }
 }
 
-module.exports = {
-    BurgerMenuPlugin: assign(connect((state) => ({
-        controls: state.controls
-    }))(BurgerMenu), {
-        OmniBar: {
-            name: "burgermenu",
-            position: 2,
-            tool: true,
-            priority: 1
+module.exports = createPlugin(
+    'BurgerMenu',
+    {
+        component: connect((state) =>({
+            controls: state.controls
+        }))(BurgerMenu),
+        containers: {
+            OmniBar: {
+                name: "burgermenu",
+                position: 2,
+                tool: true,
+                priority: 1
+            }
         }
-    }),
-    reducers: {}
-};
+    }
+);

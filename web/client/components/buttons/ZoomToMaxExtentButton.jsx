@@ -67,7 +67,7 @@ class ZoomToMaxExtentButton extends React.Component {
                 onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
                 className={this.props.className}
                 bsStyle={this.props.bsStyle}
-                >
+            >
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
@@ -120,7 +120,7 @@ class ZoomToMaxExtentButton extends React.Component {
         // zooming to the initial extent based on initial map configuration
         var mapConfig = this.props.mapInitialConfig;
         let bbox = mapUtils.getBbox(mapConfig.center, mapConfig.zoom, this.props.mapConfig.size);
-        this.props.changeMapView(mapConfig.center, mapConfig.zoom, bbox, this.props.mapConfig.size, null, mapConfig.projection);
+        this.props.changeMapView(mapConfig.center, mapConfig.zoom, bbox, this.props.mapConfig.size, null, this.props.mapConfig.projection);
     };
 }
 

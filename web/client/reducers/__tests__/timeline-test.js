@@ -7,16 +7,17 @@
  */
 
 const timeline = require('../timeline');
-const {rangeDataLoaded, selectLayer, timeDataLoading} = require('../../actions/timeline');
+const {rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync} = require('../../actions/timeline');
+const { isCollapsed, isMapSync } = require('../../selectors/timeline');
 const expect = require('expect');
 
 describe('Test the timeline reducer', () => {
     it('change the layer histogram and rangedata', () => {
         const initialState = {
-          rangeData: {
-              layer1: { range: 'old range', histogram: 'old histogram'},
-              layer2: { }
-          }
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
         };
         const state = timeline(initialState, rangeDataLoaded('layer1', 'new Range', 'new histogram', 'domain'));
         expect(state).toExist();
@@ -26,10 +27,10 @@ describe('Test the timeline reducer', () => {
     });
     it('select a layer', () => {
         const initialState = {
-          rangeData: {
-              layer1: { range: 'old range', histogram: 'old histogram'},
-              layer2: { }
-          }
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
         };
         const state = timeline(initialState, selectLayer('layer1'));
         expect(state).toExist();
@@ -37,10 +38,10 @@ describe('Test the timeline reducer', () => {
     });
     it('layer is loading', () => {
         const initialState = {
-          rangeData: {
-              layer1: { range: 'old range', histogram: 'old histogram'},
-              layer2: { }
-          }
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
         };
         const state = timeline(initialState, timeDataLoading('layer1', true));
         expect(state).toExist();
@@ -48,10 +49,10 @@ describe('Test the timeline reducer', () => {
     });
     it('remove a layer', () => {
         const initialState = {
-          rangeData: {
-              layer1: { range: 'old range', histogram: 'old histogram'},
-              layer2: { }
-          }
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
         };
         const action = {
             type: 'REMOVE_NODE',
@@ -64,11 +65,11 @@ describe('Test the timeline reducer', () => {
     });
     it('remove a layer that is not selected', () => {
         const initialState = {
-          selectedLayer: 'layer2',
-          rangeData: {
-              layer1: { range: 'old range', histogram: 'old histogram'},
-              layer2: { }
-          }
+            selectedLayer: 'layer2',
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
         };
         const action = {
             type: 'REMOVE_NODE',
@@ -82,11 +83,11 @@ describe('Test the timeline reducer', () => {
     });
     it('remove a selected layer with no rangeData or loading data', () => {
         const initialState = {
-          selectedLayer: 'layer3',
-          rangeData: {
-              layer1: { range: 'old range', histogram: 'old histogram'},
-              layer2: { }
-          }
+            selectedLayer: 'layer3',
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
         };
         const action = {
             type: 'REMOVE_NODE',
@@ -108,10 +109,18 @@ describe('Test the timeline reducer', () => {
                 layer1: { range: 'old range', histogram: 'old histogram'},
                 layer2: { }
             }
-          };
+        };
         const state = timeline(initialState, action);
         expect(state).toExist();
         expect(state.rangeData).toNotExist();
         expect(state.selectedLayer).toNotExist();
+    });
+    it('setCollapsed action', () => {
+        const action = setCollapsed(true);
+        expect(isCollapsed({timeline: timeline(undefined, action)})).toBe(true);
+    });
+    it('setMapSync', () => {
+        expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
+        expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
 });

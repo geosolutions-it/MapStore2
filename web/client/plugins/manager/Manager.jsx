@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const { itemSelected } = require('../../actions/manager');
 const {Nav, NavItem, Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
@@ -39,6 +39,7 @@ class Manager extends React.Component {
         if (tool.glyph) {
             return <Glyphicon glyph={tool.glyph} />;
         }
+        return null;
     };
 
     renderNavItems = () => {
@@ -52,8 +53,8 @@ class Manager extends React.Component {
                     this.props.itemSelected(tool.id);
                     this.context.router.history.push("/manager/" + tool.id);
                 }}>
-                    {this.renderToolIcon(tool)}
-                    <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
+                {this.renderToolIcon(tool)}
+                <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
             </NavItem>));
     };
 
@@ -84,7 +85,7 @@ module.exports = {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool
     }),
-        {
-            itemSelected
-        })(Manager)
+    {
+        itemSelected
+    })(Manager)
 };

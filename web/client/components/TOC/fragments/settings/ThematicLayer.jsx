@@ -164,7 +164,7 @@ class ThematicLayer extends React.Component {
         geometryType: 'Polygon'
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (this.props.layer) {
             // configure cfg editor
             this.props.onChangeConfiguration(
@@ -181,7 +181,7 @@ class ThematicLayer extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.layer && (!this.props.layer || (newProps.layer.id !== this.props.layer.id))) {
             this.switchLayer(newProps.layer);
         }
@@ -217,7 +217,15 @@ class ThematicLayer extends React.Component {
     };
 
     getColors = () => {
-        return this.props.getColors(this.props.colors, this.props.layer, this.props.colorSamples);
+        const colors = this.props.getColors(this.props.colors, this.props.layer, this.props.colorSamples);
+        if (colors) {
+            return colors.map(({name, ...c}) => ({
+                label: `global.colors.${name}`,
+                name,
+                ...c
+            }));
+        }
+        return [];
     };
 
     renderError = (error, type) => {
@@ -250,27 +258,27 @@ class ThematicLayer extends React.Component {
                             onClick: this.toggleCfg
                         }]}
                     >
-                    <Grid fluid>
-                        <Row>
-                        {this.props.layer.thematic.params && this.props.layer.thematic.params.length ? this.renderParams(thema) : null}
+                        <Grid fluid>
+                            <Row>
+                                {this.props.layer.thematic.params && this.props.layer.thematic.params.length ? this.renderParams(thema) : null}
 
-                        <Col xs={12}>
-                            <FormGroup>
-                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_field" /></ControlLabel></Col>
-                                <Col xs={6}><Combobox
-                                    disabled={this.hasCustomClassification()}
-                                    busy={this.props.fieldsLoading.status}
-                                    data={this.props.fields}
-                                    textField="name"
-                                    valueField="name"
-                                    value={thema.field}
-                                    onChange={(v) => this.updateStyle("field", this.getValue(v))}/></Col>
-                            </FormGroup>
-                        </Col>
-                        </Row>
-                        <Row><Col xs={12}>
-                        {this.props.fieldsLoading.error ? this.renderError(this.props.fieldsLoading.error, 'fields_error') : null}
-                        </Col></Row>
+                                <Col xs={12}>
+                                    <FormGroup>
+                                        <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_field" /></ControlLabel></Col>
+                                        <Col xs={6}><Combobox
+                                            disabled={this.hasCustomClassification()}
+                                            busy={this.props.fieldsLoading.status}
+                                            data={this.props.fields}
+                                            textField="name"
+                                            valueField="name"
+                                            value={thema.field}
+                                            onChange={(v) => this.updateStyle("field", this.getValue(v))}/></Col>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row><Col xs={12}>
+                                {this.props.fieldsLoading.error ? this.renderError(this.props.fieldsLoading.error, 'fields_error') : null}
+                            </Col></Row>
                         </Grid>
                     </SwitchPanel>
                 </Col>,
@@ -297,71 +305,71 @@ class ThematicLayer extends React.Component {
                         }]}
                     >
                         <Grid fluid><Row>
-                        <Col xs={12}>
-                            <FormGroup>
-                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_method" /></ControlLabel></Col>
-                                <Col xs={6}><Combobox
-                                    disabled={this.hasCustomClassification()}
-                                    data={this.props.methods}
-                                    textField={this.localizedItem}
-                                    defaultValue={thema.method}
-                                    onSelect={(v) => this.updateStyle("method", this.getValue(v))}
-                                /></Col>
-                            </FormGroup>
-                        </Col>
-                        <Col xs={12}>
-                            <FormGroup>
-                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_intervals" /></ControlLabel></Col>
-                                <Col xs={6}><NumberPicker
-                                    disabled={this.hasCustomClassification()}
-                                    value={thema.intervals}
-                                    onChange={(value) => { this.updateStyle("intervals", this.constrainIntervals(this.getValue(value))); }}
-                                /></Col>
-                            </FormGroup>
-                            {this.renderInputError('intervals')}
-                        </Col>
-                        <Col xs={12}>
-                            <FormGroup>
-                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_colors" /></ControlLabel></Col>
-                                <Col xs={6}>
-                                    <ColorRangeSelector items={this.getColors()} rampFunction={this.createRamp} value={{
-                                        name: thema.ramp
-                                    }}
-                                    disabled={this.hasCustomClassification()}
-                                    samples={5}
-                                    onChange={(ramp) => {
-                                        this.updateStyle("ramp", this.getValue(ramp));
-                                    }} />
-                                </Col>
-                            </FormGroup>
-                        </Col>
-                        {this.props.geometryType !== 'LineString' ? <Col xs={12}>
-                            <FormGroup>
-                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
-                                <Col xs={1}>
-                                    <Checkbox checked={thema.strokeOn}
-                                        onChange={(evt) => this.updateStyle('strokeOn', evt.target.checked)} />
-                                </Col>
-                                <Col xs={2}><ColorPicker key="strokeColor"
-                                    pickerProps={{ disableAlpha: true }}
-                                    disabled={!thema.strokeOn}
-                                    text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
-                                    onChangeColor={this.updateStrokeColor}
-                                /></Col>
-                                <Col xs={3}><NumberPicker key="strokeWeight"
-                                    disabled={!thema.strokeOn}
-                                    format="- ###.###"
-                                    value={thema.strokeWeight}
-                                    onChange={this.updateStrokeWeight}
-                                /></Col>
-                            </FormGroup>
-                        </Col> : null}
+                            <Col xs={12}>
+                                <FormGroup>
+                                    <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_method" /></ControlLabel></Col>
+                                    <Col xs={6}><Combobox
+                                        disabled={this.hasCustomClassification()}
+                                        data={this.props.methods}
+                                        textField={this.localizedItem}
+                                        defaultValue={thema.method}
+                                        onSelect={(v) => this.updateStyle("method", this.getValue(v))}
+                                    /></Col>
+                                </FormGroup>
+                            </Col>
+                            <Col xs={12}>
+                                <FormGroup>
+                                    <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_intervals" /></ControlLabel></Col>
+                                    <Col xs={6}><NumberPicker
+                                        disabled={this.hasCustomClassification()}
+                                        value={thema.intervals}
+                                        onChange={(value) => { this.updateStyle("intervals", this.constrainIntervals(this.getValue(value))); }}
+                                    /></Col>
+                                </FormGroup>
+                                {this.renderInputError('intervals')}
+                            </Col>
+                            <Col xs={12}>
+                                <FormGroup>
+                                    <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_colors" /></ControlLabel></Col>
+                                    <Col xs={6}>
+                                        <ColorRangeSelector items={this.getColors()} rampFunction={this.createRamp} value={{
+                                            name: thema.ramp
+                                        }}
+                                        disabled={this.hasCustomClassification()}
+                                        samples={5}
+                                        onChange={(ramp) => {
+                                            this.updateStyle("ramp", this.getValue(ramp));
+                                        }} />
+                                    </Col>
+                                </FormGroup>
+                            </Col>
+                            {this.props.geometryType !== 'LineString' ? <Col xs={12}>
+                                <FormGroup>
+                                    <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
+                                    <Col xs={1}>
+                                        <Checkbox checked={thema.strokeOn}
+                                            onChange={(evt) => this.updateStyle('strokeOn', evt.target.checked)} />
+                                    </Col>
+                                    <Col xs={2}><ColorPicker key="strokeColor"
+                                        pickerProps={{ disableAlpha: true }}
+                                        disabled={!thema.strokeOn}
+                                        text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
+                                        onChangeColor={this.updateStrokeColor}
+                                    /></Col>
+                                    <Col xs={3}><NumberPicker key="strokeWeight"
+                                        disabled={!thema.strokeOn}
+                                        format="- ###.###"
+                                        value={thema.strokeWeight}
+                                        onChange={this.updateStrokeWeight}
+                                    /></Col>
+                                </FormGroup>
+                            </Col> : null}
                         </Row>
                         <Row><Col xs={12}>
-                        {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : null}
-                        {this.renderInputError('classification')}
-                        <ThemaClassesEditor className={this.props.classificationLoading.status ? "loading" : ""} classification={this.getClassification()} onUpdateClasses={this.updateClassification}/>
-                        {this.props.classificationLoading.error ? this.renderError(this.props.classificationLoading.error, 'classification_error') : null}
+                            {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : null}
+                            {this.renderInputError('classification')}
+                            <ThemaClassesEditor className={this.props.classificationLoading.status ? "loading" : ""} classification={this.getClassification()} onUpdateClasses={this.updateClassification}/>
+                            {this.props.classificationLoading.error ? this.renderError(this.props.classificationLoading.error, 'classification_error') : null}
                         </Col></Row>
                         </Grid>
                     </SwitchPanel>
@@ -384,10 +392,10 @@ class ThematicLayer extends React.Component {
                             onClick: () => this.applyCfg(this.props.adminCfg.current),
                             visible: isValid
                         }, {
-                                glyph: 'exclamation-mark',
-                                tooltip: this.localizedItem("toc.thematic.cfgError", ""),
-                                glyphClassName: "text-danger",
-                                visible: !isValid
+                            glyph: 'exclamation-mark',
+                            tooltip: this.localizedItem("toc.thematic.cfgError", ""),
+                            glyphClassName: "text-danger",
+                            visible: !isValid
                         }]}
                     >
                         <Codemirror ref={(cmp) => {this.cfgEditor = cmp; }} style={{ width: '500px' }} key="code-mirror" value={this.props.adminCfg.current} onBeforeChange={this.updateCfg} options={{
@@ -409,11 +417,11 @@ class ThematicLayer extends React.Component {
                         <Col xs={6}><ControlLabel>{this.localizedItem(param.title, "")}</ControlLabel></Col>
                         <Col xs={6}><Combobox
                             data={param.values}
-                                textField={(item) => this.localizedItem(item.name, "")}
-                                valueField="value"
-                                value={thema[param.field]}
-                                onSelect={(v) => this.updateStyle(param.field, this.getValue(v))}
-                            /></Col>
+                            textField={(item) => this.localizedItem(item.name, "")}
+                            valueField="value"
+                            value={thema[param.field]}
+                            onSelect={(v) => this.updateStyle(param.field, this.getValue(v))}
+                        /></Col>
                     </FormGroup>
                 </Col>
             );
@@ -423,7 +431,7 @@ class ThematicLayer extends React.Component {
     render() {
         const thema = this.props.layer && this.props.layer.thematic && this.props.layer.thematic.current;
         return (<Grid fluid className="thematic_layer">
-                {this.props.canEditThematic && this.props.adminCfg.open ? this.renderConfigurationEditor() : null}
+            {this.props.canEditThematic && this.props.adminCfg.open ? this.renderConfigurationEditor() : null}
             {this.hasConfiguration() && !this.props.adminCfg.open && thema ? this.renderThemaPanel(thema) : null}
         </Grid>);
     }

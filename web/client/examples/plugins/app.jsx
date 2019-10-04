@@ -62,7 +62,6 @@ const startApp = () => {
     const themeSample = require("raw-loader!./sample.less.raw");
 
     let customReducers;
-
     const customReducer = (state = {}, action) => {
         if (customReducers) {
             const newState = assign({}, state);
@@ -104,7 +103,7 @@ const startApp = () => {
         } catch (e) {
             /*eslint-disable */
             alert('Error in JSON');
-            /*eslint-enable */
+            /* eslint-enable */
         }
         callback();
     };
@@ -130,13 +129,13 @@ const startApp = () => {
         const require = context;
         try {
             customReducers = eval(Babel.transform(code, { presets: ['es2015', 'react', 'stage-0'] }).code).reducers || null;
-            /*eslint-enable */
+            /* eslint-enable */
             userPlugin = connect(() => ({
                 template: code,
                 renderContent: (comp) => {
                     /*eslint-disable */
                     return eval(comp).Plugin;
-                    /*eslint-enable */
+                    /* eslint-enable */
                 },
                 getReducers() {
                     return this.comp;
@@ -176,7 +175,7 @@ const startApp = () => {
                 onToggle={togglePlugin.bind(null, pluginName, callback)}
                 onApplyCfg={configurePlugin.bind(null, plugin, callback)}
                 pluginConfig={userCfg[pluginName + 'Plugin'] && JSON.stringify(userCfg[pluginName + 'Plugin'], null, 2) || "{}"}
-                />);
+            />);
         });
     };
 
@@ -234,13 +233,13 @@ const startApp = () => {
     const renderPage = () => {
         ReactDOM.render(
 
-                <Provider store={store}>
-                    <Localized>
-                        <div style={{width: "100%", height: "100%"}}>
-                            <div id="plugins-list" style={{position: "absolute", zIndex: "10000", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
-                                <h5>Configure application plugins</h5>
-                                <ul>
-                                  <FormGroup bsSize="small">
+            <Provider store={store}>
+                <Localized>
+                    <div style={{width: "100%", height: "100%"}}>
+                        <div id="plugins-list" style={{position: "absolute", zIndex: "10000", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
+                            <h5>Configure application plugins</h5>
+                            <ul>
+                                <FormGroup bsSize="small">
                                     <label>Choose a map library</label>
                                     <FormControl value={mapType} componentClass="select" onChange={onChangeMapType.bind(null, renderPage)}>
                                         <option value="leaflet" key="leaflet">Leaflet</option>
@@ -250,28 +249,28 @@ const startApp = () => {
                                     <Theme path="../../dist/themes" version="no_version"/>
                                     <label>Choose a theme</label>
                                     <ThemeSwitcher style={{width: "275px", marginTop: "5px"}}/>
-                                  </FormGroup>
-                                </ul>
-                                <ul>
-                                  <ThemeCreator themeCode={customStyle || themeSample} onApplyTheme={customTheme.bind(null, renderPage)}/>
-                                </ul>
-                                <ul>
-                                  <label>Save &amp; Load</label>
-                                  <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
-                                </ul>
-                                <ul>
-                                    <label>Plugins</label>
-                                    <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>
-                                    {renderPlugins(renderPage)}
-                                </ul>
-                            </div>
-                            <div style={{position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden"}}>
-                                <PluginsContainer params={{mapType}} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
-                            </div>
-                            <Debug/>
+                                </FormGroup>
+                            </ul>
+                            <ul>
+                                <ThemeCreator themeCode={customStyle || themeSample} onApplyTheme={customTheme.bind(null, renderPage)}/>
+                            </ul>
+                            <ul>
+                                <label>Save &amp; Load</label>
+                                <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
+                            </ul>
+                            <ul>
+                                <label>Plugins</label>
+                                <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>
+                                {renderPlugins(renderPage)}
+                            </ul>
                         </div>
-                    </Localized>
-                </Provider>
+                        <div style={{ position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden" }}>
+                            <PluginsContainer params={{ mapType }} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard" />
+                        </div>
+                        <Debug/>
+                    </div>
+                </Localized>
+            </Provider>
             ,
             document.getElementById("container"));
     };

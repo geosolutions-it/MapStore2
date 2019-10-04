@@ -23,7 +23,8 @@ const ruelsSelector = createSelector([selectedRules, filterSelector, triggerLoad
         selectedIds: rules.map(r => r.id),
         filters,
         triggerLoad
-}; });
+    };
+});
 const rulesGridEnhancer = compose(
     connect( ruelsSelector, {onSelect: rulesSelected, onLoadError: error, setLoading, setFilters: setFilter}),
     require('../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid'));
@@ -31,7 +32,7 @@ const rulesGridEnhancer = compose(
 const RulesGrid = rulesGridEnhancer(require('../components/manager/rulesmanager/rulesgrid/RulesGrid'));
 
 /**
-  * @name RulesGrid
+  * @name RulesDataGrid
   * @memberof plugins
   * @class
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
@@ -39,8 +40,8 @@ const RulesGrid = rulesGridEnhancer(require('../components/manager/rulesmanager/
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
   * @prop {number} cfg.scrollDebounce default 50. milliseconds of debounce interval between two scroll event
   * @classdesc
-  * Rules-grid it's part of rules-manager page. It loads goefence's rules from configured geofence instance.
-  * It uses virtualScroll to manage rules loading. It allows to order geofence's rules by drag and drop.
+  * Rules-grid it's part of rules-manager page. It loads GeoFence's rules from configured geofence instance.
+  * It uses virtualScroll to manage rules loading. It allows to order GeoFence's rules by drag and drop.
   * Rules can be filtered selecting values form columns' header.
 */
 
@@ -51,15 +52,15 @@ class RulesDataGrid extends React.Component {
      static defaultProps = {
          enabled: true
      };
-    render() {
-        return (<ContainerDimensions>{({width, height}) =>
-            (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
-                {!this.props.enabled && (<div className="ms-overlay"/>)}
-                <RulesGrid width={width} height={height}/>
-            </div>)
-        }
-        </ContainerDimensions>);
-    }
+     render() {
+         return (<ContainerDimensions>{({width, height}) =>
+             (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
+                 {!this.props.enabled && (<div className="ms-overlay"/>)}
+                 <RulesGrid width={width} height={height}/>
+             </div>)
+         }
+         </ContainerDimensions>);
+     }
 }
 const RulesDataGridPlugin = connect(
     createSelector(

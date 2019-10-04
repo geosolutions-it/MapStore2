@@ -22,6 +22,8 @@ const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
+const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
+const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
 
 
 function errorLoadingFont(err = {family: ""}) {
@@ -36,6 +38,7 @@ function errorLoadingFont(err = {family: ""}) {
 
 /**
  * zoom to a specific point
+ * @memberof actions.map
  * @param {object} pos as array [x, y] or object {x: ..., y:...}
  * @param {number} zoom level to zoom to
  * @param {string} crs of the point
@@ -99,6 +102,12 @@ function changeZoomLevel(zoomLvl, mapStateSource) {
     };
 }
 
+
+/**
+ * pan to a specific point
+ * @memberof actions.map
+ * @param {object} center as {x, y, crs}
+*/
 function panTo(center) {
     return {
         type: PAN_TO,
@@ -106,6 +115,13 @@ function panTo(center) {
     };
 }
 
+/**
+ * zoom to the specified extent
+ * @memberof actions.map
+ * @param {number[]} extent in the form of [minx, miny, maxx, maxy]
+ * @param {string} crs related the extent
+ * @param {number} maxZoom the max zoom limit
+*/
 function zoomToExtent(extent, crs, maxZoom) {
     return {
         type: ZOOM_TO_EXTENT,
@@ -148,7 +164,26 @@ function resizeMap() {
         type: RESIZE_MAP
     };
 }
+function changeMapLimits({restrictedExtent, crs, minZoom}) {
+    return {
+        type: CHANGE_MAP_LIMITS,
+        restrictedExtent,
+        crs,
+        minZoom
+    };
+}
 
+function setMapResolutions(resolutions) {
+    return {
+        type: SET_MAP_RESOLUTIONS,
+        resolutions
+    };
+}
+
+/**
+ * Actions for map
+ * @name actions.map
+ */
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
@@ -165,6 +200,8 @@ module.exports = {
     UPDATE_VERSION,
     INIT_MAP,
     RESIZE_MAP,
+    CHANGE_MAP_LIMITS,
+    SET_MAP_RESOLUTIONS,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -179,5 +216,7 @@ module.exports = {
     errorLoadingFont,
     updateVersion,
     initMap,
-    resizeMap
+    resizeMap,
+    changeMapLimits,
+    setMapResolutions
 };

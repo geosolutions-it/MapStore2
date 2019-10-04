@@ -211,7 +211,7 @@ describe('FilterUtils', () => {
                             logic: "OR"
                         }]
                     }
-            }
+                }
             },
             hits: false
         };
@@ -310,6 +310,8 @@ describe('FilterUtils', () => {
                 + '<ogc:LowerBoundary><ogc:Literal>' + startDate + '</ogc:Literal></ogc:LowerBoundary>'
                 + '<ogc:UpperBoundary><ogc:Literal>' + endDate + '</ogc:Literal></ogc:UpperBoundary>'
             + '</ogc:PropertyIsBetween></ogc:Or>');
+        let cqlFilter = FilterUtils.toCQLFilter(objFilter);
+        expect(cqlFilter).toBe("((attributeEmpty>='2000-01-01T00:00:00.000Z' AND attributeEmpty<='3000-01-01T00:00:00.000Z'))");
     });
     it('Check  for options.cqlFilter are merged with existing fields', () => {
         const versionOGC = "1.1.0";
@@ -847,7 +849,7 @@ describe('FilterUtils', () => {
     });
     it('Check SpatialFilterField ogc 1.1.0 Point', () => {
         let filterObj = {
-        spatialField: {
+            spatialField: {
                 "operation": "INTERSECTS",
                 "attribute": "geometry",
                 "geometry": {
@@ -934,7 +936,7 @@ describe('FilterUtils', () => {
          + '<ogc:Function name="queryCollection">'
          + '<ogc:Literal>TEST</ogc:Literal>'
          + '<ogc:Literal>GEOMETRY</ogc:Literal>'
-         + '<ogc:Literal>INCLUDE</ogc:Literal>'
+         + '<ogc:Literal><![CDATA[INCLUDE]]></ogc:Literal>'
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
         let expected =
@@ -1008,7 +1010,7 @@ describe('FilterUtils', () => {
          + '<ogc:Function name="queryCollection">'
          + '<ogc:Literal>regions</ogc:Literal>'
          + '<ogc:Literal>regions_geom</ogc:Literal>'
-         + '<ogc:Literal>area > 10</ogc:Literal>'
+         + '<ogc:Literal><![CDATA[area > 10]]></ogc:Literal>'
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
 
@@ -1123,7 +1125,7 @@ describe('FilterUtils', () => {
         expect(FilterUtils.ogcBooleanField("attribute_1", "<", false, "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "<", true, "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "like", true, "ogc")).toBe("");
-            // testing falsy values
+        // testing falsy values
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", "", "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", undefined, "ogc")).toBe("");
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", null, "ogc")).toBe("");
@@ -1132,15 +1134,15 @@ describe('FilterUtils', () => {
     it('Calculate CQL filter for number with value 0', () => {
         let filterObj = {
             filterFields: [
-            {
-                groupId: 1,
-                attribute: "attribute3",
-                exception: null,
-                operator: "=",
-                rowId: "3",
-                type: "number",
-                value: 0
-            }],
+                {
+                    groupId: 1,
+                    attribute: "attribute3",
+                    exception: null,
+                    operator: "=",
+                    rowId: "3",
+                    type: "number",
+                    value: 0
+                }],
             groupFields: [{
                 id: 1,
                 index: 0,
@@ -1155,15 +1157,15 @@ describe('FilterUtils', () => {
     it('Calculate CQL filter for string  and LIKE operator', () => {
         let filterObj = {
             filterFields: [
-            {
-                groupId: 1,
-                attribute: "attribute3",
-                exception: null,
-                operator: "LIKE",
-                rowId: "3",
-                type: "string",
-                value: "val"
-            }],
+                {
+                    groupId: 1,
+                    attribute: "attribute3",
+                    exception: null,
+                    operator: "LIKE",
+                    rowId: "3",
+                    type: "string",
+                    value: "val"
+                }],
             groupFields: [{
                 id: 1,
                 index: 0,
@@ -1317,7 +1319,7 @@ describe('FilterUtils', () => {
         const filter = FilterUtils.getCrossLayerCqlFilter({
             collectGeometries: {
                 queryCollection: {
-                        filterFields: [
+                    filterFields: [
                         {
                             groupId: 1,
                             attribute: "attribute3",
@@ -1327,15 +1329,134 @@ describe('FilterUtils', () => {
                             type: "string",
                             value: "val"
                         }],
-                        groupFields: [{
-                            id: 1,
-                            index: 0,
-                            logic: "OR"
-                        }]
+                    groupFields: [{
+                        id: 1,
+                        index: 0,
+                        logic: "OR"
+                    }]
                 }
             }
         });
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
+    it('compose filterFilds', () => {
+        const filterA = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                },
+                {
+                    "id": 2,
+                    "logic": "OR",
+                    "groupId": 1,
+                    "index": 1
+                }
+            ],
+            "filterFields": [
+                {
+                    "rowId": 1545411885028,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Alabama",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                },
+                {
+                    "rowId": 1545411894600,
+                    "groupId": 2,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Arizona",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                }]
+        };
+        const filterB = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                },
+                {
+                    "id": 2,
+                    "logic": "OR",
+                    "groupId": 1,
+                    "index": 1
+                }
+            ],
+            "filterFields": [
+                {
+                    "rowId": 15454118,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Alabama",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                },
+                {
+                    "rowId": 1545411894,
+                    "groupId": 2,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Arizona",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                }]
+        };
+        const filter = FilterUtils.composeAttributeFilters([filterA, filterB]);
+        expect(filter).toExist();
+        expect(filter.groupFields.length).toBe(5);
+        expect(filter.groupFields[0].logic).toBe("AND");
+        expect(filter.groupFields[1].groupId).toBe(filter.groupFields[0].id);
+        expect(filter.groupFields[2].groupId).toBe(filter.groupFields[1].id);
+        expect(filter.groupFields[3].groupId).toBe(filter.groupFields[0].id);
+        expect(filter.groupFields[4].groupId).toBe(filter.groupFields[3].id);
+        expect(filter.filterFields.length).toBe(4);
+        expect(filter.filterFields[0].groupId).toBe(filter.groupFields[1].id);
+        expect(filter.filterFields[1].groupId).toBe(filter.groupFields[2].id);
+        expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
+        expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
     });
 });

@@ -30,5 +30,21 @@ describe('Test the ColorUtils', () => {
         const rgbaColor = ColorUtils.colorToRgbaStr();
         expect(rgbaColor).toBe(undefined);
     });
+    it('hexToRgb', () => {
+        expect(ColorUtils.hexToRgb('#000000')).toEqual([0, 0, 0]);
+        expect(ColorUtils.hexToRgb('000000')).toEqual([0, 0, 0]);
+        expect(ColorUtils.hexToRgb('#FFFFFF')).toEqual([255, 255, 255]);
+        expect(ColorUtils.hexToRgb('#FF0000')).toEqual([255, 0, 0]); // Red
+        expect(ColorUtils.hexToRgb('#00FFFF')).toEqual([0, 255, 255]); // Cyan
+        expect(ColorUtils.hexToRgb('#808080')).toEqual([128, 128, 128]); // Gray
+    });
+    it('hexToHsv', () => {
+        expect(ColorUtils.hexToHsv('#000000')).toEqual([0, 0, 0]);
+        expect(ColorUtils.hexToHsv('000000')).toEqual([0, 0, 0]);
+        expect(ColorUtils.hexToHsv('#FFFFFF')).toEqual([0, 0, 1]);
+        expect(ColorUtils.hexToHsv('#FF0000')).toEqual([0, 1, 1]); // Red
+        expect(ColorUtils.hexToHsv('#00FFFF')).toEqual([180, 1, 1]); // Cyan
+        expect(ColorUtils.hexToHsv('#808080').map(n => Math.round(n * 100) / 100)).toEqual([0, 0, 0.5]); // Gray
+    });
 
 });

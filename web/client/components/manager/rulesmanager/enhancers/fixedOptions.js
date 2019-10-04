@@ -43,14 +43,16 @@ module.exports = compose(
         resetCombo: () => () => {
             return {
                 val: undefined
-        }; },
-        onReset: ({typing, val}, {onValueSelected, selected}) => () => {
+            };
+        },
+        onReset: ({typing}, {onValueSelected, selected}) => () => {
             if (selected) {
                 onValueSelected();
             }
             if (typing) {
                 return {typing: false};
             }
+            return {};
         },
         onChange: ({stopChange}, {valueField}) => (val = "") => {
 
@@ -64,9 +66,10 @@ module.exports = compose(
             if (!clearable && !open && val === "" && selected) {
                 onValueSelected();
                 return {typing: false};
-            }else if (!open && val !== selected) {
+            } else if (!open && val !== selected) {
                 return {val: selected, typing: false};
             }
+            return {};
         },
         onSelect: (state, {onValueSelected, selected, valueField}) => (select) => {
             const selectedVal = isObject(select) && select[valueField] || select;
@@ -75,7 +78,8 @@ module.exports = compose(
             }
             return {stopChange: true};
         }
-    }),
+    }
+    ),
     propsStreamFactory,
     withProps(({val = "", selected = "", typing}) => {
         return {selectedValue: typing ? val : selected};

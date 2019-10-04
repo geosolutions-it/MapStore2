@@ -15,6 +15,18 @@ describe('CoordinatesUtils', () => {
 
         setTimeout(done);
     });
+    it('convert lat lon to mercator without specifying source and dest', () => {
+        const point = [45, 13];
+        const transformed = CoordinatesUtils.reproject(point, "", "");
+        expect(transformed).toNotExist();
+        expect(transformed).toEqual(null);
+        const transformed2 = CoordinatesUtils.reproject(point, null, null);
+        expect(transformed2).toNotExist();
+        expect(transformed2).toEqual(null);
+        const transformed3 = CoordinatesUtils.reproject(point, undefined, undefined);
+        expect(transformed3).toNotExist();
+        expect(transformed3).toEqual(null);
+    });
     it('convert lat lon to mercator', () => {
         var point = [45, 13];
 
@@ -146,7 +158,7 @@ describe('CoordinatesUtils', () => {
                     "geometry": {
                         "type": "LineString",
                         "coordinates": [
-                    [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
                         ]
                     },
                     "properties": {
@@ -159,7 +171,7 @@ describe('CoordinatesUtils', () => {
                         "type": "Polygon",
                         "coordinates": [
                             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
-                       [100.0, 1.0], [100.0, 0.0] ]
+                                [100.0, 1.0], [100.0, 0.0] ]
                         ]
                     },
                     "properties": {
@@ -173,6 +185,19 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[1]).toBe(0.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[2]).toBe(105.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[3]).toBe(1.0);
+        expect(CoordinatesUtils.getGeoJSONExtent({ "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                        [100.0, 1.0], [100.0, 0.0] ]
+                ]
+            },
+            "properties": {
+                "prop0": "value0",
+                "prop1": {"this": "that"}
+            }
+        })).toEqual([ 100, 0, 101, 1 ]);
     });
     it('test coordsOLtoLeaflet on point', () => {
         let geojsonPoint = {
@@ -466,6 +491,14 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).toNotBe(null);
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ).length).toBe(100);
     });
+    it('test transformLineToArcs with 2 equal points', () => {
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
+    });
+    it('test transformArcsToLine', () => {
+        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ))).toNotBe(null);
+        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).length).toBe(2);
+    });
     it('test getNormalizedLatLon', () => {
 
         let normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: 9});
@@ -677,5 +710,9 @@ describe('CoordinatesUtils', () => {
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
         const res = CoordinatesUtils.roundCoord(roundingOptions);
         expect(res).toBe(28.55);
+    });
+    it("transformArcsToLine every 2 points", () => {
+        const res = CoordinatesUtils.transformArcsToLine([[1, 1], [2, 2], [3, 3], [4, 4]], 2);
+        expect(res).toEqual([[1, 1], [3, 3], [4, 4]]);
     });
 });

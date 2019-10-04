@@ -107,7 +107,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
                         }
                     }}
                 />
-            , document.getElementById("container"));
+                , document.getElementById("container"));
             expect(cmp).toExist();
 
             let componentSpy = expect.spyOn(cmp, 'zoomToMaxExtent').andCallThrough();
@@ -145,7 +145,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
 
     it('test zoom to initial extent', () => {
 
-        let genericTest = function(btnType) {
+        let genericTest = function(btnType, projection) {
             let actions = {
                 changeMapView: (c, z, mb, ms) => {
                     return {c, z, mb, ms};
@@ -160,7 +160,8 @@ describe('This test for ZoomToMaxExtentButton', () => {
                         size: {
                             height: 100,
                             width: 100
-                        }
+                        },
+                        projection: projection
                     }}
                     mapInitialConfig={{
                         zoom: 10,
@@ -172,7 +173,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
                         projection: "EPSG:900913"
                     }}
                 />
-            , document.getElementById("container"));
+                , document.getElementById("container"));
             expect(cmp).toExist();
 
             let componentSpy = expect.spyOn(cmp, 'zoomToInitialExtent').andCallThrough();
@@ -194,10 +195,12 @@ describe('This test for ZoomToMaxExtentButton', () => {
             expect(actionsSpy.calls[0].arguments[2]).toNotExist();
             expect(actionsSpy.calls[0].arguments[3]).toExist();
             expect(actionsSpy.calls[0].arguments[4]).toNotExist();
-            expect(actionsSpy.calls[0].arguments[5]).toExist();
+            expect(actionsSpy.calls[0].arguments[5]).toEqual(projection);
         };
 
-        genericTest("normal");
-        genericTest("image");
+        genericTest("normal", "EPSG:900913");
+        genericTest("normal", "EPSG:4326");
+        genericTest("image", "EPSG:900913");
+        genericTest("image", "EPSG:4326");
     });
 });

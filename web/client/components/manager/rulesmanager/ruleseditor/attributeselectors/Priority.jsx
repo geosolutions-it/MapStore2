@@ -33,22 +33,22 @@ class Priority extends React.Component {
     render() {
         const {disabled, selected, placeholder} = this.props;
         return (
-        <Row className={disabled ? 'ms-disabled' : ''}>
-            <Col xs={12} sm={6}>
-                <Message msgId="rulesmanager.priority"/>
-            </Col>
-        <Col xs={12} sm={6}>
-            <FormGroup validationState={this.getValidationState()}>
-                <FormControl
-                    min="0"
-                    type="number"
-                    value={selected}
-                    placeholder={placeholder}
-                    onChange={this.handleChange}
-                />
-            </FormGroup>
-        </Col>
-        </Row>
+            <Row className={disabled ? 'ms-disabled' : ''}>
+                <Col xs={12} sm={6}>
+                    <Message msgId="rulesmanager.priority"/>
+                </Col>
+                <Col xs={12} sm={6}>
+                    <FormGroup validationState={this.getValidationState()}>
+                        <FormControl
+                            min="0"
+                            type="number"
+                            value={selected}
+                            placeholder={placeholder}
+                            onChange={this.handleChange}
+                        />
+                    </FormGroup>
+                </Col>
+            </Row>
         );
     }
     handleChange = (e) => {
@@ -57,8 +57,8 @@ class Priority extends React.Component {
 }
 
 module.exports = compose(
-        defaultProps({
-            placeholder: "rulesmanager.placeholders.priority"
-        }),
-        withLocalized(["placeholder"]))(Priority);
+    defaultProps({
+        placeholder: "rulesmanager.placeholders.priority"
+    }),
+    withLocalized(["placeholder"]))(Priority);
 

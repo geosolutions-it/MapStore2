@@ -44446,6 +44446,43 @@
                 "fname": "Balochistan",
                 "capital": "Quetta"
             }
+        },
+        {
+          "type": "Feature",
+          "id": "province_view.2",
+          "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": [
+              [
+                [
+                  [
+                    579401.6538179666,
+                    3547217.229597207
+                  ],
+                  [
+                    579441.0566179641,
+                    3547123.3253972046
+                  ],
+                  [
+                    579424.7444179673,
+                    3547039.3331972044
+                  ],
+                  [
+                    579401.6538179666,
+                    3547217.229597207
+                  ]
+                ]
+              ]
+          ]},
+          "geometry_name": "the_geom",
+          "properties": {
+              "province": "BALdOCHISTAN",
+              "pop": 6961556,
+              "area_km2": 347394,
+              "dens_km2": 20.04,
+              "fname": "Balochdistan",
+              "capital": "Quetdta"
+          }
         }
     ],
     "crs": {

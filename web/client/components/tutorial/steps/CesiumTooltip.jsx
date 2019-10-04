@@ -74,7 +74,7 @@ class CesiumTooltip extends React.Component {
                     </tbody>
                 </table>
             </div>
-            ) : (
+        ) : (
             <div>
                 <table>
                     <tbody>

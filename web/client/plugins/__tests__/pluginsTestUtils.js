@@ -12,13 +12,19 @@ import {Provider} from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
-import map from '../../reducers/layers';
+import map from '../../reducers/map';
+import maptype from '../../reducers/maptype';
 import layers from '../../reducers/layers';
+import controls from '../../reducers/controls';
+import annotations from '../../reducers/annotations';
 
 // StandardStore add by default current reducers
 const rootReducers = {
     map,
-    layers
+    layers,
+    controls,
+    maptype,
+    annotations
 };
 
 const createRegisterActionsMiddleware = (actions) => {

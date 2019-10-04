@@ -1,8 +1,7 @@
-[![Stories in Ready](https://badge.waffle.io/geosolutions-it/MapStore2.png?label=ready&title=Ready)](https://waffle.io/geosolutions-it/MapStore2)
 [![Build Status](https://travis-ci.org/geosolutions-it/MapStore2.svg?branch=master)](https://travis-ci.org/geosolutions-it/MapStore2)
 [![Coverage Status](https://coveralls.io/repos/geosolutions-it/MapStore2/badge.svg?branch=master&service=github)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1648d484427346e2877006dc287379b6)](https://app.codacy.com/app/geosolutions/MapStore2?utm_source=github.com&utm_medium=referral&utm_content=geosolutions-it/MapStore2&utm_campaign=badger)
-[![Inline docs](http://inch-ci.org/github/geosolutions-it/MapStore2.svg?branch=master)](http://inch-ci.org/github/geosolutions-it/MapStore2)
+[![Documentation Status](https://readthedocs.org/projects/mapstore2/badge/?version=latest)](https://mapstore.readthedocs.io/en/latest/?badge=latest)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
 MapStore
@@ -65,9 +64,9 @@ Demo Instances
 ---------------
 We have the following instances:
 
-1. a DEV instance, which can be accessed [here](http://dev.mapstore2.geo-solutions.it), where all the changes are deployed once they are published on the Master branch of our repo
-2. a QA instance, which can be accessed  [here](http://qa.mapstore2.geo-solutions.it), that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
-3. a STABLE instance, which can be accessed [here](http://mapstore2.geo-solutions.it), that gets deployed on demand after each release.
+1. a DEV instance, which can be accessed [here](http://dev.mapstore.geo-solutions.it), where all the changes are deployed once they are published on the Master branch of our repo
+2. a QA instance, which can be accessed  [here](http://qa.mapstore.geo-solutions.it), that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
+3. a STABLE instance, which can be accessed [here](http://mapstore.geo-solutions.it), that gets deployed on demand after each release.
 
 As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
 So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.

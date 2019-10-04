@@ -1,7 +1,7 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
 const { REMOVE_NODE } = require('../actions/layers');
 const { RESET_CONTROLS } = require('../actions/controls');
-const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER } = require('../actions/timeline');
+const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 const { assign, pickBy, has } = require('lodash');
 
@@ -48,42 +48,50 @@ const { assign, pickBy, has } = require('lodash');
 
  */
 module.exports = (state = {
-    settings: {autoSelect: true} // selects the first layer available as guide layer. This is a configuration only setting for now
+    settings: {
+        autoSelect: true, // selects the first layer available as guide layer. This is a configuration only setting for now
+        collapsed: false
+    }
 }, action) => {
     switch (action.type) {
-        case RANGE_CHANGED: {
-            return set(`range`, {
-                start: action.start,
-                end: action.end
-            },
-            state);
-        }
-        case RANGE_DATA_LOADED: {
-            return set(`rangeData[${action.layerId}]`, {
-                range: action.range,
-                histogram: action.histogram,
-                domain: action.domain
-            }, state);
-        }
-        case LOADING: {
-            return action.layerId ? set(`loading[${action.layerId}]`, action.loading, state) : set(`loading.timeline`, action.loading, state);
-        }
-        case SELECT_LAYER: {
-            return set('selectedLayer', action.layerId, state);
-        }
-        case REMOVE_NODE: {
-            let newState = state;
-            return assign({}, state, {
-                rangeData: has(newState.rangeData, action.node) ? pickBy(newState.rangeData, (values, key) => key !== action.node) : newState.rangeData,
-                loading: has(newState.rangeData, action.node) ? pickBy(newState.loading, (values, key) => key !== action.node) : newState.loading,
-                selectedLayer: state.selectedLayer === action.node ? undefined : state.selectedLayer
-                });
-        }
-        case RESET_CONTROLS: {
-            return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
-        }
-        default:
-            return state;
+    case SET_COLLAPSED: {
+        return set(`settings.collapsed`, action.collapsed, state);
     }
-    return state;
+    case SET_MAP_SYNC: {
+        return set(`settings.mapSync`, action.mapSync, state);
+    }
+    case RANGE_CHANGED: {
+        return set(`range`, {
+            start: action.start,
+            end: action.end
+        },
+        state);
+    }
+    case RANGE_DATA_LOADED: {
+        return set(`rangeData[${action.layerId}]`, {
+            range: action.range,
+            histogram: action.histogram,
+            domain: action.domain
+        }, state);
+    }
+    case LOADING: {
+        return action.layerId ? set(`loading[${action.layerId}]`, action.loading, state) : set(`loading.timeline`, action.loading, state);
+    }
+    case SELECT_LAYER: {
+        return set('selectedLayer', action.layerId, state);
+    }
+    case REMOVE_NODE: {
+        let newState = state;
+        return assign({}, state, {
+            rangeData: has(newState.rangeData, action.node) ? pickBy(newState.rangeData, (values, key) => key !== action.node) : newState.rangeData,
+            loading: has(newState.rangeData, action.node) ? pickBy(newState.loading, (values, key) => key !== action.node) : newState.loading,
+            selectedLayer: state.selectedLayer === action.node ? undefined : state.selectedLayer
+        });
+    }
+    case RESET_CONTROLS: {
+        return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
+    }
+    default:
+        return state;
+    }
 };

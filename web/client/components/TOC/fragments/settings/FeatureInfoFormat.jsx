@@ -51,26 +51,26 @@ module.exports = class extends React.Component {
         return (
             <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
                 {this.props.element.type === "wms" ?
-                [(<label
-                    id="mapstore-featureinfoformat-label"
-                    key="featureinfoformat-label"
-                    className="control-label"
-                    style={{marginBottom: "10px"}}>
-                    {this.props.label}
-                </label>),
-                (<DropdownList
-                    key="format-dropdown"
-                    data={data}
-                    value={this.props.element.featureInfo ? this.props.element.featureInfo.format : MapInfoUtils.getLabelFromValue(this.props.generalInfoFormat)}
-                    defaultValue={data[0]}
-                    disabled={checkDisabled}
-                    onChange={(value) => {
-                        this.props.onChange("featureInfo", Object.assign({}, {
-                            ['format']: value,
-                            ['viewer']: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
-                        }));
-                    }} />
-                )] : null}
+                    [(<label
+                        id="mapstore-featureinfoformat-label"
+                        key="featureinfoformat-label"
+                        className="control-label"
+                        style={{marginBottom: "10px"}}>
+                        {this.props.label}
+                    </label>),
+                    (<DropdownList
+                        key="format-dropdown"
+                        data={data}
+                        value={this.props.element.featureInfo ? this.props.element.featureInfo.format : MapInfoUtils.getLabelFromValue(this.props.generalInfoFormat)}
+                        defaultValue={data[0]}
+                        disabled={checkDisabled}
+                        onChange={(value) => {
+                            this.props.onChange("featureInfo", Object.assign({}, {
+                                ['format']: value,
+                                ['viewer']: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
+                            }));
+                        }} />
+                    )] : null}
             </Grid>
         );
     }

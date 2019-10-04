@@ -56,11 +56,12 @@ class MapPreview extends React.Component {
         useFixedScales: false
     };
 
-    componentWillMount() {
-        PMap = require('../map/' + this.props.mapType + '/Map');
-        Layer = require('../map/' + this.props.mapType + '/Layer');
+    UNSAFE_componentWillMount() {
+        const mapComponents = require('../map/' + this.props.mapType + '/index');
+        PMap = mapComponents.LMap;
+        Layer = mapComponents.LLayer;
+        Feature = mapComponents.Feature;
         require('../map/' + this.props.mapType + '/plugins/index');
-        Feature = require('../map/' + this.props.mapType + '/index').Feature;
     }
 
     getRatio = () => {
@@ -96,11 +97,13 @@ class MapPreview extends React.Component {
                         key={feature.id}
                         type={feature.type}
                         geometry={feature.geometry}
+                        features={feature.features}
                         msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
                         layerStyle={layer.style}
                         style={ feature.style || layer.style || null }
-                        properties={feature.properties}/>
+                        properties={feature.properties}
+                    />
                 );
             });
         }
@@ -114,10 +117,10 @@ class MapPreview extends React.Component {
         });
         const resolutions = this.getResolutions();
         const mapOptions = resolutions ? {view: {resolutions}} : {};
-        const projection = this.props.map.projection || 'EPSG:3857';
+        const projection = this.props.map && this.props.map.projection || 'EPSG:3857';
         return this.props.map && this.props.map.center ?
 
-                <div className="print-map-preview"><PMap
+            <div className="print-map-preview"><PMap
                 ref="mappa"
                 {...this.props.map}
                 resize={this.props.height}
@@ -130,7 +133,7 @@ class MapPreview extends React.Component {
                 id="print_preview"
                 registerHooks={false}
                 mapOptions={mapOptions}
-                >
+            >
                 {this.props.layers.map((layer, index) =>
                     (<Layer key={layer.id || layer.name} position={index} type={layer.type}
                         options={assign({}, this.adjustResolution(layer), {srs: projection})}>
@@ -138,15 +141,15 @@ class MapPreview extends React.Component {
                     </Layer>)
 
                 )}
-                </PMap>
-                {this.props.enableScalebox ? <ScaleBox id="mappreview-scalebox"
-                    currentZoomLvl={this.props.map.scaleZoom}
-                    scales={this.props.scales}
-                    onChange={this.props.onChangeZoomLevel}
-                    /> : null}
-                {this.props.enableRefresh ? <Button bsStyle="primary" onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
-                </div>
-         : <span/>;
+            </PMap>
+            {this.props.enableScalebox ? <ScaleBox id="mappreview-scalebox"
+                currentZoomLvl={this.props.map.scaleZoom}
+                scales={this.props.scales}
+                onChange={this.props.onChangeZoomLevel}
+            /> : null}
+            {this.props.enableRefresh ? <Button bsStyle="primary" onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
+            </div>
+            : null;
     }
 }
 

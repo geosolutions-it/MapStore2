@@ -3,8 +3,7 @@
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root dir
- ectory of this source tree.
+ * LICENSE file in the root directory of this source tree.
  */
 
 const React = require('react');
@@ -28,7 +27,8 @@ class Dialog extends React.Component {
         onClickOut: PropTypes.func,
         modal: PropTypes.bool,
         start: PropTypes.object,
-        draggable: PropTypes.bool
+        draggable: PropTypes.bool,
+        bounds: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     };
 
     static defaultProps = {
@@ -36,7 +36,7 @@ class Dialog extends React.Component {
         backgroundStyle: {
             background: "rgba(0,0,0,.5)"
         },
-        start: {x: 0, y: 0},
+        start: {x: 0, y: 150},
         className: "modal-dialog modal-content",
         maskLoading: false,
         containerClassName: "",
@@ -44,7 +44,8 @@ class Dialog extends React.Component {
         bodyClassName: "modal-body",
         footerClassName: "modal-footer",
         modal: false,
-        draggable: true
+        draggable: true,
+        bounds: 'parent'
     };
 
     renderLoading = () => {
@@ -60,12 +61,13 @@ class Dialog extends React.Component {
                 background: "rgba(255, 255, 255, 0.5)",
                 zIndex: 2
             }}><div style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -40%)"
-            }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -40%)"
+                }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
+        return null;
     };
 
     renderRole = (role) => {
@@ -73,7 +75,7 @@ class Dialog extends React.Component {
     };
 
     render() {
-        const body = (<div id={this.props.id} style={{zIndex: 3, ...this.props.style}} className={this.props.className + " modal-dialog-container"}>
+        const body = (<div id={this.props.id} style={{zIndex: 3, ...this.props.style}} className={`${this.props.draggable ? 'modal-dialog-draggable' : ''} ${this.props.className} modal-dialog-container`}>
             <div className={this.props.headerClassName + " draggable-header"}>
                 {this.renderRole('header')}
             </div>
@@ -85,10 +87,10 @@ class Dialog extends React.Component {
                 {this.renderRole('footer')}
             </div> : <span/>}
         </div>);
-        const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} handle=".draggable-header, .draggable-header *">
+        const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} bounds={this.props.bounds} handle=".draggable-header, .draggable-header *">
             {body}
         </Draggable>) : body;
-        let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);
+        let containerStyle = assign({}, this.props.style.display ? {display: this.props.style.display} : {}, this.props.backgroundStyle);
         return this.props.modal ?
             <div ref={(mask) => { this.mask = mask; }} onClick={this.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
                 {dialog}
@@ -105,5 +107,6 @@ class Dialog extends React.Component {
         }
     };
 }
+
 
 module.exports = Dialog;

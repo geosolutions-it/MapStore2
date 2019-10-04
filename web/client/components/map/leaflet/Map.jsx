@@ -30,6 +30,7 @@ class LeafletMap extends React.Component {
         onClick: PropTypes.func,
         onRightClick: PropTypes.func,
         mapOptions: PropTypes.object,
+        limits: PropTypes.object,
         zoomControl: PropTypes.bool,
         mousePointer: PropTypes.string,
         onMouseMove: PropTypes.func,
@@ -71,7 +72,7 @@ class LeafletMap extends React.Component {
 
     state = { };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.zoomOffset = 0;
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions && this.props.mapOptions.view.resolutions.length > 0) {
             const scaleFun = L.CRS.EPSG3857.scale;
@@ -86,6 +87,8 @@ class LeafletMap extends React.Component {
     }
 
     componentDidMount() {
+        const {limits = {}} = this.props;
+        const maxBounds = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
         let mapOptions = assign({}, this.props.interactive ? {} : {
             dragging: false,
             touchZoom: false,
@@ -93,11 +96,18 @@ class LeafletMap extends React.Component {
             doubleClickZoom: false,
             boxZoom: false,
             tap: false,
-            attributionControl: false
-        }, {maxZoom: 23}, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
+            attributionControl: false,
+            maxBounds: maxBounds && L.latLngBounds([
+                [maxBounds[1], maxBounds[0]],
+                [maxBounds[3], maxBounds[2]]
+            ]),
+            maxBoundsViscosity: maxBounds && 1.0,
+            minZoom: limits && limits.minZoom,
+            maxZoom: limits && limits.maxZoom || 23
+        }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
         const map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
-          Math.round(this.props.zoom));
+            Math.round(this.props.zoom));
 
         this.map = map;
 
@@ -211,7 +221,7 @@ class LeafletMap extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
 
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
@@ -231,6 +241,21 @@ class LeafletMap extends React.Component {
             setTimeout(() => {
                 this.map.invalidateSize(false);
             }, 0);
+        }
+        // update map limits
+        if (this.props.limits !== newProps.limits) {
+            const {limits = {}} = newProps;
+            const {limits: oldLimits} = this.props;
+            if (limits.restrictedExtent !== (oldLimits && oldLimits.restrictedExtent)) {
+                const maxBounds = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
+                this.map.setMaxBounds(limits.restrictedExtent && L.latLngBounds([
+                    [maxBounds[1], maxBounds[0]],
+                    [maxBounds[3], maxBounds[2]]
+                ]));
+            }
+            if (limits.minZoom !== (oldLimits && oldLimits.minZoom)) {
+                this.map.setMinZoom(limits.minZoom);
+            }
         }
         return false;
     }
@@ -300,7 +325,7 @@ class LeafletMap extends React.Component {
         // we need to check if the new zoom is equal to map zoom
         const zoomIsNotUpdated = propsZoomEqual || newZoom === mapZoom;
 
-         // do the change at the same time, to avoid glitches
+        // do the change at the same time, to avoid glitches
         if (!centerIsNotUpdated && !zoomIsNotUpdated) {
             this.map.setView([newProps.center.y, newProps.center.x], Math.round(newProps.zoom));
         } else if (!zoomIsNotUpdated) {
@@ -387,6 +412,26 @@ class LeafletMap extends React.Component {
             const point = this.map.containerPointToLatLng(pixel);
             let pos = CoordinatesUtils.reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
+        });
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+            const paddingTopLeft = padding && L.point(padding.left || 0, padding.top || 0);
+            const paddingBottomRight = padding && L.point(padding.right || 0, padding.bottom || 0);
+            const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
+            // bbox is minx, miny, maxx, maxy'southwest_lng,southwest_lat,northeast_lng,northeast_lat'
+            this.map.fitBounds([
+                // sw
+                [bounds[1], bounds[0]],
+                // ne
+                [bounds[3], bounds[2]]
+            ],
+            {
+                paddingTopLeft,
+                paddingBottomRight,
+                maxZoom,
+                duration,
+                animate: duration === 0 ? false : undefined
+            }
+            );
         });
     };
 

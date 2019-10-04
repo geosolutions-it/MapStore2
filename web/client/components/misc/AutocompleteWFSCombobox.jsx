@@ -36,8 +36,8 @@ const streamEnhancer = mapPropsStream(props$ => {
 // component enhanced with props from stream, and local state
 const PagedWFSComboboxEnhanced = streamEnhancer(
     ({ open, toggle, select, focus, change, changed, originalValue, value, valuesCount, onChangeDrawingStatus,
-    loadNextPage, loadPrevPage, maxFeatures, currentPage, itemComponent, features,
-    busy, data, loading = false, valueField, textField, filter, srsName, style }) => {
+        loadNextPage, loadPrevPage, maxFeatures, currentPage, itemComponent, features,
+        busy, data, loading = false, valueField, textField, filter, srsName, style }) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
         // for understanding "numberOfPages <= currentPage" see  https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
         // sometimes on the last page it returns a wrong totalFeatures number
@@ -72,7 +72,7 @@ const addStateHandlers = compose(
         },
         change: (state) => (v, valuefield) => {
             if (!state.selected && !state.open) {
-                state.onChangeDrawingStatus('clean', null, "queryform", [], {});
+                state.onChangeDrawingStatus('clean', '', "queryform", [], {});
             }
             return ({
                 delayDebounce: 500,
@@ -99,8 +99,9 @@ const addStateHandlers = compose(
         },
         toggle: (state) => () => {
             return ({
-            open: state.changingPage ? true : !state.open
-        }); },
+                open: state.changingPage ? true : !state.open
+            });
+        },
         loadNextPage: (state) => () => ({
             currentPage: state.currentPage + 1,
             performFetch: true,
@@ -127,13 +128,13 @@ const addStateHandlers = compose(
                     collectGeometries:
                         options && options.crossLayer
                             ?
-                                {
-                                    queryCollection: {
-                                        typeName: options.crossLayer.typeName,
-                                        geometryName: options.crossLayer.geometryName,
-                                        cqlFilter: generateTemplateString(options.crossLayer.cqlTemplate || "", escapeCQLStrings)(feature)
-                                    }
+                            {
+                                queryCollection: {
+                                    typeName: options.crossLayer.typeName,
+                                    geometryName: options.crossLayer.geometryName,
+                                    cqlFilter: generateTemplateString(options.crossLayer.cqlTemplate || "", escapeCQLStrings)(feature)
                                 }
+                            }
                             : undefined
                 });
             }

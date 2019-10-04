@@ -128,10 +128,10 @@ describe('MousePosition', () => {
 
     it('checks copy to clipboard enabled', () => {
         const cmp = ReactDOM.render(<MousePosition
-                                        enabled
-                                        mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}
-                                        copyToClipboardEnabled
-                                    />, document.getElementById("container"));
+            enabled
+            mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}
+            copyToClipboardEnabled
+        />, document.getElementById("container"));
         expect(cmp).toExist();
 
         // checking if the component exists
@@ -155,11 +155,11 @@ describe('MousePosition', () => {
 
         // instaciating mouse position plugin
         const cmp = ReactDOM.render(<MousePosition
-                                        enabled
-                                        mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}
-                                        copyToClipboardEnabled
-                                        onCopy={actions.onCopy}
-                                    />, document.getElementById("container"));
+            enabled
+            mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}
+            copyToClipboardEnabled
+            onCopy={actions.onCopy}
+        />, document.getElementById("container"));
         // getting the copy to clipboard button
         const cmpDom = ReactDOM.findDOMNode(cmp);
         const button = cmpDom.getElementsByTagName('button')[0];
@@ -182,12 +182,12 @@ describe('MousePosition', () => {
 
         // instaciating mouse position plugin
         const cmp = ReactDOM.render(<MousePosition
-                                        enabled
-                                        mousePosition={{x: Math.floor(1.1), y: Math.floor(1.2), crs: "EPSG:4326"}}
-                                        copyToClipboardEnabled
-                                        onCopy={actions.onCopy}
-                                    />, document.getElementById("container"));
-                                    // getting the copy to clipboard button
+            enabled
+            mousePosition={{x: Math.floor(1.1), y: Math.floor(1.2), crs: "EPSG:4326"}}
+            copyToClipboardEnabled
+            onCopy={actions.onCopy}
+        />, document.getElementById("container"));
+        // getting the copy to clipboard button
         const cmpDom = ReactDOM.findDOMNode(cmp);
         const button = cmpDom.getElementsByTagName('button')[0];
 

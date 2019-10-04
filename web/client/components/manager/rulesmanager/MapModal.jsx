@@ -29,8 +29,8 @@ const Portal = require('react-overlays').Portal;
 module.exports = ({layer, onMapReady = () => {}}) => {
     return (
         <Portal container={document.querySelector('.rules-data-gird')}>
-            <div className="rules-manager-map-modal" style={{position: "absolute", zIndex: 11, top: 0, bottom: 0, width: "100%"}}>
-                  <MapWitDraw
+            <div className="rules-manager-map-modal" style={{position: "absolute", zIndex: 15, top: 0, bottom: 0, width: "100%"}}>
+                <MapWitDraw
                     onMapReady={onMapReady}
                     options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
                     layer={layer}

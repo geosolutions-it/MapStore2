@@ -25,7 +25,7 @@ const {allBackgroundLayerSelector} = require('../selectors/layers');
 
 const {drawerEnabledControlSelector} = require('../selectors/controls');
 
-
+const {projectionSelector} = require('../selectors/map');
 const ROADMAP = require('./background/assets/img/ROADMAP.jpg');
 const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
 const SATELLITE = require('./background/assets/img/SATELLITE.jpg');
@@ -76,6 +76,7 @@ const thumbs = {
 };
 
 const backgroundSelector = createSelector([
+        projectionSelector,
         modalParamsSelector,
         backgroundListSelector,
         isDeletedIdSelector,
@@ -92,7 +93,7 @@ const backgroundSelector = createSelector([
         state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
         state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
     ],
-    ( CurrentModalParams, backgroundList, deletedId, editing, backgrounds, thumbURL, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
+    (projection, CurrentModalParams, backgroundList, deletedId, editing, backgrounds, thumbURL, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
         CurrentModalParams,
         backgroundList,
         deletedId,
@@ -106,7 +107,8 @@ const backgroundSelector = createSelector([
         start: controls.start || 0,
         enabled: controls.enabled,
         style,
-        enabledCatalog
+        enabledCatalog,
+        projection
     }));
 
 /**
@@ -149,14 +151,14 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     clearModal: clearModalParameters,
     addBackgroundProperties
 }, (stateProps, dispatchProps, ownProps) => ({
-        ...stateProps,
-        ...dispatchProps,
-        ...ownProps,
-        thumbs: {
-            ...thumbs,
-            ...ownProps.thumbs
-        }
-    })
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    thumbs: {
+        ...thumbs,
+        ...ownProps.thumbs
+    }
+})
 )(require('../components/background/BackgroundSelector'));
 
 module.exports = {

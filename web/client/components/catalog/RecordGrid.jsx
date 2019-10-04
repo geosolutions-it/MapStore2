@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,11 +6,10 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const {Grid, Row, Col} = require('react-bootstrap');
 
-const RecordItem = require('./RecordItem');
-
+const RecordItem = require('./RecordItem').default;
 
 class RecordGrid extends React.Component {
     static propTypes = {
@@ -39,7 +37,9 @@ class RecordGrid extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
         removeThumbnail: PropTypes.func,
-        clearModal: PropTypes.func
+        clearModal: PropTypes.func,
+        showTemplate: PropTypes.bool,
+        layerBaseConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -48,13 +48,14 @@ class RecordGrid extends React.Component {
         onLayerAdd: () => {},
         onError: () => {},
         records: [],
-        zoomToLayer: true
+        zoomToLayer: true,
+        layerBaseConfig: {}
     };
 
     renderRecordItem = (record) => {
         let Item = this.props.recordItem || RecordItem;
         return (
-			<Col {...this.props.column} key={record.identifier}>
+            <Col {...this.props.column} key={record.identifier}>
                 <Item
                     {...this.props}
                     unsavedChanges={this.props.unsavedChanges}
@@ -74,13 +75,16 @@ class RecordGrid extends React.Component {
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}
+                    showTemplate={this.props.showTemplate}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}
                     style={{height: "215px", maxHeight: "215px"}}
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
-                    currentLocale={this.props.currentLocale}/>
-			</Col>
+                    currentLocale={this.props.currentLocale}
+                    layerBaseConfig={this.props.layerBaseConfig}
+                />
+            </Col>
         );
     };
 
@@ -90,9 +94,9 @@ class RecordGrid extends React.Component {
             return (
                 <Grid className="record-grid" fluid style={this.props.style}>
                     <Row>
-						{mapsList.map(this.renderRecordItem)}
-					</Row>
-				</Grid>
+                        {mapsList.map(this.renderRecordItem)}
+                    </Row>
+                </Grid>
             );
         }
 

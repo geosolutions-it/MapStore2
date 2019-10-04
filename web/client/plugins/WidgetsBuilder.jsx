@@ -28,7 +28,7 @@ const Builder = compose(
             dependenciesSelector,
             availableDependenciesSelector,
             (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps }))
-    , { toggleConnection }),
+        , { toggleConnection }),
     withMapExitButton
 )(require('./widgetbuilder/WidgetTypeBuilder'));
 
@@ -47,7 +47,8 @@ class SideBarComponent extends React.Component {
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object,
-         layout: PropTypes.object
+         layout: PropTypes.object,
+         shortenChartLabelThreshold: PropTypes.number
      };
      static defaultProps = {
          id: "widgets-builder-plugin",
@@ -58,34 +59,45 @@ class SideBarComponent extends React.Component {
          fluid: false,
          dimMode: "none",
          position: "left",
+         shortenChartLabelThreshold: 1000,
          onMount: () => {},
          onUnmount: () => {},
          onClose: () => {},
          layout: {}
      };
-    componentDidMount() {
-        this.props.onMount();
-    }
+     componentDidMount() {
+         this.props.onMount();
+     }
 
-    componentWillUnmount() {
-        this.props.onUnmount();
-    }
-    render() {
-        return (
-        <DockPanel
-            open={this.props.enabled}
-            size={this.props.dockSize}
-            zIndex={this.props.zIndex}
-            position={this.props.position}
-            bsStyle="primary"
-            hideHeader
-            style={{...this.props.layout, background: "white"}}>
-            <Builder enabled={this.props.enabled} onClose={this.props.onClose} typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend' }/>
-        </DockPanel>);
+     componentWillUnmount() {
+         this.props.onUnmount();
+     }
+     render() {
+         return (
+             <DockPanel
+                 open={this.props.enabled}
+                 size={this.props.dockSize}
+                 zIndex={this.props.zIndex}
+                 position={this.props.position}
+                 bsStyle="primary"
+                 hideHeader
+                 style={{...this.props.layout, background: "white"}}>
+                 <Builder
+                     enabled={this.props.enabled}
+                     onClose={this.props.onClose}
+                     typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend'}
+                     shortenChartLabelThreshold={this.props.shortenChartLabelThreshold}/>
+             </DockPanel>);
 
-    }
+     }
 }
-
+/**
+ * Editor for map widgets
+ * @memberof plugins
+ * @name WidgetsBuilder
+ * @class
+ *
+ */
 const Plugin = connect(
     createSelector(
         widgetBuilderSelector,
@@ -93,7 +105,7 @@ const Plugin = connect(
         (enabled, layout) => ({
             enabled,
             layout
-    })), {
+        })), {
         onMount: () => setControlProperty("widgetBuilder", "available", true),
         onUnmount: () => setControlProperty("widgetBuilder", "available", false),
         onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)

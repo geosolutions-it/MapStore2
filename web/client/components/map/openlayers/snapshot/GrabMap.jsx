@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,14 +5,17 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {LMap,
+import PropTypes from 'prop-types';
+import React from 'react';
+import {LMap,
     LLayer,
     Feature
-} = require('../index');
-const assign = require('object-assign');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
-require("./snapshotMapStyle.css");
+} from '../index';
+import assign from 'object-assign';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import './snapshotMapStyle.css';
+
+import '../../../map/openlayers/plugins/index';
 
 /**
  * GrabMap for OpenLayers map generate a fake-map, hidden, and waits for the
@@ -21,7 +23,7 @@ require("./snapshotMapStyle.css");
  * In order to avoid cross origin issues, the allowTaint property have to be set
  * to false if you are not sure that the items come from the same orgin.
  */
-class GrabOlMap extends React.Component {
+export default class GrabOlMap extends React.Component {
     static propTypes = {
         id: PropTypes.node,
         config: ConfigUtils.PropTypes.config,
@@ -103,7 +105,7 @@ class GrabOlMap extends React.Component {
             >
                 {this.renderLayers(this.props.layers)}
             </LMap>
-         : null;
+            : null;
     }
 
     layerLoad = () => {
@@ -151,10 +153,6 @@ class GrabOlMap extends React.Component {
                 return err.code === 18;
             }
         }
-
+        return false;
     };
 }
-
-require('../../../map/openlayers/plugins/index');
-
-module.exports = GrabOlMap;

@@ -11,6 +11,8 @@ const axios = require('../ajax');
 const SecurityUtils = require('../../utils/SecurityUtils');
 const assign = require('object-assign');
 const urlUtil = require('url');
+const MockAdapter = require("axios-mock-adapter");
+let mockAxios;
 
 const userA = {
     User: {
@@ -49,36 +51,44 @@ const authenticationRules = [
         "method": "authkey"
     },
     {
-      "urlPattern": ".*youhavetouseacustomone.*",
-      "authkeyParamName": "mario",
-      "method": "authkey"
+        "urlPattern": ".*youhavetouseacustomone.*",
+        "authkeyParamName": "mario",
+        "method": "authkey"
     },
     {
-      "urlPattern": ".*thisismissingtheparam.*",
-      "method": {
-          "method": "authkey-param"
-      }
+        "urlPattern": ".*thisismissingtheparam.*",
+        "method": {
+            "method": "authkey-param"
+        }
     },
     {
-      "urlPattern": ".*not-supported.*",
-      "method": "not-supported"
+        "urlPattern": ".*not-supported.*",
+        "method": "not-supported"
     },
     {
-      "urlPattern": ".*some-site.*",
-      "method": "basic"
+        "urlPattern": ".*some-site.*",
+        "method": "basic"
     },
     {
-      "urlPattern": ".*imtokenized.*",
-      "method": "bearer"
+        "urlPattern": ".*imtokenized.*",
+        "method": "bearer"
     },
     {
-      "urlPattern": ".*useBrowserCredentials.*",
-      "method": "browserWithCredentials"
+        "urlPattern": ".*useBrowserCredentials.*",
+        "method": "browserWithCredentials"
+    },
+    {
+        "urlPattern": ".*sitetocheck.*",
+        "method": "bearer"
     }
 ];
 
 describe('Tests ajax library', () => {
     afterEach(() => {
+        if (mockAxios) {
+            mockAxios.restore();
+            mockAxios = null;
+        }
         expect.restoreSpies();
     });
 
@@ -127,6 +137,35 @@ describe('Tests ajax library', () => {
                 expect(ex.config).toExist();
                 expect(ex.config.url).toExist();
                 expect(ex.config.url).toContain('proxy/?url=');
+                done();
+            });
+    });
+
+    it('ignore undefined and null query params with custom proxy', (done) => {
+        axios.get('http://fakeexternaldomain.mapstore2', {
+            proxyUrl: '/proxy/?url=',
+            params: {
+                param1: 'param1',
+                param2: '',
+                param3: undefined,
+                param4: null,
+                param5: [],
+                param6: [1, 2, "3", ''],
+                param7: {},
+                param8: {
+                    a: 'a'
+                },
+                param9: new Date(),
+                param10: false,
+                param11: NaN,
+                param12: 0
+            }})
+            .then(() => {
+                done();
+            })
+            .catch((ex) => {
+                const decodedUrl = urlUtil.parse(decodeURIComponent(ex.config.url), true);
+                expect(decodedUrl.query).toNotContainKeys(['param3', 'param4', 'param11']);
                 done();
             });
     });
@@ -304,6 +343,20 @@ describe('Tests ajax library', () => {
         });
     });
 
+    it('adds Bearer header also when using baseURL', (done) => {
+        // mocking the authentication rules and user info
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        axios.get('tokenservice?param=token', { baseURL: 'http://sitetocheck', timeout: 1}).then(() => {
+            done("Axios actually reached the fake url");
+        }).catch((exception) => {
+            expect(exception.config).toExist().toIncludeKey('headers');
+            expect(exception.config.headers.Authorization).toBe('Bearer 263c6917-543f-43e3-8e1a-6a0d29952f72');
+            done();
+        });
+    });
+
     it('does not add Bearer headers if the configuration is wrong', (done) => {
         // mocking the authentication rules and user info
         expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
@@ -379,12 +432,49 @@ describe('Tests ajax library', () => {
     it('does not set withCredentials on the request', (done)=> {
         expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
         expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-
         axios.get('http://www.skipBrowserCredentials.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch( (exception) => {
             expect(exception.config).toExist();
             expect(exception.config.withCredentials).toNotExist();
+            done();
+        });
+    });
+
+    it('does test for CORS if autoDetectCORS is true', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(200, {}, {
+            "allow-control-allow-origin": "*"
+        });
+        axios
+            .get("http://testcors/", {
+                proxyUrl: {
+                    url: "/proxy/?url=",
+                    useCORS: [],
+                    autoDetectCORS: true
+                }
+            })
+            .then(response => {
+                expect(response.config).toExist();
+                expect(response.config.url).toExist();
+                expect(response.config.url).toNotContain("proxy/?url=");
+                done();
+            });
+    });
+
+    it('revert to proxy if autoDetectCORS is true but CORS is not enabled on server', (done) => {
+        mockAxios = new MockAdapter(axios);
+        axios.get('http://testcors/', {
+            timeout: 1,
+            proxyUrl: {
+                url: '/proxy/?url=',
+                useCORS: [],
+                autoDetectCORS: true
+            }
+        }).catch((response) => {
+            expect(response.config).toExist();
+            expect(response.config.url).toExist();
+            expect(response.config.url).toContain('proxy/?url=');
             done();
         });
     });

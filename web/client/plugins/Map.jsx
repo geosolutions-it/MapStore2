@@ -19,11 +19,10 @@ require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {errorLoadingFont} = require('../actions/map');
+const {errorLoadingFont, setMapResolutions} = require('../actions/map');
 
 const {isString} = require('lodash');
 let plugins;
-const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} = require('../epics/map');
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
@@ -132,6 +131,29 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  * ```
  * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
  *
+ * An additional feature to is limit the area and/or the minimum level of zoom in the localConfig.json file using "mapConstraints" property
+ *
+ *  e.g
+ * ```json
+ * "mapConstraints": {
+ *  "minZoom": 12, // minimal allowed zoom used by default
+ *  "crs":"EPSG:3857", // crs of the restrictedExtent
+ *  "restrictedExtent":[ // limits the area accessible to the user to this bounding box
+ *    1060334.456371965,5228292.734706056,
+ *    1392988.403469052,5503466.036532691
+ *   ],
+ *   "projectionsConstraints": {
+ *       "EPSG:1234": { "minZoom": 5 } // customization of minZoom for different projections
+ *   }
+ *  }
+ * ```
+ *
+ * With this setup you can configure a restricted area and/or a minimum zoom level for the whole application.
+ * If you have different reference systems for your maps, for each of them you can even set a minimum zoom
+ * using the entry `projectionsConstraints` as written in the example.
+ *
+ * ```
+ *
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
@@ -174,6 +196,7 @@ class MapPlugin extends React.Component {
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
         onFontError: PropTypes.func,
+        onResolutionsChange: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
         securityToken: PropTypes.string,
@@ -214,13 +237,14 @@ class MapPlugin extends React.Component {
         additionalLayers: [],
         shouldLoadFont: false,
         elevationEnabled: false,
-        onFontError: () => {}
+        onFontError: () => {},
+        onResolutionsChange: () => {}
     };
     state = {
         canRender: true
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {shouldLoadFont, fonts} = this.props;
 
         // load each font before rendering (see issue #3155)
@@ -234,7 +258,7 @@ class MapPlugin extends React.Component {
                     }).catch(() => {
                         this.props.onFontError({family: f});
                     }
-                ))
+                    ))
             ).then(() => {
                 this.setState({canRender: true});
             });
@@ -243,7 +267,7 @@ class MapPlugin extends React.Component {
         this.updatePlugins(this.props);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
@@ -251,16 +275,16 @@ class MapPlugin extends React.Component {
 
     getHighlightLayer = (projection, index) => {
         return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}}>
-                    {this.props.features.map( (feature) => {
-                        return (<plugins.Feature
-                            msId={feature.id}
-                            key={feature.id}
-                            crs={projection}
-                            type={feature.type}
-                            style={feature.style || null }
-                            geometry={feature.geometry}/>);
-                    })}
-                </plugins.Layer>);
+            {this.props.features.map( (feature) => {
+                return (<plugins.Feature
+                    msId={feature.id}
+                    key={feature.id}
+                    crs={projection}
+                    type={feature.type}
+                    style={feature.style || null }
+                    geometry={feature.geometry}/>);
+            })}
+        </plugins.Layer>);
     };
 
     getTool = (tool) => {
@@ -299,6 +323,7 @@ class MapPlugin extends React.Component {
                         type={feature.type}
                         crs={projection}
                         geometry={feature.geometry}
+                        features={feature.features}
                         msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
                         // FEATURE STYLE OVERWRITE LAYER STYLE
@@ -329,7 +354,8 @@ class MapPlugin extends React.Component {
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
                     mapOptions={assign({}, mapOptions, this.getMapOptions())}
-                    zoomControl={this.props.zoomControl}>
+                    zoomControl={this.props.zoomControl}
+                    onResolutionsChange={this.props.onResolutionsChange}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
                 </plugins.Map>
@@ -344,7 +370,7 @@ class MapPlugin extends React.Component {
                 alignItems: "center"
             }} className="mapErrorMessage">
                 <Message msgId="map.loadingerror"/>:
-                    {this.props.loadingError}
+                {this.props.loadingError}
             </div>);
         }
         return (<div style={{
@@ -353,9 +379,9 @@ class MapPlugin extends React.Component {
             display: "flex",
             justifyContent: "center",
             alignItems: "center"
-            }} className="mapLoadingMessage">
-                {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
-                <Message msgId={this.props.mapLoadingMessage}/>
+        }} className="mapLoadingMessage">
+            {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
+            <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     }
     filterLayer = (layer) => {
@@ -397,7 +423,8 @@ const selector = createSelector(
 );
 module.exports = {
     MapPlugin: connect(selector, {
-        onFontError: errorLoadingFont
+        onFontError: errorLoadingFont,
+        onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
         draw: require('../reducers/draw'),
@@ -405,5 +432,5 @@ module.exports = {
         maptype: require('../reducers/maptype'),
         additionallayers: require('../reducers/additionallayers')
     },
-    epics: assign({}, {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit})
+    epics: require('../epics/map')
 };

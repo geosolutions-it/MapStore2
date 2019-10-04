@@ -27,11 +27,13 @@ describe('This test for MetadataModal', () => {
 
     // test DEFAULTS
     it('creates the component with defaults, show=false', () => {
-        const metadataModalItem = ReactDOM.render(<MetadataModal show={false}/>, document.getElementById("container"));
+        const metadataModalItem = ReactDOM.render(<MetadataModal map={{}} show={false}/>, document.getElementById("container"));
         expect(metadataModalItem).toExist();
 
         const metadataModalItemDom = ReactDOM.findDOMNode(metadataModalItem);
-        expect(metadataModalItemDom).toNotExist();
+        expect(metadataModalItemDom).toExist();
+        const modalDivList = document.getElementsByClassName("modal-content");
+        expect(modalDivList.length).toBe(0);
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -146,6 +148,44 @@ describe('This test for MetadataModal', () => {
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorSIZE');
         expect(errorFORMAT).toExist();
+    });
+
+    it('details row is shown for maps', () => {
+        let thumbnail = "myThumnbnailUrl";
+        let errors = ["FORMAT"];
+        let map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            category: {
+                name: "MAP"
+            },
+            errors: errors
+        };
+
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+        const detailsSheetArray = document.getElementsByClassName('ms-details-sheet');
+        expect(detailsSheetArray.length).toBe(1);
+    });
+
+    it('details row is hidden for dashboards', () => {
+        let thumbnail = "myThumnbnailUrl";
+        let errors = ["FORMAT"];
+        let map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            category: {
+                name: "DASHBOARD"
+            },
+            errors: errors
+        };
+
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+        const detailsSheetArray = document.getElementsByClassName('ms-details-sheet');
+        expect(detailsSheetArray.length).toBe(0);
     });
 
 });

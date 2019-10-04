@@ -7,6 +7,9 @@
  */
 const Rx = require('rxjs');
 const { MAPS_LIST_LOADING, ATTRIBUTE_UPDATED} = require('../actions/maps');
+const { MAP_DELETED, MAP_METADATA_UPDATED } = require('../actions/maps');
+const { DASHBOARD_SAVED } = require('../actions/dashboard');
+
 const { SEARCH_DASHBOARDS, DELETE_DASHBOARD, DASHBOARD_DELETED, RELOAD, searchDashboards, dashboardListLoaded, dashboardDeleted, dashboardsLoading } = require('../actions/dashboards');
 const { searchParamsSelector, searchTextSelector, totalCountSelector} = require('../selectors/dashboards');
 const GeoStoreApi = require('../api/GeoStoreDAO');
@@ -17,7 +20,7 @@ const {deleteResource} = require('../api/persistence');
 
 const calculateNewParams = state => {
     const totalCount = totalCountSelector(state);
-    const {start, limit, ...params} = searchParamsSelector(state);
+    const {start, limit, ...params} = searchParamsSelector(state) || {};
     if (start === totalCount - 1) {
         return {
             start: Math.max(0, start - limit),
@@ -30,7 +33,7 @@ const calculateNewParams = state => {
 };
 
 module.exports = {
-   searchDashboardsOnMapSearch: action$ =>
+    searchDashboardsOnMapSearch: action$ =>
         action$.ofType(MAPS_LIST_LOADING)
             .switchMap(({ searchText }) => Rx.Observable.of(searchDashboards(searchText))),
     searchDashboards: (action$, { getState = () => { } }) =>
@@ -71,10 +74,10 @@ module.exports = {
             }))
         )),
     reloadOnDashboards: (action$, { getState = () => { } }) =>
-        action$.ofType(DASHBOARD_DELETED, RELOAD, ATTRIBUTE_UPDATED)
+        action$.ofType(DASHBOARD_DELETED, MAP_DELETED, MAP_METADATA_UPDATED, RELOAD, ATTRIBUTE_UPDATED, DASHBOARD_SAVED)
             .delay(1000) // delay as a workaround for geostore issue #178
             .switchMap( () => Rx.Observable.of(searchDashboards(
                 searchTextSelector(getState()),
                 calculateNewParams(getState())
             )))
-        };
+};

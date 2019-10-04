@@ -47,6 +47,7 @@ module.exports = class extends React.Component {
                     chartStyle={{height: 200, width: this.props.containerWidth - 30, ...this.props.chartStyle}}/>
             );
         }
+        return null;
     };
 
     renderElevationsSlider = (elevations) => {

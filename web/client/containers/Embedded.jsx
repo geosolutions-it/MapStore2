@@ -41,7 +41,7 @@ class Embedded extends React.Component {
         onInit: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.onInit();
     }
 
@@ -50,7 +50,7 @@ class Embedded extends React.Component {
             pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.params}
-            />);
+        />);
     }
 }
 

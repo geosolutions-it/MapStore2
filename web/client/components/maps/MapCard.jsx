@@ -7,7 +7,6 @@
  */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {get} = require('lodash');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const FitIcon = require('../misc/FitIcon');
@@ -106,11 +105,11 @@ class MapCard extends React.Component {
                 }
             },
             {
-                visible: this.props.map.canEdit === true && (get(this.props.map, "category.name") !== "DASHBOARD"),
+                visible: this.props.map.canEdit === true,
                 glyph: 'wrench',
                 disabled: this.props.map.updating,
                 loading: this.props.map.updating,
-                tooltipId: 'manager.editMapMetadata',
+                tooltipId: this.props.tooltips.editResource,
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.map, true);
@@ -139,10 +138,10 @@ class MapCard extends React.Component {
         ];
 
         return (
-           <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
+            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
                 actions={availableAction} onClick={this.onClick}
-               >
-               <div className="map-thumb-description">{this.props.map.description}</div>
+            >
+                <div className="map-thumb-description">{this.props.map.description}</div>
                 {this.props.map.icon ?
                     <div key="icon" style={{
                         width: "20px",
@@ -154,8 +153,17 @@ class MapCard extends React.Component {
                         left: 0 }} >
                         <FitIcon glyph={this.props.map.icon} />
                     </div> : null}
-               <ConfirmModal ref="deleteMapModal" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
-           </GridCard>
+                <ConfirmModal
+                    ref="deleteMapModal"
+                    show={this.state ? this.state.displayDeleteDialog : false}
+                    onHide={this.close}
+                    onClose={this.close}
+                    onConfirm={this.onConfirmDelete}
+                    titleText={this.props.map.title || this.props.map.name || <Message msgId="resources.deleteConfirmTitle" />}
+                    confirmText={<Message msgId="yes" />}
+                    cancelText={<Message msgId="no" />}
+                    body={<Message msgId="resources.deleteConfirmMessage" />} />
+            </GridCard>
         );
     }
 

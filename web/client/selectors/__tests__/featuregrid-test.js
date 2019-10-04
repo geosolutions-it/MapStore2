@@ -32,7 +32,9 @@ const {
     hasSupportedGeometry,
     getDockSize,
     selectedLayerNameSelector,
-    queryOptionsSelector
+    queryOptionsSelector,
+    showTimeSync,
+    timeSyncActive
 } = require('../featuregrid');
 
 const idFt1 = "idFt1";
@@ -60,252 +62,257 @@ let feature2 = {
         someProp: "someValue"
     }
 };
+const featuregrid = require('../../reducers/featuregrid');
+const { setUp, setTimeSync } = require('../../actions/featuregrid');
+
+const dimension = require('../../reducers/dimension');
+const { updateLayerDimensionData } = require('../../actions/dimension');
 
 let initialState = {
-        query: {
+    query: {
         featureTypes: {
             // use name with chars ":" and "."
-          'editing:polygons.test': {
-            geometry: [
-              {
-                label: 'geometry',
-                attribute: 'geometry',
-                type: 'geometry',
-                valueId: 'id',
-                valueLabel: 'name',
-                values: []
-              }
-            ],
-            original: {
-              elementFormDefault: 'qualified',
-              targetNamespace: 'http://geoserver.org/editing',
-              targetPrefix: 'editing',
-              featureTypes: [
-                {
-                  typeName: 'poligoni',
-                  properties: [
+            'editing:polygons.test': {
+                geometry: [
                     {
-                      name: 'name',
-                      maxOccurs: 1,
-                      minOccurs: 0,
-                      nillable: true,
-                      type: 'xsd:string',
-                      localType: 'string'
-                    },
-                    {
-                      name: 'geometry',
-                      maxOccurs: 1,
-                      minOccurs: 0,
-                      nillable: true,
-                      type: 'gml:Polygon',
-                      localType: 'Polygon'
+                        label: 'geometry',
+                        attribute: 'geometry',
+                        type: 'geometry',
+                        valueId: 'id',
+                        valueLabel: 'name',
+                        values: []
                     }
-                  ]
-                }
-              ]
-            },
-            attributes: [
-              {
-                label: 'name',
-                attribute: 'name',
-                type: 'string',
-                valueId: 'id',
-                valueLabel: 'name',
-                values: []
-              }
-            ]
-          }
+                ],
+                original: {
+                    elementFormDefault: 'qualified',
+                    targetNamespace: 'http://geoserver.org/editing',
+                    targetPrefix: 'editing',
+                    featureTypes: [
+                        {
+                            typeName: 'poligoni',
+                            properties: [
+                                {
+                                    name: 'name',
+                                    maxOccurs: 1,
+                                    minOccurs: 0,
+                                    nillable: true,
+                                    type: 'xsd:string',
+                                    localType: 'string'
+                                },
+                                {
+                                    name: 'geometry',
+                                    maxOccurs: 1,
+                                    minOccurs: 0,
+                                    nillable: true,
+                                    type: 'gml:Polygon',
+                                    localType: 'Polygon'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                attributes: [
+                    {
+                        label: 'name',
+                        attribute: 'name',
+                        type: 'string',
+                        valueId: 'id',
+                        valueLabel: 'name',
+                        values: []
+                    }
+                ]
+            }
         },
         data: {},
         result: {
-          type: 'FeatureCollection',
-          totalFeatures: 4,
-          features: [
-            {
-              type: 'Feature',
-              id: 'poligoni.1',
-              geometry: {
-                type: 'Polygon',
-                coordinates: [
-                  [
-                    [
-                      -39,
-                      39
-                    ],
-                    [
-                      -39,
-                      38
-                    ],
-                    [
-                      -40,
-                      38
-                    ],
-                    [
-                      -39,
-                      39
-                    ]
-                  ]
-                ]
-              },
-              geometry_name: 'geometry',
-              properties: {
-                name: 'test'
-              }
-            },
-            {
-              type: 'Feature',
-              id: 'poligoni.2',
-              geometry: {
-                type: 'Polygon',
-                coordinates: [
-                  [
-                    [
-                      -48.77929687,
-                      37.54457732
-                    ],
-                    [
-                      -49.43847656,
-                      36.06686213
-                    ],
-                    [
-                      -46.31835937,
-                      35.53222623
-                    ],
-                    [
-                      -44.47265625,
-                      37.40507375
-                    ],
-                    [
-                      -48.77929687,
-                      37.54457732
-                    ]
-                  ]
-                ]
-              },
-              geometry_name: 'geometry',
-              properties: {
-                name: 'poly2'
-              }
-            },
-            {
-              type: 'Feature',
-              id: 'poligoni.6',
-              geometry: {
-                type: 'Polygon',
-                coordinates: [
-                  [
-                    [
-                      -50.16357422,
-                      28.90239723
-                    ],
-                    [
-                      -49.69116211,
-                      28.24632797
-                    ],
-                    [
-                      -48.2409668,
-                      28.56522549
-                    ],
-                    [
-                      -50.16357422,
-                      28.90239723
-                    ]
-                  ]
-                ]
-              },
-              geometry_name: 'geometry',
-              properties: {
-                name: 'ads'
-              }
-            },
-            {
-              type: 'Feature',
-              id: 'poligoni.7',
-              geometry: {
-                type: 'Polygon',
-                coordinates: [
-                  [
-                    [
-                      -64.46777344,
-                      33.90689555
-                    ],
-                    [
-                      -66.22558594,
-                      31.95216224
-                    ],
-                    [
-                      -63.32519531,
-                      30.97760909
-                    ],
-                    [
-                      -64.46777344,
-                      33.90689555
-                    ]
-                  ]
-                ]
-              },
-              geometry_name: 'geometry',
-              properties: {
-                name: 'vvvv'
-              }
+            type: 'FeatureCollection',
+            totalFeatures: 4,
+            features: [
+                {
+                    type: 'Feature',
+                    id: 'poligoni.1',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [
+                            [
+                                [
+                                    -39,
+                                    39
+                                ],
+                                [
+                                    -39,
+                                    38
+                                ],
+                                [
+                                    -40,
+                                    38
+                                ],
+                                [
+                                    -39,
+                                    39
+                                ]
+                            ]
+                        ]
+                    },
+                    geometry_name: 'geometry',
+                    properties: {
+                        name: 'test'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    id: 'poligoni.2',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [
+                            [
+                                [
+                                    -48.77929687,
+                                    37.54457732
+                                ],
+                                [
+                                    -49.43847656,
+                                    36.06686213
+                                ],
+                                [
+                                    -46.31835937,
+                                    35.53222623
+                                ],
+                                [
+                                    -44.47265625,
+                                    37.40507375
+                                ],
+                                [
+                                    -48.77929687,
+                                    37.54457732
+                                ]
+                            ]
+                        ]
+                    },
+                    geometry_name: 'geometry',
+                    properties: {
+                        name: 'poly2'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    id: 'poligoni.6',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [
+                            [
+                                [
+                                    -50.16357422,
+                                    28.90239723
+                                ],
+                                [
+                                    -49.69116211,
+                                    28.24632797
+                                ],
+                                [
+                                    -48.2409668,
+                                    28.56522549
+                                ],
+                                [
+                                    -50.16357422,
+                                    28.90239723
+                                ]
+                            ]
+                        ]
+                    },
+                    geometry_name: 'geometry',
+                    properties: {
+                        name: 'ads'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    id: 'poligoni.7',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [
+                            [
+                                [
+                                    -64.46777344,
+                                    33.90689555
+                                ],
+                                [
+                                    -66.22558594,
+                                    31.95216224
+                                ],
+                                [
+                                    -63.32519531,
+                                    30.97760909
+                                ],
+                                [
+                                    -64.46777344,
+                                    33.90689555
+                                ]
+                            ]
+                        ]
+                    },
+                    geometry_name: 'geometry',
+                    properties: {
+                        name: 'vvvv'
+                    }
+                }
+            ],
+            crs: {
+                type: 'name',
+                properties: {
+                    name: 'urn:ogc:def:crs:EPSG::4326'
+                }
             }
-          ],
-          crs: {
-            type: 'name',
-            properties: {
-              name: 'urn:ogc:def:crs:EPSG::4326'
-            }
-          }
         },
         resultError: null,
         isNew: false,
         filterObj: {
-          featureTypeName: 'editing:polygons.test',
-          groupFields: [
-            {
-              id: 1,
-              logic: 'OR',
-              index: 0
-            }
-          ],
-          filterFields: [],
-          spatialField: {
-            method: null,
-            attribute: 'geometry',
-            operation: 'INTERSECTS',
-            geometry: null
-          },
-          pagination: {
-            startIndex: 0,
-            maxFeatures: 20
-          },
-          filterType: 'OGC',
-          ogcVersion: '1.1.0',
-          sortOptions: null,
-          hits: false
+            featureTypeName: 'editing:polygons.test',
+            groupFields: [
+                {
+                    id: 1,
+                    logic: 'OR',
+                    index: 0
+                }
+            ],
+            filterFields: [],
+            spatialField: {
+                method: null,
+                attribute: 'geometry',
+                operation: 'INTERSECTS',
+                geometry: null
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: 'OGC',
+            ogcVersion: '1.1.0',
+            sortOptions: null,
+            hits: false
         },
         searchUrl: 'http://localhost:8081/geoserver/wfs?',
         typeName: 'editing:polygons.test',
         url: 'http://localhost:8081/geoserver/wfs?',
         featureLoading: false
-      },
-      featuregrid: {
-          open: true,
-          selectedLayer: "TEST_LAYER",
-          mode: modeEdit,
-          select: [feature1, feature2],
-          changes: [{id: feature2.id, updated: {geometry: null}}]
-      },
-      layers: {
-          flat: [{
-              id: "TEST_LAYER",
-              title: "Test Layer"
-          }]
-      },
-        highlight: {
-            featuresPath: "featuregrid.select"
-        }
-    };
+    },
+    featuregrid: {
+        open: true,
+        selectedLayer: "TEST_LAYER",
+        mode: modeEdit,
+        select: [feature1, feature2],
+        changes: [{id: feature2.id, updated: {geometry: null}}]
+    },
+    layers: {
+        flat: [{
+            id: "TEST_LAYER",
+            title: "Test Layer"
+        }]
+    },
+    highlight: {
+        featuresPath: "featuregrid.select"
+    }
+};
 
 
 describe('Test featuregrid selectors', () => {
@@ -321,10 +328,10 @@ describe('Test featuregrid selectors', () => {
                 select: [feature1, feature2],
                 changes: [{id: feature2.id, updated: {geometry: null}}],
                 attributes: {
-                name: {
-                  hide: true
+                    name: {
+                        hide: true
+                    }
                 }
-              }
             }
         });
     });
@@ -476,6 +483,29 @@ describe('Test featuregrid selectors', () => {
         expect(getDockSize({})).toBe(undefined);
     });
 
+    it('showTimeSync', () => {
+        expect(showTimeSync({featuregrid: initialState.featuregrid})).toBeFalsy();
+        const state = {
+            ...initialState,
+            featuregrid: featuregrid(initialState.featuregrid, setUp({ showTimeSync: true })),
+            dimension: dimension({}, updateLayerDimensionData('TEST_LAYER', 'time', {
+                source: { // describes the source of dimension
+                    type: 'multidim-extension',
+                    url: 'http://domain.com:80/geoserver/wms'
+                },
+                name: 'time',
+                domain: '2016-09-01T00:00:00.000Z--2017-04-11T00:00:00.000Z'
+            }))
+        };
+        expect(showTimeSync(state)).toBeTruthy();
+    });
+    it('syncTimeActive', () => {
+        expect(timeSyncActive({ featuregrid: initialState.featuregrid })).toBeFalsy();
+        const state = {
+            featuregrid: featuregrid(initialState.featureGrid, setTimeSync(true))
+        };
+        expect(timeSyncActive(state)).toBe(true);
+    });
     it('test selectedLayerNameSelector', () => {
         const state = {...initialState, layers: {
             flat: [{

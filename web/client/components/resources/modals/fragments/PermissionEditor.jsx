@@ -112,7 +112,7 @@ class PermissionEditor extends React.Component {
                     }
                     return rule;
                 }
-        ).filter(rule => rule.canRead || rule.canWrite));
+            ).filter(rule => rule.canRead || rule.canWrite));
     };
 
     getSelectableGroups = () => {
@@ -123,12 +123,12 @@ class PermissionEditor extends React.Component {
 
     getPermissionLabel = (perm) => {
         switch (perm) {
-            case "canRead":
-                return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
-            case "canWrite":
-                return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
-            default:
-                return perm;
+        case "canRead":
+            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
+        case "canWrite":
+            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
+        default:
+            return perm;
         }
     };
 
@@ -160,12 +160,12 @@ class PermissionEditor extends React.Component {
                         <td style={{ width: "50px" }}>{
                             // <Button bsStyle="danger" className="square-button" onClick={this.onChangePermission.bind(this, index, "delete")} ><Glyphicon glyph="1-close"/></Button>
                         }
-                            <Button
-                                key={"deleteButton" + index}
-                                ref="deleteButton"
-                                bsStyle="danger"
-                                disabled={this.props.disabled}
-                                onClick={this.onChangePermission.bind(this, group.groupName, "delete")}><Glyphicon glyph="1-close" /></Button>
+                        <Button
+                            key={"deleteButton" + index}
+                            ref="deleteButton"
+                            bsStyle="danger"
+                            disabled={this.props.disabled}
+                            onClick={this.onChangePermission.bind(this, group.groupName, "delete")}><Glyphicon glyph="1-close" /></Button>
                         </td>
                     </tr>
                 );

@@ -9,6 +9,8 @@
 const expect = require('expect');
 const assign = require('object-assign');
 const Proj4js = require('proj4').default;
+const { set } = require('../../utils/ImmutableUtils');
+
 const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
@@ -41,7 +43,8 @@ const {
     moreFeatures,
     GRID_QUERY_RESULT,
     changePage,
-    sort
+    sort,
+    setTimeSync
 } = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
@@ -49,14 +52,16 @@ const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {toggleSyncWms, QUERY, querySearchResponse} = require('../../actions/wfsquery');
-const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
+const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
-const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-const {LOAD_FILTER} = require('../../actions/queryform');
+const {
+    toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
+    layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
+const { LOAD_FILTER, QUERY_FORM_RESET} = require('../../actions/queryform');
 
 const {
+    featureGridBrowseData,
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
     featureGridLayerSelectionInitialization,
@@ -84,9 +89,9 @@ const {
     removeWmsFilterOnGridClose,
     autoReopenFeatureGridOnFeatureInfoClose,
     featureGridChangePage,
-    featureGridSort
-}
-    = require('../featuregrid');
+    featureGridSort,
+    replayOnTimeDimensionChange
+} = require('../featuregrid');
 
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
@@ -94,290 +99,290 @@ const {isEmpty, isNil} = require('lodash');
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
-      {
-        id: 1,
-        logic: 'OR',
-        index: 0
-      }
+        {
+            id: 1,
+            logic: 'OR',
+            index: 0
+        }
     ],
     filterFields: [],
     spatialField: {
-      method: 'BBOX',
-      attribute: 'GEOMETRY',
-      operation: 'INTERSECTS',
-      geometry: {
-        id: 'a45697d0-cab1-11e7-a45c-3d37963eccab',
-        type: 'Polygon',
-        extent: [
-          978438.5673027613,
-          5527214.592597753,
-          994987.1839265019,
-          5533558.865945422
-        ],
-        center: [
-          986712.8756146316,
-          5530386.729271587
-        ],
-        coordinates: [
-          [
-            [
-              978438.5673027613,
-              5533558.865945422
+        method: 'BBOX',
+        attribute: 'GEOMETRY',
+        operation: 'INTERSECTS',
+        geometry: {
+            id: 'a45697d0-cab1-11e7-a45c-3d37963eccab',
+            type: 'Polygon',
+            extent: [
+                978438.5673027613,
+                5527214.592597753,
+                994987.1839265019,
+                5533558.865945422
             ],
-            [
-              978438.5673027613,
-              5527214.592597753
+            center: [
+                986712.8756146316,
+                5530386.729271587
             ],
-            [
-              994987.1839265019,
-              5527214.592597753
+            coordinates: [
+                [
+                    [
+                        978438.5673027613,
+                        5533558.865945422
+                    ],
+                    [
+                        978438.5673027613,
+                        5527214.592597753
+                    ],
+                    [
+                        994987.1839265019,
+                        5527214.592597753
+                    ],
+                    [
+                        994987.1839265019,
+                        5533558.865945422
+                    ],
+                    [
+                        978438.5673027613,
+                        5533558.865945422
+                    ]
+                ]
             ],
-            [
-              994987.1839265019,
-              5533558.865945422
-            ],
-            [
-              978438.5673027613,
-              5533558.865945422
-            ]
-          ]
-        ],
-        style: {},
-        projection: 'EPSG:900913'
-      }
+            style: {},
+            projection: 'EPSG:900913'
+        }
     },
     pagination: {
-      startIndex: 0,
-      maxFeatures: 20
+        startIndex: 0,
+        maxFeatures: 20
     },
     filterType: 'OGC',
     ogcVersion: '1.1.0',
     sortOptions: null,
     hits: false
-  };
+};
 const features = [{
-                    type: 'Feature',
-                    id: 'polygons.1',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-39,
-                                    39
-                                ],
-                                [-39,
-                                    38
-                                ],
-                                [-40,
-                                    38
-                                ],
-                                [-39,
-                                    39
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'test'
-                    }
-                },
-                {
-                    type: 'Feature',
-                    id: 'polygons.2',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-48.77929687,
-                                    37.54457732
-                                ],
-                                [-49.43847656,
-                                    36.06686213
-                                ],
-                                [-46.31835937,
-                                    35.53222623
-                                ],
-                                [-44.47265625,
-                                    37.40507375
-                                ],
-                                [-48.77929687,
-                                    37.54457732
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'poly2'
-                    }
-                },
-                {
-                    type: 'Feature',
-                    id: 'polygons.6',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-50.16357422,
-                                    28.90239723
-                                ],
-                                [-49.69116211,
-                                    28.24632797
-                                ],
-                                [-48.2409668,
-                                    28.56522549
-                                ],
-                                [-50.16357422,
-                                    28.90239723
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'ads'
-                    }
-                },
-                {
-                    type: 'Feature',
-                    id: 'polygons.7',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-64.46777344,
-                                    33.90689555
-                                ],
-                                [-66.22558594,
-                                    31.95216224
-                                ],
-                                [-63.32519531,
-                                    30.97760909
-                                ],
-                                [-64.46777344,
-                                    33.90689555
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'vvvv'
-                    }
-                }
-            ];
-const gmlFeatures = [{
-        type: 'Feature',
-        id: 'polygons.1',
-        geometry: {
-            type: 'Polygon',
-            coordinates: [
-                [
-                    [-39,
-                        39
-                    ],
-                    [-39,
-                        38
-                    ],
-                    [-40,
-                        38
-                    ],
-                    [-39,
-                        39
-                    ]
+    type: 'Feature',
+    id: 'polygons.1',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-39,
+                    39
+                ],
+                [-39,
+                    38
+                ],
+                [-40,
+                    38
+                ],
+                [-39,
+                    39
                 ]
             ]
-        },
-        geometry_name: 'geometry',
-        properties: {
-            name: 'test'
-        }
+        ]
     },
-    {
-        type: 'Feature',
-        id: 'polygons.2',
-        geometry: {
-            type: 'Polygon',
-            coordinates: [
-                [
-                    [-48.77929687,
-                        37.54457732
-                    ],
-                    [-49.43847656,
-                        36.06686213
-                    ],
-                    [-46.31835937,
-                        35.53222623
-                    ],
-                    [-44.47265625,
-                        37.40507375
-                    ],
-                    [-48.77929687,
-                        37.54457732
-                    ]
-                ]
-            ]
-        },
-        geometry_name: 'geometry',
-        properties: {
-            name: 'poly2'
-        }
-    },
-    {
-        type: 'Feature',
-        id: 'polygons.6',
-        geometry: {
-            type: 'Polygon',
-            coordinates: [
-                [
-                    [-50.16357422,
-                        28.90239723
-                    ],
-                    [-49.69116211,
-                        28.24632797
-                    ],
-                    [-48.2409668,
-                        28.56522549
-                    ],
-                    [-50.16357422,
-                        28.90239723
-                    ]
-                ]
-            ]
-        },
-        geometry_name: 'geometry',
-        properties: {
-            name: 'ads'
-        }
-    },
-    {
-        type: 'Feature',
-        id: 'polygons.7',
-        geometry: {
-            type: 'Polygon',
-            coordinates: [
-                [
-                    [-64.46777344,
-                        33.90689555
-                    ],
-                    [-66.22558594,
-                        31.95216224
-                    ],
-                    [-63.32519531,
-                        30.97760909
-                    ],
-                    [-64.46777344,
-                        33.90689555
-                    ]
-                ]
-            ]
-        },
-        geometry_name: 'geometry',
-        properties: {
-            name: 'vvvv'
-        }
+    geometry_name: 'geometry',
+    properties: {
+        name: 'test'
     }
+},
+{
+    type: 'Feature',
+    id: 'polygons.2',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-48.77929687,
+                    37.54457732
+                ],
+                [-49.43847656,
+                    36.06686213
+                ],
+                [-46.31835937,
+                    35.53222623
+                ],
+                [-44.47265625,
+                    37.40507375
+                ],
+                [-48.77929687,
+                    37.54457732
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'poly2'
+    }
+},
+{
+    type: 'Feature',
+    id: 'polygons.6',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-50.16357422,
+                    28.90239723
+                ],
+                [-49.69116211,
+                    28.24632797
+                ],
+                [-48.2409668,
+                    28.56522549
+                ],
+                [-50.16357422,
+                    28.90239723
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'ads'
+    }
+},
+{
+    type: 'Feature',
+    id: 'polygons.7',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-64.46777344,
+                    33.90689555
+                ],
+                [-66.22558594,
+                    31.95216224
+                ],
+                [-63.32519531,
+                    30.97760909
+                ],
+                [-64.46777344,
+                    33.90689555
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'vvvv'
+    }
+}
+];
+const gmlFeatures = [{
+    type: 'Feature',
+    id: 'polygons.1',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-39,
+                    39
+                ],
+                [-39,
+                    38
+                ],
+                [-40,
+                    38
+                ],
+                [-39,
+                    39
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'test'
+    }
+},
+{
+    type: 'Feature',
+    id: 'polygons.2',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-48.77929687,
+                    37.54457732
+                ],
+                [-49.43847656,
+                    36.06686213
+                ],
+                [-46.31835937,
+                    35.53222623
+                ],
+                [-44.47265625,
+                    37.40507375
+                ],
+                [-48.77929687,
+                    37.54457732
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'poly2'
+    }
+},
+{
+    type: 'Feature',
+    id: 'polygons.6',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-50.16357422,
+                    28.90239723
+                ],
+                [-49.69116211,
+                    28.24632797
+                ],
+                [-48.2409668,
+                    28.56522549
+                ],
+                [-50.16357422,
+                    28.90239723
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'ads'
+    }
+},
+{
+    type: 'Feature',
+    id: 'polygons.7',
+    geometry: {
+        type: 'Polygon',
+        coordinates: [
+            [
+                [-64.46777344,
+                    33.90689555
+                ],
+                [-66.22558594,
+                    31.95216224
+                ],
+                [-63.32519531,
+                    30.97760909
+                ],
+                [-64.46777344,
+                    33.90689555
+                ]
+            ]
+        ]
+    },
+    geometry_name: 'geometry',
+    properties: {
+        name: 'vvvv'
+    }
+}
 ];
 
 const state = {
@@ -399,21 +404,21 @@ const state = {
                     featureTypes: [{
                         typeName: 'polygons',
                         properties: [{
-                                name: 'name',
-                                maxOccurs: 1,
-                                minOccurs: 0,
-                                nillable: true,
-                                type: 'xsd:string',
-                                localType: 'string'
-                            },
-                            {
-                                name: 'geometry',
-                                maxOccurs: 1,
-                                minOccurs: 0,
-                                nillable: true,
-                                type: 'gml:Polygon',
-                                localType: 'Polygon'
-                            }
+                            name: 'name',
+                            maxOccurs: 1,
+                            minOccurs: 0,
+                            nillable: true,
+                            type: 'xsd:string',
+                            localType: 'string'
+                        },
+                        {
+                            name: 'geometry',
+                            maxOccurs: 1,
+                            minOccurs: 0,
+                            nillable: true,
+                            type: 'gml:Polygon',
+                            localType: 'Polygon'
+                        }
                         ]
                     }]
                 },
@@ -496,21 +501,21 @@ const stateWithGmlGeometry = {
                     featureTypes: [{
                         typeName: 'polygons',
                         properties: [{
-                                name: 'name',
-                                maxOccurs: 1,
-                                minOccurs: 0,
-                                nillable: true,
-                                type: 'xsd:string',
-                                localType: 'string'
-                            },
-                            {
-                                name: 'geometry',
-                                maxOccurs: 1,
-                                minOccurs: 0,
-                                nillable: true,
-                                type: 'gml:Geometry',
-                                localType: 'Geometry'
-                            }
+                            name: 'name',
+                            maxOccurs: 1,
+                            minOccurs: 0,
+                            nillable: true,
+                            type: 'xsd:string',
+                            localType: 'string'
+                        },
+                        {
+                            name: 'geometry',
+                            maxOccurs: 1,
+                            minOccurs: 0,
+                            nillable: true,
+                            type: 'gml:Geometry',
+                            localType: 'Geometry'
+                        }
                         ]
                     }]
                 },
@@ -578,7 +583,83 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
+    describe('featureGridBrowseData epic', () => {
+        const LAYER = state.layers.flat[0];
+        const LAYER_NO_NATIVE_CRS =
+            {
+                id: "TEST_LAYER",
+                name: "V_TEST",
+                title: "V_TEST",
+                filterObj,
+                url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                // NO native CRS, to force fetch
+            };
+        const checkInitActions = ([a1, a2, a3]) => {
+            // close TOC
+            expect(a1.type).toBe(SET_CONTROL_PROPERTY);
+            expect(a1.control).toBe('drawer');
+            expect(a1.property).toBe('enabled');
+            expect(a1.value).toBe(false);
+            // set feature grid layer
+            expect(a2.type).toBe(SET_LAYER);
+            expect(a2.id).toBe(LAYER.id);
+            // open feature grid
+            expect(a3.type).toBe(OPEN_FEATURE_GRID);
+        };
+        it('browseData action initializes featuregrid', done => {
+            testEpic(featureGridBrowseData, 5, browseData(LAYER), ([ a1, a2, a3, a4, a5 ]) => {
+                checkInitActions([a1, a2, a3]);
+                // sets the feature type selected for search
+                expect(a4.type).toBe(FEATURE_TYPE_SELECTED);
+                expect(a5.type).toBe(QUERY_FORM_RESET);
+                done();
+            }, state);
+        });
+        it('browseData action triggers nativeCrs fetch', done => {
+            const TEST_CRS = "EPSG:3044";
+            const oldDEF = proj4.defs(TEST_CRS);
+            proj4.defs(TEST_CRS, "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
 
+            testEpic(featureGridBrowseData, 6, browseData(LAYER_NO_NATIVE_CRS), (actions) => {
+                proj4.defs(TEST_CRS, oldDEF); // reset old definition, if any
+                expect(actions.filter(({type}) => type === CHANGE_LAYER_PROPERTIES).length).toBe(1);
+                actions.filter(({ type }) => type === CHANGE_LAYER_PROPERTIES).map(a => {
+                    expect(a.layer).toBe(LAYER_NO_NATIVE_CRS.id);
+                    expect(a.newProperties.nativeCrs).toBe(TEST_CRS);
+                });
+                done();
+            }, {
+                ...state,
+                query: { ...state.query, syncWmsFilter: true },
+                layers: {
+                    selected: [LAYER.id], // the layer is selected
+                    flat: [LAYER_NO_NATIVE_CRS]
+                }
+            });
+        });
+        it('browseData action trigger error notification if can not get nativeCrs', done => {
+            const LAYER_NO_NATIVE_CRS_ERROR = {
+                ...LAYER_NO_NATIVE_CRS,
+                url: "FAKE_URL_NOT_FOUND"
+            };
+            testEpic(featureGridBrowseData, 6, browseData(LAYER_NO_NATIVE_CRS_ERROR), (actions) => {
+                checkInitActions(actions);
+                // sets the feature type selected for search
+                actions.filter(a => a.type === SHOW_NOTIFICATION).map( a => {
+                    expect(a.message).toExist();
+                    done();
+                });
+
+            }, {
+                ...state,
+                query: { ...state.query, syncWmsFilter: true },
+                layers: {
+                    selected: [LAYER.id], // the layer is selected
+                    flat: [LAYER_NO_NATIVE_CRS_ERROR]
+                }
+            });
+        });
+    });
     it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -608,14 +689,14 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case START_SYNC_WMS:
-                        expect(action.type).toBe(START_SYNC_WMS);
-                        break;
-                    case CHANGE_LAYER_PROPERTIES:
-                        expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case START_SYNC_WMS:
+                    expect(action.type).toBe(START_SYNC_WMS);
+                    break;
+                case CHANGE_LAYER_PROPERTIES:
+                    expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -627,21 +708,21 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_HIGHLIGHT_FEATURES_PATH:
-                        expect(action.featuresPath).toBe('featuregrid.select');
-                        break;
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("clean");
-                        expect(action.method).toBe("");
-                        expect(action.features).toEqual([]);
-                        expect(action.options).toEqual({});
-                        expect(action.style).toBe(undefined);
-                        break;
-                    case SHOW_NOTIFICATION:
-                        expect(action.uid).toBe("notSupportedGeometryWarning");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SET_HIGHLIGHT_FEATURES_PATH:
+                    expect(action.featuresPath).toBe('featuregrid.select');
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    expect(action.method).toBe("");
+                    expect(action.features).toEqual([]);
+                    expect(action.options).toEqual({});
+                    expect(action.style).toBe(undefined);
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.uid).toBe("notSupportedGeometryWarning");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -656,18 +737,18 @@ describe('featuregrid Epics', () => {
                 expect(actions.length).toBe(2);
                 actions.map((action) => {
                     switch (action.type) {
-                        case SET_HIGHLIGHT_FEATURES_PATH:
-                            expect(action.featuresPath).toBe('featuregrid.select');
-                            break;
-                        case CHANGE_DRAWING_STATUS:
-                            expect(action.status).toBe("clean");
-                            expect(action.method).toBe("");
-                            expect(action.features).toEqual([]);
-                            expect(action.options).toEqual({});
-                            expect(action.style).toBe(undefined);
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case SET_HIGHLIGHT_FEATURES_PATH:
+                        expect(action.featuresPath).toBe('featuregrid.select');
+                        break;
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("clean");
+                        expect(action.method).toBe("");
+                        expect(action.features).toEqual([]);
+                        expect(action.options).toEqual({});
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
             } catch (e) {
@@ -685,11 +766,11 @@ describe('featuregrid Epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     switch (action.type) {
-                        case SET_HIGHLIGHT_FEATURES_PATH:
-                            expect(action.featuresPath).toBe(undefined);
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case SET_HIGHLIGHT_FEATURES_PATH:
+                        expect(action.featuresPath).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
             } catch (e) {
@@ -719,15 +800,15 @@ describe('featuregrid Epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     switch (action.type) {
-                        case CHANGE_DRAWING_STATUS:
-                            expect(action.status).toBe("clean");
-                            expect(action.method).toBe("");
-                            expect(action.features).toEqual([]);
-                            expect(action.options).toEqual({});
-                            expect(action.style).toBe(undefined);
-                            break;
-                        default:
-                            expect(true).toBe(false);
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("clean");
+                        expect(action.method).toBe("");
+                        expect(action.features).toEqual([]);
+                        expect(action.options).toEqual({});
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
                     }
                 });
             } catch (e) {
@@ -756,11 +837,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case TEST_TIMEOUT:
-                        done();
-                        break;
-                    default:
-                        expect(false).toBe(true);
+                case TEST_TIMEOUT:
+                    done();
+                    break;
+                default:
+                    expect(false).toBe(true);
                 }
             });
         }, newState);
@@ -771,11 +852,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_LAYER:
-                        expect(action.id).toBe('layer001');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SET_LAYER:
+                    expect(action.id).toBe('layer001');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -787,35 +868,35 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(3);
             actions.map((action, i) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY: {
-                        switch (i) {
-                            case 0: {
-                                expect(action.control).toBe('metadataexplorer');
-                                expect(action.property).toBe('enabled');
-                                expect(action.value).toBe(false);
-                                expect(action.toggle).toBe(undefined);
-                                break;
-                            }
-                            case 1: {
-                                expect(action.control).toBe('annotations');
-                                expect(action.property).toBe('enabled');
-                                expect(action.value).toBe(false);
-                                expect(action.toggle).toBe(undefined);
-                                break;
-                            }
-                            case 2: {
-                                expect(action.control).toBe('details');
-                                expect(action.property).toBe('enabled');
-                                expect(action.value).toBe(false);
-                                expect(action.toggle).toBe(undefined);
-                                break;
-                            }
-                            default: expect(true).toBe(false);
-                        }
+                case SET_CONTROL_PROPERTY: {
+                    switch (i) {
+                    case 0: {
+                        expect(action.control).toBe('metadataexplorer');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
                         break;
                     }
-                    default:
-                        expect(true).toBe(false);
+                    case 1: {
+                        expect(action.control).toBe('annotations');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 2: {
+                        expect(action.control).toBe('details');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    default: expect(true).toBe(false);
+                    }
+                    break;
+                }
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -836,19 +917,19 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case DELETE_GEOMETRY_FEATURE:
-                        expect(action.features).toEqual([{id: 'select001'}]);
+                case DELETE_GEOMETRY_FEATURE:
+                    expect(action.features).toEqual([{id: 'select001'}]);
 
-                        break;
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("clean");
-                        expect(action.method).toBe("");
-                        expect(action.features).toEqual([]);
-                        expect(action.options).toEqual({});
-                        expect(action.style).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    expect(action.method).toBe("");
+                    expect(action.features).toEqual([]);
+                    expect(action.options).toEqual({});
+                    expect(action.style).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -861,15 +942,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("clean");
-                        expect(action.method).toBe("");
-                        expect(action.features).toEqual([]);
-                        expect(action.options).toEqual({});
-                        expect(action.style).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    expect(action.method).toBe("");
+                    expect(action.features).toEqual([]);
+                    expect(action.options).toEqual({});
+                    expect(action.style).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -881,14 +962,14 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case CLOSE_FEATURE_GRID:
-                        expect(action.features).toBe(undefined);
-                        break;
-                    case TOGGLE_MODE:
-                        expect(action.mode).toBe(MODES.VIEW);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CLOSE_FEATURE_GRID:
+                    expect(action.features).toBe(undefined);
+                    break;
+                case TOGGLE_MODE:
+                    expect(action.mode).toBe(MODES.VIEW);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -907,14 +988,14 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        expect(action.control).toBe('queryPanel');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case SET_CONTROL_PROPERTY:
+                    expect(action.control).toBe('queryPanel');
+                    expect(action.property).toBe('enabled');
+                    expect(action.value).toBe(false);
+                    expect(action.toggle).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -931,11 +1012,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CLOSE_FEATURE_GRID:
-                        expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CLOSE_FEATURE_GRID:
+                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -947,11 +1028,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CLOSE_FEATURE_GRID:
-                        expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CLOSE_FEATURE_GRID:
+                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -963,15 +1044,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case TOGGLE_TOOL:
-                        expect(action.tool).toBe('clearConfirm');
-                        expect(action.value).toBe(false);
-                        break;
-                    case CLEAR_CHANGES:
-                        expect(action.type).toBe(CLEAR_CHANGES);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case TOGGLE_TOOL:
+                    expect(action.tool).toBe('clearConfirm');
+                    expect(action.value).toBe(false);
+                    break;
+                case CLEAR_CHANGES:
+                    expect(action.type).toBe(CLEAR_CHANGES);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -983,18 +1064,18 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case TOGGLE_TOOL:
-                        expect(action.tool).toBe('featureCloseConfirm');
-                        expect(action.value).toBe(false);
-                        break;
-                    case SET_CONTROL_PROPERTY:
-                        expect(action.control).toBe('drawer');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case TOGGLE_TOOL:
+                    expect(action.tool).toBe('featureCloseConfirm');
+                    expect(action.value).toBe(false);
+                    break;
+                case SET_CONTROL_PROPERTY:
+                    expect(action.control).toBe('drawer');
+                    expect(action.property).toBe('enabled');
+                    expect(action.value).toBe(false);
+                    expect(action.toggle).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1007,12 +1088,12 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case ZOOM_TO_EXTENT:
-                        expect(action.extent).toEqual([-66.22558594, 28.24632797, -39, 39]);
-                        expect(action.crs).toBe('EPSG:4326');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case ZOOM_TO_EXTENT:
+                    expect(action.extent).toEqual([-66.22558594, 28.24632797, -39, 39]);
+                    expect(action.crs).toBe('EPSG:4326');
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1024,11 +1105,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case RESET_CONTROLS:
-                        expect(action.skip).toEqual(['query']);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case RESET_CONTROLS:
+                    expect(action.skip).toEqual(['query']);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1040,11 +1121,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CLOSE_IDENTIFY:
-                        expect(action.type).toBe(CLOSE_IDENTIFY);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CLOSE_IDENTIFY:
+                    expect(action.type).toBe(CLOSE_IDENTIFY);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1057,15 +1138,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case STOP_SYNC_WMS:
-                        expect(action.type).toBe(STOP_SYNC_WMS);
-                        break;
-                    case CHANGE_LAYER_PROPERTIES:
-                        expect(action.layer).toBe('TEST_LAYER');
-                        expect(action.newProperties).toEqual({filterObj: undefined});
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case STOP_SYNC_WMS:
+                    expect(action.type).toBe(STOP_SYNC_WMS);
+                    break;
+                case CHANGE_LAYER_PROPERTIES:
+                    expect(action.layer).toBe('TEST_LAYER');
+                    expect(action.newProperties).toEqual({filterObj: undefined});
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1091,15 +1172,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("drawOrEdit");
-                        expect(action.method).toBe("Polygon");
-                        expect(action.owner).toBe("featureGrid");
-                        expect(action.features).toEqual([{id: 'TEST_LAYER', type: 'Feature'}]);
-                        expect(action.style).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("drawOrEdit");
+                    expect(action.method).toBe("Polygon");
+                    expect(action.owner).toBe("featureGrid");
+                    expect(action.features).toEqual([{id: 'TEST_LAYER', type: 'Feature'}]);
+                    expect(action.style).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1121,15 +1202,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("drawOrEdit");
-                        expect(action.method).toBe("Polygon");
-                        expect(action.owner).toBe("featureGrid");
-                        expect(action.features).toEqual([{id: 'TEST_LAYER', type: 'Feature'}]);
-                        expect(action.style).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("drawOrEdit");
+                    expect(action.method).toBe("Polygon");
+                    expect(action.owner).toBe("featureGrid");
+                    expect(action.features).toEqual([{id: 'TEST_LAYER', type: 'Feature'}]);
+                    expect(action.style).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1151,15 +1232,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("clean");
-                        expect(action.method).toBe("");
-                        expect(action.features).toEqual([]);
-                        expect(action.options).toEqual({});
-                        expect(action.style).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    expect(action.method).toBe("");
+                    expect(action.features).toEqual([]);
+                    expect(action.options).toEqual({});
+                    expect(action.style).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1182,18 +1263,18 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case GEOMETRY_CHANGED:
-                        expect(action.features).toEqual([{
-                            id: 'polygons.1',
-                            type: 'Feature',
-                            _new: 'polygons._new',
-                            geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
-                            geometry_name: 'geometry'
-                        }]);
+                case GEOMETRY_CHANGED:
+                    expect(action.features).toEqual([{
+                        id: 'polygons.1',
+                        type: 'Feature',
+                        _new: 'polygons._new',
+                        geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
+                        geometry_name: 'geometry'
+                    }]);
 
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1216,30 +1297,30 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case GEOMETRY_CHANGED:
-                        expect(action.features).toEqual([{
-                            id: 'polygons.1',
-                            type: 'Feature',
-                            _new: 'polygons._new',
-                            geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
-                            geometry_name: 'geometry'
-                        }]);
-                        break;
-                    case CHANGE_DRAWING_STATUS:
-                        expect(action.status).toBe("drawOrEdit");
-                        expect(action.method).toBe("Polygon");
-                        expect(action.owner).toBe("featureGrid");
-                        expect(action.features).toEqual([{
-                            id: 'polygons.1',
-                            type: 'Feature',
-                            _new: 'polygons._new',
-                            geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
-                            geometry_name: 'geometry'
-                        }]);
-                        expect(action.style).toBe(undefined);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case GEOMETRY_CHANGED:
+                    expect(action.features).toEqual([{
+                        id: 'polygons.1',
+                        type: 'Feature',
+                        _new: 'polygons._new',
+                        geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
+                        geometry_name: 'geometry'
+                    }]);
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("drawOrEdit");
+                    expect(action.method).toBe("Polygon");
+                    expect(action.owner).toBe("featureGrid");
+                    expect(action.features).toEqual([{
+                        id: 'polygons.1',
+                        type: 'Feature',
+                        _new: 'polygons._new',
+                        geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
+                        geometry_name: 'geometry'
+                    }]);
+                    expect(action.style).toBe(undefined);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1263,15 +1344,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_LAYER_PROPERTIES: {
-                        expect(action.newProperties.filterObj.spatialField.geometry.coordinates[0].length).toBe(5);
-                        const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 10000000000), 10) / 10000000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 10000000000), 10) / 10000000000 ];
-                        expect(firstPoint[0]).toBe(8.7894631958);
-                        expect(firstPoint[1]).toBe(44.4385328728);
-                        break;
-                    }
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_LAYER_PROPERTIES: {
+                    expect(action.newProperties.filterObj.spatialField.geometry.coordinates[0].length).toBe(5);
+                    const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 10000000000), 10) / 10000000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 10000000000), 10) / 10000000000 ];
+                    expect(firstPoint[0]).toBe(8.7894631958);
+                    expect(firstPoint[1]).toBe(44.4385328728);
+                    break;
+                }
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1304,13 +1385,13 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_LAYER_PROPERTIES: {
-                        expect(isEmpty(action.newProperties.filterObj)).toBeTruthy();
-                        expect(isNil(action.newProperties.nativeCrs)).toBeTruthy();
-                        break;
-                    }
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_LAYER_PROPERTIES: {
+                    expect(isEmpty(action.newProperties.filterObj)).toBeTruthy();
+                    expect(isNil(action.newProperties.nativeCrs)).toBeTruthy();
+                    break;
+                }
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1343,12 +1424,12 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_LAYER_PROPERTIES: {
-                        expect(action.newProperties.filterObj.spatialField).toBe(undefined);
-                        break;
-                    }
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_LAYER_PROPERTIES: {
+                    expect(action.newProperties.filterObj.spatialField).toBe(undefined);
+                    break;
+                }
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1382,14 +1463,14 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case CHANGE_LAYER_PROPERTIES: {
-                        const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
-                        expect(firstPoint[0]).toBe(483245.221897);
-                        expect(firstPoint[1]).toBe(4920603.15056);
-                        break;
-                    }
-                    default:
-                        expect(true).toBe(false);
+                case CHANGE_LAYER_PROPERTIES: {
+                    const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
+                    expect(firstPoint[0]).toBe(483245.221897);
+                    expect(firstPoint[1]).toBe(4920603.15056);
+                    break;
+                }
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1424,11 +1505,11 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case START_SYNC_WMS:
-                        expect(action.type).toBe(START_SYNC_WMS);
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case START_SYNC_WMS:
+                    expect(action.type).toBe(START_SYNC_WMS);
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1464,15 +1545,15 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case START_SYNC_WMS:
-                        expect(action.type).toBe(START_SYNC_WMS);
-                        break;
-                    case CHANGE_LAYER_PROPERTIES:
-                        expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
-                        expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case START_SYNC_WMS:
+                    expect(action.type).toBe(START_SYNC_WMS);
+                    break;
+                case CHANGE_LAYER_PROPERTIES:
+                    expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
+                    expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
+                    break;
+                default:
+                    expect(true).toBe(false);
                 }
             });
             done();
@@ -1514,16 +1595,16 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
-                    case LOAD_FILTER:
-                        // load filter, if present
-                        expect(action.filter).toExist();
-                        break;
-                    case CHANGE_DRAWING_STATUS:
-                        //  throw drawstatechange if drawStatus is not clean on queryPanel close
-                        expect(action.status).toBe('clean');
-                        break;
-                    default:
-                        expect(true).toBe(true);
+                case LOAD_FILTER:
+                    // load filter, if present
+                    expect(action.filter).toExist();
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    //  throw drawstatechange if drawStatus is not clean on queryPanel close
+                    expect(action.status).toBe('clean');
+                    break;
+                default:
+                    expect(true).toBe(true);
                 }
             });
             done();
@@ -1552,12 +1633,12 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case QUERY:
-                        expect(action.filterObj.pagination.startIndex).toBe(0);
-                        expect(action.filterObj.pagination.maxFeatures).toBe(30);
-                        break;
-                    default:
-                        expect(true).toBe(true);
+                case QUERY:
+                    expect(action.filterObj.pagination.startIndex).toBe(0);
+                    expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                    break;
+                default:
+                    expect(true).toBe(true);
                 }
             });
             done();
@@ -1595,13 +1676,13 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case QUERY:
-                        expect(action.filterObj.pagination.startIndex).toBe(0);
-                        expect(action.filterObj.pagination.maxFeatures).toBe(30);
-                        expect(action.queryOptions.viewParams).toBe("a:b");
-                        break;
-                    default:
-                        expect(true).toBe(true);
+                case QUERY:
+                    expect(action.filterObj.pagination.startIndex).toBe(0);
+                    expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                    expect(action.queryOptions.viewParams).toBe("a:b");
+                    break;
+                default:
+                    expect(true).toBe(true);
                 }
             });
             done();
@@ -1628,19 +1709,19 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case QUERY:
-                        expect(action.filterObj.pagination.startIndex).toBe(0);
-                        expect(action.filterObj.pagination.maxFeatures).toBe(30);
-                        break;
-                    case GRID_QUERY_RESULT:
-                        expect(action.features.length).toBe(30);
-                        expect(action.pages.length).toBe(3);
-                        expect(action.pages[0]).toBe(0);
-                        expect(action.pages[1]).toBe(10);
-                        expect(action.pages[2]).toBe(20);
-                        break;
-                    default:
-                        expect(true).toBe(true);
+                case QUERY:
+                    expect(action.filterObj.pagination.startIndex).toBe(0);
+                    expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                    break;
+                case GRID_QUERY_RESULT:
+                    expect(action.features.length).toBe(30);
+                    expect(action.pages.length).toBe(3);
+                    expect(action.pages[0]).toBe(0);
+                    expect(action.pages[1]).toBe(10);
+                    expect(action.pages[2]).toBe(20);
+                    break;
+                default:
+                    expect(true).toBe(true);
                 }
             });
             done();
@@ -1702,6 +1783,25 @@ describe('featuregrid Epics', () => {
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
     });
+
+    it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+    });
+
+    it('autoReopenFeatureGridOnFeatureInfoClose: other toggle control apart from drawer cannot cancel ability to open feature grid', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(OPEN_FEATURE_GRID);
+            done();
+        };
+        testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), toggleControl('notdrawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+    });
+
     it('autoReopenFeatureGridOnFeatureInfoClose: feature info doesn\'t reopen feature grid after close', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(2);
@@ -1753,8 +1853,8 @@ describe('featuregrid Epics', () => {
                 }]
             }, featuregrid: {
                 open: true,
-                    selectedLayer: "TEST_LAYER",
-                        changes: []
+                selectedLayer: "TEST_LAYER",
+                changes: []
             }
         }));
     });
@@ -1808,5 +1908,79 @@ describe('featuregrid Epics', () => {
             }
         }));
     });
+    describe('replayOnTimeDimensionChange', () => {
+        const SEARCH_URL = '/test-url';
+        const FILTER_OBJECT = { "dummy": "object" };
+        const TEST_STATE_OPEN_BASE = {
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        viewParams: "a:b"
+                    }
+                }]
+            },
+            featuregrid: {
+                pagination: {
+                    size: 10
+                },
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                changes: []
+            }
+        };
+        const TEST_STATE_CLOSED = set('featuregrid.open', false, TEST_STATE_OPEN_BASE);
+        const TEST_STATE_SYNC_ACTIVE = set('featuregrid.timeSync', true, TEST_STATE_OPEN_BASE);
+        const isSameQuery = a => {
+            expect(a.type).toBe(QUERY_CREATE);
+            expect(a.searchUrl).toBe(SEARCH_URL);
+            expect(a.filterObj).toBe(FILTER_OBJECT);
+        };
+        it('toggle on setTimeSync if FG is open', done => {
+            testEpic(replayOnTimeDimensionChange, 1, [query(SEARCH_URL, FILTER_OBJECT), setTimeSync(false)], ([a]) => {
+                isSameQuery(a);
+                done();
+            }, TEST_STATE_OPEN_BASE);
+        });
+        it('do not toggle if FG is closed', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), setTimeSync(true)], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_CLOSED);
+        });
+        it('toggle with time change', done => {
+            testEpic(replayOnTimeDimensionChange, 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
+                isSameQuery(a);
+                done();
+            }, TEST_STATE_SYNC_ACTIVE);
+        });
+        it('do not toggle with time change, sync disabled', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_OPEN_BASE);
+        });
+        it('do not toggle with time change if layer do not change time', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("OTHER_LAYER", { time: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_SYNC_ACTIVE);
+        });
+        it('do not toggle with time change if param changed is not the time', done => {
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { elevation: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_SYNC_ACTIVE);
+        });
+        it('do not toggle with time change if feature grid is closed', done => {
+            const TEST_STATE_TIME_ACTIVE_CLOSED = set('featuregrid.timeSync', true, TEST_STATE_CLOSED);
+            testEpic(addTimeoutEpic(replayOnTimeDimensionChange, 10), 1, [query(SEARCH_URL, FILTER_OBJECT), changeLayerParams("TEST_LAYER", { time: '123' })], ([a]) => {
+                expect(a.type).toBe(TEST_TIMEOUT);
+                done();
+            }, TEST_STATE_TIME_ACTIVE_CLOSED);
+        });
 
+    });
 });

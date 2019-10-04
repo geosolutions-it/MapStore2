@@ -14,13 +14,13 @@ const expect = require('expect');
 const SimpleChart = require('../SimpleChart');
 
 const data = [
-      {name: 'Page A', uv: 0, pv: 0, amt: 0},
-      {name: 'Page B', uv: 1, pv: 1, amt: 1},
-      {name: 'Page C', uv: 2, pv: 2, amt: 2},
-      {name: 'Page D', uv: 3, pv: 3, amt: 3},
-      {name: 'Page E', uv: 4, pv: 4, amt: 4},
-      {name: 'Page F', uv: 5, pv: 5, amt: 5},
-      {name: 'Page G', uv: 6, pv: 6, amt: 6}
+    {name: 'Page A', uv: 0, pv: 0, amt: 0},
+    {name: 'Page B', uv: 1, pv: 1, amt: 1},
+    {name: 'Page C', uv: 2, pv: 2, amt: 2},
+    {name: 'Page D', uv: 3, pv: 3, amt: 3},
+    {name: 'Page E', uv: 4, pv: 4, amt: 4},
+    {name: 'Page F', uv: 5, pv: 5, amt: 5},
+    {name: 'Page G', uv: 6, pv: 6, amt: 6}
 ];
 const SERIES = [{dataKey: "pv"}, {dataKey: "uv"}];
 describe('SimpleChart component', () => {
@@ -45,6 +45,15 @@ describe('SimpleChart component', () => {
         const el = container.querySelector('div');
         expect(el).toExist();
     });
+    it('test line chart with oblique labels', () => {
+        ReactDOM.render(<SimpleChart data={data} type="line" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const text = container.querySelector('text');
+        expect(text.attributes.transform.value).toBe("rotate(-45)");
+
+    });
     it('test pie chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="pie" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -56,6 +65,15 @@ describe('SimpleChart component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('div');
         expect(el).toExist();
+    });
+    it('test bar chart with oblique labels', () => {
+        ReactDOM.render(<SimpleChart data={data} type="bar" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        expect(el).toExist();
+        const text = container.querySelector('text');
+        expect(text.attributes.transform.value).toBe("rotate(-45)");
+
     });
     it('test gauge chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="gauge" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));

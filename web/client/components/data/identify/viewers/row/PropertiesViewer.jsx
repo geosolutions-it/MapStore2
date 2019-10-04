@@ -44,10 +44,9 @@ class PropertiesViewer extends React.Component {
         }
     };
 
-
     getBodyItems = () => {
         return Object.keys(this.props)
-            .filter(this.toExlude)
+            .filter(this.toExclude)
             .map((key) => {
                 const val = this.renderProperty(this.props[key]);
                 return <p key={key} style={this.props.listStyle}><b>{key}</b> {containsHTML(val) ? <span dangerouslySetInnerHTML={{__html: val}}/> : val}</p>;
@@ -87,6 +86,7 @@ class PropertiesViewer extends React.Component {
         }
         return JSON.stringify(prop);
     };
+
     render() {
         return (
             <div style={this.props.componentStyle}>
@@ -96,7 +96,7 @@ class PropertiesViewer extends React.Component {
         );
     }
 
-    toExlude = (propName) => {
+    toExclude = (propName) => {
         return alwaysExcluded
             .concat(this.props.exclude)
             .indexOf(propName) === -1;

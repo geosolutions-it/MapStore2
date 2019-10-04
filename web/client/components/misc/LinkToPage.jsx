@@ -27,7 +27,7 @@ class LinkToPage extends React.Component {
     render() {
         return (
             <Button bsStyle="link" href={this.buildUrl()} target="_blank" {...this.props.btProps}>
-            {this.props.txt}
+                {this.props.txt}
             </Button>
         );
     }

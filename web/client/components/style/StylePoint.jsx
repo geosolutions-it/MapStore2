@@ -87,7 +87,7 @@ class StylePoint extends React.Component {
                         </Row>
                     </Col>
                 </Row>
-                </Grid>);
+            </Grid>);
     }
 }
 

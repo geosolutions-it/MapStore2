@@ -17,7 +17,7 @@
         "about_a0": "deze",
         "about_p5-1": "bladzijde.",
         "about_h21": "Credits",
-        "about_p6": "MapStore2 ontwikkeld door:",
+        "about_p6": "MapStore ontwikkeld door:",
         "enable": "Activeren",
         "layers": "Lagen",
         "warning": "Opgepast",
@@ -25,6 +25,8 @@
         "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "version": {
             "label": "Versie"
         },
@@ -39,6 +41,8 @@
         "details": {
             "title": "About this map"
         },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Eigenschappen van de laag",
             "title": "Titel",
@@ -57,6 +61,8 @@
             "delete": "Wissen",
             "deleteLayer":"Verwijder de laag",
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
+            "deleteLayerGroup":"Groep verwijderen",
+            "deleteLayerGroupMessage": "Wilt u deze groep en alle lagen ervan echt verwijderen?",
             "confirmDelete": "Bent u zeker?",
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
             "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
@@ -104,7 +110,9 @@
             "noBackgroundLayerSupported": "Er is geen achtergrondlaag ondersteund voor dit type kaart.",
             "updateOldMap": "Dit is een oude kaart, dus niet alle functionaliteiten kunnen worden ingeschakeld. Klik op de knop Bijwerken om de kaart bij te werken of sluit deze melding als u deze niet wilt bijwerken.",
             "warningSaveUpdatedMap": "Sommige lagen zijn niet correct bijgewerkt",
-            "saveUpdatedMap": "Alle lagen zijn succesvol bijgewerkt"
+            "saveUpdatedMap": "Alle lagen zijn succesvol bijgewerkt",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} geselecteerde lijn",
@@ -162,7 +170,9 @@
             "colors": {
                 "red": "{number, plural, =0 {Rouge} =1 {Rouge} other {rouges}}",
                 "blue": "{number, plural, =0 {Bleu} =1 {Bleu} other {Bleus}}",
-                "green": "{number, plural, =0 {vert} =1 {vert} other {verts}}",
+                "green": "{number, plural, =0 {Vert} =1 {Vert} other {Verts}}",
+                "gray": "{number, plural, =0 {Gray} =1 {Gray} other {Grays}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Brun} =1 {Brun} other {Bruns}}",
                 "purple": "{number, plural, =0 {Pourpre} =1 {Pourpre} other {Pourpre}}",
                 "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
@@ -218,7 +228,7 @@
                     "html":"<h3>Plugins</h3><p>Uw eigen applicatie opbouwen</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Gebruik API's om een MapStore2-kaart in uw applicatie op te nemen</p>"
+                    "html":"<h3>API</h3><p>Gebruik API's om een MapStore-kaart in uw applicatie op te nemen</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Beeldweergave</h3><p>Uw beeldlaag weergeven</p>"
@@ -297,7 +307,9 @@
                 "errorLoadingDashboards": "There was an error loading dashboards"
             },
             "maps": {
-                "title": "Maps ({count})"
+                "title": "Maps ({count})",
+                "noMapAvailable": "Geen kaart beschikbaar",
+                "createNewOne": "Maak een nieuwe"
             }
         },
         "map": {
@@ -340,9 +352,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error loading map",
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
-                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul><p>",
+                    "title" : "Map cannot be viewed"
                 }
             }
         },
@@ -519,7 +533,12 @@
             "resetButtonText": "Herbeginnen",
             "lengthLabel": "Lengte",
             "areaLabel": "Afstand",
-            "bearingLabel": "Richting"
+            "bearingLabel": "Richting",
+            "formula": "Formula for distance calculation",
+            "showLabel": "Show measurement label",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "Decimal",
@@ -551,7 +570,47 @@
             "s_wfs_opt_props_label" : "Optionele supports",
             "s_result_props_label": "Eigenschappen van de weergave van de resultaten",
             "s_priority_info": "Gebruik eerst eerst hogere waarden om de zoekresultaten te sorteren. Nominatim-resultaten hebben prioriteit = 5",
-            "serviceslistempty": "Er is geen aangepaste service gedefinieerd"
+            "serviceslistempty": "Er is geen aangepaste service gedefinieerd",
+            "service_missing": "{serviceType} service is not configured",
+            "generic_error": "An error occurred during search. Error details: {message}",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            },
+            "s_launch_info_panel": {
+                "label": "Launch Info panel",
+                "no_info": "No Info",
+                "all_layers": "All Layers",
+                "single_layer": "Search Layer",
+                "no_info_description": "Identify panel will not show up on search",
+                "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
+                "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
+            }
+        },
+        "draw": {
+            "fill": "Fill",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "LineDash",
+            "stroke": "Stroke",
+            "opacity": "Opacity",
+            "width": "Width",
+            "font": {
+                "textColor": "Color",
+                "family": "Family",
+                "size": "Size",
+                "style": "Style",
+                "weight": "Weight",
+                "textAlign": "Align"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -765,6 +824,80 @@
                 }
             }
         },
+        "annotations": {
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
+            "edit": "Edit",
+            "remove": "Delete",
+            "save": "Save",
+            "cancel": "Cancel",
+            "back": "Back",
+            "applyStyle": "Apply Style",
+            "addMarker": "Add a new geometry",
+            "styleGeometry": "Change style",
+            "deleteGeometry": "Remove all annotation geometries",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
+            "removegeometry": "Do you want to remove all annotation features?",
+            "confirm": "Confirm",
+            "mandatory": "Mandatory field",
+            "emptygeometry": "Geometry cannot be empty",
+            "add": "New",
+            "filter": "Filter annotations...",
+            "titleUndoGeom": "The geometry has changed",
+            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
+            "confirmGeom": "Confirm",
+            "cancelModalGeom": "Cancel",
+            "deleteFeature": "Delete this feature",
+            "undoDeleteFeature": "Are you sure to delete this feature?",
+            "undo": "Are you sure you want to abandon the annotation editing session?",
+            "title": "Annotations",
+            "zoomTo": "Zoom",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
+            "field": {
+                "title": "Title",
+                "description": "Description"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Polygon editor",
+                    "LineString": "LineString editor",
+                    "Bearing": "Bearing editor",
+                    "Circle": "Circle editor",
+                    "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
+                    "Text": "Text editor"
+                },
+                "center": "Center",
+                "add": "Add new coordinates",
+                "addByClick": "Add new coordinates by clicking the plus button or on the map",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -779,6 +912,7 @@
             "passwordInvalid": "Verkeerd wachtwoord",
             "username": "Gebruikersnaam",
             "password": "Paswoord",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordChanged": "Wachtwoord gewijzigd",
             "passwordError": "Fout bij het wijzigen van het wachtwoord",
             "signIn":"Certificeer",
@@ -817,7 +951,8 @@
             "confirmDeleteUser": "Weet u zeker dat u deze gebruiker wilt verwijderen?",
             "errorDelete": "Er is een fout opgetreden bij het wissen van deze gebruiker:",
             "errorSaving": "Er is een fout opgetreden bij het opslaan van deze gebruiker",
-            "selectedGroups": "BEPAALDE GROEPEN"
+            "selectedGroups": "BEPAALDE GROEPEN",
+            "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
           "searchGroups": "groepen opzoeken...",
@@ -886,7 +1021,26 @@
             "cancel": "Annuleer",
             "success": " Import geslaagd"
         },
+        "mapImport": {
+            "title": "Import",
+            "dropZone": {
+                "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Select Files...",
+                "infoSupported": "<p><small>Supported configuration files: MapStore legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "File not supported",
+                "unknownError": "there was an unknown error during import"
+            }
+        },
+        "mapExport": {
+            "title": "Export Map"
+        },
         "catalog": {
+            "start": "Start date ",
+            "end": "End date ",
+            "notAvailable": "Not Available",
             "title": "Catalogus",
             "tooltip": "De catalogus doorlopen",
             "addToMap": "Aan de kaart toevoegen",
@@ -907,7 +1061,21 @@
             "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet",
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
-            "hideDescription": "Hide full description"
+            "hideDescription": "Hide full description",
+            "templateFormatDescriptionExample": "The description of layer is",
+            "showTemplate": "Show metadata template",
+            "showPreview": "Show preview",
+            "advancedSettings": "Advanced Settings",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
+                "warningAddCatalogService": "Insert a valid url and title",
+                "addCatalogService": "Service added correctly",
+                "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
+                "serviceDeletedCorrectly": "The service was deleted correctly",
+                "errorServiceUrl": "Service not available. Please, check the provided url"
+            }
         },
         "uploader": {
             "filename": "File Name",
@@ -1216,7 +1384,12 @@
             "displayCartesian": {
                 "line": "Hide Grid",
                 "bar": "Hide Grid"
-            },"yAxis":{
+            },
+            "xAxisAngle":{
+                "line": "X Axis: Label rotation angle °",
+                "bar": "X Axis: Label rotation angle °"
+            },
+            "yAxis":{
                 "line": "Hide Y axis",
                 "bar": "Hide Y axis"
             },
@@ -1343,6 +1516,7 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "validationErrorTitle": "Validation Error",
             "genericValidationError": "Style is not valid and it could not be applied.",
             "setDefaultStyle": "Set selected style as default for the current layer",
             "setDefaultStyleSuccessTitle": "Success on set default style",
@@ -1457,7 +1631,7 @@
             "checkbox": "laat dit bericht niet meer zien",
             "error": "Fout: doel niet gevonden",
             "intro": {
-                "title": "Welkom bij MapStore2",
+                "title": "Welkom bij MapStore",
                 "text": "framework om web mapping-applicaties te bouwen met behulp van standaard mapping-bibliotheken, zoals OpenLayers 3 en Leaflet."
             },
             "drawerMenu": {
@@ -1502,11 +1676,11 @@
             },
             "mapsGrid": {
                 "title": "Kaarten",
-                "text": "Hier enkele voorbeelden van MapStore2. Klik op een afbeelding om de demo te proberen."
+                "text": "Hier enkele voorbeelden van MapStore. Klik op een afbeelding om de demo te proberen."
             },
             "examples": {
                 "title": "Aangepaste applicatie",
-                "text": "U kunt componenten en plug-ins van MapStore2 gebruiken om aangepaste applicaties te bouwen"
+                "text": "U kunt componenten en plug-ins van MapStore gebruiken om aangepaste applicaties te bouwen"
             },
             "introCesium": {
                 "title": "3D-kaartinstructies",
@@ -1545,7 +1719,7 @@
             },
             "dashboardContainer": {
                 "title": "Dashboard",
-                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+                "text": "<p>A Dashboard in MapStore provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
             },
             "dashboardAddWidget": {
                 "title": "Add Widget",

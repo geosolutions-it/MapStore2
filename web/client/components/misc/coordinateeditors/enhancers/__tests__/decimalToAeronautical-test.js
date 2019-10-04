@@ -25,6 +25,33 @@ describe("test the Annotations enahncers", () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+    it('rendering default values', () => {
+        const Sink = decimalToAeronautical(createSink(props => {
+            expect(props).toExist();
+            // east is default in aeronautical format
+            if (props.coordinate === "lon") {
+                expect(props.direction).toBe('E');
+            } else {
+                expect(props.direction).toBe('N');
+            }
+
+
+        }));
+        // lat
+        ReactDOM.render((<Sink
+        />), document.getElementById("container"));
+        ReactDOM.render((<Sink
+            value={0}
+        />), document.getElementById("container"));
+        // lon
+        ReactDOM.render((<Sink
+            coordinate="lon"
+        />), document.getElementById("container"));
+        ReactDOM.render((<Sink
+            value={0}
+            coordinate="lon"
+        />), document.getElementById("container"));
+    });
     it('decimalToAeronautical conversion', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
             expect(props).toExist();
@@ -36,7 +63,7 @@ describe("test the Annotations enahncers", () => {
         ReactDOM.render((<Sink
             value = {1.50}
             coordinate="lon"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
     it('decimalToAeronautical conversion to 4 decimals as seconds', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
@@ -52,7 +79,7 @@ describe("test the Annotations enahncers", () => {
                 decimals: 4
             }}}
             coordinate="lon"
-            />), document.getElementById("container"));
+        />), document.getElementById("container"));
     });
     it('decimalToAeronautical conversion correctly step on minutes and seconds', (done) => {
         // 13.3333333333 should be 13 degrees, 20 minutes

@@ -58,7 +58,7 @@ class PasswordResetModal extends React.Component {
         password: ''
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let newUser = nextProps.user;
         let oldUser = this.props.user;
         let userChange = newUser !== oldUser;
@@ -77,21 +77,21 @@ class PasswordResetModal extends React.Component {
 
     getFooter = () => {
         return (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
-        <Button
-            ref="passwordChangeButton"
-            key="passwordChangeButton"
-            bsStyle="primary"
-            bsSize={this.props.buttonSize}
-            disabled={!this.state.passwordValid}
-            onClick={() => {
-                this.setState({loading: true});
-                this.onPasswordChange();
-            }}><Message msgId="user.changePwd"/></Button>
-        {this.props.includeCloseButton ? <Button
-            key="closeButton"
-            ref="closeButton"
-            bsSize={this.props.buttonSize}
-            onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
+            <Button
+                ref="passwordChangeButton"
+                key="passwordChangeButton"
+                bsStyle="primary"
+                bsSize={this.props.buttonSize}
+                disabled={!this.state.passwordValid}
+                onClick={() => {
+                    this.setState({loading: true});
+                    this.onPasswordChange();
+                }}><Message msgId="user.changePwd"/></Button>
+            {this.props.includeCloseButton ? <Button
+                key="closeButton"
+                ref="closeButton"
+                bsSize={this.props.buttonSize}
+                onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
         </span>);
     };
 
@@ -111,13 +111,13 @@ class PasswordResetModal extends React.Component {
         return (
             <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
                 <Modal.Header key="passwordChange" closeButton>
-                  <Modal.Title><Message msgId="user.changePwd"/></Modal.Title>
+                    <Modal.Title><Message msgId="user.changePwd"/></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {this.getBody()}
                 </Modal.Body>
                 <Modal.Footer>
-                  {this.getFooter()}
+                    {this.getFooter()}
                 </Modal.Footer>
             </Modal>);
     }

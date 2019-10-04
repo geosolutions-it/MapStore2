@@ -25,7 +25,7 @@ const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(or
 const getAllowedSpatialOperations = (spatialOperations) => (spatialOperations || []).filter( ({id} = {}) => id !== "BBOX");
 
 module.exports = ({
-    crossLayerExpanded,
+    crossLayerExpanded = true,
     spatialOperations,
     expandCrossLayerFilterPanel = () => {},
     layers = [],
@@ -52,7 +52,7 @@ module.exports = ({
 
     return (<SwitchPanel
         loading={loadingCapabilities}
-        expanded={operation && queryCollection.typeName ? true : crossLayerExpanded && !loadingCapabilities && !errorObj }
+        expanded={crossLayerExpanded && !loadingCapabilities && !errorObj}
         error={errorObj}
         errorMsgId={"queryPanel"}
         buttons={[
@@ -60,11 +60,11 @@ module.exports = ({
                 glyph: 'clear-filter',
                 tooltipId: "queryform.crossLayerFilter.clear",
                 onClick: () => resetCrossLayerFilter()
-                }] : [])
-            ]}
+            }] : [])
+        ]}
         onSwitch={expandCrossLayerFilterPanel}
         title={<Message msgId="queryform.crossLayerFilter.title" />} >
-            <Row className="filter-field-fixed-row">
+        <Row className="filter-field-fixed-row">
             <Col xs={6}>
                 <div className="m-label"><Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
             </Col>
@@ -74,12 +74,12 @@ module.exports = ({
                     disabled={loadingCapabilities || !!errorObj}
                     isLoading={loadingAttributes}
                     options={layers
-                      .filter( l => isSameOGCServiceRoot(searchUrl, l))
-                      .map( l => ({
-                        label: l.title || l.name,
-                        value: l.name
-                    }))}
-                    placeholder="Select Layer"
+                        .filter( l => isSameOGCServiceRoot(searchUrl, l))
+                        .map( l => ({
+                            label: l.title || l.name,
+                            value: l.name
+                        }))}
+                    placeholder={<Message msgId="queryform.crossLayerFilter.placeholder" />}
                     filter="contains"
                     value={typeName}
                     onChange={ sel => {
@@ -93,32 +93,32 @@ module.exports = ({
                     <div className="m-label"><Message msgId="queryform.crossLayerFilter.operation"/></div>
                 </Col>
                 <Col xs={6}>
-                <GeometricOperationSelector
-                    value={operation}
-                    onChange={({id}={}) => setOperation(id)}
-                    spatialOperations={getAllowedSpatialOperations(spatialOperations)}
+                    <GeometricOperationSelector
+                        value={operation}
+                        onChange={({id} = {}) => setOperation(id)}
+                        spatialOperations={getAllowedSpatialOperations(spatialOperations)}
                     />
                 </Col>
             </Row>)
             : null}
-            {(typeName && geometryName && operation)
-                ? (<Row className="filter-field-fixed-row">
-                    <Col xs={12}>
-                        <GroupField
-                            autocompleteEnabled={false /* TODO make it work with stream enhancer */}
-                            withContainer={false}
-                            attributes={attributes}
-                            groupLevels={-1}
-                            filterFields={filterFields}
-                            actions={{
-                                onUpdateLogicCombo: updateLogicCombo,
-                                onAddFilterField: addCrossLayerFilterField,
-                                onUpdateFilterField: updateCrossLayerFilterField,
-                                onRemoveFilterField: removeCrossLayerFilterField
-                            }}
-                            groupFields={groupFields} filterField/>
-                    </Col>
-                </Row>)
-                : null}
-        </SwitchPanel>);
+        {(typeName && geometryName && operation)
+            ? (<Row className="filter-field-fixed-row">
+                <Col xs={12}>
+                    <GroupField
+                        autocompleteEnabled={false /* TODO make it work with stream enhancer */}
+                        withContainer={false}
+                        attributes={attributes}
+                        groupLevels={-1}
+                        filterFields={filterFields}
+                        actions={{
+                            onUpdateLogicCombo: updateLogicCombo,
+                            onAddFilterField: addCrossLayerFilterField,
+                            onUpdateFilterField: updateCrossLayerFilterField,
+                            onRemoveFilterField: removeCrossLayerFilterField
+                        }}
+                        groupFields={groupFields} filterField/>
+                </Col>
+            </Row>)
+            : null}
+    </SwitchPanel>);
 };

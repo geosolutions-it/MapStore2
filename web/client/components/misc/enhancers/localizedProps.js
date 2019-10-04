@@ -17,9 +17,9 @@ const getMessage = (messages, path) => {
     return !isNil(msg) ? msg : path;
 };
 const accumulate = (props, messages) => (acc = {}, propName) => ({
-            ...acc,
-            [propName]: props[propName] && getMessage(messages, props[propName])
-        });
+    ...acc,
+    [propName]: props[propName] && getMessage(messages, props[propName])
+});
 /**
  * Converts the msgId provided for the props indicated as arguments into localized
  * strings getting them from the context.
@@ -41,4 +41,4 @@ module.exports = (propNames) => compose(
         ...props,
         ...(castArray(propNames).reduce(accumulate(props, messages), {}))
     })
-));
+    ));

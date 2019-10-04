@@ -67,20 +67,23 @@ const WMTSUtils = {
                     .filter((operation) => operation.$.name === name)
                     .map((operation) => castArray(operation["ows:DCP"]["ows:HTTP"]["ows:Get"]))
             ) || [])
-            .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
-            .map((request) => request.$["xlink:href"])
+                .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
+                .map((request) => request.$["xlink:href"])
         );
     },
     /**
      * Returns the GetTile Url from the record. This allows to get to get the proper
      * url template.
-     * If ResourceURL is not present it uses GetTileURL
+     * If requestEncoding is KVP uses GetTileURL, otherwise (RESTful) uses ResourceURL or GetTileURL
      */
-    getGetTileURL: (record = {}) => {
-        return record.ResourceURL
-                // TODO: support for multiple URLs
-                && castArray(record.ResourceURL).map(({$ = {}}) => $.template || $.value)
-                || record.GetTileURL;
+    getGetTileURL: ({ ResourceURL, GetTileURL, requestEncoding } = {}) => {
+        if (requestEncoding === "KVP") {
+            return GetTileURL;
+        }
+        return ResourceURL
+            // TODO: support for multiple URLs
+            && castArray(ResourceURL).map(({ $ = {} }) => $.template || $.value)
+            || GetTileURL;
     },
     /**
      * Returns the the original capabilities. if not present, try returns the GetTileURL.

@@ -75,30 +75,30 @@ module.exports = ({
     style = {}
 
 }) => (<div className="ms-playback-settings" style={style}>
-        <h4><Message msgId="timeline.settings.title" /></h4>
-        <FormGroup controlId="timelineSettings">
-            <Form componentClass="fieldset" inline>
-                <ControlLabel>
-                    <Message msgId="timeline.settings.snapToGuideLayer" />&nbsp;
-                    <InfoPopover text={<Message msgId="timeline.settings.snapToGuideLayerTooltip" />} />
-                </ControlLabel>
-                <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
-            </Form>
-        </FormGroup>
+    <h4><Message msgId="timeline.settings.title" /></h4>
+    <FormGroup controlId="timelineSettings">
+        <Form componentClass="fieldset" inline>
+            <ControlLabel>
+                <Message msgId="timeline.settings.snapToGuideLayer" />&nbsp;
+                <InfoPopover text={<Message msgId="timeline.settings.snapToGuideLayerTooltip" />} />
+            </ControlLabel>
+            <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
+        </Form>
+    </FormGroup>
     <h4><Message msgId="playback.settings.title" /></h4>
-        <FormGroup controlId="frameDuration" >
+    <FormGroup controlId="frameDuration" >
         <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>
-            <InputGroup>
+        <InputGroup>
             <FormControl
                 componentClass="input"
                 type="number"
                 value={frameDuration}
-                    onChange={({ target = {} } = {}) => onValidInteger(
+                onChange={({ target = {} } = {}) => onValidInteger(
                     target.value,
                     v => {
                         onSettingChange("frameDuration", v);
                     }
-                    )} /><InputGroup.Addon>s</InputGroup.Addon>
+                )} /><InputGroup.Addon>s</InputGroup.Addon>
         </InputGroup>
 
     </FormGroup>
@@ -114,12 +114,12 @@ module.exports = ({
                 type="number"
                 style={{ maxWidth: 120 }}
                 value={timeStep}
-                    onChange={({ target = {} } = {}) => onValidInteger(
-                        target.value,
-                        v => {
-                            onSettingChange("timeStep", v);
-                        }
-                        )} />
+                onChange={({ target = {} } = {}) => onValidInteger(
+                    target.value,
+                    v => {
+                        onSettingChange("timeStep", v);
+                    }
+                )} />
             <FormControl disabled={!fixedStep} componentClass="select" value={stepUnit} onChange={({ target = {} }) => onSettingChange("stepUnit", target.value)} >
                 <option value="years"><Message msgId="playback.settings.step.year" msgParams={{ number: timeStep || 1 }} /></option>
                 <option value="weeks"><Message msgId="playback.settings.step.week" msgParams={{ number: timeStep || 1 }} /></option>
@@ -130,7 +130,7 @@ module.exports = ({
             </FormControl>
         </Form>
     </FormGroup>
-        <SwitchPanel onSwitch={(enabled) => toggleAnimationRange(enabled)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
+    <SwitchPanel onSwitch={(enabled) => toggleAnimationRange(enabled)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
         <FormGroup controlId="formPlaybackMode" style={{margin: 10}}>
             <InlineDateTimeSelector
                 tooltipId="playback.settings.range.animationStart"
@@ -150,8 +150,8 @@ module.exports = ({
     </SwitchPanel>
     <FormGroup controlId="formPlaybackFollowingMode">
         <Form componentClass="fieldset" inline>
-                <ControlLabel><Message msgId="playback.settings.mode.following" />&nbsp;<InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>
-                <span><SwitchButton checked={following} onChange={v => onSettingChange("following", v)}/></span>
+            <ControlLabel><Message msgId="playback.settings.mode.following" />&nbsp;<InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>
+            <span><SwitchButton checked={following} onChange={v => onSettingChange("following", v)}/></span>
         </Form>
     </FormGroup>
 </div>);

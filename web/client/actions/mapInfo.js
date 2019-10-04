@@ -22,11 +22,16 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
+const CHANGE_PAGE = 'IDENTIFY:CHANGE_PAGE';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
+
+const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
+const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
 
 /**
  * Private
@@ -181,12 +186,41 @@ function updateCenterToMarker(status) {
         status
     };
 }
-
-function featureInfoClick(point, layer) {
+/**
+ * Carries data needed for Get Feature Info request
+ * @param {object} point point clicked in this shape {latlng: {lat:1, lng:2}, pixel:{x:33 y:33}, modifiers:{} }
+ * @param {string} layer the name of the layer without workspace
+ * @param {object[]} [filterNameList=[]] list of layers to perform the GFI request
+ * @param {object} [overrideParams={}] a map based on name as key and objec as value for overriding request params
+ * @param {string} [itemId=null] id of the item needed for filtering results
+ */
+function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null) {
     return {
         type: FEATURE_INFO_CLICK,
         point,
-        layer
+        layer,
+        filterNameList,
+        overrideParams,
+        itemId
+    };
+}
+
+function toggleHighlightFeature(enabled) {
+    return {
+        type: TOGGLE_HIGHLIGHT_FEATURE,
+        enabled
+    };
+}
+
+/**
+ * Changes the current page of the feature info.
+ * The index is relative only to valid responses, excluding invalid.(see validResponsesSelector)
+ * @param {number} index index of the page
+ */
+function changePage(index) {
+    return {
+        type: CHANGE_PAGE,
+        index
     };
 }
 
@@ -228,9 +262,12 @@ module.exports = {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
+    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
+    CHANGE_PAGE, changePage,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,
+    TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
     closeIdentify,

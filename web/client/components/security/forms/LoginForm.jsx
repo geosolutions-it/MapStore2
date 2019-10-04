@@ -18,17 +18,17 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
  */
 class LoginForm extends React.Component {
     static propTypes = {
-      // props
+        // props
         user: PropTypes.object,
         onLoginSuccess: PropTypes.func,
         showSubmitButton: PropTypes.bool,
         loginError: PropTypes.object,
 
-      // actions
+        // actions
         onSubmit: PropTypes.func,
         onError: PropTypes.func,
 
-      // localization
+        // localization
         userNameText: PropTypes.node,
         passwordText: PropTypes.node,
         loginFailedStatusMessages: PropTypes.object,
@@ -59,7 +59,7 @@ class LoginForm extends React.Component {
         password: ''
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let newUser = nextProps.user;
         let oldUser = this.props.user;
         let userChange = newUser !== oldUser;
@@ -100,6 +100,7 @@ class LoginForm extends React.Component {
                 bsStyle="primary"
                 key="submit" onClick={this.handleSubmit}>{submitText}</Button>);
         }
+        return null;
     };
 
     render() {

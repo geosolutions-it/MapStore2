@@ -7,21 +7,11 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-const PropTypes = require('prop-types');
-const { withContext } = require('recompose');
+const {Provider} = require('react-redux');
+
 const expect = require('expect');
 
-const mockStore = withContext({
-    store: PropTypes.any
-}, ({store = {}} = {}) => ({
-    store: {
-        dispatch: () => { },
-        subscribe: () => { },
-        getState: () => ({}),
-        ...store
-    }
-}));
-const MapWizard = mockStore(require('../MapWizard'));
+const MapWizard = require('../MapWizard');
 describe('MapWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -39,10 +29,11 @@ describe('MapWizard component', () => {
                 maptype: {
                     mapType: 'sink'
                 }
-            })
+            }),
+            subscribe: () => {}
         };
         const map = { groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", name: "Layer", group: "GGG", options: {} }] };
-        ReactDOM.render(<MapWizard store={store} editorData={{ map }} />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><MapWizard editorData={{ map }} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toExist();

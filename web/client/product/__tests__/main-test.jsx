@@ -11,8 +11,9 @@ const mainApp = require('../main');
 const expect = require('expect');
 const assign = require('object-assign');
 const ConfigUtils = require('../../utils/ConfigUtils');
+const {includes} = require('lodash');
 
-class AppComnponent extends React.Component {
+class AppComponent extends React.Component {
     render() {
         return <div>TEST</div>;
     }
@@ -39,10 +40,11 @@ describe('standard application runner', () => {
     it('allows overriding appConfig', (done) => {
         const overrideCfg = (config) => {
             return assign({}, config, {
-                appComponent: AppComnponent,
+                appComponent: AppComponent,
                 onStoreInit: () => {
                     setTimeout(() => {
                         expect(document.body.innerHTML).toContain("TEST");
+                        expect(config.printingEnabled).toBe(true);
                         done();
                     }, 0);
                 }
@@ -51,4 +53,65 @@ describe('standard application runner', () => {
         mainApp({}, {plugins: {}}, overrideCfg);
     });
 
+    it('check printingEnabled set to false', (done) => {
+        const overrideCfg = (config) => {
+            return assign({}, config, {
+                onStoreInit: () => {
+                    setTimeout(() => {
+                        expect(config.printingEnabled).toBe(false);
+                        done();
+                    }, 0);
+                }
+            });
+        };
+        mainApp({printingEnabled: false}, {plugins: {}}, overrideCfg);
+    });
+    it('testing default appStore', () => {
+        let defaultConfig;
+        mainApp(defaultConfig, {plugins: {}}, (config) => {
+            expect(config.appStore).toExist();
+            const state = config.appStore().getState();
+            const reducersKeys = Object.keys(state);
+            expect(includes(reducersKeys, "maptype")).toBe(true);
+            expect(includes(reducersKeys, "maps")).toBe(true);
+            expect(includes(reducersKeys, "maplayout")).toBe(true);
+            expect(includes(reducersKeys, "version")).toBe(true);
+        });
+    });
+
+    it('testing default appStore plus some extra reducers', () => {
+        let defaultConfig = {
+            appReducers: {
+                catalog: require("../../reducers/catalog")
+            }
+        };
+        mainApp(defaultConfig, {plugins: {}}, (config) => {
+            expect(config.appStore).toExist();
+            const state = config.appStore().getState();
+            const reducersKeys = Object.keys(state);
+            expect(includes(reducersKeys, "maptype")).toBe(true);
+            expect(includes(reducersKeys, "maps")).toBe(true);
+            expect(includes(reducersKeys, "maplayout")).toBe(true);
+            expect(includes(reducersKeys, "version")).toBe(true);
+            expect(includes(reducersKeys, "catalog")).toBe(true);
+        });
+    });
+
+    it('testing appStore overridng default reducers', () => {
+        let defaultConfig = {
+            baseReducers: {
+                catalog: require("../../reducers/catalog")
+            }
+        };
+        mainApp(defaultConfig, {plugins: {}}, (config) => {
+            expect(config.appStore).toExist();
+            const state = config.appStore().getState();
+            const reducersKeys = Object.keys(state);
+            expect(includes(reducersKeys, "maptype")).toBe(false);
+            expect(includes(reducersKeys, "maps")).toBe(false);
+            expect(includes(reducersKeys, "maplayout")).toBe(false);
+            expect(includes(reducersKeys, "version")).toBe(false);
+            expect(includes(reducersKeys, "catalog")).toBe(true);
+        });
+    });
 });

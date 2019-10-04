@@ -5,21 +5,38 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../../../components/I18N/Message');
-const Layers = require('../../../../utils/openlayers/Layers');
-const ol = require('openlayers');
-const {isNil} = require('lodash');
-const objectAssign = require('object-assign');
-const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-const ProxyUtils = require('../../../../utils/ProxyUtils');
-const { isArray, castArray } = require('lodash');
-const {optionsToVendorParams} = require('../../../../utils/VendorParamsUtils');
-const SecurityUtils = require('../../../../utils/SecurityUtils');
-const { creditsToAttribution } = require('../../../../utils/LayersUtils');
+import React from 'react';
+import Message from '../../../../components/I18N/Message';
+import Layers from '../../../../utils/openlayers/Layers';
+import isNil from 'lodash/isNil';
+import isEqual from 'lodash/isEqual';
+import union from 'lodash/union';
+import isArray from 'lodash/isArray';
+import assign from 'object-assign';
 
-const mapUtils = require('../../../../utils/MapUtils');
-const ElevationUtils = require('../../../../utils/ElevationUtils');
+import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import ProxyUtils from '../../../../utils/ProxyUtils';
+
+import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
+import SecurityUtils from '../../../../utils/SecurityUtils';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
+
+import MapUtils from '../../../../utils/MapUtils';
+import ElevationUtils from '../../../../utils/ElevationUtils';
+
+import ImageLayer from 'ol/layer/Image';
+import ImageWMS from 'ol/source/ImageWMS';
+import {get} from 'ol/proj';
+import TileGrid from 'ol/tilegrid/TileGrid';
+import TileLayer from 'ol/layer/Tile';
+import TileWMS from 'ol/source/TileWMS';
+
+import VectorTileSource from 'ol/source/VectorTile';
+import VectorTileLayer from 'ol/layer/VectorTile';
+
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
+import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
+
 /**
     @param {object} options of the layer
     @return the Openlayers options from the layers ones and/or default.
@@ -28,7 +45,7 @@ const ElevationUtils = require('../../../../utils/ElevationUtils');
 function wmsToOpenlayersOptions(options) {
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
-    const result = objectAssign({}, options.baseParams, {
+    const result = assign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
@@ -37,7 +54,7 @@ function wmsToOpenlayersOptions(options) {
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: !isNil(options.tiled) ? options.tiled : true,
         VERSION: options.version || "1.3.0"
-    }, objectAssign(
+    }, assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
         (params || {})
@@ -76,11 +93,10 @@ function elevationLoadFunction(forceProxy, imageTile, src) {
 
 function addTileLoadFunction(sourceOptions, options) {
     if (options.useForElevation) {
-        return objectAssign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
-        // return objectAssign({}, sourceOptions, { tileLoadFunction: (imageTile, src) => { imageTile.getImage().src = src; } });
+        return assign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
     }
     if (options.forceProxy) {
-        return objectAssign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
+        return assign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
     }
     return sourceOptions;
 }
@@ -114,57 +130,141 @@ function getElevation(pos) {
         return <Message msgId="elevationLoadingError" />;
     }
 }
-const toOLAttributions = credits => credits && creditsToAttribution(credits) ? castArray(creditsToAttribution(credits)) : undefined;
+const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
 
-Layers.registerType('wms', {
-    create: (options, map) => {
-        const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-        const queryParameters = wmsToOpenlayersOptions(options) || {};
-        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
-        if (options.singleTile) {
-            return new ol.layer.Image({
-                opacity: options.opacity !== undefined ? options.opacity : 1,
-                visible: options.visibility !== false,
-                zIndex: options.zIndex,
-                source: new ol.source.ImageWMS({
-                    url: urls[0],
-                    attributions: toOLAttributions(options.credits),
-                    params: queryParameters,
-                    ratio: options.ratio || 1
-                })
-            });
-        }
-        const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-        const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
-        const sourceOptions = addTileLoadFunction({
-            attributions: toOLAttributions(options.credits),
-            urls: urls,
-            params: queryParameters,
-            tileGrid: new ol.tilegrid.TileGrid({
-                extent: extent,
-                resolutions: mapUtils.getResolutions(),
-                tileSize: options.tileSize ? options.tileSize : 256,
-                origin: options.origin ? options.origin : [extent[0], extent[1]]
-            })
-        }, options);
-        const layer = new ol.layer.Tile({
+const createLayer = (options, map) => {
+    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+    const queryParameters = wmsToOpenlayersOptions(options) || {};
+    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
+
+    const vectorFormat = isVectorFormat(options.format);
+
+    if (options.singleTile && !vectorFormat) {
+        return new ImageLayer({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
-            source: new ol.source.TileWMS(sourceOptions)
+            source: new ImageWMS({
+                url: urls[0],
+                attributions: toOLAttributions(options.credits),
+                params: queryParameters,
+                ratio: options.ratio || 1
+            })
         });
-        layer.set('map', map);
-        if (options.useForElevation) {
-            layer.set('nodata', options.nodata);
-            layer.set('getElevation', getElevation.bind(layer));
+    }
+    const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
+    const extent = get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
+    const sourceOptions = addTileLoadFunction({
+        attributions: toOLAttributions(options.credits),
+        urls: urls,
+        params: queryParameters,
+        tileGrid: new TileGrid({
+            extent: extent,
+            resolutions: MapUtils.getResolutions(),
+            tileSize: options.tileSize ? options.tileSize : 256,
+            origin: options.origin ? options.origin : [extent[0], extent[1]]
+        })
+    }, options);
+    const wmsSource = new TileWMS({ ...sourceOptions });
+    const layerConfig = {
+        opacity: options.opacity !== undefined ? options.opacity : 1,
+        visible: options.visibility !== false,
+        zIndex: options.zIndex
+    };
+    let layer;
+    if (vectorFormat) {
+        layer = new VectorTileLayer({
+            ...layerConfig,
+            source: new VectorTileSource({
+                ...sourceOptions,
+                format: new OL_VECTOR_FORMATS[options.format]({
+                    layerName: '_layer_'
+                }),
+                tileUrlFunction: (tileCoord, pixelRatio, projection) => wmsSource.tileUrlFunction(tileCoord, pixelRatio, projection)
+            })
+        });
+    } else {
+        layer = new TileLayer({
+            ...layerConfig,
+            source: wmsSource
+        });
+    }
+    layer.set('map', map);
+    if (vectorFormat) {
+        layer.set('wmsSource', wmsSource);
+        if (options.vectorStyle) {
+            applyStyle(options.vectorStyle, layer);
         }
-        return layer;
-    },
+    }
+    if (options.useForElevation) {
+        layer.set('nodata', options.nodata);
+        layer.set('getElevation', getElevation.bind(layer));
+    }
+    return layer;
+};
+
+const mustCreateNewLayer = (oldOptions, newOptions) => {
+    return (oldOptions.singleTile !== newOptions.singleTile
+        || oldOptions.securityToken !== newOptions.securityToken
+        || oldOptions.ratio !== newOptions.ratio
+        // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
+        || oldOptions.credits !== newOptions.credits && !newOptions.credits
+        || isVectorFormat(oldOptions.format) !== isVectorFormat(newOptions.format)
+        || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
+    );
+};
+
+Layers.registerType('wms', {
+    create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
-            let changed = false;
+        const newIsVector = isVectorFormat(newOptions.format);
+
+        if (mustCreateNewLayer(oldOptions, newOptions)) {
+            // TODO: do we need to clean anything before re-creating stuff from scratch?
+            return createLayer(newOptions, map);
+        }
+        let needsRefresh = false;
+        if (newIsVector && newOptions.vectorStyle && !isEqual(newOptions.vectorStyle, oldOptions.vectorStyle || {})) {
+            applyStyle(newOptions.vectorStyle, layer);
+            needsRefresh = true;
+        }
+
+        const wmsSource = layer.get('wmsSource') || layer.getSource();
+        const vectorSource = newIsVector ? layer.getSource() : null;
+
+        if (oldOptions.srs !== newOptions.srs) {
+            const extent = get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
+            if (newOptions.singleTile && !newIsVector) {
+                layer.setExtent(extent);
+            } else {
+                const tileGrid = new TileGrid({
+                    extent: extent,
+                    resolutions: MapUtils.getResolutions(),
+                    tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
+                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                });
+                wmsSource.tileGrid = tileGrid;
+                if (vectorSource) {
+                    vectorSource.tileGrid = tileGrid;
+                }
+            }
+            needsRefresh = true;
+        }
+
+        if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
+            wmsSource.setAttributions(toOLAttributions(newOptions.credits));
+            needsRefresh = true;
+        }
+
+        let changed = false;
+        let oldParams;
+        let newParams;
+        if (oldOptions && wmsSource && wmsSource.updateParams) {
             if (oldOptions.params && newOptions.params) {
-                changed = Object.keys(oldOptions.params).reduce((found, param) => {
+                changed = union(
+                    Object.keys(oldOptions.params),
+                    Object.keys(newOptions.params)
+                ).reduce((found, param) => {
                     if (newOptions.params[param] !== oldOptions.params[param]) {
                         return true;
                     }
@@ -173,88 +273,40 @@ Layers.registerType('wms', {
             } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
                 changed = true;
             }
-            let oldParams = wmsToOpenlayersOptions(oldOptions);
-            let newParams = wmsToOpenlayersOptions(newOptions);
+            oldParams = wmsToOpenlayersOptions(oldOptions);
+            newParams = wmsToOpenlayersOptions(newOptions);
             changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }
                 return found;
             }, false);
-            if (oldOptions.srs !== newOptions.srs) {
-                const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
-                layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
-                    extent: extent,
-                    resolutions: mapUtils.getResolutions(),
-                    tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
-                });
+
+            needsRefresh = needsRefresh || changed;
+        }
+
+        if (needsRefresh) {
+            // forces tile cache drop
+            // this prevents old cached tiles at lower zoom levels to be
+            // rendered during new params load, but causes a blink glitch.
+            // TODO: find out a way to refresh only once to clear lower zoom level cache.
+            if (wmsSource.refresh) {
+                wmsSource.refresh();
+            }
+            if (vectorSource) {
+                vectorSource.clear();
+                vectorSource.refresh();
             }
             if (changed) {
-                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
-                layer.getSource().updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
-                    return params[key] ? previous : objectAssign(previous, {
+                const params = assign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+
+                wmsSource.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                    return params[key] ? previous : assign(previous, {
                         [key]: undefined
                     });
                 }, {})));
             }
-            if (oldOptions.credits !== newOptions.credits && newOptions.credits) {
-                layer.getSource().setAttributions(toOLAttributions(newOptions.credits));
-            }
-            if (oldOptions.singleTile !== newOptions.singleTile
-                || oldOptions.securityToken !== newOptions.securityToken
-                || oldOptions.ratio !== newOptions.ratio
-                 // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
-                || oldOptions.credits !== newOptions.credits && !newOptions.credits
-                ) {
-                // this forces cache empty, required when auth permission changed to avoid caching when unauthorized
-                // Moved here to avoid the layer disappearing during animations
-                if (changed) {
-                    if (layer.getSource().refresh) {
-                        layer.getSource().refresh();
-                    }
-                }
-                const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-                const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
-                urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
-                let newLayer;
-                if (newOptions.singleTile) {
-                    // return the Image Layer with the related source
-                    newLayer = new ol.layer.Image({
-                        opacity: newOptions.opacity !== undefined ? newOptions.opacity : 1,
-                        visible: newOptions.visibility !== false,
-                        zIndex: newOptions.zIndex,
-                        source: new ol.source.ImageWMS({
-                            attributions: toOLAttributions(newOptions.credits),
-                            url: urls[0],
-                            params: queryParameters,
-                            ratio: newOptions.ratio || 1
-                        })
-                    });
-                } else {
-                    // return the Tile Layer with the related source
-                    const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-                    const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs || mapSrs, newOptions.allowedSRS)).getExtent();
-                    newLayer = new ol.layer.Tile({
-                        opacity: newOptions.opacity !== undefined ? newOptions.opacity : 1,
-                        visible: newOptions.visibility !== false,
-                        zIndex: newOptions.zIndex,
-                        source: new ol.source.TileWMS(objectAssign({
-                            attributions: toOLAttributions(newOptions.credits),
-                            urls: urls,
-                            params: queryParameters,
-                            tileGrid: new ol.tilegrid.TileGrid({
-                                extent: extent,
-                                resolutions: mapUtils.getResolutions(),
-                                tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                                origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
-                            })
-                        }, newOptions.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
-                    });
-                }
-                return newLayer;
-            }
-            return null;
         }
+        return null;
     }
 });

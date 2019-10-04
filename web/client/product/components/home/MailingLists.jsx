@@ -36,7 +36,7 @@ class MailingLists extends React.Component {
                         <p>
                             <strong><I18N.Message msgId="home.ml.subscribe_users"/></strong>
                         </p>
-                        <p>
+                        <div>
                             <Form inline action="https://groups.google.com/group/mapstore-users/boxsubscribe">
                                 <FormGroup controlId="formInlineEmail">
                                     <span><I18N.Message msgId="home.ml.email"/></span>{' '}
@@ -44,7 +44,7 @@ class MailingLists extends React.Component {
                                 </FormGroup>{' '}
                                 <Button bsStyle="primary" type="submit">{this.context.messages.home.ml.subscribe}</Button>
                             </Form>
-                        </p>
+                        </div>
                         <p><a className="link-white-bg" href="https://groups.google.com/group/mapstore-users"><I18N.Message msgId="home.ml.visit_group"/></a></p>
                     </Col>
 
@@ -55,7 +55,7 @@ class MailingLists extends React.Component {
                         <p>
                             <strong><I18N.Message msgId="home.ml.subscribe_devel"/></strong>
                         </p>
-                        <p>
+                        <div>
                             <Form inline action="https://groups.google.com/group/mapstore-developers/boxsubscribe">
                                 <FormGroup controlId="formInlineMapStoreDev">
                                     <span><I18N.Message msgId="home.ml.email"/></span>{' '}
@@ -63,30 +63,30 @@ class MailingLists extends React.Component {
                                 </FormGroup>{' '}
                                 <Button bsStyle="primary" type="submit">{this.context.messages.home.ml.subscribe}</Button>
                             </Form>
-                        </p>
+                        </div>
                         <p><a className="link-white-bg" href="https://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a></p>
                     </Col>
                     <Col sm={12} md={6}>
                         <table style={{padding: "0", margin: "10px auto"}} cellSpacing="0">
                             <tbody>
-                            <tr>
-                                <td>
-                                    <img style={{
-                                        background: "white",
-                                        borderRadius: "2px 2px 2px 2px"
-                                    }} src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <b><I18N.Message msgId="home.LinkedinGroup"/></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{padding: "10px"}}>
-                                    <a className="link-white-bg" href="https://www.linkedin.com/groups/7444734/profile"><I18N.Message msgId="home.ml.visit_group"/></a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <img style={{
+                                            background: "white",
+                                            borderRadius: "2px 2px 2px 2px"
+                                        }} src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
+                                        <b><I18N.Message msgId="home.LinkedinGroup"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{padding: "10px"}}>
+                                        <a className="link-white-bg" href="https://www.linkedin.com/groups/7444734/profile"><I18N.Message msgId="home.ml.visit_group"/></a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </Col>
@@ -94,7 +94,7 @@ class MailingLists extends React.Component {
                         <Follow options={{size: 'large'}} username="mapstore2" />
                     </Col>
                 </Row>
-			</div>
+            </div>
         );
     }
 }

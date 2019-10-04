@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +6,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ol = require('openlayers');
+import PropTypes from 'prop-types';
+import React from 'react';
+import Select from 'ol/interaction/Select';
+import {platformModifierKeyOnly} from 'ol/events/condition';
+import {Style, Stroke, Fill} from 'ol/style';
+import CircleStyle from 'ol/style/Circle';
 
-class HighlightFeatureSupport extends React.Component {
+export default class HighlightFeatureSupport extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         layer: PropTypes.string.isRequired,
@@ -61,7 +64,7 @@ class HighlightFeatureSupport extends React.Component {
              nx.features.toString() !== pr.features.toString();
     }
 
-    componentWillUpdate(np) {
+    UNSAFE_componentWillUpdate(np) {
         switch (np.status) {
         case "enabled": {
             this.setSelectInteraction(np);
@@ -112,10 +115,10 @@ class HighlightFeatureSupport extends React.Component {
 
     createSelectInteraction = () => {
         this.createStyle();
-        this._selectInteraction = new ol.interaction.Select({
+        this._selectInteraction = new Select({
             layers: this.layersFilter,
             style: this._style,
-            toggleCondition: ol.events.condition.platformModifierKeyOnly
+            toggleCondition: platformModifierKeyOnly
         });
         this._selectInteraction.on('select', this.selectionChange, this);
         this.props.map.addInteraction(this._selectInteraction);
@@ -143,20 +146,20 @@ class HighlightFeatureSupport extends React.Component {
     createStyle = () => {
         let sty = this.props.selectedStyle;
         let style = {
-            stroke: new ol.style.Stroke( sty.stroke ? sty.stroke : {
+            stroke: new Stroke( sty.stroke ? sty.stroke : {
                 color: 'blue',
                 width: 1
             }),
-            fill: new ol.style.Fill(sty.fill ? sty.fill : {
+            fill: new Fill(sty.fill ? sty.fill : {
                 color: 'blue'
             })
         };
         if (sty.type === "Point") {
             style = {
-                image: new ol.style.Circle({...style, radius: sty.radius || 5})
+                image: new CircleStyle({...style, radius: sty.radius || 5})
             };
         }
-        this._style = new ol.style.Style(style);
+        this._style = new Style(style);
     };
 
     highlightFeatures = (features) => {
@@ -174,4 +177,3 @@ class HighlightFeatureSupport extends React.Component {
     };
 }
 
-module.exports = HighlightFeatureSupport;

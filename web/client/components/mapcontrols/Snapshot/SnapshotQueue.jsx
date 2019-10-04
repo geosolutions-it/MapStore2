@@ -39,11 +39,11 @@ class SnapshotQueue extends React.Component {
         mapType: 'leaflet'
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType) {
             SnapshotSupport = require('./SnapshotSupport')(newProps.mapType);
         }
@@ -68,7 +68,7 @@ class SnapshotQueue extends React.Component {
                 <div
                     key="hiddenGrabMaps"
                     style={{zIndex: -9999}}
-                    >
+                >
                     {this.renderGrabMaps(this.props.queue)}
                 </div>
             </div>);

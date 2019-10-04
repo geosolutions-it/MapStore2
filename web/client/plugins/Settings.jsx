@@ -72,10 +72,10 @@ class SettingsButton extends React.Component {
         wrapWithPanel: false,
         panelStyle: {
             minWidth: "300px",
-            zIndex: 100,
+            zIndex: 1996,
             position: "absolute",
             overflow: "auto",
-            top: "100px",
+            top: "90px",
             left: "calc(50% - 150px)",
             backgroundColor: "white"
         },
@@ -88,21 +88,21 @@ class SettingsButton extends React.Component {
     renderSettings = () => {
         const settingsFirst = {
             language: (
-            <span key="language-label">
-                <FormGroup>
-                    <Row>
-                        <Col xs={12}>
-                            <label><Message msgId="language" /></label>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12}>
-                            <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
-                        </Col>
-                    </Row>
-                </FormGroup>
+                <span key="language-label">
+                    <FormGroup>
+                        <Row>
+                            <Col xs={12}>
+                                <label><Message msgId="language" /></label>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12}>
+                                <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                            </Col>
+                        </Row>
+                    </FormGroup>
 
-            </span>)
+                </span>)
         };
         const settingsLast = {
             history: <HistoryBar
@@ -143,7 +143,7 @@ class SettingsButton extends React.Component {
                         {settings}
                     </Panel>);
                 }
-                return (<Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                return (<Dialog id={this.props.id} style={{...this.props.panelStyle, display: this.props.visible ? 'block' : 'none'}} className={this.props.panelClassName} draggable={false} modal>
                     <span role="header">
                         <span className="settings-panel-title"><Message msgId="settings"/></span>
                         <button onClick={this.props.toggleControl} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>

@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,6 +7,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
+
 const {connect} = require('react-redux');
 const {compose} = require('redux');
 
@@ -144,29 +145,29 @@ class ToolsContainer extends React.Component {
                     {...tool.cfg} items={tool.items || []}>
                     {tool.cfg && tool.cfg.glyph ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 </Tool>,
-            tool);
+                tool);
         });
     };
 
     renderPanels = () => {
         return this.props.panels
-        .filter((panel) => !panel.panel.loadPlugin).map((panel) => {
-            const ToolPanelComponent = panel.panel;
-            const ToolPanel = (<ToolPanelComponent
-                key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
-                items={panel.items || []}/>);
-            const title = panel.title ? <Message msgId={panel.title}/> : null;
-            if (panel.wrap) {
-                return (
-                    <Collapse key={"mapToolBar-item-collapse-" + panel.name} in={this.props.activePanel === panel.name}>
-                        <Panel header={title} style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {ToolPanel}
-                        </Panel>
-                    </Collapse>
-                );
-            }
-            return ToolPanel;
-        });
+            .filter((panel) => !panel.panel.loadPlugin).map((panel) => {
+                const ToolPanelComponent = panel.panel;
+                const ToolPanel = (<ToolPanelComponent
+                    key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
+                    items={panel.items || []}/>);
+                const title = panel.title ? <Message msgId={panel.title}/> : null;
+                if (panel.wrap) {
+                    return (
+                        <Collapse key={"mapToolBar-item-collapse-" + panel.name} in={this.props.activePanel === panel.name}>
+                            <Panel header={title} style={this.props.panelStyle} className={this.props.panelClassName}>
+                                {ToolPanel}
+                            </Panel>
+                        </Collapse>
+                    );
+                }
+                return ToolPanel;
+            });
     };
 
     render() {

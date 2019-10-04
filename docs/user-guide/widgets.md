@@ -1,7 +1,7 @@
 # Creating Widgets
 ******************
 
-In addition to adding layers to the map, in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) the user can create widgets from the added layers. Widgets are graphical elements created by the user that describe and visualize qualitatively and quantitatively the data of the layer such as charts, texts, tables and counters.
+In addition to adding layers to the map, in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can create widgets from the added layers. Widgets are graphical elements created by the user that describe and visualize qualitatively and quantitatively the data of the layer such as charts, texts, tables and counters.
 
 * **Open** a new map.
 * **Add** a layer (e.g. USA Population).
@@ -11,6 +11,27 @@ In addition to adding layers to the map, in [MapStore](https://mapstore2.geo-sol
 The Widget page will open showing the various widget types to create.
 
   <img src="../img/widget-list.jpg" style="max-width:400px;"/>
+
+Widgets Tray
+------------
+
+When created, the widgets will be placed on the map (or in the dashboard, depending on the context). In the header of each widget window there are some options:
+
+ <img src="../img/widgets-tray.jpg"/>
+
+
+* **Pin** the pin tool allow to lock the widget position
+* **Collapse** the collapse tool allow to collapse the widgets in the *Widgets Tray**
+* **Menu** a set of tools (depending of the widget). Contains the controls to "Remove" or Edit the widget
+
+The **Widget Tray** is a plugin that allow to expand/collapse widgets one by one. In this tray you can see one item for each widget. You can click on these items to collapse or expand the single widgets. A **Collapse All** button allow to collapse or expand all widgets at once.
+
+Widgets and **[Timeline](timeline.md#timeline)** cannot be expanded on the same map at the same time.<br>
+If a layer with a time dimension is added to the map, the *Timeline* will be shown on the screen and not-pinned widgets will collapse in the tray automatically.<br>
+When a widget is added to the map, the *Timeline* will collapse in the tray and all the widgets will expand. A tooltip will highlight the *Timeline* icon <img src="../img/timeline-collapse-icon.jpg" style="max-width:25px;"/> in the tray.<br>
+When those events occur a **notification** explains what happened and how to manage the widgets and the *Timeline*.
+
+<img src="../img/timeline-collapse.jpg"/>
 
 Creating Chart Widget
 ---------------------

@@ -131,6 +131,7 @@ const getGeometryType = (rule) => {
     if (rule.PointSymbolizer) {
         return 'Point';
     }
+    return null;
 };
 
 const getRuleColor = (rule) => {

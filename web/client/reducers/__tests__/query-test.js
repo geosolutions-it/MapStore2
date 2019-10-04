@@ -8,9 +8,9 @@
 
 const expect = require('expect');
 const query = require('../query');
-
+const {TOGGLE_LAYER_FILTER} = require('../../actions/wfsquery');
 const { reset
- } = require('../../actions/queryform');
+} = require('../../actions/queryform');
 
 describe('Test the query reducer', () => {
     it('Test QUERY_FORM_RESET to skip query', () => {
@@ -27,5 +27,12 @@ describe('Test the query reducer', () => {
         };
         const state = query(initState, reset("query"));
         expect(state).toEqual(initState);
+    });
+    it('Test TOGGLE_LAYER_FILTER', () => {
+        const initState = {
+            isLayerFilter: false
+        };
+        const state = query(initState, {type: TOGGLE_LAYER_FILTER});
+        expect(state.isLayerFilter).toBeTruthy();
     });
 });

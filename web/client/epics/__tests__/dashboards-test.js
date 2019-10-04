@@ -12,8 +12,13 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const {
     searchDashboardsOnMapSearch,
-    searchDashboards: searchDashboardsEpic
+    searchDashboards: searchDashboardsEpic,
+    reloadOnDashboards
 } = require('../dashboards');
+
+const { dashboardSaved } = require('../../actions/dashboard');
+const { mapMetadataUpdated } = require('../../actions/maps');
+
 
 const {
     SEARCH_DASHBOARDS,
@@ -43,15 +48,15 @@ describe('dashboards epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case LOADING:
+                case LOADING:
 
-                        break;
-                    case SEARCH_DASHBOARDS:
-                        expect(action.searchText).toBe("Search Text");
-                        done();
-                        break;
-                    default:
-                        done(new Error("Action not recognized"));
+                    break;
+                case SEARCH_DASHBOARDS:
+                    expect(action.searchText).toBe("Search Text");
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
                 }
             });
             done();
@@ -76,6 +81,48 @@ describe('dashboards epics', () => {
             expect(actions[2].value).toBe(false);
             done();
         }, {});
+    });
+    describe('reloadOnDashboards', () => {
+        it('reload on dashboardSaved', (done) => {
+            const startActions = [dashboardSaved("Search Text")];
+            testEpic(reloadOnDashboards, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_DASHBOARDS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                dashboards: {
+                    searchText: "test",
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
+        it('reload on mapMetadataUpdate', (done) => {
+            const startActions = [mapMetadataUpdated(1, "name", "description")];
+            testEpic(reloadOnDashboards, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_DASHBOARDS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                dashboards: {
+                    searchText: "test",
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
     });
     it('searchDashboards error', (done) => {
         const baseUrl = "base/web/client/test-resources/geostore/extjs/search/NODATA#";

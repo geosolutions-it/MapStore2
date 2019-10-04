@@ -17,7 +17,7 @@
         "about_a0": "ovu",
         "about_p5-1": "stranicu.",
         "about_h21": "Zasluge",
-        "about_p6": "MapStore2 je razvijan od:",
+        "about_p6": "MapStore je razvijan od:",
         "enable": "Omogući",
         "layers": "Slojevi",
         "warning": "Upozorenje",
@@ -25,6 +25,8 @@
         "errorDefault": "Došlo je do greške",
         "pageInfoShowMore": "{count} od {total} rezultata",
         "showMore": "Prikaži više...",
+        "collapse": "Sažmi",
+        "expand": "Proširi",
         "version": {
             "label": "Verzija"
         },
@@ -39,6 +41,8 @@
         "details": {
             "title": "O karti"
         },
+        "showEmptyMessageGFI": "Prikaži poruku o praznom rezultatu pretrage u info panel-u",
+        "remove": "Izbriši",
         "layerProperties": {
             "windowTitle": "Svojstva sloja",
             "title": "Naslov",
@@ -58,6 +62,8 @@
             "delete": "Izbriši",
             "deleteLayer":"Izbriši sloj",
             "deleteLayerMessage": "Želite li zaista izbrisati ovaj sloj?",
+            "deleteLayerGroup":"Izbriši grupu",
+            "deleteLayerGroupMessage": "Želite li stvarno izbrisati ovu grupu i sve njezine slojeve?",
             "confirmDelete": "Jeste li sigurni?",
             "featureTypeError": "Nije moguće učitavanje atributa sloja",
             "featureTypeErrorInvalidJSON": "Nije moguće učitavanje atributa sloja. Odziv nije ispravan",
@@ -84,19 +90,19 @@
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
             "templatePreview": "Pregled predloška",
             "tooltip": {
-                "label": "Tooltip",
-                "title": "Title",
-                "description": "Description",
-                "both": "Title and Description",
-                "none": "No Tooltip",
-                "labelPlacement": "Placement",
-                "right": "Right",
-                "bottom": "Bottom",
-                "top": "Top"
+                "label": "Info oblačić",
+                "title": "Naslov",
+                "description": "Opis",
+                "both": "Naslov i opis",
+                "none": "Bez info oblačića",
+                "labelPlacement": "Položaj",
+                "right": "Desno",
+                "bottom": "Dno",
+                "top": "Vrh"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Geografska dužina",
+        "latitude": "Geografska širina",
         "notification": {
             "update": "Ažuriranje",
             "warning": "Upozorenje",
@@ -105,7 +111,9 @@
             "noBackgroundLayerSupported": "Nema dostupnih pozadinskih slojeva za ovaj tip karte.",
             "updateOldMap": "Ovo je stara karta, stoga sve funkcionalnosti ne mogu biti omogućene. Kliknite na dugme za ažuriranje ili zanemarite ovo upozorenje ako ne želite ažurirati kartu.",
             "warningSaveUpdatedMap": "Neki od slojeva se nisu ispravno ažurirali",
-            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani"
+            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani",
+            "incompatibleBackgroundAndProjection":"Projekcija koju ste odabrali nije kompatibilna sa podlogom, promijenite je na kompatibilnu ili odaberite praznu podlogu, a potom odaberite ovu projekciju!",
+            "incompatibleDataAndProjection":"trenutni sloj i projekcija karte nisu potpuno kompatibilni. Moguće je da se dio ili svi podaci ne prikažu na karti"
         },
         "dock": {
             "row": "{rowsSelected} redak odabran",
@@ -164,6 +172,8 @@
                 "red": "{number, plural, =0 {Crveno} =1 {Crveno} other {Crvene}}",
                 "blue": "{number, plural, =0 {Plavo} =1 {Plavo} other {Plave}}",
                 "green": "{number, plural, =0 {Zeleno} =1 {Zeleno} other {Zelene}}",
+                "gray": "{number, plural, =0 {Sivo} =1 {Sivo} other {Sive}}",
+                "jet": "{number, plural, =0 {Tamnosivo} =1 {Tamnosivo} other {Tamnosive}}",
                 "brown": "{number, plural, =0 {Smeđe} =1 {Smeđe} other {Smeđe}}",
                 "purple": "{number, plural, =0 {Ljubičasto} =1 {Ljubičasto} other {Ljubičaste}}",
                 "random": "{number, plural, =0 {Nasumično} =1 {Nasumično} other {Nasumične}}"
@@ -219,7 +229,7 @@
                     "html":"<h3>Pluginovi</h3><p>Izgradi vlastitu aplikaciju</p>"
                 },
                 "api":{
-                    "html":"<h3>API</h3><p>Korist API kako bi uključio MapStore2 kartu u svojoj aplikaciji</p>"
+                    "html":"<h3>API</h3><p>Korist API kako bi uključio MapStore kartu u svojoj aplikaciji</p>"
                 },
                 "rasterstyler":{
                     "html":"<h3>Uređivač stila rastera</h3><p>Stiliziraj svoje rastere</p>"
@@ -298,11 +308,13 @@
                 "errorLoadingDashboards": "Došlo je do greške prilikom učitavanja kontrolnih ploča"
             },
             "maps": {
-                "title": "Karte ({count})"
+                "title": "Karte ({count})",
+                "noMapAvailable": "Karta nije dostupna",
+                "createNewOne": "Izradite novi"
             }
         },
         "map": {
-            "errorLoadingFont": "Grupa fontova {family} nije ispravno učitana. Neki elementi (poput simbola u markerima) mogu imati problema u prikazu",
+            "errorLoadingFont": "Grupa fontova {family} nije ispravno učitana. Neki elementi (poput simbola u oznakama) mogu imati problema u prikazu",
             "loading": "Učitavanje...",
             "loadingSpinner": "Učitavanje karte",
             "loadingerror": "Greška prilikom učitavanja",
@@ -361,9 +373,11 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Greška prilikom učitavanja karte",
                     "notFound": "Karta nije pronađena",
                     "notAccessible": "Karta nije dostupna",
-                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li><ul><p>"
+                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li> <li>projekcija karte nije prilagođena</li></ul><p>",
+                    "title" : "Karta ne može biti prikazana"
                 }
             }
         },
@@ -372,11 +386,19 @@
             "showLegend": "Prikaži legendu",
             "hideLegend": "Sakrij legendu"
         },
+        "addgroup": {
+            "addbtn": "Dodaj",
+            "groupName": "Naziv grupe"
+        },
         "toc": {
             "toggleLayerVisibility": "Izmijeni vidljivost sloja",
+            "toggleGroupVisibility": "Izmijeni vidljivost grupe",
             "displayLegendAndTools": "Prikaži kazalo i alate",
             "zoomToLayerExtent": "Prikaži puni opseg sloja",
             "addLayer": "Dodaj sloj",
+            "addLayerToGroup": "Dodaj sloj odabranoj grupi",
+            "addGroup": "Dodaj grupu",
+            "addSubGroup": "Dodaj podgrupu odabranoj grupi",
             "toolZoomToLayerTooltip": "Prikaži puni opseg odabranoga sloja",
             "toolZoomToLayersTooltip": "Prikaži puni opseg odabranih slojeva",
             "toolLayerSettingsTooltip": "Svojstva odabranoga sloja",
@@ -384,6 +406,7 @@
             "toolTrashLayerTooltip": "Ukloni odabrani sloj",
             "toolTrashLayersTooltip": "Ukloni odabrane slojeve",
             "toolFeaturesGridTooltip": "Otvori atributnu tabelu",
+            "layerFilterTooltip": "Filtriraj sloj",
             "toolDownloadTooltip": "Izvezi podatke sloja",
             "noFilteredResults": "Nema rezultata",
             "filterPlaceholder": "Filtriraj slojeve",
@@ -409,6 +432,8 @@
             "refreshMessage": "Ponovno učitaj konfiguraciju WMS slojeva sa servera",
             "refreshError": "Greška prilikom ažuriranja slojeva: ",
             "epsgNotSupported": "CRS {epsg} nije podržan za približavanje na sloj",
+            "filterIconEnabled": "Onemogući filter sloja",
+            "filterIconDisabled": "Omogući filter sloja",
             "refreshOptions": {
                 "bbox": "Ažuriraj granični okvir",
                 "search": "Ažuriraj postavke pretraživanja",
@@ -505,8 +530,11 @@
         "identifyTitle": "Informacije o objektu",
         "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
         "identifyRevGeocodeHeader": "Koordinate",
-        "identifyShowCoordinateEditor": "Show coordinate editor",
-        "identifyHideCoordinateEditor": "Hide coordinate editor",
+        "identifyZoomToFeature": "Približi na objekt",
+        "identifyStopHighlightingFeatures": "Bez naglašavanja objekata",
+        "identifyHighlightFeatures": "Naglašavanje objekata",
+        "identifyShowCoordinateEditor": "Prikaži unos koordinata",
+        "identifyHideCoordinateEditor": "Sakrij unos koordinata",
         "identifyRevGeocodeModalTitle": "Adresa",
         "identifyRevGeocodeSubmitText": "Više informacija",
         "identifyRevGeocodeCloseText": "Zatvori",
@@ -537,17 +565,20 @@
             "title": "Mjerenje",
             "lengthButtonText": "Linija",
             "areaButtonText": "Površina",
-            "resetButtonText": "Poništi",
+            "resetButtonText": "Resetiraj",
             "lengthLabel": "Duljina",
             "areaLabel": "Površina",
             "bearingLabel": "Azimut",
             "formula": "Formula za izračun udaljenosti",
-            "showLabel": "Prikaži oznaku mjerenja"
+            "showLabel": "Prikaži oznaku mjerenja",
+            "addAsAnnotation": "Dodaj kao pribilješku",
+            "newMeasure": "Nova pribilješka",
+            "selectTool": "Odaberi alat za mjerenje"
         },
         "search":{
-            "decimal": "Decimal",
-            "aeronautical": "Aeronautical",
-            "changeSearchInputField": "Change the search tool",
+            "decimal": "Decimalne",
+            "aeronautical": "Aeronautičke",
+            "changeSearchInputField": "Promijeni alat za pretragu",
             "addressSearch": "Traži po nazivu mjesta",
             "coordinatesSearch": "Pretraživanje po koordinatama",
             "searchservicesbutton": "Konfiguriraj servise pretraživanja",
@@ -573,8 +604,48 @@
             "s_wfs_props_label" : "Svojstva WFS servisa",
             "s_wfs_opt_props_label" : "Dodatna svojstva",
             "s_result_props_label": "Svojstva prikaza rezultata",
-            "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
-            "serviceslistempty": "Nije definiran niti jedan servis"
+            "s_priority_info": "Koristi se za sortiranje rezultata pretrage, prvo niže vrijednosti. Nominatim razultati imaju prednost = 5",
+            "serviceslistempty": "Nije definiran niti jedan servis",
+            "service_missing": "{serviceType} servis nije konfiguriran",
+            "generic_error": "Došlo je do greške prilikom pretrage. Detalji greške: {message}",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+            },
+            "s_launch_info_panel": {
+                "label": "Launch Info panel",
+                "no_info": "No Info",
+                "all_layers": "All Layers",
+                "single_layer": "Search Layer",
+                "no_info_description": "Identify panel will not show up on search",
+                "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
+                "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
+            }
+        },
+        "draw": {
+            "fill": "Ispuna",
+            "text": "Tekst",
+            "fontTitle": "Font",
+            "color": "Boja",
+            "lineDash": "Prekidi",
+            "stroke": "Potez",
+            "opacity": "Prozirnost",
+            "width": "Širina",
+            "font": {
+                "textColor": "Boja",
+                "family": "Porodica",
+                "size": "Veličina",
+                "style": "Stil",
+                "weight": "Debljina",
+                "textAlign": "Poravnavanje"
+            },
+            "marker": {
+                "layout": "Raspored",
+                "shape": "Oblik",
+                "size": "Veličina",
+                "type": "Tip",
+                "icon": "Ikona"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -592,7 +663,7 @@
                         "polygon": "Nacrtaj poligon",
                         "rectangle": "Nacrtaj pravokutnik",
                         "circle": "ncrtaj kružnicu",
-                        "marker": "Nacrtaj marker"
+                        "marker": "Nacrtaj oznaku"
                     }
                 },
                 "handlers": {
@@ -603,7 +674,7 @@
                     },
                     "marker": {
                         "tooltip": {
-                            "start": "Klikni na kartu za postavljanje markera."
+                            "start": "Klikni na kartu za postavljanje oznake."
                         }
                     },
                     "polygon": {
@@ -655,7 +726,7 @@
                 "handlers": {
                     "edit": {
                         "tooltip": {
-                            "text": "Povucite ručke ili marker za uređivanje objekta.",
+                            "text": "Povucite ručke ili oznaku za uređivanje objekta.",
                             "subtext": "Kliknite na odustani za poništavanje promjena."
                         }
                     },
@@ -711,7 +782,10 @@
         "queryform": {
             "title": "Napredna pretraga",
             "query": "Pretraži",
-            "reset": "Poništi",
+            "apply": "Primijeni",
+            "reset": "Resetiraj",
+            "save": "Spremi",
+            "discard": "Poništi",
             "query_request_exception": "Greška upita",
             "config": {
                 "load_config_exception": "Greška učitavanja postavki"
@@ -766,7 +840,7 @@
                     "details_header": "Detalji odabira",
                     "details_bbox_label": "Uredi koordinate za izmjenu područja",
                     "details_circle_label": "Uredi numeričko polje za prilagodbu promjera i središta kružnice",
-                    "reset_bbox": "Poništi",
+                    "reset_bbox": "Resetiraj",
                     "save_bbox": "Spremi izmjenu graničnog okvira",
                     "save_radius": "Spremi izmjenu promjera/središta",
                     "radius": "Promjer"
@@ -794,9 +868,91 @@
                 "targetLayer": "Ciljani sloj",
                 "clear": "Izbriši filter",
                 "operation": "Operacija",
+                "placeholder": "Odaberi sloj",
                 "errors": {
                     "noCrossLayerAvailable": "Unakrsni filter više slojeva nije omogućen za odabrani sloj"
                 }
+            },
+            "changedFilter": "Filter prominjenjen",
+            "changedFilterAlert": "Postoje nespremljene promjene. Želite li ih spremiti?",
+            "resetFilter": "Ukloni filter",
+            "confirmReset": "Potvrdi",
+            "loadingError": "Trenutni filter je uzrokovao problem u prikazu sloja na karti. Molimo, pregledajte postavke sloja na poslužitelji ili ispravite filter",
+            "changedFilterWithErrorAlert": "Filter uzrokuje grešku u prikazu sloja, želite li ga svejedno spremiti ?"
+
+        },
+        "annotations": {
+            "errorLoadingSymbols": "Došlo je do problema prilikom učitavanja popisa simbola. Molimo kontaktirajte administratora za provjeru konfiguracije",
+            "edit": "Uredi",
+            "remove": "Izbriši",
+            "save": "Spremi",
+            "cancel": "Odustani",
+            "back": "Natrag",
+            "applyStyle": "Primijeni stil",
+            "addMarker": "Dodaj novu oznaku na karti",
+            "styleGeometry": "Odaberi različiti stil za točke",
+            "deleteGeometry": "Ukloni geometrije pribilješki",
+            "removeannotation": "Želite li ukloniti pribilješku sa naslovom: {title}?",
+            "removegeometry": "Želite li ukloniti sve pribilješke?",
+            "confirm": "Potvrdi",
+            "mandatory": "Obavezno polje",
+            "emptygeometry": "Geometrija ne može biti prazna",
+            "add": "Nova",
+            "filter": "Filtriraj pribilješke...",
+            "undo": "Želite li zaista napustiti trenutno uređivanje pribilješki?",
+            "titleUndoGeom": "Geometrija se promijenila",
+            "undoGeom": "Želite li izaći bez prethodno spremanja? (Sve promjene će biti izgubljene)",
+            "confirmGeom": "Potvrdi",
+            "cancelModalGeom": "Odustani",
+            "deleteFeature": "Izbriši ovaj objekt",
+            "undoDeleteFeature": "Želite li izbrisati ovaj objekt?",
+            "title": "Pribilješke",
+            "zoomTo": "Približi",
+            "insertText": "Umetnite tekstualnu pribilješku",
+            "downloadtooltip": "Preuzmi pribilješke",
+            "downloadcurrenttooltip": "Preuzmi trenutnu pribilješku",
+            "downloadError": "Greška u izvozu",
+            "loadtooltip": "Uvezi pribilješke",
+            "loadtitle": "Uvezi pribilješke",
+            "selectfiletext": "Prevucite Vašu datoteku ovdje ili kliknite za odabir datoteke s pribilješkama za uvoz. (podržani formati: JSON)",
+            "loadoverride": "Zamijeni pribilješke",
+            "loaderror": "Odaberite jednu ili više datoteka sa pribilješkama. (podržani formati: json)",
+            "defaulttitle": "Izmijeni zadani naslov",
+            "field": {
+                "title": "Naslov",
+                "description": "Opis"
+            },
+            "titles": {
+                "marker": " Oznaka",
+                "line": " Linija",
+                "polygon": " Poligon",
+                "text": " Texst",
+                "circle": " Kružnica"
+            },
+            "editor": {
+                "decimal": "Decimalne",
+                "aeronautical": "Aeronautičke",
+                "title": {
+                    "Polygon": "Uređivač poligona",
+                    "LineString": "Uređivač linije",
+                    "Bearing": "Uređivač azimuta",
+                    "Circle": "Uređivač kružnice",
+                    "Point": "Uređivač oznaka",
+                    "MultiPoint": "Uređivač linije",
+                    "Text": "Uređivač teksta"
+                },
+                "center": "Centar",
+                "add": "Dodaj nove koordinate",
+                "addByClick": "Dodaj nove koordinate klikom na plus dugme ili na karti",
+                "valid": "Geometrija je ispravna",
+                "radius": "Radijus",
+                "text": "Tekst",
+                "lat": "Geografska širina",
+                "lon": "Geografska dužina",
+                "notValidMarker": "Unesi ispravne koordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Sve koordinate moraju biti ispravne (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Unesi tekstualnu vrijednost i ispravne koordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Unesi vrijednost radijusa i ispravne koordinate (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{
@@ -813,6 +969,7 @@
             "passwordInvalid": "Neispravna zaporka",
             "username": "Korisničko ime",
             "password": "Zaporka",
+            "passwordMessage": "Zaporka mora sadržavati barem 6 znakova",
             "passwordChanged": "Zaporka je promijenjena",
             "passwordError": "Greška prilikom izmjene zaporke",
             "signIn": "Prijava",
@@ -827,30 +984,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Tvrtka",
             "detailsNotes": "Bilješke"
-        },
-        "annotations": {
-            "edit": "Uredi",
-            "remove": "Izbriši",
-            "save": "Spremi",
-            "cancel": "Odustani",
-            "back": "Natrag",
-            "addMarker": "Dodaj novu točku na karti",
-            "styleGeometry": "Odaberi različiti stil za točke",
-            "deleteGeometry": "Ukloni postojeće točke",
-            "removeannotation": "Želite li ukloniti pribilješku?",
-            "removegeometry": "Želite li ukloniti sve pribilješke?",
-            "confirm": "Potvrdi",
-            "mandatory": "Obavezno polje",
-            "emptygeometry": "Geometrija ne može biti prazna",
-            "add": "Nova",
-            "filter": "Filtriraj pribilješke...",
-            "undo": "Želite li zaista napustiti trenutno uređivanje pribilješki?",
-            "title": "Pribilješke",
-            "zoomTo": "Približi",
-            "field": {
-                "title": "Naslov",
-                "description": "Opis"
-            }
         },
         "users": {
             "title": "Upravljaj korisničkim računima",
@@ -875,7 +1008,8 @@
             "confirmDeleteUser": "Želite li zaista izbrisati ovoga korisnika?",
             "errorDelete": "Došlo je do greške prilikom brisanja ovoga korisnika:",
             "errorSaving": "Došlo je do greške prilikom spremanja ovoga korisnika:",
-            "selectedGroups": "ODABRANE GRUPE"
+            "selectedGroups": "ODABRANE GRUPE",
+            "requiredFiedsMessage": "Polja označena zvjezdicom (*) su obavezna"
         },
         "usergroups": {
           "searchGroups": "Pretraži grupe...",
@@ -916,10 +1050,10 @@
             "msgCopiedUrl": "Kopirano",
             "msgToCopyUrl": "Klikni za kopiranje",
             "sharedTitle": "Posjeti moju novu kartu: ",
-            "advancedOptions": "Advanced Options",
-            "addBboxParam": "Add bbox param to sharing link",
-            "wrongBboxParamTitle": "Invalid bbox param",
-            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
+            "advancedOptions": "Napredne mogućnosti",
+            "addBboxParam": "Dodaj bbox parametar na poveznicu za dijeljenje",
+            "wrongBboxParamTitle": "Neispravan bbox parametar",
+            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Pregled snimke",
@@ -949,7 +1083,26 @@
             "cancel": "Odustani",
             "success": " ispravno uvezeno"
         },
+        "mapImport": {
+            "title": "Uvezi",
+            "dropZone": {
+                "heading": "<p><h4>Dovucite vašu konfiguraciju ili vektorske datoteke ovdje</h4><small>or</small></p>",
+                "selectFiles": "Odaberi datoteke...",
+                "infoSupported": "<p><small>Podržane konfiguracijske datoteke: MapStore format<br />Podržane datoteke vektorskih slojeva: shapefile (mora biti komprimiran u zip arhiv), KML/KMZ, GeoJSON ili GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: trenutna karta će biti zamijenjena u slučaju učitavanja konfiguracijskih datoteka</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "Datoteka nije podržana",
+                "unknownError": "došlo je do nepoznate greške tijekom uvoza"
+            }
+        },
+        "mapExport": {
+            "title": "Izvezi kartu"
+        },
         "catalog": {
+            "start": "Početni datum ",
+            "end": "Krajnji datum ",
+            "notAvailable": "Nije dostupno",
             "title": "Katalog",
             "autoload": "Traži prilikom odabira servisa",
             "clearValueText": "Očisti odabir",
@@ -984,7 +1137,14 @@
             "missingReference": "Nedostaju referentni OGC metapodaci",
             "showDescription": "Prikaži puni opis",
             "hideDescription": "Sakrij puni opis",
+            "templateFormatDescriptionExample": "Opis sloja je",
+            "showTemplate": "Prikaži predložak metapodataka",
+            "showPreview": "Prikaži pretpregled",
+            "advancedSettings": "Napredne mogućnosti",
+            "templateMetadataAvailable": "Metapodaci distupni iz Dublin Core formata: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
+                "errorTitle": "Error",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
                 "duplicatedServiceTitle": "Servis sa tim naslovom već postoji. Molim, promijenite naslov",
@@ -1163,7 +1323,8 @@
                     "editMode": "Brza pretraga nije dostupna dok je aktivno editiranje",
                     "default": "Traži...",
                     "string": "Unesi tekst za filter...",
-                    "number": "Unesi vrijednost ili izraz. Primjeri: 10, > 2, < 10"
+                    "number": "Unesi vrijednost ili izraz. Primjeri: 10, > 2, < 10",
+                    "date": "Unesi datum ili izraz. Koristi {format} za datum."
                 }
             },
             "toolbar": {
@@ -1187,6 +1348,8 @@
                 "hideShowColumns": "Sakrij/prikaži kolone",
                 "zoomAll": "Prikaz na opseg stranice",
                 "syncOnMap": "Uskladi kartu sa aktivnim filtrom",
+                "enableTimeSync": "Sinkroniziraj sa odabranim vremenom ili vremenskim rasponom",
+                "disableTimeSync": "isključi sinkronizaciju sa odabranim vremenom ili vremenskim rasponom",
                 "createNewChart": "Kreiraj grafikon za odabrani sloj"
             }
         },
@@ -1302,9 +1465,16 @@
                     "showChartData": "Prikaži podatke grafikona",
                     "edit": "Uredi",
                     "delete": "Izbriši",
+                    "collapse": "Sažmi",
                     "confirmDelete": "Jeste li sigurni?",
                     "downloadData": "Preuzmi podatke",
-                    "exportImage": "Izvezi sliku"
+                    "exportImage": "Izvezi sliku",
+                    "pin": "Označi",
+                    "unpin": "Odznači",
+                    "hide": "Sakrij",
+                    "hideDescription": "Sakrij ovaj widget ostalim korisnicima",
+                    "unhide": "Otkrij",
+                    "unhideDescription": "Otkrij ovaj widget ostalim korisnicima"
                 }
             },
             "chartType": {
@@ -1385,6 +1555,10 @@
                 "line": "Sakrij mrežu",
                 "bar": "Sakrij mrežu"
             },
+            "xAxisAngle":{
+                "line": "X os: Kut rotacije oznake °",
+                "bar": "X os: Kut rotacije oznake °"
+            },
             "yAxis":{
                 "line": "Sakrij Y os",
                 "bar": "Sakrij Y os"
@@ -1396,6 +1570,20 @@
             "advancedOptions":{
                 "line": "Napredne mogućnosti",
                 "bar": "Napredne mogućnosti"
+            },
+            "tray": {
+                "title": "Widgeti",
+                "expandTray": "Proširi traku s widgetima",
+                "collapseTray": "Sažmi traku s widgetima",
+                "expandAll": "Proširi sve widgete",
+                "collapseAll": "Sažmi sve widgete",
+                "notifications" : {
+                    "collapsed": {
+                        "message": "Vremenska crta i widgeti ne mogu biti prikazani u isto vrijeme. Koristi traku s widgetima za prebacivanje između vremenske crte i widgeta",
+                        "timelineTitle": "Vremenska crta je sažeta",
+                        "widgetsTitle": "Widgeti su sažeti"
+                    }
+                }
             }
         },
         "dashboard": {
@@ -1471,111 +1659,120 @@
             "layerlabel": "Sloj"
         },
         "styleeditor": {
-            "styleListfilterPlaceholder": "Filter styles by name, title or abstract",
-            "templateFilterPlaceholder": "Filter styles templates by title",
-            "createStyleFromTemplate": "Select a template to create a new style",
-            "titleRequired": "<div>Title is required!</div><div>Title and abstract must be alphanumeric</div>",
-            "titleSettings": "Title",
-            "titleSettingsplaceholder": "Enter title (alphanumeric)",
-            "abstractSettings": "Abstract",
-            "abstractSettingsplaceholder": "Enter abstract (alphanumeric)",
-            "createStyleModalTitle": "Create new style",
-            "filterMatchNotFound": "No styles match entered text filter",
-            "backToList": "Back to style list",
-            "createNewStyle": "Create new style",
-            "editSelectedStyle": "Edit selected style",
-            "saveCurrentStyle": "Save current style",
-            "addSelectedTemplate": "Add selected template to list of styles",
-            "deleteSelectedStyle": "Delete selected style",
-            "closeWithoutSaveAlertTitle": "Style has changed",
-            "closeWithoutSaveAlert": "You are quitting the style editor without save your changes",
-            "deleteStyleAlertTitle": "Delete style",
-            "deleteStyleAlert": "Selected style will be permanently delete",
-            "delete": "Delete",
-            "defaultStyle": "Default style",
-            "availableStyle": "Available style",
-            "styleNotFound": "Style not found",
-            "noPermission": "User cannot edit styles",
-            "deletedStyleSuccessTitle": "Delete style",
-            "deletedStyleSuccessMessage": "Style has been successfully deleted",
-            "deletedStyleErrorTitle": "Delete style error",
-            "deletedStyleErrorMessage": "Could not delete current style",
-            "savedStyleTitle": "Style saved",
-            "savedStyleMessage": "Style has been successfully saved",
-            "missingAvailableStyles": "Missing styles",
-	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
-            "createTmpErrorTitle": "New Temporary Style",
-            "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
-            "updateTmpErrorTitle": "Temporary Style Update",
-            "updateTmpStyleErrorMessage": "Temporary style could not be updated. This could be on unsupported style format or connection issue.",
-            "createStyleErrorTitle": "New Style",
-            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
-            "updateStyleErrorTitle": "Edit Style",
-            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
-            "genericValidationError": "Style is not valid and it could not be applied.",
-            "setDefaultStyle": "Set selected style as default for the current layer",
-            "setDefaultStyleSuccessTitle": "Success on set default style",
-            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
-            "setDefaultStyleErrorTitle": "Error on set default style",
-            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+            "styleListfilterPlaceholder": "Filtriraj stilove po imenu, naslovu ili sažetku",
+            "templateFilterPlaceholder": "Filtriraj predloške stilova po naslovu",
+            "createStyleFromTemplate": "Odaberi predložak za kreiranje novog stila",
+            "titleRequired": "<div>Naslov je obavezan!</div><div>Naslovi sažetaka moraju biti u alfanumeričkom obliku</div>",
+            "titleSettings": "Naslov",
+            "titleSettingsplaceholder": "Unesi naslov (alfanumerički)",
+            "abstractSettings": "Sažetak",
+            "abstractSettingsplaceholder": "Unesi sažetak (alfanumerički)",
+            "createStyleModalTitle": "Kreiraj novi stil",
+            "filterMatchNotFound": "Niti jedan stil se ne podudara s filtrom",
+            "backToList": "Natrag na listu stilova",
+            "createNewStyle": "Kreiraj novi stil",
+            "editSelectedStyle": "Uredi odabrani stil",
+            "saveCurrentStyle": "Spremi trenutni stil",
+            "addSelectedTemplate": "Dodaj odabrani predložak na listu stilova",
+            "deleteSelectedStyle": "Izbriši odabrani stil",
+            "closeWithoutSaveAlertTitle": "Stil je izmijenjen",
+            "closeWithoutSaveAlert": "Izlazite iz uređivača stila bez spremanja promjena",
+            "deleteStyleAlertTitle": "Izbriši stil",
+            "deleteStyleAlert": "Odabrani stilće biti trajno izbrisan",
+            "delete": "Izbriši",
+            "defaultStyle": "Zadani stil",
+            "availableStyle": "Dostupni stil",
+            "styleNotFound": "Stil nije pronađen",
+            "noPermission": "Korisnik ne može mijenjati stilove",
+            "deletedStyleSuccessTitle": "Izbriši stil",
+            "deletedStyleSuccessMessage": "Stil je uspješno izbrisan",
+            "deletedStyleErrorTitle": "Greška prilikom brisanja stila",
+            "deletedStyleErrorMessage": "Nije bilo moguće izbrisati trenutni stil",
+            "savedStyleTitle": "Stil je spremljen",
+            "savedStyleMessage": "Stil je uspješno spremljen",
+            "missingAvailableStyles": "Nedostajući stilovi",
+	        "missingAvailableStylesMessage": "<ul><h4>Mogući uzroci:</h4> <li>Odabrani sloj je grupni sloj</li><li>Sloj nije ispravno konfiguriran na strani poslužitelja</li></ul>",
+            "createTmpErrorTitle": "Novi privremeni stil",
+            "createTmpStyleErrorMessage": "Privremeni stil nije mogao biti kreiran. Moguće zbog nepodržanog formata na servisu stilova.",
+            "updateTmpErrorTitle": "Izmjena privremenog stila",
+            "updateTmpStyleErrorMessage": "Privremeni stil nije mogao biti izmijenjen. Moguće zbog nepodržanog formata na servisu stilova ili problema s konekcijom.",
+            "createStyleErrorTitle": "Novi stil",
+            "createStyleErrorMessage": "Stil nije mogao biti kreiran na servisu stilova. Moguće zbog nepodržanog formata na servisu stilova ili problema s konekcijom.",
+            "updateStyleErrorTitle": "Izmjena stila",
+            "updateStyleErrorMessage": "Stil nije mogao biti izmijenjen na servisu stilova. Moguće zbog nepodržanog formata na servisu stilova ili problema s konekcijom.",
+            "validationErrorTitle": "Greška u provjeri",
+            "genericValidationError": "Stil nije ispravan i ne može se primijeniti.",
+            "setDefaultStyle": "Postavi odabrani stil kao zadani za trenutni sloj",
+            "setDefaultStyleSuccessTitle": "Uspješna primjena zadanog stila",
+            "setDefaultStyleSuccessMessage": "Zadani stil je uspješno postavljen",
+            "setDefaultStyleErrorTitle": "Greška pri postavljanju zadanog stila",
+            "setDefaultStyleErrorMessage": "Nije moguće postaviti odabrani stil kao zadani"
         },
         "playback": {
             "settings": {
-                "tooltip": "Settings",
-                "title": "Playback Settings",
-                "frameDuration": "Frame Duration",
+                "tooltip": "Postavke",
+                "title": "Postavke reprodukcije",
+                "frameDuration": "Trajanje okvira",
                 "range": {
-                    "title": "Animation Range",
-                    "zoomTooltip": "Zoom to current animation range",
-                    "animationStart": "Animation start",
-                    "animationEnd": "Animation end",
-                    "zoomToCurrentPlayackRange": "Zoom to current playback range",
-                    "setToCurrentViewRange": "Set to current view range",
-                    "fitToSelectedLayerRange": "Fit to selected layer's range"
+                    "title": "Raspon animacije",
+                    "zoomTooltip": "Približi na trenutni raspon animacije",
+                    "animationStart": "Početak animacije",
+                    "animationEnd": "Kraj animacije",
+                    "zoomToCurrentPlayackRange": "Približi na trenutni raspon reprodukcije",
+                    "setToCurrentViewRange": "Postavi na trenutni raspon prikaza",
+                    "fitToSelectedLayerRange": "Prilagodi rasponu odabranoga sloja"
                 },
                 "step": {
-                    "tooltip": "When 'Snap to guide Layer' option is disabled, you can customize the animation step",
-                    "label": "Animation Step",
-                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
-                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
-                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
-                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
-                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
-                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                    "tooltip": "Kada je onemogućena opcija 'Zalijepi na referentni sloj', možete prilagoditi korake animacije",
+                    "label": "Koraci animacije",
+                    "year": "{number, plural, =0 {Godina} =1 {Godina} other {Godina}}",
+                    "week": "{number, plural, =0 {Tjedan} =1 {Tjedan} other {Tjedana}}",
+                    "day": "{number, plural, =0 {Dan} =1 {Dan} other {Dana}}",
+                    "hour": "{number, plural, =0 {Sat} =1 {Sat} other {Sati}}",
+                    "minute": "{number, plural, =0 {Minuta} =1 {Minuta} other {Minuta}}",
+                    "second": "{number, plural, =0 {Sekunda} =1 {Sekunda} other {Sekundi}}"
                 },
                 "mode": {
-                    "title": "Mode",
-                    "following": "Follow the animation",
-                    "followingDescription": "When the animation is active, follow the cursor"
+                    "title": "Način",
+                    "following": "Prati animaciju",
+                    "followingDescription": "Kada je animacija aktivna, prati pokazivač miša"
                 }
             },
-            "backwardStep": "Step backward",
-            "forwardStep" : "Step forward",
-            "play": "Play",
-            "pause": "Pause",
-            "paused": "Play (paused)",
-            "stop": "Stop"
+            "backwardStep": "Korak unazad",
+            "forwardStep" : "Korak naprijed",
+            "play": "Pokreni",
+            "pause": "Pauzitaj",
+            "paused": "Pokreni (pauzirano)",
+            "stop": "Stani"
         },
         "timeline": {
             "settings": {
-                "title": "Timeline Settings",
-                "snapToGuideLayer": "Snap to guide layer",
-                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+                "title": "Postavke vremenske crte",
+                "snapToGuideLayer": "Zalijepi na referentni sloj",
+                "snapToGuideLayerTooltip": "Čini da se pokazivač vremena prilagodi podacima odabranoga sloja. Onemogućite ovu opciju ukoliko želite otključati pokazivač vremena i omogućiti prilagodbu koraka animacije"
             },
-            "currentTime": "Go to current time",
-            "rangeStart":"Go to the current time range",
-            "rangeEnd" : "Go to the current time range",
-            "hideLayerName" : "Hide layers names",
-            "showLayerName" : "Show layers names",
-            "enableRange": "Enable time range",
-            "disableRange": "Disable time range",
-            "enablePlayBack": "Enable playback controls",
-            "disablePlayBack": "Disable playback controls",
-            "expand" : "Expand time slider",
-            "collapse" : "Collapse time slider",
+            "hide": "Sakrij vremensku crtu",
+            "show": "Prikaži vremensku crtu",
+            "mapSyncOn": "Prikaži sva vremena, bez filtra na trnutni raspon karte",
+            "mapSyncOff": "Prikaži samo vremena dostupna na trenutnom raspnu karte",
+            "currentTime": "Idi na trenutno vrijeme",
+            "rangeStart": "Idi na trenutni vremenski raspon",
+            "rangeEnd" : "Idi na trenutni vremenski raspon",
+            "hideLayerName" : "Sakrij imena slojeva",
+            "showLayerName" : "Prikaži imena slojeva",
+            "enableRange": "Omogući vreemenski raspon",
+            "disableRange": "Onemogući vremenski raspon",
+            "enablePlayBack": "Omogući kontrole reprodukcije",
+            "disablePlayBack": "Onemogući kontrole reprodukcije",
+            "expand" : "Proširi vremenski klizač",
+            "collapse" : "Sažmi vremenski klizač",
+            "collapsed": {
+                "title": "Vremenska crta je sažeta",
+                "tooltip": "Klikni ovdje za ponovno proširivanje"
+            },
             "errors": {
-                "multidim_error_title": "Backend service is not responding",
-                "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
+                "multidim_error_title": "Pozadinski servis nije dostupan",
+                "multidim_error_message": "Servisi potrebni za multidimenzionalnu podršku nisu dostupni. Molimo, pokušajte ponovno ili kontaktirajte administratora."
             }
         },
         "rulesmanager": {
@@ -1676,7 +1873,7 @@
             "checkbox": "nemoj više prikazivati ovu poruku",
             "error": "Greška: cilj nije pronađen",
             "intro": {
-                "title": "Dobrodošli u MapStore2",
+                "title": "Dobrodošli u MapStore",
                 "text": "framework za izradu web mapping aplikacija koristeći standardne biblioteke kao što su OpenLayers 3 i Leaflet."
             },
             "drawerMenu": {
@@ -1725,7 +1922,7 @@
             },
             "examples": {
                 "title": "Prilagođena aplikacija",
-                "text": "Možete koristiti Mapstore2 komponente i pluginove kako bi izgradili vlastite aplikacije"
+                "text": "Možete koristiti MapStore komponente i pluginove kako bi izgradili vlastite aplikacije"
             },
             "introCesium": {
                 "title": "Upute za 3D prikaz",
@@ -1764,7 +1961,7 @@
             },
             "dashboardContainer": {
                 "title": "Kontrolna ploča",
-                "text": "<p>Kontrolna ploča u Mapstore2 daje skup podataka prikladno prikupljenih za prikaz zbirnih podataka u jedinstvenom prikazu. Geografski podaci prikazani na karti mogu se postaviti paralelno s povezanim atributnim tabelama, grafikonima i drugim, s ciljem povezivanja različitih vrsta informacija, s ciljem prikaza statističkih pojedinosti i tekstualnih opisa povezanih s određenim kontekstom.</p><p> Svi korisnici mogu vizualizirati i interaktivno raditi s objavljenim kontrolnim pločama, ali samo korisnici koji imaju dopuštenje za uređivanje mogu dodavati, organizirati, promijeniti veličinu ili brisati widgete unutar nadzorne ploče</p>"
+                "text": "<p>Kontrolna ploča u MapStore daje skup podataka prikladno prikupljenih za prikaz zbirnih podataka u jedinstvenom prikazu. Geografski podaci prikazani na karti mogu se postaviti paralelno s povezanim atributnim tabelama, grafikonima i drugim, s ciljem povezivanja različitih vrsta informacija, s ciljem prikaza statističkih pojedinosti i tekstualnih opisa povezanih s određenim kontekstom.</p><p> Svi korisnici mogu vizualizirati i interaktivno raditi s objavljenim kontrolnim pločama, ali samo korisnici koji imaju dopuštenje za uređivanje mogu dodavati, organizirati, promijeniti veličinu ili brisati widgete unutar nadzorne ploče</p>"
             },
             "dashboardAddWidget": {
                 "title": "Dodaj widget",
@@ -1780,7 +1977,7 @@
             },
             "dashboardAddText": {
                 "title": "Tekst",
-                "text": "<p>Dodaj svoj tekst na ploču.</p><p>Koraci:</p><p><ul><li>Uredi tekst u editoru</li><li>Save and add to dashboard</li></ul></p>"
+                "text": "<p>Dodaj svoj tekst na ploču.</p><p>Koraci:</p><p><ul><li>Uredi tekst u uređivaču</li><li>Spremi i dodaj na kontrolu ploču</li></ul></p>"
             },
             "dashboardAddTable": {
                 "title": "Tablica",

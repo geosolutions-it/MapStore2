@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-require('./olPopUp.css');
+import './olPopUp.css';
 
-let popUp = function() {
+export default function() {
     let pop = document.createElement('div');
     pop.setAttribute("class", "ol-popup");
     let popDismis = document.createElement('a');
@@ -29,5 +29,4 @@ let popUp = function() {
     pop.appendChild(popCntWrap);
     pop.appendChild(popTipWrap);
     return pop;
-};
-module.exports = popUp;
+}

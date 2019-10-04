@@ -28,6 +28,6 @@ module.exports = ({ errors = []}) => {
                         {errorMessage(error)}
                     </div>))}
             </div>
-        : null}
-        </Row>);
+            : null}
+    </Row>);
 };

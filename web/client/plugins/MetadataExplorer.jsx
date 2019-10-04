@@ -16,17 +16,18 @@ const ContainerDimensions = require('react-container-dimensions').default;
 const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
-    addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
+    addLayer, addLayerError, resetCatalog, focusServicesList, changeText,
+    changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {addBackgroundProperties, updateThumbnail, removeThumbnail, clearModalParameters} = require('../actions/backgroundselector');
-const {currentLocaleSelector} = require("../selectors/locale");
+const {currentLocaleSelector, currentMessagesSelector} = require("../selectors/locale");
 const {layersSelector} = require('../selectors/layers');
-const {setControlProperty, toggleControl} = require("../actions/controls");
+const {setControlProperty, toggleControl, setControlProperties} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector
+    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -34,7 +35,6 @@ const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector} = re
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
-
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
@@ -50,8 +50,11 @@ const catalogSelector = createSelector([
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
-    (state) => currentLocaleSelector(state)
-], (unsavedChanges, layers, modalParams, source, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    (state) => currentLocaleSelector(state),
+    (state) => currentMessagesSelector(state),
+    (state) => pageSizeSelector(state),
+    (state) => loadingSelector(state)
+], (unsavedChanges, layers, modalParams, source, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading) =>({
     unsavedChanges,
     layers,
     modalParams,
@@ -62,12 +65,14 @@ const catalogSelector = createSelector([
     format: newformat,
     newService,
     currentLocale,
-    records: CatalogUtils.getCatalogRecords(selectedFormat, result, options)
+    pageSize,
+    loading,
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
 const catalogClose = () => {
     return (dispatch) => {
-        dispatch(setControlProperty('metadataexplorer', "enabled", false));
+        dispatch(setControlProperties('metadataexplorer', "enabled", false, "group", null));
         dispatch(changeCatalogMode("view"));
         dispatch(resetCatalog());
     };
@@ -109,7 +114,8 @@ class MetadataExplorerComponent extends React.Component {
 
         // side panel properties
         width: PropTypes.number,
-        dockStyle: PropTypes.object
+        dockStyle: PropTypes.object,
+        group: PropTypes.string
     };
 
     static defaultProps = {
@@ -136,13 +142,17 @@ class MetadataExplorerComponent extends React.Component {
             position: "right",
             zIndex: 1030
         },
-        dockStyle: {}
+        dockStyle: {},
+        group: null
     };
 
     render() {
-        const panel = <Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
+        const layerBaseConfig = {
+            group: this.props.group || undefined
+        };
+        const panel = <Catalog layerBaseConfig={layerBaseConfig} zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
         return (
-            <div style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+            <div id="catalog-root" style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
                 <ContainerDimensions>
                     {({ width }) => (<DockPanel
                         open={this.props.active}
@@ -174,8 +184,9 @@ const metadataExplorerSelector = createSelector([
     layerErrorSelector,
     activeSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
-    searchTextSelector
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle, searchText) => ({
+    searchTextSelector,
+    groupSelector
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle, searchText, group) => ({
     searchOptions,
     formats,
     result,
@@ -185,7 +196,8 @@ const metadataExplorerSelector = createSelector([
     layerError,
     active,
     dockStyle,
-    searchText
+    searchText,
+    group
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
@@ -197,11 +209,15 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onChangeUrl: changeUrl,
     onChangeType: changeType,
     onChangeTitle: changeTitle,
+    onChangeMetadataTemplate: changeMetadataTemplate,
     onChangeText: changeText,
     onChangeAutoload: changeAutoload,
     onChangeSelectedService: changeSelectedService,
     onChangeCatalogMode: changeCatalogMode,
     onAddService: addService,
+    onToggleAdvancedSettings: toggleAdvancedSettings,
+    onToggleThumbnail: toggleThumbnail,
+    onToggleTemplate: toggleTemplate,
     onDeleteService: deleteService,
     onError: addLayerError
 })(MetadataExplorerComponent);
@@ -213,7 +229,7 @@ const API = {
     backgrounds: require('../api/mapBackground')
 };
 /**
- * MetadataExplorer plugin. Shows the catalogs results (CSW, WMS and WMTS).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS and WMTS).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *
@@ -224,6 +240,7 @@ const API = {
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
+ * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
  */
 module.exports = {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
@@ -250,5 +267,5 @@ module.exports = {
         }
     }),
     reducers: {catalog: require('../reducers/catalog')},
-    epics: require("../epics/catalog")(API)
+    epics: require("../epics/catalog").default(API)
 };

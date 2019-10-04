@@ -3,10 +3,10 @@ const { editors } = require('react-data-grid');
 
 class AttributeEditor extends editors.SimpleTextEditor {
     static propTypes = {
-      onTemporaryChanges: PropTypes.func
+        onTemporaryChanges: PropTypes.func
     };
     static defaultProps = {
-      onTemporaryChanges: () => {}
+        onTemporaryChanges: () => {}
     };
     componentDidMount() {
         if (this.props.onTemporaryChanges) {

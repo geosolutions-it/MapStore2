@@ -8,13 +8,16 @@
 
 const expect = require('expect');
 const {
+    availableCrossLayerFilterLayersSelector,
     spatialFieldSelector,
     spatialFieldGeomSelector,
     spatialFieldGeomTypeSelector,
     spatialFieldGeomProjSelector,
     spatialFieldGeomCoordSelector,
     spatialFieldMethodSelector,
-    queryFormUiStateSelector
+    queryFormUiStateSelector,
+    storedFilterSelector,
+    appliedFilterSelector
 } = require('../queryform');
 
 const circle = "Circle";
@@ -43,37 +46,41 @@ const initialState = {
                     45.52174389699363
                 ],
                 coordinates: [
-                [
-                  [
-                    -125.56368892134608,
-                    42.78500647128915
-                  ],
-                  [
-                    -125.32435247361764,
-                    42.79605649953404
-                  ],
-                  [
-                    -125.08643378708538,
-                    42.81810704761059
-                  ],
-                  [
-                    -124.85087181811029,
-                    42.85105938624819
-                  ],
-                  [
-                    -124.61859622216589,
-                    42.894766137903254
-                  ],
-                  [
-                    -125.56368892134608,
-                    42.78500647128915
-                  ]
-                ]
-              ],
+                    [
+                        [
+                            -125.56368892134608,
+                            42.78500647128915
+                        ],
+                        [
+                            -125.32435247361764,
+                            42.79605649953404
+                        ],
+                        [
+                            -125.08643378708538,
+                            42.81810704761059
+                        ],
+                        [
+                            -124.85087181811029,
+                            42.85105938624819
+                        ],
+                        [
+                            -124.61859622216589,
+                            42.894766137903254
+                        ],
+                        [
+                            -125.56368892134608,
+                            42.78500647128915
+                        ]
+                    ]
+                ],
                 radius: 424941.79896156304,
                 projection
             }
         }
+    },
+    layerFilter: {
+        persisted: {id: 1},
+        applied: {id: 2}
     }
 };
 
@@ -116,5 +123,26 @@ describe('Test queryform selectors', () => {
         expect(queryFormUiState.attributePanelExpanded).toBe(false);
         expect(queryFormUiState.spatialPanelExpanded).toBe(true);
         expect(queryFormUiState.crossLayerExpanded).toBe(true);
+    });
+    it(' 8) - storedFilterSelector', () => {
+        const storedFilter = storedFilterSelector(initialState);
+        expect(storedFilter).toExist();
+        expect(storedFilter.id).toBe(1);
+    });
+    it(' 9) - appliedFilterSelector', () => {
+        const appliedFilter = appliedFilterSelector(initialState);
+        expect(appliedFilter).toExist();
+        expect(appliedFilter.id).toBe(2);
+    });
+    it(' 10) - availableCrossLayerFilterLayersSelector', () => {
+        const layers = availableCrossLayerFilterLayersSelector({layers: [
+            {type: "wms", group: "group name"},
+            {type: "csw", group: "group name"},
+            {type: "wms", group: "background"}]
+        });
+        expect(layers).toExist();
+        expect(layers.length).toBe(1);
+        expect(layers[0].group).toBe("group name");
+        expect(layers[0].type).toBe("wms");
     });
 });

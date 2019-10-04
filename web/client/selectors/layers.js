@@ -12,14 +12,18 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
+const { clickedPointWithFeaturesSelector} = require('./mapInfo');
+const { defaultQueryableFilter } = require('../utils/MapInfoUtils');
+
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
 const {flattenGroups} = require('../utils/TOCUtils');
 
 const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
+const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));
 const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
-const markerSelector = state => state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint;
+const highlightPointSelector = state => state.annotations && state.annotations.showMarker && state.annotations.clickPoint;
 const geoColderSelector = state => state.search && state.search;
 
 // TODO currently loading flag causes a re-creation of the selector on any pan
@@ -30,8 +34,8 @@ const additionalLayersSelector = state => get(state, "additionallayers", []);
 
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector],
-    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers) => {
+    [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector, highlightPointSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
 
         // Perform an override action on the layers using options retrieved from additional layers
         const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
@@ -42,9 +46,30 @@ const layerSelectorWithMarkers = createSelector(
         });
         newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
+            // A separate layer for feature highlight is required because the SRS is different
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfoHighLight", { features: markerPosition.features }, undefined, {
+                overrideOLStyle: true,
+                featuresCrs: markerPosition.featuresCrs,
+                style: { ...defaultIconStyle, ...{
+                    color: '#3388ff',
+                    weight: 4,
+                    dashArray: '',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.2
+                }}
+            }));
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
+        if ( highlightPoint ) {
+            const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(highlightPoint.latlng) : highlightPoint.latlng;
+            newLayers.push(MapInfoUtils.getMarkerLayer("Annotations", coords));
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", {
+                ...coords
+
+            }));
+        }
+
         if (geocoder && geocoder.markerPosition) {
             let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
@@ -103,10 +128,24 @@ const elementSelector = (state) => {
     return settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(flattenGroups(groups, 0, true).filter(group => group.id === settings.node)) || {};
 };
+/**
+* Select queriable layers
+* @param {object} state the state
+* @return {array} the queriable layers
+*/
+const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+/**
+ * Return loading error state for selected layer
+ * @param {object} state the state
+ * @return {boolean} true if selected layer has error
+ */
+const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {}).loadingError === 'Error';
 
 module.exports = {
+    getLayerFromName,
     layersSelector,
     layerSelectorWithMarkers,
+    queryableLayersSelector,
     groupsSelector,
     currentBackgroundLayerSelector,
     allBackgroundLayerSelector,
@@ -123,5 +162,7 @@ module.exports = {
     currentBackgroundSelector,
     tempBackgroundSelector,
     centerToMarkerSelector,
-    elementSelector
+    elementSelector,
+    selectedLayerLoadingErrorSelector
+
 };

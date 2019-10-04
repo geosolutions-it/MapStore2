@@ -36,6 +36,8 @@ docs_dir: 'docs'
 markdown_extensions:
   - admonition
   - markdown.extensions.attr_list
+  - codehilite:
+      linenums: true
 pages:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
@@ -48,6 +50,7 @@ pages:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
       - Managing Layer Settings: 'user-guide/layer-settings.md'
+      - Filtering Layers: 'user-guide/filtering-layers.md'
       - Attribute Table: 'user-guide/attributes-table.md'
       - Creating Widgets: 'user-guide/widgets.md'
       - Menu Bar: 'user-guide/menu-bar.md'
@@ -65,13 +68,29 @@ pages:
     - Exploring Dashboards: 'user-guide/exploring-dashboards.md'
   - Developer Guide:
     - Dev Setup and Run: 'developer-guide/index.md'
+    - Database Setup: 'developer-guide/database-setup.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore: 'developer-guide/developing-with-mapstore-2-intro.md'
+    - How to:
+      - Dev How To: 'developer-guide/dev-how-to.md'
+      - Writing Plugins: 'developer-guide/plugins-howto.md'
+      - Writing Epics: 'developer-guide/writing-epics.md'
+      - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
+      - Styling and theming: 'developer-guide/customize-theme.md'
     - Configuration: 'developer-guide/configuration-files.md'
+    - Integrations:
+      - users:
+        - GeoServer: 'developer-guide/integrations/users/geoserver.md'
+        - LDAP: 'developer-guide/integrations/users/ldap.md'
     - Migration: 'developer-guide/mapstore-migration-guide.md'
     - How to Release: 'developer-guide/release.md'
+    - Projects:
+      - MapStore Projects: 'developer-guide/mapstore-projects.md'
+      - Project Creation Script: 'developer-guide/project-creation-script.md'
     - Plugins:
       - Plugins Architecture: 'developer-guide/plugins-architecture.md'
       - Configuring Plugins: 'developer-guide/plugins-documentation.md'
-    - Project Creation Script: 'developer-guide/project-creation-script.md'
+    - Communicating with MapStore:
+      - API usage: 'developer-guide/API-usage.md'
+      - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
   - Quick Start: 'quick-start.md'

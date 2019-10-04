@@ -1,0 +1,286 @@
+{
+  "type": "cascade",
+  "resources": [
+    {
+      "id": "23b34678-9f0c-4498-9ba2-ceffe0b071be",
+      "type": "image",
+      "data": {
+        "src": "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/Hanle_observatory.jpg",
+        "title": "Indian",
+        "description": "The Indian Astronomical Observatory stands at an altitude of 4,500 m (14,800 ft) on Mount Saraswati in Ladakh, India."
+      }
+    },
+    {
+      "id": "95170aa4-ad68-4a57-9be8-7ff00b30eda6",
+      "type": "image",
+      "data": {
+        "src": "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/Obsevatorio_Astrof%C3%ADsico_de_Chacaltaya.jpg",
+        "description": "Particle detector at Chacaltaya Astrophysical Observatory, the highest permanent astronomical observatory in the world from the 1940s through 2009.",
+        "title": "Chacaltaya"
+      }
+    },
+    {
+      "id": "c4b1a878-e12d-40e8-983c-4c35ea721447",
+      "type": "image",
+      "data": {
+        "src": "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/The_Keck_Subaru_and_Infrared_obervatories.jpg",
+        "description": "Aerial view of part of the Mauna Kea Observatory, showing Subaru, Keck, and IRTF telescopes (left to right).",
+        "title": "Mauna Kea"
+      }
+    },
+    {
+      "id": "24deeead-5c13-41cb-bc4a-b9a3f84fa95e",
+      "type": "image",
+      "data": {
+        "src": "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/hs-2015-29-a-xlarge_web.jpg",
+        "title": "Nebula 2"
+      }
+    },
+    {
+      "id": "eaebe073-d514-4601-8c85-94f00f67ef70",
+      "type": "image",
+      "data": {
+        "src": "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/ALMA_Dwarfed_by_Mountain_Peaks.jpg",
+        "description": "View showing several of the world's highest observatory sites in Chile, looking north across the Llano de Chajnantor and ALMA site, with the peaks of Cerro Toco (right center) and Cerro Chajnantor (right) rising above.",
+        "title": "Chajnantor and ALMA"
+      }
+    },
+    {
+      "id": "6a8929c1-ca6f-4de5-9df4-2b810f7f0a44",
+      "type": "image",
+      "data": {
+        "src": "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg",
+        "title": "nebulosa_1"
+      }
+    }
+  ],
+  "sections": [
+    {
+      "type": "title",
+      "id": "title_section_id1",
+      "title": "Abstract",
+      "cover": true,
+      "contents": [
+        {
+          "id": "title_content_id1",
+          "type": "text",
+          "size": "large",
+          "align": "center",
+          "theme": "bright",
+          "html": "<h1 style=\"text-align:center;\">List of Highest Astronomical Observatories</h1>\n<h6 style=\"text-align:center;\">From Wikipedia, the free encyclopedia</h6>\n",
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright",
+            "resourceId": "6a8929c1-ca6f-4de5-9df4-2b810f7f0a44",
+            "type": "image"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4372f8a2-4af2-43b3-97ab-e8975ceace54",
+      "type": "paragraph",
+      "title": "Paragraph Section",
+      "contents": [
+        {
+          "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+          "type": "column",
+          "size": "full",
+          "align": "center",
+          "contents": [
+            {
+              "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+              "type": "text",
+              "html": "<p>This is a list of the <strong><ins>highest astronomical observatories</ins></strong> in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.insert text here...</p>\n"
+            },
+            {
+              "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
+              "type": "image",
+              "title": "UNKNOWN",
+              "resourceId": "eaebe073-d514-4601-8c85-94f00f67ef70",
+              "size": "medium"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b9aee6bf-789a-4607-822d-688a0b4eb9ed",
+      "type": "immersive",
+      "title": "Immersive Section",
+      "contents": [
+        {
+          "id": "7e16f518-a929-4f69-ac54-401e3284a169",
+          "type": "column",
+          "align": "left",
+          "size": "small",
+          "theme": "bright",
+          "contents": [
+            {
+              "id": "fc1a167c-58e1-4701-8cc1-dc3a89a6fd07",
+              "type": "text",
+              "html": "<h5><strong><ins>History of high altitude astronomical observatories</ins></strong></h5>\n<p>Prior to the late 19th century, almost all astronomical observatories throughout history were located at modest elevations, often close to cities and educational institutions for the simple reason of convenience.[1] As air pollution from industrialization and light pollution from artificial lighting increased during the Industrial Revolution, astronomers sought observatory sites in remote locations with clear and dark skies, naturally drawing them towards the mountains. The first permanent mountaintop astronomical observatory was the Lick Observatory constructed from 1876 to 1887, at the modest elevation of 1,283 m (4,209 ft) atop Mount Hamilton in California.[2] The first high altitude observatory was constructed atop the 2,877 m (9,439 ft) Pic du Midi de Bigorre in the French Pyrenees starting in 1878, with its first telescope and dome installed in 1904.[3] Astronomical observations were also made from Mont Blanc in the late 1800s.[4] A few other high altitude observatories (such as the Lowell Observatory in Arizona and Sphinx Observatory in Switzerland) were constructed through the first half of the 20th century. However, the two most important and prominent of the early 20th century observatories, Mount Wilson Observatory and Palomar Observatory, were both located on mid-elevation mountaintops of about 1,700 m (5,600 ft) in southern California.[5] The stunning successes and discoveries made there using the world's largest telescopes, the 100-inch Hooker Telescope and 200-inch Hale Telescope, spurred the move to ever higher sites for the new generation of observatories and telescopes after World War II, along with a worldwide search for locations which had the best astronomical seeing. Since the mid-20th century, an increasing number of high altitude observatory sites have been developed at locations around the world, including numerous sites in Arizona, Hawaii, Chile, and the Canary Islands.[6][7] The initial wave of high-altitude sites were mostly in the 2,000–2,500 m (6,600–8,200 ft) range, but astronomers soon sought even higher sites above 3,000 m (9,800 ft). Among the largest, best developed, and most renowned of these high altitude sites is the Mauna Kea Observatory located near the summit of a 4,205 m (13,796 ft) volcano in Hawaii, which has grown to include over a dozen major telescopes during the four decades since it was founded. In the first decade of the 21st century, there has been a new wave of observatory construction at very high altitudes above 4,500 m (14,800 ft), with such observatories constructed in India, Mexico, and most notably the Atacama Desert in northern Chile, now the site of several of the world's highest observatories. The scientific benefits of these sites outweigh the numerous logistical and physiological challenges which must be overcome during the construction and operation of observatories in remote mountain locations, even in desert, polar, and tropical island sites which magnify the challenges but confer additional observational advantages. Sites at high altitude are ideal for optical astronomy and provide optimal seeing, being above a significant portion of the Earth's atmosphere with its associated weather, turbulence, and diminished clarity. In particular, sites on mountaintops within about 80 km (50 mi) of the ocean often have excellent observing conditions above a stable inversion layer throughout much of the year.[8] High altitude sites are also above most of atmosphere's water vapor, making them ideal for infrared astronomy and submillimeter astronomy as those wavelengths are strongly absorbed by water vapor. On the other hand, high altitude does not offer as significant an advantage for radio astronomy at longer wavelengths, so relatively few radio telescopes are located at such sites. At the far end of the spectrum, for the extremely short wavelengths of x-ray and gamma ray astronomy, along with high-energy cosmic rays, high altitude observations once again offers significant advantages, enough that many experiments at these wavelengths have been conducted by balloon-borne or even by space telescopes, although a number of high-altitude ground-based sites have also been used. These include the Chacaltaya Astrophysical Observatory in Bolivia, which at 5,230 m (17,160 ft) was the world's highest permanent astronomical observatory[9] from the time of its construction during the 1940s until surpassed in 2009 by the new University of Tokyo Atacama Observatory,[10] an optical-infrared telescope on a remote 5,640 m (18,500 ft) mountaintop in Chile.insert text here...</p>\n"
+            }
+          ],
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09437688-b6a5-42a6-8eed-59aec7661a09",
+      "type": "title",
+      "title": "Title Section",
+      "cover": false,
+      "contents": [
+        {
+          "id": "79d9ffbf-9ebd-426d-b36c-4e57b03d3b99",
+          "type": "text",
+          "html": "<h1 style=\"text-align:center;\"><ins>Where are they located?</ins></h1>\n",
+          "size": "large",
+          "align": "center",
+          "theme": "bright",
+          "background": {
+            "fit": "cover",
+            "theme": "bright",
+            "size": "full",
+            "align": "center",
+            "resourceId": "24deeead-5c13-41cb-bc4a-b9a3f84fa95e",
+            "type": "image"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7eca906c-5dae-431c-b313-80721d4af301",
+      "type": "immersive",
+      "title": "Immersive Section",
+      "contents": [
+        {
+          "id": "b9b758ba-bf93-48f5-9bcd-92292e7d9858",
+          "type": "column",
+          "align": "right",
+          "size": "small",
+          "theme": "bright",
+          "contents": [
+            {
+              "id": "169b17b7-21a2-47ad-a69d-1882ab286851",
+              "type": "text",
+              "html": "<p><strong><ins>Mauna Kea Observatory</ins></strong></p>\n"
+            },
+            {
+              "id": "aa8251ef-6acc-499e-a992-2a033b8e0687",
+              "type": "image",
+              "title": "UNKNOWN",
+              "resourceId": "c4b1a878-e12d-40e8-983c-4c35ea721447"
+            }
+          ],
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright"
+          }
+        },
+        {
+          "id": "7ee2c8a2-e960-45aa-b008-f75589606d6b",
+          "type": "column",
+          "align": "right",
+          "size": "small",
+          "theme": "bright",
+          "contents": [
+            {
+              "id": "bbae2888-612c-4af6-95bf-d1ff442a1d15",
+              "type": "text",
+              "html": "<p><strong><ins>Chacaltaya Astrophysical Observatory</ins></strong></p>\n"
+            },
+            {
+              "id": "41b78dcb-e1ca-4130-a890-fa72dc6d44f1",
+              "type": "image",
+              "title": "UNKNOWN",
+              "resourceId": "95170aa4-ad68-4a57-9be8-7ff00b30eda6"
+            }
+          ],
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright"
+          }
+        },
+        {
+          "id": "08b82a2d-057c-4a22-991d-92911b115d86",
+          "type": "column",
+          "align": "right",
+          "size": "small",
+          "theme": "bright",
+          "contents": [
+            {
+              "id": "e44702e4-4428-413f-a23e-86ada2506047",
+              "type": "text",
+              "html": "<h5><strong><ins>Indian Astronomical Observatory</ins></strong></h5>\n"
+            },
+            {
+              "id": "df0882ca-926f-439f-9f0f-34c2633b4cb9",
+              "type": "image",
+              "title": "UNKNOWN",
+              "resourceId": "23b34678-9f0c-4498-9ba2-ceffe0b071be"
+            }
+          ],
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright"
+          }
+        },
+        {
+          "id": "98d2c069-4534-4c3b-abbd-1308d42e4b50",
+          "type": "column",
+          "align": "left",
+          "size": "small",
+          "theme": "dark",
+          "contents": [
+            {
+              "id": "df8927be-41a6-45bb-817c-b586206896e3",
+              "type": "text",
+              "html": "<h5><strong><ins>The Best Stargazing is at the Northern Tip of India</ins></strong></h5>\n<p>For some of the best stargazing in the world, many make the trek to Ladakh at the northern tip of India. The region is home to the Indian Astronomical Observatory, specifically situated for its unique geology. Located on cold, remote desert land, the area experiences very little rainfall and hardly any snow. The high altitude—2.5 miles above sea level—also allows scientists to collect more data than would be possible at a lower altitude. For visitors of the observatory, the summer months give way to a perfectly clear sky. As soon as the sun sets, visitors are treated to a blanket of extraordinary stars and light.</p>\n<p></p>\n<p>From Great Big Story</p>\n"
+            }
+          ],
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright"
+          }
+        },
+        {
+          "id": "fd79e319-d395-4512-ae89-afebd85dbae8",
+          "type": "column",
+          "align": "center",
+          "size": "small",
+          "theme": "dark-text",
+          "contents": [
+            {
+              "id": "c1b925bd-620c-4432-8aaa-32efeeeff821",
+              "type": "text",
+              "html": "<p style=\"text-align:center;\"><strong><ins>Map of all Observatories listed in Wikipedia</ins></strong></p>\n"
+            }
+          ],
+          "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center",
+            "theme": "bright"
+          }
+        }
+      ]
+    }
+  ]
+}

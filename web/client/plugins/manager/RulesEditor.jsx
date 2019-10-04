@@ -8,13 +8,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const {connect} = require('react-redux');
-const {createSelector} = require("reselect");
-const {compose} = require('recompose');
-const enhancer = require("./EditorEnhancer");
-const {cleanEditing, saveRule, setLoading} = require("../../actions/rulesmanager");
-const {activeRuleSelector, geometryStateSel} = require("../../selectors/rulesmanager");
-
 const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require("../../components/layout/BorderLayout");
@@ -23,12 +16,13 @@ const MainEditor = require("../../components/manager/rulesmanager/ruleseditor/Ed
 const StylesEditor = require("../../components/manager/rulesmanager/ruleseditor/StylesEditor");
 const FiltersEditor = require("../../components/manager/rulesmanager/ruleseditor/FiltersEditor");
 const AttributesEditor = require("../../components/manager/rulesmanager/ruleseditor/AttributesEditor");
-const ModalDialog = require("./ModalDialog");
+const ModalDialog = require("../../components/manager/rulesmanager/ModalDialog");
 
 
 class RuleEditor extends React.Component {
     static propTypes = {
         initRule: PropTypes.object,
+        disableDetails: PropTypes.bool,
         activeRule: PropTypes.object,
         activeEditor: PropTypes.string,
         onNavChange: PropTypes.func,
@@ -54,26 +48,27 @@ class RuleEditor extends React.Component {
         type: ""
     }
     render() {
-        const {loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties} = this.props;
+        const { loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties, disableDetails} = this.props;
         const {modalProps} = this.state || {};
         return (
             <BorderLayout
                 className="bg-body"
                 header={<Header
-                                layer={layer}
-                                loading={loading}
-                                type={type}
-                                onSave={this.save}
-                                onExit={this.cancelEditing}
-                                activeTab={activeEditor}
-                                disableSave={isSaveDisabled(activeRule, initRule)}
-                                rule={activeRule}
-                                onNavChange={onNavChange}/>}
+                    disableDetails={disableDetails}
+                    layer={layer}
+                    loading={loading}
+                    type={type}
+                    onSave={this.save}
+                    onExit={this.cancelEditing}
+                    activeTab={activeEditor}
+                    disableSave={isSaveDisabled(activeRule, initRule)}
+                    rule={activeRule}
+                    onNavChange={onNavChange}/>}
             >
                 <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
-                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
-                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule.constraints} active={activeEditor === "3"}/>
-                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule.constraints} setOption={setConstraintsOption}/>
+                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
+                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule && activeRule.constraints} active={activeEditor === "3"}/>
+                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption}/>
                 <ModalDialog {...modalProps}/>
             </BorderLayout>);
     }
@@ -82,15 +77,15 @@ class RuleEditor extends React.Component {
         if (!isRulePristine(activeRule, initRule)) {
             this.setState( () => ({modalProps: {title: "featuregrid.toolbar.saveChanges",
                 showDialog: true, buttons: [{
-                        text: <Message msgId="no"/>,
-                        bsStyle: 'primary',
-                        onClick: this.cancel
-                    },
-                    {
-                        text: <Message msgId="yes"/>,
-                        bsStyle: 'primary',
-                        onClick: onExit
-                    }
+                    text: <Message msgId="no"/>,
+                    bsStyle: 'primary',
+                    onClick: this.cancel
+                },
+                {
+                    text: <Message msgId="yes"/>,
+                    bsStyle: 'primary',
+                    onClick: onExit
+                }
                 ], closeAction: this.cancel, msg: "map.details.sureToClose"}}));
         } else {
             onExit();
@@ -103,21 +98,21 @@ class RuleEditor extends React.Component {
         const {activeRule, onSave} = this.props;
         if (isRuleValid(activeRule)) {
             onSave(activeRule);
-        }else {
+        } else {
             this.setState( () => ({modalProps: {title: "featuregrid.toolbar.saveChanges",
                 showDialog: true, buttons: [
-                        {
-                            text: 'Ok',
-                            bsStyle: 'primary',
-                            onClick: this.cancel
-                        }
-                    ], closeAction: this.cancel, msg: "rulesmanager.invalidForm"}}));
+                    {
+                        text: 'Ok',
+                        bsStyle: 'primary',
+                        onClick: this.cancel
+                    }
+                ], closeAction: this.cancel, msg: "rulesmanager.invalidForm"}}));
         }
     }
     setOption = ({key, value}) => {
         if (askConfirm(this.props.activeRule, key, value)) {
             this.setState( () => ({modalProps: {title: "rulesmanager.resetconstraints",
-            showDialog: true, buttons: [{
+                showDialog: true, buttons: [{
                     text: <Message msgId="no"/>,
                     bsStyle: 'primary',
                     onClick: this.cancel
@@ -131,19 +126,12 @@ class RuleEditor extends React.Component {
                         this.props.cleanConstraints(key === 'grant');
                     }
                 }
-            ], closeAction: this.cancel, msg: "rulesmanager.constraintsmsg"}}));
+                ], closeAction: this.cancel, msg: "rulesmanager.constraintsmsg"}}));
 
-        }else {
+        } else {
             this.props.setOption({key, value});
         }
 
     }
 }
-
-module.exports = compose(
-    connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({activeRule, geometryState})), {
-        onExit: cleanEditing,
-        onSave: saveRule,
-        setLoading
-    }),
-    enhancer)(RuleEditor);
+module.exports = RuleEditor;

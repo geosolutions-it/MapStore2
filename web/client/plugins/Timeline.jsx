@@ -12,14 +12,14 @@ const { createSelector } = require('reselect');
 const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
-const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { currentTimeRangeSelector, rangeSelector } = require('../selectors/timeline');
+const { offsetEnabledSelector, currentTimeSelector } = require('../selectors/dimension');
+const { currentTimeRangeSelector, isVisible, rangeSelector, timelineLayersSelector, isMapSync } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
 const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
 const withResizeSpy = require('../components/misc/enhancers/withResizeSpy');
 
-const { selectTime, enableOffset, onRangeChanged } = require('../actions/timeline');
+const { selectTime, enableOffset, onRangeChanged, setMapSync } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
 const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
@@ -36,7 +36,9 @@ const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 
 /**
-  * Timeline Plugin. Shows the timeline tool on the map
+  * Timeline Plugin. Shows the timeline tool on the map.
+  * To use with Playback plugin. {@link api/plugins#plugins.Playback}
+  * For configuration, see related reducer's documentation {@link api/framework#reducers.timeline}
   * @class  Timeline
   * @memberof plugins
   * @static
@@ -44,14 +46,16 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 const TimelinePlugin = compose(
     connect(
         createSelector(
-            layersWithTimeDataSelector,
+            isVisible,
+            timelineLayersSelector,
             currentTimeSelector,
             currentTimeRangeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
             statusSelector,
             rangeSelector,
-            (layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
+                visible,
                 layers,
                 currentTime,
                 currentTimeRange,
@@ -67,8 +71,15 @@ const TimelinePlugin = compose(
             setPlaybackRange: selectPlaybackRange,
             moveRangeTo: onRangeChanged
         }),
-    branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
+    branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true}),
+    // add mapSync button handler and value
+    connect(
+        createSelector(isMapSync, mapSync => ({mapSync})),
+        {
+            toggleMapSync: setMapSync
+        }
+    ),
     //
     // ** Responsiveness to container.
     // These enhancers allow to properly place the timeline inside the map
@@ -122,6 +133,8 @@ const TimelinePlugin = compose(
         items,
         options,
         setOptions,
+        mapSync,
+        toggleMapSync = () => {},
         currentTime,
         setCurrentTime,
         offsetEnabled,
@@ -144,10 +157,10 @@ const TimelinePlugin = compose(
             const shift = moment(view.end).diff(view.start) / 2;
             if (type === "time-current" && view) {
                 // if the current time is centered to viewRange do nothing
-                return view.start.toString() !== moment(time).add(-1 * shift).toString() && view.end.toString() !== moment(time).add(shift).toString()
+                view.start.toString() !== moment(time).add(-1 * shift).toString() && view.end.toString() !== moment(time).add(shift).toString()
                 && moveRangeTo({
-                        start: moment(time).add(-1 * shift),
-                        end: moment(time).add(shift)
+                    start: moment(time).add(-1 * shift),
+                    end: moment(time).add(shift)
                 });
             }
             // center to the current offset range
@@ -159,13 +172,13 @@ const TimelinePlugin = compose(
                     moveRangeTo({
                         start: moment(offsetCenter).add(-1 * shift),
                         end: moment(offsetCenter).add(shift)
-                });
+                    });
                 // if offset range is wider than the view range zoom out + move
                 } else {
                     moveRangeTo({
                         start: moment(offsetCenter).add(-1 * offsetRangeDistance * 5 / 2),
                         end: moment(offsetCenter).add( offsetRangeDistance * 5 / 2)
-                });
+                    });
                 }
             }
         };
@@ -182,20 +195,20 @@ const TimelinePlugin = compose(
 
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
-                clickable={!collapsed}
-                glyph="range-start"
-                onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
-                tooltip={<Message msgId="timeline.rangeStart"/>}
-                showButtons
-                date={currentTime || currentTimeRange && currentTimeRange.start}
-                onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
-                className="shadow-soft"
-                style={{
-                    position: 'absolute',
-                    top: -5,
-                    left: 2,
-                    transform: 'translateY(-100%)'
-                }} />}
+                    clickable={!collapsed}
+                    glyph="range-start"
+                    onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
+                    tooltip={<Message msgId="timeline.rangeStart"/>}
+                    showButtons
+                    date={currentTime || currentTimeRange && currentTimeRange.start}
+                    onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
+                    className="shadow-soft"
+                    style={{
+                        position: 'absolute',
+                        top: -5,
+                        left: 2,
+                        transform: 'translateY(-100%)'
+                    }} />}
 
             <div
                 className={`timeline-plugin-toolbar${compactToolbar ? ' ms-collapsed' : ''}`}>
@@ -243,6 +256,14 @@ const TimelinePlugin = compose(
                                     if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
 
                                 }
+                            },
+                            {
+                                glyph: "map-synch",
+                                tooltip: <Message msgId={mapSync ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
+                                bsStyle: mapSync ? 'success' : 'primary',
+                                active: mapSync,
+                                onClick: () => toggleMapSync(!mapSync)
+
                             }
                         ]} />
                     <Playback
@@ -271,10 +292,14 @@ const TimelinePlugin = compose(
 );
 
 const assign = require('object-assign');
-
+const TimelineToggle = require('./timeline/TimelineToggle');
 module.exports = {
     TimelinePlugin: assign(TimelinePlugin, {
-        disablePluginIf: "{state('mapType') === 'cesium'}"
+        disablePluginIf: "{state('mapType') === 'cesium'}",
+        WidgetsTray: {
+            tool: <TimelineToggle />,
+            position: 0
+        }
     }),
     reducers: {
         dimension: require('../reducers/dimension'),

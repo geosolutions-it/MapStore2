@@ -10,7 +10,7 @@ const React = require('react');
 const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
 const Message = require('../../I18N/Message');
-const {Glyphicon, Row, Col} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 
 /**
  * Component for rendering lat and lng of the current selected point
@@ -23,42 +23,26 @@ const {Glyphicon, Row, Col} = require('react-bootstrap');
  * @prop {node} revGeocodeDisplayName text/info displayed on modal
  */
 
-module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalReverse, revGeocodeDisplayName, showCoordinateEditor = false}) => {
-
-    let lngCorrected = null;
-    if (latlng) {
-        /* lngCorrected is the converted longitude in order to have the value between
-        the range (-180 / +180).*/
-        lngCorrected = latlng && Math.round(latlng.lng * 100000) / 100000;
-        /* the following formula apply the converion */
-        lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
-    }
-
-    return enableRevGeocode && latlng && lngCorrected ? (
-        <Row key="ms-geocode-coords" className="ms-geoscode-viewer text-center" style={{display: showCoordinateEditor ? "none" : "block"}}>
-            {!showCoordinateEditor &&
-            (<Col xs={12}>
-                <div className="ms-geocode-coords">{latlng ? 'Lat: ' + (Math.round(latlng.lat * 100000) / 100000) + '- Long: ' + lngCorrected : null}</div>
-            </Col>)}
-            <Portal>
-                <ResizableModal
-                    fade
-                    title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
-                    size="xs"
-                    show={showModalReverse}
-                    onClose={hideRevGeocode}
-                    buttons={[{
-                        text: <Message msgId="close"/>,
-                        onClick: hideRevGeocode,
-                        bsStyle: 'primary'
-                    }]}>
-                    <div className="ms-alert" style={{padding: 15}}>
-                        <div className="ms-alert-center text-center">
-                            <div>{revGeocodeDisplayName}</div>
-                        </div>
+module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalReverse, revGeocodeDisplayName}) => {
+    return enableRevGeocode && latlng ? (
+        <Portal>
+            <ResizableModal
+                fade
+                title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
+                size="xs"
+                show={showModalReverse}
+                onClose={hideRevGeocode}
+                buttons={[{
+                    text: <Message msgId="close"/>,
+                    onClick: hideRevGeocode,
+                    bsStyle: 'primary'
+                }]}>
+                <div className="ms-alert" style={{padding: 15}}>
+                    <div className="ms-alert-center text-center">
+                        <div>{revGeocodeDisplayName}</div>
                     </div>
-                </ResizableModal>
-            </Portal>
-        </Row>
+                </div>
+            </ResizableModal>
+        </Portal>
     ) : null;
 };

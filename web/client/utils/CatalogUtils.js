@@ -7,11 +7,12 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, omit} = require('lodash');
+const {head, isArray, isString, castArray, isObject, omit, sortBy, uniq, includes} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
 const LayersUtils = require('./LayersUtils');
+const LocaleUtils = require('./LocaleUtils');
 const WMTSUtils = require('./WMTSUtils');
 
 const WMS = require('../api/WMS');
@@ -49,7 +50,7 @@ const getThumb = (dc) => {
 };
 
 const converters = {
-    csw: (records, options) => {
+    csw: (records, options, locales = {}) => {
         let result = records;
         // let searchOptions = catalog.searchOptions;
         if (result && result.records) {
@@ -145,61 +146,112 @@ const converters = {
                     }
                 }
                 // create the references array (now only wms is supported)
+                let metadata = {boundingBox: record.boundingBox && record.boundingBox.extent && castArray(record.boundingBox.extent.join(","))};
+                if (dc) {
+                    // parsing all it comes from the csw service
+                    metadata = {...metadata, ...sortBy(Object.keys(dc)).reduce((p, c) => ({...p, [c]: uniq(castArray(dc[c]))}), {})};
+                }
+                // parsing URI
+                if (dc && dc.URI && castArray(dc.URI) && castArray(dc.URI).length) {
+                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(u => `<li><a target="_blank" href="${u.value}">${u.name}</a></li>`).join("") + "</ul>"]};
+                }
+                if (dc && dc.subject && castArray(dc.subject) && castArray(dc.subject).length) {
+                    metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
+                }
+                if (references && castArray(references).length ) {
+                    metadata = {...metadata, references: ["<ul>" + castArray(references).map(ref => `<li><a target="_blank" href="${ref.url}">${ref.params && ref.params.name || ref.url}</a></li>`).join("") + "</ul>"]
+                    };
+                } else {
+                    // in order to use a default value
+                    // we need to not push undefined/empty matadata
+                    delete metadata.references;
+                }
 
+                if (dc && dc.temporal) {
+                    let elements = dc.temporal.split("; ");
+                    if (elements.length) {
+                        // finding scheme or using default
+                        let scheme = elements.filter(e => e.indexOf("scheme=") !== -1).map(e => {
+                            const equalIndex = e.indexOf("=");
+                            const value = e.substr(equalIndex + 1, e.length - 1);
+                            return value;
+                        });
+                        scheme = scheme.length ? scheme[0] : "W3C-DTF";
+                        let temporal = elements
+                            .filter(e => e.indexOf("start=") !== -1 || e.indexOf("end=") !== -1)
+                            .map(e => {
+                                const equalIndex = e.indexOf("=");
+                                const prop = e.substr(0, equalIndex);
+                                const value = e.substr(equalIndex + 1, e.length - 1);
+                                const isOnlyDateFormat = e.length - equalIndex - 1 <= 10;
+                                if (includes(["start", "end"], prop) && scheme === "W3C-DTF" && !isOnlyDateFormat) {
+                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
+                                }
+                                if (includes(["start", "end"], prop)) {
+                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + value;
+                                }
+                                return "";
+                            });
+                        metadata = {...metadata, temporal: ["<ul>" + temporal.map(date => `<li>${date}</li>`).join("") + "</ul>"]};
+                    }
+                }
                 // setup the final record object
                 return {
-                    title: dc && isString(dc.title) && dc.title || '',
+                    boundingBox: record.boundingBox,
                     description: dc && isString(dc.abstract) && dc.abstract || '',
                     identifier: dc && isString(dc.identifier) && dc.identifier || '',
+                    references: references,
                     thumbnail: thumbURL,
-                    tags: dc && isString(dc.subject) && dc.subject || '',
-                    boundingBox: record.boundingBox,
-                    references: references
+                    title: dc && isString(dc.title) && dc.title || '',
+                    tags: dc && dc.tags || '',
+                    metadata
                 };
             });
         }
+        return null;
     },
     wms: (records, options = {}) => {
         if (records && records.records) {
             return records.records.map((record) => {
                 return {
-                title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
-                description: record.Abstract || record.Title || record.Name,
-                identifier: record.Name,
-                tags: "",
-                capabilities: record,
-                service: records.service,
-                boundingBox: WMS.getBBox(record),
-                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                    capabilities: record,
+                    credits: record.credits,
+                    boundingBox: WMS.getBBox(record),
+                    description: record.Abstract || record.Title || record.Name,
+                    identifier: record.Name,
+                    service: records.service,
+                    tags: "",
+                    title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
+                    dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                         values: dim._ && dim._.split(',') || []
                     }, dim.$ || {}))
                     // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
                     // TODO: replace with capabilities URL service. something like this:
-                    /*
-                    .map(dim => dim && dim.name !== "time" ? dim : {
-                        ...dim,
-                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
-                        source: { <-- add the source
-                            type: "wms-capabilities",
-                            url: options.url
-                        }
-                    })
-                    */
-                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
-                    .filter(dim => dim && dim.name !== "time"),
+                        /*
+                        .map(dim => dim && dim.name !== "time" ? dim : {
+                            ...dim,
+                            values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
+                            source: { <-- add the source
+                                type: "wms-capabilities",
+                                url: options.url
+                            }
+                        })
+                        */
+                        // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
+                        .filter(dim => dim && dim.name !== "time"),
 
-                references: [{
-                    type: "OGC:WMS",
-                    url: options && options.url,
-                    SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
-                    params: {
-                        name: record.Name
-                    }
-                }],
-                credits: record.credits
+                    references: [{
+                        type: "OGC:WMS",
+                        url: options && options.url,
+                        SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
+                        params: {
+                            name: record.Name
+                        }
+                    }]
                 };
             });
         }
+        return null;
     },
     wmts: (records, options) => {
         if (records && records.records) {
@@ -235,37 +287,38 @@ const converters = {
 
                 const bbox = getWMTSBBox(record);
                 return {
-                title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
-                description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
-                identifier: getNodeText(record["ows:Identifier"]),
-                tags: "",
-                style: record.style,
-                capabilitiesURL: capabilitiesURL,
-                queryable: record.queryable,
-                requestEncoding: record.requestEncoding,
-                tileMatrixSet: record.TileMatrixSet,
-                matrixIds,
-                TileMatrixSetLink: castArray(record.TileMatrixSetLink),
-                boundingBox: {
-                    extent: [
+                    title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
+                    description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
+                    identifier: getNodeText(record["ows:Identifier"]),
+                    tags: "",
+                    style: record.style,
+                    capabilitiesURL: capabilitiesURL,
+                    queryable: record.queryable,
+                    requestEncoding: record.requestEncoding,
+                    tileMatrixSet: record.TileMatrixSet,
+                    matrixIds,
+                    TileMatrixSetLink: castArray(record.TileMatrixSetLink),
+                    boundingBox: {
+                        extent: [
                             bbox["ows:LowerCorner"].split(" ")[0],
                             bbox["ows:LowerCorner"].split(" ")[1],
                             bbox["ows:UpperCorner"].split(" ")[0],
                             bbox["ows:UpperCorner"].split(" ")[1]
-                    ],
-                    crs: "EPSG:4326"
-                },
-                references: [{
-                    type: "OGC:WMTS",
-                    url: urls,
-                    SRS: filterOnMatrix(record.SRS || [], matrixIds),
-                    params: {
-                        name: record["ows:Identifier"]
-                    }
-                }]
+                        ],
+                        crs: "EPSG:4326"
+                    },
+                    references: [{
+                        type: "OGC:WMTS",
+                        url: urls,
+                        SRS: filterOnMatrix(record.SRS || [], matrixIds),
+                        params: {
+                            name: record["ows:Identifier"]
+                        }
+                    }]
                 };
             });
         }
+        return null;
     }
 };
 const buildSRSMap = (srs) => {
@@ -348,7 +401,7 @@ const CatalogUtils = {
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
      */
-    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url, group, id, title, additionalParams} = {}) => {
+    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url, group, id, title, additionalParams} = {}, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -364,11 +417,11 @@ const CatalogUtils = {
         const urls = ogcServiceReference.url;
 
         // extract additional parameters and alternative URLs.
-        if (isArray(urls)) {
+        if (urls && isArray(urls)) {
             originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
             params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
         } else {
-            const { url: uu, params: pp } = cleanURL(urls);
+            const { url: uu, params: pp } = cleanURL(urls || catalogURL);
             originalUrl = uu;
             params = pp;
         }
@@ -409,15 +462,16 @@ const CatalogUtils = {
             allowedSRS: allowedSRS,
             catalogURL,
             group,
-            additionalParams: additionalParams || {} ? omit(additionalParams, ['source', 'format', 'style', 'title']) : additionalParams
+            additionalParams: additionalParams || {} ? omit(additionalParams, ['source', 'format', 'style', 'title']) : additionalParams,
+            ...baseConfig
         };
         // adding the additional parameters, so as a node, so it could be retrieved and rendered in the background selector modal
         return assign({}, returnLayer, additionalParams);
     },
-    getCatalogRecords: (format, records, options) => {
-        return format === 'backgrounds' && records && records.records || converters[format] && converters[format](records, options) || null;
+    getCatalogRecords: (format, records, options, locales) => {
+        return format === 'backgrounds' && records && records.records || converters[format] && converters[format](records, options, locales) || null;
     },
-    esriToLayer: (record) => {
+    esriToLayer: (record, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -438,7 +492,8 @@ const CatalogUtils = {
                     maxx: record.boundingBox.extent[2],
                     maxy: record.boundingBox.extent[3]
                 }
-            }
+            },
+            ...baseConfig
         };
 
     }

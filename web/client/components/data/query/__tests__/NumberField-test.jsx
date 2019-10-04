@@ -82,8 +82,8 @@ describe('NumberField', () => {
 
         const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
         const cmp = ReactDOM.render(
-        <NumberField
-        onUpdateField={actions.onUpdateField}
+            <NumberField
+                onUpdateField={actions.onUpdateField}
             />, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
@@ -99,8 +99,8 @@ describe('NumberField', () => {
 
         const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
         const cmp = ReactDOM.render(
-        <NumberField
-        onUpdateField={actions.onUpdateField}
+            <NumberField
+                onUpdateField={actions.onUpdateField}
             />, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);

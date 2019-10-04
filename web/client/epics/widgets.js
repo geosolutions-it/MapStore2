@@ -1,11 +1,13 @@
 const Rx = require('rxjs');
-const { get, isEqual, omit } = require('lodash');
+const { has, get, isEqual, omit } = require('lodash');
 const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
-    onEditorChange, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
+    onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
+const { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } = require('../actions/layers');
+const { getLayerFromId } = require('../selectors/layers');
 const { pathnameSelector } = require('../selectors/routing');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const { DASHBOARD_LOADED } = require('../actions/dashboard');
@@ -74,19 +76,19 @@ module.exports = {
      */
     alignDependenciesToWidgets: (action$, { getState = () => { } } = {}) =>
         action$.ofType(MAP_CONFIG_LOADED, DASHBOARD_LOADED, INSERT)
-        .map(() => availableDependenciesSelector(getState()))
-        .pluck('availableDependencies')
-        .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
+            .map(() => availableDependenciesSelector(getState()))
+            .pluck('availableDependencies')
+            .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
         // add dependencies for all map widgets (for the moment the only ones that shares dependencies)
         // and for main "map" dependency, the "viewport" and "center"
-        .map((maps=[]) => loadDependencies(maps.reduce( (deps, m) => ({
-            ...deps,
-            [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
-            [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
-            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
-            [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
-        }), {}))
-    ),
+            .map((maps = []) => loadDependencies(maps.reduce( (deps, m) => ({
+                ...deps,
+                [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
+                [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
+                [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
+                [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
+            }), {}))
+            ),
     /**
      * Toggles the dependencies setup and widget selection for dependencies
      * (if more than one widget is available for connection)
@@ -102,20 +104,20 @@ module.exports = {
                     ? configureDependency(active, availableDependencies[0], options)
                     // case of multiple map
                     : Rx.Observable.of(toggleDependencySelector(active, {
-                            availableDependencies
-                        })
-                        ).merge(
-                            action$.ofType(WIDGET_SELECTED)
-                                .filter(() => isWidgetSelectionActive(getState()))
-                                .switchMap(({ widget }) => {
-                                    const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
-                                    const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
-                                    return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
-                                }).takeUntil(
-                                    action$.ofType(LOCATION_CHANGE)
+                        availableDependencies
+                    })
+                    ).merge(
+                        action$.ofType(WIDGET_SELECTED)
+                            .filter(() => isWidgetSelectionActive(getState()))
+                            .switchMap(({ widget }) => {
+                                const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
+                                const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
+                                return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                            }).takeUntil(
+                                action$.ofType(LOCATION_CHANGE)
                                     .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))
-                                )
-                        )
+                            )
+                    )
 
                 // deactivate flow
                 : configureDependency(active, availableDependencies[0], options)
@@ -159,5 +161,41 @@ module.exports = {
                     }
                 });
             })
-            .filter( () => false)
+            .filter( () => false),
+    /**
+     * Triggers updates of the layer property of widgets on layerFilter change
+     * @memberof epics.widgets
+     * @param {external:Observable} action$ manages `CHANGE_LAYER_PROPERTIES`
+     * @return {external:Observable}
+     */
+    updateLayerOnLayerPropertiesChange: (action$, store) =>
+        action$.ofType(CHANGE_LAYER_PROPERTIES)
+            .switchMap(({layer, newProperties}) => {
+                const state = store.getState();
+                const flatLayer = getLayerFromId(state, layer);
+                return Rx.Observable.of(
+                    ...(has(newProperties, "layerFilter") && flatLayer ? [updateWidgetLayer(flatLayer)] : [])
+                );
+            }),
+
+    /**
+     * Triggers updates of the layer property of widgets on loading error state change
+     * @memberof epics.widgets
+     * @param {external:Observable} action$ manages `LAYER_LOAD, LAYER_ERROR`
+     * @return {external:Observable}
+     */
+    updateLayerOnLoadingErrorChange: (action$, store) =>
+        action$.ofType(LAYER_LOAD, LAYER_ERROR)
+            .groupBy(({layerId}) => layerId)
+            .map(layerStream$ => layerStream$
+                .switchMap(({layerId}) => {
+                    const state = store.getState();
+                    const flatLayer = getLayerFromId(state, layerId);
+                    return Rx.Observable.of(
+                        ...(flatLayer && flatLayer.previousLoadingError !== flatLayer.loadingError ?
+                            [updateWidgetLayer(flatLayer)] :
+                            [])
+                    );
+                })
+            ).mergeAll()
 };

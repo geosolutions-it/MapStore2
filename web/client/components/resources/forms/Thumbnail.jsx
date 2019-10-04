@@ -112,20 +112,20 @@ class Thumbnail extends React.Component {
             this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
 
                 <div className="dropzone-thumbnail-container" style={{
-                        pointerEvents: this.props.resource.saving ? "none" : "auto"
-                    }}>
+                    pointerEvents: this.props.resource.saving ? "none" : "auto"
+                }}>
                     <label className="control-label"><Message msgId="map.thumbnail"/></label>
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
-                    { this.getThumbnailUrl()
-                        ? <div>
+                        { this.getThumbnailUrl()
+                            ? <div>
                                 <img src={this.getThumbnailUrl()} />
                                 <div className="dropzone-content-image-added">{this.props.message}<br/>{this.props.suggestion}</div>
                                 <div className="dropzone-remove" onClick={this.onRemoveThumbnail}>
                                     <Glyphicon glyph={this.props.glyphiconRemove} />
                                 </div>
-                          </div>
-                        : <div className="dropzone-content-image">{this.props.message}<br />{this.props.suggestion}</div>
-                    }
+                            </div>
+                            : <div className="dropzone-content-image">{this.props.message}<br />{this.props.suggestion}</div>
+                        }
                     </Dropzone>
                 </div>
 

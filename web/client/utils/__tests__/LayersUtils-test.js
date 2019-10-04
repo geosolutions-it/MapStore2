@@ -741,6 +741,23 @@ describe('LayersUtils', () => {
         const matchedGeoServerNameCustomReg = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows", regex: /\/geoserver\//});
         expect(matchedGeoServerNameCustomReg).toBe(null);
     });
+    it('test findGeoServerName with array url', () => {
+        const matched = LayersUtils
+            .findGeoServerName({url: ['https://1maps.geo-solutions.it/geoserver/wms'], regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
+        expect(matched).toExist();
+    });
+
+    it('test findGeoServerName with string url', () => {
+        const matched = LayersUtils
+            .findGeoServerName({url: 'https://1maps.geo-solutions.it/geoserver/wms', regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
+        expect(matched).toExist();
+    });
+
+    it('test getCapabilitiesUrl', () => {
+        const capabilities = LayersUtils
+            .getCapabilitiesUrl({url: ['https://1maps.geo-solutions.it/geoserver/wms'], name: 'states'});
+        expect(capabilities).toExist();
+    });
     it('getAuthenticationParam', () => {
         expect(LayersUtils.getAuthenticationParam({
             url: ['http://url/'],
@@ -805,6 +822,112 @@ describe('LayersUtils', () => {
         ];
         TESTS.map(([credits, expectedResult]) => expect(LayersUtils.creditsToAttribution(credits)).toBe(expectedResult));
     });
+    it('geoJSONToLayer with a Feature with id', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip",
+            "id": "feature-id"
+        };
+        const layer = LayersUtils.geoJSONToLayer(feature, "layer-id");
+        expect(layer.type).toEqual("vector");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.group).toEqual("Local shape");
+        expect(layer.name).toEqual("file.zip");
+        expect(layer.hideLoading).toEqual(true);
+        expect(layer.bbox).toEqual({
+            "bounds": {
+                "minx": 0,
+                "miny": 39,
+                "maxx": 28,
+                "maxy": 48
+            },
+            "crs": "EPSG:4326"
+        });
+        expect(layer.features).toEqual([{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+            },
+            "id": "feature-id",
+            "type": "Feature"
+        }]);
+    });
+    it('geoJSONToLayer with a Feature without id', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip"
+        };
+        const layer = LayersUtils.geoJSONToLayer(feature, "layer-id");
+        expect(layer.type).toEqual("vector");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.group).toEqual("Local shape");
+        expect(layer.name).toEqual("file.zip");
+        expect(layer.hideLoading).toEqual(true);
+        expect(layer.bbox).toEqual({
+            "bounds": {
+                "minx": 0,
+                "miny": 39,
+                "maxx": 28,
+                "maxy": 48
+            },
+            "crs": "EPSG:4326"
+        });
+
+        expect(Object.keys(layer.features[0]).length).toEqual(3);
+        expect(Object.keys(layer.features[0])).toEqual(["geometry", "type", "id"]);
+        expect(layer.features[0].geometry).toEqual({
+            "type": "LineString",
+            "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+        });
+        expect(layer.features[0].type).toEqual("Feature");
+        expect(layer.features[0].id.length).toEqual("1e63efb0-6b37-11e9-8359-eb9aa043350b".length);
+    });
+    it('geoJSONToLayer with a FeatureCollection', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "id": "feature-id"
+        };
+        const ftColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            fileName: "ft-coll-zip"
+        };
+        const layer = LayersUtils.geoJSONToLayer(ftColl, "layer-id");
+        expect(layer.type).toEqual("vector");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.group).toEqual("Local shape");
+        expect(layer.name).toEqual("ft-coll-zip");
+        expect(layer.hideLoading).toEqual(true);
+        expect(layer.bbox).toEqual({
+            "bounds": {
+                "minx": 0,
+                "miny": 39,
+                "maxx": 28,
+                "maxy": 48
+            },
+            "crs": "EPSG:4326"
+        });
+        expect(layer.features).toEqual([{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[ 0, 39 ], [ 28, 48 ] ]
+            },
+            "id": "feature-id",
+            "type": "Feature"
+        }]);
+    });
     it('saveLayer', () => {
         const layers = [
             // no params if not present
@@ -844,9 +967,54 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.credits).toExist();
                 }
+            ],
+            // save tooltipOptions and tooltipPlacement if present
+            [
+                {
+                    tooltipOptions: "both",
+                    tooltipPlacement: "right"
+                },
+                l => {
+                    expect(l.tooltipOptions).toExist();
+                    expect(l.tooltipPlacement).toExist();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
     });
 
+    it('findGeoServerName with a positive match and using custom regex (setRegGeoserverRule)', () => {
+        const customRegex = /\/[\w- ]*gs[\w- ]*\//;
+        LayersUtils.setRegGeoserverRule(customRegex);
+
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/gs/ows"});
+        expect(matchedGeoServerName).toBe("/gs/");
+
+        // reset regex
+        LayersUtils.setRegGeoserverRule(LayersUtils.REG_GEOSERVER_RULE);
+    });
+
+    it('getRegGeoserverRule test default value', () => {
+        expect(LayersUtils.getRegGeoserverRule()).toBe(LayersUtils.REG_GEOSERVER_RULE);
+    });
+
+
+    it('test formatCapabitiliesOptions', () => {
+
+        expect(LayersUtils.formatCapabitiliesOptions()).toEqual({});
+
+        const capabilities = {
+            style: { name: 'generic' },
+            _abstract: 'description',
+            latLonBoundingBox: [-180, -90, 180, 90]
+        };
+        expect(LayersUtils.formatCapabitiliesOptions(capabilities))
+            .toEqual({
+                capabilities,
+                capabilitiesLoading: null,
+                description: 'description',
+                boundingBox: [-180, -90, 180, 90],
+                availableStyles: [{ name: 'generic' }]
+            });
+    });
 });

@@ -37,7 +37,7 @@ module.exports = {
         .switchMap(() => Rx.Observable.of(
             setControlProperty("widgetBuilder", "enabled", true),
             setControlProperty("metadataexplorer", "enabled", false)
-    )),
+        )),
     closeWidgetEditorOnFinish: (action$, {getState = () => {}} = {}) => action$.ofType(INSERT, ADD_LAYER)
         .filter(() => widgetBuilderAvailable(getState()))
         .switchMap(() => Rx.Observable.of(setControlProperty("widgetBuilder", "enabled", false))),
@@ -86,24 +86,24 @@ module.exports = {
                         action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled")).take(1)
                     )
                     // then close the query panel, open widget form and update the current filter for the widget in editing
-                    .switchMap( action =>
-                        (action.filterObj
-                            ? Rx.Observable.of(onEditorChange("filter", action.filterObj))
-                            : Rx.Observable.empty()
+                        .switchMap( action =>
+                            (action.filterObj
+                                ? Rx.Observable.of(onEditorChange("filter", action.filterObj))
+                                : Rx.Observable.empty()
+                            )
+                                .merge(Rx.Observable.of(
+                                    setControlProperty("widgetBuilder", "enabled", true)
+                                ))
                         )
-                        .merge(Rx.Observable.of(
-                            setControlProperty("widgetBuilder", "enabled", true)
-                        ))
-                    )
                     // if the widgetBuilder is closed or the page is changed, do not listen anymore
                 ).takeUntil(
                     action$.ofType(LOCATION_CHANGE, EDIT)
-                    .merge(action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "widgetBuilder" && (!property === false))))
-                .concat(
-                    Rx.Observable.of(drawSupportReset(),
-                    setControlProperty('queryPanel', "enabled", false)
-                )
-                )
+                        .merge(action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "widgetBuilder" && (!property === false))))
+                    .concat(
+                        Rx.Observable.of(drawSupportReset(),
+                            setControlProperty('queryPanel', "enabled", false)
+                        )
+                    )
             )
 
 };

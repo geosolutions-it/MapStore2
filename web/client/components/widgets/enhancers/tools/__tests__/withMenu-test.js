@@ -33,12 +33,12 @@ describe('withMenu enhancer', () => {
     });
     it('withMenu rendering widget creates menu', () => {
         ReactDOM.render(<Widget
-        widgetType="text"
-        widgetTools={[{
-            glyph: "test",
-            target: "menu",
-            text: <div id="test" />
-        }]} />, document.getElementById("container"));
+            widgetType="text"
+            widgetTools={[{
+                glyph: "test",
+                target: "menu",
+                text: <div id="test" />
+            }]} />, document.getElementById("container"));
         expect(document.getElementById("test")).toExist();
         // check the presence of a menu
         expect(document.querySelector('.dropdown .widget-menu')).toExist();
@@ -67,8 +67,27 @@ describe('withMenu enhancer', () => {
                 text: <div id="test-menu" />,
                 onClick: actions.callback
             }]}
-            />, document.getElementById("container"));
+        />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector("#test-menu"));
         expect(spyCallback).toHaveBeenCalled();
+    });
+
+    it('Widgets callback should not be called when menu disabled', () => {
+        const actions = {
+            callback: () => {}
+        };
+        const spyCallback = expect.spyOn(actions, 'callback');
+        ReactDOM.render(<Widget
+            widgetType="text"
+            widgetTools={[{
+                glyph: "text",
+                target: "menu",
+                disabled: true,
+                text: <div id="test-menu" />,
+                onClick: actions.callback
+            }]}
+        />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector("#test-menu"));
+        expect(spyCallback).toNotHaveBeenCalled();
     });
 });

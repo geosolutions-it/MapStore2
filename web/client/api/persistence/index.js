@@ -11,7 +11,7 @@ const ApiProviders = {
 };
 /**
  * MapStore Persistence layer.
- * By default MapStore persists resources on geostrore. You can add a persistence provider creating an object that
+ * By default MapStore persists resources on geostore. You can add a persistence provider creating an object that
  * implements the CRUD interface (createResource, getResource, updateResource and deleteResource)
  * and adding it to the API providers calling `addApi`.
  * Then you can select your provider by settings the  `persistenceApi` property in `localConfig.json`
@@ -84,6 +84,14 @@ const Persistence = {
     * @return an observable that emits the id of the updated resource
     */
     updateResource: (...args) => Persistence.getApi().updateResource(...args),
+    /**
+    * Updates a resource attribute
+    * @param {number} id the id of the resource which we want to update/create the attribute value
+    * @param {string} name the attribute name
+    * @param {string} value the attribute value
+    * @return an observable that emits the id of the updated resource
+    */
+    updateResourceAttribute: (...args) => Persistence.getApi().updateResourceAttribute(...args),
     /**
     * Deletes a resource and its linked attributes
     * @param {object} resource the resource with the id

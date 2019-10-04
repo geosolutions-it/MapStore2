@@ -14,6 +14,7 @@ const JSZip = require('jszip');
 const {Promise} = require('es6-promise');
 const parser = new DOMParser();
 const assign = require('object-assign');
+const {hint: geojsonhint} = require('@mapbox/geojsonhint/lib/object');
 
 const cleanStyleFromKml = (xml) => {
 
@@ -31,10 +32,13 @@ const cleanStyleFromKml = (xml) => {
 };
 const FileUtils = {
     MIME_LOOKUPS: {
+        'avi': 'video/avi',
         'gpx': 'application/gpx+xml',
         'kmz': 'application/vnd.google-earth.kmz',
         'kml': 'application/vnd.google-earth.kml+xml',
-        'zip': 'application/zip'
+        'zip': 'application/zip',
+        'json': 'application/json',
+        'geojson': 'application/json'
     },
     recognizeExt: function(fileName) {
         return fileName.split('.').slice(-1)[0];
@@ -55,8 +59,9 @@ const FileUtils = {
         const geoJSON = [].concat(tj.kml(pureKml)).map(item => assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
         return geoJSON;
     },
-    gpxToGeoJSON: function(xml) {
-        const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {fileName: xml.getElementsByTagName('name')[0].innerHTML}));
+    gpxToGeoJSON: function(xml, fileName) {
+        const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {
+            fileName: xml.getElementsByTagName('name')[0] && xml.getElementsByTagName('name')[0].innerHTML || fileName }));
         return geoJSON;
     },
     readZip: function(file) {
@@ -71,8 +76,24 @@ const FileUtils = {
         return new Promise((resolve, reject) => {
             let reader = new FileReader();
             reader.onload = function() {
-                 resolve(parser.parseFromString(reader.result, "text/xml"));
-             };
+                resolve(parser.parseFromString(reader.result, "text/xml"));
+            };
+            reader.onerror = function() {
+                reject(reader.error.name);
+            };
+            reader.readAsText(file);
+        });
+    },
+    readJson: function(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    resolve(JSON.parse(reader.result));
+                } catch (e) {
+                    reject(e);
+                }
+            };
             reader.onerror = function() {
                 reject(reader.error.name);
             };
@@ -93,6 +114,23 @@ const FileUtils = {
                     });
                 });
             });
+        });
+    },
+    readGeoJson: function(file, warnings = false) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    const geoJsonObj = JSON.parse(reader.result);
+                    resolve({geoJSON: geoJsonObj, errors: geojsonhint(geoJsonObj).filter((e) => warnings || e.level !== 'message')});
+                } catch (e) {
+                    reject(e);
+                }
+            };
+            reader.onerror = function() {
+                reject(reader.error.name);
+            };
+            reader.readAsText(file);
         });
     },
     /* Checks if the zip contains .prj file */

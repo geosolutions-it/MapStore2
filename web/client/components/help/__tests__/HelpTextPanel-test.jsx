@@ -40,12 +40,12 @@ describe('Test for HelpTextPanel', () => {
 
     it('creates the component with custom props', () => {
         const helpPanel = ReactDOM.render(<HelpTextPanel
-                        asPanel
-                        id="fooid"
-                        isVisible
-                        title="footitle"
-                        helpText="foohelptext"
-                        />, document.getElementById("container"));
+            asPanel
+            id="fooid"
+            isVisible
+            title="footitle"
+            helpText="foohelptext"
+        />, document.getElementById("container"));
         expect(helpPanel).toExist();
 
         const helpPanelDom = ReactDOM.findDOMNode(helpPanel);

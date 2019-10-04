@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -10,7 +10,7 @@ const {pure} = require('recompose');
 const {PieChart, Pie, Cell} = require('recharts');
 const {convertToNameValue} = require('./polar');
 
-module.exports = pure(({isAnimationActive, width = 600, height = 300, data, series =[], xAxis, colorGenerator, ...props, maxCols = 3} = {}) => {
+module.exports = pure(({ isAnimationActive, width = 600, height = 300, data, series = [], xAxis, colorGenerator, maxCols = 3, ...props} = {}) => {
     const seriesArray = Array.isArray(series) ? series : [series];
     const cols = Math.min(maxCols, seriesArray.length);
     const COLORS = colorGenerator(data.length);
@@ -25,13 +25,13 @@ module.exports = pure(({isAnimationActive, width = 600, height = 300, data, seri
         {
             seriesArray.map((serie = {}, i) =>
                 (<Pie key={`pie-${i}`} isAnimationActive={isAnimationActive}
-                     {...centers[i]}
-                     data={convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data)}
-                     {...serie}
-                     outerRadius={Math.min(cellWidth / 2, cellHeight / 2)}>
-                     {cells}
-                 </Pie>))
-         }
+                    {...centers[i]}
+                    data={convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data)}
+                    {...serie}
+                    outerRadius={Math.min(cellWidth / 2, cellHeight / 2)}>
+                    {cells}
+                </Pie>))
+        }
         {props.children}
     </PieChart>);
 });

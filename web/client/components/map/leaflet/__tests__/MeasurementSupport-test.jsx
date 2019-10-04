@@ -35,16 +35,14 @@ describe('Leaflet MeasurementSupport', () => {
         return Object.keys(map._layers).length;
     }
 
-    beforeEach((done) => {
+    beforeEach(() => {
         document.body.innerHTML = '<div id="map" style="heigth: 100px; width: 100px"></div><div id="ms"></div>';
         msNode = document.getElementById('ms');
-        setTimeout(done);
     });
-    afterEach((done) => {
+    afterEach(() => {
         ReactDOM.unmountComponentAtNode(msNode);
         document.body.innerHTML = '';
         msNode = undefined;
-        setTimeout(done);
     });
 
     it('test creation', () => {
@@ -61,7 +59,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={() => {}}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
     });
 
@@ -73,7 +71,7 @@ describe('Leaflet MeasurementSupport', () => {
             <MeasurementSupport
                 messages={myMessages}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
         expect(L.drawLocal).toEqual(myMessages);
         // restoring old value of drawLocal because other test would fail otherwise.
@@ -98,7 +96,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={() => {}}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         cmp = ReactDOM.render(
@@ -108,7 +106,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={{geomType: "LineString"}}
                 changeMeasurementState={() => {}}
             />
-        , msNode);
+            , msNode);
         expect(getMapLayersNum(map)).toBeGreaterThan(initialLayersNum);
     });
 
@@ -128,7 +126,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={() => {}}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         let initialLayersNum = getMapLayersNum(map);
@@ -141,7 +139,7 @@ describe('Leaflet MeasurementSupport', () => {
                 }}
                 changeMeasurementState={() => {}}
             />
-        , msNode);
+            , msNode);
         expect(getMapLayersNum(map)).toBeGreaterThan(initialLayersNum);
         cmp = ReactDOM.render(
             <MeasurementSupport
@@ -152,7 +150,7 @@ describe('Leaflet MeasurementSupport', () => {
                 }}
                 changeMeasurementState={() => {}}
             />
-        , msNode);
+            , msNode);
         expect(getMapLayersNum(map)).toBe(initialLayersNum);
     });
 
@@ -173,7 +171,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         cmp = ReactDOM.render(
@@ -185,7 +183,7 @@ describe('Leaflet MeasurementSupport', () => {
                 }}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         document.getElementById('map').addEventListener('click', () => {
@@ -211,7 +209,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         cmp = ReactDOM.render(
@@ -223,7 +221,7 @@ describe('Leaflet MeasurementSupport', () => {
                 }}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
 
         document.getElementById('map').addEventListener('draw:addvertex', () => {
             expect(newMeasureState).toExist();
@@ -248,7 +246,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         cmp = ReactDOM.render(
@@ -260,7 +258,7 @@ describe('Leaflet MeasurementSupport', () => {
                 }}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         document.getElementById('map').addEventListener('draw:addvertex', () => {
             expect(newMeasureState).toExist();
         });
@@ -284,7 +282,7 @@ describe('Leaflet MeasurementSupport', () => {
                 measurement={measurement}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         expect(cmp).toExist();
 
         cmp = ReactDOM.render(
@@ -296,7 +294,7 @@ describe('Leaflet MeasurementSupport', () => {
                 }}
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
-        , msNode);
+            , msNode);
         document.getElementById('map').addEventListener('draw:addvertex', () => {
             expect(newMeasureState).toExist();
         });

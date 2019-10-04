@@ -24,17 +24,28 @@ const GOOGLE_MERCATOR = {
 };
 
 const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
+
+/**
+ * `ZOOM_TO_EXTENT_HOOK` hook takes 2 arguments:
+ * - `extent`: array of the extent [minx, miny, maxx, maxy]
+ * - `options` object, with the following attributes:
+ *   - `crs`: crs of the extent
+ *   - `maxZoom`: max zoom for the zoom to functionality.
+ *   - `padding`: object with attributes, `top`, `right`, `bottom` and `top` with the size, in pixels of the padding for the visible part of the map. When supported by the mapping lib, it will zoom to visible area
+ */
+const ZOOM_TO_EXTENT_HOOK = 'ZOOM_TO_EXTENT_HOOK';
 const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
 const RESOLUTION_HOOK = 'RESOLUTION_HOOK';
 const COMPUTE_BBOX_HOOK = 'COMPUTE_BBOX_HOOK';
 const GET_PIXEL_FROM_COORDINATES_HOOK = 'GET_PIXEL_FROM_COORDINATES_HOOK';
 const GET_COORDINATES_FROM_PIXEL_HOOK = 'GET_COORDINATES_FROM_PIXEL_HOOK';
 
-var hooks = {};
-var CoordinatesUtils = require('./CoordinatesUtils');
+let hooks = {};
+let CoordinatesUtils = require('./CoordinatesUtils');
+let {set} = require('./ImmutableUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isObject, head, isEmpty} = require('lodash');
+const {isObject, head, isEmpty, findIndex} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -177,7 +188,7 @@ function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapReso
     const resolutions = mapResolutions || getResolutionsForScales(getGoogleMercatorScales(
         minZoom, maxZoom, dpi || DEFAULT_SCREEN_DPI), "EPSG:3857", dpi);
 
-    const {zoom, ...other} = resolutions.reduce((previous, resolution, index) => {
+    const {zoom} = resolutions.reduce((previous, resolution, index) => {
         const diff = Math.abs(resolution - extentResolution);
         return diff > previous.diff ? previous : {diff: diff, zoom: index};
     }, {diff: Number.POSITIVE_INFINITY, zoom: 0});
@@ -294,6 +305,7 @@ const groupSaveFormatted = (node) => {
     return {id: node.id, expanded: node.expanded};
 };
 
+
 function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, additionalOptions) {
 
     const map = {
@@ -327,6 +339,29 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         return assign({}, l, {tileMatrixSet: l.tileMatrixSet && l.tileMatrixSet.length > 0, matrixIds: l.matrixIds && Object.keys(l.matrixIds)});
     });
 
+    /* removes the geometryGeodesic property from the features in the annotations layer*/
+    let annotationsLayerIndex = findIndex(formattedLayers, layer => layer.id === "annotations");
+    if (annotationsLayerIndex !== -1) {
+        let featuresLayer = formattedLayers[annotationsLayerIndex].features.map(feature => {
+            if (feature.type === "FeatureCollection") {
+                return {
+                    ...feature,
+                    features: feature.features.map(f => {
+                        if (f.properties.geometryGeodesic) {
+                            return set("properties.geometryGeodesic", null, f);
+                        }
+                        return f;
+                    })
+                };
+            }
+            if (feature.properties.geometryGeodesic) {
+                return set("properties.geometryGeodesic", null, feature);
+            }
+            return {};
+        });
+        formattedLayers[annotationsLayerIndex] = set("features", featuresLayer, formattedLayers[annotationsLayerIndex]);
+    }
+
     return {
         version: 2,
         // layers are defined inside the map object
@@ -337,17 +372,19 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
 
 function isSimpleGeomType(geomType) {
     switch (geomType) {
-        case "MultiPoint": case "MultiLineString": case "MultiPolygon": return false;
-        case "Point": case "LineString": case "Polygon": case "Circle": default: return true;
+    case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": case "Text": return false;
+    case "Point": case "Circle": case "LineString": case "Polygon": default: return true;
     }
 }
 function getSimpleGeomType(geomType = "Point") {
     switch (geomType) {
-        case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
-        case "MultiPoint": return "Point";
-        case "MultiLineString": return "LineString";
-        case "MultiPolygon": return "Polygon";
-        default: return geomType;
+    case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
+    case "MultiPoint": case "Marker": return "Point";
+    case "MultiLineString": return "LineString";
+    case "MultiPolygon": return "Polygon";
+    case "GeometryCollection": return "GeometryCollection";
+    case "Text": return "Point";
+    default: return geomType;
     }
 }
 
@@ -382,6 +419,7 @@ module.exports = {
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
     DEFAULT_SCREEN_DPI,
+    ZOOM_TO_EXTENT_HOOK,
     registerHook,
     getHook,
     dpi2dpm,

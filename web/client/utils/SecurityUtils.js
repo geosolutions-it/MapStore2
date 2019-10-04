@@ -27,7 +27,7 @@ const SecurityUtils = {
      * Gets security state form the store.
      */
     getSecurityInfo() {
-        return this.store.getState().security;
+        return this.store && this.store.getState().security || {};
     },
 
     /**
@@ -88,7 +88,7 @@ const SecurityUtils = {
         let userAttributes = this.getUserAttributes();
         if (!userAttributes || !attributeName ) {
             // the user as no attributes or the provided attribute name is undefined
-            return undefined;
+            return null;
         }
         return head(userAttributes.filter(attribute => attribute.name
             && attribute.name.toLowerCase() === attributeName.toLowerCase()));

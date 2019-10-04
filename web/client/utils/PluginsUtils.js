@@ -14,6 +14,7 @@ const {connect} = require('react-redux');
 const url = require('url');
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
+
 /**
  * Gives a reduced version of the status to check.
  * It cached the last state to prevent re-evaluations if the input didn't change.
@@ -41,6 +42,8 @@ const filterState = memoize((state, monitor) => {
 
 const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.substring(0, plugin.length - 6) || plugin;
 
+const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
+
 const getPluginConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
     return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName).map(cfgObj => isString(cfgObj) ? {
@@ -48,7 +51,7 @@ const getPluginConfiguration = (cfg, plugin) => {
     } : cfgObj)) || {};
 };
 
-/*eslint-disable */
+/* eslint-disable */
 const parseExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
@@ -61,7 +64,7 @@ const parseExpression = (state = {}, context = {}, value) => {
     }
     return value;
 };
-/*eslint-enable */
+/* eslint-enable */
 /**
  * Parses a expression string "{some javascript}" and evaluate it.
  * The expression will be evaluated getting as parameters the state and the context and the request.
@@ -80,7 +83,7 @@ const handleExpression = (state, context, expression) => {
     return expression;
 };
 /**
- * filters the plugins passed evaluating the dsiablePluginIf expression with the given context
+ * filters the plugins passed evaluating the disablePluginIf expression with the given context
  * @memberof utils.PluginsUtils
  * @param  {Object} item         the plugins
  * @param  {function} [state={}]   The state to evaluate
@@ -102,18 +105,18 @@ const isContainedInList = (prop, list, state, requires) => {
 
 const showIn = (state, requires, cfg = {}, name, id, isDefault) => {
     return (
-            // showIn contains plugin id
-            isContainedInList(id, cfg.showIn, state, requires) ||
+    // showIn contains plugin id
+        isContainedInList(id, cfg.showIn, state, requires) ||
             // showIn contains plugin name
             isContainedInList(name, cfg.showIn, state, requires) ||
             // always show in default container
             !cfg.showIn && isDefault
-        ) && !(
-            // dot not show if hideFrom contains id
-            isContainedInList(id, cfg.hideFrom, state, requires) ||
+    ) && !(
+    // dot not show if hideFrom contains id
+        isContainedInList(id, cfg.hideFrom, state, requires) ||
             // dot not show if hideFrom contains name
             isContainedInList(name, cfg.hideFrom, state, requires)
-        );
+    );
 };
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
@@ -174,58 +177,58 @@ const isValidConfiguration = (cfg) => {
 
 const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
-            // extract basic info for each plugins (name, implementation and config)
-            .map(pluginName => ({
-                name: pluginName,
-                impl: plugins[pluginName],
-                config: getPluginConfiguration(pluginsConfig, pluginName)
-            }))
-            // include only plugins that are configured for the current mode
-            .filter((plugin) => isValidConfiguration(plugin.config))
-            // include only plugins that support container as a parent
-            .filter((plugin) => canContain(containerName, plugin.impl, plugin.config.override))
-            // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
-            .filter((plugin) => {
-                return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
-            })
-            // include only plugins for which container is the preferred container
-            .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
-                getPriority(plugin.impl, plugin.config.override, containerName)))
-            .map((plugin) => {
-                const pluginName = getPluginSimpleName(plugin.name);
-                const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
-                const containerProperties = assign(
-                    {},
-                    get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName),
-                    get(plugin.config, 'override.' + containerName)
-                );
-                return assign(
-                    {
-                        name: pluginName
-                    },
-                    containerProperties,
-                    {
-                        cfg: assign(
-                            {},
-                            pluginImpl.cfg || {},
-                            parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) || undefined
-                        )
-                    },
-                    {
-                        plugin: pluginImpl,
-                        items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
-                    });
-            })
-            // filter disabled plugins
-            .filter((item) => filterDisabledPlugins(item, state, plugins))
-            // apply optional user filter
-            .filter((item) => (!filter || filter(item)));
+    // extract basic info for each plugins (name, implementation and config)
+        .map(pluginName => ({
+            name: pluginName,
+            impl: plugins[pluginName],
+            config: getPluginConfiguration(pluginsConfig, pluginName)
+        }))
+    // include only plugins that are configured for the current mode
+        .filter((plugin) => isValidConfiguration(plugin.config))
+    // include only plugins that support container as a parent
+        .filter((plugin) => canContain(containerName, plugin.impl, plugin.config.override))
+    // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
+        .filter((plugin) => {
+            return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
+        })
+    // include only plugins for which container is the preferred container
+        .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
+            getPriority(plugin.impl, plugin.config.override, containerName)))
+        .map((plugin) => {
+            const pluginName = getPluginSimpleName(plugin.name);
+            const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
+            const containerProperties = assign(
+                {},
+                get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName),
+                get(plugin.config, 'override.' + containerName)
+            );
+            return assign(
+                {
+                    name: pluginName
+                },
+                containerProperties,
+                {
+                    cfg: assign(
+                        {},
+                        pluginImpl.cfg || {},
+                        parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) || undefined
+                    )
+                },
+                {
+                    plugin: pluginImpl,
+                    items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
+                });
+        })
+    // filter disabled plugins
+        .filter((item) => filterDisabledPlugins(item, state, plugins))
+    // apply optional user filter
+        .filter((item) => (!filter || filter(item)));
 };
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
-                            .reduce((previous, current) => assign({}, previous, current), {});
+    .reduce((previous, current) => assign({}, previous, current), {});
 const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
-                            .reduce((previous, current) => assign({}, previous, current), {});
+    .reduce((previous, current) => assign({}, previous, current), {});
 
 const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     const {pluginCfg, ...otherProps} = ownProps;
@@ -238,15 +241,17 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
  * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
  */
 const defaultEpicWrapper = epic => (...args) =>
-  epic(...args).catch((error, source) => {
-      setTimeout(() => { throw error; }, 0);
-      return source;
-  });
+    epic(...args).catch((error, source) => {
+        setTimeout(() => { throw error; }, 0);
+        return source;
+    });
 
+const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
 
 const getPluginImplementation = (impl, stateSelector) => {
-    return impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector);
+    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
 };
+
 /**
  * Utilities to manage plugins
  * @memberof utils
@@ -282,14 +287,14 @@ const PluginsUtils = {
      * Create an object structured like following:
      * ```
      * {
-     *   bodyPlugins: [...all the configs without cfg.contanerPosition attribute ]
-     *   columns: [...all the configs configured with cfg.contanerPosition: "columns"]
-     *   header: [...all the configs configured with cfg.contanerPosition: "header"]
-     *   ... and so on, for every cfg.contanerPosition value found
+     *   bodyPlugins: [...all the configs without cfg.containerPosition attribute ]
+     *   columns: [...all the configs configured with cfg.containerPosition: "columns"]
+     *   header: [...all the configs configured with cfg.containerPosition: "header"]
+     *   ... and so on, for every cfg.containerPosition value found
      * }
      * ```
      * @param  {object[]} pluginsConfig The configurations of plugins
-     * @return {object}   An object that spreads the configruations in arrays by their `cfg.containerPosition`.
+     * @return {object}   An object that spreads the configurations in arrays by their `cfg.containerPosition`.
      */
     mapPluginsPosition: (pluginsConfig = []) =>
         pluginsConfig.reduce( (o, p) => {
@@ -302,15 +307,15 @@ const PluginsUtils = {
             };
         }, {}),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
-                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {}),
+        .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {}),
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
-     * @param {object} state the state. This is required to laod plugins that depend from the state itself
+     * @param {object} state the state. This is required to load plugins that depend from the state itself
      * @param {object} plugins all the plugins, like this:
      * ```
      *  {
-     *      P1Plugin: connectdComponent1,
-     *      P2Plugin: connectdComponent2
+     *      P1Plugin: connectedComponent1,
+     *      P2Plugin: connectedComponent2
      *  }
      * ```
      * @param {array} pluginConfig the configurations of the plugins
@@ -373,16 +378,85 @@ const PluginsUtils = {
      * The plugin config properties are taken from the **pluginCfg** property.
 
      * @param {function} [mapStateToProps] state to properties selector
-     * @param {function} [mapDispatchToProps] dispatchable actions selector
+     * @param {function} [mapDispatchToProps] dispatch-able actions selector
      * @param {function} [mergeProps] merge function, if not defined, the internal override applies
      * @param {object} [options] connect options (look at react-redux docs for details)
-     * @returns {function} funtion to be applied to the dumb object to connect it to state / dispatchers
+     * @returns {function} function to be applied to the dumb object to connect it to state / dispatchers
      */
     connect: (mapStateToProps, mapDispatchToProps, mergeProps, options) => {
         return connect(mapStateToProps, mapDispatchToProps, mergeProps || pluginsMergeProps, options);
     },
+    /**
+     * Use this function to export a plugin from a module.
+     *
+     * @param {string} name name of the plugin (without the Plugin postfix)
+     * @param {object} config configuration object, with the following (optional) properties:
+     * @param {object|function} config.component: ReactJS component that implements the plugin functionalities, can be null if the plugin supports lazy loading
+     * @param {object} config.options: generic plugins configuration options (e.g. disablePluginIf)
+     * @param {object} config.containers: object with supported containers (key=container name, value=container config)
+     * @param {object} config.reducers: reducers the plugin will need
+     * @param {object} config.epics: epics the plugin will need to work
+     * @param {boolean} config.lazy: true if the plugin implements on-demand loading,
+     * @param {function} config.enabler: function used in lazy mode to decide when plugin needs to be loaded (receives redux state as the only param)
+     * @param {promise} config.loader: promise that will return the loaded implementation
+     *
+     * @example statically loaded plugin
+     * createPlugin('My', {
+     *  component: MyPluginComponent,
+     *  options: {...},
+     *  containers: {
+     *      Toolbar: {
+     *          priority: 1,
+     *          tool: true,
+     *          ...
+     *      }
+     *  },
+     *  reducers: {my: require('...')},
+     *  epics: {myEpic: require('...')}
+     * });
+     *
+     * @example lazy loaded plugin
+     * createPlugin('My', {
+     *  enabler: (state) => state.my.enabled || false,
+     *  loader: () => new Promise((resolve) => {
+     *    require.ensure(['...'], () => {
+     *        const MyComponent = require('...');
+     *        ...
+     *        const MyPlugin = connect(...)(MyComponent);
+     *        resolve(MyPlugin);
+     *    });
+     *  },
+     *  options: {...},
+     *  containers: {
+     *      Toolbar: {
+     *          priority: 1,
+     *          tool: true,
+     *          ...
+     *      }
+     *  },
+     *  reducers: {my: require('...')},
+     *  epics: {myEpic: require('...')}
+     * });
+     */
+    createPlugin: (name, { component, options = {}, containers = {}, reducers = {}, epics = {}, lazy = false, enabler = () => true, loader}) => {
+        const pluginName = normalizeName(name);
+        const pluginImpl = lazy ? {
+            loadPlugin: (resolve) => {
+                loader().then(loadedImpl => {
+                    resolve(assign(loadedImpl, { isMapStorePlugin: true }));
+                });
+            },
+            enabler
+        } : assign(component, {isMapStorePlugin: true});
+        return {
+            [pluginName]: assign(pluginImpl, containers, options),
+            reducers,
+            epics
+        };
+    },
     handleExpression,
     getMorePrioritizedContainer,
-    getPluginConfiguration
+    getPluginConfiguration,
+    isMapStorePlugin
 };
 module.exports = PluginsUtils;

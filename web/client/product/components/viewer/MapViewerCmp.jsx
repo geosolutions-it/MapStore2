@@ -20,18 +20,39 @@ class MapViewerComponent extends React.Component {
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
-        wrappedContainer: PropTypes.object,
+        wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
     static defaultProps = {
         mode: 'desktop',
         plugins: {},
+        onInit: () => {},
+        loadMapConfig: () => {},
         match: {
             params: {}
         }
     };
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const id = this.props.match.params.mapId || '0';
+        this.updateMap(id);
+    }
+    componentDidUpdate(oldProps) {
+        const id = this.props.match.params.mapId || '0';
+        const oldId = oldProps.match.params.mapId || '0';
+        if (id !== oldId) {
+            this.updateMap(id);
+        }
+    }
+
+    render() {
+        const WrappedContainer = this.props.wrappedContainer;
+        return (<WrappedContainer
+            pluginsConfig={this.props.pluginsConfig}
+            plugins={this.props.plugins}
+            params={this.props.match.params}
+        />);
+    }
+    updateMap = (id) => {
         if (id && oldLocation !== this.props.location) {
             oldLocation = this.props.location;
             if (!ConfigUtils.getDefaults().ignoreMobileCss) {
@@ -46,19 +67,11 @@ class MapViewerComponent extends React.Component {
             // if it is a number it loads the config from geostore
             let mapId = id === '0' ? null : id;
             let config = urlQuery && urlQuery.config || null;
-            const {configUrl} = ConfigUtils.getConfigUrl({mapId, config});
+            const { configUrl } = ConfigUtils.getConfigUrl({ mapId, config });
             mapId = mapId === 'new' ? null : mapId;
             this.props.onInit();
             this.props.loadMapConfig(configUrl, mapId);
         }
-    }
-    render() {
-        const WrappedContainer = this.props.wrappedContainer;
-        return (<WrappedContainer
-            pluginsConfig={this.props.pluginsConfig}
-            plugins={this.props.plugins}
-            params={this.props.match.params}
-            />);
     }
 }
 

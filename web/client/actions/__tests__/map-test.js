@@ -20,7 +20,10 @@ var {
     INIT_MAP,
     ZOOM_TO_EXTENT,
     RESIZE_MAP,
-    ZOOM_TO_POINT, zoomToPoint,
+    CHANGE_MAP_LIMITS,
+    ZOOM_TO_POINT,
+    SET_MAP_RESOLUTIONS,
+    zoomToPoint,
     errorLoadingFont,
     changeMapView,
     clickOnMap,
@@ -33,7 +36,9 @@ var {
     updateVersion,
     initMap,
     zoomToExtent,
-    resizeMap
+    resizeMap,
+    changeMapLimits,
+    setMapResolutions
 } = require('../map');
 const {
     SHOW_NOTIFICATION
@@ -188,6 +193,17 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(RESIZE_MAP);
     });
+    it('change map limits', () => {
+        const restrictedExtent = [0, 0, 1, 1];
+        const crs = "EPSG:4326";
+        const minZoom = 2;
+        const action = changeMapLimits({ restrictedExtent, crs, minZoom});
+        expect(action).toExist();
+        expect(action.type).toBe(CHANGE_MAP_LIMITS);
+        expect(action.restrictedExtent).toBe(restrictedExtent);
+        expect(action.crs).toBe(crs);
+        expect(action.minZoom).toBe(minZoom);
+    });
 
     it('zoomToPoint', () => {
         const pos = {x: 1, y: 2};
@@ -199,5 +215,13 @@ describe('Test correctness of the map actions', () => {
         expect(retval.pos).toEqual(pos);
         expect(retval.zoom).toEqual(zoom);
         expect(retval.crs).toEqual(crs);
+    });
+
+    it('setMapResolutions', () => {
+        const resolutions = [4, 2];
+        const retval = setMapResolutions(resolutions);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(SET_MAP_RESOLUTIONS);
+        expect(retval.resolutions).toEqual(resolutions);
     });
 });

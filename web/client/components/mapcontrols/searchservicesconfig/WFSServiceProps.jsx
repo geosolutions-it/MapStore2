@@ -35,7 +35,7 @@ class WFSServiceProps extends React.Component {
         const {options = {}} = service;
         return (
             <form>
-              <span className="wfs-required-props-title"><Message msgId="search.s_wfs_props_label" /></span>
+                <span className="wfs-required-props-title"><Message msgId="search.s_wfs_props_label" /></span>
                 <FormGroup>
                     <ControlLabel>
                         <Message msgId="search.s_name" />
@@ -51,30 +51,30 @@ class WFSServiceProps extends React.Component {
                         <Message msgId="search.s_url" />
                     </ControlLabel>
                     <FormControl
-                    value={options.url}
-                    key="url"
-                    type="text"
-                    onChange={this.updateProp.bind(null, "url")}/>
+                        value={options.url}
+                        key="url"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "url")}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
                         <Message msgId="search.s_layer" />
                     </ControlLabel>
                     <FormControl
-                    value={options.typeName}
-                    key="typeName"
-                    type="text"
-                    onChange={this.updateProp.bind(null, "typeName")}/>
+                        value={options.typeName}
+                        key="typeName"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "typeName")}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
                         <Message msgId="search.s_attributes" />
                     </ControlLabel>
                     <FormControl
-                    value={([options.queriableAttributes] || []).join(",")}
-                    key="queriableAttributes"
-                    type="text"
-                    onChange={this.updateProp.bind(null, "queriableAttributes")}/>
+                        value={([options.queriableAttributes] || []).join(",")}
+                        key="queriableAttributes"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "queriableAttributes")}/>
                 </FormGroup>
             </form>);
     }

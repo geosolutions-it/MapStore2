@@ -5,44 +5,59 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const PropTypes = require('prop-types');
-const SharingLinks = require('./SharingLinks');
-const Message = require('../I18N/Message');
-const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const {isObject, head, omit} = require('lodash');
-const assign = require('object-assign');
-const uuidv1 = require('uuid/v1');
-const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const ContainerDimensions = require('react-container-dimensions').default;
-const ConfigUtils = require('../../utils/ConfigUtils');
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer, removeParameters} = require('../../utils/CatalogUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import uuidv1 from 'uuid/v1';
+import {isObject, head, omit, isArray, trim } from 'lodash';
+import {Image, Panel, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
 
-const tooltip = require('../misc/enhancers/tooltip');
+import {
+    buildSRSMap,
+    extractEsriReferences,
+    extractOGCServicesReferences,
+    esriToLayer,
+    getRecordLinks,
+    recordToLayer,
+    removeParameters
+} from '../../utils/CatalogUtils';
+import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import ContainerDimensions from 'react-container-dimensions';
+import ConfigUtils from '../../utils/ConfigUtils';
+import HtmlRenderer from '../misc/HtmlRenderer';
+import {parseCustomTemplate} from '../../utils/TemplateUtils';
+import LocaleUtils from '../../utils/LocaleUtils';
+import Message from '../I18N/Message';
+import SharingLinks from './SharingLinks';
+import SideCard from '../misc/cardgrids/SideCard';
+import Toolbar from '../misc/toolbar/Toolbar';
+import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
-const defaultThumb = require('./img/default.jpg');
+
+import defaultThumb from './img/default.jpg';
 
 const BackgroundDialog = require('../background/BackgroundDialog');
 
 class RecordItem extends React.Component {
     static propTypes = {
         addAuthentication: PropTypes.bool,
+        authkeyParamNames: PropTypes.array,
         buttonSize: PropTypes.string,
+        catalogURL: PropTypes.string,
+        catalogType: PropTypes.string,
         crs: PropTypes.string,
         currentLocale: PropTypes.string,
+        hideThumbnail: PropTypes.bool,
+        hideExpand: PropTypes.bool,
+        hideIdentifier: PropTypes.bool,
+        layerBaseConfig: PropTypes.object,
         onCopy: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
-        authkeyParamNames: PropTypes.array,
         showGetCapLinks: PropTypes.bool,
         zoomToLayer: PropTypes.bool,
-        catalogURL: PropTypes.string,
-        catalogType: PropTypes.string,
-        hideThumbnail: PropTypes.bool,
-        hideIdentifier: PropTypes.bool,
-        hideExpand: PropTypes.bool,
         onPropertiesChange: PropTypes.func,
         onLayerChange: PropTypes.func,
         layers: PropTypes.array,
@@ -54,8 +69,8 @@ class RecordItem extends React.Component {
         unsavedChanges: PropTypes.bool,
         deletedId: PropTypes.string,
         removeThumbnail: PropTypes.func,
-        clearModal: PropTypes.func
-
+        clearModal: PropTypes.func,
+        showTemplate: PropTypes.bool
     };
 
     static defaultProps = {
@@ -65,6 +80,10 @@ class RecordItem extends React.Component {
         currentLocale: 'en-US',
         onUpdateThumbnail: () => {},
         onAddBackgroundProperties: () => {},
+        hideThumbnail: false,
+        hideIdentifier: false,
+        hideExpand: false,
+        layerBaseConfig: {},
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
@@ -76,18 +95,32 @@ class RecordItem extends React.Component {
         style: {},
         showGetCapLinks: false,
         zoomToLayer: true,
-        hideThumbnail: false,
-        hideIdentifier: false,
-        hideExpand: true,
         layers: [],
         onAdd: () => {},
         source: 'metadataExplorer',
-        record: {}
+        record: {},
+        showTemplate: false
+    };
+    state = {
+        visibleExpand: false
+    }
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
-    state = {};
-
-    componentWillMount() {
+    componentDidMount() {
+        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        const record = this.props.record;
+        this.setState({visibleExpand: !this.props.hideExpand &&
+            (
+                this.displayExpand() ||
+                // show expand if the template is not empty
+                !!(this.props.showTemplate && record && record.metadataTemplate && parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`))
+            )
+        });
+    }
+    UNSAFE_componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
     }
 
@@ -140,11 +173,13 @@ class RecordItem extends React.Component {
                 </Button>
             );
         }
+        // TODO addWmsLayer and addwmtsLayer do almost the same thing and they should be unified
         if (wms) {
             buttons.push(
                 <Button
                     key="wms-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
@@ -156,7 +191,7 @@ class RecordItem extends React.Component {
                         } else {
                             this.addLayer(wms);
                         }
-
+                        /*this.addWmsLayer(wms);*/
 
                     }}
                     key="addlayer">
@@ -168,7 +203,8 @@ class RecordItem extends React.Component {
             buttons.push(
                 <Button
                     key="wmts-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
@@ -190,7 +226,8 @@ class RecordItem extends React.Component {
             buttons.push(
                 <Button
                     key="wmts-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
@@ -203,7 +240,7 @@ class RecordItem extends React.Component {
                         }
                     }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                    <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -216,22 +253,19 @@ class RecordItem extends React.Component {
             }
         }
 
-        return (
-            <div className="record-buttons">
-                {buttons}
-            </div>
-        );
+        return buttons;
     };
 
     renderDescription = (record) => {
         if (!record) {
             return null;
         }
-        if (typeof record.description === "string") {
-            return record.description;
-        } else if (Array.isArray(record.description)) {
-            return record.description.join(", ");
-        }
+        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        return this.state.fullText && record.metadataTemplate
+            ? (<div className="catalog-metadata ql-editor">
+                <HtmlRenderer html={parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`)}/>
+            </div>)
+            : record.metadataTemplate ? '' : (isArray(record.description) ? record.description.join(", ") : record.description);
     };
 
     render() {
@@ -239,7 +273,9 @@ class RecordItem extends React.Component {
         const {wms, wmts} = record && record.group === 'background' && {} || record && record.references && extractOGCServicesReferences(record) || {};
         const disabled = record && record.group === 'background' && head((this.props.layers || []).filter(lay => lay.id === record.id));
         const {esri} = record && record.group === 'background' && record && record.references && extractEsriReferences(record) || {};
-        return (
+        // the preview and toolbar width depends on the values defined in the theme (variable.less)
+        // IMPORTANT: if those values are changed then this defaults needs to change too
+        return record ? (<div>
             <Panel className="record-item" style={{opacity: disabled ? 0.4 : 1.0}}>
                 {!this.props.hideThumbnail && <div className="record-item-thumb">
                     {this.renderThumb(record && (record.thumbnail || record.thumbUrl), record)}
@@ -300,7 +336,49 @@ class RecordItem extends React.Component {
                     updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(this.props.modalParams.id) : this.props.onUpdateThumbnail(data, url, true, this.props.modalParams.id)}
                    />
             </Panel>
-        );
+            <SideCard
+                style={{transform: "none"}}
+                fullText={this.state.fullText}
+                preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
+                title={record && this.getTitle(record.title)}
+                description={<div className ref={sideCardDesc => {
+                    this.sideCardDesc = sideCardDesc;
+                }}>{this.renderDescription(record)}</div>}
+                caption={
+                    <div>
+                        {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
+                        <div>{!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        {!this.props.hideExpand &&
+                                <div
+                                    className="ms-ruler"
+                                    style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
+                                    ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}
+                                </div>
+                        }
+                    </div>
+                }
+                tools={
+                    <Toolbar
+                        btnDefaultProps={{
+                            className: 'square-button-md',
+                            bsStyle: 'primary'
+                        }}
+                        btnGroupProps={{
+                            style: {
+                                margin: 10
+                            }
+                        }}
+                        buttons={[
+                            ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
+                            {
+                                glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
+                                visible: this.state.visibleExpand,
+                                tooltipId: this.state.fullText ? 'collapse' : 'expand',
+                                onClick: () => this.setState({ fullText: !this.state.fullText })
+                            }
+                        ]}/>
+                }/>
+        </div>) : null;
     }
 
     isLinkCopied = (key) => {
@@ -353,7 +431,7 @@ class RecordItem extends React.Component {
             };
             const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
             let layerProperties = assign({}, properties, assign({}, LayerGroup, extraParameters ? {additionalParams: extraParameters} : {}));
-            this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", layerProperties));
+            this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", layerProperties, this.props.layerBaseConfig));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
@@ -362,16 +440,23 @@ class RecordItem extends React.Component {
         }
     };
     addEsriLayer = () => {
-        this.props.onLayerAdd(esriToLayer(this.props.record));
+        this.props.onLayerAdd(esriToLayer(this.props.record, this.props.layerBaseConfig));
         if (this.props.record.boundingBox && this.props.zoomToLayer) {
             let extent = this.props.record.boundingBox.extent;
             let crs = this.props.record.boundingBox.crs;
             this.props.onZoomToExtent(extent, crs);
         }
     };
-    displayExpand = width => {
-        const descriptionWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
-        return descriptionWidth > width;
+    /**
+     * it manages visibility of expand button.
+     * it checks if the width of descriptionRuler is higher than the width of the desc-section
+     * @return {boolean} the value of the check
+    */
+    displayExpand = () => {
+
+        const descriptionRulerWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
+        const descriptionWidth = this.sideCardDesc ? this.sideCardDesc.clientWidth : 0;
+        return descriptionRulerWidth > descriptionWidth;
     };
     updatedLayer = (layer) => {
         // add the newly created Thumbnail url (if existed)
@@ -380,4 +465,4 @@ class RecordItem extends React.Component {
     };
 }
 
-module.exports = RecordItem;
+export default RecordItem;

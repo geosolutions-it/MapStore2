@@ -8,14 +8,64 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
-const {getWpsPayload, getRequestBody, getRequestBodyWithFilter} = require('../autocomplete');
+const FilterUtils = require('../../../FilterUtils');
+const {getWpsPayload} = require('../autocomplete');
 
 const defaultOptions = {
     value: "somevalue",
     layerName: "layerName",
+    layerFilter: undefined,
     attribute: "attribute",
     maxFeatures: 5,
     startIndex: 0
+};
+
+const sampleFilter = {
+    "searchUrl": null,
+    "featureTypeConfigUrl": null,
+    "showGeneratedFilter": false,
+    "attributePanelExpanded": true,
+    "spatialPanelExpanded": true,
+    "crossLayerExpanded": true,
+    "showDetailsPanel": false,
+    "groupLevels": 5,
+    "useMapProjection": false,
+    "toolbarEnabled": true,
+    "groupFields": [{
+        "id": 1,
+        "logic": "OR",
+        "index": 0
+    }],
+    "maxFeaturesWPS": 5,
+    "filterFields": [{
+        "rowId": 1567774442481,
+        "groupId": 1,
+        "attribute": "STATE_FIPS",
+        "operator": "=",
+        "value": "05",
+        "type": "string",
+        "fieldOptions": {
+            "valuesCount": 0,
+            "currentPage": 1
+        },
+        "exception": null,
+        "loading": false,
+        "openAutocompleteMenu": false,
+        "options": {
+            "STATE_FIPS": []
+        }
+    }],
+    "spatialField": {
+        "method": null,
+        "operation": "INTERSECTS",
+        "geometry": null,
+        "attribute": "the_geom"
+    },
+    "simpleFilterFields": [],
+    "crossLayerFilter": {
+        "attribute": "the_geom"
+    },
+    "autocompleteEnabled": true
 };
 
 const getBodyPart1 = ({layerName}) => '<wps:Execute xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" service="WPS" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd"> '
@@ -30,12 +80,30 @@ const getBodyPart1 = ({layerName}) => '<wps:Execute xmlns:wps="http://www.opengi
 + '         <wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.0.0">'
 + '           <wfs:Query typeName="' + layerName + '">';
 
-const getBodyPart2 = ({attribute, value}) => '             <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">'
-+ '               <ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
-+ '                 <ogc:PropertyName>' + attribute + '</ogc:PropertyName>'
-+ '                 <ogc:Literal>*' + value + '*</ogc:Literal>'
-+ '               </ogc:PropertyIsLike>'
-+ '             </ogc:Filter>';
+const getBodyPart2 = ({attribute, value}) => '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
++ '<ogc:And>'
++ '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
++ '   <ogc:PropertyName>' + attribute + '</ogc:PropertyName>'
++ '   <ogc:Literal>*' + value + '*</ogc:Literal>'
++ '</ogc:PropertyIsLike>'
++ '</ogc:And>'
++ '</ogc:Filter>';
+
+const getBodyPart2WithLayerFilter = ({layerFilter}) => '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
++ '<ogc:And>'
++ FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc").join('')
++ '</ogc:And>'
++ '</ogc:Filter>';
+
+const getBodyPart2Both = ({attribute, value, layerFilter}) => '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
++ '<ogc:And>'
++ FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc").join('')
++ '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
++ '   <ogc:PropertyName>' + attribute + '</ogc:PropertyName>'
++ '   <ogc:Literal>*' + value + '*</ogc:Literal>'
++ '</ogc:PropertyIsLike>'
++ '</ogc:And>'
++ '</ogc:Filter>';
 
 const getBodyPart3 = ({attribute, maxFeatures, startIndex}) => '             <ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">'
 + '               <ogc:SortProperty>'
@@ -100,24 +168,24 @@ describe('Test WPS requests', () => {
         const expectedBody = getBodyPart1(options) + getBodyPart3(options);
         expect(requestBody).toBe(expectedBody);
     });
-    it('getRequestBody with value null', () => {
-        const options = assign({}, defaultOptions, {value: null});
-        const requestBody = getRequestBody(options);
-        const expectedBody = getBodyPart1(options) + getBodyPart3(options);
-        expect(requestBody).toBe(expectedBody);
-    });
-    it('getRequestBodyWithFilter with value', () => {
-        const options = assign({}, defaultOptions);
-        const requestBody = getRequestBodyWithFilter(options);
-        expect(requestBody).toExist();
-        const expectedBody = getBodyPart1(options) + getBodyPart2(options) + getBodyPart3(options);
-        expect(requestBody).toBe(expectedBody);
-    });
     it('getWpsPayload with no data', () => {
-        const requestBody = getRequestBodyWithFilter({});
+        const requestBody = getWpsPayload({});
         expect(requestBody).toExist();
-        const expectedBody = getBodyPart1({}) + getBodyPart2({}) + getBodyPart3({});
+        const expectedBody = getBodyPart1({}) + getBodyPart3({});
         expect(requestBody).toBe(expectedBody);
     });
-
+    it('getWpsPayload with layerFilter', () => {
+        const options = assign({}, defaultOptions, {layerFilter: sampleFilter});
+        const requestBody = getWpsPayload(options);
+        expect(requestBody).toExist();
+        const expectedBody = getBodyPart1(options) + getBodyPart2Both(options) + getBodyPart3(options);
+        expect(requestBody).toBe(expectedBody);
+    });
+    it('getWpsPayload with layerFilter and value undefined', () => {
+        const options = assign({}, defaultOptions, {layerFilter: sampleFilter, value: undefined});
+        const requestBody = getWpsPayload(options);
+        expect(requestBody).toExist();
+        const expectedBody = getBodyPart1(options) + getBodyPart2WithLayerFilter(options) + getBodyPart3(options);
+        expect(requestBody).toBe(expectedBody);
+    });
 });

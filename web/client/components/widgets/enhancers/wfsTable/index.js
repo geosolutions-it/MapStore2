@@ -19,23 +19,23 @@ const noPaginationFetch = require('./noPaginationFetch');
 
 const fetchDataStream = (props$, pages$, virtualScroll = true) =>
     triggerFetch(props$)
-    .let(virtualScroll
-        ? virtualScrollFetch(
-            pages$.withLatestFrom(
-                props$
+        .let(virtualScroll
+            ? virtualScrollFetch(
+                pages$.withLatestFrom(
+                    props$
                     // get latest options needed
-                    .map(({pagination = {}} = {}) => ({
-                        pagination
-                    })), // pagination is needed to allow workaround of GEOS-7233
-                (pagesRange, otherOptions) => ({
-                    pagesRange,
-                    ...otherOptions
-                })
+                        .map(({pagination = {}} = {}) => ({
+                            pagination
+                        })), // pagination is needed to allow workaround of GEOS-7233
+                    (pagesRange, otherOptions) => ({
+                        pagesRange,
+                        ...otherOptions
+                    })
+                )
             )
+            : noPaginationFetch
         )
-        : noPaginationFetch
-    )
-    .startWith({});
+        .startWith({});
 
 
 const dataStreamFactory = ($props) => {
@@ -103,8 +103,8 @@ module.exports = compose(
                     .reduce((acc, p) => ({
                         ...acc,
                         [p.name]: {
-                        hide: true
-                    }
+                            hide: true
+                        }
                     }), {}) : {},
             options.columnSettings || {},
             columnSettings)

@@ -18,12 +18,12 @@ describe('jsapi epic', () => {
         testEpic(epic, 1, [{type: "A"}, {type: "B"}], actions => {
             actions.map((action) => {
                 switch (action.type) {
-                    case "C":
-                        stop();
-                        done();
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case "C":
+                    stop();
+                    done();
+                    break;
+                default:
+                    expect(true).toBe(false);
 
                 }
             });

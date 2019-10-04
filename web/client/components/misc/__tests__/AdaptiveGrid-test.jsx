@@ -16,7 +16,7 @@ for (let i = 1; i < 3; i++) {
         id: i,
         title: 'Title ' + i,
         count: i * 1
-      });
+    });
 }
 const defaultProps = {
     columns: [
@@ -43,7 +43,7 @@ describe("Test AdaptiveGrid Component", () => {
         ReactDOM.render(
             <AdaptiveGrid
                 {...defaultProps}
-                />, document.getElementById("container"));
+            />, document.getElementById("container"));
 
         const domComp = document.getElementsByClassName('react-grid-Container')[0];
         expect(domComp).toExist();

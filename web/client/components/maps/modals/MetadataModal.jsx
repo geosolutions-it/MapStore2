@@ -16,11 +16,11 @@ const ResizableModal = require('../../misc/ResizableModal');
 require('react-quill/dist/quill.snow.css');
 require('./css/modals.css');
 const Spinner = require('react-spinkit');
-const {Grid, Row, Col} = require('react-bootstrap');
-const {isNil} = require('lodash');
+const { Grid, Row, Col } = require('react-bootstrap');
+const { get, isNil } = require('lodash');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const {NO_DETAILS_AVAILABLE} = require('../../../actions/maps');
+const { NO_DETAILS_AVAILABLE } = require('../../../actions/maps');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 
@@ -83,30 +83,30 @@ class MetadataModal extends React.Component {
     static defaultProps = {
         id: "MetadataModal",
         modalSize: "",
-        loadPermissions: () => {},
-        loadAvailableGroups: () => {},
-        onSave: ()=> {},
+        loadPermissions: () => { },
+        loadAvailableGroups: () => { },
+        onSave: () => { },
         detailsSheetActions: {
-            onBackDetails: () => {},
-            onUndoDetails: () => {},
-            onToggleGroupProperties: () => {},
-            onToggleDetailsSheet: () => {},
-            onUpdateDetails: () => {},
-            onDeleteDetails: () => {},
-            onSaveDetails: () => {}
+            onBackDetails: () => { },
+            onUndoDetails: () => { },
+            onToggleGroupProperties: () => { },
+            onToggleDetailsSheet: () => { },
+            onUpdateDetails: () => { },
+            onDeleteDetails: () => { },
+            onSaveDetails: () => { }
         },
-        onCreateThumbnail: ()=> {},
-        onDeleteThumbnail: ()=> {},
-        onGroupsChange: ()=> {},
-        onAddPermission: ()=> {},
-        onDisplayMetadataEdit: ()=> {},
-        metadataChanged: ()=> {},
-        onNewGroupChoose: ()=> {},
-        onNewPermissionChoose: ()=> {},
+        onCreateThumbnail: () => { },
+        onDeleteThumbnail: () => { },
+        onGroupsChange: () => { },
+        onAddPermission: () => { },
+        onDisplayMetadataEdit: () => { },
+        metadataChanged: () => { },
+        onNewGroupChoose: () => { },
+        onNewPermissionChoose: () => { },
         user: {
             name: "Guest"
         },
-        metadata: {name: "", description: ""},
+        metadata: { name: "", description: "" },
         modules: {
             toolbar: [
                 [{ 'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
@@ -123,19 +123,19 @@ class MetadataModal extends React.Component {
         showDetailsRow: true,
         fluid: true,
         // CALLBACKS
-        onErrorCurrentMap: ()=> {},
-        onUpdateCurrentMap: ()=> {},
-        onSaveAll: () => {},
-        onRemoveThumbnail: ()=> {},
-        onSaveMap: ()=> {},
-        onResetCurrentMap: () => {},
+        onErrorCurrentMap: () => { },
+        onUpdateCurrentMap: () => { },
+        onSaveAll: () => { },
+        onRemoveThumbnail: () => { },
+        onSaveMap: () => { },
+        onResetCurrentMap: () => { },
         // I18N
-        errorMessages: {"FORMAT": <Message msgId="map.errorFormat"/>, "SIZE": <Message msgId="map.errorSize"/>},
-        errorImage: <Message msgId="map.error"/>,
+        errorMessages: { "FORMAT": <Message msgId="map.errorFormat" />, "SIZE": <Message msgId="map.errorSize" /> },
+        errorImage: <Message msgId="map.error" />,
         displayPermissionEditor: true,
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: [],
-        updatePermissions: () => {},
+        updatePermissions: () => { },
         groups: []
     };
 
@@ -155,7 +155,7 @@ class MetadataModal extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.show && !prevProps.show) {
-            if (this.props.displayPermissionEditor && (this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN" )) {
+            if (this.props.displayPermissionEditor && (this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN")) {
                 this.loadPermissions();
                 this.loadAvailableGroups();
             }
@@ -178,7 +178,7 @@ class MetadataModal extends React.Component {
         });
         let metadata = null;
 
-        if ( this.isMetadataChanged() ) {
+        if (this.isMetadataChanged()) {
             let name = this.props.metadata.name;
             let description = this.props.metadata.description;
             metadata = {
@@ -200,16 +200,16 @@ class MetadataModal extends React.Component {
                         onClose={() => {
                             this.props.onResetCurrentMap();
                         }}
-                        title={<Message msgId="map.details.title" msgParams={{name: this.props.map.name }}/>}
+                        title={<Message msgId="map.details.title" msgParams={{ name: this.props.map.name }} />}
                         show
-                        >
+                    >
                         <div className="ms-detail-body">
-                            {!this.props.map.detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <div className="ql-editor" dangerouslySetInnerHTML={{__html: this.props.map.detailsText || ''}} />}
+                            {!this.props.map.detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : <div className="ql-editor" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText || '' }} />}
                         </div>
                     </ResizableModal>
                 ) : (<ResizableModal
                     show={!!this.props.map.showDetailEditor}
-                    title={<Message msgId="map.details.title" msgParams={{name: this.props.map.name }}/>}
+                    title={<Message msgId="map.details.title" msgParams={{ name: this.props.map.name }} />}
                     bodyClassName="ms-modal-quill-container"
                     size="lg"
                     clickOutEnabled={false}
@@ -217,12 +217,12 @@ class MetadataModal extends React.Component {
                     fullscreenType="full"
                     onClose={() => { this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup); }}
                     buttons={[{
-                        text: <Message msgId="map.details.back"/>,
+                        text: <Message msgId="map.details.back" />,
                         onClick: () => {
                             this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
                         }
                     }, {
-                        text: <Message msgId="map.details.save"/>,
+                        text: <Message msgId="map.details.save" />,
                         onClick: () => {
                             this.props.detailsSheetActions.onSaveDetails(this.props.map.detailsText);
                         }
@@ -236,46 +236,46 @@ class MetadataModal extends React.Component {
                                     this.props.detailsSheetActions.onUpdateDetails(details, false);
                                 }
                             }}
-                            modules={this.props.modules}/>
+                            modules={this.props.modules} />
                     </div>
                 </ResizableModal>)}
-        </Portal>);
+            </Portal>);
     }
     /**
      * @return the modal for unsaved changes
     */
     renderUnsavedChanges = () => {
         return (<Portal>
-                <ResizableModal
-                    size="xs"
-                    clickOutEnabled={false}
-                    showClose={false}
-                    title={<Message msgId="warning"/>}
-                    bodyClassName="modal-details-sheet-confirm"
-                    show={!!this.props.map.showUnsavedChanges}
-                    buttons={[{
-                        text: <Message msgId="no"/>,
-                        onClick: () => {
-                            if (this.props.detailsSheetActions.onToggleUnsavedChangesModal) {
-                                this.props.detailsSheetActions.onToggleUnsavedChangesModal();
-                            }
-                            this.props.onDisplayMetadataEdit(true);
+            <ResizableModal
+                size="xs"
+                clickOutEnabled={false}
+                showClose={false}
+                title={<Message msgId="warning" />}
+                bodyClassName="modal-details-sheet-confirm"
+                show={!!this.props.map.showUnsavedChanges}
+                buttons={[{
+                    text: <Message msgId="no" />,
+                    onClick: () => {
+                        if (this.props.detailsSheetActions.onToggleUnsavedChangesModal) {
+                            this.props.detailsSheetActions.onToggleUnsavedChangesModal();
                         }
-                    }, {
-                        text: <Message msgId="yes"/>,
-                        onClick: () => {
-                            this.props.onResetCurrentMap();
-                        }
-                    }]}>
-                        <div className="ms-alert">
-                            <span className="ms-alert-center">
-                                <Message msgId="map.details.fieldsChanged"/>
-                                <br/>
-                                <Message msgId="map.details.sureToClose"/>
-                            </span>
-                        </div>
-                </ResizableModal>
-            </Portal>);
+                        this.props.onDisplayMetadataEdit(true);
+                    }
+                }, {
+                    text: <Message msgId="yes" />,
+                    onClick: () => {
+                        this.props.onResetCurrentMap();
+                    }
+                }]}>
+                <div className="ms-alert">
+                    <span className="ms-alert-center">
+                        <Message msgId="map.details.fieldsChanged" />
+                        <br />
+                        <Message msgId="map.details.sureToClose" />
+                    </span>
+                </div>
+            </ResizableModal>
+        </Portal>);
     }
     renderDetailsRow = () => {
         return (
@@ -284,15 +284,15 @@ class MetadataModal extends React.Component {
                     <Row>
                         <Col xs={6}>
                             <div className="m-label">
-                                {this.props.map.detailsText === "" ? <Message msgId="map.details.add"/> : <Message msgId="map.details.rowTitle"/>}
+                                {this.props.map.detailsText === "" ? <Message msgId="map.details.add" /> : <Message msgId="map.details.rowTitle" />}
                             </div>
                         </Col>
                         <Col xs={6}>
                             <div className="ms-details-sheet">
                                 <div className="pull-right">
-                                    {this.props.map.saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null}
-                                    {isNil(this.props.map.detailsText) ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <Toolbar
-                                        btnDefaultProps={{ className: 'square-button-md no-border'}}
+                                    {this.props.map.saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
+                                    {isNil(this.props.map.detailsText) ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : <Toolbar
+                                        btnDefaultProps={{ className: 'square-button-md no-border' }}
                                         buttons={[
                                             {
                                                 glyph: !this.props.map.hideGroupProperties ? 'eye-close' : 'eye-open',
@@ -331,27 +331,28 @@ class MetadataModal extends React.Component {
                                                 visible: !!this.props.map.detailsText,
                                                 onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); },
                                                 disabled: this.props.map.saving
-                                            }]}/>}
+                                            }]} />}
                                 </div>
                             </div>
                         </Col>
                     </Row>
                 </div>
                 {this.props.map.detailsText && <div className="ms-details-preview-container">
-                    {this.props.map.detailsText !== NO_DETAILS_AVAILABLE ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText}}/>
-                : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable"/></div>}
-                    </div>}
+                    {this.props.map.detailsText !== NO_DETAILS_AVAILABLE ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText }} />
+                        : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable" /></div>}
+                </div>}
             </div>
         );
     }
     renderPermissionEditor = () => {
-        if (this.props.displayPermissionEditor && this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN" ) {
+        if (this.props.displayPermissionEditor && this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN") {
             // Hack to convert map permissions to a simpler format, TODO: remove this
             if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
                 this.localGroups = this.props.map.permissions.SecurityRuleList.SecurityRule.map(function(rule) {
                     if (rule && rule.group && rule.canRead) {
-                        return {name: rule.group.groupName, permission: rule.canWrite ? "canWrite" : "canRead" };
+                        return { name: rule.group.groupName, permission: rule.canWrite ? "canWrite" : "canRead" };
                     }
+                    return null;
                 }
                 ).filter(rule => rule);  // filter out undefined values
             } else {
@@ -362,7 +363,7 @@ class MetadataModal extends React.Component {
                     disabled={!!this.props.map.saving}
                     map={this.props.map}
                     user={this.props.user}
-                    availablePermissions ={this.props.availablePermissions}
+                    availablePermissions={this.props.availablePermissions}
                     availableGroups={this.props.availableGroups}
                     groups={this.props.groups}
                     newGroup={this.props.newGroup}
@@ -374,6 +375,7 @@ class MetadataModal extends React.Component {
                 />
             );
         }
+        return null;
     };
     renderMapProperties = () => {
         const mapErrorStatus = this.props.map && this.props.map.mapError && this.props.map.mapError.status ? this.props.map.mapError.status : null;
@@ -392,82 +394,83 @@ class MetadataModal extends React.Component {
         }
         return (<Portal>
             <ResizableModal
-            id={this.props.id}
-            size={this.props.modalSize}
-            title={<Message msgId="manager.editMapMetadata"/>}
-            show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
-            clickOutEnabled
-            bodyClassName="ms-flex modal-properties-container"
-            buttons={[{
-                text: <Message msgId="close"/>,
-                onClick: this.onCloseMapPropertiesModal,
-                disabled: this.props.map.saving
-            }, {
-                text: <Message msgId="save"/>,
-                onClick: () => { this.onSave(); },
-                disabled: this.props.map.saving
-            }]}
-            showClose={!this.props.map.saving}
-            onClose={this.onCloseMapPropertiesModal}>
-            <Grid fluid>
-                <div className="ms-map-properties">
-                    {/* TODO fix this error messages*/}
-                    <Row>
-                        {this.props.map && this.props.map.mapError ?
-                            <div className="dropzone-errorBox alert-danger">
+                id={this.props.id}
+                size={this.props.modalSize}
+                title={<Message msgId="saveDialog.title" />}
+                show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
+                clickOutEnabled
+                bodyClassName="ms-flex modal-properties-container"
+                buttons={[{
+                    text: <Message msgId="close" />,
+                    onClick: this.onCloseMapPropertiesModal,
+                    disabled: this.props.map.saving
+                }, {
+                    text: <Message msgId="save" />,
+                    onClick: () => { this.onSave(); },
+                    disabled: this.props.map.saving
+                }]}
+                showClose={!this.props.map.saving}
+                onClose={this.onCloseMapPropertiesModal}>
+                <Grid fluid>
+                    <div className="ms-map-properties">
+                        {/* TODO fix this error messages*/}
+                        <Row>
+                            {this.props.map && this.props.map.mapError ?
+                                <div className="dropzone-errorBox alert-danger">
                                     <div id={"error" + messageIdMapError} key={"error" + messageIdMapError} className={"error" + messageIdMapError}>
-                                    <Message msgId={"map.mapError.error" + messageIdMapError}/>
+                                        <Message msgId={"map.mapError.error" + messageIdMapError} />
+                                    </div>
                                 </div>
-                            </div>
-                        : null }
-                        {this.props.map && this.props.map.errors && this.props.map.errors.length > 0 ?
-                        <div className="dropzone-errorBox alert-danger">
-                            <p>{this.props.errorImage}</p>
-                            { (this.props.map.errors.map((error) => <div id={"error" + error} key={"error" + error} className={"error" + error}> {this.props.errorMessages[error]} </div>))}
-                        </div>
-                        : null }
-                        {this.props.map && this.props.map.thumbnailError ?
-                            <div className="dropzone-errorBox alert-danger">
-                                <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
-                                    <Message msgId={"map.thumbnailError.error" + messageIdError}/>
+                                : null}
+                            {this.props.map && this.props.map.errors && this.props.map.errors.length > 0 ?
+                                <div className="dropzone-errorBox alert-danger">
+                                    <p>{this.props.errorImage}</p>
+                                    {(this.props.map.errors.map((error) => <div id={"error" + error} key={"error" + error} className={"error" + error}> {this.props.errorMessages[error]} </div>))}
                                 </div>
-                            </div>
-                        : null }
-                    </Row>
-                    <Row>
-                        <Col xs={12}>
-                            <Thumbnail
-                                map={this.props.map}
-                                onSaveAll={this.props.onSaveAll}
-                                onRemoveThumbnail={this.props.onRemoveThumbnail}
-                                onError={this.props.onErrorCurrentMap}
-                                onUpdate={this.props.onUpdateCurrentMap}
-                                onCreateThumbnail={this.props.onCreateThumbnail}
-                                onDeleteThumbnail={this.props.onDeleteThumbnail}
-                                ref="thumbnail"/>
-                        </Col>
-                        <Col xs={12}>
-                            <Metadata role="body" ref="mapMetadataForm"
-                                onChange={this.props.metadataChanged}
-                                map={this.props.map}
-                                metadata={this.props.metadata}
-                                nameFieldText={<Message msgId="map.name" />}
-                                descriptionFieldText={<Message msgId="map.description" />}
-                                namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}
-                                descriptionPlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.descriptionPlaceholder") || "Map Description"}
-                            />
-                        </Col>
-                    </Row>
-                    {this.props.showDetailsRow ? this.renderDetailsRow() : null}
-                    {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
+                                : null}
+                            {this.props.map && this.props.map.thumbnailError ?
+                                <div className="dropzone-errorBox alert-danger">
+                                    <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
+                                        <Message msgId={"map.thumbnailError.error" + messageIdError} />
+                                    </div>
+                                </div>
+                                : null}
+                        </Row>
+                        <Row>
+                            <Col xs={12}>
+                                <Thumbnail
+                                    map={this.props.map}
+                                    onSaveAll={this.props.onSaveAll}
+                                    onRemoveThumbnail={this.props.onRemoveThumbnail}
+                                    onError={this.props.onErrorCurrentMap}
+                                    onUpdate={this.props.onUpdateCurrentMap}
+                                    onCreateThumbnail={this.props.onCreateThumbnail}
+                                    onDeleteThumbnail={this.props.onDeleteThumbnail}
+                                    ref="thumbnail" />
+                            </Col>
+                            <Col xs={12}>
+                                <Metadata role="body" ref="mapMetadataForm"
+                                    onChange={this.props.metadataChanged}
+                                    map={this.props.map}
+                                    metadata={this.props.metadata}
+                                    nameFieldText={<Message msgId="map.name" />}
+                                    descriptionFieldText={<Message msgId="map.description" />}
+                                    namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}
+                                    descriptionPlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.descriptionPlaceholder") || "Map Description"}
+                                />
+                            </Col>
+                        </Row>
+                        {this.props.showDetailsRow && get(this.props.map, "category.name") !== "DASHBOARD" ? this.renderDetailsRow() : null}
 
-            </div></Grid>
-        </ResizableModal>
-    </Portal>);
+                        {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
+
+                    </div></Grid>
+            </ResizableModal>
+        </Portal>);
     }
     // TODO restore this
     renderLoading = () => {
-        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner" /> : null;
     };
 
     render() {

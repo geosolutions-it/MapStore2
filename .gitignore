@@ -18,3 +18,8 @@ _site
 docs/developer-guide/reference/
 web/client/mapstore/docs/
 web/docs
+.classpath
+.project
+.settings/
+debug.log
+.vscode/settings.json

@@ -8,11 +8,11 @@
 
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
-const { isString, isObject, isArray, head, castArray, isEmpty, findIndex} = require('lodash');
-const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
-const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
-    return regex.test(url) && url.match(regex)[0] || null;
-};
+const uuidv1 = require('uuid/v1');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
+
+let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
+
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
 };
@@ -31,7 +31,7 @@ const initialReorderLayers = (groups, allLayers) => {
                 }
                 return layers.concat(getLayer(node, allLayers));
             }, [])
-            );
+        );
     }, []);
 };
 const reorderLayers = (groups, allLayers) => {
@@ -393,8 +393,29 @@ const LayersUtils = {
         }
         return mapState;
     },
+    /**
+     * used for converting a geojson file with fileName into a vector layer
+     * it supports FeatureCollection or Feature
+     * @param {object} geoJSON object to put into features
+     * @param {string} id layer id
+     * @return {object} vector layer containing the geojson in features array
+    */
     geoJSONToLayer: (geoJSON, id) => {
         const bbox = toBbox(geoJSON);
+        let features = [];
+        if (geoJSON.type === "FeatureCollection") {
+            features = geoJSON.features.map((feature, idx) => {
+                if (!feature.id) {
+                    feature.id = idx;
+                }
+                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
+                    feature.geometry.bbox = [null, null, null, null];
+                }
+                return feature;
+            });
+        } else {
+            features = [pick({...geoJSON, id: isNil(geoJSON.id) ? uuidv1() : geoJSON.id}, ["geometry", "type", "style", "id"])];
+        }
         return {
             type: 'vector',
             visibility: true,
@@ -411,15 +432,7 @@ const LayersUtils = {
                 },
                 crs: "EPSG:4326"
             },
-            features: geoJSON.features.map((feature, idx) => {
-                if (!feature.id) {
-                    feature.id = idx;
-                }
-                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
-                    feature.geometry.bbox = [null, null, null, null];
-                }
-                return feature;
-            })
+            features
         };
     },
     saveLayer: (layer) => {
@@ -439,6 +452,7 @@ const LayersUtils = {
             style: layer.style,
             styleName: layer.styleName,
             availableStyles: layer.availableStyles,
+            layerFilter: layer.layerFilter,
             title: layer.title,
             transparent: layer.transparent,
             tiled: layer.tiled,
@@ -465,16 +479,30 @@ const LayersUtils = {
             hidden: layer.hidden || false,
             origin: layer.origin,
             thematic: layer.thematic,
-            thumbId: layer.thumbId
+            thumbId: layer.thumbId,
+            tooltipOptions: layer.tooltipOptions,
+            tooltipPlacement: layer.tooltipPlacement
         },
         layer.additionalParams ? { additionalParams: layer.additionalParams } : {},
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {});
     },
     /**
-    * default regex rule for searching for a /geoserver/ string in a url
+    * default initial constant regex rule for searching for a /geoserver/ string in a url
+    * useful for a reset to an initial state of the rule
     */
-    REG_GEOSERVER_RULE,
+    REG_GEOSERVER_RULE: regGeoServerRule,
+    /**
+     * Override default REG_GEOSERVER_RULE variable
+     * @param {regex} regex custom regex to override
+     */
+    setRegGeoserverRule: (regex) => {
+        regGeoServerRule = regex;
+    },
+    /**
+     * Get REG_GEOSERVER_RULE regex variable
+     */
+    getRegGeoserverRule: () => regGeoServerRule,
     /**
     * it tests if a url is matched by a regex,
     * if so it returns the matched string
@@ -482,15 +510,19 @@ const LayersUtils = {
     * @param object.regex the regex to use for parsing the url
     * @param object.url the url to test
     */
-    findGeoServerName,
+    findGeoServerName: ({url, regexRule}) => {
+        const regex = regexRule || LayersUtils.getRegGeoserverRule();
+        const location = isArray(url) ? url[0] : url;
+        return regex.test(location) && location.match(regex)[0] || null;
+    },
     /**
      * This method search for a /geoserver/  string inside the url
      * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
      * otherwise it returns the default getCapabilitiesUrl
     */
     getCapabilitiesUrl: (layer) => {
-        const matchedGeoServerName = findGeoServerName({url: layer.url});
-        let reqUrl = layer.url;
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
+        let reqUrl = isArray(layer.url) ? layer.url[0] : layer.url;
         if (!!matchedGeoServerName) {
             let urlParts = reqUrl.split(matchedGeoServerName);
             if (urlParts.length === 2) {
@@ -574,6 +606,20 @@ const LayersUtils = {
         // TODO: check if format is valid for an img (svg, for instance, may not work)
         const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
         return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
+    },
+    /**
+     * Return capabilities valid for the layer object
+     */
+    formatCapabitiliesOptions: function(capabilities) {
+        return isObject(capabilities)
+            ? {
+                capabilities,
+                capabilitiesLoading: null,
+                description: capabilities._abstract,
+                boundingBox: capabilities.latLonBoundingBox,
+                availableStyles: capabilities.style && (Array.isArray(capabilities.style) ? capabilities.style : [capabilities.style])
+            }
+            : {};
     }
 };
 

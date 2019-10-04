@@ -35,7 +35,7 @@ const chooseMapEnhancer = compose(
         ({ editorData = {} } = {}) => !editorData.map,
         renderComponent(require('./MapSelector'))
     ),
-     // layer selector - to add layers to the map
+    // layer selector - to add layers to the map
     withState('layerSelectorOpen', 'toggleLayerSelector', false),
     branch(
         ({ layerSelectorOpen = false } = {}) => layerSelectorOpen,
@@ -83,25 +83,26 @@ const mapBuilder = compose(
 
 
 module.exports = mapBuilder(({
-        enabled, onClose = () => {},
-        toggleLayerSelector = () => {},
-        editorData = {},
-        editNode, setEditNode, closeNodeEditor, selectedGroups=[], exitButton, selectedLayers=[], selectedNodes, onNodeSelect = () => {},
+    enabled, onClose = () => {},
+    toggleLayerSelector = () => {},
+    editorData = {},
+    editNode, setEditNode, closeNodeEditor, selectedGroups = [], exitButton, selectedLayers = [], selectedNodes, onNodeSelect = () => {},
     availableDependencies = [], toggleConnection = () => {}
-    } = {}) =>
+} = {}) =>
     (<BorderLayout
         className = "map-selector"
         header={(<BuilderHeader onClose={onClose}>
             <Toolbar
-            exitButton={exitButton}
-            editorData={editorData}
-            availableDependencies={availableDependencies}
-            toggleConnection={toggleConnection}
-            selectedNodes={selectedNodes}
-            selectedLayers={selectedLayers}
-            selectedGroups={selectedGroups}
-            toggleLayerSelector={toggleLayerSelector}/></BuilderHeader>)}
-        >
+                exitButton={exitButton}
+                editorData={editorData}
+                availableDependencies={availableDependencies}
+                toggleConnection={toggleConnection}
+                selectedNodes={selectedNodes}
+                selectedLayers={selectedLayers}
+                selectedGroups={selectedGroups}
+                onNodeSelect={onNodeSelect}
+                toggleLayerSelector={toggleLayerSelector}/></BuilderHeader>)}
+    >
         {enabled ? <Builder
             setEditNode={setEditNode}
             editNode={editNode}

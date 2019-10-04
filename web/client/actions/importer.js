@@ -89,6 +89,7 @@ const applyPlaceholders = function(preset, model) {
         if (isString(el)) {
             return el.replace("{targetWorkspace}", model.targetWorkspace && model.targetWorkspace.workspace && model.targetWorkspace.workspace.name);
         }
+        return el;
     };
     if (preset && preset.changes && preset.changes.target && preset.changes.target.dataStore && preset.changes.target.dataStore.name) {
         return assign({}, preset, {

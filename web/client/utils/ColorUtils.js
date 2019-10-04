@@ -1,4 +1,4 @@
- /*
+/*
   * Copyright 2017, GeoSolutions Sas.
   * All rights reserved.
   *
@@ -22,15 +22,15 @@ const ColorUtils = {
         n = (n > 255 || n < 0) ? 0 : n;
         return HCHARS.charAt( ( n - n % 16 ) / 16 ) + HCHARS.charAt( n % 16 );
     },
-    rgbToHex: function( r, g, b ) {
+    rgbToHex: ( r, g, b ) => {
         if ( r instanceof Array ) { return ColorUtils.rgbToHex( r[0], r[1], r[2] ); }
-        return this.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
+        return "#" + ColorUtils.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
     },
     realToDec: function( n ) {
         return Math.min( 255, Math.round( n * 256 ) );
     },
     rgbToHsv: ( rr, gg, bb ) => {
-        if ( rr instanceof Array ) { return ColorUtils.rgbToHsv( r[0], r[1], r[2] ); }
+        if ( rr instanceof Array ) { return ColorUtils.rgbToHsv( rr[0], rr[1], rr[2] ); }
         let r = rr / 255;
         let g = gg / 255;
         let b = bb / 255;
@@ -43,13 +43,13 @@ const ColorUtils = {
         max = Math.max( Math.max( r, g ), b );
         delta = max - min;
         switch (max) {
-            case min: h = 0; break;
-            case r: h = 60 * ( g - b ) / delta;
-                    if ( g < b ) { h += 360; }
-                    break;
-            case g: h = ( 60 * ( b - r ) / delta ) + 120; break;
-            case b: h = ( 60 * ( r - g ) / delta ) + 240; break;
-            default: break;
+        case min: h = 0; break;
+        case r: h = 60 * ( g - b ) / delta;
+            if ( g < b ) { h += 360; }
+            break;
+        case g: h = ( 60 * ( b - r ) / delta ) + 120; break;
+        case b: h = ( 60 * ( r - g ) / delta ) + 240; break;
+        default: break;
         }
         s = ( max === 0 ) ? 0 : 1 - ( min / max );
         return [Math.round( h ), s, max];
@@ -67,7 +67,7 @@ const ColorUtils = {
         const hsvToRgb = (h, s, v) => {
             let rgb = hsvToRgb(h, s, v);
             // return rgb;
-            return "#" + ColorUtils.rgbToHex(rgb);
+            return ColorUtils.rgbToHex(rgb);
         };
         for (let x = 0; x < total; x++) {
             r.push(hsvToRgb(i * x, 0.57, 0.63, x)); // you can also alternate the saturation and value for even more contrast between the colors
@@ -105,7 +105,6 @@ const ColorUtils = {
         if (total === 1) {
             svstep = 0.50;
             hstep = range / 2;
-
         }
         for (let x = 0; x < total; x++) {
             let h = base + x * hstep - range / 2;
@@ -120,7 +119,6 @@ const ColorUtils = {
             r.push(ColorUtils.hsvToHex(h, s, v, x));
         }
         return r;
-
     },
     hsvToRgb: ( h, s, v ) => {
         if ( h instanceof Array ) { return ColorUtils.hsvToRgb( h[0], h[1], h[2] ); }
@@ -133,22 +131,22 @@ const ColorUtils = {
         let q = v * ( 1 - f * s );
         let t = v * ( 1 - ( 1 - f ) * s );
         switch (i) {
-            case 0: r = v; g = t; b = p; break;
-            case 1: r = q; g = v; b = p; break;
-            case 2: r = p; g = v; b = t; break;
-            case 3: r = p; g = q; b = v; break;
-            case 4: r = t; g = p; b = v; break;
-            case 5: r = v; g = p; b = q; break;
-            default: break;
+        case 0: r = v; g = t; b = p; break;
+        case 1: r = q; g = v; b = p; break;
+        case 2: r = p; g = v; b = t; break;
+        case 3: r = p; g = q; b = v; break;
+        case 4: r = t; g = p; b = v; break;
+        case 5: r = v; g = p; b = q; break;
+        default: break;
         }
         return [ColorUtils.realToDec( r ), ColorUtils.realToDec( g ), ColorUtils.realToDec( b )];
     },
     hsvToHex: (h, s, v) => {
         let rgb = ColorUtils.hsvToRgb(h, s, v);
         // return rgb;
-        return "#" + ColorUtils.rgbToHex(rgb);
+        return ColorUtils.rgbToHex(rgb);
     },
-    hexToHsv: function(h) {
+    hexToHsv: (h) => {
         let hex = h;
         if (hex.length > 0) {
             if (hex[0] === '#') {
@@ -157,6 +155,24 @@ const ColorUtils = {
             let rgb = ColorUtils.hexToRgb(hex);
             return ColorUtils.rgbToHsv(rgb);
         }
+        return null;
+    },
+    hexToRgb: (h) => {
+        let hex = h;
+        let r;
+        let g;
+        let b;
+        if (hex.charAt(0) === '#') {
+            hex = h.substring(1);
+        }
+        r = hex.charAt(0) + hex.charAt(1);
+        g = hex.charAt(2) + hex.charAt(3);
+        b = hex.charAt(4) + hex.charAt(5);
+        return [
+            parseInt(r, 16),
+            parseInt(g, 16),
+            parseInt(b, 16)
+        ];
     },
     colorToHexStr: (color = 'red') => tinycolor(color).toHexString(),
     /**
@@ -170,5 +186,6 @@ const ColorUtils = {
         const c = tinycolor(color);
         return color && c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString() || defaultColor;
     }
+
 };
 module.exports = ColorUtils;

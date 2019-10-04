@@ -16,7 +16,7 @@ const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV,
 const editOptions = require('./widgets/editOptions');
 const autoDisableWidgets = require('./widgets/autoDisableWidgets');
 
-
+const RIGHT_MARGIN = 70;
 const {heightProvider} = require('../components/layout/enhancers/gridLayout');
 const ContainerDimensions = require('react-container-dimensions').default;
 
@@ -54,19 +54,19 @@ compose(
             const nRows = 4;
             const rowHeight = Math.floor(divHeight / nRows - 20);
             return ({
-            rowHeight,
-            className: "on-map",
+                rowHeight,
+                className: "on-map",
                 breakpoints: { md: 480, xxs: 0 },
                 cols: { md: 6, xxs: 1 },
-            style: {
-                left: (width && width > 800) ? "500px" : "0",
-                marginTop: 52,
-                bottom: 67,
-                height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
-                width: `${width && width > 800 ? 'calc(100% - 550px)' : 'calc(100% - 50px)'}`,
-                position: 'absolute',
-                zIndex: 50
-            }
+                style: {
+                    left: (width && width > 800) ? "500px" : "0",
+                    marginTop: 52,
+                    bottom: 65,
+                    height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
+                    width: width && width > 800 ? `calc(100% - ${500 + RIGHT_MARGIN}px)` : `calc(100% - ${RIGHT_MARGIN}px)`,
+                    position: 'absolute',
+                    zIndex: 50
+                }
             });
         })
     ),
@@ -110,10 +110,12 @@ compose(
 
 class Widgets extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        shortenChartLabelThreshold: PropTypes.number
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        shortenChartLabelThreshold: 1000
     };
     render() {
         return this.props.enabled ? <WidgetsView {...this.props /* pass options to the plugin */ } /> : null;

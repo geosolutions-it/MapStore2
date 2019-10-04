@@ -25,7 +25,9 @@ const onToolsActions = {
     onRetrieveLayerData: () => {},
     onHideSettings: () => {},
     onReload: () => {},
+    onQueryBuilder: () => {},
     onAddLayer: () => {},
+    onAddGroup: () => {},
     onGetMetadataRecord: () => {},
     onHideLayerMetadata: () => {},
     onShow: () => {}
@@ -45,19 +47,24 @@ describe('TOC Toolbar', () => {
 
     it('deselected element', () => {
         const spyAddLayer = expect.spyOn(onToolsActions, 'onAddLayer');
-        ReactDOM.render(<Toolbar text={{addLayer: 'ADD LAYER'}} onToolsActions={onToolsActions}/>, document.getElementById("container"));
+        const spyAddGroup = expect.spyOn(onToolsActions, 'onAddGroup');
+        ReactDOM.render(<Toolbar onToolsActions={onToolsActions}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group").item(0);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(1);
-        expect(btn[0].innerHTML).toBe('ADD LAYER');
+        expect(btn.length).toBe(2);
+        expect(btn[0].innerHTML).toContain('add-layer');
+        expect(btn[1].innerHTML).toContain('add-folder');
         TestUtils.Simulate.click(btn[0]);
         expect(spyAddLayer).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[1]);
+        expect(spyAddGroup).toHaveBeenCalled();
     });
 
     it('layer single selection', () => {
         const spyZoom = expect.spyOn(onToolsActions, 'onZoom');
         const spySettings = expect.spyOn(onToolsActions, 'onSettings');
+        const spyLayerFilter = expect.spyOn(onToolsActions, 'onQueryBuilder');
         const spyBrowseData = expect.spyOn(onToolsActions, 'onBrowseData');
         const spyDownload = expect.spyOn(onToolsActions, 'onDownload');
         const selectedLayers = [{
@@ -85,7 +92,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(5);
+        expect(btn.length).toBe(6);
         TestUtils.Simulate.click(btn[0]);
         expect(spyZoom).toHaveBeenCalledWith({
             maxx: 10,
@@ -96,15 +103,17 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[1]);
         expect(spySettings).toHaveBeenCalledWith('l001', 'layers', {opacity: 1 });
-
         TestUtils.Simulate.click(btn[2]);
-        expect(spyBrowseData).toHaveBeenCalled();
+        expect(spyLayerFilter).toHaveBeenCalled();
+
+        TestUtils.Simulate.click(btn[3]);
+        expect(spyLayerFilter).toHaveBeenCalled();
         expect(spyBrowseData).toHaveBeenCalledWith({
             url: selectedLayers[0].search.url,
             name: selectedLayers[0].name,
             id: selectedLayers[0].id
         });
-        TestUtils.Simulate.click(btn[4]);
+        TestUtils.Simulate.click(btn[5]);
         expect(spyDownload).toHaveBeenCalled();
         expect(spyDownload).toHaveBeenCalledWith({
             url: selectedLayers[0].search.url,
@@ -112,7 +121,7 @@ describe('TOC Toolbar', () => {
             id: selectedLayers[0].id
         });
 
-        TestUtils.Simulate.click(btn[3]);
+        TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
     });
@@ -162,10 +171,64 @@ describe('TOC Toolbar', () => {
     it('layer single selection (loading error)', () => {
         const spyReload = expect.spyOn(onToolsActions, 'onReload');
         const spyShow = expect.spyOn(onToolsActions, 'onShow');
+        const spySettings = expect.spyOn(onToolsActions, 'onSettings');
         const selectedLayers = [{
             id: 'l001',
             title: 'layer001',
             name: 'layer001name',
+            loadingError: 'Error',
+            bbox: {
+                bounds: {
+                    maxx: 10,
+                    maxy: 9,
+                    minx: -10,
+                    miny: -9
+                }, crs: 'EPSG:4326'
+            }
+        }];
+
+        const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
+
+        const modal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(modal).toNotExist();
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(3);
+        TestUtils.Simulate.click(btn[2]);
+        expect(spyReload).toHaveBeenCalled();
+        expect(spyShow).toHaveBeenCalledWith('l001', {visibility: true});
+
+        TestUtils.Simulate.click(btn[1]);
+        const removeModal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(removeModal).toExist();
+
+        TestUtils.Simulate.click(btn[0]);
+        expect(spySettings).toHaveBeenCalled();
+        expect(btn[0].querySelector('.glyphicon-wrench')).toExist();
+    });
+
+    it('multiple layer selection (loading error)', () => {
+        const spyReload = expect.spyOn(onToolsActions, 'onReload');
+        const spyShow = expect.spyOn(onToolsActions, 'onShow');
+        const selectedLayers = [{
+            id: 'l001',
+            title: 'layer001',
+            name: 'layer001name',
+            loadingError: 'Error',
+            bbox: {
+                bounds: {
+                    maxx: 10,
+                    maxy: 9,
+                    minx: -10,
+                    miny: -9
+                }, crs: 'EPSG:4326'
+            }
+        }, {
+            id: 'l002',
+            title: 'layer002',
+            name: 'layer002name',
             loadingError: 'Error',
             bbox: {
                 bounds: {
@@ -223,18 +286,20 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(6);
+        expect(btn.length).toBe(7);
 
 
-        TestUtils.Simulate.click(btn[5]);
+        TestUtils.Simulate.click(btn[6]);
         expect(spyGetMetadataRecord).toHaveBeenCalled();
 
-        TestUtils.Simulate.click(btn[3]);
+        TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
     });
 
     it('group single selection', () => {
+        const spyAddLayer = expect.spyOn(onToolsActions, 'onAddLayer');
+        const spyAddGroup = expect.spyOn(onToolsActions, 'onAddGroup');
         const spyZoom = expect.spyOn(onToolsActions, 'onZoom');
         const spySettings = expect.spyOn(onToolsActions, 'onSettings');
 
@@ -285,8 +350,12 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(3);
+        expect(btn.length).toBe(5);
         TestUtils.Simulate.click(btn[0]);
+        expect(spyAddLayer).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[1]);
+        expect(spyAddGroup).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[2]);
         expect(spyZoom).toHaveBeenCalledWith({
             maxx: 30,
             maxy: 29,
@@ -294,12 +363,49 @@ describe('TOC Toolbar', () => {
             miny: -9
         }, 'EPSG:4326');
 
-        TestUtils.Simulate.click(btn[1]);
+        TestUtils.Simulate.click(btn[3]);
         expect(spySettings).toHaveBeenCalledWith('g001', 'groups', {});
 
-        TestUtils.Simulate.click(btn[2]);
+        TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
+    });
+
+    it('add group max depth ok', () => {
+        const selectedGroups = [{
+            id: 'g001',
+            title: 'group001',
+            name: 'group001name',
+            nodes: []
+        }];
+
+        const cmp = ReactDOM.render(<Toolbar maxDepth={2} selectedGroups={selectedGroups} onToolsActions={onToolsActions} />, document.getElementById("container"));
+
+        const modal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(modal).toNotExist();
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(4);
+    });
+
+    it('add group max depth reached', () => {
+        const selectedGroups = [{
+            id: 'g001.g002',
+            title: 'group001',
+            name: 'group001name',
+            nodes: []
+        }];
+        const cmp = ReactDOM.render(<Toolbar maxDepth={2} selectedGroups={selectedGroups} onToolsActions={onToolsActions} />, document.getElementById("container"));
+
+        const modal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(modal).toNotExist();
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(3);
     });
 
     it('group multiple selections', () => {

@@ -2,7 +2,7 @@
 *****************
 In GIS, the attribute table associated to a vector layer is a table that stores tabular informations related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corresponds to one feature geometry of the layer. This relation allows to find records in the table (informations) by selecting features on the map and viceversa.
 
-In [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/), accessing the attribute table of a vector layer allows you to edit the tabular data or to directly edit the geometries on the map, to perform spatial queries and filters and to create widgets from the data.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), accessing the attribute table of a vector layer allows you to edit the tabular data or to directly edit the geometries on the map, to perform spatial queries and filters and to create widgets from the data.
 
 !!! note
     Creating widgets for a layer is accessible from the *TOC* and the *Attribute Table* by clicking on this icon <img src="../img/widgets.jpg" style="max-width:20px;"/> and was already treated in the [Widgets](widgets.md) section.
@@ -16,15 +16,18 @@ The attribute table will open showing the data table and a set of functionalitie
 
 <img src="../img/attributes-table-1.jpg" style="max-width:600px;"/>
 
+!!! warning
+    When GeoServer is set to strict CITE compliance for WFS (by default), the feature grid do not work correctly.
+    This is because MapStore uses by default WFS 1.1.0 with startIndex/maxFeatures. This is not strict compliant with WFS 1.1.0 (GeoServer supports it but the request in strict mode is invalid). To solve it un-check the CITE compliance checkbox in the "WFS" page of GeoServer "Services" configurations using the GeoServer web interface.
 
 Editing
 -------
 
 The basic Web Feature Service allows querying and retrieval of features.
-Through Transactional Web Feature Services (WFS-T) [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows creation, deletion, and updating of features.
+Through Transactional Web Feature Services (WFS-T) [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows creation, deletion, and updating of features.
 
 !!! warning
-    By default editing functionalities are available only for MapStore ***Admin*** users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev.mapstore2.geo-solutions.it/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
+    By default editing functionalities are available only for MapStore ***Admin*** users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev.mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
 
 The **Editing** tools can be reached from the *Attribute Table* panel and they allow to edit only the layer which the table refers to.
 
@@ -110,10 +113,50 @@ In *Edit mode*, you can delete existing features following these steps:
 
 <img src="../img/delete-line-shape.gif" />
 
+Quick Filtering
+-------------------
+
+The [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) Attribute Table allows you to quickly filter the table records (features) by using the filter field located at the top of each column.
+
+<p><img src="../img/attribute-table-quick-filter.jpg" style="max-width:620px;"/></p>
+
+To use quick filters, just type in the filter text in the filter fields located at the top of any column to be filtered.
+For example to filter **Arizona State** type in **arizona** in the filter field located on **state_name** column.
+<p><img src="../img/attribute-table-quick-filter-1.jpg" style="max-width:620px;"/></p>
+
+!!! note
+    We have got **one** item and since the map is by default synchronized with the **attribute table**, only the **Arizona** state is visible.
+
+
+### Operator based quick filtering
+Quick filters allow you to filter records in the Attribute Table by using comparison operators (the operators must precede the filter text): operator can be used for all data type including float and date types.
+
+<p><img src="../img/attribute-table-quick-filter-2.jpg" style="max-width:620px;"/></p>
+
+So far the operators allowed are as follows
+
+* **!== or != or <>**  Not equal
+* **<=**  Less than or equal
+* **>=**  Greater than or equal
+* **<**  Less than
+* **>**  Greater than
+* **=== or == or =** Equal, this is the internal default one if the operator isn't specified.
+
+Examples;
+
+* Filtering states with **persons >= 4,000,000**
+<p><img src="../img/attribute-table-quick-filter-3.jpg" style="max-width:620px;"/></p>
+
+* Filtering states with male population **Male < 2000,0000**
+<p><img src="../img/attribute-table-quick-filter-4.jpg" style="max-width:620px;"/></p>
+
+!!! note
+    Please note the comparison operator preceding the filter text in both examples.
+
 Advanced Filtering
 ------------------
 
-[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to filter and select the data by attribute or by region and to perform cross filtering between two present layers in the map.
+In addition to quick filters, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) attribute table allows you to perform advance filtering and select the data by attribute or by region and to perform cross filtering between two present layers in the map.
 
 * **Click** on the *Advanced Search* icon <img src="../img/filter-icon.jpg" style="max-width:25px;" />.
 

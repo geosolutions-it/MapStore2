@@ -14,6 +14,7 @@ const {isString, trimStart, isFunction} = require('lodash');
 const {Nav, NavItem, Glyphicon} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const NavItemT = tooltip(NavItem);
+const {scrollIntoViewId} = require('../../utils/DOMUtil');
 
 /**
  * Plugin for navigation menu. It renders some items passed as props (or injected by other plugins)
@@ -26,6 +27,8 @@ const NavItemT = tooltip(NavItem);
  * In case of `href`, or `linkId`, the item can also to contain:
  *  - `label`: a node (react element or string, for instance) to render
  *  - `glyph` icon to use when the window's width is less then `minWidth`
+ *  - `labelComponent` react element to render as navItem label, label will be visible when screen size is bigger
+ *  - `iconComponent` react element to render as navItem on small screen, it should contain only icon
  *
  * Examples:
  * ```
@@ -78,49 +81,48 @@ class NavMenu extends React.Component {
     getLinks = (width) => {
 
         return this.props.items && [...this.props.items, ...(this.props.links || [])]
-            .filter(item => item.href || item.linkId || item.tool)
+            .filter(item => item.href || item.linkId || item.tool || !item.hide)
             .map(item => item.tool && isFunction(item.tool) && item.tool(item.cfg) || item)
             .sort((itemA, itemB) => itemA.position - itemB.position)
             .map((item, idx) => {
                 return width > this.props.minWidth && !item.logo ?
-                <NavItem
-                    key={idx}
-                    target="_blank"
-                    href={isString(item.href) && !item.linkId && item.href}
-                    onClick={isString(item.linkId) ? () => this.scrollIntoView(item.linkId) : () => {}}>
-                    {item.label}
-                </NavItem>
-                :
-                <NavItemT
-                    key={idx}
-                    target="_blank"
-                    tooltip={item.label}
-                    tooltipPosition="bottom"
-                    href={isString(item.href) && !item.linkId && item.href}
-                    onClick={isString(item.linkId) ? () => this.scrollIntoView(item.linkId) : () => {}}>
-                    {item.glyph && <Glyphicon glyph={item.glyph}/> || item.img}
-                </NavItemT>;
+                    this.renderLabeledItem(item, idx) : this.renderIconedItem(item, idx);
             }) || [];
+    };
+
+    renderLabeledItem = (item, idx) => {
+        return item.labelComponent ? item.labelComponent : (<NavItem
+            key={idx}
+            target="_blank"
+            href={isString(item.href) && !item.linkId && item.href || ""}
+            onClick={isString(item.linkId) ? () => scrollIntoViewId(trimStart(item.linkId, '#')) : () => { }}>
+            {item.label}
+        </NavItem>);
+    };
+
+    renderIconedItem = (item, idx) => {
+        return item.iconComponent ? item.iconComponent : (<NavItemT
+            key={idx}
+            target="_blank"
+            tooltip={item.label}
+            tooltipPosition="bottom"
+            href={isString(item.href) && !item.linkId && item.href || ""}
+            onClick={isString(item.linkId) ? () => scrollIntoViewId(trimStart(item.linkId, '#')) : () => { }}>
+            {item.glyph && <Glyphicon glyph={item.glyph} /> || item.img}
+        </NavItemT>);
     };
 
     render() {
         return (
             <ContainerDimensions>
-            {({width}) => (
-                <Nav {...this.props.navProps}>
-                    {this.getLinks(width)}
-                </Nav>
-            )}
+                {({width}) => (
+                    <Nav {...this.props.navProps}>
+                        {this.getLinks(width)}
+                    </Nav>
+                )}
             </ContainerDimensions>
         );
     }
-
-    scrollIntoView = linkId => {
-        const node = document.getElementById(trimStart(linkId, '#'));
-        if (node && node.scrollIntoView) {
-            node.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-    };
 }
 
 module.exports = {

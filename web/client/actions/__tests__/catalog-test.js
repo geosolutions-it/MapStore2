@@ -15,14 +15,47 @@ const service = {
 };
 const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
-const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
-     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
+const {
+    addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, textSearch, TEXT_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
+    focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
     changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
-    SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT} = require('../catalog');
+    SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
+    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING,
+    recordsNotFound
+} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
+const {SHOW_NOTIFICATION} = require('../notifications');
 describe('Test correctness of the catalog actions', () => {
 
+    it('addLayersMapViewerUrl', () => {
+        const layers = ["layer name"];
+        const sources = ["catalog name"];
+        const retval = addLayersMapViewerUrl(layers, sources);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_LAYERS_FROM_CATALOGS);
+        expect(retval.layers).toEqual(layers);
+        expect(retval.sources).toEqual(sources);
+    });
+    it('textSearch', () => {
+        const format = "csw";
+        const urlValue = "url";
+        const startPosition = 1;
+        const maxRecords = 1;
+        const text = "text";
+        const options = {};
+        const retval = textSearch({format, url: urlValue, startPosition, maxRecords, text, options});
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(TEXT_SEARCH);
+        expect(retval.format).toBe(format);
+        expect(retval.url).toBe(urlValue);
+        expect(retval.startPosition).toBe(startPosition);
+        expect(retval.maxRecords).toBe(maxRecords);
+        expect(retval.text).toBe(text);
+        expect(retval.options).toEqual(options);
+    });
     it('deleteCatalogService', () => {
         var retval = deleteCatalogService(service);
 
@@ -144,10 +177,14 @@ describe('Test correctness of the catalog actions', () => {
     it('getRecords ISO Metadata Profile', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {
             try {
-                let result = actionResult && actionResult.result;
-                expect(result).toExist();
-                expect(result.records).toExist();
-                expect(result.records.length).toBe(1);
+                if (actionResult.type === SET_LOADING) {
+                    expect(actionResult.loading).toBe(true);
+                } else {
+                    let result = actionResult && actionResult.result;
+                    expect(result).toExist();
+                    expect(result.records).toExist();
+                    expect(result.records.length).toBe(1);
+                }
                 done();
             } catch (ex) {
                 done(ex);
@@ -157,8 +194,12 @@ describe('Test correctness of the catalog actions', () => {
     it('getRecords Error', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseException.xml', 1, 1)((result) => {
             try {
-                expect(result).toExist();
-                expect(result.error).toExist();
+                if (result.type === SET_LOADING) {
+                    expect(result.loading).toBe(true);
+                } else {
+                    expect(result).toExist();
+                    expect(result.error).toExist();
+                }
                 done();
             } catch (ex) {
                 done(ex);
@@ -169,17 +210,21 @@ describe('Test correctness of the catalog actions', () => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
             try {
                 let result = actionResult && actionResult.result;
-                expect(result).toExist();
-                expect(result.records).toExist();
-                expect(result.records.length).toBe(2);
-                let rec0 = result.records[0];
-                expect(rec0.dc).toExist();
-                expect(rec0.dc.URI).toExist();
-                expect(rec0.dc.URI[0]);
-                let uri = rec0.dc.URI[0];
-                expect(uri.name).toExist();
-                expect(uri.value).toExist();
-                expect(uri.description).toExist();
+                if (actionResult.type === SET_LOADING) {
+                    expect(actionResult.loading).toBe(true);
+                } else {
+                    expect(result).toExist();
+                    expect(result.records).toExist();
+                    expect(result.records.length).toBe(2);
+                    let rec0 = result.records[0];
+                    expect(rec0.dc).toExist();
+                    expect(rec0.dc.URI).toExist();
+                    expect(rec0.dc.URI[0]);
+                    let uri = rec0.dc.URI[0];
+                    expect(uri.name).toExist();
+                    expect(uri.value).toExist();
+                    expect(uri.description).toExist();
+                }
                 done();
             } catch (ex) {
                 done(ex);
@@ -234,5 +279,28 @@ describe('Test correctness of the catalog actions', () => {
 
         expect(action.type).toBe(ADD_LAYER_ERROR);
         expect(action.error).toBe('myerror');
+    });
+    it('test toggleAdvancedSettings action', () => {
+        const action = toggleAdvancedSettings();
+        expect(action.type).toBe(TOGGLE_ADVANCED_SETTINGS);
+    });
+    it('test toggleTemplate action', () => {
+        const action = toggleTemplate();
+        expect(action.type).toBe(TOGGLE_TEMPLATE);
+    });
+    it('test toggleThumbnail action', () => {
+        const action = toggleThumbnail();
+        expect(action.type).toBe(TOGGLE_THUMBNAIL);
+    });
+    it('test changeMetadataTemplate action', () => {
+        const action = changeMetadataTemplate("${title}");
+        expect(action.type).toBe(CHANGE_METADATA_TEMPLATE);
+        expect(action.metadataTemplate).toBe("${title}");
+    });
+    it('test recordsNotFound action', () => {
+        const action = recordsNotFound("topp:states , topp:states-tasmania");
+        expect(action.type).toBe(SHOW_NOTIFICATION);
+        expect(action.message).toBe("catalog.notification.errorSearchingRecords");
+        expect(action.values).toEqual({records: "topp:states , topp:states-tasmania"});
     });
 });

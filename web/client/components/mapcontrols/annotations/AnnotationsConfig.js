@@ -63,7 +63,7 @@ module.exports = {
             type: 'text',
             validator: (val) => val,
             validateError: 'annotations.mandatory',
-            showLabel: false,
+            showLabel: true,
             editable: true
         },
         {

@@ -38,13 +38,21 @@ describe("Test GroupCard Component", () => {
             <GroupCard group={group1}/>, document.getElementById("container"));
         expect(comp).toExist();
         let title = ReactTestUtils.scryRenderedDOMComponentsWithClass(
-              comp,
-              "gridcard-title"
+            comp,
+            "gridcard-title"
         );
         expect(title.length).toBe(1);
         expect(ReactTestUtils.scryRenderedDOMComponentsWithClass(
-          comp,
-          "group-thumb-description"
+            comp,
+            "group-thumb-description"
         ).length).toBe(1);
+    });
+    it('Test groupname rendering inside the card', () => {
+        let comp = ReactDOM.render(
+            <GroupCard group={group1} />, document.getElementById("container"));
+        expect(comp).toExist();
+        let items = document.querySelectorAll('#container .gridcard .user-data-container > div');
+        let renderName = items[1];
+        expect(renderName.innerHTML).toBe(group1.groupName);
     });
 });

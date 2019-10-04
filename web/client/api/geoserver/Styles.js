@@ -5,18 +5,40 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../libs/ajax');
-const assign = require('object-assign');
-const { getNameParts, stringifyNameParts } = require('../../utils/StyleEditorUtils');
+import axios from '../../libs/ajax';
+import assign from 'object-assign';
+import { getVersion } from './About';
+import { head } from 'lodash';
+import { getNameParts, stringifyNameParts } from '../../utils/StyleEditorUtils';
+
+const STYLE_MODULES = [
+    { regex: /gt-css/, format: 'css' }
+];
 
 const contentTypes = {
     css: 'application/vnd.geoserver.geocss+css',
     sld: 'application/vnd.ogc.sld+xml',
-    // sldse: 'application/vnd.ogc.se+xml',
+    sldse: 'application/vnd.ogc.se+xml',
     zip: 'application/zip'
 };
 
-const formatRequestData = ({options = {}, format, baseUrl, name, workspace}, isNameParam) => {
+/**
+ * get correct content type based on format and version of style
+ * @param {string} format
+ * @param {object} languageVersion eg: { version: "1.0.0" }
+ */
+const getContentType = (format, languageVersion) => {
+    if (format === 'sld') {
+        return languageVersion && languageVersion.version && languageVersion.version === '1.1.0'
+            ? contentTypes.sldse
+            : contentTypes.sld;
+    }
+    // set content type to sld if is missed
+    // to avoid 415 error with unknown content types
+    return contentTypes[format] || contentTypes.sld;
+};
+
+const formatRequestData = ({options = {}, format, baseUrl, name, workspace, languageVersion}, isNameParam) => {
     const paramName = isNameParam ? {name: encodeURIComponent(name)} : {};
     const opts = {
         ...options,
@@ -26,7 +48,7 @@ const formatRequestData = ({options = {}, format, baseUrl, name, workspace}, isN
         },
         headers: {
             ...(options.headers || {}),
-            'Content-Type': contentTypes[format]
+            'Content-Type': getContentType(format, languageVersion)
         }
     };
     const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles${!isNameParam ? `/${encodeURIComponent(name)}` : '.json'}`;
@@ -48,6 +70,32 @@ const Api = {
         let opts = assign({}, options);
         opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
         return axios.put(url, body, opts);
+    },
+    /**
+    * Get style service configuration based on url
+    * @memberof api.geoserver
+    * @param {object} params {baseUrl, style, options, format, styleName}
+    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+    * @return {promise} it returns a valid styleService object or null
+    */
+    getStyleService: function({ baseUrl }) {
+        return getVersion({ baseUrl })
+            .then(({ version, manifest }) => {
+                if (!version) return null;
+                const formats = (manifest || [])
+                    .map(({ name }) =>
+                        head(STYLE_MODULES
+                            .filter(({ regex }) => name.match(regex))
+                            .map(({ format }) => format))
+                    ).filter(format => format);
+                const geoserver = head(version.filter(({ name = ''}) => name.toLowerCase() === 'geoserver')) || {};
+                return {
+                    baseUrl,
+                    version: geoserver.version,
+                    formats: [...formats, 'sld'],
+                    availableUrls: []
+                };
+            });
     },
     /**
     * Get style object
@@ -73,9 +121,9 @@ const Api = {
     * @param {string} params.code style code
     * @return {object} response
     */
-    createStyle: ({baseUrl, code, options, format = 'sld', styleName}) => {
+    createStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion}) => {
         const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace}, true);
+        const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion}, true);
         return axios.post(data.url, code, data.options);
     },
     /**
@@ -88,9 +136,9 @@ const Api = {
     * @param {string} params.code style code
     * @return {object} response
     */
-    updateStyle: ({baseUrl, code, options, format = 'sld', styleName}) => {
+    updateStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion}) => {
         const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace});
+        const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion});
         return axios.put(data.url, code, data.options);
     },
     /**
@@ -122,17 +170,17 @@ const Api = {
                 resolve([]);
             } else {
                 styles.forEach(({name}, idx) =>
-                axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
-                    .then(({data}) => {
-                        responses[idx] = assign({}, styles[idx], data && data.style && {...data.style, name: stringifyNameParts(data.style)} || {});
-                        count--;
-                        if (count === 0) resolve(responses.filter(val => val));
-                    })
-                    .catch(() => {
-                        responses[idx] = assign({}, styles[idx]);
-                        count--;
-                        if (count === 0) resolve(responses.filter(val => val));
-                    })
+                    axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
+                        .then(({data}) => {
+                            responses[idx] = assign({}, styles[idx], data && data.style && {...data.style, name: stringifyNameParts(data.style)} || {});
+                            count--;
+                            if (count === 0) resolve(responses.filter(val => val));
+                        })
+                        .catch(() => {
+                            responses[idx] = assign({}, styles[idx]);
+                            count--;
+                            if (count === 0) resolve(responses.filter(val => val));
+                        })
                 );
             }
         });
@@ -157,4 +205,4 @@ const Api = {
     }
 };
 
-module.exports = Api;
+export default Api;

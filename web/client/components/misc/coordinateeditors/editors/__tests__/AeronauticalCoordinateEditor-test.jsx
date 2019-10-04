@@ -1,3 +1,11 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
@@ -45,5 +53,27 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         ReactTestUtils.Simulate.change(elements[0], { target: { value: "20" } });
         expect(spyonChange).toHaveBeenCalled();
         expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(20);
+    });
+    it('Test AeronauticalCoordinateEditor onChange not exceed maxDegrees', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<AeronauticalCoordinateEditor
+            coordinate="lon"
+            value={180}
+            onChange={actions.onChange} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(3);
+        expect(elements[0].value).toBe('180');
+        expect(elements[1].value).toBe('0');
+        expect(elements[2].value).toBe('0');
+        ReactTestUtils.Simulate.change(elements[1], { target: { value: "20" } });
+        expect(spyonChange).toHaveBeenCalled();
+        expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(180);
+        expect(elements[0].value).toBe('180');
+        expect(elements[1].value).toBe('0');
+        expect(elements[2].value).toBe('0');
     });
 });

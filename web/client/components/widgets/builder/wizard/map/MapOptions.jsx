@@ -25,7 +25,7 @@ const TOC = emptyState(
         title: <Message msgId="widgets.selectMap.TOC.noLayerTitle" />,
         description: <Message msgId="widgets.selectMap.TOC.noLayerDescription" />
     })
-     )(require('./TOC'));
+)(require('./TOC'));
 const nodeEditor = require('./enhancers/nodeEditor');
 const Editor = nodeEditor(require('./NodeEditor'));
 const EditorTitle = compose(
@@ -47,12 +47,12 @@ module.exports = ({ preview, map = {}, onChange = () => { }, selectedNodes = [],
     </div>
     {editNode
         ? [<EditorTitle map={map} editNode={editNode} />,
-        <Editor
-            closeNodeEditor={closeNodeEditor}
-            editNode={editNode}
-            map={map}
-            onChange={onChange} />
-            ] : [<StepHeader title={<Message msgId={`layers`} />} />, <TOC
+            <Editor
+                closeNodeEditor={closeNodeEditor}
+                editNode={editNode}
+                map={map}
+                onChange={onChange} />
+        ] : [<StepHeader title={<Message msgId={`layers`} />} />, <TOC
             selectedNodes={selectedNodes}
             onSelect={onNodeSelect}
             onChange={onChange}

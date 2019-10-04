@@ -133,6 +133,7 @@ class Importer extends React.Component {
         if (this.props.error) {
             return <Alert bsStyle="danger">There was an error during the import list loading: {this.props.error.statusText}</Alert>;
         }
+        return null;
     };
 
     renderLoading = () => {
@@ -151,28 +152,28 @@ class Importer extends React.Component {
             loadImport={this.props.loadImport}
             loadTask={this.props.loadTask}
             loadTransform={this.props.loadTransform}
-            />);
+        />);
         if ( this.props.selectedImport && this.props.selectedTask && this.props.selectedTransform) {
             return (<div>
-            {breadcrumb}
-            <h2>Transform {this.props.selectedTransform.id}</h2>
-            <Transform
-                transform={this.props.selectedTransform}
-                editTransform={this.props.editTransform}
-                updateTransform={this.props.updateTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id, this.props.selectedTransform.id)}/>
+                {breadcrumb}
+                <h2>Transform {this.props.selectedTransform.id}</h2>
+                <Transform
+                    transform={this.props.selectedTransform}
+                    editTransform={this.props.editTransform}
+                    updateTransform={this.props.updateTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id, this.props.selectedTransform.id)}/>
             </div>);
         }
         if ( this.props.selectedImport && this.props.selectedTask) {
             return (<div>
-            {breadcrumb}
-            <Task
-                task={this.props.selectedTask}
-                updateTask={this.props.updateTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
-                deleteTask={this.props.deleteTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
-                deleteTransform={this.props.deleteTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
-                loadTransform={this.props.loadTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
-                loadLayer={this.props.loadLayer.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
-                updateLayer={this.props.updateLayer.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                {breadcrumb}
+                <Task
+                    task={this.props.selectedTask}
+                    updateTask={this.props.updateTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                    deleteTask={this.props.deleteTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                    deleteTransform={this.props.deleteTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                    loadTransform={this.props.loadTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                    loadLayer={this.props.loadLayer.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                    updateLayer={this.props.updateLayer.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
                 />
             </div>);
         }
@@ -189,47 +190,47 @@ class Importer extends React.Component {
                     updateProgress={this.props.updateProgress}
                     deleteTask={this.props.deleteTask}
                     deleteImport={this.props.deleteImport}
-                     />
-                </div>);
+                />
+            </div>);
         }
         return (<div>
-                {breadcrumb}
-                <ImportsGrid
+            {breadcrumb}
+            <ImportsGrid
                 loadImports={this.props.loadImports}
                 deleteImport={this.props.deleteImport}
                 loadImport={this.props.loadImport}
                 imports={this.props.imports} />
-            </div>);
+        </div>);
     };
 
     render() {
         let message = this.props.selectedImport ? "importer.dropfileImport" : "importer.dropfile";
         return (
-            <Grid fluid>
+            <Grid className="importer-plugin" fluid>
                 <Row>
                     <Col md={6}>
-                    <FileUploader
-                        dropZoneStyle={{
-                            borderStyle: "dashed",
-                            minHeight: "100px",
-                            borderWidth: "3px",
-                            verticalAlign: "middle",
-                            transition: "all 0.3s ease-in-out"
-                        }}
-                        dropZoneActiveStyle={{
-                            backgroundColor: "#eee",
-                            borderWidth: "5px",
-                            boxShadow: "0px 0px 25px 14px #d9edf7"
+                        <FileUploader
+                            dropZoneStyle={{
+                                borderStyle: "dashed",
+                                minHeight: "100px",
+                                borderWidth: "3px",
+                                verticalAlign: "middle",
+                                transition: "all 0.3s ease-in-out"
+                            }}
+                            dropZoneActiveStyle={{
+                                backgroundColor: "#eee",
+                                borderWidth: "5px",
+                                boxShadow: "0px 0px 25px 14px #d9edf7"
 
-                        }}
-                        error={this.props.taskCreationError}
-                        beforeUploadMessage={<Message msgId="importer.creatingImportProcess" />}
-                        dropMessage={<Message msgId={message} />}
-                        uploading={this.props.uploading}
-                        allowUpload={this.props.selectedImport}
-                        onBeforeUpload={this.props.createImport.bind(null, this.getImportCreationDefaults())}
-                        onUpload={this.props.uploadImportFiles.bind(null, this.props.selectedImport && this.props.selectedImport.id)}
-                        uploadAdditionalParams={this.getPresets()} />
+                            }}
+                            error={this.props.taskCreationError}
+                            beforeUploadMessage={<Message msgId="importer.creatingImportProcess" />}
+                            dropMessage={<Message msgId={message} />}
+                            uploading={this.props.uploading}
+                            allowUpload={this.props.selectedImport}
+                            onBeforeUpload={this.props.createImport.bind(null, this.getImportCreationDefaults())}
+                            onUpload={this.props.uploadImportFiles.bind(null, this.props.selectedImport && this.props.selectedImport.id)}
+                            uploadAdditionalParams={this.getPresets()} />
                     </Col>
                     <Col md={6}>
                         <Workspace

@@ -49,6 +49,7 @@ class WMSStyle extends React.Component {
         if (this.props.element && this.props.element.capabilities && this.props.element && this.props.element.capabilities.error) {
             return <Alert bsStyle="danger"><Message msgId="layerProperties.styleListLoadError" /></Alert>;
         }
+        return null;
     };
 
     render() {
@@ -61,32 +62,32 @@ class WMSStyle extends React.Component {
         }
         return (
             <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
-            <form ref="style">
-            <Select.Creatable
-                    key="styles-dropdown"
-                    options={options}
-                    isLoading={this.props.element && this.props.element.capabilitiesLoading}
-                    value={this.props.element.style || ""}
-                    onOpen={() => {
+                <form ref="style">
+                    <Select.Creatable
+                        key="styles-dropdown"
+                        options={options}
+                        isLoading={this.props.element && this.props.element.capabilitiesLoading}
+                        value={this.props.element.style || ""}
+                        onOpen={() => {
                         // automatic retrieve if availableStyles are not available or capabilities is not present
                         // that means you don't have a list and you didn't try to load it.
-                        if (this.props.element && !(this.props.element.capabilities && this.props.element.availableStyles)) {
-                            this.props.retrieveLayerData(this.props.element);
-                        }
-                    }}
-                    promptTextCreator={(value) => {
-                        return <Message msgId="layerProperties.styleCustom" msgParams={{value}} />;
-                    }}
-                    onChange={(selected) => {
-                        this.updateEntry("style", {target: {value: (selected && selected.value) || ""}});
-                    }}
+                            if (this.props.element && !(this.props.element.capabilities && this.props.element.availableStyles)) {
+                                this.props.retrieveLayerData(this.props.element);
+                            }
+                        }}
+                        promptTextCreator={(value) => {
+                            return <Message msgId="layerProperties.styleCustom" msgParams={{value}} />;
+                        }}
+                        onChange={(selected) => {
+                            this.updateEntry("style", {target: {value: (selected && selected.value) || ""}});
+                        }}
                     />
-                <br />
-                {this.renderLegend()}
-                {this.renderError()}
-                <Button bsStyle="primary" style={{"float": "right"}} onClick={() => this.props.retrieveLayerData(this.props.element)}><Glyphicon glyph="refresh" />&nbsp;<Message msgId="layerProperties.stylesRefreshList" /></Button>
-                <br />
-            </form>
+                    <br />
+                    {this.renderLegend()}
+                    {this.renderError()}
+                    <Button bsStyle="primary" style={{"float": "right"}} onClick={() => this.props.retrieveLayerData(this.props.element)}><Glyphicon glyph="refresh" />&nbsp;<Message msgId="layerProperties.stylesRefreshList" /></Button>
+                    <br />
+                </form>
             </Grid>);
     }
 

@@ -24,12 +24,8 @@ const {createEpicMiddleware} = require('redux-observable');
 const SecurityUtils = require('../utils/SecurityUtils');
 const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer').default;
 
-const {routerReducer, routerMiddleware} = require('react-router-redux');
-const routerCreateHistory = require('history/createHashHistory').default;
-const history = routerCreateHistory();
+const { routerMiddleware, connectRouter } = require('connected-react-router');
 
-// Build the middleware for intercepting and dispatching navigation actions
-const reduxRouterMiddleware = routerMiddleware(history);
 const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
 const timeManagerEpics = require('../epics/dimension');
@@ -40,10 +36,12 @@ const standardEpics = {
 };
 
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins = {}, storeOpts = {}) => {
+    const history = storeOpts.noRouter ? null : require('./History').default;
     const allReducers = combineReducers(plugins, {
         ...appReducers,
         localConfig: require('../reducers/localConfig'),
         locale: require('../reducers/locale'),
+        locales: () => {return null; },
         browser: require('../reducers/browser'),
         controls: require('../reducers/controls'),
         theme: require('../reducers/theme'),
@@ -51,7 +49,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; },
-        routing: routerReducer
+        router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
     const rootEpic = combineEpics(plugins, {...appEpics, ...standardEpics});
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
@@ -91,7 +89,15 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
             setTimeout(() => {storeOpts.onPersist(); }, 0);
         }
     }
-    store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware, reduxRouterMiddleware], enhancer);
+
+    let middlewares = [epicMiddleware];
+    if (!storeOpts.noRouter) {
+        // Build the middleware for intercepting and dispatching navigation actions
+        const reduxRouterMiddleware = routerMiddleware(history);
+        middlewares = [...middlewares, reduxRouterMiddleware];
+    }
+
+    store = DebugUtils.createDebugStore(rootReducer, defaultState, middlewares, enhancer);
     if (storeOpts && storeOpts.persist) {
         const persisted = {};
         store.subscribe(() => {
