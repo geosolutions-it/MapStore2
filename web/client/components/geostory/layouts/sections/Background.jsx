@@ -10,8 +10,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 
 import stickySupport from '../../../misc/enhancers/stickySupport';
-import {Media} from '../../media/index';
-import MediaType from '../../media/index';
+import MediaType, {Media} from '../../media/index';
 import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
 import ContentToolbar from '../../contents/ContentToolbar';
 import Message from '../../../I18N/Message';
