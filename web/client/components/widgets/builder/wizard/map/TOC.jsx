@@ -15,13 +15,11 @@ const DefaultLayer = require('../../../../TOC/DefaultLayer');
 const handleNodePropertyChanges = require('./enhancers/handleNodePropertyChanges');
 const handleNodeFiltering = require('./enhancers/handleNodeFiltering');
 const mapToNodes = require('./enhancers/mapToNodes');
-const withSortable = require('./enhancers/withSortable');
 
 const enhanceTOC = compose(
     mapToNodes,
     handleNodeFiltering,
     handleNodePropertyChanges,
-    withSortable
 );
 
 module.exports = enhanceTOC(({
