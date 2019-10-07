@@ -26,7 +26,6 @@ export default backgroundPropWithHandler(({
     mode,
     contentId,
     path,
-    sectionPath,
     sectionType,
     cover,
     viewWidth,
@@ -62,7 +61,6 @@ export default backgroundPropWithHandler(({
                     add={add}
                     editMedia={editMedia}
                     updateSection={updateSection}
-                    sectionPath={sectionPath}
                     cover={cover}
                     remove={remove}
                     width={viewWidth}

@@ -31,7 +31,6 @@ class Background extends Component {
         fit: PropTypes.string,
         size: PropTypes.string,
         path: PropTypes.string,
-        sectionPath: PropTypes.string,
         credits: PropTypes.string,
         description: PropTypes.string,
         height: PropTypes.number,
