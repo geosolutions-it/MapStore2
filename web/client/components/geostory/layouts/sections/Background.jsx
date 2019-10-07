@@ -40,6 +40,7 @@ class Background extends Component {
         add: PropTypes.func,
         editMedia: PropTypes.func,
         update: PropTypes.func,
+        updateSection: PropTypes.func,
         remove: PropTypes.func,
         type: PropTypes.oneOf(lists.MediaTypes),
         disableToolbarPortal: PropTypes.bool,

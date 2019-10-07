@@ -1864,6 +1864,8 @@
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
+                "contentHeightAuto": "Altura automática",
+                "contentHeightView": "Altura de la vista",
                 "smallSizeLabel": "Pequeña",
                 "mediumSizeLabel": "Medio",
                 "largeSizeLabel": "Grande",

@@ -1865,6 +1865,8 @@
             "emptyDescription": "Start creating an awesome geostory by adding new content",
             "contentToolbar": {
                 "contentSize": "Change size",
+                "contentHeightAuto": "Height Auto",
+                "contentHeightView": "Height View",
                 "smallSizeLabel": "Small",
                 "mediumSizeLabel": "Medium",
                 "largeSizeLabel": "Large",

@@ -68,7 +68,8 @@ export const backgroundProp = withProps(
  */
 
 export const updateBackgroundEnhancer = withHandlers({
-    updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args)
+    updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args),
+    updateSection: ({ sectionId, update = () => { } }) => (...args) => update(`sections[{"id": "${sectionId}"}]`, ...args)
 });
 
 export const backgroundPropWithHandler = compose(
