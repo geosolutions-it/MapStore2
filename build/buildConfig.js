@@ -79,7 +79,9 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     })] : []),
     resolve: {
         extensions: [".js", ".jsx"],
-        alias: alias
+        alias: assign({}, {
+            jsonix: '@boundlessgeo/jsonix'
+        }, alias)
     },
     module: {
         noParse: [/html2canvas/],

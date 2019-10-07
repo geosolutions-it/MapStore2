@@ -177,7 +177,11 @@
                 &.ms-dark {
                     background-color: contrast(@ms-story-bg);
                 }
-
+                &.ms-align-right .ms-media.ms-media-map .ol-zoom {
+                    top: 50px;
+                    right: 10px;
+                    left: auto;
+                }
             }
         }
         /*
@@ -258,6 +262,14 @@
                 position: absolute;
                 top: auto;
                 bottom: 0;
+            }
+            & > .ms-content-toolbar {
+                position: absolute;
+                z-index: 10;
+                top: 0;
+                left: 0;
+                margin: 8px;
+                .shadow-soft();
             }
             .ms-content-text {
                 display: flex;
@@ -358,10 +370,10 @@
                     .ms-column-contents {
                         // override default class and width of the content
                         .ms-content-text {
-                            &.ms-size-full { width: 100%; }
-                            &.ms-size-large { width: 100%; }
-                            &.ms-size-medium { width: 100%; }
-                            &.ms-size-small { width: 100%; }
+                            &.ms-size-full { width: @ms-story-size-full; }
+                            &.ms-size-large { width: @ms-story-size-large; }
+                            &.ms-size-medium { width: @ms-story-size-medium; }
+                            &.ms-size-small { width: @ms-story-size-small; }
                             width: 100%;
                         }
                     }
@@ -534,10 +546,12 @@
     //////////
 
     .ms-media {
-        &.ms-media-image {
+        &.ms-media-image, &.ms-media-map {
             position: relative;
             width: 100%;
             height: 100%;
+        }
+        &.ms-media-image {
             & > img {
                 position: relative;
                 width: 100%;
@@ -569,6 +583,12 @@
                 }
             }
         }
+        &.ms-media-map {
+            .ol-zoom {
+                top: 50px;
+            }
+
+        }
     }
     .empty-state-container .empty-state-main-view .empty-state-description {
         text-align: center;
@@ -591,11 +611,16 @@
             }
 
             // foreground guidelines color for container size
-            &.ms-section-title .ms-content {
-                border-left: 2px dashed @ms-story-fg-guidelines;
-                border-right: 2px dashed @ms-story-fg-guidelines;
-                .ms-content-toolbar {
-                    border-top: 2px solid @ms-story-fg-guidelines;
+            &.ms-section-title {
+                > .ms-content-toolbar {
+                    border-top: 2px solid @ms-story-bg-guidelines;
+                }
+                .ms-content {
+                    border-left: 2px dashed @ms-story-fg-guidelines;
+                    border-right: 2px dashed @ms-story-fg-guidelines;
+                    .ms-content-toolbar {
+                        border-top: 2px solid @ms-story-fg-guidelines;
+                    }
                 }
             }
         }

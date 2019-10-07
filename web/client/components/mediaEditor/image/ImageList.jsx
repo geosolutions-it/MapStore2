@@ -1,4 +1,3 @@
-import {isNil} from 'lodash';
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -8,50 +7,29 @@ import {isNil} from 'lodash';
  */
 import React from "react";
 
+import withFilter from '../enhancers/withFilter';
+import withLocal from "../../misc/enhancers/localizedProps";
+import Filter from '../../misc/Filter';
 import SideGrid from '../../misc/cardgrids/SideGrid';
-import Toolbar from '../../misc/toolbar/Toolbar';
+import { filterResources } from '../../../utils/GeoStoryUtils';
 
-export default ({
+const FilterLocalized = withLocal('filterPlaceholder')(Filter);
+
+export default withFilter(({
+    filterText,
     resources = [],
     selectedItem,
-    selectItem = () => { },
-    setAddingMedia = () => {},
-    setEditingMedia = () => {}
+    onFilter = () => {},
+    selectItem = () => {}
 }) => (
-    <div style={{position: 'relative'}} className="ms-imageList">
-        <div
-            className="text-center"
-            key="toolbar"
-            style={{
-                borderBottom: '1px solid #ddd',
-                padding: 8
-            }}>
-            <Toolbar
-                btnGroupProps={{
-                    style: {
-                        marginBottom: 8
-                    }
-                }}
-                btnDefaultProps={{
-                    bsStyle: 'primary',
-                    className: 'square-button-md'
-                }}
-                buttons={[
-                    {
-                        glyph: 'plus',
-                        tooltipId: 'mediaEditor.mediaPicker.add',
-                        onClick: () => setAddingMedia(true)
-                    },
-                    {
-                        glyph: 'pencil',
-                        tooltipId: 'mediaEditor.mediaPicker.edit',
-                        visible: !isNil(selectedItem),
-                        onClick: () => setEditingMedia(true)
-                    }
-                ]} />
-        </div>
+    <div className="ms-imageList">
+        <FilterLocalized
+            className="ms-image-filter"
+            filterPlaceholder="mediaEditor.mediaPicker.imageFilter"
+            filterText={filterText}
+            onFilter={onFilter}/>
         <SideGrid
-            items={resources.map(({ id, data = {}}) => ({
+            items={filterResources(resources, filterText).map(({ id, data = {}}) => ({
                 preview: <div
                     style={{
                         background: `url("${data.src}")`,
@@ -64,4 +42,4 @@ export default ({
                 selected: selectedItem && selectedItem.id && id === selectedItem.id,
                 description: data.description
             }))} />
-    </div>);
+    </div>));

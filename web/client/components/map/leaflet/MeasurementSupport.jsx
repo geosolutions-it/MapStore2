@@ -55,7 +55,8 @@ L.getMeasureWithTreshold = (value, threshold, source, dest, precision, sourceLab
 */
 const originalReadableDistance = L.GeometryUtil.readableDistance;
 
-L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, precision, options) => {
+
+function readableDistance(distance, isMetric, isFeet, isNauticalMile, precision, options) {
     if (!options) {
         return originalReadableDistance.apply(null, arguments);
     }
@@ -75,8 +76,8 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
         }
     }
     return distanceStr;
-};
-
+}
+L.GeometryUtil.readableDistance = readableDistance;
 /** @method readableArea(area, isMetric, precision): string
  * @return a readable area string in yards or metric.
  * The value will be rounded as defined by the precision option object.
@@ -86,7 +87,7 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
 
 const originalReadableArea = L.GeometryUtil.readableArea;
 
-L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
+function readableArea(area, isMetric, precision, options) {
     if (!options) {
         return originalReadableArea.apply(null, arguments);
     }
@@ -102,8 +103,8 @@ L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
         }
     }
     return areaStr;
-};
-
+}
+L.GeometryUtil.readableArea = readableArea;
 /**
  * this is need to pass custom options as uom, useTreshold to the readableArea function
 */

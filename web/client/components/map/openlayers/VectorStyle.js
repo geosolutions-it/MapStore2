@@ -20,7 +20,7 @@ import {reproject, transformLineToArcs} from '../../../utils/CoordinatesUtils';
 import Icons from '../../../utils/openlayers/Icons';
 import {
     isMarkerStyle, isTextStyle, isStrokeStyle, isFillStyle, isCircleStyle, isSymbolStyle,
-    registerGeometryFunctions, geometryFunctions
+    registerGeometryFunctions, geometryFunctions, getStyleParser
 } from '../../../utils/VectorStyleUtils';
 
 import CircleStyle from 'ol/style/Circle';
@@ -30,7 +30,6 @@ import {Point, LineString} from 'ol/geom';
 import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
 
-import { getStyleParser } from '../../../utils/VectorStyleUtils';
 import OlStyleParser from 'geostyler-openlayers-parser';
 
 const olStyleParser = new OlStyleParser();

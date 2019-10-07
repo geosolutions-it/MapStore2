@@ -23,15 +23,19 @@ const toolButtons = {
             tooltipId="geostory.contentToolbar.contentSize"
             options={[{
                 value: 'small',
+                glyph: 'size-small',
                 label: <Message msgId="geostory.contentToolbar.smallSizeLabel"/>
             }, {
                 value: 'medium',
+                glyph: 'size-medium',
                 label: <Message msgId="geostory.contentToolbar.mediumSizeLabel"/>
             }, {
                 value: 'large',
+                glyph: 'size-large',
                 label: <Message msgId="geostory.contentToolbar.largeSizeLabel"/>
             }, {
                 value: 'full',
+                glyph: 'size-extra-large',
                 label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
             }]}
             onSelect={(selected) => update('size', selected)}/>
@@ -81,10 +85,18 @@ const toolButtons = {
     fit: ({ fit, update = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: fit,
-        glyph: "1-full-screen",
+        glyph: fit === "contain" ? "fit-cover" : "fit-contain",
         visible: true,
-        tooltipId: fit === "contain" ? "geostory.contentToolbar.fit" : "geostory.contentToolbar.cover",
-        onClick: () => update('fit', fit === "contain" ? "cover" : "contain") // toggle
+        tooltipId: fit === "contain" ? "geostory.contentToolbar.cover" : "geostory.contentToolbar.fit",
+        onClick: () => update('fit', fit === "contain" ? "cover" : "contain")
+    }),
+    cover: ({ cover, updateSection = () => {} }) => ({
+        // using normal ToolbarButton because this is a toggle button without options
+        value: cover,
+        glyph: cover ? "height-auto" : "height-view",
+        visible: true,
+        tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
+        onClick: () => updateSection({cover: !cover}, "merge")
     }),
     editMedia: ({ path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options

@@ -24,7 +24,7 @@
           "size": "large",
           "align": "center",
           "theme": "bright",
-          "html": "<h1 style='text-align:center;'>Insert Title...</h1><p style='text-align:center;'></p>",
+          "html": "",
           "background": {
             "fit": "cover",
             "size": "full",

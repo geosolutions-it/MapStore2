@@ -1864,6 +1864,8 @@
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
                 "contentSize": "Cambia larghezza",
+                "contentHeightAuto": "Altezza automatica",
+                "contentHeightView": "Altezza piena",
                 "smallSizeLabel": "Piccola",
                 "mediumSizeLabel": "Media",
                 "largeSizeLabel": "Grande",
@@ -1963,7 +1965,10 @@
                 "descriptionPlaceholder": "Inserisci una descrizione",
                 "description": "Descrizione",
                 "creditsPlaceholder": "Inserisci i crediti",
-                "credits": "Crediti"
+                "credits": "Crediti",
+                "mapFilter": "Filtra mappe",
+                "videoFilter": "Filtra video",
+                "imageFilter": "Filtra immagini"
             }
         },
         "tutorial": {

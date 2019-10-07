@@ -7,8 +7,10 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import {Provider} from 'react-redux';
 import expect from 'expect';
+
+import { testToolbarButtons } from './testUtils';
 import Title from '../Title';
 describe('Title component', () => {
     beforeEach((done) => {
@@ -20,6 +22,7 @@ describe('Title component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+
     it('Title rendering with defaults', () => {
         ReactDOM.render(<Title />, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -48,6 +51,12 @@ describe('Title component', () => {
         expect(img.getAttribute('src')).toBe(IMAGE_SRC);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
+
+        const buttonsInToolbar = container.querySelectorAll('.ms-section-background-container .btn-group .glyphicon');
+        expect(buttonsInToolbar).toExist();
+        expect(buttonsInToolbar.length).toBe(6);
+        testToolbarButtons(["pencil", "1-full-screen", "resize-vertical", "resize-horizontal", "align-center", "dropper"], container);
+
     });
     it('Title rendering cover set to true', () => {
         const VIEW_HEIGHT = 500;
@@ -72,6 +81,7 @@ describe('Title component', () => {
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
+        testToolbarButtons(["pencil"], container);
     });
 
     it('Title rendering cover set to false', () => {
@@ -95,5 +105,40 @@ describe('Title component', () => {
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(sectionContents.clientHeight);
+    });
+    it('Title rendering with Map as background', () => {
+        const VIEW_HEIGHT = 834;
+        const CONTENTS = [
+            {
+                id: '000',
+                type: "text",
+                background: {
+                    type: 'map'
+                }
+            }
+        ];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover mode="edit"/>
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-title');
+        expect(el).toExist();
+
+        const sectionContents = container.querySelector('.ms-section-contents');
+        expect(sectionContents).toExist();
+        expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
+
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        expect(backgroundContainer).toExist();
+        expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(["pencil", "resize-vertical", "resize-horizontal", "align-center", "dropper"], container);
     });
 });

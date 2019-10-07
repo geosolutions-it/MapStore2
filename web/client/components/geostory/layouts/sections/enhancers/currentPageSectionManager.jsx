@@ -5,12 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { compose, createEventHandler, mapPropsStream } from 'recompose';
+import { compose, createEventHandler, mapPropsStream, setObservableConfig } from 'recompose';
 import { get, maxBy } from "lodash";
 import { Observable } from "rxjs";
 
 // TODO: externalize
-import { setObservableConfig } from 'recompose';
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 

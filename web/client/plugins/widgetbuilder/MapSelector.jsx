@@ -9,7 +9,7 @@ const { compose, withProps } = require('recompose');
 const {connect} = require('react-redux');
 const { onEditorChange } = require('../../actions/widgets');
 const { normalizeMap } = require('../../utils/LayersUtils');
-
+const MapSelector = require('../../components/widgets/builder/wizard/map/MapSelector').default;
 module.exports = compose(
     connect(
         () => ({}), {
@@ -29,4 +29,4 @@ module.exports = compose(
             }
         }]
     }))
-)(require('../../components/widgets/builder/wizard/map/MapSelector'));
+)(MapSelector);

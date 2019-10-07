@@ -33,6 +33,7 @@ export default backgroundPropWithHandler(({
     inViewRef,
     add = () => {},
     update = () => {},
+    updateSection = () => {},
     remove = () => {},
     updateBackground = () => {},
     editMedia = () => {}
@@ -59,18 +60,23 @@ export default backgroundPropWithHandler(({
                     update={updateBackground}
                     add={add}
                     editMedia={editMedia}
+                    updateSection={updateSection}
+                    cover={cover}
                     remove={remove}
                     width={viewWidth}
+                    sectionType={sectionType}
                     backgroundPlaceholder={{
                         background: `url(${cover ? coverPattern : titlePattern })`,
                         backgroundSize: `${cover ? 64 : 600 }px auto`
                     }}
                     tools={{
-                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                        [MediaTypes.IMAGE]: ['editMedia', 'fit', 'cover', 'size', 'align', 'theme'],
+                        [MediaTypes.MAP]: ['editMedia', 'size', 'cover', 'align', 'theme']
                     }}
                     height={height >= viewHeight
                         ? viewHeight
-                        : height}/>}
+                        : height}
+                />}
         </ContainerDimensions>
         <SectionContents
             className="ms-section-contents"
@@ -92,21 +98,21 @@ export default backgroundPropWithHandler(({
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
-                glyph: 'font',
+                glyph: 'story-title-section',
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.TITLE);
                 }
             },
             {
-                glyph: 'sheet',
+                glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.PARAGRAPH);
                 }
             },
             {
-                glyph: 'book',
+                glyph: 'story-immersive-section',
                 tooltipId: 'geostory.addImmersiveSection',
                 onClick: () => {
                     // TODO: add
@@ -114,7 +120,7 @@ export default backgroundPropWithHandler(({
                 }
             },
             {
-                glyph: 'picture',
+                glyph: 'story-media-section',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.MEDIA);

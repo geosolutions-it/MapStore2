@@ -51,7 +51,9 @@ export default compose(
         compose(
             withHandlers({
                 onBlur: ({toggleEditing = () => {}, editorState}) => () => {
-                    const rawText = convertToRaw(editorState.getCurrentContent()).blocks[0].text;
+                    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+                    // it can happen that first block is empty, i.e. there is a carriage return
+                    const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
                     const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
                     // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
                     toggleEditing(false, rawText ? html : EMPTY_CONTENT);

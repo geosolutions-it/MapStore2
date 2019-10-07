@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import geostory from './geostory';
-
+import * as geostory from './geostory';
 
 const registry = {
     "geostory": geostory
 };
 
 
-export default () => registry.geostory; // TODO: support other kinds of media types and sources
+export default (sourceType) => registry[sourceType]; // TODO: support other kinds of media types and sources
