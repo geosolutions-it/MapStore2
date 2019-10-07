@@ -34,6 +34,7 @@ export default backgroundPropWithHandler(({
     inViewRef,
     add = () => {},
     update = () => {},
+    updateSection = () => {},
     remove = () => {},
     updateBackground = () => {},
     editMedia = () => {}
@@ -60,7 +61,7 @@ export default backgroundPropWithHandler(({
                     update={updateBackground}
                     add={add}
                     editMedia={editMedia}
-                    updateSection={update}
+                    updateSection={updateSection}
                     sectionPath={sectionPath}
                     cover={cover}
                     remove={remove}
