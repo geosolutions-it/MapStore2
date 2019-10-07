@@ -35,21 +35,23 @@ class BackgroundDialog extends React.Component{
         addParameter: () => {},
         add: true,
         unsavedChanges: false,
-        editing: false
+        editing: false,
+        modalParams: {}
 
     };
     state = {id: 0, additionalParameters: []};
 
     componentWillReceiveProps(nextProps) {
-        if ( !nextProps.modalParams) {
+        if (!nextProps.modalParams) {
             this.setState({title: this.state.title || '', format: this.state.format || "image/png"});
-        }else if (!this.modalParams || this.props.modalParams.id !== nextProps.modalParams.id) {
-            this.setState({title: nextProps.modalParams && nextProps.modalParams.title || '', format: nextProps.modalParams && nextProps.modalParams.format || "image/png"});
+        } else if (!this.props.modalParams || this.props.modalParams.id !== nextProps.modalParams.id) {
+            this.setState({title: nextProps.modalParams && nextProps.modalParams.showModal && nextProps.modalParams.showModal.title || '',
+                format: nextProps.modalParams && nextProps.modalParams.showModal && nextProps.modalParams.showModal.format || "image/png"});
         }
 
         if (!this.props.editing && nextProps.editing) {
-            if (nextProps.modalParams && nextProps.modalParams.additionalParams) {
-                this.assignParameters(nextProps.modalParams.additionalParams);
+            if (nextProps.modalParams && nextProps.modalParams.additionalParameters) {
+                this.setState({additionalParameters: nextProps.modalParams.additionalParameters});
             }
         }
 
@@ -66,23 +68,25 @@ class BackgroundDialog extends React.Component{
                 text: this.props.add ? 'Add' : 'Save',
                 bsStyle: 'primary',
                 onClick: () => {
-                    this.addParameters()
-                    .then( (obj)=> {
-                        const extraParams = assign({}, obj, {source: this.props.thumbURL});
-                        let parameters = this.props.modalParams;
-                        // add the edited source and additional parameters
-                        if (this.props.editing) {
-                            parameters = assign({}, this.props.modalParams, extraParams);
-                        }else {
-                            if (this.props.modalParams.showModal) {
-                                this.props.onUpdate(assign({}, this.props.modalParams, {
-                                    showModal: assign({}, this.props.modalParams.showModal, obj)}));
-                            }else {
-                                this.props.onUpdate(assign({}, this.props.modalParams, obj));
-                            }
+                    let obj = {source: this.props.thumbURL, title: this.state.title, format: this.state.format};
+                    this.state.additionalParameters.forEach(parameter => obj[parameter.param] = parameter.val);
+                    const extraParams = assign({}, obj, {source: this.props.thumbURL});
+                    let parameters = assign({}, this.props.modalParams);
+                    // add the edited source and additional parameters
+                    if (this.props.editing) {
+                        parameters = assign({}, this.props.modalParams, extraParams);
+                        this.props.onUpdate(assign({}, this.props.modalParams, obj, {additionalParameters: assign({}, this.state.additionalParameters)}));
+                    } else {
+                        if (this.props.modalParams.showModal) {
+                            this.props.onUpdate(assign({}, this.props.modalParams, {
+                                showModal: assign({}, this.props.modalParams.showModal, obj),
+                                additionalParameters: assign({}, this.state.additionalParameters)
+                            }));
+                        } else {
+                            this.props.onUpdate(assign({}, this.props.modalParams, obj, {additionalParameters: assign({}, this.state.additionalParameters)}));
                         }
-                        this.props.onSave(parameters, extraParams);
-                    });
+                    }
+                    this.props.onSave(parameters, extraParams);
                     this.resetParameters([]);
                 }
             }
@@ -137,7 +141,7 @@ class BackgroundDialog extends React.Component{
                     } ) )
                     }
                     clearable={false}
-                    value="default"
+                    value={this.props.modalParams && this.props.modalParams.showModal && this.props.modalParams.showModal.style || "default"}
                     options={[{
                         label: 'Default',
                         value: 'default'
@@ -187,20 +191,6 @@ class BackgroundDialog extends React.Component{
         </Form>
     </ResizableModal>);
     }
-    // assign the additional parameters from the layers (state) to the modal component state
-    assignParameters = (parameters) => {
-        let results = [];
-        let count = 0;
-        for (let key in parameters) {
-            if (parameters.hasOwnProperty(key)) {
-                results = results.concat({id: count, param: key, val: parameters[key]});
-            }
-            count++;
-        }
-        return this.setState({additionalParameters:
-            results});
-
-    }
     addAdditionalParameter = (event, key, id, type)=> {
         this.setState({
             additionalParameters:
@@ -228,13 +218,6 @@ class BackgroundDialog extends React.Component{
             })
         });
     }
-    addParameters = () => new Promise((resolve) => {
-        var obj = { source: this.props.thumbURL, title: this.state.title, format: this.state.format};
-
-        this.state.additionalParameters.map( parameter => obj[parameter.param] = parameter.val);
-
-        return resolve(obj);
-    })
     resetParameters = () => this.setState({id: 0, additionalParameters: []});
 }
 

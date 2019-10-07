@@ -47,12 +47,14 @@ function addBackgroundProperties(modalParams, unsavedChanges) {
     };
 }
 
-function editBackgroundProperties(editing) {
+function editBackgroundProperties(editing, backgroundId) {
     return {
         type: EDIT_BACKGROUND_PROPERTIES,
-        editing
+        editing,
+        id: backgroundId
     };
 }
+
 function updateThumbnail(thumbnailData, thumbnail, unsavedChanges, backgroundId) {
     return {
         type: UPDATE_BACKGROUND_THUMBNAIL,

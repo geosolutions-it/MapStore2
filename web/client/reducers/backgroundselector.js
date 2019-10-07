@@ -10,7 +10,7 @@ const { ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, UPDATE_BACKGROUND_THUMBNAIL, 
         REMOVE_BACKGROUND_THUMBNAIL, CREATE_BACKGROUNDS_LIST, EDIT_BACKGROUND_PROPERTIES, CLEAR_MODAL_PARAMETERS} = require('../actions/backgroundselector');
 const {RESET_CATALOG} = require('../actions/catalog');
 const assign = require('object-assign');
-const {filter} = require('lodash');
+const {filter, find} = require('lodash');
 
 function backgroundselector(state = null, action) {
     switch (action.type) {
@@ -36,9 +36,11 @@ function backgroundselector(state = null, action) {
         });
     }
     case EDIT_BACKGROUND_PROPERTIES: {
+        const modalParams = action.editing ? find(state.backgrounds || [], background => background.id === action.id) : null;
 
         return assign({}, state, {
-            editing: action.editing
+            editing: action.editing,
+            modalParams
         });
     }
     case BACKGROUNDS_CLEAR: {

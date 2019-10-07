@@ -93,8 +93,8 @@ const backgroundSelector = createSelector([
         state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
         state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
     ],
-    (projection, CurrentModalParams, backgroundList, deletedId, editing, backgrounds, thumbURL, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
-        CurrentModalParams,
+    (projection, modalParams, backgroundList, deletedId, editing, backgrounds, thumbURL, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
+        modalParams,
         backgroundList,
         deletedId,
         editing,

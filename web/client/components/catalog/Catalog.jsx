@@ -56,6 +56,7 @@ class Catalog extends React.Component {
         onToggleTemplate: PropTypes.func,
         onToggleAdvancedSettings: PropTypes.func,
         onToggleThumbnail: PropTypes.func,
+        onPropertiesChange: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
         onReset: PropTypes.func,
@@ -121,12 +122,14 @@ class Catalog extends React.Component {
         onToggleAdvancedSettings: () => {},
         onToggleThumbnail: () => {},
         onDeleteService: () => {},
+        onPropertiesChange: () => {},
         onError: () => {},
         onLayerAdd: () => {},
         onReset: () => {},
         onSearch: () => {},
         onZoomToExtent: () => {},
         removeThumbnail: () => {},
+        changeLayerProperties: () => {},
         pageSize: 4,
         records: [],
         saving: false,
@@ -271,6 +274,7 @@ class Catalog extends React.Component {
                     catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
                     showTemplate={this.props.services[this.props.selectedService].showTemplate}
                     onLayerAdd={this.props.onLayerAdd}
+                    onPropertiesChange={this.props.onPropertiesChange}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
                     onError={this.props.onError}
@@ -316,25 +320,6 @@ class Catalog extends React.Component {
             buttons.push(<Button style={this.props.buttonStyle} disabled={this.props.saving} onClick={() => this.props.onChangeCatalogMode("view")} key="catalog_back_view_button">
                         <Message msgId="cancel"/>
                     </Button>);
-
-            return [
-                {
-                    glyph: 'arrow-left',
-                    tooltip: 'Back to catalog',
-                    onClick: () => this.props.onChangeCatalogMode("view")
-                },
-                {
-                    glyph: 'floppy-disk',
-                    tooltip: 'Save',
-                    onClick: () => this.props.onAddService()
-                },
-                {
-                    glyph: 'trash',
-                    tooltip: 'Remove catalog',
-                    visible: !this.props.newService.isNew ? true : false,
-                    onClick: () => this.props.onDeleteService()
-                }
-            ];
         }
         return buttons;
     };

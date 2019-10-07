@@ -99,7 +99,8 @@ class RecordItem extends React.Component {
         onAdd: () => {},
         source: 'metadataExplorer',
         record: {},
-        showTemplate: false
+        showTemplate: false,
+        changeLayerProperties: () => {}
     };
     state = {
         visibleExpand: false
@@ -195,7 +196,7 @@ class RecordItem extends React.Component {
 
                     }}
                     key="addlayer">
-                        <Glyphicon glyph="plus" />&nbsp;{buttonText}
+                        <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -218,7 +219,7 @@ class RecordItem extends React.Component {
 
                     }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />&nbsp;{buttonText}
+                        <Glyphicon glyph="plus" />
                 </Button>
             );
         }
@@ -276,40 +277,12 @@ class RecordItem extends React.Component {
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then this defaults needs to change too
         return record ? (<div>
-            <Panel className="record-item" style={{opacity: disabled ? 0.4 : 1.0}}>
-                {!this.props.hideThumbnail && <div className="record-item-thumb">
-                    {this.renderThumb(record && (record.thumbnail || record.thumbUrl), record)}
-                </div>}
-                <div className="record-item-content">
-                    <div className="record-item-title">
-                        <h4>{record && this.getTitle(record.title)}</h4>
-                        {!this.props.hideExpand && <ContainerDimensions>
-                            {({width}) => this.displayExpand(width) &&
-                            <Button
-                                tooltipPosition="left"
-                                tooltipId={!this.state.truncateText ? 'catalog.showDescription' : 'catalog.hideDescription'}
-                                className={`square-button-md ${!this.state.truncateText ? '' : ' ms-collapsed'}`} onClick={() => this.setState({truncateText: !this.state.truncateText})}>
-                                <Glyphicon glyph="chevron-left"/>
-                            </Button>}
-                        </ContainerDimensions>}
-                    </div>
-                    <div className={`record-item-info${this.state.truncateText ? '' : ' record-item-truncate-text'}`}>
-                        {!this.props.hideIdentifier && <h4><small>{record && record.identifier}</small></h4>}
-                        <p className="record-item-description">{this.renderDescription(record)}</p>
-                    </div>
-                    {!wms && !wmts && !esri && !(record.group === 'background') && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
-                    {!this.props.hideExpand && <div
-                    className="ms-ruler"
-                    style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
-                    ref={ruler => { this.descriptionRuler = ruler; }}>{this.renderDescription(record)}</div>}
-                    {!disabled ? this.renderButtons(record) : 'Added to background selector'}
-                </div>
                 <BackgroundDialog
-                    deletedId = {this.props.deletedId}
-                    unsavedChanges = {this.props.unsavedChanges}
-                    thumbURL ={this.props.modalParams && this.props.modalParams.CurrentNewThumbnail}
+                    deletedId={this.props.deletedId}
+                    unsavedChanges={this.props.unsavedChanges}
+                    thumbURL={this.props.modalParams && this.props.modalParams.CurrentNewThumbnail}
                     add
-                    onUpdate= { parameter => this.props.onAddBackgroundProperties(parameter, true)}
+                    onUpdate={parameter => this.props.onAddBackgroundProperties(parameter, true)}
                     modalParams={this.props.modalParams}
                     onClose={() => {
                         this.props.onAddBackgroundProperties(null, false);
@@ -317,7 +290,9 @@ class RecordItem extends React.Component {
                         this.props.clearModal();
                     }}
                     onSave={(layerModal, extraParams) => {
+                        console.log('layerModal:', layerModal);
                         const savedLayer = this.updatedLayer(layerModal);
+                        console.log('savedLayer:', savedLayer);
                         if (savedLayer.type === 'wms') {
                             this.addLayer(savedLayer, this.props.modalParams.id, extraParams);
                         }
@@ -325,17 +300,16 @@ class RecordItem extends React.Component {
                         if (savedLayer.type === 'wmts') {
                             this.addwmtsLayer(savedLayer, this.props.modalParams.id, extraParams);
                         }
-                        this.props.onPropertiesChange(this.props.modalParams.id, this.updatedLayer(layerModal));
+
+                        this.props.onPropertiesChange(this.props.modalParams.id, assign({}, savedLayer, {visibility: true}));
                         this.props.onLayerChange('currentLayer', assign({}, savedLayer, {id: this.props.modalParams.id}));
                         this.props.onLayerChange('tempLayer', savedLayer);
-                        // this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
                         this.props.onUpdateThumbnail(this.props.modalParams.newThumbnail, this.props.modalParams.thumbnailData, false, this.props.modalParams.id);
                         this.props.clearModal();
 
                     }}
                     updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(this.props.modalParams.id) : this.props.onUpdateThumbnail(data, url, true, this.props.modalParams.id)}
                    />
-            </Panel>
             <SideCard
                 style={{transform: "none"}}
                 fullText={this.state.fullText}
@@ -461,7 +435,7 @@ class RecordItem extends React.Component {
     updatedLayer = (layer) => {
         // add the newly created Thumbnail url (if existed)
         const output = assign({}, this.props.modalParams.showModal, {source: layer.CurrentNewThumbnail || layer.source } );
-        return omit(output, ['CurrentThumbnailData', 'CurrentNewThumbnail']);
+        return omit(output, ['CurrentThumbnailData', 'CurrentNewThumbnail, additionalParameters']);
     };
 }
 

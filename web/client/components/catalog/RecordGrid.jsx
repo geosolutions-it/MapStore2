@@ -19,6 +19,7 @@ class RecordGrid extends React.Component {
         onZoomToExtent: PropTypes.func,
         zoomToLayer: PropTypes.bool,
         onLayerAdd: PropTypes.func,
+        onPropertiesChange: PropTypes.func,
         onError: PropTypes.func,
         records: PropTypes.array,
         authkeyParamNames: PropTypes.array,
@@ -46,6 +47,7 @@ class RecordGrid extends React.Component {
         column: {xs: 12},
         currentLocale: 'en-US',
         onLayerAdd: () => {},
+        onPropertiesChange: () => {},
         onError: () => {},
         records: [],
         zoomToLayer: true,
@@ -67,6 +69,7 @@ class RecordGrid extends React.Component {
                     onAddBackgroundProperties = {this.props.onAddBackgroundProperties}
                     source= {this.props.source}
                     onLayerAdd={this.props.onLayerAdd}
+                    onPropertiesChange={this.props.onPropertiesChange}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
                     hideThumbnail={this.props.hideThumbnail}
