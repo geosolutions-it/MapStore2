@@ -85,7 +85,9 @@ describe('tutorial Epics', () => {
             {
                 type: "@@router/LOCATION_CHANGE",
                 payload: {
-                    pathname: '/dashboard/'
+                    location: {
+                        pathname: '/dashboard/'
+                    }
                 }
             },
             initTutorial('id', [], {}, null, {}, {})
@@ -120,7 +122,9 @@ describe('tutorial Epics', () => {
             {
                 type: "@@router/LOCATION_CHANGE",
                 payload: {
-                    pathname: '/viewer/cesium/001'
+                    location: {
+                        pathname: '/viewer/cesium/001'
+                    }
                 }
             },
             initTutorial('id', [], {}, null, {}, {})
@@ -155,7 +159,9 @@ describe('tutorial Epics', () => {
             {
                 type: "@@router/LOCATION_CHANGE",
                 payload: {
-                    pathname: '/dashboard/001'
+                    location: {
+                        pathname: '/dashboard/001'
+                    }
                 }
             },
             initTutorial('id', [], {}, null, {}, {})
@@ -190,7 +196,9 @@ describe('tutorial Epics', () => {
             {
                 type: "@@router/LOCATION_CHANGE",
                 payload: {
-                    pathname: '/dashboard/001'
+                    location: {
+                        pathname: '/dashboard/001'
+                    }
                 }
             },
             initTutorial('id', [], {}, null, {}, {})
@@ -228,7 +236,9 @@ describe('tutorial Epics', () => {
             {
                 type: "@@router/LOCATION_CHANGE",
                 payload: {
-                    pathname: '/dashboard/001'
+                    location: {
+                        pathname: '/dashboard/001'
+                    }
                 }
             },
             initTutorial('id', [], {}, null, {}, {})
