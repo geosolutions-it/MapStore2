@@ -59,7 +59,8 @@ export const backgroundProp = withProps(
             background: get(contentInView, 'background') || { type: 'none' },
             contentId,
             sectionId: id,
-            path: `sections[{"id": "${id}"}].contents[{"id": "${contentId}"}].background`
+            path: `sections[{"id": "${id}"}].contents[{"id": "${contentId}"}].background`,
+            sectionPath: `sections[{"id": "${id}"}]`
         };
     });
 /**

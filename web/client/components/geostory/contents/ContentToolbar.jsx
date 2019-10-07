@@ -85,15 +85,15 @@ const toolButtons = {
         glyph: fit === "contain" ? "fit-cover" : "fit-contain",
         visible: true,
         tooltipId: fit === "contain" ? "geostory.contentToolbar.cover" : "geostory.contentToolbar.fit",
-        onClick: () => update('fit', fit === "contain" ? "cover" : "contain") // toggle
+        onClick: () => update('fit', fit === "contain" ? "cover" : "contain")
     }),
-    cover: ({ cover, updateSection = () => {} }) => ({
+    cover: ({ cover, sectionPath, updateSection = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: cover,
         glyph: cover ? "height-auto" : "height-view",
         visible: true,
         tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
-        onClick: () => updateSection({cover: !cover}) // toggle
+        onClick: () => updateSection(sectionPath, {cover: !cover}, "merge")
     }),
     editMedia: ({ path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options

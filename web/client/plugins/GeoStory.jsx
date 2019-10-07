@@ -52,7 +52,6 @@ export default createPlugin("GeoStory", {
             }), {
                 add,
                 update,
-                updateSection: update,
                 updateCurrentPage,
                 remove,
                 editMedia

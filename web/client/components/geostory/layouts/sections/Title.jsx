@@ -26,6 +26,7 @@ export default backgroundPropWithHandler(({
     mode,
     contentId,
     path,
+    sectionPath,
     sectionType,
     cover,
     viewWidth,
@@ -33,7 +34,6 @@ export default backgroundPropWithHandler(({
     inViewRef,
     add = () => {},
     update = () => {},
-    updateSection = () => {},
     remove = () => {},
     updateBackground = () => {},
     editMedia = () => {}
@@ -60,7 +60,8 @@ export default backgroundPropWithHandler(({
                     update={updateBackground}
                     add={add}
                     editMedia={editMedia}
-                    updateSection={updateSection}
+                    updateSection={update}
+                    sectionPath={sectionPath}
                     cover={cover}
                     remove={remove}
                     width={viewWidth}
@@ -84,7 +85,6 @@ export default backgroundPropWithHandler(({
             mode={mode}
             add={add}
             sectionType={sectionType}
-            updateSection={updateSection}
             update={update}
             remove={remove}
             sectionId={id}
