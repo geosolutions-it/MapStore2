@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Confirm = require('../ConfirmDialog');
-const Portal = require('../Portal');
-const Message = require('../../I18N/Message');
+import React from 'react';
+import Confirm from '../ConfirmDialog';
+import Portal from '../Portal';
+import Message from '../../I18N/Message';
 const ConfirmModal = ({
     confirmButtonMessageId = "confirm",
     show = false,
@@ -26,10 +26,10 @@ const ConfirmModal = ({
         onConfirm={onConfirm}
         confirmButtonBSStyle="default"
         closeGlyph="1-close"
+        body={(<Message msgId={confirmMessageId} msgParams={confirmMessageParams} />)}
         confirmButtonContent={<Message msgId={confirmButtonMessageId} />}
-    >
-        <Message msgId={confirmMessageId} msgParams={confirmMessageParams} />
-    </Confirm></Portal>);
+    />
+</Portal>);
 
 
 import { compose, withHandlers, withState, withProps, nest} from 'recompose';
@@ -49,7 +49,13 @@ export default (Component) => compose(
     withChildren(
         compose(
             withHandlers({
-                onClose: ({ setConfirming = () => { } }) => () => setConfirming(false)
+                onClose: ({ setConfirming = () => { } }) => (event) => {
+                    setConfirming(false);
+                    // prevent click event bubbling to the button, that is the container of this modal
+                    if (event && event.stopPropagation) {
+                        event.stopPropagation();
+                    }
+                }
             }),
             withProps(({confirming}) => ({
                 show: !!confirming

@@ -1,74 +1,94 @@
-/*
-* Copyright 2016, GeoSolutions Sas.
-* All rights reserved.
-*
-* This source code is licensed under the BSD-style license found in the
-* LICENSE file in the root directory of this source tree.
-*/
 const PropTypes = require('prop-types');
-const React = require('react');
-const {Button, ButtonGroup, Glyphicon} = require('react-bootstrap');
+/**
+ * Copyright 2016, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const Dialog = require('./Dialog');
-const assign = require('object-assign');
-const Message = require('../I18N/Message');
+const React = require('react');
+const { Button } = require('react-bootstrap');
+const Modal = require('../misc/Modal');
+const Spinner = require('react-spinkit');
 
 /**
- * A Modal window to show password reset form
+ * A Modal window to show a confirmation dialog
  */
-class UserDialog extends React.Component {
+class ConfirmModal extends React.Component {
     static propTypes = {
         // props
+        className: PropTypes.string,
         show: PropTypes.bool,
-        draggable: PropTypes.bool,
-        onClose: PropTypes.func,
+        options: PropTypes.object,
         onConfirm: PropTypes.func,
-        onSave: PropTypes.func,
-        modal: PropTypes.bool,
+        onClose: PropTypes.func,
         closeGlyph: PropTypes.string,
         style: PropTypes.object,
         buttonSize: PropTypes.string,
-        inputStyle: PropTypes.object,
-        title: PropTypes.node,
-        confirmButtonContent: PropTypes.node,
-        confirmButtonDisabled: PropTypes.bool,
-        closeText: PropTypes.node,
-        confirmButtonBSStyle: PropTypes.string
+        includeCloseButton: PropTypes.bool,
+        body: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        confirmText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        cancelText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        running: PropTypes.bool
     };
 
     static defaultProps = {
-        onClose: () => {},
-        onChange: () => {},
-        modal: true,
-        title: <Message msgId="confirmTitle" />,
+        onConfirm: () => { },
+        onClose: () => { },
+        options: {
+            animation: false
+        },
+        className: "",
         closeGlyph: "",
-        confirmButtonBSStyle: "danger",
-        confirmButtonDisabled: false,
-        confirmButtonContent: <Message msgId="confirm" /> || "Confirm",
-        closeText: <Message msgId="close" />,
-        includeCloseButton: true
+        style: {},
+        includeCloseButton: true,
+        body: "",
+        titleText: "Confirm Delete",
+        confirmText: "Delete",
+        cancelText: "Cancel"
+    };
+
+    onConfirm = () => {
+        this.props.onConfirm();
     };
 
     render() {
-        return (<Dialog draggable={this.props.draggable} onClickOut={this.props.onClose} id="confirm-dialog" modal={this.props.modal} style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-            <span role="header">
-                <span className="user-panel-title">{this.props.title}</span>
-                <button onClick={this.props.onClose} className="login-panel-close close">
-                    {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
-                </button>
-            </span>
-            <div role="body">
-                {this.props.children}
-            </div>
-            <div role="footer">
-                <ButtonGroup>
-                    <Button onClick={this.props.onConfirm} disabled={this.props.confirmButtonDisabled} bsStyle={this.props.confirmButtonBSStyle}>{this.props.confirmButtonContent}
-                    </Button>
-                    <Button onClick={this.props.onClose}>{this.props.closeText}</Button>
-                </ButtonGroup>
-            </div>
-        </Dialog>);
+        const footer = (<span role="footer"><div style={{ "float": "left" }}></div>
+            <Button
+                ref="confirmButton"
+                disabled={this.props.running}
+                className={this.props.className}
+                key="confirmButton"
+                bsStyle="primary"
+                bsSize={this.props.buttonSize}
+                onClick={() => {
+                    this.onConfirm();
+                }}>{this.props.running ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" noFadeIn /> : null}{this.props.confirmText}</Button>
+            {this.props.includeCloseButton ? <Button
+                key="cancelButton"
+                ref="cancelButton"
+                bsSize={this.props.buttonSize}
+                onClick={this.props.onClose}>{this.props.cancelText}</Button> : <span />}
+        </span>);
+        const body = this.props.body;
+        return (
+            <Modal {...this.props.options}
+                show={this.props.show}
+                onClick={e => e.stopPropagation()}
+                onHide={this.props.onClose}>
+                <Modal.Header key="dialogHeader" closeButton>
+                    <Modal.Title>{this.props.titleText}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {body}
+                </Modal.Body>
+                <Modal.Footer>
+                    {footer}
+                </Modal.Footer>
+            </Modal>);
     }
 }
 
-module.exports = UserDialog;
+module.exports = ConfirmModal;
