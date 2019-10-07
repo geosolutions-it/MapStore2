@@ -8,7 +8,9 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const Layer = require('../DefaultLayer');
+const dragDropContext = require('react-dnd').DragDropContext;
+const testBackend = require('react-dnd-test-backend');
+const Layer = dragDropContext(testBackend)(require('../DefaultLayer'));
 // var ConfirmButton = require('../../buttons/ConfirmButton');
 const expect = require('expect');
 const TestUtils = require('react-dom/test-utils');

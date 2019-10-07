@@ -9,6 +9,7 @@
 const React = require('react');
 const Node = require('./Node');
 const PropTypes = require('prop-types');
+const draggableComponent = require('./enhancers/draggableComponent');
 const GroupTitle = require('./fragments/GroupTitle');
 const GroupChildren = require('./fragments/GroupChildren');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
@@ -29,7 +30,14 @@ class DefaultGroup extends React.Component {
         selectedNodes: PropTypes.array,
         onSelect: PropTypes.func,
         titleTooltip: PropTypes.bool,
-        tooltipOptions: PropTypes.object
+        tooltipOptions: PropTypes.object,
+        setDndState: PropTypes.func,
+        connectDragSource: PropTypes.func,
+        connectDragPreview: PropTypes.func,
+        connectDropTarget: PropTypes.func,
+        isDraggable: PropTypes.bool,
+        isDragging: PropTypes.bool,
+        isOver: PropTypes.bool
     };
 
     static defaultProps = {
@@ -48,7 +56,13 @@ class DefaultGroup extends React.Component {
         joinStr: ' - ',
         selectedNodes: [],
         onSelect: () => {},
-        titleTooltip: false
+        titleTooltip: false,
+        connectDragPreview: (x) => x,
+        connectDragSource: (x) => x,
+        connectDropTarget: (x) => x,
+        isDraggable: false,
+        isDragging: false,
+        isOver: false
     };
 
     renderVisibility = (error) => {
@@ -67,31 +81,44 @@ class DefaultGroup extends React.Component {
     }
 
     render() {
-        let {children, onToggle, ...other } = this.props;
+        let {children, onToggle, connectDragPreview, connectDragSource, connectDropTarget, ...other } = this.props;
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError ? ' group-error' : '';
         const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabGroupIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
+        const groupHead = (
+            <div className="toc-default-group-head">
+                {grab}
+                {this.renderVisibility(error)}
+                <GroupTitle
+                    tooltipOptions={this.props.tooltipOptions}
+                    tooltip={this.props.titleTooltip}
+                    node={this.props.node}
+                    currentLocale={this.props.currentLocale}
+                    onClick={this.props.onToggle}
+                    onSelect={this.props.onSelect}
+                />
+            </div>
+        );
+        const groupChildren = (
+            <GroupChildren
+                level={this.props.level + 1}
+                onSort={this.props.onSort}
+                setDndState={this.props.setDndState}
+                position="collapsible">
+                {this.props.children}
+            </GroupChildren>
+        );
 
-        return this.props.node.showComponent ? (
-            <Node className={"toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
-                <div className="toc-default-group-head">
-                    {grab}
-                    {this.renderVisibility(error)}
-                    <GroupTitle
-                        tooltipOptions={this.props.tooltipOptions}
-                        tooltip={this.props.titleTooltip}
-                        node={this.props.node}
-                        currentLocale={this.props.currentLocale}
-                        onClick={this.props.onToggle}
-                        onSelect={this.props.onSelect}
-                    />
-                </div>
-                <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
-                    {this.props.children}
-                </GroupChildren>
-            </Node>
-        ) : null;
+        if (this.props.node.showComponent && !this.props.node.hide) {
+            return (
+                <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + "toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
+                    {this.props.isDraggable ? connectDragPreview(connectDropTarget(connectDragSource(groupHead))) : groupHead}
+                    {this.props.isDragging || this.props.node.placeholder ? null : groupChildren}
+                </Node>
+            );
+        }
+        return null;
     }
 }
 
-module.exports = DefaultGroup;
+module.exports = draggableComponent('LayerOrGroup', DefaultGroup);

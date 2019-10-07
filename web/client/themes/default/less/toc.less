@@ -257,6 +257,7 @@
     }
 
     .toc-default-group-head {
+        background-color: @ms2-color-background;
         height: @square-btn-size;
         width: 100%;
         padding: floor((@square-btn-size - @icon-size-md) / 2) 0;
@@ -481,8 +482,8 @@
 
 }
 
-.SortableItem.is-dragging.toc-default-layer,
-.SortableItem.is-dragging.toc-default-layer.selected {
+.is-dragging.toc-default-layer,
+.is-dragging.toc-default-layer.selected {
     background-color: @ms2-color-background !important;
     border: 1px dashed @ms2-color-primary !important;
     height: @square-btn-size !important;
@@ -507,8 +508,8 @@
     }
 }
 
-.SortableItem.is-placeholder.toc-default-layer,
-.SortableItem.is-placeholder.toc-default-layer.selected {
+.is-placeholder.toc-default-layer,
+.is-placeholder.toc-default-layer.selected {
     background-color: transparent !important;
     border: 1px dashed @ms2-color-primary !important;
     height: @square-btn-size !important;
@@ -526,8 +527,8 @@
     }
 }
 
-.SortableItem.is-dragging.toc-default-group,
-.SortableItem.is-dragging.toc-default-group.selected {
+.is-dragging.toc-default-group,
+.is-dragging.toc-default-group.selected {
     background-color: @ms2-color-background !important;
     border: 1px dashed @ms2-color-primary !important;
     height: @square-btn-size !important;
@@ -552,8 +553,8 @@
     }
 }
 
-.SortableItem.is-placeholder.toc-default-group,
-.SortableItem.is-placeholder.toc-default-group.selected {
+.is-placeholder.toc-default-group,
+.is-placeholder.toc-default-group.selected {
     background-color: @ms2-color-background !important;
     border: none !important;
     border-bottom:  1px solid @ms2-color-primary !important;
