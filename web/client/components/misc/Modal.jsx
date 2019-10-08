@@ -9,9 +9,24 @@
 
 const withContainer = require('./WithContainer');
 const {Modal} = require('react-bootstrap');
+
+/**
+ * this allows to stop click event propagation in portals, passing the original
+ * click event to the onHide handler.
+ * Useful if you want to use a portal inside a component with a `onClick method defined`.
+ */
+class FixedModal extends Modal {
+    handleDialogClick(e) {
+        if (e.target !== e.currentTarget) {
+            return;
+        }
+        this.props.onHide(e);
+    }
+}
+
 const assign = require('object-assign');
 
-module.exports = assign(withContainer(Modal), {
+module.exports = assign(withContainer(FixedModal), {
     Body: Modal.Body,
     Dialog: Modal.Dialog,
     Footer: Modal.Footer,

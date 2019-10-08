@@ -50,11 +50,11 @@ export default (Component) => compose(
         compose(
             withHandlers({
                 onClose: ({ setConfirming = () => { } }) => (event) => {
-                    setConfirming(false);
                     // prevent click event bubbling to the button, that is the container of this modal
                     if (event && event.stopPropagation) {
                         event.stopPropagation();
                     }
+                    setConfirming(false);
                 }
             }),
             withProps(({confirming}) => ({

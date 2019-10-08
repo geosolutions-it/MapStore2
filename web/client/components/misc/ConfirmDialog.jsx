@@ -76,7 +76,6 @@ class ConfirmModal extends React.Component {
         return (
             <Modal {...this.props.options}
                 show={this.props.show}
-                onClick={e => e.stopPropagation()}
                 onHide={this.props.onClose}>
                 <Modal.Header key="dialogHeader" closeButton>
                     <Modal.Title>{this.props.titleText}</Modal.Title>
