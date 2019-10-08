@@ -47,7 +47,12 @@ export default (Component) => compose(
     withState('confirming', 'setConfirming', false),
     withHandlers({
         onClick: ({ setConfirming = () => { } }) => () => setConfirming(true),
-        onConfirm: ({onClick}) => (...args) => {
+        onConfirm: ({ onClick = () => {}, setConfirming = () => {} }) => (...args) => {
+            const event = args[0];
+            if (event && event.stopPropagation) {
+                event.stopPropagation();
+            }
+            setConfirming(false);
             onClick(...args);
         }
     }),
