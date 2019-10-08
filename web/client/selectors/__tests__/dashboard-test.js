@@ -63,7 +63,7 @@ describe('dashboard selectors', () => {
     });
     it('test buttonCanEdit with a new dashboared', () => {
         expect(buttonCanEdit({
-            routing: {
+            router: {
                 location: {
                     pathname: '/dashboard/'
                 }
@@ -72,7 +72,7 @@ describe('dashboard selectors', () => {
     });
     it('test buttonCanEdit when load a dashboared', () => {
         expect(buttonCanEdit({
-            routing: {
+            router: {
                 location: {
                     pathname: '/dashboard/0000'
                 }

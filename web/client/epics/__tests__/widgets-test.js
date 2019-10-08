@@ -60,12 +60,12 @@ describe('widgets Epics', () => {
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old/2013"}
                         }
                     };
@@ -88,12 +88,12 @@ describe('widgets Epics', () => {
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new-map-type/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old-map-type/2013"}
                         }
                     };
@@ -120,12 +120,12 @@ describe('widgets Epics', () => {
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old/2013"}
                         }
                     };
@@ -154,12 +154,12 @@ describe('widgets Epics', () => {
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old/2013"}
                         }
                     };

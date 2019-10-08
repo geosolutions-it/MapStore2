@@ -49,7 +49,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; },
-        routing: storeOpts.noRouter ? undefined : connectRouter(history)
+        router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
     const rootEpic = combineEpics(plugins, {...appEpics, ...standardEpics});
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};

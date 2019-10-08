@@ -12,7 +12,7 @@ const {
 } = require("../routing");
 const pathname = "/viewer/openlayers/123";
 const state = {
-    routing: {
+    router: {
         location: {
             pathname
         }
