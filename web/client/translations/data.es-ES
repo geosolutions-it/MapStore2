@@ -1884,9 +1884,7 @@
                 "editMedia": "Cambiar fuente de medios",
                 "remove": "Eliminar",
                 "removeConfirmTitle": "¿Estás seguro?",
-                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
-                "removeConfirmTitle": "Êtes-vous sûr?",
-                "removeConfirmContent": "Voulez-vous supprimer ce contenu de l'histoire?"
+                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?"
             },
             "builder": {
                 "defaults": {
