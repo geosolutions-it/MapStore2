@@ -1882,7 +1882,9 @@
                 "cover": "Copri lo spazio del contenitore",
                 "fit": "Riempi lo spazio del contenitore",
                 "editMedia": "Cambia la sorgente del media",
-                "remove": "Elimina"
+                "remove": "Elimina",
+                "removeConfirmTitle": "Sei sicuro?",
+                "removeConfirmContent": "Vuoi rimuovere questi contenuti dalla storia?"
             },
             "builder": {
                 "defaults": {

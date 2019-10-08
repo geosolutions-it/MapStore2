@@ -1882,7 +1882,9 @@
                 "cover": "Decken Sie den Behälterraum ab",
                 "fit": "Den Behälterraum montieren",
                 "editMedia": "Ändern Sie die Medienquelle",
-                "remove": "Entfernen"
+                "remove": "Entfernen",
+                "removeConfirmTitle": "Bist du sicher?",
+                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?"
             },
             "builder": {
                 "defaults": {
