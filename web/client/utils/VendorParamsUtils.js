@@ -19,8 +19,7 @@ module.exports = {
      * @returns params for the layer's request, properly manipulated
      */
     optionsToVendorParams: (options = {}) => {
-        const layerFilter = FilterUtils.normalizeFilterCQL(options.layerFilter, options.nativeCrs);
-        const featureGridFilter = FilterUtils.normalizeFilterCQL(options.filterObj, options.nativeCrs);
+        const {layerFilter, filterObj: featureGridFilter} = options;
         let cqlFilters = [
             FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled && FilterUtils.toCQLFilter(layerFilter),
             FilterUtils.isFilterValid(featureGridFilter) && FilterUtils.toCQLFilter(featureGridFilter),

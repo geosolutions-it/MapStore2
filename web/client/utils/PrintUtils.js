@@ -206,7 +206,6 @@ const PrintUtils = {
                     "scaleMethod": "accurate"
                 }, layer.baseParams || {}, layer.params || {}, {
                     ...optionsToVendorParams({
-                        nativeCrs: layer.nativeCrs,
                         layerFilter: layer.layerFilter,
                         filterObj: layer.filterObj
                     })

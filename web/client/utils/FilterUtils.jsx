@@ -718,14 +718,16 @@ const FilterUtils = {
     },
 
     processCQLSpatialFilter: function(objFilter) {
+
         let cql = objFilter.spatialField.operation + "(" +
-            objFilter.spatialField.attribute + ", ";
+            objFilter.spatialField.attribute + ",";
         if (objFilter.spatialField.collectGeometries && objFilter.spatialField.collectGeometries.queryCollection) {
             cql += cqlCollectGeometries(cqlQueryCollection(objFilter.spatialField.collectGeometries.queryCollection));
         } else {
-            cql += this.getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
+            let crs = objFilter.spatialField.geometry.projection || "";
+            crs = crs.split(":").length === 2 ? "SRID=" + crs.split(":")[1] + ";" : "";
+            cql += crs + this.getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
         }
-
 
         return cql + ")";
     },

@@ -18,14 +18,13 @@ const {QUERY_FORM_SEARCH, loadFilter, reset, search} = require('../actions/query
 const {changeLayerProperties} = require('../actions/layers');
 
 
-const { warning} = require('../actions/notifications');
 const {OPEN_QUERY_BUILDER, initLayerFilter, DISCARD_CURRENT_FILTER, APPLY_FILTER, storeAppliedFilter} = require('../actions/layerFilter');
 const {featureTypeSelected, toggleLayerFilter, initQueryPanel} = require("../actions/wfsquery");
 const {getSelectedLayer} = require("../selectors/layers");
 
 const {changeDrawingStatus} = require('../actions/draw');
 const FilterUtils = require('../utils/FilterUtils');
-const {getNativeCrs} = require('../observables/wms');
+
 
 const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields} = {}) => {
     return !!(filterFields && head(filterFields)
@@ -41,10 +40,6 @@ const endLayerFilterEpic = (action$) => ob$ => ob$.takeUntil(action$.ofType(TOGG
 const addFilterToLayer = (layer, filter) => {
     return changeLayerProperties(layer, {layerFilter: filter});
 };
-// Create action to add nativeCrs to wms layer
-const addNativeCrsLayer = (layer, nativeCrs = "") => {
-    return changeLayerProperties(layer, {nativeCrs});
-};
 
 
 module.exports = {
@@ -54,7 +49,7 @@ module.exports = {
  * @memberof epics.layerFilter
  * @param {external:Observable} action$ manages `OPEN_QUERY_BUILDER` and `QUERY_FORM_SEARCH`
  * @return {external:Observable} `FEATURE_TYPE_SELECTED` `QUERYFORM:LOAD_FILTER` `LAYER_FILTER:INIT_LAYER_FILTER` `SET_CONTROL_PROPERTY` (open queryPanel)
- * `CHANGE_LAYERPROPERTIS` with nativeCrs if needed and on `QUERY_FORM_SEARCH` `CHANGE_LAYERPROPERTIS` adding layerFilter to selected layer
+ * and on `QUERY_FORM_SEARCH` `CHANGE_LAYERPROPERTIS` adding layerFilter to selected layer
  * terminate on `LOCATION_CHANGE` `TOGGLE_CONTROL` with queryPanel enabled === false
  */
     handleLayerFilterPanel: (action$, {getState}) =>
@@ -70,17 +65,6 @@ module.exports = {
                 setControlProperty('queryPanel', "enabled", true)
             )
                 .merge(
-                    getNativeCrs(layer)
-                        .map((nativeCrs) => addNativeCrsLayer(layer.id, nativeCrs))
-                        .catch(() => {
-                            return Rx.Observable.of(
-                                warning({
-                                    title: "notification.warning",
-                                    message: "featuregrid.errorProjFetch",
-                                    position: "tc",
-                                    autoDismiss: 5
-                                }));
-                        }),
                     Rx.Observable.of(toggleLayerFilter()).filter(() => !get(getState(), "query.isLayerFilter")),
                     action$.ofType(QUERY_FORM_SEARCH)
                         .switchMap( ({filterObj}) => {
@@ -89,8 +73,6 @@ module.exports = {
                                 newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
                                 newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;
                                 newFilter.crossLayerFilter = newFilter.crossLayerExpanded && FilterUtils.setupCrossLayerFilterDefaults(newFilter.crossLayerFilter) || null;
-                                const {nativeCrs} = getSelectedLayer(getState());
-                                newFilter = FilterUtils.normalizeFilterCQL(newFilter, nativeCrs);
                             }
                             return Rx.Observable.of(addFilterToLayer(layer.id, newFilter));
                         })

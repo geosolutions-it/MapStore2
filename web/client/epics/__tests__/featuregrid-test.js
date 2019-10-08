@@ -8,10 +8,10 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
-const Proj4js = require('proj4').default;
+
 const { set } = require('../../utils/ImmutableUtils');
 
-const proj4 = Proj4js;
+
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
 
@@ -583,17 +583,9 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
+
     describe('featureGridBrowseData epic', () => {
         const LAYER = state.layers.flat[0];
-        const LAYER_NO_NATIVE_CRS =
-            {
-                id: "TEST_LAYER",
-                name: "V_TEST",
-                title: "V_TEST",
-                filterObj,
-                url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
-                // NO native CRS, to force fetch
-            };
         const checkInitActions = ([a1, a2, a3]) => {
             // close TOC
             expect(a1.type).toBe(SET_CONTROL_PROPERTY);
@@ -615,52 +607,8 @@ describe('featuregrid Epics', () => {
                 done();
             }, state);
         });
-        it('browseData action triggers nativeCrs fetch', done => {
-            const TEST_CRS = "EPSG:3044";
-            const oldDEF = proj4.defs(TEST_CRS);
-            proj4.defs(TEST_CRS, "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
-
-            testEpic(featureGridBrowseData, 6, browseData(LAYER_NO_NATIVE_CRS), (actions) => {
-                proj4.defs(TEST_CRS, oldDEF); // reset old definition, if any
-                expect(actions.filter(({type}) => type === CHANGE_LAYER_PROPERTIES).length).toBe(1);
-                actions.filter(({ type }) => type === CHANGE_LAYER_PROPERTIES).map(a => {
-                    expect(a.layer).toBe(LAYER_NO_NATIVE_CRS.id);
-                    expect(a.newProperties.nativeCrs).toBe(TEST_CRS);
-                });
-                done();
-            }, {
-                ...state,
-                query: { ...state.query, syncWmsFilter: true },
-                layers: {
-                    selected: [LAYER.id], // the layer is selected
-                    flat: [LAYER_NO_NATIVE_CRS]
-                }
-            });
-        });
-        it('browseData action trigger error notification if can not get nativeCrs', done => {
-            const LAYER_NO_NATIVE_CRS_ERROR = {
-                ...LAYER_NO_NATIVE_CRS,
-                url: "FAKE_URL_NOT_FOUND"
-            };
-            testEpic(featureGridBrowseData, 6, browseData(LAYER_NO_NATIVE_CRS_ERROR), (actions) => {
-                checkInitActions(actions);
-                // sets the feature type selected for search
-                actions.filter(a => a.type === SHOW_NOTIFICATION).map( a => {
-                    expect(a.message).toExist();
-                    done();
-                });
-
-            }, {
-                ...state,
-                query: { ...state.query, syncWmsFilter: true },
-                layers: {
-                    selected: [LAYER.id], // the layer is selected
-                    flat: [LAYER_NO_NATIVE_CRS_ERROR]
-                }
-            });
-        });
     });
-    it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
+    it('test startSyncWmsFilter', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
                 open: true,
@@ -685,15 +633,12 @@ describe('featuregrid Epics', () => {
         CoordinatesUtils.getProjUrl = () => "base/web/client/test-resources/wms/projDef_3044.txt";
 
         const newState = assign({}, state, stateFeaturegrid);
-        testEpic(startSyncWmsFilter, 2, toggleSyncWms(), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(startSyncWmsFilter, 1, toggleSyncWms(), actions => {
+            expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                 case START_SYNC_WMS:
                     expect(action.type).toBe(START_SYNC_WMS);
-                    break;
-                case CHANGE_LAYER_PROPERTIES:
-                    expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
                     break;
                 default:
                     expect(true).toBe(false);
@@ -1327,38 +1272,6 @@ describe('featuregrid Epics', () => {
         }, newState);
     });
 
-
-    it('test syncMapWmsFilter with: nativeCrs and spatialField', (done) => {
-        const stateFeaturegrid = {
-            featuregrid: {
-                open: true,
-                selectedLayer: "TEST_LAYER",
-                mode: 'EDIT',
-                select: [{id: 'polygons.1', _new: 'polygons._new'}],
-                changes: []
-            }
-        };
-        const newState = assign({}, state, stateFeaturegrid);
-
-        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case CHANGE_LAYER_PROPERTIES: {
-                    expect(action.newProperties.filterObj.spatialField.geometry.coordinates[0].length).toBe(5);
-                    const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 10000000000), 10) / 10000000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 10000000000), 10) / 10000000000 ];
-                    expect(firstPoint[0]).toBe(8.7894631958);
-                    expect(firstPoint[1]).toBe(44.4385328728);
-                    break;
-                }
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, newState);
-    });
-
     it('test syncMapWmsFilter with only: nativeCrs', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -1399,84 +1312,6 @@ describe('featuregrid Epics', () => {
     });
 
 
-    it('test syncMapWmsFilter with only spatialField. NativeCrs not fetched', (done) => {
-        const stateFeaturegrid = {
-            featuregrid: {
-                open: true,
-                selectedLayer: "TEST__6",
-                mode: 'EDIT',
-                select: [{id: 'polygons.1', _new: 'polygons._new'}],
-                changes: []
-            },
-            layers: {
-                flat: [{
-                    id: "TEST__6",
-                    name: "V_TEST",
-                    title: "V_TEST",
-                    filterObj,
-                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
-                }]
-            }
-        };
-        const newState = assign({}, state, stateFeaturegrid);
-
-        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case CHANGE_LAYER_PROPERTIES: {
-                    expect(action.newProperties.filterObj.spatialField).toBe(undefined);
-                    break;
-                }
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, newState);
-    });
-
-    it('test syncMapWmsFilter with only spatialField. NativeCrs already present', (done) => {
-        const stateFeaturegrid = {
-            featuregrid: {
-                open: true,
-                selectedLayer: "TEST__6",
-                mode: 'EDIT',
-                select: [{id: 'polygons.1', _new: 'polygons._new'}],
-                changes: []
-            },
-            layers: {
-                flat: [{
-                    id: "TEST__6",
-                    name: "V_TEST",
-                    title: "V_TEST",
-                    filterObj,
-                    nativeCrs: "EPSG:3044",
-                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
-                }]
-            }
-        };
-        const newState = assign({}, state, stateFeaturegrid);
-        proj4.defs("EPSG:3044", "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
-
-        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case CHANGE_LAYER_PROPERTIES: {
-                    const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
-                    expect(firstPoint[0]).toBe(483245.221897);
-                    expect(firstPoint[1]).toBe(4920603.15056);
-                    break;
-                }
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, newState);
-    });
-
     it('test startSyncWmsFilter with nativeCrs present in layer props', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -1516,49 +1351,6 @@ describe('featuregrid Epics', () => {
         }, newState);
     });
 
-    it('test startSyncWmsFilter with nativeCrs absent in layer props and with definition registered in proj4 defs', (done) => {
-        const stateFeaturegrid = {
-            featuregrid: {
-                open: true,
-                selectedLayer: "TEST__6",
-                mode: 'EDIT',
-                select: [{id: 'polygons.1', _new: 'polygons._new'}],
-                changes: []
-            },
-            layers: {
-                flat: [{
-                    id: "TEST__6",
-                    name: "V_TEST",
-                    title: "V_TEST",
-                    filterObj,
-                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
-                }]
-            },
-            query: {
-                syncWmsFilter: true
-            }
-        };
-
-        const newState = assign({}, state, stateFeaturegrid);
-        proj4.defs("EPSG:3044", "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
-        testEpic(startSyncWmsFilter, 2, toggleSyncWms(), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                case START_SYNC_WMS:
-                    expect(action.type).toBe(START_SYNC_WMS);
-                    break;
-                case CHANGE_LAYER_PROPERTIES:
-                    expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
-                    expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, newState);
-    });
 
     it('test onOpenAdvancedSearch', (done) => {
         const stateFeaturegrid = {
