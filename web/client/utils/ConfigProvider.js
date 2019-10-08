@@ -14,7 +14,7 @@ const CONFIGPROVIDER = {
         variants: {
             Mapnik: {},
             BlackAndWhite: {
-                url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+                url: 'http://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
                 options: {
                     maxZoom: 18,
                     maxNativeZoom: 18
