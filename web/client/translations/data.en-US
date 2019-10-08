@@ -1883,7 +1883,9 @@
                 "cover": "Cover the container space",
                 "fit": "Fit the container space",
                 "editMedia": "Change media source",
-                "remove": "Remove"
+                "remove": "Remove",
+                "removeConfirmTitle": "Are you sure?",
+                "removeConfirmContent": "Do you want to remove this content from the story?"
             },
             "builder": {
                 "defaults": {

@@ -114,6 +114,8 @@ const toolButtons = {
             visible
             className={BUTTON_CLASSES}
             tooltipId={"geostory.contentToolbar.remove"}
+            confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
+            confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
             onClick={ () => {
                 remove(path);
             }} />)

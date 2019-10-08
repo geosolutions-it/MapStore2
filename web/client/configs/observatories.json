@@ -5,6 +5,16 @@
       "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
       "type": "map",
       "data": {
+        "id": 10886,
+        "type": "map",
+        "canDelete": true,
+        "canEdit": true,
+        "canCopy": true,
+        "creation": "2019-09-20 12:21:30.924",
+        "description": "US observatories",
+        "name": "Observatories",
+        "thumbnail": "rest/geostore/data/10890/raw?decode=datauri&v=699a3c40-db90-11e9-bbe3-0d1967043af5",
+        "owner": "admin",
         "center": {
           "x": -111.57714843750004,
           "y": 35.173808317999566,
@@ -137,12 +147,6 @@
             "useForElevation": false,
             "hidden": false,
             "params": {}
-          }
-        ],
-        "groups": [
-          {
-            "id": "Default",
-            "expanded": true
           }
         ]
       }

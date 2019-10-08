@@ -11,24 +11,29 @@ import Confirm from '../ConfirmDialog';
 import Portal from '../Portal';
 import Message from '../../I18N/Message';
 const ConfirmModal = ({
-    confirmButtonMessageId = "confirm",
+    confirmYes = <Message msgId="yes" />,
+    confirmNo = <Message msgId="no"/>,
+    confirmTitle = <Message msgId="confirm"/>,
+    confirmContent,
     show = false,
     modal = true,
-    confirmMessageId = "confirmTitle",
-    confirmMessageParams,
+    draggable = false,
     onClose = () => { },
     onConfirm = () => { }
 } = {}) => (<Portal>
     <Confirm
+        draggable={draggable}
         show={show}
         modal={modal}
         onClose={onClose}
         onConfirm={onConfirm}
+        title={confirmTitle}
+        confirmButtonContent={confirmYes}
+        closeText={confirmNo}
         confirmButtonBSStyle="default"
-        closeGlyph="1-close"
-        body={(<Message msgId={confirmMessageId} msgParams={confirmMessageParams} />)}
-        confirmButtonContent={<Message msgId={confirmButtonMessageId} />}
-    />
+        closeGlyph="1-close">
+        {confirmContent}
+    </Confirm>
 </Portal>);
 
 

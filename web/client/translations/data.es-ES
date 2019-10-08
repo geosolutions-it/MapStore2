@@ -1882,7 +1882,11 @@
                 "cover": "Cubra el espacio del contenedor",
                 "fit": "Ajustar el espacio del contenedor",
                 "editMedia": "Cambiar fuente de medios",
-                "remove": "Eliminar"
+                "remove": "Eliminar",
+                "removeConfirmTitle": "¿Estás seguro?",
+                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
+                "removeConfirmTitle": "Êtes-vous sûr?",
+                "removeConfirmContent": "Voulez-vous supprimer ce contenu de l'histoire?"
             },
             "builder": {
                 "defaults": {
