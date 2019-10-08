@@ -23,11 +23,12 @@ const syncMapType = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(action =>
             action.payload
-            && action.payload.pathname
-            && action.payload.pathname.match(defaultRegex)
-            && findMapType(action.payload.pathname) !== get(store.getState(), "maptype.mapType"))
+            && action.payload
+            && action.payload.location.pathname
+            && action.payload.location.pathname.match(defaultRegex)
+            && findMapType(action.payload.location.pathname) !== get(store.getState(), "maptype.mapType"))
         .switchMap((action) =>
-            Rx.Observable.of(changeMapType(findMapType(action.payload.pathname)))
+            Rx.Observable.of(changeMapType(findMapType(action.payload.location.pathname)))
         );
 /**
  * Epics for maptype switch functionalities

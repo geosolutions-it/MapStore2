@@ -113,7 +113,7 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
 const detectNewPage = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(action => {
-            const pathname = action.payload && action.payload.pathname;
+            const pathname = action.payload && action.payload.location && action.payload.location.pathname;
             const currentPage = !isNil(pathname) && split(pathname, '/')[1];
             const oldPage = get(store.getState(), 'feedbackMask.currentPage');
             // verify if it's a text to avoid id number (eg. embedded)
@@ -122,7 +122,7 @@ const detectNewPage = (action$, store) =>
         .switchMap(action => Rx.Observable.of(
             feedbackMaskLoaded(),
             feedbackMaskEnabled(false),
-            detectedNewPage(split(action.payload.pathname, '/')[1])
+            detectedNewPage(split(action.payload.location.pathname, '/')[1])
         ));
 /**
  * Epics for feedbackMask functionality
