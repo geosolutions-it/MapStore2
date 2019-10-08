@@ -45,7 +45,14 @@
 }
 
 {{#each codepoints}}
-.{{../classPrefix}}{{@key}}:before {
-	content: "\\{{this}}";
-}
+.{{../classPrefix}}{{@key}}:before { content: "\\{{this}}"; }
+{{/each}}
+
+/* 
+classes with icon code
+they can be used as mixin to get the content code
+structure .glyphicon-{iconName}-content
+*/
+{{#each codepoints}}
+.{{../classPrefix}}{{@key}}-content { content: "\\{{this}}"; }
 {{/each}}

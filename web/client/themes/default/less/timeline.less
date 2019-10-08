@@ -68,14 +68,14 @@
                         display: flex;
                         font-size: 10px;
                         justify-content: flex-start;
-                        content: "\e257";
+                        .glyphicon-chevron-left-content();
                     }
                     /* chevron left icon */
                     &:after, &::after {
                         display: flex;
                         font-size: 10px;
                         justify-content: flex-end;
-                        content: "\e258";
+                        .glyphicon-chevron-right-content();
                     }
                 }
                 &:hover, &:active {
@@ -119,7 +119,7 @@
             &:after, &::after {
                 bottom: 24px;
                 left: -16px;
-                content: "\E074";
+                .glyphicon-stop-content();
                 font-size: 18px;
                 font-family: "mapstore2";
                 color: lighten(@ms2-color-danger, 5%);
@@ -151,7 +151,7 @@
             &:after, &::after {
                 bottom: 24px;
                 left: 1px;
-                content: "\E072";
+                .glyphicon-play-content();
                 font-family: "mapstore2";
                 font-size: 18px;
                 color: lighten(@ms2-color-success, 10%);
