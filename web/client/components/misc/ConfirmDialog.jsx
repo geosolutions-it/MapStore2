@@ -22,6 +22,7 @@ class ConfirmModal extends React.Component {
         show: PropTypes.bool,
         options: PropTypes.object,
         onConfirm: PropTypes.func,
+        // has original click event as parameter
         onClose: PropTypes.func,
         closeGlyph: PropTypes.string,
         style: PropTypes.object,
