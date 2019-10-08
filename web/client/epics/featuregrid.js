@@ -7,7 +7,7 @@
  */
 const Rx = require('rxjs');
 const { get, head, isEmpty, find, castArray, includes, reduce} = require('lodash');
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE } = require('connected-react-router');
 
 
 const axios = require('../libs/ajax');

@@ -38,7 +38,7 @@ const {
     layerLoad,
     layerError
 } = require('../../actions/layers');
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { onLocationChanged } = require('connected-react-router');
 const { ActionsObservable } = require('redux-observable');
 const Rx = require('rxjs');
 
@@ -53,9 +53,9 @@ describe('widgets Epics', () => {
         let count = 0;
         testEpic(clearWidgetsOnLocationChange,
             1,
-            [configureMap(), { type: LOCATION_CHANGE, payload: {
+            [configureMap(), onLocationChanged({
                 pathname: "newPath"
-            }}],
+            })],
             checkActions,
             () => {
                 return count++
@@ -81,9 +81,9 @@ describe('widgets Epics', () => {
         let count = 0;
         testEpic(clearWidgetsOnLocationChange,
             1,
-            [configureMap(), { type: LOCATION_CHANGE, payload: {
+            [configureMap(), onLocationChanged({
                 pathname: "newPath"
-            }}],
+            })],
             checkActions,
             () => {
                 return count++
@@ -112,12 +112,9 @@ describe('widgets Epics', () => {
             [
                 configureMap(),
                 savingMap(),
-                {
-                    type: LOCATION_CHANGE,
-                    payload: {
-                        pathname: "newPath"
-                    }
-                }
+                onLocationChanged({
+                    pathname: "newPath"
+                })
             ],
             checkActions,
             () => {
@@ -146,18 +143,13 @@ describe('widgets Epics', () => {
             1,
             [configureMap(),
                 savingMap(),
-                {
-                    type: LOCATION_CHANGE,
-                    payload: {
-                        pathname: "newPath"
-                    }
-                },
+                onLocationChanged({
+                    pathname: "newPath"
+                }),
                 mapCreated(),
-                {
-                    type: LOCATION_CHANGE, payload: {
-                        pathname: "newPath"
-                    }
-                }],
+                onLocationChanged({
+                    pathname: "newPath"
+                })],
             checkActions,
             () => {
                 return count++

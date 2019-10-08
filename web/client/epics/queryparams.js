@@ -7,7 +7,7 @@
 */
 
 import * as Rx from 'rxjs';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import { get, head, isNaN, isString, includes } from 'lodash';
 import url from 'url';
 

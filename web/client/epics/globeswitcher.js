@@ -14,7 +14,7 @@ const Rx = require('rxjs');
 const {get} = require('lodash');
 
 const defaultRegexes = [/\/viewer\/\w+\/(\w+)/, /\/viewer\/(\w+)/];
-const { push } = require('react-router-redux');
+const { push } = require('connected-react-router');
 
 const replaceMapType = (path, newMapType) => {
     const match = defaultRegexes.reduce((previous, regex) => {
@@ -29,7 +29,7 @@ const replaceMapType = (path, newMapType) => {
  * Gets every `TOGGLE_3D` event.
  * @memberof epics.globeswitcher
  * @param {external:Observable} action$ manages `TOGGLE_3D`.
- * @return {external:Observable} emitting react-router-redux push action and {@link #actions.globeswitcher.updateLast2dMapType} actions
+ * @return {external:Observable} emitting connected-react-router push action and {@link #actions.globeswitcher.updateLast2dMapType} actions
  */
 const updateRouteOn3dSwitch = (action$, store) =>
     action$.ofType(TOGGLE_3D)

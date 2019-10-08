@@ -62,7 +62,7 @@ const {
 const {
     wrapStartStop
 } = require('../observables/epics');
-const { LOCATION_CHANGE, push} = require('react-router-redux');
+const { LOCATION_CHANGE, push} = require('connected-react-router');
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
     let url = layer.search && layer.search.url;

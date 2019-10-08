@@ -15,7 +15,7 @@ const {TOGGLE_3D} = require('../actions/globeswitcher');
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
     || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE } = require('connected-react-router');
 const {isEmpty, isArray, isObject} = require('lodash');
 
 /**

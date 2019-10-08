@@ -11,7 +11,7 @@
 const Rx = require('rxjs');
 
 const {get, head} = require("lodash");
-const { LOCATION_CHANGE} = require('react-router-redux');
+const { LOCATION_CHANGE} = require('connected-react-router');
 
 const {TOGGLE_CONTROL, setControlProperty} = require('../actions/controls');
 const {QUERY_FORM_SEARCH, loadFilter, reset, search} = require('../actions/queryform');

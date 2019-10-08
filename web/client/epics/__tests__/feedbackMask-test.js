@@ -14,7 +14,7 @@ const {initMap} = require('../../actions/map');
 const {configureMap, configureError} = require('../../actions/config');
 const {loadDashboard, dashboardLoaded, dashboardLoadError} = require('../../actions/dashboard');
 const { loadGeostory, geostoryLoaded, loadGeostoryError } = require('../../actions/geostory');
-
+const { onLocationChanged } = require('connected-react-router');
 
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
@@ -125,21 +125,15 @@ describe('feedbackMask Epics', () => {
             }
             done();
         };
-        testEpic(detectNewPage, 3, [{
-            type: '@@router/LOCATION_CHANGE',
-            payload: {
-                pathname: '/viewer'
-            }
-        }], epicResult, {});
+        testEpic(detectNewPage, 3, [onLocationChanged({
+            pathname: '/viewer'
+        })], epicResult, {});
     });
 
     it('test detectNewPage same page', (done) => {
-        testEpic(addTimeoutEpic(detectNewPage, 10), 1, {
-            type: '@@router/LOCATION_CHANGE',
-            payload: {
-                pathname: '/viewer'
-            }
-        }, actions => {
+        testEpic(addTimeoutEpic(detectNewPage, 10), 1, onLocationChanged({
+            pathname: '/viewer'
+        }), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -159,12 +153,9 @@ describe('feedbackMask Epics', () => {
     });
 
     it('test detectNewPage exclude number id path', (done) => {
-        testEpic(addTimeoutEpic(detectNewPage, 10), 1, {
-            type: '@@router/LOCATION_CHANGE',
-            payload: {
-                pathname: '/777'
-            }
-        }, actions => {
+        testEpic(addTimeoutEpic(detectNewPage, 10), 1, onLocationChanged({
+            pathname: '/777'
+        }), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {

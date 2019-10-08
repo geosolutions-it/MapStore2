@@ -9,7 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {compose} = require('recompose');
 const {createSelector} = require('reselect');
-const {push} = require('react-router-redux');
+const {push} = require('connected-react-router');
 const {Button} = require('react-bootstrap');
 const {get} = require('lodash');
 

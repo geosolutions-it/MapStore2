@@ -11,7 +11,7 @@ const { getLayerFromId } = require('../selectors/layers');
 const { pathnameSelector } = require('../selectors/routing');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const { DASHBOARD_LOADED } = require('../actions/dashboard');
-const {LOCATION_CHANGE} = require('react-router-redux');
+const {LOCATION_CHANGE} = require('connected-react-router');
 const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
 const converter = require('json-2-csv');
@@ -133,7 +133,7 @@ module.exports = {
                     const newLocationDifference = newLocation[newLocation.length - 1];
                     return newLocationDifference !== loctionDifference;
                 }).switchMap( ({payload = {}} = {}) => {
-                    if (payload && payload.pathname) {
+                    if (payload && payload.location && payload.location.pathname) {
                         return Rx.Observable.of(clearWidgets());
                     }
                     return Rx.Observable.empty();

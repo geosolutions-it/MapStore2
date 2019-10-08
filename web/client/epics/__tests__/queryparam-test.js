@@ -11,6 +11,7 @@ import { addTimeoutEpic, testEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { readQueryParamsOnMapEpic } from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT } from '../../actions/map';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { onLocationChanged } from 'connected-react-router';
 
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
@@ -26,9 +27,7 @@ describe('queryparam epics', () => {
         testEpic(
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
-                {
-                    type: '@@router/LOCATION_CHANGE'
-                },
+                onLocationChanged({}),
                 changeMapView()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
@@ -58,9 +57,7 @@ describe('queryparam epics', () => {
         testEpic(
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
-                {
-                    type: '@@router/LOCATION_CHANGE'
-                },
+                onLocationChanged({}),
                 changeMapView()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
@@ -91,9 +88,7 @@ describe('queryparam epics', () => {
         testEpic(
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
-                {
-                    type: '@@router/LOCATION_CHANGE'
-                },
+                onLocationChanged({}),
                 changeMapView()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);

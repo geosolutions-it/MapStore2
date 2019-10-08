@@ -10,7 +10,7 @@ const Rx = require('rxjs');
 const {get} = require('lodash');
 const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
 const findMapType = path => path.match(defaultRegex) && path.replace(defaultRegex, "$2");
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE } = require('connected-react-router');
 
 /**
  * keep the default mapType in sync when change the URL of the map for viewer

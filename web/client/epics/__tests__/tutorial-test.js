@@ -11,6 +11,7 @@ const expect = require('expect');
 const {getActionsFromStepEpic, switchTutorialEpic} = require('../tutorial');
 const {SETUP_TUTORIAL, updateTutorial, initTutorial} = require('../../actions/tutorial');
 const {testEpic} = require('./epicTestUtils');
+const { onLocationChanged } = require('connected-react-router');
 
 describe('tutorial Epics', () => {
     it('getActionsFromStepEpic with object action', (done) => {
@@ -82,14 +83,9 @@ describe('tutorial Epics', () => {
     it('switchTutorialEpic with path', (done) => {
 
         testEpic(switchTutorialEpic, 1, [
-            {
-                type: "@@router/LOCATION_CHANGE",
-                payload: {
-                    location: {
-                        pathname: '/dashboard/'
-                    }
-                }
-            },
+            onLocationChanged({
+                pathname: '/dashboard/'
+            }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
             expect(actions.length).toBe(1);
@@ -119,14 +115,9 @@ describe('tutorial Epics', () => {
     it('switchTutorialEpic with viewer path', (done) => {
 
         testEpic(switchTutorialEpic, 1, [
-            {
-                type: "@@router/LOCATION_CHANGE",
-                payload: {
-                    location: {
-                        pathname: '/viewer/cesium/001'
-                    }
-                }
-            },
+            onLocationChanged({
+                pathname: '/viewer/cesium/001'
+            }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
             expect(actions.length).toBe(1);
@@ -156,14 +147,9 @@ describe('tutorial Epics', () => {
     it('switchTutorialEpic with path and id', (done) => {
 
         testEpic(switchTutorialEpic, 1, [
-            {
-                type: "@@router/LOCATION_CHANGE",
-                payload: {
-                    location: {
-                        pathname: '/dashboard/001'
-                    }
-                }
-            },
+            onLocationChanged({
+                pathname: '/dashboard/001'
+            }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
             expect(actions.length).toBe(1);
@@ -193,14 +179,9 @@ describe('tutorial Epics', () => {
     it('switchTutorialEpic mobile', (done) => {
 
         testEpic(switchTutorialEpic, 1, [
-            {
-                type: "@@router/LOCATION_CHANGE",
-                payload: {
-                    location: {
-                        pathname: '/dashboard/001'
-                    }
-                }
-            },
+            onLocationChanged({
+                pathname: '/dashboard/001'
+            }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
             expect(actions.length).toBe(1);
@@ -233,14 +214,9 @@ describe('tutorial Epics', () => {
     it('switchTutorialEpic missing preset steps', (done) => {
 
         testEpic(switchTutorialEpic, 1, [
-            {
-                type: "@@router/LOCATION_CHANGE",
-                payload: {
-                    location: {
-                        pathname: '/dashboard/001'
-                    }
-                }
-            },
+            onLocationChanged({
+                pathname: '/dashboard/001'
+            }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
             expect(actions.length).toBe(1);

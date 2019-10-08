@@ -10,7 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MockAdapter from 'axios-mock-adapter';
-import { CALL_HISTORY_METHOD } from 'react-router-redux';
+import { CALL_HISTORY_METHOD } from 'connected-react-router';
 
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';

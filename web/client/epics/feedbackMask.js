@@ -16,7 +16,7 @@ const { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } = require('../acti
 const {INIT_MAP} = require('../actions/map');
 const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapSelector} = require('../selectors/map');
-const {LOCATION_CHANGE} = require('react-router-redux');
+const {LOCATION_CHANGE} = require('connected-react-router');
 const {LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
 
 /**
