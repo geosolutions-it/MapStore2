@@ -19,8 +19,7 @@ const layer = {
 const layerSottoPasso = {
     id: 'DBT:SOTTOPASSO__6',
     type: 'wms',
-    url: 'http://localhost:8081/geoserver-test/wms',
-    nativeCrs: 'EPSG:3003'
+    url: 'http://localhost:8081/geoserver-test/wms'
 };
 
 const layerFilterSottoPasso = {
