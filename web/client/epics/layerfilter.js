@@ -18,14 +18,13 @@ const {QUERY_FORM_SEARCH, loadFilter, reset, search} = require('../actions/query
 const {changeLayerProperties} = require('../actions/layers');
 
 
-const { warning} = require('../actions/notifications');
 const {OPEN_QUERY_BUILDER, initLayerFilter, DISCARD_CURRENT_FILTER, APPLY_FILTER, storeAppliedFilter} = require('../actions/layerFilter');
 const {featureTypeSelected, toggleLayerFilter, initQueryPanel} = require("../actions/wfsquery");
 const {getSelectedLayer} = require("../selectors/layers");
 
 const {changeDrawingStatus} = require('../actions/draw');
 const FilterUtils = require('../utils/FilterUtils');
-const {getNativeCrs} = require('../observables/wms');
+
 
 const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields} = {}) => {
     return !!(filterFields && head(filterFields)
@@ -34,16 +33,12 @@ const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields} = {}) =
 };
 
 const endLayerFilterEpic = (action$) => ob$ => ob$.takeUntil(action$.ofType(TOGGLE_CONTROL).
-            filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-            .merge(action$.ofType(LOCATION_CHANGE)));
+    filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
+    .merge(action$.ofType(LOCATION_CHANGE)));
 
 // Create action to add filter to wms layer
 const addFilterToLayer = (layer, filter) => {
     return changeLayerProperties(layer, {layerFilter: filter});
-};
-// Create action to add nativeCrs to wms layer
-const addNativeCrsLayer = (layer, nativeCrs = "") => {
-    return changeLayerProperties(layer, {nativeCrs});
 };
 
 
@@ -54,7 +49,7 @@ module.exports = {
  * @memberof epics.layerFilter
  * @param {external:Observable} action$ manages `OPEN_QUERY_BUILDER` and `QUERY_FORM_SEARCH`
  * @return {external:Observable} `FEATURE_TYPE_SELECTED` `QUERYFORM:LOAD_FILTER` `LAYER_FILTER:INIT_LAYER_FILTER` `SET_CONTROL_PROPERTY` (open queryPanel)
- * `CHANGE_LAYERPROPERTIS` with nativeCrs if needed and on `QUERY_FORM_SEARCH` `CHANGE_LAYERPROPERTIS` adding layerFilter to selected layer
+ * and on `QUERY_FORM_SEARCH` `CHANGE_LAYERPROPERTIS` adding layerFilter to selected layer
  * terminate on `LOCATION_CHANGE` `TOGGLE_CONTROL` with queryPanel enabled === false
  */
     handleLayerFilterPanel: (action$, {getState}) =>
@@ -69,35 +64,22 @@ module.exports = {
                 initLayerFilter(layerFilter),
                 setControlProperty('queryPanel', "enabled", true)
             )
-            .merge(
-                getNativeCrs(layer)
-                .map((nativeCrs) => addNativeCrsLayer(layer.id, nativeCrs))
-                .catch(() => {
-                    return Rx.Observable.of(
-                        warning({
-                            title: "notification.warning",
-                            message: "featuregrid.errorProjFetch",
-                            position: "tc",
-                            autoDismiss: 5
-                        }));
-                }),
-                Rx.Observable.of(toggleLayerFilter()).filter(() => !get(getState(), "query.isLayerFilter")),
-                action$.ofType(QUERY_FORM_SEARCH)
-                    .switchMap( ({filterObj}) => {
-                        let newFilter = isNotEmptyFilter(filterObj) ? {...get(getState(), "queryform", {})} : undefined;
-                        if (newFilter) {
-                            newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
-                            newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;
-                            newFilter.crossLayerFilter = newFilter.crossLayerExpanded && FilterUtils.setupCrossLayerFilterDefaults(newFilter.crossLayerFilter) || null;
-                            const {nativeCrs} = getSelectedLayer(getState());
-                            newFilter = FilterUtils.normalizeFilterCQL(newFilter, nativeCrs);
-                        }
-                        return Rx.Observable.of(addFilterToLayer(layer.id, newFilter));
-                    })
-            ).let(endLayerFilterEpic(action$)).concat(Rx.Observable.from([toggleLayerFilter(), reset(), changeDrawingStatus("clean", "", "queryform", [], {})]))
+                .merge(
+                    Rx.Observable.of(toggleLayerFilter()).filter(() => !get(getState(), "query.isLayerFilter")),
+                    action$.ofType(QUERY_FORM_SEARCH)
+                        .switchMap( ({filterObj}) => {
+                            let newFilter = isNotEmptyFilter(filterObj) ? {...get(getState(), "queryform", {})} : undefined;
+                            if (newFilter) {
+                                newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
+                                newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;
+                                newFilter.crossLayerFilter = newFilter.crossLayerExpanded && FilterUtils.setupCrossLayerFilterDefaults(newFilter.crossLayerFilter) || null;
+                            }
+                            return Rx.Observable.of(addFilterToLayer(layer.id, newFilter));
+                        })
+                ).let(endLayerFilterEpic(action$)).concat(Rx.Observable.from([toggleLayerFilter(), reset(), changeDrawingStatus("clean", "", "queryform", [], {})]))
             ;
         }),
-/**
+    /**
  * It throws the correct actions to discard the current applied filter and reload the last saved if present
  * @memberof epics.layerFilter
  * @param {external:Observable} action$ manages `DISCARD_CURRENT_FILTER`
@@ -105,17 +87,17 @@ module.exports = {
  */
     restoreSavedFilter: (action$, {getState}) =>
         action$.ofType(DISCARD_CURRENT_FILTER)
-        .switchMap(() => {
-            const params = {typeName: get(getState(), "state.query.typeName")};
-            const searchUrl = get(getState(), "state.query.url");
-            const filter = get(getState(), "layerFilter.persisted");
-            return Rx.Observable.of(changeDrawingStatus('clean', '', "queryform", []),
-            loadFilter(filter),
-            search(searchUrl, filter, params),
-            initQueryPanel());
+            .switchMap(() => {
+                const params = {typeName: get(getState(), "state.query.typeName")};
+                const searchUrl = get(getState(), "state.query.url");
+                const filter = get(getState(), "layerFilter.persisted");
+                return Rx.Observable.of(changeDrawingStatus('clean', '', "queryform", []),
+                    loadFilter(filter),
+                    search(searchUrl, filter, params),
+                    initQueryPanel());
 
-        }),
-/**
+            }),
+    /**
  * It Persists the current applied filter
  * @memberof epics.layerFilter
  * @param {external:Observable} action$ manages `APPLY_FILTER`
@@ -123,9 +105,9 @@ module.exports = {
  */
     onApplyFilter: (action$, {getState}) =>
         action$.ofType(APPLY_FILTER)
-        .map(() => {
-            const newFilter = {...get(getState(), "queryform", {})};
-            return storeAppliedFilter(newFilter);
+            .map(() => {
+                const newFilter = {...get(getState(), "queryform", {})};
+                return storeAppliedFilter(newFilter);
 
-        })
+            })
 };

@@ -24,7 +24,6 @@ const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEAT
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
-const {getNativeCrs} = require('../observables/wms');
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
 const { closeIdentify } = require('../actions/mapInfo');
@@ -46,12 +45,12 @@ const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasCha
     isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector, getAttributeFilters } = require('../selectors/featuregrid');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
-const {getLayerFromId, getSelectedLayer} = require('../selectors/layers');
+const {getSelectedLayer} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
 const {queryFormUiStateSelector} = require('../selectors/queryform');
-const {composeAttributeFilters, normalizeFilterCQL} = require('../utils/FilterUtils');
+const {composeAttributeFilters} = require('../utils/FilterUtils');
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -140,13 +139,13 @@ const createDeleteFlow = (features, describeFeatureType, url) => save(
 const createLoadPageFlow = (store) => ({page, size} = {}) => {
     const state = store.getState();
     return Rx.Observable.of( query(
-            wfsURL(state),
-            addPagination({
-                    ...(wfsFilter(state))
-                },
-                getPagination(state, {page, size})
-            ),
-            queryOptionsSelector(state)
+        wfsURL(state),
+        addPagination({
+            ...(wfsFilter(state))
+        },
+        getPagination(state, {page, size})
+        ),
+        queryOptionsSelector(state)
     ));
 };
 
@@ -171,10 +170,7 @@ const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
 const addFilterToWMSLayer = (layer, filter) => {
     return changeLayerProperties(layer, {filterObj: filter});
 };
-// Create action to add nativeCrs to wms layer
-const addNativeCrsLayer = (layer, nativeCrs = "") => {
-    return changeLayerProperties(layer, {nativeCrs});
-};
+
 const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
@@ -189,36 +185,16 @@ module.exports = {
     featureGridBrowseData: (action$, store) =>
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
-            const isActive = isSyncWmsActive(store.getState());
-            const objLayer = getLayerFromId(store.getState(), layer.id);
             return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
-                ).merge(
-                    Rx.Observable.of(isActive)
-                        // if sync is active on startup
-                        // but nativeCRS is missing, it should be get from the server
-                        .switchMap( active => {
-                            if (!active || (objLayer && objLayer.nativeCrs)) {
-                                return Rx.Observable.empty();
-                            }
-                            return getNativeCrs(objLayer)
-                                .map((nativeCrs) => addNativeCrsLayer(objLayer.id, nativeCrs));
-                        }).catch(() => {
-                            return Rx.Observable.of(
-                                warning({
-                                    title: "notification.warning",
-                                    message: "featuregrid.errorProjFetch",
-                                    position: "tc",
-                                    autoDismiss: 5
-                                }));
-                        }),
-                        createInitialQueryFlow(action$, store, layer)
-                )
+            ).merge(
+                createInitialQueryFlow(action$, store, layer)
+            )
                 .merge(
                     Rx.Observable.of(reset())
-                    .filter(() => currentTypeName !== layer.name)
+                        .filter(() => currentTypeName !== layer.name)
                 );
         }),
     /**
@@ -235,7 +211,7 @@ module.exports = {
     featureGridStartupQuery: (action$, store) =>
         action$.ofType(QUERY_CREATE)
             .switchMap(() => Rx.Observable.of(changePage(0))
-            .concat(modeSelector(store.getState()) === MODES.VIEW ? Rx.Observable.of(toggleViewMode()) : Rx.Observable.empty())),
+                .concat(modeSelector(store.getState()) === MODES.VIEW ? Rx.Observable.of(toggleViewMode()) : Rx.Observable.empty())),
     /**
      * Create sorted queries on sort action
      * With virtualScroll active reset to page 0 but the grid will reload
@@ -244,23 +220,23 @@ module.exports = {
      */
     featureGridSort: (action$, store) =>
         action$.ofType(SORT_BY)
-        .switchMap( ({sortBy, sortOrder}) =>
-            Rx.Observable.of( query(
+            .switchMap( ({sortBy, sortOrder}) =>
+                Rx.Observable.of( query(
                     wfsURL(store.getState()),
                     addPagination({
-                            ...wfsFilter(store.getState()),
-                            sortOptions: {sortBy, sortOrder}
-                        },
-                        getPagination(store.getState())
-                ),
-                queryOptionsSelector(store.getState())
-            ))
-            .merge(action$.ofType(QUERY_RESULT)
-                    .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
-                    .takeUntil(action$.ofType(QUERY_ERROR))
-                    .take(1)
+                        ...wfsFilter(store.getState()),
+                        sortOptions: {sortBy, sortOrder}
+                    },
+                    getPagination(store.getState())
+                    ),
+                    queryOptionsSelector(store.getState())
+                ))
+                    .merge(action$.ofType(QUERY_RESULT)
+                        .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                        .takeUntil(action$.ofType(QUERY_ERROR))
+                        .take(1)
                     )
-        ),
+            ),
     /**
      * Performs the query when the text filter is updated
      * @memberof epics.featuregrid
@@ -310,21 +286,21 @@ module.exports = {
                 query(
                     wfsURL(store.getState()),
                     addPagination({
-                            ...wfsFilter(store.getState())
-                        },
-                        getPagination(store.getState(), {page: page, size})
+                        ...wfsFilter(store.getState())
+                    },
+                    getPagination(store.getState(), {page: page, size})
                     ),
                     queryOptionsSelector(store.getState())
                 ),
                 refreshLayerVersion(selectedLayerIdSelector(store.getState()))
             )
-            .merge(action$.ofType(QUERY_RESULT)
-                .map((ra) => Rx.Observable.of(clearChanges(), fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                .merge(action$.ofType(QUERY_RESULT)
+                    .map((ra) => Rx.Observable.of(clearChanges(), fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
                     )
-                .mergeAll()
-                .takeUntil(action$.ofType(QUERY_ERROR))
-                .take(2)
-            )
+                    .mergeAll()
+                    .takeUntil(action$.ofType(QUERY_ERROR))
+                    .take(2)
+                )
         ),
     /**
      * trigger WFS transaction stream on SAVE_CHANGES action
@@ -339,7 +315,7 @@ module.exports = {
                         describeSelector(store.getState()),
                         wfsURL(store.getState())
                     ).map(() => saveSuccess())
-                    .catch((e) => Rx.Observable.of(saveError(), error({
+                        .catch((e) => Rx.Observable.of(saveError(), error({
                             title: "featuregrid.errorSaving",
                             message: e.message || "Unknown Exception",
                             uid: "saveError",
@@ -363,10 +339,10 @@ module.exports = {
                         wfsURL(store.getState())
                     ).map(() => saveSuccess())
                     // close window
-                    .catch((e) => Rx.Observable.of(saveError(), error({
-                        title: "featuregrid.errorSaving",
-                        message: e.message || "Unknown Exception",
-                        uid: "saveError"
+                        .catch((e) => Rx.Observable.of(saveError(), error({
+                            title: "featuregrid.errorSaving",
+                            message: e.message || "Unknown Exception",
+                            uid: "saveError"
                         }))).concat(Rx.Observable.of(
                             toggleTool("deleteConfirm"),
                             clearSelection()
@@ -532,9 +508,8 @@ module.exports = {
         ),
     resetQueryPanel: (action$, store) =>
         action$.ofType(LOCATION_CHANGE).switchMap( () => {
-            return queryPanelSelector(store.getState()) ? Rx.Observable.of(setControlProperty('queryPanel', "enabled", false))
-        : Rx.Observable.empty(); }
-    ),
+            return queryPanelSelector(store.getState()) ? Rx.Observable.of(setControlProperty('queryPanel', "enabled", false)) : Rx.Observable.empty();
+        }),
     /**
      * Closes the feature grid when the drawer menu button has been toggled
      * @memberof epics.featuregrid
@@ -597,32 +572,32 @@ module.exports = {
                         .ofType(HIDE_MAPINFO_MARKER)
                         .switchMap(() => Rx.Observable.of(openFeatureGrid()))
 
-                    ).takeUntil(
-                        action$.ofType(LOCATION_CHANGE, TOGGLE_CONTROL)
-                            .filter(action => action.type === LOCATION_CHANGE || action.control && action.control === 'drawer')
-                            .merge(
-                                action$
-                                    // a close feature grid event not between feature info click and hide mapinfo marker
-                                    .ofType(CLOSE_FEATURE_GRID)
-                                    .withLatestFrom(
-                                        action$
-                                            .ofType(FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER)
-                                            .scan((acc, { type }) => {
-                                                switch (type) {
-                                                    case FEATURE_INFO_CLICK:
-                                                        return false;
-                                                    case HIDE_MAPINFO_MARKER:
-                                                        return true;
-                                                    default:
-                                                        return false;
-                                                }
-                                            }, true)
-                                            .startWith(true),
-                                        (a, b) => b
-                                    ).filter(e => e)
+                ).takeUntil(
+                    action$.ofType(LOCATION_CHANGE, TOGGLE_CONTROL)
+                        .filter(action => action.type === LOCATION_CHANGE || action.control && action.control === 'drawer')
+                        .merge(
+                            action$
+                            // a close feature grid event not between feature info click and hide mapinfo marker
+                                .ofType(CLOSE_FEATURE_GRID)
+                                .withLatestFrom(
+                                    action$
+                                        .ofType(FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER)
+                                        .scan((acc, { type }) => {
+                                            switch (type) {
+                                            case FEATURE_INFO_CLICK:
+                                                return false;
+                                            case HIDE_MAPINFO_MARKER:
+                                                return true;
+                                            default:
+                                                return false;
+                                            }
+                                        }, true)
+                                        .startWith(true),
+                                    (a, b) => b
+                                ).filter(e => e)
 
-                            )
-                    )
+                        )
+                )
             ),
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
@@ -631,44 +606,44 @@ module.exports = {
                 closeFeatureGrid(),
                 setControlProperty('queryPanel', "enabled", true)
             )
-            .merge(
-                Rx.Observable.race(
-                    action$.ofType(QUERY_FORM_SEARCH).mergeMap((action) => {
+                .merge(
+                    Rx.Observable.race(
+                        action$.ofType(QUERY_FORM_SEARCH).mergeMap((action) => {
                         // merge advanced filter with columns filters
-                        return Rx.Observable.of(
-                            createQuery(action.searchUrl, action.filterObj),
-                            storeAdvancedSearchFilter(assign({}, queryFormUiStateSelector(store.getState()), action.filterObj)),
-                            setControlProperty('queryPanel', "enabled", false),
-                            openFeatureGrid()
-                        );
-                    }),
-                    action$.ofType(TOGGLE_CONTROL)
-                        .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-                        .mergeMap(() => {
-                            const {drawStatus} = (store.getState()).draw || {};
-                            const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
-                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
-                        }
-                    )
-                ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
-            );
+                            return Rx.Observable.of(
+                                createQuery(action.searchUrl, action.filterObj),
+                                storeAdvancedSearchFilter(assign({}, queryFormUiStateSelector(store.getState()), action.filterObj)),
+                                setControlProperty('queryPanel', "enabled", false),
+                                openFeatureGrid()
+                            );
+                        }),
+                        action$.ofType(TOGGLE_CONTROL)
+                            .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
+                            .mergeMap(() => {
+                                const {drawStatus} = (store.getState()).draw || {};
+                                const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                                return Rx.Observable.from(acts.concat(openFeatureGrid()));
+                            }
+                            )
+                    ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
+                );
         }),
     onFeatureGridZoomAll: (action$, store) =>
         action$.ofType(ZOOM_ALL).filter(() => !get(store.getState(), "featuregird.virtualScroll", false)).switchMap(() =>
             Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
 
-    ),
+        ),
     /**
      * reset controls on edit mode switch
      */
     resetControlsOnEnterInEditMode: (action$) =>
         action$.ofType(TOGGLE_MODE)
-        .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"])),
+            .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"])),
     closeIdentifyWhenOpenFeatureGrid: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
-        .switchMap(() => {
-            return Rx.Observable.of(closeIdentify());
-        }),
+            .switchMap(() => {
+                return Rx.Observable.of(closeIdentify());
+            }),
     /**
      * start sync filter with wms layer
      *
@@ -678,33 +653,15 @@ module.exports = {
      */
     startSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
-        .filter( () => isSyncWmsActive(store.getState()))
-        .switchMap(() => {
-            const state = store.getState();
-            const layerId = selectedLayerIdSelector(state);
-            const objLayer = getLayerFromId(store.getState(), layerId);
-            if (!objLayer.nativeCrs) {
-                return getNativeCrs(objLayer)
-                    .switchMap((nativeCrs) => Rx.Observable.of(addNativeCrsLayer(layerId, nativeCrs), startSyncWMS()))
-                    .catch(() => {
-                        return Rx.Observable.of(
-                            warning({
-                                title: "notification.warning",
-                                message: "featuregrid.errorProjFetch",
-                                position: "tc",
-                                autoDismiss: 5
-                            }), startSyncWMS());
-                    });
-            }
-            return Rx.Observable.of(startSyncWMS());
-        }),
+            .filter( () => isSyncWmsActive(store.getState()))
+            .mapTo(startSyncWMS()),
     /**
      * stop sync filter with wms layer
      */
     stopSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
-        .filter( () => !isSyncWmsActive(store.getState()))
-        .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
+            .filter( () => !isSyncWmsActive(store.getState()))
+            .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
     /**
      * Sync map with filter.
      *
@@ -723,51 +680,49 @@ module.exports = {
                     Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                     action$.ofType(START_SYNC_WMS))
                     .mergeMap(() => {
-                        const objLayer = getLayerFromId(store.getState(), layerId);
-                        const normalizedFilter = normalizeFilterCQL(filter, objLayer.nativeCrs);
-                        return Rx.Observable.of(addFilterToWMSLayer(layerId, normalizedFilter));
+                        return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
                     });
             }),
     virtualScrollLoadFeatures: (action$, {getState}) =>
         action$.ofType(LOAD_MORE_FEATURES)
-        .filter(() => !featureLoadingSelector(getState()))
-        .switchMap( ac => {
-            const state = getState();
-            const {startPage, endPage} = ac.pages;
-            const {pages: oldPages, pagination} = state.featuregrid;
-            const size = get(pagination, "size");
-            const nPs = getPagesToLoad(startPage, endPage, oldPages, size);
-            const needPages = (nPs[1] - nPs[0] + 1 );
-            return Rx.Observable.of( query(wfsURL(state),
+            .filter(() => !featureLoadingSelector(getState()))
+            .switchMap( ac => {
+                const state = getState();
+                const {startPage, endPage} = ac.pages;
+                const {pages: oldPages, pagination} = state.featuregrid;
+                const size = get(pagination, "size");
+                const nPs = getPagesToLoad(startPage, endPage, oldPages, size);
+                const needPages = (nPs[1] - nPs[0] + 1 );
+                return Rx.Observable.of( query(wfsURL(state),
                     addPagination({
-                                ...(wfsFilter(state))
-                                },
-                                {startIndex: nPs[0] * size, maxFeatures: needPages * size }
+                        ...(wfsFilter(state))
+                    },
+                    {startIndex: nPs[0] * size, maxFeatures: needPages * size }
                     ),
                     queryOptionsSelector(state)
-                    )).filter(() => nPs.length > 0)
-                .merge( action$.ofType(QUERY_RESULT)
-                    .filter(() => nPs.length > 0)
-                    .map(({result = {}, filterObj} = {}) => {
-                        const {features: oldFeatures, maxStoredPages} = (getState()).featuregrid;
-                        const startIndex = get(filterObj, "pagination.startIndex");
-                        const { pages, features } = updatePages(
-                            result,
-                            { endPage, startPage },
-                            { pages: oldPages, features: oldFeatures || [] },
-                            { size, startIndex, maxStoredPages});
-                        return fatureGridQueryResult(features, pages);
-                    }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
-                ).merge(
-                    action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
-                    // When loading we store the load more features request, on loading end we emit the last
-                    .filter(a => !a.isLoading)
-                    .withLatestFrom(action$.ofType(LOAD_MORE_FEATURES))
-                    .map((p) => p[1])
-                    .take(1)
-                    .takeUntil(action$.ofType(QUERY_ERROR))
-                );
-        }),
+                )).filter(() => nPs.length > 0)
+                    .merge( action$.ofType(QUERY_RESULT)
+                        .filter(() => nPs.length > 0)
+                        .map(({result = {}, filterObj} = {}) => {
+                            const {features: oldFeatures, maxStoredPages} = (getState()).featuregrid;
+                            const startIndex = get(filterObj, "pagination.startIndex");
+                            const { pages, features } = updatePages(
+                                result,
+                                { endPage, startPage },
+                                { pages: oldPages, features: oldFeatures || [] },
+                                { size, startIndex, maxStoredPages});
+                            return fatureGridQueryResult(features, pages);
+                        }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
+                    ).merge(
+                        action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
+                        // When loading we store the load more features request, on loading end we emit the last
+                            .filter(a => !a.isLoading)
+                            .withLatestFrom(action$.ofType(LOAD_MORE_FEATURES))
+                            .map((p) => p[1])
+                            .take(1)
+                            .takeUntil(action$.ofType(QUERY_ERROR))
+                    );
+            }),
     /**
      * Implements synchronization with time dimension for the feature grid.
      * Performs again createQuery when time changes or if timeSync is toggled
