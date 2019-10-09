@@ -9,8 +9,10 @@ var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 const assign = require('object-assign');
 const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
 const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = (env) => {
     const isProduction = env && env.production ? true : false;
+    const cssPrefix = '.__PROJECTNAME__';
     return {
         entry: assign({
             'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
@@ -31,7 +33,7 @@ module.exports = (env) => {
                 options: {
                     postcss: {
                         plugins: [
-                            require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.ms2', '.__PROJECTNAME__', '[data-ms2-container]']})
+                            require('postcss-prefix-selector')({prefix: cssPrefix, exclude: ['.ms2', cssPrefix, '[data-ms2-container]']})
                         ]
                     },
                     context: __dirname
@@ -69,7 +71,12 @@ module.exports = (env) => {
                     }, {
                         loader: 'css-loader'
                     }, {
-                        loader: 'postcss-loader'
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: [
+                                require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
+                            ]
+                        }
                     }]
                 },
                 {
@@ -85,10 +92,17 @@ module.exports = (env) => {
                 },
                 {
                     test: /themes[\\\/]?.+\.less$/,
-                    use: extractThemesPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'postcss-loader', 'less-loader']
-                    })
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        'css-loader', {
+                            loader: 'postcss-loader',
+                            options: {
+                                plugins: [
+                                    require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
+                                ]
+                            }
+                        }, 'less-loader'
+                    ]
                 },
                 {
                     test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
@@ -122,7 +136,10 @@ module.exports = (env) => {
                     test: /\.jsx?$/,
                     exclude: /(ol\.js)$|(Cesium\.js)$/,
                     use: [{
-                        loader: "babel-loader"
+                        loader: "babel-loader",
+                        options: {
+                            configFile: path.join(__dirname, 'babel.config.js')
+                        }
                     }],
                     include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
                 }

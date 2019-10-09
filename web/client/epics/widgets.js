@@ -8,7 +8,7 @@ const {
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
 const { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } = require('../actions/layers');
 const { getLayerFromId } = require('../selectors/layers');
-const { pathnameSelector } = require('../selectors/routing');
+const { pathnameSelector } = require('../selectors/router');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const { DASHBOARD_LOADED } = require('../actions/dashboard');
 const {LOCATION_CHANGE} = require('connected-react-router');

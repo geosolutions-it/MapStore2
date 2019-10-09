@@ -9,7 +9,7 @@
 const expect = require('expect');
 const {
     pathnameSelector
-} = require("../routing");
+} = require("../router");
 const pathname = "/viewer/openlayers/123";
 const state = {
     router: {
@@ -19,7 +19,7 @@ const state = {
     }
 };
 
-describe('Test routing selectors', () => {
+describe('Test router selectors', () => {
     it('test pathnameSelector', () => {
         const retVal = pathnameSelector(state);
         expect(retVal).toExist();
