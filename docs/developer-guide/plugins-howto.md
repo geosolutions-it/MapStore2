@@ -464,7 +464,7 @@ Note that not all the application state is available through the state function,
 {
     ...,
     "monitorState": [
-      {"name": "routing", "path": "routing.location.pathname"},
+      {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     ...

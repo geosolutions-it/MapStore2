@@ -92,7 +92,7 @@ const {
     featureGridSort,
     replayOnTimeDimensionChange
 } = require('../featuregrid');
-
+const { onLocationChanged } = require('connected-react-router');
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
 const {isEmpty, isNil} = require('lodash');
@@ -903,7 +903,7 @@ describe('featuregrid Epics', () => {
     });
 
     it('test resetGridOnLocationChange', (done) => {
-        testEpic(resetGridOnLocationChange, 2, [openFeatureGrid(), {type: '@@router/LOCATION_CHANGE'}], actions => {
+        testEpic(resetGridOnLocationChange, 2, [openFeatureGrid(), onLocationChanged({})], actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
@@ -929,7 +929,7 @@ describe('featuregrid Epics', () => {
                 }
             }
         };
-        testEpic(resetQueryPanel, 1, {type: '@@router/LOCATION_CHANGE'}, actions => {
+        testEpic(resetQueryPanel, 1, onLocationChanged({}), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {

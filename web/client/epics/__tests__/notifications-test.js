@@ -16,6 +16,7 @@ const {clearNotificationOnLocationChange} = require('../notifications');
 const rootEpic = combineEpics(clearNotificationOnLocationChange);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
+const { onLocationChanged } = require('connected-react-router');
 
 describe('notifications Epics', () => {
     let store;
@@ -29,7 +30,7 @@ describe('notifications Epics', () => {
 
     it('test clear notifications on location change', (done) => {
 
-        store.dispatch({type: '@@router/LOCATION_CHANGE'});
+        store.dispatch(onLocationChanged({}));
 
         setTimeout( () => {
             try {

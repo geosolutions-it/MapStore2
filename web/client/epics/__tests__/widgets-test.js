@@ -38,7 +38,7 @@ const {
     layerLoad,
     layerError
 } = require('../../actions/layers');
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { onLocationChanged } = require('connected-react-router');
 const { ActionsObservable } = require('redux-observable');
 const Rx = require('rxjs');
 
@@ -53,19 +53,19 @@ describe('widgets Epics', () => {
         let count = 0;
         testEpic(clearWidgetsOnLocationChange,
             1,
-            [configureMap(), { type: LOCATION_CHANGE, payload: {
+            [configureMap(), onLocationChanged({
                 pathname: "newPath"
-            }}],
+            })],
             checkActions,
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old/2013"}
                         }
                     };
@@ -81,19 +81,19 @@ describe('widgets Epics', () => {
         let count = 0;
         testEpic(clearWidgetsOnLocationChange,
             1,
-            [configureMap(), { type: LOCATION_CHANGE, payload: {
+            [configureMap(), onLocationChanged({
                 pathname: "newPath"
-            }}],
+            })],
             checkActions,
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new-map-type/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old-map-type/2013"}
                         }
                     };
@@ -112,23 +112,20 @@ describe('widgets Epics', () => {
             [
                 configureMap(),
                 savingMap(),
-                {
-                    type: LOCATION_CHANGE,
-                    payload: {
-                        pathname: "newPath"
-                    }
-                }
+                onLocationChanged({
+                    pathname: "newPath"
+                })
             ],
             checkActions,
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old/2013"}
                         }
                     };
@@ -146,28 +143,23 @@ describe('widgets Epics', () => {
             1,
             [configureMap(),
                 savingMap(),
-                {
-                    type: LOCATION_CHANGE,
-                    payload: {
-                        pathname: "newPath"
-                    }
-                },
+                onLocationChanged({
+                    pathname: "newPath"
+                }),
                 mapCreated(),
-                {
-                    type: LOCATION_CHANGE, payload: {
-                        pathname: "newPath"
-                    }
-                }],
+                onLocationChanged({
+                    pathname: "newPath"
+                })],
             checkActions,
             () => {
                 return count++
                     ? {
-                        routing: {
+                        router: {
                             location: { pathname: "new/3012"}
                         }
                     }
                     : {
-                        routing: {
+                        router: {
                             location: { pathname: "old/2013"}
                         }
                     };

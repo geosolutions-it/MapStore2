@@ -29,7 +29,7 @@ const { error } = require('../actions/notifications');
 
 const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelectorCreator } = require('../selectors/dimension');
 
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE } = require('connected-react-router');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
 

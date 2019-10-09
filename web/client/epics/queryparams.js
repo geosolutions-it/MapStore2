@@ -7,7 +7,7 @@
 */
 
 import * as Rx from 'rxjs';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import { get, head, isNaN, isString, includes } from 'lodash';
 import url from 'url';
 
@@ -58,7 +58,7 @@ const paramActions = {
     }
 };
 /**
- * Intercept on `LOCATION_CHANGE` to get query params from routing.location.search string.
+ * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
  * It needs to wait the first `CHANGE_MAP_VIEW` to ensure that width and height of map are in the state.
  * @param {external:Observable} action$ manages `LOCATION_CHANGE` and `CHANGE_MAP_VIEW`
  * @memberof epics.share
@@ -71,7 +71,7 @@ const readQueryParamsOnMapEpic = (action$, store) =>
                 .take(1)
                 .switchMap(() => {
                     const state = store.getState();
-                    const search = get(state, 'routing.location.search') || '';
+                    const search = get(state, 'router.location.search') || '';
                     const { query = {} } = url.parse(search, true) || {};
                     const queryActions = Object.keys(query)
                         .reduce((actions, param) => {

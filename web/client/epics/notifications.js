@@ -7,7 +7,7 @@
 */
 const Rx = require('rxjs');
 const {clear} = require('../actions/notifications');
-const {LOCATION_CHANGE} = require('react-router-redux');
+const {LOCATION_CHANGE} = require('connected-react-router');
 
 /**
  * Clear all notifications on LOCATION_CHANGE.

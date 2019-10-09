@@ -19,7 +19,7 @@ const {
 const {QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {setControlProperty, TOGGLE_CONTROL} = require('../actions/controls');
 const {ADD_LAYER} = require('../actions/layers');
-const {LOCATION_CHANGE} = require('react-router-redux');
+const {LOCATION_CHANGE} = require('connected-react-router');
 
 const {featureTypeSelected} = require('../actions/wfsquery');
 const {getWidgetLayer, getEditingWidgetFilter} = require('../selectors/widgets');

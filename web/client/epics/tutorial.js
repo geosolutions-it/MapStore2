@@ -15,7 +15,7 @@ const {TOGGLE_3D} = require('../actions/globeswitcher');
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
     || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE } = require('connected-react-router');
 const {isEmpty, isArray, isObject} = require('lodash');
 
 /**
@@ -41,17 +41,18 @@ const switchTutorialEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(action =>
             action.payload
-            && action.payload.pathname)
+            && action.payload.location
+            && action.payload.location.pathname)
         .switchMap( (action) =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
                 .switchMap( () => {
-                    const id = findTutorialId(action.payload.pathname);
+                    const id = findTutorialId(action.payload.location.pathname);
                     const state = store.getState();
                     const presetList = state.tutorial && state.tutorial.presetList || {};
                     const browser = state.browser;
                     const mobile = browser && browser.mobile ? '_mobile' : '';
-                    const defaultName = id ? 'default' : action.payload && action.payload.pathname || 'default';
+                    const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
                     const prevTutorialId = state.tutorial && state.tutorial.id;
 
                     return !isEmpty(presetList) ? Rx.Observable.of(presetList[id + mobile + '_tutorial'] ?
