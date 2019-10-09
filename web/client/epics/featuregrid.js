@@ -24,7 +24,6 @@ const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEAT
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
-const {getNativeCrs} = require('../observables/wms');
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
 const { closeIdentify } = require('../actions/mapInfo');
@@ -46,12 +45,12 @@ const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasCha
     isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector, getAttributeFilters } = require('../selectors/featuregrid');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
-const {getLayerFromId, getSelectedLayer} = require('../selectors/layers');
+const {getSelectedLayer} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
 const {queryFormUiStateSelector} = require('../selectors/queryform');
-const {composeAttributeFilters, normalizeFilterCQL} = require('../utils/FilterUtils');
+const {composeAttributeFilters} = require('../utils/FilterUtils');
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -171,10 +170,7 @@ const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
 const addFilterToWMSLayer = (layer, filter) => {
     return changeLayerProperties(layer, {filterObj: filter});
 };
-// Create action to add nativeCrs to wms layer
-const addNativeCrsLayer = (layer, nativeCrs = "") => {
-    return changeLayerProperties(layer, {nativeCrs});
-};
+
 const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
@@ -189,31 +185,11 @@ module.exports = {
     featureGridBrowseData: (action$, store) =>
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
-            const isActive = isSyncWmsActive(store.getState());
-            const objLayer = getLayerFromId(store.getState(), layer.id);
             return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
             ).merge(
-                Rx.Observable.of(isActive)
-                // if sync is active on startup
-                // but nativeCRS is missing, it should be get from the server
-                    .switchMap( active => {
-                        if (!active || (objLayer && objLayer.nativeCrs)) {
-                            return Rx.Observable.empty();
-                        }
-                        return getNativeCrs(objLayer)
-                            .map((nativeCrs) => addNativeCrsLayer(objLayer.id, nativeCrs));
-                    }).catch(() => {
-                        return Rx.Observable.of(
-                            warning({
-                                title: "notification.warning",
-                                message: "featuregrid.errorProjFetch",
-                                position: "tc",
-                                autoDismiss: 5
-                            }));
-                    }),
                 createInitialQueryFlow(action$, store, layer)
             )
                 .merge(
@@ -680,25 +656,7 @@ module.exports = {
     startSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
             .filter( () => isSyncWmsActive(store.getState()))
-            .switchMap(() => {
-                const state = store.getState();
-                const layerId = selectedLayerIdSelector(state);
-                const objLayer = getLayerFromId(store.getState(), layerId);
-                if (!objLayer.nativeCrs) {
-                    return getNativeCrs(objLayer)
-                        .switchMap((nativeCrs) => Rx.Observable.of(addNativeCrsLayer(layerId, nativeCrs), startSyncWMS()))
-                        .catch(() => {
-                            return Rx.Observable.of(
-                                warning({
-                                    title: "notification.warning",
-                                    message: "featuregrid.errorProjFetch",
-                                    position: "tc",
-                                    autoDismiss: 5
-                                }), startSyncWMS());
-                        });
-                }
-                return Rx.Observable.of(startSyncWMS());
-            }),
+            .mapTo(startSyncWMS()),
     /**
      * stop sync filter with wms layer
      */
@@ -724,9 +682,7 @@ module.exports = {
                     Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                     action$.ofType(START_SYNC_WMS))
                     .mergeMap(() => {
-                        const objLayer = getLayerFromId(store.getState(), layerId);
-                        const normalizedFilter = normalizeFilterCQL(filter, objLayer.nativeCrs);
-                        return Rx.Observable.of(addFilterToWMSLayer(layerId, normalizedFilter));
+                        return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
                     });
             }),
     virtualScrollLoadFeatures: (action$, {getState}) =>

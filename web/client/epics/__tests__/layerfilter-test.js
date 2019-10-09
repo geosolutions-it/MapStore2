@@ -19,7 +19,7 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         const state = {layers: {
-            flat: [{id: "topp:states__5", name: "topp:states", nativeCrs: "EPSG:4326", search: {url: "searchUrl"}, url: "url"}],
+            flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url"}],
             selected: ["topp:states__5"]}
         };
         testEpic(handleLayerFilterPanel, 6, action, (actions) => {
@@ -39,7 +39,7 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         const state = {layers: {
-            flat: [{id: "topp:states__5", name: "topp:states", nativeCrs: "EPSG:4326", url: "url"}],
+            flat: [{id: "topp:states__5", name: "topp:states", url: "url"}],
             selected: ["topp:states__5"]}
         };
         testEpic(handleLayerFilterPanel, 6, action, (actions) => {

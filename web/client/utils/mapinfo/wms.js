@@ -47,7 +47,6 @@ module.exports = {
         const locale = currentLocale ? head(currentLocale.split('-')) : null;
         const ENV = locale ? 'locale:' + locale : '';
         const params = optionsToVendorParams({
-            nativeCrs: layer.nativeCrs,
             layerFilter: layer.layerFilter,
             filterObj: layer.filterObj,
             params: assign({}, layer.baseParams, layer.params, defaultParams)

@@ -44,7 +44,6 @@ module.exports = {
         const matrixIds = WMTSUtils.limitMatrix(layer.matrixIds && WMTSUtils.getMatrixIds(layer.matrixIds, tileMatrixSet || srs) || WMTSUtils.getDefaultMatrixId(layer), resolutions.length);
 
         const params = optionsToVendorParams({
-            nativeCrs: layer.nativeCrs,
             layerFilter: layer.layerFilter,
             filterObj: layer.filterObj,
             params: assign({}, layer.baseParams, layer.params, props.params)
