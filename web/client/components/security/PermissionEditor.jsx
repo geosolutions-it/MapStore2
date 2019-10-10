@@ -194,7 +194,7 @@ class PermissionEditor extends React.Component {
                     if (rule && rule.group && rule.canRead) {
                         return {name: rule.group.groupName, permission: rule.canWrite ? "canWrite" : "canRead" };
                     }
-                    return {};
+                    return null;
                 }
                 ).filter(rule => rule);  // filter out undefined values
         } else {
