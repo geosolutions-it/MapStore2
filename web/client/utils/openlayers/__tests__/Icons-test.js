@@ -61,10 +61,8 @@ describe('Icons openlayers styles', () => {
         expect(styles.length).toBe(3);
         const highlightStyle = styles[2];
         expect(highlightStyle).toExist();
-        const highlightStyleText = highlightStyle.getText();
-        expect(highlightStyleText).toExist();
-        expect(highlightStyleText.getFill().getColor()).toEqual("#FF00FF");
-        expect(highlightStyleText.getFont()).toEqual("18px mapstore2");
+        const highlightStyleIcon = highlightStyle.getImage();
+        expect(highlightStyleIcon).toExist();
     });
     it('test standard getIcon iconUrl, no shadow, no highlight', () => {
         const getIcon = Icons.standard.getIcon;
@@ -119,10 +117,8 @@ describe('Icons openlayers styles', () => {
         expect(iconImage.getSize()).toEqual([14, 14]);
         const highlightStyle = styles[2];
         expect(highlightStyle).toExist();
-        const highlightStyleText = highlightStyle.getText();
-        expect(highlightStyleText).toExist();
-        expect(highlightStyleText.getFill().getColor()).toEqual("#FF00FF");
-        expect(highlightStyleText.getFont()).toEqual("18px mapstore2");
+        const highlightStyleIcon = highlightStyle.getImage();
+        expect(highlightStyleIcon).toExist();
         const shadowStyle = styles[0];
         expect(shadowStyle).toExist();
         const shadowStyleImage = shadowStyle.getImage();

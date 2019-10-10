@@ -176,10 +176,10 @@ describe('Test VectorStyle', () => {
         expect(olStyle[1].getText().getOffsetY()).toEqual(-30.666666666666668);
         expect(olStyle[1].getText().getFill().getColor()).toEqual("#FFFFFF");
         // **************** highlight ****************
-        expect(olStyle[2].getText().getText()).toEqual("\ue165");
-        expect(olStyle[2].getText().getFont()).toEqual("18px mapstore2");
-        expect(olStyle[2].getText().getOffsetY()).toEqual(-56);
-        expect(olStyle[2].getText().getFill().getColor()).toEqual("#FF00FF");
+        const highlightStyle = olStyle[2];
+        expect(highlightStyle).toExist();
+        const highlightStyleIcon = highlightStyle.getImage();
+        expect(highlightStyleIcon).toExist();
     });
     it('getMarkerStyle, with a Marker Style with url, no shadow, no highlight', () => {
         const markerStyle = {
