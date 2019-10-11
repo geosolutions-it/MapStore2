@@ -1006,10 +1006,6 @@ describe('Test the MapUtils', () => {
                     }
                 }
             },
-            mapInfoConfiguration: {
-                infoFormat: "text/html",
-                showEmptyMessageGFI: false
-            },
             version: 2
         });
     });
@@ -1169,6 +1165,7 @@ describe('Test the MapUtils', () => {
                     thematic: undefined,
                     tooltipOptions: undefined,
                     tooltipPlacement: undefined,
+                    thumbId: undefined,
                     params: {} } ],
                 groups: [ {
                     id: 'Default', expanded: true
@@ -1290,7 +1287,8 @@ describe('Test the MapUtils', () => {
                     origin: undefined,
                     thematic: undefined,
                     tooltipOptions: undefined,
-                    tooltipPlacement: undefined
+                    tooltipPlacement: undefined,
+                    thumbId: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1429,7 +1427,8 @@ describe('Test the MapUtils', () => {
                     origin: undefined,
                     thematic: undefined,
                     tooltipOptions: undefined,
-                    tooltipPlacement: undefined
+                    tooltipPlacement: undefined,
+                    thumbId: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

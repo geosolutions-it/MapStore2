@@ -185,8 +185,6 @@ module.exports = {
     featureGridBrowseData: (action$, store) =>
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
-            const isActive = isSyncWmsActive(store.getState());
-            const objLayer = getLayerFromId(store.getState(), layer.id);
             return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),

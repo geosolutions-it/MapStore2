@@ -180,7 +180,7 @@ class DefaultLayer extends React.Component {
                 {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
-        ) : null;
+        );
     }
 
     render() {

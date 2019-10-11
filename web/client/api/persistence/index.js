@@ -103,14 +103,6 @@ const Persistence = {
     * @param {string} value the attribute value
     * @return an observable that emits the id of the updated resource
     */
-    updateResourceAttribute: (...args) => Persistence.getApi().updateResourceAttribute(...args),
-    /**
-    * Deletes a resource and its linked attributes
-    * @param {object} resource the resource with the id
-    * @param {object} options properties: deleteLinkedResources default true
-    * @param {object} API the API to use
-    * @return an observable that emits axios response for the deleted resource and for each of its deleted attributes
-    */
     deleteResource: (...args) => Persistence.getApi().deleteResource(...args)
 };
 
