@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -60,6 +61,30 @@ import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../util
 import { getEffectivePath } from '../reducers/geostory';
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
+const updateMediaSection = (store, path) => action$ =>
+    action$.ofType(CHOOSE_MEDIA)
+        .switchMap( ({resource = {}}) => {
+            let actions = [];
+            const state = store.getState();
+            const mediaType = currentMediaTypeSelector(state);
+            const sourceId = sourceIdSelector(state);
+
+            // if resources comes from geostory the id is at root level
+            // otherwise it checks for the original resource id present in data
+            const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
+
+            let resourceId = resource.id;
+            if (resourceAlreadyPresent) {
+                resourceId = resourceAlreadyPresent.id;
+            } else {
+            // if the resource is new, add it to the story resources list
+                resourceId = uuid();
+                actions = [...actions, addResource(resourceId, mediaType, resource)];
+            }
+
+            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
+            return Observable.from(actions);
+        });
 
 /**
  * opens the media editor for new image with content type media is passed
@@ -73,35 +98,22 @@ export const openMediaEditorForNewMedia = (action$, store) =>
             return isMediaContent || isMediaSection(element);
         })
         .switchMap(({path: arrayPath, element}) => {
+            let mediaPath = "";
+            if (isMediaSection(element) && arrayPath === "sections") {
+                        mediaPath = ".contents[0].contents[0]";
+            }
+            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
             return Observable.of(
                 showMediaEditor('geostory') // open mediaEditor
             )
                 .merge(
-                    action$.ofType(CHOOSE_MEDIA, HIDE)
-                        .switchMap( ({type, resource = {}}) => {
-                            let mediaPath = "";
-                            if (isMediaSection(element) && arrayPath === "sections") {
-                                mediaPath = ".contents[0].contents[0]";
-                            }
-                            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
-                            // if HIDE then update only the type but not the resource, this allows to use placeholder
-                            return type === HIDE ?
-                                Observable.of(
-                                    update(
-                                        path,
-                                        { type: currentMediaTypeSelector(store.getState()) },
-                                        "merge" )
-                                ) :
-                                Observable.of(
-                                    update(
-                                        path,
-                                        { resourceId: resource.id, type: currentMediaTypeSelector(store.getState()) }, // TODO take type from mediaEditor state or from resource
-                                        "merge"
-                                    )
-                                );
+                    action$.let(updateMediaSection(store, path)),
+                    action$.ofType(HIDE)
+                        .switchMap(() => {
+                            return Observable.of(remove(
+                                path));
                         })
-                        .takeUntil(action$.ofType(EDIT_MEDIA))
-                );
+                ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
 
@@ -172,30 +184,8 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 showMediaEditor(owner),
                 selectItem(selectedResource)
             )
-                .merge(
-                    action$.ofType(CHOOSE_MEDIA)
-                        .switchMap( ({resource = {}}) => {
-                            let actions = [];
-                            const state = store.getState();
-                            const mediaType = currentMediaTypeSelector(state);
-                            const sourceId = sourceIdSelector(state);
-
-                            // if resources comes from geostory the id is at root level
-                            // otherwise it checks for the original resource id present in data
-                            const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
-
-                            let resourceId = resource.id;
-                            if (resourceAlreadyPresent) {
-                                resourceId = resourceAlreadyPresent.id;
-                            } else {
-                                // if the resource is new, add it to the story resources list
-                                resourceId = uuid();
-                                actions = [...actions, addResource(resourceId, mediaType, resource)];
-                            }
-
-                            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
-                            return Observable.from(actions);
-                        })
+                          .merge(
+                    action$.let(updateMediaSection(store, path))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
                 );
