@@ -33,12 +33,6 @@
     opacity: 0.5;
 }
 
-.background-preview-icon-remove-button-container-horizontal {
-    width: 83px;
-    height: 92px;
-    float: left;
-}
-
 .background-remove-button {
     position: relative;
     float: right;
