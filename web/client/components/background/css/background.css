@@ -33,6 +33,17 @@
     opacity: 0.5;
 }
 
+.background-preview-icon-remove-button-container-horizontal {
+    width: 83px;
+    height: 92px;
+    float: left;
+}
+
+.background-remove-button {
+    position: relative;
+    float: right;
+}
+
 .background-plugin-pagination-btn-vertical {
     cursor: pointer;
     width: 20px;
@@ -68,6 +79,23 @@
     opacity: 0.7;
     width: 20px;
     height: 20px;
+}
+
+.background-list-container .background-preview-container .square-button-md .glyphicon {
+    font-size: 12px;
+}
+
+.background-list-container .background-preview-container {
+    position: relative;
+    float: left;
+}
+
+.background-list-container .background-preview-container .square-button-md {
+    position: absolute;
+    opacity: 1;
+    right: 0;
+    top: -10px;
+    z-index: 1;
 }
 
 .background-list-container .square-button-md .glyphicon {

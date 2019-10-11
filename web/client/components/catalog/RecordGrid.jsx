@@ -36,9 +36,8 @@ class RecordGrid extends React.Component {
         modalParams: PropTypes.object,
         layers: PropTypes.object,
         onUpdateThumbnail: PropTypes.func,
-        unsavedChanges: PropTypes.bool,
-        removeThumbnail: PropTypes.func,
         clearModal: PropTypes.func,
+        onAddBackground: PropTypes.func,
         showTemplate: PropTypes.bool,
         layerBaseConfig: PropTypes.object
     };
@@ -59,15 +58,13 @@ class RecordGrid extends React.Component {
         return (
             <Col {...this.props.column} key={record.identifier}>
                 <Item
-                    {...this.props}
-                    unsavedChanges={this.props.unsavedChanges}
                     clearModal={this.props.clearModal}
                     layers={this.props.layers}
                     modalParams={this.props.modalParams}
-                    removeThumbnail={this.props.removeThumbnail}
                     onUpdateThumbnail={this.props.onUpdateThumbnail}
-                    onAddBackgroundProperties = {this.props.onAddBackgroundProperties}
-                    source= {this.props.source}
+                    onAddBackgroundProperties={this.props.onAddBackgroundProperties}
+                    onAddBackground={this.props.onAddBackground}
+                    source={this.props.source}
                     onLayerAdd={this.props.onLayerAdd}
                     onPropertiesChange={this.props.onPropertiesChange}
                     onZoomToExtent={this.props.onZoomToExtent}

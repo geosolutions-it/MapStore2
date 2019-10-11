@@ -30,6 +30,7 @@ export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
 export const TEXT_SEARCH = 'CATALOG:TEXT_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
+export const CATALOG_CLOSE = 'CATALOG:CATALOG_CLOSE';
 export const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
 export const CHANGE_CATALOG_FORMAT = 'CATALOG:CHANGE_CATALOG_FORMAT';
 export const ADD_LAYER_ERROR = 'CATALOG:ADD_LAYER_ERROR';
@@ -213,7 +214,13 @@ export function initCatalog(apis = API) {
     };
 }
 
-function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
+export function catalogClose() {
+    return {
+        type: CATALOG_CLOSE
+    };
+}
+
+export function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
     return (dispatch, getState) => {
         const state = getState();
         const layers = layersSelector(state);

@@ -15,7 +15,7 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
-const {saveMapResource, backgroundThumbnailsCreated} = require('../actions/maps');
+const {triggerSaveMap} = require('../actions/maps');
 
 const ConfirmModal = require('../components/maps/modals/ConfirmModal');
 const ConfigUtils = require('../utils/ConfigUtils');
@@ -25,7 +25,6 @@ const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
 
-const MapUtils = require('../utils/MapUtils');
 const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
@@ -56,15 +55,13 @@ class Save extends React.Component {
         groups: PropTypes.array,
         params: PropTypes.object,
         textSearchConfig: PropTypes.object,
-        backgrounds: PropTypes.array,
-        backgroundThumbnailsCreated: PropTypes.func
+        backgrounds: PropTypes.array
     };
 
     static defaultProps = {
         additionalOptions: {},
         onMapSave: () => {},
         loadMapInfo: () => {},
-        backgroundThumbnailsCreated: () => {},
         show: false
     };
 
@@ -98,17 +95,11 @@ class Save extends React.Component {
     goForTheUpdate = () => {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
-                const resultingMap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
                 const {name, description} = this.props.map.info;
-                if (this.props.backgrounds && this.props.backgrounds.length > 0) {
-                    this.props.backgroundThumbnailsCreated({
-                        backgrounds: this.props.backgrounds,
-                        metadata: {name, description}
-                    });
-
-                }else {
-                    this.props.onMapSave({id: this.props.mapId, data: resultingMap, metadata: {name, description}, category: "MAP"});
-                }
+                this.props.onMapSave({
+                    backgrounds: this.props.backgrounds,
+                    metadata: {name, description}
+                });
                 this.props.onClose();
             }
         }
@@ -119,9 +110,8 @@ module.exports = {
     SavePlugin: connect(selector,
         {
             onClose: toggleControl.bind(null, 'save', false),
-            onMapSave: saveMapResource,
-            loadMapInfo,
-            backgroundThumbnailsCreated
+            onMapSave: triggerSaveMap,
+            loadMapInfo
         })(assign(Save, {
         BurgerMenu: {
             name: 'save',
@@ -144,7 +134,7 @@ module.exports = {
                         return { };
                     }
                 }
-                return { style: {display: "none"} };
+                return {style: {display: "none"}};
             }
         }
     }))

@@ -7,7 +7,7 @@
 */
 
 import * as Rx from 'rxjs';
-import {head, isArray, isString, isObject} from 'lodash';
+import {head, isArray, isString, isObject, keys} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -15,6 +15,7 @@ import {
     DELETE_SERVICE,
     GET_METADATA_RECORD_BY_ID,
     TEXT_SEARCH,
+    CATALOG_CLOSE,
     addCatalogService,
     setLoading,
     deleteCatalogService,
@@ -22,11 +23,14 @@ import {
     recordsLoaded,
     recordsLoadError,
     savingService,
-    textSearch
+    changeCatalogMode,
+    resetCatalog,
+    textSearch,
+    changeSelectedService
 } from '../actions/catalog';
 import {showLayerMetadata, addLayer} from '../actions/layers';
 import {error, success} from '../actions/notifications';
-import {SET_CONTROL_PROPERTY} from '../actions/controls';
+import {SET_CONTROL_PROPERTY, setControlProperties} from '../actions/controls';
 import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {
@@ -39,8 +43,9 @@ import {
     selectedCatalogSelector,
     searchOptionsSelector
 } from '../selectors/catalog';
+import {metadataSourceSelector} from '../selectors/backgroundselector';
 import {currentMessagesSelector} from "../selectors/locale";
-import {getSelectedLayer} from '../selectors/layers';
+import {layersSelector, getSelectedLayer} from '../selectors/layers';
 import axios from '../libs/ajax';
 import {
     buildSRSMap,
@@ -64,11 +69,11 @@ export default (API) => ({
      * text is the name of the layer to search
      * it also start with a loading action used to trigger loading state in catalog ui
      */
-    recordSearchEpic: action$ =>
+    recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
             .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
                 return Rx.Observable.defer( () =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, options)
+                    API[format].textSearch(url, startPosition, maxRecords, text, options, layersSelector(store.getState()))
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -330,5 +335,18 @@ export default (API) => ({
                 const pageSize = pageSizeSelector(state);
                 const {type, url} = selectedCatalogSelector(state);
                 return Rx.Observable.of(textSearch({format: type, url, startPosition: 1, maxRecords: pageSize, text}));
+            }),
+
+    catalogCloseEpic: (action$, store) =>
+        action$.ofType(CATALOG_CLOSE)
+            .switchMap(() => {
+                const state = store.getState();
+                const metadataSource = metadataSourceSelector(state);
+                const services = servicesSelector(state);
+                return Rx.Observable.of(...([
+                    setControlProperties('metadataexplorer', "enabled", false, "group", null),
+                    changeCatalogMode("view"),
+                    resetCatalog()
+                ].concat(metadataSource === 'backgroundSelector' ? [changeSelectedService(head(keys(services)))] : [])));
             })
 });

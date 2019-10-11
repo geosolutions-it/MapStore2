@@ -610,7 +610,8 @@ const TOCPlugin = connect(tocSelector, {
 const API = {
     csw: require('../api/CSW'),
     wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
+    wmts: require('../api/WMTS'),
+    backgrounds: require('../api/mapBackground')
 };
 
 module.exports = {

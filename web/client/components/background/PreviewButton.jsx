@@ -25,7 +25,6 @@ class PreviewButton extends React.Component {
         onAdd: PropTypes.func,
         currentLayer: PropTypes.object,
         enabledCatalog: PropTypes.bool,
-        onRemove: PropTypes.func,
         onEdit: PropTypes.func,
         layers: PropTypes.array
     };
@@ -40,6 +39,7 @@ class PreviewButton extends React.Component {
         showLabel: true,
         onToggle: () => {},
         onAdd: () => {},
+        onEdit: () => {},
         currentLayer: {},
         layers: []
     };
@@ -69,14 +69,8 @@ class PreviewButton extends React.Component {
                         {
                             glyph: 'wrench',
                             tooltip: 'Edit current background',
-                            visible: !this.props.enabledCatalog && !!( this.props.currentLayer.type === 'wms' || this.props.currentLayer.type === 'wmts'),
+                            visible: !this.props.enabledCatalog && !!(this.props.currentLayer.type === 'wms' || this.props.currentLayer.type === 'wmts'),
                             onClick: () => this.props.onEdit()
-                        },
-                        {
-                            glyph: 'trash',
-                            tooltip: 'Remove current background',
-                            visible: !this.props.enabledCatalog && this.props.layers.length > 1,
-                            onClick: () => this.props.onRemove(this.props.currentLayer.id, 'layers', this.props.currentLayer)
                         }
                     ]}/> : null}
             </div>

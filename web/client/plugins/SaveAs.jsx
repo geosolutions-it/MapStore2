@@ -14,7 +14,7 @@ const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
-const {saveMapResource, createThumbnail, onDisplayMetadataEdit, metadataChanged, createBackgroundThumbnail, backgroundThumbnailsCreated} = require('../actions/maps');
+const {createThumbnail, onDisplayMetadataEdit, metadataChanged, createBackgroundThumbnail, triggerSaveMap} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
@@ -22,7 +22,6 @@ const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {indexOf} = require('lodash');
-const uuid = require('uuid/v1');
 
 const MapUtils = require('../utils/MapUtils');
 
@@ -78,9 +77,7 @@ class SaveAs extends React.Component {
         onMapSave: PropTypes.func,
         loadMapInfo: PropTypes.func,
         textSearchConfig: PropTypes.object,
-        backgrounds: PropTypes.array,
-        createBackgroundThumbnail: PropTypes.func,
-        backgroundThumbnailsCreated: PropTypes.func
+        backgrounds: PropTypes.array
     };
 
     static contextTypes = {
@@ -92,7 +89,6 @@ class SaveAs extends React.Component {
         onMapSave: () => {},
         onDisplayMetadataEdit: () => {},
         loadMapInfo: () => {},
-        backgroundThumbnailsCreated: () => {},
         show: false
     };
 
@@ -159,28 +155,16 @@ class SaveAs extends React.Component {
         };
         const thumbName = thumbComponent.generateUUID();
         if (metadata.name !== "") {
-            thumbComponent.getThumbnailDataUri( (data) => {
-                if (this.props.backgrounds && this.props.backgrounds.length > 0) {
-                    this.props.backgroundThumbnailsCreated({
-                        backgrounds: this.props.backgrounds,
-                        data,
-                        metadata: metadata,
-                        thumbName
-                    });
-
-                }else {
-                    this.props.onMapSave({category: "MAP", data: this.createV2Map(), metadata, linkedResources: data && {thumbnail: {
-                        data,
-                        category: "THUMBNAIL",
-                        name: thumbName,
-                        tail: `/raw?decode=datauri&v=${uuid()}`
-                    }} || {}});
-                }
-
+            thumbComponent.getThumbnailDataUri((data) => {
+                this.props.onMapSave({
+                    backgrounds: this.props.backgrounds,
+                    data,
+                    metadata: metadata,
+                    thumbName
+                });
             });
         }
-
-    }
+    };
 }
 
 
@@ -190,14 +174,13 @@ module.exports = {
             onClose: () => onDisplayMetadataEdit(false),
             onUpdateCurrentMap: updateCurrentMap,
             onErrorCurrentMap: errorCurrentMap,
-            onMapSave: saveMapResource,
+            onMapSave: triggerSaveMap,
             metadataChanged,
             editMap,
             resetCurrentMap,
             createBackgroundThumbnail,
             onDisplayMetadataEdit,
-            onCreateThumbnail: createThumbnail,
-            backgroundThumbnailsCreated
+            onCreateThumbnail: createThumbnail
         })(assign(SaveAs, {
         BurgerMenu: {
             name: 'saveAs',

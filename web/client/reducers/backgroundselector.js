@@ -6,11 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, UPDATE_BACKGROUND_THUMBNAIL, BACKGROUNDS_CLEAR,
-        REMOVE_BACKGROUND_THUMBNAIL, CREATE_BACKGROUNDS_LIST, EDIT_BACKGROUND_PROPERTIES, CLEAR_MODAL_PARAMETERS} = require('../actions/backgroundselector');
+const { ADD_BACKGROUND, SET_BACKGROUND_MODAL_PARAMS, UPDATE_BACKGROUND_THUMBNAIL, BACKGROUNDS_CLEAR,
+    REMOVE_BACKGROUND, CREATE_BACKGROUNDS_LIST, CLEAR_MODAL_PARAMETERS} = require('../actions/backgroundselector');
 const {RESET_CATALOG} = require('../actions/catalog');
 const assign = require('object-assign');
-const {filter, find} = require('lodash');
 
 function backgroundselector(state = null, action) {
     switch (action.type) {
@@ -24,81 +23,69 @@ function backgroundselector(state = null, action) {
             source: 'metadataExplorer'
         });
     }
-    case ADD_BACKGROUND_PROPERTIES: {
-        // replace the background properties if it already exist
-        let backgrounds = filter(state.backgrounds || [], ((o) => action.modalParams && o.id !== action.modalParams.id)) || [];
-
-        const newBackgrounds = backgrounds.concat(action.modalParams);
+    case SET_BACKGROUND_MODAL_PARAMS: {
         return assign({}, state, {
-            backgrounds: action.modalParams ? newBackgrounds : backgrounds,
-            modalParams: action.modalParams,
-            unsavedChanges: action.unsavedChanges
-        });
-    }
-    case EDIT_BACKGROUND_PROPERTIES: {
-        const modalParams = action.editing ? find(state.backgrounds || [], background => background.id === action.id) : null;
-
-        return assign({}, state, {
-            editing: action.editing,
-            modalParams
+            modalParams: action.modalParams
         });
     }
     case BACKGROUNDS_CLEAR: {
         return assign({}, state, {
             backgrounds: [],
+            removedBackgroundsThumbIds: [],
             modalParams: {},
-            unsavedChanges: false,
-            source: undefined,
             lastRemovedId: undefined
         });
     }
     case UPDATE_BACKGROUND_THUMBNAIL: {
-        const backgrounds = state.backgrounds || [];
-        const updatedBackgrounds = backgrounds.map( background => {
-            if (background.id === action.id) {
-                return assign({}, background, {
-                    CurrentNewThumbnail: action.thumbnail || state.modalParams && state.modalParams.CurrentNewThumbnail,
-                    CurrentThumbnailData: action.thumbnailData || state.modalParams && state.modalParams.CurrentThumbnailData
-                });
-
-            }
-            return assign({}, background);
-        });
-
-        return assign({}, state, {
-            backgrounds: updatedBackgrounds,
-            modalParams: assign({}, state.modalParams, {
-                CurrentNewThumbnail: action.thumbnail || state.modalParams && state.modalParams.CurrentNewThumbnail,
-                CurrentThumbnailData: action.thumbnailData || state.modalParams && state.modalParams.CurrentThumbnailData
-            }),
-            unsavedChanges: action.unsavedChanges !== undefined ? action.unsavedChanges : true,
-            lastRemovedId: undefined
+        if (action.id) {
+            const backgrounds = state.backgrounds || [];
+            const doesNotHaveBackground = backgrounds.findIndex(background => background.id === action.id) === -1;
+            const newBackgrounds = doesNotHaveBackground ? backgrounds.concat({id: action.id}) : backgrounds;
+            const updatedBackgrounds = newBackgrounds.map(background => {
+                if (background.id === action.id) {
+                    return assign({}, background, {
+                        id: action.id,
+                        thumbnail: {
+                            url: action.thumbnail,
+                            data: action.thumbnailData
+                        }
+                    });
+                }
+                return assign({}, background);
             });
+
+            return assign({}, state, {
+                backgrounds: updatedBackgrounds
+            });
+        }
+        return state;
     }
     case CLEAR_MODAL_PARAMETERS : {
         return assign({}, state, {
             modalParams: undefined
         });
     }
-    case REMOVE_BACKGROUND_THUMBNAIL: {
+    case REMOVE_BACKGROUND: {
         const backgrounds = state.backgrounds || [];
+        const removedBackgroundsThumbIds = state.removedBackgroundsThumbIds || [];
         const updatedBackgrounds = backgrounds.filter(background => background.id !== action.backgroundId);
+        const newRemovedBackgroundsThumbIds =
+            backgrounds
+                .filter(background => background.id === action.backgroundId && !!background.thumbId)
+                .map(background => background.thumbId);
 
         return assign({}, state, {
             backgrounds: updatedBackgrounds,
-            modalParams: action.backgroundId !== undefined ? assign({}, state.modalParams, {
-                CurrentNewThumbnail: undefined,
-                CurrentThumbnailData: undefined}) : state.modalParams,
+            removedBackgroundsThumbIds: removedBackgroundsThumbIds.concat(newRemovedBackgroundsThumbIds),
             lastRemovedId: action.backgroundId
-            });
-
+        });
     }
     case CREATE_BACKGROUNDS_LIST: {
         const backgrounds = action.backgrounds;
-        let idList = [];
-        backgrounds.filter((background) => background.thumbId !== undefined).map(l => idList.push(l.thumbId));
+        const newBackgrounds = backgrounds.filter(background => background.thumbId !== undefined)
+            .map(background => ({id: background.id, thumbId: background.thumbId}));
 
-        return assign({}, state, { backgroundSourcesId: idList});
+        return assign({}, state, {backgrounds: newBackgrounds});
     }
     default:
         return state;

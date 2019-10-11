@@ -16,32 +16,30 @@ const ContainerDimensions = require('react-container-dimensions').default;
 const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
-    addLayer, addLayerError, resetCatalog, focusServicesList, changeText,
-    changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate} = require("../actions/catalog");
+    addLayer, addLayerError, focusServicesList, changeText,
+    changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate, catalogClose} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {addBackgroundProperties, updateThumbnail, removeThumbnail, clearModalParameters} = require('../actions/backgroundselector');
+const {addBackgroundProperties, updateThumbnail, removeThumbnail, clearModalParameters, backgroundAdded} = require('../actions/backgroundselector');
 const {currentLocaleSelector, currentMessagesSelector} = require("../selectors/locale");
 const {layersSelector} = require('../selectors/layers');
-const {setControlProperty, toggleControl, setControlProperties} = require("../actions/controls");
+const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
-    newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
-    servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
+    newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector, servicesSelector,
+    servicesSelectorWithBackgrounds, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector} = require('../selectors/backgroundselector');
+const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
 const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
-    (state) => unsavedChangesSelector(state),
     (state) => layersSelector(state),
     (state) => modalParamsSelector(state),
-    (state) => metadataSourceSelector(state),
     (state) => authkeyParamNameSelector(state),
     (state) => resultSelector(state),
     (state) => savingSelector(state),
@@ -54,11 +52,9 @@ const catalogSelector = createSelector([
     (state) => currentMessagesSelector(state),
     (state) => pageSizeSelector(state),
     (state) => loadingSelector(state)
-], (unsavedChanges, layers, modalParams, source, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading) =>({
-    unsavedChanges,
+], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading) => ({
     layers,
     modalParams,
-    source,
     authkeyParamNames,
     saving,
     openCatalogServiceList,
@@ -70,14 +66,6 @@ const catalogSelector = createSelector([
     records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
-const catalogClose = () => {
-    return (dispatch) => {
-        dispatch(setControlProperties('metadataexplorer', "enabled", false, "group", null));
-        dispatch(changeCatalogMode("view"));
-        dispatch(resetCatalog());
-    };
-};
-
 
 const Catalog = connect(catalogSelector, {
     // add layer action to pass to the layers
@@ -86,6 +74,7 @@ const Catalog = connect(catalogSelector, {
     onZoomToExtent: zoomToExtent,
     onFocusServicesList: focusServicesList,
     onPropertiesChange: changeLayerProperties,
+    onAddBackground: backgroundAdded,
     removeThumbnail,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
@@ -96,6 +85,7 @@ const Catalog = connect(catalogSelector, {
 class MetadataExplorerComponent extends React.Component {
     static propTypes = {
         id: PropTypes.string,
+        source: PropTypes.string,
         active: PropTypes.bool,
         searchOnStartup: PropTypes.bool,
         formats: PropTypes.array,
@@ -107,6 +97,7 @@ class MetadataExplorerComponent extends React.Component {
         closeGlyph: PropTypes.string,
         buttonStyle: PropTypes.object,
         services: PropTypes.object,
+        servicesWithBackgrounds: PropTypes.object,
         selectedService: PropTypes.string,
         style: PropTypes.object,
         dockProps: PropTypes.object,
@@ -143,14 +134,26 @@ class MetadataExplorerComponent extends React.Component {
             zIndex: 1030
         },
         dockStyle: {},
-        group: null
+        group: null,
+        services: {},
+        servicesWithBackgrounds: {}
     };
 
     render() {
         const layerBaseConfig = {
             group: this.props.group || undefined
         };
-        const panel = <Catalog layerBaseConfig={layerBaseConfig} zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
+        const panel = (
+            <Catalog
+                layerBaseConfig={layerBaseConfig}
+                zoomToLayer={this.props.zoomToLayer}
+                searchOnStartup={this.props.searchOnStartup}
+                active={this.props.active}
+                {...this.props}
+                services={this.props.source === 'backgroundSelector' ? this.props.servicesWithBackgrounds : this.props.services}
+                servicesWithBackgrounds={undefined}
+            />
+        );
         return (
             <div id="catalog-root" style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
                 <ContainerDimensions>
@@ -181,23 +184,26 @@ const metadataExplorerSelector = createSelector([
     selectedServiceSelector,
     modeSelector,
     servicesSelector,
+    servicesSelectorWithBackgrounds,
     layerErrorSelector,
     activeSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
     searchTextSelector,
-    groupSelector
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle, searchText, group) => ({
+    groupSelector,
+    metadataSourceSelector
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, servicesWithBackgrounds, layerError, active, dockStyle, searchText, group, source) => ({
     searchOptions,
     formats,
     result,
     loadingError,
     selectedService,
-    mode, services,
+    mode, services, servicesWithBackgrounds,
     layerError,
     active,
     dockStyle,
     searchText,
-    group
+    group,
+    source
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {

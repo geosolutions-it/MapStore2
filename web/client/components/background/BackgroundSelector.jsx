@@ -12,10 +12,11 @@ const assign = require('object-assign');
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
+const ToolbarButton = require('../misc/toolbar/ToolbarButton');
 const BackgroundDialog = require('./BackgroundDialog');
 
 const PropTypes = require('prop-types');
-const {head, omit} = require('lodash');
+const {head, get} = require('lodash');
 require('./css/background.css');
 
 class BackgroundSelector extends React.Component {
@@ -38,13 +39,11 @@ class BackgroundSelector extends React.Component {
         onAdd: PropTypes.func,
         enabledCatalog: PropTypes.bool,
         onRemove: PropTypes.func,
+        onBackgroundEdit: PropTypes.func,
         source: PropTypes.string,
-        thumbURL: PropTypes.string,
-        onEditBackgroundProperties: PropTypes.func,
         addBackgroundProperties: PropTypes.func,
         onUpdateThumbnail: PropTypes.func,
-        editing: PropTypes.bool,
-        removeThumbnail: PropTypes.func,
+        removeBackground: PropTypes.func,
         deletedId: PropTypes.string,
         modalParams: PropTypes.object,
         updateNode: PropTypes.func,
@@ -53,8 +52,8 @@ class BackgroundSelector extends React.Component {
     };
 
     static defaultProps = {
-        onEditBackgroundProperties: ()=> {},
-        addBackgroundProperties: ()=> {},
+        addBackgroundProperties: () => {},
+        onBackgroundEdit: () => {},
         source: 'backgroundSelector',
         start: 0,
         style: {},
@@ -67,7 +66,6 @@ class BackgroundSelector extends React.Component {
         thumbs: {
             unknown: require('./img/default.jpg')
         },
-        modalParams: {},
         onPropertiesChange: () => {},
         onToggle: () => {},
         onLayerChange: () => {},
@@ -77,42 +75,50 @@ class BackgroundSelector extends React.Component {
         clearModal: () => {}
     };
 
-    state = {
-        additionalParameters: [],
-        id: 0
-    };
-
     componentWillUnmount() {
         this.props.onLayerChange('currentLayer', {});
         this.props.onLayerChange('tempLayer', {});
         this.props.onStartChange(0);
     }
 
-    getThumbById = (id, backgrounds) => {
-        const thumb = head(backgrounds.filter( background => background.id === id));
-        if (thumb && thumb.hasOwnProperty('CurrentNewThumbnail') && thumb.CurrentNewThumbnail === undefined) {
-            return this.props.thumbs.unknown;
-        }
-        return thumb && thumb.CurrentNewThumbnail && decodeURIComponent(thumb.CurrentNewThumbnail) || thumb && thumb.source;
-    };
-    // get the associated thumbnail for the Modal
     getThumb = (layer) => {
-        return this.props.thumbURL || this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
-        (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
-        layer.source || (this.props.thumbURL && decodeURIComponent(this.props.thumbURL)) || this.props.thumbs.unknown;
-    };
-
-    // get the thumbnail of the BackgroundSelector list and the BackgroundSelector Button
-    getListThumb = (layer) => {
-        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
-        (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
-        layer.source || this.props.thumbs.unknown;
+        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
     };
 
     getIcons = (side, frame, margin, vertical) => {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
-            let thumb = this.getListThumb(layer);
-            return <PreviewIcon projection={this.props.projection} vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
+            let thumb = this.getThumb(layer);
+            return (
+                <div
+                    style={{
+                        width: (vertical ? margin : 0) + (vertical ? 0 : margin) + side + frame,
+                        height: margin + side + frame
+                    }}
+                    className="background-preview-container"
+                >
+                    <ToolbarButton
+                        glyph="remove"
+                        className="square-button-md background-remove-button"
+                        bsStyle="primary"
+                        onClick={() => {
+                            this.props.removeBackground(layer.id);
+                        }}
+                    />
+                    <PreviewIcon
+                        projection={this.props.projection}
+                        vertical={vertical}
+                        key={idx}
+                        src={thumb}
+                        currentLayer={this.props.currentLayer}
+                        margin={margin}
+                        side={side}
+                        frame={frame}
+                        layer={layer}
+                        onToggle={this.props.onToggle}
+                        onPropertiesChange={this.props.onPropertiesChange}
+                        onLayerChange={this.props.onLayerChange}/>
+                </div>
+            );
         }) : [];
     };
 
@@ -126,14 +132,6 @@ class BackgroundSelector extends React.Component {
 
         return {pagination, listSize, visibleIconsLength};
     };
-updatedLayer = (layer) => {
-    if (this.props.deletedId && layer.CurrentNewThumbnail === undefined) {
-        return omit(layer, ['source', 'CurrentThumbnailData']);
-    }
-    // add the newly created Thumbnail url (if existed)
-    const output = assign({}, layer, {source: this.props.modalParams.CurrentNewThumbnail || this.props.modalParams.source } );
-    return omit(output, ['CurrentThumbnailData', 'CurrentNewThumbnail']);
-}
     renderBackgroundSelector = () => {
         const configuration = assign({
             side: 78,
@@ -152,7 +150,6 @@ updatedLayer = (layer) => {
         const labelHeight = this.props.enabled ? sideButton - frame * 2 : 0;
         const layer = this.props.enabled ? this.props.tempLayer : this.props.currentLayer;
 
-        const src = this.getThumb(layer);
         const icons = this.getIcons(side, frame, margin, configuration.vertical);
 
         const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, 0, configuration.vertical ? this.props.size.height : this.props.size.width, icons.length);
@@ -178,53 +175,48 @@ updatedLayer = (layer) => {
             width: buttonSize * visibleIconsLength
         };
         const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id)) || layer;
+        const backgroundDialogParams = {
+            title: editedLayer.title,
+            format: editedLayer.format,
+            style: editedLayer.style,
+            additionalParameters: editedLayer.additionalParameters,
+            thumbnail: {
+                data: get((this.props.backgroundList || []).find(background => background.id === editedLayer.id), 'thumbnail.data'),
+                url: this.getThumb(editedLayer)
+            }
+        };
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
-                 <BackgroundDialog
-                    deletedId = {this.props.deletedId}
-                    editing = {this.props.editing}
-                    unsavedChanges={this.props.unsavedChanges}
-                    add = {false}
-                    thumbURL= {src}
-                    onUpdate= {parameter => this.props.addBackgroundProperties(parameter, false)}
-                    modalParams={this.props.modalParams}
-                    onClose={() => {
-                        this.props.onEditBackgroundProperties(false);
-                        this.props.removeThumbnail(undefined);
-                        this.props.clearModal();
+                {this.props.modalParams && this.props.modalParams.editing && <BackgroundDialog
+                    onClose={this.props.clearModal}
+                    onSave={layerToAdd => {
+                        this.props.updateNode(layerToAdd.id, 'layers', layerToAdd);
+                        this.props.onBackgroundEdit(layerToAdd.id);
                     }}
-                    onSave={(layerModal, extra) => {
-
-                        if (this.props.deletedId && layerModal.CurrentNewThumbnail === undefined) {
-                            this.props.updateNode(layerModal.id, "layers", {source: undefined});
-                        }
-                        // clear thumbnail data
-                        this.props.removeThumbnail(this.props.deletedId ? editedLayer.id : undefined);
-                        // updating layer properties in layer state
-                        let cleanedExtra = extra && omit(extra, ['source', 'title', 'format', 'style']);
-                        const layerProps = assign({}, layerModal, cleanedExtra ? {additionalParams: cleanedExtra} : {});
-                        this.props.updateNode(this.props.modalParams.id, "layers", this.updatedLayer(layerProps));
-                        // clear state objects for modal and backgroundSelector properties
-                        this.props.onEditBackgroundProperties(false);
-                        this.props.clearModal();
-                        this.forceUpdate();
-                    }}
-                    updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(editedLayer.id) : this.props.onUpdateThumbnail(data, url, false, editedLayer.id)}
-                   />
+                    updateThumbnail={this.props.onUpdateThumbnail}
+                    {...backgroundDialogParams}
+                    {...this.props.modalParams}
+                />}
                 <div className={'background-plugin-position'} style={this.props.style}>
                     <PreviewButton
-                    onEdit={() => {
-                        this.props.onUpdateThumbnail(null, editedLayer.source, false, editedLayer.id);
-                        this.props.onEditBackgroundProperties(true, editedLayer.id);
-                    }}
-                    onRemove={(id, type, lay) => {
-                        const nextLayer = head(this.props.layers.filter(laa => laa.id !== lay.id && !laa.invalid));
-                        this.props.onRemove(id, type, lay);
-                        this.props.removeThumbnail(id);
-                        this.props.onPropertiesChange(nextLayer.id, {visibility: true});
-                        this.props.onLayerChange('currentLayer', {...nextLayer});
-                        this.props.onLayerChange('tempLayer', {...nextLayer});
-                    }} layers={this.props.layers} enabledCatalog={this.props.enabledCatalog} currentLayer={this.props.currentLayer} onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')} showLabel={configuration.label} src={this.getListThumb(layer)} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
+                        onEdit={() => {
+                            this.props.addBackgroundProperties({
+                                layer: editedLayer,
+                                editing: true
+                            });
+                        }}
+                        layers={this.props.layers}
+                        enabledCatalog={this.props.enabledCatalog}
+                        currentLayer={this.props.currentLayer}
+                        onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')}
+                        showLabel={configuration.label}
+                        src={this.getThumb(layer)}
+                        side={sideButton}
+                        frame={frame}
+                        margin={margin}
+                        labelHeight={labelHeight}
+                        label={layer.title}
+                        onToggle={this.props.onToggle}/>
                     <div className="background-list-container" style={listContainerStyle}>
                         <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
                     </div>
@@ -234,7 +226,6 @@ updatedLayer = (layer) => {
     };
 
     render() {
-        console.log('this.props.thumbs:', this.props.thumbs);
         return this.props.layers.length > 0 ? this.renderBackgroundSelector() : null;
     }
 }

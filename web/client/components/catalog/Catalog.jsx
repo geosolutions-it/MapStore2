@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const {isNil, omit} = require("lodash");
+const {isNil} = require("lodash");
 const assign = require("object-assign");
 const PropTypes = require("prop-types");
 const React = require("react");
@@ -20,7 +20,6 @@ const Message = require("../I18N/Message");
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const RecordGrid = require("./RecordGrid");
 const SwitchPanel = require("../misc/switch/SwitchPanel");
-const Toolbar = require('../misc/toolbar/Toolbar');
 const Loader = require('../misc/Loader');
 
 require('react-select/dist/react-select.css');
@@ -62,6 +61,7 @@ class Catalog extends React.Component {
         onReset: PropTypes.func,
         onSearch: PropTypes.func,
         onZoomToExtent: PropTypes.func,
+        onAddBackground: PropTypes.func,
         pageSize: PropTypes.number,
         records: PropTypes.array,
         authkeyParamNames: PropTypes.array,
@@ -81,8 +81,6 @@ class Catalog extends React.Component {
         modalParams: PropTypes.object,
         layers: PropTypes.array,
         onUpdateThumbnail: PropTypes.func,
-        unsavedChanges: PropTypes.bool,
-        removeThumbnail: PropTypes.func,
         clearModal: PropTypes.func,
         layerBaseConfig: PropTypes.object
     };
@@ -128,7 +126,6 @@ class Catalog extends React.Component {
         onReset: () => {},
         onSearch: () => {},
         onZoomToExtent: () => {},
-        removeThumbnail: () => {},
         changeLayerProperties: () => {},
         pageSize: 4,
         records: [],
@@ -148,7 +145,7 @@ class Catalog extends React.Component {
         if (this.props.selectedService &&
             this.isValidServiceSelected() &&
             this.props.services[this.props.selectedService].autoload) {
-            this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, searchText: this.props.searchText});
+            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
         }
     }
 
@@ -176,7 +173,7 @@ class Catalog extends React.Component {
 
     onKeyDown = (event) => {
         if (event.keyCode === 13) {
-            this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, searchText: this.props.searchText});
+            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
         }
     };
 
@@ -253,43 +250,43 @@ class Catalog extends React.Component {
         }
 
         return (<div className="catalog-results">
-                <RecordGrid
-                    {...this.props.gridOptions}
-                    key="records"
-                    hideThumbnail={hideThumbnail}
-                    records={this.props.records.map(
-                        (record) => showTemplate && metadataTemplate
-                            ? { ...record, metadataTemplate}
-                            : record)}
-                    clearModal={this.props.clearModal}
-                    unsavedChanges={this.props.unsavedChanges}
-                    onUpdateThumbnail = {this.props.onUpdateThumbnail}
-                    layers={this.props.layers}
-                    modalParams= {this.props.modalParams}
-                    onAddBackgroundProperties={this.props.onAddBackgroundProperties}
-                    source={this.props.source}
-                    records={this.props.records}
-                    authkeyParamNames={this.props.authkeyParamNames}
-                    catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
-                    catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
-                    showTemplate={this.props.services[this.props.selectedService].showTemplate}
-                    onLayerAdd={this.props.onLayerAdd}
-                    onPropertiesChange={this.props.onPropertiesChange}
-                    onZoomToExtent={this.props.onZoomToExtent}
-                    zoomToLayer={this.props.zoomToLayer}
-                    onError={this.props.onError}
-                    showGetCapLinks={this.props.showGetCapLinks}
-                    addAuthentication={this.props.addAuthentication}
-                    currentLocale={this.props.currentLocale}
-                    recordItem={this.props.recordItem}
-                    hideThumbnail={this.props.hideThumbnail}
-                    hideIdentifier={this.props.hideIdentifier}
-                    hideExpand={this.props.hideExpand}
-                    layerBaseConfig={this.props.layerBaseConfig}
-                    onAdd={() => {
-                        this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService});
-                    }}
-                />
+            <RecordGrid
+                {...this.props.gridOptions}
+                key="records"
+                hideThumbnail={hideThumbnail}
+                records={this.props.records.map(
+                    (record) => showTemplate && metadataTemplate
+                        ? { ...record, metadataTemplate}
+                        : record)}
+                clearModal={this.props.clearModal}
+                onUpdateThumbnail = {this.props.onUpdateThumbnail}
+                layers={this.props.layers}
+                modalParams= {this.props.modalParams}
+                onAddBackgroundProperties={this.props.onAddBackgroundProperties}
+                source={this.props.source}
+                records={this.props.records}
+                authkeyParamNames={this.props.authkeyParamNames}
+                catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
+                catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
+                showTemplate={this.props.services[this.props.selectedService].showTemplate}
+                onLayerAdd={this.props.onLayerAdd}
+                onPropertiesChange={this.props.onPropertiesChange}
+                onZoomToExtent={this.props.onZoomToExtent}
+                zoomToLayer={this.props.zoomToLayer}
+                onError={this.props.onError}
+                showGetCapLinks={this.props.showGetCapLinks}
+                addAuthentication={this.props.addAuthentication}
+                currentLocale={this.props.currentLocale}
+                recordItem={this.props.recordItem}
+                hideThumbnail={this.props.hideThumbnail}
+                hideIdentifier={this.props.hideIdentifier}
+                hideExpand={this.props.hideExpand}
+                onAddBackground={this.props.onAddBackground}
+                layerBaseConfig={this.props.layerBaseConfig}
+                onAdd={() => {
+                    this.search({services: this.props.services, selectedService: this.props.selectedService});
+                }}
+            />
         </div>);
     };
 
@@ -297,7 +294,7 @@ class Catalog extends React.Component {
         const buttons = [];
         if (this.props.mode === "view" ) {
             if (this.props.includeSearchButton) {
-                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, searchText: this.props.searchText})}
+                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText})}
                     className={this.props.buttonClassName} key="catalog_search_button" disabled={this.props.loading || !this.isValidServiceSelected()}>
                     <Message msgId="catalog.search"/>
                 </Button>);
@@ -318,8 +315,8 @@ class Catalog extends React.Component {
                 </Button>);
             }
             buttons.push(<Button style={this.props.buttonStyle} disabled={this.props.saving} onClick={() => this.props.onChangeCatalogMode("view")} key="catalog_back_view_button">
-                        <Message msgId="cancel"/>
-                    </Button>);
+                <Message msgId="cancel"/>
+            </Button>);
         }
         return buttons;
     };
@@ -344,7 +341,7 @@ class Catalog extends React.Component {
     };
 
     getServices = () => {
-        return Object.keys(this.excludedBackgrounds()).map(s => {
+        return Object.keys(this.props.services).map(s => {
             return assign({}, this.props.services[s], {label: this.props.services[s].title, value: s});
         });
     };
@@ -370,23 +367,23 @@ class Catalog extends React.Component {
                                     value={this.props.selectedService}
                                     onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
                                     placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
-                                        {this.isValidServiceSelected() && this.props.selectedService !== 'Map Backgrounds' ? (<InputGroup.Addon className="btn"
-                                            onClick={() => this.props.onChangeCatalogMode("edit", false)}>
-                                            <Glyphicon glyph="pencil"/>
-                                        </InputGroup.Addon>) : null}
-                                        <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
-                                            <Glyphicon glyph="plus"/>
-                                        </InputGroup.Addon>
-                                    </InputGroup>
-                                </FormGroup>
-                                <FormGroup controlId="searchText" key="searchText">
-                                    {this.renderTextSearch()}
-                                </FormGroup>
-                                <FormGroup controlId="buttons" key="buttons">
-                                    {this.renderButtons()}
-                                    {this.props.layerError ? this.renderError(this.props.layerError) : null}
-                                </FormGroup>
-                            </Form>)}
+                                {this.isValidServiceSelected() && this.props.selectedService !== 'default_map_backgrounds' ? (<InputGroup.Addon className="btn"
+                                    onClick={() => this.props.onChangeCatalogMode("edit", false)}>
+                                    <Glyphicon glyph="pencil"/>
+                                </InputGroup.Addon>) : null}
+                                <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
+                                    <Glyphicon glyph="plus"/>
+                                </InputGroup.Addon>
+                            </InputGroup>
+                        </FormGroup>
+                        <FormGroup controlId="searchText" key="searchText">
+                            {this.renderTextSearch()}
+                        </FormGroup>
+                        <FormGroup controlId="buttons" key="buttons">
+                            {this.renderButtons()}
+                            {this.props.layerError ? this.renderError(this.props.layerError) : null}
+                        </FormGroup>
+                    </Form>)}
                     footer={this.renderPagination()}>
                     { this.props.loading ? this.renderLoading() : this.renderResult() }
                 </BorderLayout>
@@ -507,10 +504,10 @@ class Catalog extends React.Component {
                                     </Col>
                                 </FormGroup>)}
                                 <FormGroup>
-                                <Col xs={6} >
+                                    <Col xs={6} >
                                         <ControlLabel>Format</ControlLabel>
-                                        </Col >
-                                        <Col xs={6} >
+                                    </Col >
+                                    <Col xs={6} >
                                         <Select
                                             value="image/png"
                                             clearable={false}
@@ -530,8 +527,8 @@ class Catalog extends React.Component {
                                                 label: 'image/gif',
                                                 value: 'image/gif'
                                             }]}/>
-                                            </Col >
-                                    </FormGroup>
+                                    </Col >
+                                </FormGroup>
                             </div>
                         </SwitchPanel>
                         <FormGroup controlId="buttons" key="butStons">
@@ -546,9 +543,6 @@ class Catalog extends React.Component {
     }
 
     isValidServiceSelected = () => {
-        // if (this.props.source === 'backgroundSelector') {
-        //     return this.props.services[this.props.selectedService] === 'Map Background';
-        // }
         return this.props.services[this.props.selectedService] !== undefined;
 
     };
@@ -575,14 +569,8 @@ class Catalog extends React.Component {
     handlePage = (eventKey) => {
         if (eventKey) {
             let start = (eventKey - 1) * this.props.pageSize + 1;
-            this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, start, searchText: this.props.searchText});
+            this.search({services: this.props.services, selectedService: this.props.selectedService, start, searchText: this.props.searchText});
         }
-    };
-    excludedBackgrounds = () => {
-        if (this.props.source !== 'backgroundSelector') {
-            return omit(this.props.services, 'Map Backgrounds');
-        }
-        return this.props.services;
     };
 }
 

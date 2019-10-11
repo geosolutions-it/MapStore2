@@ -7,28 +7,21 @@
  */
 
 const ADD_BACKGROUND = 'ADD_BACKGROUND';
+const REMOVE_BACKGROUND = 'REMOVE_BACKGROUND';
+const SET_CURRENT_BACKGROUND_LAYER = 'SET_CURRENT_BACKGROUND_LAYER';
+const BACKGROUND_ADDED = 'BACKGROUND_ADDED';
+const BACKGROUND_EDITED = 'BACKGROUND_EDITED';
 const ADD_BACKGROUND_PROPERTIES = 'ADD_BACKGROUND_PROPERTIES';
+const SET_BACKGROUND_MODAL_PARAMS = 'SET_BACKGROUND_MODAL_PARAMS';
 const UPDATE_BACKGROUND_THUMBNAIL = 'UPDATE_BACKGROUND_THUMBNAIL';
 const BACKGROUNDS_CLEAR = 'BACKGROUNDS_CLEAR';
-const REMOVE_BACKGROUND_THUMBNAIL = ' REMOVE_BACKGROUND_THUMBNAIL';
-const BACKGROUND_THUMBS_UPDATED = 'BACKGROUND_THUMBS_UPDATED';
 const CREATE_BACKGROUNDS_LIST = 'CREATE_BACKGROUNDS_LIST';
-const EDIT_BACKGROUND_PROPERTIES = 'EDIT_BACKGROUND_PROPERTIES';
 const CLEAR_MODAL_PARAMETERS = 'CLEAR_MODAL_PARAMETERS';
 
 function createBackgroundsList(backgrounds) {
     return {
-       type: CREATE_BACKGROUNDS_LIST,
+        type: CREATE_BACKGROUNDS_LIST,
         backgrounds
-    };
-}
-
-function backgroundThumbnailsUpdated(mapThumb, metadata, data) {
-    return {
-        type: BACKGROUND_THUMBS_UPDATED,
-        mapThumb,
-        data,
-        metadata
     };
 }
 
@@ -39,35 +32,53 @@ function addBackground(source) {
     };
 }
 
-function addBackgroundProperties(modalParams, unsavedChanges) {
+function addBackgroundProperties(modalParams) {
     return {
         type: ADD_BACKGROUND_PROPERTIES,
-        modalParams,
-        unsavedChanges
+        modalParams
     };
 }
 
-function editBackgroundProperties(editing, backgroundId) {
+function setBackgroundModalParams(modalParams) {
     return {
-        type: EDIT_BACKGROUND_PROPERTIES,
-        editing,
-        id: backgroundId
+        type: SET_BACKGROUND_MODAL_PARAMS,
+        modalParams
     };
 }
 
-function updateThumbnail(thumbnailData, thumbnail, unsavedChanges, backgroundId) {
+function backgroundAdded(layerId) {
+    return {
+        type: BACKGROUND_ADDED,
+        layerId
+    };
+}
+
+function backgroundEdited(layerId) {
+    return {
+        type: BACKGROUND_EDITED,
+        layerId
+    };
+}
+
+function setCurrentBackgroundLayer(layerId) {
+    return {
+        type: SET_CURRENT_BACKGROUND_LAYER,
+        layerId
+    };
+}
+
+function updateThumbnail(thumbnailData, thumbnail, backgroundId) {
     return {
         type: UPDATE_BACKGROUND_THUMBNAIL,
         thumbnailData,
         thumbnail,
-        unsavedChanges,
         id: backgroundId
     };
 }
 
-function removeThumbnail(backgroundId) {
+function removeBackground(backgroundId) {
     return {
-        type: REMOVE_BACKGROUND_THUMBNAIL,
+        type: REMOVE_BACKGROUND,
         backgroundId
     };
 }
@@ -86,20 +97,24 @@ function clearModalParameters() {
 module.exports = {
     CREATE_BACKGROUNDS_LIST,
     ADD_BACKGROUND,
+    BACKGROUND_ADDED,
+    BACKGROUND_EDITED,
     ADD_BACKGROUND_PROPERTIES,
+    SET_BACKGROUND_MODAL_PARAMS,
     UPDATE_BACKGROUND_THUMBNAIL,
     BACKGROUNDS_CLEAR,
-    REMOVE_BACKGROUND_THUMBNAIL,
-    BACKGROUND_THUMBS_UPDATED,
-    EDIT_BACKGROUND_PROPERTIES,
+    REMOVE_BACKGROUND,
     CLEAR_MODAL_PARAMETERS,
-    editBackgroundProperties,
+    SET_CURRENT_BACKGROUND_LAYER,
     createBackgroundsList,
     addBackgroundProperties,
+    setBackgroundModalParams,
     addBackground,
+    backgroundAdded,
+    backgroundEdited,
+    setCurrentBackgroundLayer,
     updateThumbnail,
     clearModalParameters,
     clearBackgrounds,
-    removeThumbnail,
-    backgroundThumbnailsUpdated
+    removeBackground
 };

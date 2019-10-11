@@ -71,10 +71,47 @@
                 "title": "GeoSolutions GeoServer CSW",
                 "autoload": true
               },
-              "Map Backgrounds": {
+              "default_map_backgrounds": {
                 "type": "backgrounds",
-                "title": "Map Backgrounds",
-                "autoload": false
+                "title": "Default Backgrounds",
+                "autoload": true,
+                "backgrounds": [{
+                    "type": "osm",
+                    "title": "Open Street Map",
+                    "name": "mapnik",
+                    "source": "osm",
+                    "group": "background"
+                }, {
+                    "type": "tileprovider",
+                    "title": "NASAGIBS Night 2012",
+                    "provider": "NASAGIBS.ViirsEarthAtNight2012",
+                    "name": "Night2012",
+                    "source": "nasagibs",
+                    "group": "background"
+                }, {
+                    "type": "tileprovider",
+                    "title": "OpenTopoMap",
+                    "provider": "OpenTopoMap",
+                    "name": "OpenTopoMap",
+                    "source": "OpenTopoMap",
+                    "group": "background"
+                }, {
+                    "format": "image/jpeg",
+                    "group": "background",
+                    "name": "s2cloudless:s2cloudless",
+                    "opacity": 1,
+                    "title": "Sentinel 2 Cloudless",
+                    "type": "wms",
+                    "url": "https://1maps.geo-solutions.it/geoserver/wms",
+                    "source": "s2cloudless",
+                    "singleTile": false
+                }, {
+                    "source": "ol",
+                    "group": "background",
+                    "title": "Empty Background",
+                    "fixed": true,
+                    "type": "empty"
+                }]
               },
               "gs_stable_wms": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/wms",

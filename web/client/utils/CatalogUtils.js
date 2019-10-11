@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, omit, sortBy, uniq, includes} = require('lodash');
+const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
@@ -319,6 +319,21 @@ const converters = {
             });
         }
         return null;
+    },
+    backgrounds: (records) => {
+        if (records && records.records) {
+            return records.records.map(record => {
+                return {
+                    description: record.title,
+                    title: record.title,
+                    identifier: record.name,
+                    thumbnail: record.thumbURL,
+                    references: [],
+                    background: record
+                };
+            });
+        }
+        return null;
     }
 };
 const buildSRSMap = (srs) => {
@@ -401,7 +416,7 @@ const CatalogUtils = {
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
      */
-    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url, group, id, title, additionalParams} = {}, baseConfig = {}) => {
+    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url} = {}, baseConfig = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -432,8 +447,7 @@ const CatalogUtils = {
         const layerURL = toLayerURL(url || originalUrl);
 
         const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
-        const returnLayer = {
-            id,
+        return {
             type: type,
             requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
             style: record.style,
@@ -443,7 +457,7 @@ const CatalogUtils = {
             visibility: true,
             dimensions: record.dimensions || [],
             name: ogcServiceReference.params && ogcServiceReference.params.name,
-            title: title || record.title || ogcServiceReference.params && ogcServiceReference.params.name,
+            title: record.title || ogcServiceReference.params && ogcServiceReference.params.name,
             matrixIds: type === "wmts" ? record.matrixIds || [] : undefined,
             description: record.description || "",
             tileMatrixSet: type === "wmts" ? record.tileMatrixSet || [] : undefined,
@@ -461,15 +475,11 @@ const CatalogUtils = {
             params: params,
             allowedSRS: allowedSRS,
             catalogURL,
-            group,
-            additionalParams: additionalParams || {} ? omit(additionalParams, ['source', 'format', 'style', 'title']) : additionalParams,
             ...baseConfig
         };
-        // adding the additional parameters, so as a node, so it could be retrieved and rendered in the background selector modal
-        return assign({}, returnLayer, additionalParams);
     },
     getCatalogRecords: (format, records, options, locales) => {
-        return format === 'backgrounds' && records && records.records || converters[format] && converters[format](records, options, locales) || null;
+        return converters[format] && converters[format](records, options, locales) || null;
     },
     esriToLayer: (record, baseConfig = {}) => {
         if (!record || !record.references) {

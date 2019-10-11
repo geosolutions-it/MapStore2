@@ -9,107 +9,50 @@
 const {connect} = require('react-redux');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties, updateNode} = require('../actions/layers');
-const {addBackground, editBackgroundProperties, addBackgroundProperties,
-    updateThumbnail, removeThumbnail, clearModalParameters} = require('../actions/backgroundselector');
+const {addBackground, addBackgroundProperties,
+    updateThumbnail, removeBackground, clearModalParameters, backgroundEdited} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
-const {layersSelector, backgroundControlsSelector,
+const {backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
-const {mapTypeSelector} = require('../selectors/maptype');
-const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
 const {mapSelector} = require('../selectors/map');
-const {backgroundThumbSelector, isEditSelector, modalParamsSelector,
-    isDeletedIdSelector, backgroundListSelector} = require('../selectors/backgroundselector');
+const {modalParamsSelector,
+    isDeletedIdSelector, backgroundListSelector, backgroundLayersSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {allBackgroundLayerSelector} = require('../selectors/layers');
 
-const {drawerEnabledControlSelector} = require('../selectors/controls');
-
 const {projectionSelector} = require('../selectors/map');
-const ROADMAP = require('./background/assets/img/ROADMAP.jpg');
-const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
-const SATELLITE = require('./background/assets/img/SATELLITE.jpg');
-const Aerial = require('./background/assets/img/Aerial.jpg');
-const mapnik = require('./background/assets/img/mapnik.jpg');
-const s2cloodless = require('./background/assets/img/s2cloudless.jpg');
-const empty = require('./background/assets/img/none.jpg');
-const unknown = require('./background/assets/img/dafault.jpg');
-const Night2012 = require('./background/assets/img/NASA_NIGHT.jpg');
-const AerialWithLabels = require('./background/assets/img/AerialWithLabels.jpg');
-const OpenTopoMap = require('./background/assets/img/OpenTopoMap.jpg');
-
 const {removeNode} = require('../actions/layers');
-// TODO REMOVE these once they are removed from all maps see issue #3304
-const HYBRID = require('./background/assets/img/HYBRID.jpg');
-const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
-
-const thumbs = {
-    google: {
-        HYBRID,
-        ROADMAP,
-        TERRAIN,
-        SATELLITE
-    },
-    bing: {
-        Aerial,
-        AerialWithLabels
-    },
-    osm: {
-        mapnik
-    },
-    mapquest: {
-        osm: mapquestOsm
-    },
-    ol: {
-        "undefined": empty
-    },
-    nasagibs: {
-        Night2012
-    },
-    OpenTopoMap: {
-        OpenTopoMap
-    },
-    unknown,
-    s2cloudless: {
-        "s2cloudless:s2cloudless": s2cloodless
-    }
-};
+const thumbs = require('./background/DefaultThumbs');
 
 const backgroundSelector = createSelector([
-        projectionSelector,
-        modalParamsSelector,
-        backgroundListSelector,
-        isDeletedIdSelector,
-        isEditSelector,
-        allBackgroundLayerSelector,
-        backgroundThumbSelector,
-        mapSelector,
-        layersSelector,
-        backgroundControlsSelector,
-        drawerEnabledControlSelector,
-        mapTypeSelector,
-        currentBackgroundSelector,
-        tempBackgroundSelector,
-        state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
-        state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
-    ],
-    (projection, modalParams, backgroundList, deletedId, editing, backgrounds, thumbURL, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
-        modalParams,
-        backgroundList,
-        deletedId,
-        editing,
-        backgrounds,
-        thumbURL,
-        size: map && map.size || {width: 0, height: 0},
-        layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
-        tempLayer,
-        currentLayer,
-        start: controls.start || 0,
-        enabled: controls.enabled,
-        style,
-        enabledCatalog,
-        projection
-    }));
+    projectionSelector,
+    modalParamsSelector,
+    backgroundListSelector,
+    isDeletedIdSelector,
+    allBackgroundLayerSelector,
+    mapSelector,
+    backgroundLayersSelector,
+    backgroundControlsSelector,
+    currentBackgroundSelector,
+    tempBackgroundSelector,
+    state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
+    state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled],
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, layers, controls, currentLayer, tempLayer, style, enabledCatalog) => ({
+    modalParams,
+    backgroundList,
+    deletedId,
+    backgrounds,
+    size: map && map.size || {width: 0, height: 0},
+    layers,
+    tempLayer,
+    currentLayer,
+    start: controls.start || 0,
+    enabled: controls.enabled,
+    style,
+    enabledCatalog,
+    projection
+}));
 
 /**
   * BackgroundSelector Plugin.
@@ -144,10 +87,10 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
     onAdd: addBackground,
     onRemove: removeNode,
+    onBackgroundEdit: backgroundEdited,
     updateNode,
-    onEditBackgroundProperties: editBackgroundProperties,
     onUpdateThumbnail: updateThumbnail,
-    removeThumbnail,
+    removeBackground,
     clearModal: clearModalParameters,
     addBackgroundProperties
 }, (stateProps, dispatchProps, ownProps) => ({

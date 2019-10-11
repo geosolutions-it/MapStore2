@@ -34,6 +34,7 @@ const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
 const RESET_UPDATING = 'RESET_UPDATING';
 const SAVING_MAP = 'SAVING_MAP';
 const SAVE_MAP = 'SAVE_MAP';
+const SAVE_MAP_WITH_BACKGROUNDS = 'SAVE_MAP_WITH_BACKGROUNDS';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
@@ -60,7 +61,7 @@ const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
-const BACKGROUND_THUMBNAIL_CREATED = "BACKGROUND_THUMBNAIL_CREATED";
+const TRIGGER_SAVE_MAP = "TRIGGER_SAVE_MAP";
 const FEATURED_MAPS_SET_LATEST_RESOURCE = "FEATURED_MAPS:SET_LATEST_RESOURCE";
 
 
@@ -377,6 +378,16 @@ function saveMap(map, resourceId) {
         map
     };
 }
+function saveMapWithBackgrounds(mapThumb, metadata, data, resourcesToRemove) {
+    return {
+        type: SAVE_MAP_WITH_BACKGROUNDS,
+        mapThumb,
+        data,
+        metadata,
+        resourcesToRemove
+    };
+}
+
 /**
  * Performed before start saving a new map
  * @memberof actions.maps
@@ -749,9 +760,9 @@ function saveDetails(detailsText) {
     };
 }
 
-function backgroundThumbnailsCreated(data) {
+function triggerSaveMap(data) {
     return {
-        type: BACKGROUND_THUMBNAIL_CREATED,
+        type: TRIGGER_SAVE_MAP,
         data
     };
 }
@@ -962,6 +973,7 @@ module.exports = {
     attributeUpdated,
     savingMap,
     saveMap,
+    saveMapWithBackgrounds, SAVE_MAP_WITH_BACKGROUNDS,
     thumbnailError,
     loadError,
     loadPermissions,
@@ -973,6 +985,6 @@ module.exports = {
     mapsSearchTextChanged,
     updateAttribute,
     saveMapResource,
-    backgroundThumbnailsCreated, BACKGROUND_THUMBNAIL_CREATED,
+    triggerSaveMap, TRIGGER_SAVE_MAP,
     setFeaturedMapsLatestResource
 };

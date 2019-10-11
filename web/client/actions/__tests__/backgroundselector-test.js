@@ -12,19 +12,15 @@ const {CREATE_BACKGROUNDS_LIST,
     ADD_BACKGROUND_PROPERTIES,
     UPDATE_BACKGROUND_THUMBNAIL,
     BACKGROUNDS_CLEAR,
-    REMOVE_BACKGROUND_THUMBNAIL,
-    BACKGROUND_THUMBS_UPDATED,
-    EDIT_BACKGROUND_PROPERTIES,
     CLEAR_MODAL_PARAMETERS,
-    editBackgroundProperties,
+    REMOVE_BACKGROUND,
     createBackgroundsList,
     addBackgroundProperties,
     addBackground,
     updateThumbnail,
     clearModalParameters,
     clearBackgrounds,
-    removeThumbnail,
-    backgroundThumbnailsUpdated} = require('../backgroundselector');
+    removeBackground} = require('../backgroundselector');
 
 describe('Test backgroundSelector actions', () => {
     it('test accessing catalog from backgroundSelector', (done) => {
@@ -36,15 +32,13 @@ describe('Test backgroundSelector actions', () => {
         done();
     });
     it('test adding or updating thumbnails', (done) => {
-        let e = updateThumbnail('binary Code', 'https:/link', true, '1983');
+        let e = updateThumbnail('binary Code', 'https:/link', '1983');
         expect(e).toExist();
         expect(e.type).toBe(UPDATE_BACKGROUND_THUMBNAIL);
         expect(e.thumbnailData).toExist();
         expect(e.thumbnailData).toBe('binary Code');
         expect(e.thumbnail).toExist();
         expect(e.thumbnail).toBe('https:/link');
-        expect(e.unsavedChanges).toExist();
-        expect(e.unsavedChanges).toBe(true);
         expect(e.id).toExist();
         expect(e.id).toBe('1983');
 
@@ -58,39 +52,18 @@ describe('Test backgroundSelector actions', () => {
         expect(e.backgrounds.length).toBe(3);
         done();
     });
-    it('test saving map with newly created backgrounds', (done) => {
-        let e = backgroundThumbnailsUpdated('string', {name: 'thumb'}, {});
-        expect(e).toExist();
-        expect(e.type).toBe(BACKGROUND_THUMBS_UPDATED);
-        expect(e.mapThumb).toExist();
-        expect(e.mapThumb).toBe('string');
-        expect(e.metadata).toExist();
-        expect(e.metadata.name).toBe('thumb');
-        expect(e.data).toExist();
-        done();
-    });
     it('test adding background properties', (done) => {
         let e = addBackgroundProperties({name: 'thumb'}, true);
         expect(e).toExist();
         expect(e.type).toBe(ADD_BACKGROUND_PROPERTIES);
         expect(e.modalParams).toExist();
         expect(e.modalParams.name).toBe('thumb');
-        expect(e.unsavedChanges).toExist();
-        expect(e.unsavedChanges).toBe(true);
         done();
     });
-    it('test editing action of a background properties', (done) => {
-        let e = editBackgroundProperties(true);
+    it('test removing background thumbnail info by Id', (done) => {
+        let e = removeBackground('1983');
         expect(e).toExist();
-        expect(e.type).toBe(EDIT_BACKGROUND_PROPERTIES);
-        expect(e.editing).toExist();
-        expect(e.editing).toBe(true);
-        done();
-    });
-    it('test removing thumbnail by Id', (done) => {
-        let e = removeThumbnail('1983');
-        expect(e).toExist();
-        expect(e.type).toBe(REMOVE_BACKGROUND_THUMBNAIL);
+        expect(e.type).toBe(REMOVE_BACKGROUND);
         expect(e.backgroundId).toExist();
         expect(e.backgroundId).toBe('1983');
         done();

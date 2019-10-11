@@ -1,4 +1,12 @@
-const {get} = require('lodash');
+const {createSelector} = require('reselect');
+const {get, pick} = require('lodash');
+
+const defaultServicesSelector = (state) => get(state, "catalog.default.services");
+const servicesSelector = (state) => get(state, "catalog.services");
+const servicesSelectorWithBackgrounds = createSelector(defaultServicesSelector, servicesSelector, (defaultServices, services) => ({
+    ...services,
+    ...(pick(defaultServices, "default_map_backgrounds"))
+}));
 
 module.exports = {
     groupSelector: (state) => get(state, "controls.metadataexplorer.group"),
@@ -6,10 +14,12 @@ module.exports = {
     resultSelector: (state) => get(state, "catalog.result"),
     serviceListOpenSelector: (state) => get(state, "catalog.openCatalogServiceList"),
     newServiceSelector: (state) => get(state, "catalog.newService"),
-    servicesSelector: (state) => get(state, "catalog.services"),
+    defaultServicesSelector,
+    servicesSelector,
+    servicesSelectorWithBackgrounds,
     newServiceTypeSelector: (state) => get(state, "catalog.newService.type", "csw"),
     selectedCatalogSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"]`),
-    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, "csw"),
+    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, get(state, `catalog.default.services["${get(state, 'catalog.selectedService')}"].type`, "csw")),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
     formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),
