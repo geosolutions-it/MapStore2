@@ -263,7 +263,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -311,7 +310,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -359,7 +357,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -407,7 +404,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -579,7 +575,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -627,7 +622,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -675,7 +669,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -863,7 +856,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -911,7 +903,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -959,7 +950,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -1015,6 +1005,10 @@ describe('Test the MapUtils', () => {
                         }
                     }
                 }
+            },
+            mapInfoConfiguration: {
+                infoFormat: "text/html",
+                showEmptyMessageGFI: false
             },
             version: 2
         });
@@ -1154,7 +1148,6 @@ describe('Test the MapUtils', () => {
                     type: 'vector',
                     url: '',
                     bbox: {},
-                    nativeCrs: undefined,
                     visibility: true,
                     singleTile: false,
                     allowedSRS: {},
@@ -1176,7 +1169,6 @@ describe('Test the MapUtils', () => {
                     thematic: undefined,
                     tooltipOptions: undefined,
                     tooltipPlacement: undefined,
-                    thumbId: undefined,
                     params: {} } ],
                 groups: [ {
                     id: 'Default', expanded: true
@@ -1264,7 +1256,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -1299,8 +1290,7 @@ describe('Test the MapUtils', () => {
                     origin: undefined,
                     thematic: undefined,
                     tooltipOptions: undefined,
-                    tooltipPlacement: undefined,
-                    thumbId: undefined
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1405,7 +1395,6 @@ describe('Test the MapUtils', () => {
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
-                    nativeCrs: undefined,
                     features: undefined,
                     queryable: undefined,
                     featureInfo: undefined,
@@ -1440,8 +1429,7 @@ describe('Test the MapUtils', () => {
                     origin: undefined,
                     thematic: undefined,
                     tooltipOptions: undefined,
-                    tooltipPlacement: undefined,
-                    thumbId: undefined
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

@@ -13,6 +13,7 @@ import isNumber from 'lodash/isNumber';
 import isNil from 'lodash/isNil';
 
 import {Text, Fill, Style, Icon} from 'ol/style';
+import highlightIcon from './highlight.png';
 
 const markers = MarkerUtils.markers.extra;
 const extraMarker = markers.icons[0];
@@ -21,13 +22,14 @@ const extraMarkerShadow = markers.icons[1];
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
 
 
-const getHighlishtStyle = ({highlight, rotation = 0}) => (highlight ? [new Style({
-    text: new Text({
+const getHighlightStyle = ({highlight, rotation = 0}) => (highlight ? [new Style({
+    image: new Icon({
+        anchor: [ 0.5, (markers.size[1] + 18) * 2 ],
         rotation,
-        text: '\ue165',
-        font: '18px mapstore2',
-        offsetY: -markers.size[1] - 10,
-        fill: new Fill({color: '#FF00FF'})
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'pixels',
+        src: highlightIcon,
+        scale: 0.5
     })
 })] : []);
 
@@ -61,7 +63,7 @@ export default {
                     fill: new Fill({color: '#FFFFFF'})
                 })
 
-            })].concat(getHighlishtStyle(options.style));
+            })].concat(getHighlightStyle(options.style));
         }
     },
     standard: {
@@ -89,7 +91,7 @@ export default {
                     })
                 }), markerStyle[0]];
             }
-            return markerStyle.concat(getHighlishtStyle(style));
+            return markerStyle.concat(getHighlightStyle(style));
         }
     },
     html: {

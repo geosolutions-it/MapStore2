@@ -8,9 +8,13 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {DragDropContext as dragDropContext} from 'react-dnd';
+import TestBackend from 'react-dnd-test-backend';
 
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
+
+const dndContext = dragDropContext(TestBackend);
 
 describe('TOCPlugin Plugin', () => {
     beforeEach((done) => {
@@ -32,7 +36,8 @@ describe('TOCPlugin Plugin', () => {
                 }
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.getElementsByClassName('mapstore-toc').length).toBe(1);
     });
 
@@ -46,7 +51,8 @@ describe('TOCPlugin Plugin', () => {
                 mapType: 'openlayers'
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.querySelector('.toc-title').textContent).toBe('Annotations');
         expect(document.querySelector('.toc-group-title').textContent).toBe('Default');
         expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(1);
@@ -62,7 +68,8 @@ describe('TOCPlugin Plugin', () => {
                 mapType: 'cesium'
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.querySelectorAll('.toc-title').length).toBe(0);
         expect(document.querySelectorAll('.toc-group-title').length).toBe(0);
     });
@@ -77,7 +84,8 @@ describe('TOCPlugin Plugin', () => {
                 mapType: 'cesium'
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.querySelectorAll('.toc-title').length).toBe(1);
         expect(document.querySelectorAll('.toc-group-title').length).toBe(1);
     });
@@ -91,7 +99,8 @@ describe('TOCPlugin Plugin', () => {
                 mapType: 'openlayers'
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
     });
     it('TOCPlugin hides filter layer if a group with no layers are present', () => {
@@ -104,7 +113,8 @@ describe('TOCPlugin Plugin', () => {
                 mapType: 'openlayers'
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
     });
 });

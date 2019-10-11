@@ -8,6 +8,7 @@
 var expect = require('expect');
 var FilterUtils = require('../FilterUtils');
 
+
 describe('FilterUtils', () => {
     it('Calculate OGC filter', () => {
         let filterObj = {
@@ -138,7 +139,50 @@ describe('FilterUtils', () => {
 
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
-        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom, Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
+        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
+    });
+    it('Calculate CQL filter without filter projection', () => {
+        let filterObj = {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            spatialField: {
+                groupId: 1,
+                attribute: "the_geom",
+                geometry: {
+                    center: [1, 1],
+                    coordinates: [[
+                        [1, 2],
+                        [2, 3],
+                        [3, 4],
+                        [4, 5],
+                        [5, 6]
+                    ]],
+                    extent: [
+                        1, 2, 3, 4, 5
+                    ],
+                    radius: 1,
+                    type: "Polygon"
+                },
+                method: "BBOX",
+                operation: "INTERSECTS"
+            }
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom,Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Check for pagination wfs 1.1.0', () => {
         let filterObj = {
@@ -967,7 +1011,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toCQLFilter(filterObj);
-        expect(filter).toEqual('(INTERSECTS(geometry, collectGeometries(queryCollection(\'TEST\', \'GEOMETRY\',\'INCLUDE\'))))');
+        expect(filter).toEqual('(INTERSECTS(geometry,collectGeometries(queryCollection(\'TEST\', \'GEOMETRY\',\'INCLUDE\'))))');
     });
     it('Check SpatialFilterField cql', () => {
         let filterObj = {

@@ -5,12 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { compose, createEventHandler, withProps, mapPropsStream, withHandlers } from 'recompose';
+import { compose, createEventHandler, withProps, mapPropsStream, withHandlers, setObservableConfig } from 'recompose';
 import { findIndex, get, maxBy } from "lodash";
 import { Observable } from "rxjs";
 
 // TODO: externalize
-import { setObservableConfig } from 'recompose';
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 
@@ -69,7 +68,8 @@ export const backgroundProp = withProps(
  */
 
 export const updateBackgroundEnhancer = withHandlers({
-    updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args)
+    updateBackground: ({ sectionId, contentId, update = () => { } }) => (path, ...args) => update(`sections[{"id": "${sectionId}"}].contents[{"id": "${contentId}"}].background.` + path, ...args),
+    updateSection: ({ sectionId, update = () => { } }) => (...args) => update(`sections[{"id": "${sectionId}"}]`, ...args)
 });
 
 export const backgroundPropWithHandler = compose(

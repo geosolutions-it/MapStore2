@@ -2,6 +2,156 @@
   "type": "cascade",
   "resources": [
     {
+      "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
+      "type": "map",
+      "data": {
+        "id": 10886,
+        "type": "map",
+        "canDelete": true,
+        "canEdit": true,
+        "canCopy": true,
+        "creation": "2019-09-20 12:21:30.924",
+        "description": "US observatories",
+        "name": "Observatories",
+        "thumbnail": "rest/geostore/data/10890/raw?decode=datauri&v=699a3c40-db90-11e9-bbe3-0d1967043af5",
+        "owner": "admin",
+        "center": {
+          "x": -111.57714843750004,
+          "y": 35.173808317999566,
+          "crs": "EPSG:4326"
+        },
+        "maxExtent": [
+          -20037508.34,
+          -20037508.34,
+          20037508.34,
+          20037508.34
+        ],
+        "projection": "EPSG:900913",
+        "units": "m",
+        "zoom": 6,
+        "mapOptions": {},
+        "layers": [
+          {
+            "id": "mapnik__0",
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "useForElevation": false,
+            "hidden": false
+          },
+          {
+            "id": "Night2012__1",
+            "group": "background",
+            "source": "nasagibs",
+            "name": "Night2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "title": "NASAGIBS Night 2012",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "useForElevation": false,
+            "hidden": false
+          },
+          {
+            "id": "OpenTopoMap__2",
+            "group": "background",
+            "source": "OpenTopoMap",
+            "name": "OpenTopoMap",
+            "provider": "OpenTopoMap",
+            "title": "OpenTopoMap",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "useForElevation": false,
+            "hidden": false
+          },
+          {
+            "id": "s2cloudless:s2cloudless__3",
+            "format": "image/jpeg",
+            "group": "background",
+            "source": "s2cloudless",
+            "name": "s2cloudless:s2cloudless",
+            "opacity": 1,
+            "title": "Sentinel 2 Cloudless",
+            "type": "wms",
+            "url": [
+              "https://1maps.geo-solutions.it/geoserver/wms",
+              "https://2maps.geo-solutions.it/geoserver/wms",
+              "https://3maps.geo-solutions.it/geoserver/wms",
+              "https://4maps.geo-solutions.it/geoserver/wms",
+              "https://5maps.geo-solutions.it/geoserver/wms",
+              "https://6maps.geo-solutions.it/geoserver/wms"
+            ],
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "useForElevation": false,
+            "hidden": false
+          },
+          {
+            "id": "undefined__4",
+            "group": "background",
+            "source": "ol",
+            "title": "Empty Background",
+            "type": "empty",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "useForElevation": false,
+            "hidden": false
+          },
+          {
+            "id": "gs:observatories__5",
+            "search": {
+              "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+              "type": "wfs"
+            },
+            "name": "gs:observatories",
+            "description": "",
+            "title": "observatories",
+            "type": "wms",
+            "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+            "bbox": {
+              "crs": "EPSG:4326",
+              "bounds": {
+                "minx": -156.2575,
+                "miny": -90,
+                "maxx": 123.33333333333333,
+                "maxy": 46.5475
+              }
+            },
+            "visibility": true,
+            "singleTile": false,
+            "allowedSRS": {},
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "catalogURL": "https://gs-stable.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=gs:observatories",
+            "useForElevation": false,
+            "hidden": false,
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
       "id": "23b34678-9f0c-4498-9ba2-ceffe0b071be",
       "type": "image",
       "data": {
@@ -125,10 +275,21 @@
             }
           ],
           "background": {
+            "map": {
+                "mapStateSource": "b9aee6bf-789a-4607-822d-688a0b4eb9ed",
+                "zoom": 6,
+                "center": {
+                    "x": -67.742222,
+                    "y": -22.986667,
+                    "crs": "EPSG: 4326"
+                }
+            },
             "fit": "cover",
             "size": "full",
             "align": "center",
-            "theme": "bright"
+            "theme": "bright",
+            "type": "map",
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
           }
         }
       ]
@@ -185,7 +346,18 @@
             "fit": "cover",
             "size": "full",
             "align": "center",
-            "theme": "bright"
+            "theme": "bright",
+            "type": "map",
+            "map": {
+              "mapStateSource": "b9b758ba-bf93-48f5-9bcd-92292e7d9858",
+              "center": {
+                "zoom": 6,
+                "x": -155.473333,
+                "y": 19.824444,
+                "crs": "EPSG: 4326"
+              }
+            },
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
           }
         },
         {
@@ -208,10 +380,21 @@
             }
           ],
           "background": {
+            "map": {
+              "mapStateSource": "7ee2c8a2-e960-45aa-b008-f75589606d6b",
+              "zoom": 6,
+              "center": {
+                "x": -68.131389,
+                "y": -16.353333,
+                "crs": "EPSG: 4326"
+              }
+            },
             "fit": "cover",
             "size": "full",
             "align": "center",
-            "theme": "bright"
+            "theme": "bright",
+            "type": "map",
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
           }
         },
         {
@@ -237,7 +420,18 @@
             "fit": "cover",
             "size": "full",
             "align": "center",
-            "theme": "bright"
+            "theme": "bright",
+            "type": "map",
+            "map": {
+              "mapStateSource": "08b82a2d-057c-4a22-991d-92911b115d86",
+              "zoom": 6,
+              "center" : {
+                "x" : 78.964167,
+                "y" : 32.779444,
+                "crs" : "EPSG: 4326"
+              }
+            },
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
           }
         },
         {
@@ -257,7 +451,9 @@
             "fit": "cover",
             "size": "full",
             "align": "center",
-            "theme": "bright"
+            "theme": "bright",
+            "type": "map",
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
           }
         },
         {
@@ -274,10 +470,21 @@
             }
           ],
           "background": {
+            "map": {
+              "mapStateSource": "fd79e319-d395-4512-ae89-afebd85dbae8",
+              "zoom": 3,
+              "center": {
+                "x": 0,
+                "y": 0,
+                "crs": "EPSG: 4326"
+              }
+            },
             "fit": "cover",
             "size": "full",
             "align": "center",
-            "theme": "bright"
+            "theme": "bright",
+            "type": "map",
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
           }
         }
       ]

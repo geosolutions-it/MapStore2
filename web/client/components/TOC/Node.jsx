@@ -10,28 +10,7 @@ const PropTypes = require('prop-types');
 var React = require('react');
 var createReactClass = require('create-react-class');
 var assign = require('object-assign');
-const cx = require('classnames');
 const {CSSTransitionGroup} = require('react-transition-group');
-
-var SortableMixin = assign(require('react-sortable-items/SortableItemMixin'), {
-    renderWithSortable: function(item) {
-        var classNames = cx(assign({
-            'SortableItem': true,
-            'is-dragging': this.props._isDragging,
-            'is-undraggable': !this.props.isDraggable,
-            'is-placeholder': this.props._isPlaceholder
-        }), item.props.className || {});
-        return React.cloneElement(
-            this.props._isPlaceholder && this.getPlaceholderContent && Object.prototype.toString.call(this.getPlaceholderContent) === '[object Function]'
-                ? this.getPlaceholderContent() : item, {
-                className: classNames,
-                style: assign({}, item.props.style, this.props.sortableStyle),
-                key: this.props.sortableIndex,
-                onMouseDown: this.handleSortableItemMouseDown,
-                onMouseUp: this.handleSortableItemMouseUp
-            });
-    }
-});
 
 var Node = createReactClass({
     displayName: 'Node',
@@ -46,8 +25,6 @@ var Node = createReactClass({
         isDraggable: PropTypes.bool,
         animateCollapse: PropTypes.bool
     },
-
-    mixins: [SortableMixin],
 
     getDefaultProps() {
         return {
@@ -85,7 +62,7 @@ var Node = createReactClass({
             {this.renderChildren((child) => child && child.props.position !== 'collapsible')}
             {collapsible}
         </div>);
-        return this.props.isDraggable ? this.renderWithSortable(content) : content;
+        return content;
     }
 });
 

@@ -1860,10 +1860,12 @@
             "addTextContent": "Agregar contenido de texto",
             "addMediaContent": "Agregar contenido multimedia",
             "zoomToContent": "Zoom al contenido",
-            "emptyTitle": "This story is empty",
-            "emptyDescription": "Start creating an awesome geostory by adding new content",
+            "emptyTitle": "Esta historia esta vacia",
+            "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
+                "contentHeightAuto": "Altura automática",
+                "contentHeightView": "Altura de la vista",
                 "smallSizeLabel": "Pequeña",
                 "mediumSizeLabel": "Medio",
                 "largeSizeLabel": "Grande",
@@ -1880,7 +1882,9 @@
                 "cover": "Cubra el espacio del contenedor",
                 "fit": "Ajustar el espacio del contenedor",
                 "editMedia": "Cambiar fuente de medios",
-                "remove": "Eliminar"
+                "remove": "Eliminar",
+                "removeConfirmTitle": "¿Estás seguro?",
+                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?"
             },
             "builder": {
                 "defaults": {
@@ -1942,6 +1946,7 @@
             "modalTitle": "Media",
             "images": "Imágenes",
             "videos": "Videos",
+            "maps": "Mapas",
             "preview": "Avance",
             "apply": "Aplicar",
             "mediaPicker": {
@@ -1962,7 +1967,10 @@
                 "descriptionPlaceholder": "Ingrese una descripción",
                 "description": "Descripción",
                 "creditsPlaceholder": "Ingrese créditos",
-                "credits": "Créditos"
+                "credits": "Créditos",
+                "mapFilter": "Filtrar mapas",
+                "videoFilter": "Filtrar videos",
+                "imageFilter": "Filtrar imágenes"
             }
         },
         "tutorial": {

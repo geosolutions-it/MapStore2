@@ -43,7 +43,8 @@ const Immersive = ({
             mode={mode}
             disableToolbarPortal
             tools={{
-                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
+                [MediaTypes.MAP]: ['editMedia', 'fit', 'size', 'align', 'theme']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
@@ -84,28 +85,28 @@ const Immersive = ({
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
-                glyph: 'font',
+                glyph: 'story-title-section',
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.TITLE);
                 }
             },
             {
-                glyph: 'sheet',
+                glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.PARAGRAPH);
                 }
             },
             {
-                glyph: 'book',
+                glyph: 'story-immersive-content',
                 tooltipId: 'geostory.addImmersiveContent',
                 onClick: () => {
                     add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN); // position undefined means append
                 }
             },
             {
-                glyph: 'picture',
+                glyph: 'story-media-section',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.MEDIA);

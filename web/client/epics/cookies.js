@@ -9,7 +9,7 @@ const Rx = require('rxjs');
 const {setCookieVisibility, setDetailsCookieHtml, SET_MORE_DETAILS_VISIBILITY} = require('../actions/cookie');
 const axios = require('../libs/ajax');
 const {CHANGE_LOCALE} = require('../actions/locale');
-const {LOCATION_CHANGE} = require('react-router-redux');
+const {LOCATION_CHANGE} = require('connected-react-router');
 
 
 /**

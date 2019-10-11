@@ -7,7 +7,7 @@
  */
 
 const { MAPS_LIST_LOADING } = require('../actions/maps');
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE } = require('connected-react-router');
 
 const { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING } = require('../actions/dashboards');
 const {set} = require('../utils/ImmutableUtils');

@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Sortable = require('react-sortable-items');
+const dndTree = require('./enhancers/dndTree');
 require('./css/toc.css');
 
 class TOC extends React.Component {
@@ -16,14 +16,16 @@ class TOC extends React.Component {
         filter: PropTypes.func,
         nodes: PropTypes.array,
         id: PropTypes.string,
-        onSort: PropTypes.func
+        onSort: PropTypes.func,
+        setDndState: PropTypes.func
     };
 
     static defaultProps = {
         filter() {return true; },
         nodes: [],
         id: 'mapstore-layers',
-        onSort: null
+        onSort: null,
+        setDndState: () => {}
     };
 
     render() {
@@ -33,26 +35,23 @@ class TOC extends React.Component {
             let i = 0;
             content = filteredNodes.map((node) => React.cloneElement(this.props.children, {
                 node: node,
-                sortData: i++,
+                parentNodeId: 'root',
+                onSort: this.props.onSort,
+                sortIndex: node.hide ? i : i++,
                 key: node.name || 'default',
-                isDraggable: !!this.props.onSort
+                isDraggable: !!this.props.onSort,
+                setDndState: this.props.setDndState
             }));
         }
         if (this.props.onSort) {
             return (
                 <div id={this.props.id} className="mapstore-layers-container">
-                    <Sortable minDragDistance={5} onSort={this.handleSort}>
-                        {content}
-                    </Sortable>
+                    {content}
                 </div>
             );
         }
         return <div id={this.props.id} className="mapstore-layers-container">{content}</div>;
     }
-
-    handleSort = (reorder) => {
-        this.props.onSort('root', reorder);
-    };
 }
 
-module.exports = TOC;
+module.exports = dndTree(TOC);

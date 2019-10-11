@@ -103,7 +103,7 @@ class Dialog extends React.Component {
     };
     onClickOut = (e) => {
         if (this.props.onClickOut && this.mask === e.target) {
-            this.props.onClickOut();
+            this.props.onClickOut(e);
         }
     };
 }

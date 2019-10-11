@@ -1,5 +1,5 @@
 const {createSelector} = require('reselect');
-const {pathnameSelector} = require('../selectors/routing');
+const {pathnameSelector} = require('../selectors/router');
 
 const isDashboardAvailable = state => state && state.dashboard && state.dashboard.editor && state.dashboard.editor.available;
 const isShowSaveOpen = state => state && state.dashboard && state.dashboard.showSaveModal;

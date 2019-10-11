@@ -49,7 +49,7 @@ describe('login Epics', () => {
             done();
         };
         const state = {
-            routing: {
+            router: {
                 location: {
                     pathname: "/viewer/openlayers/new"
                 }

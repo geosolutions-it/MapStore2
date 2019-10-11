@@ -10,8 +10,11 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const AnnotationsEditor = require('../AnnotationsEditor');
+const dragDropContext = require('react-dnd').DragDropContext;
+const html5Backend = require('react-dnd-html5-backend');
+const AnnotationsEditor = dragDropContext(html5Backend)(require('../AnnotationsEditor'));
 const TestUtils = require('react-dom/test-utils');
+
 const actions = {
     onChangeProperties: () => {},
     onSetUnsavedChanges: () => {},

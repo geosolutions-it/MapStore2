@@ -8,7 +8,9 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const Group = require('../DefaultGroup');
+const dragDropContext = require('react-dnd').DragDropContext;
+const testBackend = require('react-dnd-test-backend');
+const Group = dragDropContext(testBackend)(require('../DefaultGroup'));
 
 const expect = require('expect');
 

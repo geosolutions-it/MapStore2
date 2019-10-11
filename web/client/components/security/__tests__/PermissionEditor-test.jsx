@@ -32,6 +32,13 @@ let setupEditor = (docElement, actions) => {
                             group: {
                                 groupName: "g11"
                             }
+                        }, {
+                            canRead: true,
+                            canWrite: true,
+                            user: {
+                                id: 3,
+                                name: "admin"
+                            }
                         }
                     ]
                 }
@@ -66,6 +73,7 @@ describe("Test the permission editor component", () => {
     it('creates component with some existing permission rules', () => {
         const cmp = setupEditor(document.getElementById("container"));
         expect(cmp).toExist();
+        expect(cmp.localGroups.length).toBe(2);
         const nodeEven = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "even");
         expect(nodeEven.length).toBe(1);
         const nodeOdd = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "odd");

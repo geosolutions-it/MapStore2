@@ -9,8 +9,10 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const dragDropContext = require('react-dnd').DragDropContext;
+const testBackend = require('react-dnd-test-backend');
 
-const TOC = require('../TOC');
+const TOC = dragDropContext(testBackend)(require('../TOC'));
 const Group = require('../DefaultGroup');
 const Layer = require('../DefaultLayer');
 
@@ -144,19 +146,5 @@ describe('Layers component', () => {
         const domNode = ReactDOM.findDOMNode(element);
         expect(domNode).toExist();
         expect(domNode.children.length).toBe(layers.length);
-    });
-
-    it('tests Layers component sortable', () => {
-        const comp = ReactDOM.render(<TOC onSort={() => {}} nodes={layers}><Layer/></TOC>, document.getElementById("container"));
-
-        const domNode = ReactDOM.findDOMNode(comp);
-
-        const sortable = domNode.getElementsByClassName('Sortable');
-        expect(sortable).toExist();
-        expect(sortable.length).toBe(1);
-
-        const sortableItem = domNode.getElementsByClassName('SortableItem');
-        expect(sortableItem).toExist();
-        expect(sortableItem.length).toBe(3);
     });
 });

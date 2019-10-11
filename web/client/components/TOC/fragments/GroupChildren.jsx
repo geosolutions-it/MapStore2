@@ -8,7 +8,6 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const Sortable = require('react-sortable-items');
 require('./css/groupchildren.css');
 
 class GroupChildren extends React.Component {
@@ -16,6 +15,7 @@ class GroupChildren extends React.Component {
         node: PropTypes.object,
         filter: PropTypes.func,
         onSort: PropTypes.func,
+        setDndState: PropTypes.func,
         level: PropTypes.number
     };
 
@@ -36,18 +36,19 @@ class GroupChildren extends React.Component {
             let i = 0;
             content = nodes.map((node) => React.cloneElement(this.props.children, {
                 node: node,
+                parentNodeId: this.props.node ? this.props.node.id : '',
                 key: node.id,
-                sortData: i++,
+                sortIndex: node.hide ? i : i++,
+                onSort: this.props.onSort,
                 level: this.props.level,
-                isDraggable: !!this.props.onSort
+                isDraggable: !!this.props.onSort,
+                setDndState: this.props.setDndState
             }));
         }
         if (this.props.onSort) {
             return (
                 <div className="toc-group-children" >
-                    <Sortable minDragDistance={5} onSort={this.handleSort}>
-                        {content}
-                    </Sortable>
+                    {content}
                 </div>
             );
         }
@@ -55,10 +56,6 @@ class GroupChildren extends React.Component {
             <div className="toc-group-children" >{content}</div>
         );
     }
-
-    handleSort = (reorder) => {
-        this.props.onSort(this.props.node.id, reorder);
-    };
 }
 
 module.exports = GroupChildren;

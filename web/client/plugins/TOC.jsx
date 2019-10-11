@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-    sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+    sortNode, moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
     browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
 const {openQueryBuilder} = require("../actions/layerFilter");
@@ -590,7 +590,7 @@ const TOCPlugin = connect(tocSelector, {
     onBrowseData: browseData,
     onQueryBuilder: openQueryBuilder,
     onDownload: download,
-    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
+    onSort: moveNode,
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,
     hideSettings,

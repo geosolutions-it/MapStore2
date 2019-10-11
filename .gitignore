@@ -4,6 +4,7 @@ dist/
 target/
 *.sublime-*
 npm-debug.log
+package-lock.json
 coverage/
 web/client/libs/Cesium/
 web/cesium.zip

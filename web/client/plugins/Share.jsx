@@ -82,7 +82,7 @@ const Share = connect(createSelector([
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('routing') && state('routing').endsWith('new')}",
+    disablePluginIf: "{state('router') && state('router').endsWith('new')}",
     BurgerMenu: {
         name: 'share',
         position: 1000,

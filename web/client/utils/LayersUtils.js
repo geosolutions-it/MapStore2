@@ -90,7 +90,7 @@ const getNode = (nodes, id) => {
             if (previous) {
                 return previous;
             }
-            if (node && (node.name === id || node.id === id)) {
+            if (node && (node.name === id || node.id === id || node === id)) {
                 return node;
             }
             if (node && node.nodes && node.nodes.length > 0) {
@@ -459,7 +459,6 @@ const LayersUtils = {
             type: layer.type,
             url: layer.url,
             bbox: layer.bbox,
-            nativeCrs: layer.nativeCrs,
             visibility: layer.visibility,
             singleTile: layer.singleTile || false,
             allowedSRS: layer.allowedSRS,

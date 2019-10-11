@@ -88,7 +88,6 @@ class SaveAs extends React.Component {
         additionalOptions: {},
         onMapSave: () => {},
         onDisplayMetadataEdit: () => {},
-        loadMapInfo: () => {},
         show: false
     };
 

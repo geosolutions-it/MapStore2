@@ -10,8 +10,11 @@
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
+import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import Message from '../../I18N/Message';
-
+import withConfirm from "../../misc/toolbar/withConfirm";
+const DeleteButton = withConfirm(ToolbarButton);
+const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
     size: ({ size, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
@@ -20,15 +23,19 @@ const toolButtons = {
             tooltipId="geostory.contentToolbar.contentSize"
             options={[{
                 value: 'small',
+                glyph: 'size-small',
                 label: <Message msgId="geostory.contentToolbar.smallSizeLabel"/>
             }, {
                 value: 'medium',
+                glyph: 'size-medium',
                 label: <Message msgId="geostory.contentToolbar.mediumSizeLabel"/>
             }, {
                 value: 'large',
+                glyph: 'size-large',
                 label: <Message msgId="geostory.contentToolbar.largeSizeLabel"/>
             }, {
                 value: 'full',
+                glyph: 'size-extra-large',
                 label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
             }]}
             onSelect={(selected) => update('size', selected)}/>
@@ -78,10 +85,18 @@ const toolButtons = {
     fit: ({ fit, update = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: fit,
-        glyph: "1-full-screen",
+        glyph: fit === "contain" ? "fit-cover" : "fit-contain",
         visible: true,
-        tooltipId: fit === "contain" ? "geostory.contentToolbar.fit" : "geostory.contentToolbar.cover",
-        onClick: () => update('fit', fit === "contain" ? "cover" : "contain") // toggle
+        tooltipId: fit === "contain" ? "geostory.contentToolbar.cover" : "geostory.contentToolbar.fit",
+        onClick: () => update('fit', fit === "contain" ? "cover" : "contain")
+    }),
+    cover: ({ cover, updateSection = () => {} }) => ({
+        // using normal ToolbarButton because this is a toggle button without options
+        value: cover,
+        glyph: cover ? "height-auto" : "height-view",
+        visible: true,
+        tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
+        onClick: () => updateSection({cover: !cover}, "merge")
     }),
     editMedia: ({ path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options
@@ -94,12 +109,17 @@ const toolButtons = {
     }),
     // remove content
     remove: ({ path, remove = () => { } }) => ({
-        glyph: "trash",
-        visible: true,
-        tooltipId: "geostory.contentToolbar.remove",
-        onClick: () => {
-            remove(path);
-        }
+        Element: () => (<DeleteButton
+            glyph={"trash"}
+            visible
+            className={BUTTON_CLASSES}
+            tooltipId={"geostory.contentToolbar.remove"}
+            confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
+            confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
+            onClick={ () => {
+                remove(path);
+            }} />)
+
     })
 };
 
@@ -121,7 +141,7 @@ export default function ContentToolbar({
         <div className="ms-content-toolbar">
             <Toolbar
                 btnDefaultProps={{
-                    className: 'square-button-md no-border'
+                    className: BUTTON_CLASSES
                 }}
                 buttons={tools
                     .filter((id) => toolButtons[id])

@@ -11,7 +11,7 @@ const localizeProps = require('../misc/enhancers/localizedProps');
 const SearchInput = localizeProps("placeholder")(FormControl);
 module.exports = ({ onSearchTextChange = () => { }, searchText, title }) =>
     (<Grid className="catalog-form" fluid><Row><Col xs={12}>
-        <h4 className="text-center">{title}</h4>
+        {title && (<h4 className="text-center">{title}</h4>)}
         <FormGroup controlId="catalog-form">
             <SearchInput type="text" placeholder="catalog.textSearchPlaceholder" value={searchText} onChange={(e) => onSearchTextChange(e.currentTarget.value)} />
         </FormGroup>

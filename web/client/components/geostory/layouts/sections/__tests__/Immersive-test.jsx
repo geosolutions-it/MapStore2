@@ -7,14 +7,16 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import {Provider} from 'react-redux';
 import expect from 'expect';
+
 import Immersive from '../Immersive';
 
 // TODO: externalize
 import {setObservableConfig} from 'recompose';
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
+import { testToolbarButtons } from './testUtils';
 
 import { Modes } from '../../../../../utils/GeoStoryUtils';
 
@@ -96,8 +98,8 @@ describe('Immersive component', () => {
         expect(backgroundToolbar).toExist();
         expect(backgroundToolbar.querySelectorAll('button').length).toBe(5);
         expect(backgroundToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
-        expect(backgroundToolbar.querySelector('button .glyphicon-1-full-screen')).toExist(); // align tool
-        expect(backgroundToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-fit-contain')).toExist(); // fit tool
+        expect(backgroundToolbar.querySelector('button .glyphicon-size-extra-large')).toExist(); // resize tool
         expect(backgroundToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(backgroundToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
@@ -107,6 +109,7 @@ describe('Immersive component', () => {
         expect(columnToolbar.querySelectorAll('button').length).toBe(3);
         expect(columnToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
+        expect(columnToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
         // inner media and image contents must have edit, resize and align tools
         const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');
@@ -116,5 +119,33 @@ describe('Immersive component', () => {
         expect(innerMediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
+    });
+
+    it('Immersive background rendering (Map)', () => {
+        const CONTENTS_MAP = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'map'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Immersive mode={Modes.EDIT} contents={CONTENTS_MAP} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(["pencil", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
     });
 });

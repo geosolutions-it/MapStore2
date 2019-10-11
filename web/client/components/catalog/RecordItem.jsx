@@ -152,7 +152,8 @@ class RecordItem extends React.Component {
             buttons.push(
                 <Button
                     key="wms-button"
-                    className="record-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
