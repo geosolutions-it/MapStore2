@@ -120,6 +120,16 @@ const toolButtons = {
                 remove(path);
             }} />)
 
+    }),
+    editMap: ({editMap = false, update = () => {}}) => ({
+        // using normal ToolbarButton because this has no options
+        glyph: "1-map",
+        visible: true,
+        active: editMap,
+        tooltipId: "geostory.contentToolbar.editMap",
+        onClick: () => {
+            update( 'editMap', !editMap);
+        }
     })
 };
 

@@ -1884,7 +1884,8 @@
                 "editMedia": "Ändern Sie die Medienquelle",
                 "remove": "Entfernen",
                 "removeConfirmTitle": "Bist du sicher?",
-                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?"
+                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
+                "editMap": "Bearbeiten Sie die ursprüngliche Kartenausdehnung"
             },
             "builder": {
                 "defaults": {
