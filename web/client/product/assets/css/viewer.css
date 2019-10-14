@@ -30,7 +30,7 @@ html, body, #container, .fill {
     float: left;
 }
 
-.ol-attribution li:first-child, .leaflet-control-attribution > a:first-child{
+.leaflet-control-attribution > a:first-child{
     display: none;
     visibility: hidden;
 }
