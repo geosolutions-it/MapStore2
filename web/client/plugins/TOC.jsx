@@ -18,6 +18,7 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
+const {error} = require('../actions/notifications');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
@@ -204,6 +205,7 @@ class LayerTree extends React.Component {
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
         onAddGroup: PropTypes.func,
+        onError: PropTypes.func,
         onGetMetadataRecord: PropTypes.func,
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
@@ -281,6 +283,7 @@ class LayerTree extends React.Component {
         noFilterResults: false,
         onAddLayer: () => {},
         onAddGroup: () => {},
+        onError: () => {},
         onGetMetadataRecord: () => {},
         hideLayerMetadata: () => {},
         activateAddLayerButton: false,
@@ -449,7 +452,7 @@ class LayerTree extends React.Component {
                             <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
                         </div>
                         :
-                        <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
+                        <TOC onError={this.props.onError} onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
                             <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
                         </TOC>
                     }
@@ -602,6 +605,7 @@ const TOCPlugin = connect(tocSelector, {
     onAddLayer: setControlProperties.bind(null, "metadataexplorer", "enabled", true, "group"),
     onAddGroup: setControlProperties.bind(null, "addgroup", "enabled", true, "parent"),
     onGetMetadataRecord: getMetadataRecordById,
+    onError: error,
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion

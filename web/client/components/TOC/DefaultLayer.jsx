@@ -198,9 +198,7 @@ class DefaultLayer extends React.Component {
             </div>
         );
         if (other.node.showComponent !== false && !other.node.hide && this.props.filter(this.props.node)) {
-            return other.isDraggable ? connectDropTarget(connectDragSource(
-                tocListItem
-            )) : tocListItem;
+            return connectDropTarget(other.isDraggable ? connectDragSource(tocListItem) : tocListItem);
         }
         return null;
     }

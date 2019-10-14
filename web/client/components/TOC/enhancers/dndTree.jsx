@@ -17,7 +17,7 @@ const changeNode = (nodes, id, objToMerge) => {
 };
 
 const updateNodes = (nodes, dndState) => {
-    const {node: draggedNode, sortIndex, parentNodeId, newParentNodeId} = dndState;
+    const {node: draggedNode, sortIndex, parentNodeId, newParentNodeId, illegalDrop} = dndState;
 
     if (!nodes || !draggedNode) {
         return nodes;
@@ -26,7 +26,9 @@ const updateNodes = (nodes, dndState) => {
     return nodes.map(node => {
         if (node.nodes && node.id === newParentNodeId) {
             let newNodes = newParentNodeId === parentNodeId ? changeNode(node.nodes, draggedNode.id, null) : node.nodes.slice();
-            newNodes.splice(sortIndex, 0, {...draggedNode, ...(newParentNodeId === parentNodeId ? {} : {id: draggedNode.id + '__placeholder', placeholder: true})});
+            newNodes.splice(sortIndex, 0, {...draggedNode, ...(newParentNodeId === parentNodeId ?
+                {} :
+                {id: draggedNode.id + '__placeholder', placeholder: true, hide: !!illegalDrop})});
             return {...node, nodes: newNodes};
         }
         return {...node, nodes: updateNodes(node.nodes, dndState)};
@@ -47,13 +49,15 @@ const dndTree = branch(
             node: null,
             parentNodeId: '',
             newParentNodeId: '',
-            sortIndex: 0
+            sortIndex: 0,
+            illegalDrop: null
         }),
         Component => ({dndState, nodes, ...props}) => {
-            const {node: draggedNode, parentNodeId, newParentNodeId} = dndState;
+            const {node: draggedNode, parentNodeId, newParentNodeId, illegalDrop} = dndState;
             const newNodes = updateNodes([{id: 'root', nodes}], dndState)[0].nodes;
             return (
-                <Component {...props} nodes={newParentNodeId === parentNodeId ? newNodes : changeNode(newNodes, draggedNode.id, {hide: true})}/>
+                <Component {...props} nodes={newParentNodeId === parentNodeId &&
+                    !illegalDrop ? newNodes : changeNode(newNodes, draggedNode.id, {hide: true})}/>
             );
         }
     )

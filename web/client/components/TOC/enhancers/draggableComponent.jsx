@@ -20,13 +20,23 @@ const dragSpec = {
         };
     },
     endDrag: (props, monitor) => {
-        const {sortIndex, newParentNodeId} = monitor.getItem();
+        const {sortIndex, newParentNodeId, illegalDrop} = monitor.getItem();
         if (props.setDndState) {
             props.setDndState({
-                node: null
+                node: null,
+                illegalDrop: null
             });
         }
-        if (props.onSort) {
+        if (illegalDrop) {
+            if (props.onError) {
+                props.onError({
+                    title: 'notification.warning',
+                    autoDismiss: 5,
+                    position: 'tc',
+                    ...illegalDrop
+                });
+            }
+        } else if (props.onSort) {
             props.onSort(props.node.id, newParentNodeId, sortIndex);
         }
     }
@@ -53,7 +63,7 @@ const dropSpec = {
         // For group list items it inserts dragged element above the group item in it's parent node if we
         // are hovering above the upper third of a component, into the group item if we are hovering above the lower
         // third of a component and into the group itself if hovering above the middle(that's where group's name text is)
-        if (monitor.isOver({shallow: true}) && (item.newParentNodeId !== props.parentNodeId || draggedItemIndex !== hoveredItemIndex)) {
+        if (monitor.isOver({shallow: true})) {
             const componentDomNode = ReactDOM.findDOMNode(component);
             const headDomNode = componentDomNode.getElementsByClassName('toc-default-group-head')[0];
             const domNode = headDomNode || componentDomNode;
@@ -71,15 +81,29 @@ const dropSpec = {
                     if (clientY < thirdY) {
                         item.sortIndex = props.sortIndex;
                         item.newParentNodeId = props.parentNodeId;
+                        // check if we are over the Default group
+                        if (props.node.name === 'Default') {
+                            item.illegalDrop = {
+                                message: 'toc.error.defaultGroupOnTop',
+                                values: {
+                                    groupTitle: props.node.title
+                                }
+                            };
+                        }
                     } else if (clientY >= thirdY && clientY <= 2 * thirdY) {
                         item.sortIndex = 0;
                         item.newParentNodeId = props.node.id;
+                        item.illegalDrop = null;
                     } else {
                         item.sortIndex = props.sortIndex + 1;
                         item.newParentNodeId = props.parentNodeId;
+                        item.illegalDrop = null;
                     }
                 } else {
                     const middleY = (boundingRect.bottom - boundingRect.top) / 2;
+                    if (draggedItemIndex === hoveredItemIndex && item.newParentNodeId === props.parentNodeId) {
+                        return;
+                    }
                     if (item.newParentNodeId === props.parentNodeId && draggedItemIndex < hoveredItemIndex && clientY < middleY) {
                         return;
                     }
@@ -88,6 +112,7 @@ const dropSpec = {
                     }
                     item.sortIndex = props.sortIndex;
                     item.newParentNodeId = props.parentNodeId;
+                    item.illegalDrop = null;
                 }
                 if (props.setDndState) {
                     props.setDndState(item);
@@ -116,6 +141,9 @@ module.exports = (type, ...args) => {
         ({isDraggable} = {}) => isDraggable,
         compose(
             dragSource(type, dragSpec, dragCollect),
+            dropTarget(type, dropSpec, dropCollect)
+        ),
+        compose(
             dropTarget(type, dropSpec, dropCollect)
         )
     )(...args);
