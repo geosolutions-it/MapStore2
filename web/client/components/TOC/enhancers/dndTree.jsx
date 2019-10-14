@@ -1,6 +1,6 @@
 const React = require('react');
 const {compose, branch, withState} = require('recompose');
-const {isArray} = require('lodash');
+const isArray = require('lodash/isArray');
 
 const changeNode = (nodes, id, objToMerge) => {
     const targetIndex = nodes.findIndex(node => node.id === id);

@@ -10,7 +10,13 @@
  * Utils for geostory
  */
 
-import { isArray, values, filter, merge } from 'lodash';
+import get from "lodash/get";
+import findIndex from "lodash/findIndex";
+import toPath from "lodash/toPath";
+import isArray from "lodash/isArray";
+import values from "lodash/values";
+import filter from "lodash/filter";
+import merge from "lodash/merge";
 import uuid from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
@@ -59,6 +65,7 @@ export const lists = {
     MediaTypes: values(MediaTypes),
     Modes: values(Modes)
 };
+
 
 /**
  * Return a class name from props of a content
@@ -227,6 +234,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             align: 'left',
             size: 'small',
             theme: 'bright',
+            title: localize("geostory.builder.defaults.titleImmersiveContent"),
             contents: [{
                 id: uuid(),
                 type: ContentTypes.TEXT,
@@ -244,7 +252,15 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
         return {
             id: uuid(),
             type: ContentTypes.TEXT,
+            title: localize("geostory.builder.defaults.titleText"),
             html: ''
+        };
+    }
+    case ContentTypes.IMAGE: {
+        return {
+            id: uuid(),
+            type,
+            title: localize("geostory.builder.defaults.titleMedia")
         };
     }
     default:
@@ -254,4 +270,31 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             title: localize("geostory.builder.defaults.titleUnknown")
         };
     }
+};
+
+/**
+ * transforms the path with  into a path with predicates into a path with array indexes
+ * @private
+ * @param {string|string[]} rawPath path to transform in real path
+ * @param {object} state the state to check to inspect the tree and get the real path
+ */
+export const getEffectivePath = (rawPath, state) => {
+    const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`
+    // use curly brackets elements as predicates of findIndex to get the correct index.
+    return rawPathArray.reduce( (path, current) => {
+        if (current && current.indexOf('{') === 0) {
+            const predicate = JSON.parse(current);
+            const currentArray = get(state, path);
+            const index = findIndex(
+                currentArray,
+                predicate
+            );
+            if (index >= 0) {
+                return [...path, index];
+            }
+            // if the predicate is not found, it will ignore the unknown part
+            return path;
+        }
+        return [...path, current];
+    }, []);
 };

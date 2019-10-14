@@ -9,7 +9,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import {Provider} from 'react-redux';
+import HTML5Backend from 'react-dnd-html5-backend';
+const dragDropContext = require('react-dnd').DragDropContext;
+
 import SectionsPreview from '../SectionsPreview';
+const Comp = dragDropContext(HTML5Backend)(SectionsPreview);
 import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 
 describe('SectionsPreview component', () => {
@@ -23,28 +28,32 @@ describe('SectionsPreview component', () => {
         setTimeout(done);
     });
     it('SectionsPreview rendering with defaults', () => {
-        ReactDOM.render(<SectionsPreview />, document.getElementById("container"));
+        ReactDOM.render(<SectionsPreview/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
     });
     it('SectionsPreview rendering with sections, preview enabled', () => {
-        ReactDOM.render(<SectionsPreview sections={STORY.sections} cardPreviewEnabled />, document.getElementById("container"));
+
+        ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({})}}>
+            <Comp sections={STORY.sections} isCollapsed />
+        </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
-        // empty view when no session
-        expect(el.querySelectorAll('.items-list > div').length).toBe(8); // 3 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
-        expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(5);
+        expect(el.querySelectorAll('.items-list > div').length).toBe(3); // 3 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
+        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(3);
     });
 
     it('SectionsPreview rendering with sections, preview disabled', () => {
-        ReactDOM.render(<SectionsPreview sections={STORY.sections} cardPreviewEnabled={false}/>, document.getElementById("container"));
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}}>
+                <Comp sections={STORY.sections} isCollapsed={false}/>
+            </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
-        // empty view when no session
-        expect(el.querySelectorAll('.items-list > div').length).toBe(8); // 3 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
-        expect(el.querySelectorAll('.ms-section-preview .ms-section-preview-icon').length).toBe(0);
+        expect(el.querySelectorAll('.items-list > div').length).toBe(11); // one for each card in the side grid
+        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(11);
     });
 });

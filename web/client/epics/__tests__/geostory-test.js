@@ -24,9 +24,12 @@ import {
     editMediaForBackgroundEpic,
     cleanUpEmptyStoryContainers,
     saveGeoStoryResource,
-    reloadGeoStoryOnLoginLogout
+    reloadGeoStoryOnLoginLogout,
+    sortContentEpic
 } from '../geostory';
 import {
+    ADD,
+    MOVED,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
@@ -40,7 +43,8 @@ import {
     SAVED,
     SET_RESOURCE,
     GEOSTORY_LOADED,
-    ADD_RESOURCE
+    ADD_RESOURCE,
+    move
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -785,6 +789,171 @@ describe('Geostory Epics', () => {
                     done();
                 }, S2);
             }, S1);
+        });
+        it('sortContentEpic sorting two sections', done => {
+            const source = `sections[{"id": "SECTION-TITLE-1"}]`;
+            const target = "sections";
+            const position = 2;
+            const newId = "newId";
+            const updatePath = `sections[{"id": "${newId}"}]`;
+            const moveAction = move(
+                source,
+                target,
+                position,
+                newId,
+                updatePath
+            );
+            const NUM_ACTIONS = 4;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position - 1 );
+                        expect(a.element).toEqual({
+                            "type": "title",
+                            "id": "newId",
+                            "title": "Abstract",
+                            "contents": [
+                                {
+                                    "id": "title_content_id1",
+                                    "type": "text"
+                                }
+                            ]
+                        });
+                        break;
+                    case UPDATE:
+                        expect(a.path).toBe(updatePath);
+                        expect(a.element).toEqual({id: "SECTION-TITLE-1"});
+                        expect(a.mode).toBe("merge");
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    case MOVED:
+                        expect(a.position).toBe(position);
+                        expect(a.source).toBe(source);
+                        expect(a.target).toBe(target);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "type": "title",
+                                "id": "SECTION-TITLE-1",
+                                "title": "Abstract",
+                                "contents": [
+                                    {
+                                        "id": "title_content_id1",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text",
+                                                "html": "<p>This is a list of the <strong><ins>highest astronomical observatories</ins></strong> in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.insert text here...</p>\n"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
+        });
+        it('sortContentEpic sorting two items under paragraph', done => {
+            const source = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"0264c912-2814-47fa-8050-ea11cf11e833"}]`;
+            const target = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents`;
+            const position = 1;
+            const newId = "newId";
+            const updatePath = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"${newId}"}]`;
+            const moveAction = move(
+                source,
+                target,
+                position,
+                newId,
+                updatePath
+            );
+            const NUM_ACTIONS = 4;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position - 1);
+                        expect(a.element).toEqual({
+                            "id": newId,
+                            "type": "text"
+                        });
+                        break;
+                    case UPDATE:
+                        expect(a.path).toBe(updatePath);
+                        expect(a.element).toEqual({id: "0264c912-2814-47fa-8050-ea11cf11e833"});
+                        expect(a.mode).toBe("merge");
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    case MOVED:
+                        expect(a.position).toBe(position);
+                        expect(a.source).toBe(source);
+                        expect(a.target).toBe(target);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
+                                                "type": "image"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
         });
     });
 });

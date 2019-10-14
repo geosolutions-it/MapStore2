@@ -8,7 +8,11 @@
  */
 
 import { Observable } from 'rxjs';
-import {head, isNaN, isString, isNil, lastIndexOf} from 'lodash';
+import head from 'lodash/head';
+import isNaN from 'lodash/isNaN';
+import isString from 'lodash/isString';
+import isNil from 'lodash/isNil';
+import lastIndexOf from 'lodash/lastIndexOf';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -21,22 +25,25 @@ const {
 } = require('../api/persistence');
 
 import {
-    addResource,
     ADD,
-    REMOVE,
     LOAD_GEOSTORY,
+    MOVE,
+    REMOVE,
+    SAVE,
+    addResource,
+    add,
+    geostoryLoaded,
     loadGeostory,
     loadingGeostory,
     loadGeostoryError,
+    moved,
+    remove,
     setCurrentStory,
     saveGeoStoryError,
-    storySaved,
     setControl,
     setResource,
-    update,
-    remove,
-    SAVE,
-    geostoryLoaded
+    storySaved,
+    update
 } from '../actions/geostory';
 
 import {
@@ -56,9 +63,8 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 
-import { getEffectivePath } from '../reducers/geostory';
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 const updateMediaSection = (store, path) => action$ =>
@@ -266,7 +272,7 @@ export const reloadGeoStoryOnLoginLogout = (action$) =>
  * Removes containers that are empty after a REMOVE action from GeoStory.
  * In case of nested contents, it could call recursively until all the empty containers are empty
  * @param {Observable} action$ stream of redux actions
- * @param {object} store simplified redux store redux store
+ * @param {object} store simplified redux store
  * @returns {Observable} a stream that emits remove action for the container, if empty.
  */
 export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
@@ -283,4 +289,24 @@ export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
             }
         }
         return Observable.empty();
+    });
+
+/**
+ * trigger actions for sorting in GeostoryEditor
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions for sorting
+ */
+export const sortContentEpic = (action$, {getState = () => {}}) =>
+    action$.ofType(MOVE).switchMap(({source, target, position, newId, updatePath}) => {
+        const state = getState();
+        const current = createPathSelector(source)(state);
+
+        // remove first so, the highlight works correctly
+        return Observable.of(
+            remove(source),
+            add(target, position > 0 ? position - 1 : 0, { ...current, id: newId }),
+            update(updatePath, {id: current.id}, "merge" ),
+            moved(source, target, position)
+        );
     });

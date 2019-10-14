@@ -112,7 +112,7 @@ export default compose(
             )
         ),
         emptyState(
-            ({src = "", sectionType} = {}) => !src && sectionType !== SectionTypes.TITLE,
+            ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && sectionType !== SectionTypes.IMMERSIVE),
             () => ({
                 glyph: "picture"
             })

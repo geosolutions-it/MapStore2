@@ -5,9 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import uuid from "uuid";
-
 import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 
 export const ADD = "GEOSTORY:ADD";
@@ -22,17 +21,20 @@ export const REMOVE = "GEOSTORY:REMOVE";
 export const SAVE = "GEOSTORY:SAVE_STORY";
 export const SAVE_ERROR = "GEOSTORY:SAVE_ERROR";
 export const SAVED = "GEOSTORY:STORY_SAVED";
+export const SELECT_CARD = "GEOSTORY:SELECT_CARD";
 export const SET_CONTROL = "GEOSTORY:SET_CONTROL";
 export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
+export const MOVED = "GEOSTORY:MOVED";
+export const MOVE = "GEOSTORY:MOVE";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
  *
- * @param {string} path path where to add the element. It can contain path like this `sections[{id: "abc"}].contents[{id: "def"}]` to resolve the predicate between brackets.
+ * @param {string} path path where to add the element. It can contain path like this `sections[{"id": "abc"}].contents[{"id": "def"}]` to resolve the predicate between brackets.
  * @param {string|number} [position] the ID or the index of the section where to place the section (if not present the section will be appended at the end)
  * @param {string|object} element the object to add or the template to apply. can be a section, a content or whatever. If it is a string, it will be transformed in the content template with the provided name.
  * @param {function} [localize] localization function used in case of template to localize default strings
@@ -105,6 +107,11 @@ export const saveGeoStoryError = error => ({type: SAVE_ERROR, error});
  */
 export const setControl = (control, value) => ({ type: SET_CONTROL, control, value });
 /**
+ * changes selection of cards, if already selected it deselects
+ * @param {string} card card being selected
+ */
+export const selectCard = (card) => ({ type: SELECT_CARD, card });
+/**
  * Sets the resource for GeoStorySave plugin content.
  * **NOTE**: Don't confuse this from the resources of the story content. This contains permission and
  * basic properties **of the remote resource of the whole story (e.g. geostore resource)**
@@ -128,7 +135,7 @@ export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
 export const toggleCardPreview = () => ({ type: TOGGLE_CARD_PREVIEW});
 /**
  * Updates a value or an object in the current Story. Useful to update contents, settings and so on.
- * @param {string} path the path of the element to modify. It can contain path like this `sections[{id: "abc"}].contents[{id: "def"}]` to resolve the predicate between brackets.
+ * @param {string} path the path of the element to modify. It can contain path like this `sections[{"id": "abc"}].contents[{"id": "def"}]` to resolve the predicate between brackets.
  * @param {object} element the object to update
  * @param {string|object} [mode="replace"] "merge" or "replace", if "merge", the object passed as element will be merged with the original one (if present and if it is an object)
  */
@@ -145,4 +152,34 @@ export const update = (path, element, mode = "replace") => ({
 export const updateCurrentPage = ({sectionId}) => ({
     type: UPDATE_CURRENT_PAGE,
     sectionId
+});
+
+/**
+ * sort cards in builder content list after drag & drop events
+ * @param {string} source source path that is being dragged
+ * @param {string} target target path in the story, where to place dragged item
+ * @param {string|number} position new position of the target drop
+ * @param {string} newId id of the new card that is created, it is temporary
+ * @param {string} updatePath path to the new item where old id will be restored
+ */
+export const move = (source, target, position, newId, updatePath) => ({
+    type: MOVE,
+    source,
+    target,
+    position,
+    newId,
+    updatePath
+});
+
+/**
+ * clean up states after sort operation
+ * @param {string} source source path that is being dragged
+ * @param {string} target target path in the story, where to place dragged item
+ * @param {string|number} position new position of the target drop
+ */
+export const moved = (source, target, position) => ({
+    type: MOVED,
+    source,
+    target,
+    position
 });

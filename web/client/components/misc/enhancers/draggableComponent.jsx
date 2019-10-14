@@ -21,7 +21,14 @@ const itemTarget = {
     drop: (props, monitor) => {
         const item = monitor.getItem();
         if (item.sortId !== props.sortId) {
-            props.onSort(props.sortId, item.sortId);
+            props.onSort(props.sortId, item.sortId, {
+                id: props.id,
+                containerId: props.containerId
+            },
+            {
+                id: item.id,
+                containerId: item.containerId
+            });
         }
     }
 };
@@ -47,10 +54,15 @@ module.exports = branch(
         Component => ({connectDragSource, connectDragPreview, connectDropTarget, isDragging, isOver, ...props}) => {
             const pos = props.draggingItem && props.draggingItem.sortId < props.sortId;
 
+            const isSameContainer = props.draggingItem && props.draggingItem.containerId === props.containerId;
+            const draggingClassName = isSameContainer && isDragging ? ' ms-dragging' : '';
+            const overClassName = isSameContainer && isOver ? ' ms-over' : '';
+            const posClassName = isSameContainer && pos ? ' ms-above' : ' ms-below';
+
             return connectDragPreview(connectDropTarget(
-                <div className={`ms-dragg ${isDragging ? 'ms-dragging ' : ''}${isOver ? 'ms-over ' : ''} ${pos ? 'ms-above ' : 'ms-below '}`}>
+                <div className={`ms-dragg${draggingClassName}${overClassName} ${posClassName}`}>
                     <div>
-                        <Component {...props} connectDragSource={connectDragSource} isDragging={isDragging} isOver={isOver} />
+                        <Component {...props} connectDragSource={connectDragSource} isDragging={isDragging} isOver={isOver} onDrop={(event) => event.stopPropagation()} />
                     </div>
                 </div>));
         })
