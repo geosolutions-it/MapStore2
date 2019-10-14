@@ -130,7 +130,7 @@
     "immutable": "4.0.0-rc.12",
     "intersection-observer": "0.7.0",
     "intl": "1.2.2",
-    "ismobilejs": "0.4.0",
+    "ismobilejs": "0.5.0",
     "istanbul-instrumenter-loader": "3.0.1",
     "json-2-csv": "2.1.2",
     "json-loader": "0.5.7",
