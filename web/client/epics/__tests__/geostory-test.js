@@ -421,7 +421,7 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
-    it('test openMediaEditorForNewMedia, adding a media content and choosing an image', (done) => {
+    it('test openMediaEditorForNewMedia, adding a media content and choosing an image already present in resources', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
             add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
@@ -444,7 +444,14 @@ describe('Geostory Epics', () => {
             });
             done();
         }, {
-            geostory: {},
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "geostory",
+                        data: {}
+                    }]
+                }
+            },
             mediaEditor: {
                 settings: {
                     mediaType: "image"
@@ -452,7 +459,43 @@ describe('Geostory Epics', () => {
             }
         });
     });
-    it('test openMediaEditorForNewMedia, adding an empty media content (image)', (done) => {
+    it('test openMediaEditorForNewMedia, adding a media content and choosing an image not present in resources', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
+            chooseMedia({id: "geostory"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case ADD_RESOURCE:
+                    expect(a.data.id).toBe("geostory");
+                    expect(a.mediaType).toBe(MediaTypes.IMAGE);
+                    break;
+                case UPDATE:
+                    expect(a.element.type).toEqual(MediaTypes.IMAGE);
+                    expect(a.mode).toEqual("merge");
+                    expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}]`);
+                    break;
+                case SHOW:
+                    expect(a.owner).toEqual("geostory");
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
+                }
+            }
+        });
+    });
+    it('test openMediaEditorForNewMedia, and hide without applying', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
             add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: ""}),
@@ -461,9 +504,7 @@ describe('Geostory Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(a => {
                 switch (a.type) {
-                case UPDATE:
-                    expect(a.element).toEqual({type: MediaTypes.IMAGE});
-                    expect(a.mode).toEqual("merge");
+                case REMOVE:
                     expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":""}]`);
                     break;
                 case SHOW:
@@ -484,7 +525,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('test openMediaEditorForNewMedia, adding a media section and choosing an image', (done) => {
-        const NUM_ACTIONS = 2;
+        const NUM_ACTIONS = 3;
         const element = {
             id: '57cd0993-ad29-438a-b02a-d8f110de5d81',
             type: 'paragraph',
@@ -510,8 +551,12 @@ describe('Geostory Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(a => {
                 switch (a.type) {
+                case ADD_RESOURCE:
+                    expect(a.data.id).toBe("geostory");
+                    expect(a.mediaType).toBe(MediaTypes.IMAGE);
+                    break;
                 case UPDATE:
-                    expect(a.element).toEqual({resourceId: "geostory", type: MediaTypes.IMAGE});
+                    expect(a.element.type).toEqual(MediaTypes.IMAGE);
                     expect(a.mode).toEqual("merge");
                     expect(a.path).toEqual(`sections[{"id":"57cd0993-ad29-438a-b02a-d8f110de5d81"}].contents[0].contents[0]`);
                     break;
