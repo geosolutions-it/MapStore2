@@ -311,6 +311,16 @@
                 "title": "Cartes ({count})",
                 "noMapAvailable": "Aucune carte disponible",
                 "createNewOne": "Créer un nouveau"
+            },
+            "geostories": {
+                "newGeostory": "Nouveau Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "Créer un Story",
+                "noGeostoryAvailable": "Aucun story disponible",
+                "createANewOne": "Créer un nouveau",
+                "deleteError": "Une erreur s'est produite lors de la suppression de la ressource",
+                "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des stories"
             }
         },
         "map": {

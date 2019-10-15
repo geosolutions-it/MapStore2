@@ -532,7 +532,18 @@
               },
               "fluid": true
             }
-          }, "MailingLists", "Footer", {
+          },
+          {
+            "name": "GeoStories",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              },
+              "fluid": true
+            }
+          }
+          , "MailingLists", "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",
