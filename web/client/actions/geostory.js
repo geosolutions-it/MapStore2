@@ -155,7 +155,7 @@ export const updateCurrentPage = ({sectionId}) => ({
 });
 
 /**
- * sort cards in builder content list after drag & drop events
+ * moves one section/content from `source` to the `target` container at the `position` position.
  * @param {string} source source path that is being dragged
  * @param {string} target target path in the story, where to place dragged item
  * @param {string|number} position new position of the target drop
