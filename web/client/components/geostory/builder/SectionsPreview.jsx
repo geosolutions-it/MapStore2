@@ -291,9 +291,7 @@ export default ({ sections = [], scrollTo, onSelect = () => {}, isCollapsed, cur
             const newId = uuid();
             const source = `sections[{ "id": "${itemDataFrom.id}" }]`;
             const target = `sections`;
-            const position = sortIdTo > sortIdFrom
-                ? sortIdTo + 1
-                : sortIdTo;
+            const position = sortIdTo + 1;
             onSort(source, target, position, newId, `sections[{ "id": "${newId}" }]`);
         }
     }}
