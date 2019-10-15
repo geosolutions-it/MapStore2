@@ -282,6 +282,11 @@ const PluginsUtils = {
     getReducers,
     filterState,
     filterDisabledPlugins,
+    /**
+     * Gets from the state the monitor state.
+     * @param {object} state the whole application state
+     * @param {object[]} [monitorState] the state parts to monitor. Every object of the array is shapes this way `{name: "mapType", path: 'maptype.mapType'}`. Joined with default.
+     */
     getMonitoredState: (state, monitorState = []) => filterState(state, defaultMonitoredState.concat(monitorState)),
     /**
      * Create an object structured like following:
