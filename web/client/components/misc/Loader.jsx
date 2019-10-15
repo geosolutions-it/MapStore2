@@ -13,6 +13,6 @@ const sizeToClass = size => size > 100
         : 'small';
 const React = require('react');
 module.exports = ({ size, style = {}, className}) => (<div className={className}
-    style={{ width: size, height: size, overflow: "hidden", ...style }}>
+    style={{ width: `${size}px`, height: `${size}px`, overflow: "hidden", ...style }}>
     <div className={`mapstore-${sizeToClass(size)}-size-loader`}></div>
 </div>);
