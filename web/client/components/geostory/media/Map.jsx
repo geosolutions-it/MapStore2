@@ -9,7 +9,8 @@ import React from 'react';
 import { find } from 'lodash';
 import { createSelector } from 'reselect';
 import { connect } from "react-redux";
-import { compose, withProps, branch } from 'recompose';
+import { compose, withProps, branch, withHandlers} from 'recompose';
+import uuid from "uuid";
 
 import { resourcesSelector } from '../../../selectors/geostory';
 import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
@@ -22,18 +23,28 @@ export default compose(
         compose(
             connect(createSelector(resourcesSelector, (resources) => ({ resources }))),
             withProps(
-                ({ resources, resourceId, map = {} }) => {
+                ({ resources, resourceId, map = {}}) => {
                     const resource = find(resources, { id: resourceId }) || {};
                     return { map: createMapObject(resource.data, map) };
                 }
             )
         )
-    )
+    ),
+    withHandlers({
+        onMapViewChanges: ({ editMap = false, update = () => {}}) => ({center, zoom}) => {
+            editMap && update("map", {
+                center,
+                zoom,
+                mapStateSource: uuid()
+            });
+        }
+    }),
 )(({
     id,
     map = {layers: [defaultLayerMapPreview]},
     options = {},
-    fit
+    fit,
+    onMapViewChanges
 }) => {
     const { layers = [], mapOptions, ...m} = (map.data ? map.data : map); // remove mapOptions to not override options
     return (<div
@@ -41,6 +52,7 @@ export default compose(
             objectFit: fit
         }}>
         <MapView
+            onMapViewChanges={onMapViewChanges}
             id={"media" + id}
             map={{
                 ...m,

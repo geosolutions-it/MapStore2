@@ -1885,7 +1885,8 @@
                 "editMedia": "Change media source",
                 "remove": "Remove",
                 "removeConfirmTitle": "Are you sure?",
-                "removeConfirmContent": "Do you want to remove this content from the story?"
+                "removeConfirmContent": "Do you want to remove this content from the story?",
+                "editMap": "Edit initial map extent"
             },
             "builder": {
                 "defaults": {

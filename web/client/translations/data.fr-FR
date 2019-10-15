@@ -1884,7 +1884,8 @@
                 "editMedia": "Changer de source média",
                 "remove": "Supprimer",
                 "removeConfirmTitle": "Bist du sicher?",
-                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?"
+                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
+                "editMap": "Edit initial map extent"
             },
             "builder": {
                 "defaults": {

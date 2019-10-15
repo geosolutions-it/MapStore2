@@ -1884,7 +1884,8 @@
                 "editMedia": "Cambiar fuente de medios",
                 "remove": "Eliminar",
                 "removeConfirmTitle": "¿Estás seguro?",
-                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?"
+                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
+                "editMap": "Modifier l'étendue initiale de la carte"
             },
             "builder": {
                 "defaults": {
