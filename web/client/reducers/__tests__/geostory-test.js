@@ -17,11 +17,12 @@ import {
     update,
     remove,
     toggleCardPreview,
-    updateCurrentPage,
     setControl,
     setResource,
     saveGeoStoryError,
-    storySaved
+    storySaved,
+    updateCurrentColumn,
+    updateCurrentPage
 } from '../../actions/geostory';
 import {
     isCollapsedSelector,
@@ -207,6 +208,44 @@ describe('geostory reducer', () => {
                 geostory: geostory(undefined, setResource(SAMPLE_RESOURCE))
             })
         ).toBe(SAMPLE_RESOURCE);
+    });
+    it('updateCurrentColumn', () => {
+        expect(
+            currentPageSelector({
+                geostory: geostory({
+                    currentPage: {
+                        columns: {}
+                    },
+                    currentStory: {
+                        sections: [{
+                            id: "section_1",
+                            contents: [{
+                                id: "column_id_1"
+                            }]
+                        }]
+                    }
+                }, updateCurrentColumn("column_id_1"))
+            }).columns
+        ).toEqual({ section_1: 'column_id_1' });
+    });
+    it('updateCurrentColumn', () => {
+        expect(
+            currentPageSelector({
+                geostory: geostory({
+                    currentPage: {
+                        columns: { section_1: 'column_id_2'}
+                    },
+                    currentStory: {
+                        sections: [{
+                            id: "section_1",
+                            contents: [{
+                                id: "column_id_2"
+                            }]
+                        }]
+                    }
+                }, updateCurrentColumn("column_id_1"))
+            }).columns
+        ).toEqual({ section_1: 'column_id_2' });
     });
     describe('setControl', () => {
         Object.keys(Controls).forEach(k => {

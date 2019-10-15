@@ -23,6 +23,7 @@ const Immersive = ({
     onVisibilityChange = () => { },
     update = () => {},
     updateBackground = () => {},
+    updateCurrentColumn = () => {},
     remove = () => {},
     id,
     background = {},
@@ -53,6 +54,7 @@ const Immersive = ({
             editMedia={editMedia}
             path={path}
             update={updateBackground}
+            updateCurrentColumn={updateCurrentColumn}
             remove={remove}
             sectionType={sectionType}
             sectionId={id}
@@ -72,6 +74,7 @@ const Immersive = ({
             contents={contents}
             mode={mode}
             add={add}
+            updateCurrentColumn={updateCurrentColumn}
             editMedia={editMedia}
             update={update}
             remove={remove}

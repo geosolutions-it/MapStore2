@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { compose, createEventHandler, mapPropsStream, setObservableConfig } from 'recompose';
-import { get, maxBy } from "lodash";
+import { head } from "lodash";
 import { Observable } from "rxjs";
 
 // TODO: externalize
@@ -20,21 +20,19 @@ setObservableConfig(rxjsConfig);
 const createCurrentPageUpdateStream = (intersection$, props$) =>
     intersection$
         // create a map with the latest states of each intersection event
-        .scan((visibleItems = {}, { id, visible, entry }) => ({
-            ...visibleItems,
+        .scan((items = {}, { id, visible, entry }) => ({
+            ...items,
             [id]: {
                 visible,
                 entry
             }
         }), {})
         // select the current section id
-        .map((visibleItems = {}) =>
-            // get the one with max intersectionRatio that should be the current sectionId
-            maxBy(
-                Object.keys(visibleItems),
-                (k) => get(visibleItems[k], 'entry.intersectionRatio')
-            )
-        )
+        .map((items = {}) => {
+
+            const visibleItemsKeys = Object.keys(items).filter(k => items[k].visible);
+            return head(visibleItemsKeys);
+        })
         // optimization to avoid not useful events
         .distinctUntilChanged()
         // create the property from the Id stream

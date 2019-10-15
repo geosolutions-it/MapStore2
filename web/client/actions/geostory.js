@@ -28,6 +28,7 @@ export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
+export const UPDATE_CURRENT_COLUMN = "GEOSTORY:UPDATE_CURRENT_COLUMN";
 export const MOVE = "GEOSTORY:MOVE";
 
 /**
@@ -151,6 +152,10 @@ export const update = (path, element, mode = "replace") => ({
 export const updateCurrentPage = ({sectionId}) => ({
     type: UPDATE_CURRENT_PAGE,
     sectionId
+});
+export const updateCurrentColumn = (columnId) => ({
+    type: UPDATE_CURRENT_COLUMN,
+    columnId
 });
 
 /**

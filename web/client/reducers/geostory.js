@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, isObject, isArray, castArray } from "lodash";
+import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
 import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
 import { getEffectivePath } from '../utils/GeoStoryUtils';
 
@@ -19,6 +19,7 @@ import {
     TOGGLE_CARD_PREVIEW,
     UPDATE,
     UPDATE_CURRENT_PAGE,
+    UPDATE_CURRENT_COLUMN,
     REMOVE,
     SELECT_CARD,
     SET_CONTROL,
@@ -29,10 +30,10 @@ import {
 
 import { selectedCardSelector } from "../selectors/geostory";
 
-
 let INITIAL_STATE = {
     mode: 'edit', // TODO: change in to Modes.VIEW
-    isCollapsed: false
+    isCollapsed: false,
+    currentPage: {}
 };
 
 /**
@@ -217,8 +218,21 @@ export default (state = INITIAL_STATE, action) => {
         return set(path, newElement, state);
     }
     case UPDATE_CURRENT_PAGE: {
-        const { type, ...currentPage } = action;
-        return set('currentPage', currentPage, state); // maybe a merge is better
+        return set('currentPage', { ...state.currentPage, sectionId: action.sectionId }, state);
+    }
+    case UPDATE_CURRENT_COLUMN: {
+        const section = find(state.currentStory.sections, s => find(s.contents, {id: action.columnId}));
+
+        if (section && find(section.contents, {id: action.columnId})) {
+            return set('currentPage', {
+                ...state.currentPage,
+                columns: {
+                    ...state.currentPage.columns,
+                    [section.id]: action.columnId
+                }
+            }, state);
+        }
+        return state;
     }
     default:
         return state;

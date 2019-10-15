@@ -45,6 +45,7 @@ export default ({
     ContentComponent = Content,
     mode,
     sectionType,
+    updateCurrentColumn = () => {},
     editMedia = () => {},
     add = () => {},
     update = () => {},
@@ -60,6 +61,7 @@ export default ({
                     viewWidth={viewWidth}
                     sectionType={sectionType}
                     viewHeight={viewHeight}
+                    updateCurrentColumn={updateCurrentColumn}
                     editMedia={({path = ""}, ...args) => editMedia({path: `contents[{"id": "${id}"}]` + path}, ...args)}
                     // restructure the path to give it the correct scope
                     add={(path, ...args) => add(`contents[{"id": "${id}"}].` + path, ...args)}

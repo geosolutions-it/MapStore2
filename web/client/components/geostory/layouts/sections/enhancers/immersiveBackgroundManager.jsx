@@ -18,34 +18,56 @@ const getContentInView = (contents, id) => {
     return contents[index === -1 || !index ? 0 : index];
 };
 
+
 /**
  * Transforms the intersection events stream into backgroundId property stream.
  * @param {stream} intersection$ the stream of intersection event calls
  */
-const createBackgroundIdStream = (intersection$) =>
-    intersection$
+const createBackgroundIdStream = (intersection$, props$) => {
+    const visibility$ = intersection$
         // create a map with the latest states of each intersection event
-        .scan((visibleItems = {}, { id, visible, entry }) => ({
-            ...visibleItems,
+        .scan((items = {}, { id, visible, entry }) => ({
+            ...items,
             [id]: {
                 visible,
                 entry
             }
-        }), {})
-        // select the current background id
-        .map((visibleItems = {}) =>
-            // get the one with max intersectionRatio that should be the selected background ID
-            maxBy(
-                Object.keys(visibleItems),
-                (k) => get(visibleItems[k], 'entry.intersectionRatio')
-            )
-        )
-        // optimization to avoid not useful events
-        .distinctUntilChanged()
-        // create the property from the Id stream
-        .map(backgroundId => ({
-            backgroundId
-        }));
+        }), {});
+    return Observable.merge(
+        visibility$
+            .map((items = {}) => {
+                // get the one with max intersectionRatio that should be the selected background ID
+                const maxItem = maxBy(
+                    Object.keys(items),
+                    (k) => get(items[k], 'entry.intersectionRatio')
+                );
+                return maxItem;
+            })
+            // optimization to avoid not useful events
+            .distinctUntilChanged() // HERE THERE IS A PROBLEM BECAUSE IT DOES NOT PUSH SOME EVENTS ESPECIALLY FROM TWO DIFFERENT IMMERSIVE SECTIONS
+            // create the property from the Id stream
+            .map(backgroundId => ({
+                backgroundId
+            })),
+        visibility$
+            .map((items = {}) => {
+                const maxItem = maxBy(
+                    Object.keys(items),
+                    (k) => get(items[k], 'entry.intersectionRatio')
+                );
+                if (get(items[maxItem], 'entry.intersectionRatio') === 0) {
+                    return "EMPTY";
+                }
+                return maxItem;
+            })
+            // optimization to avoid not useful events
+            // .distinctUntilChanged() // HERE THERE IS A PROBLEM BECAUSE IT DOES NOT PUSH SOME EVENTS ESPECIALLY FROM TWO DIFFERENT IMMERSIVE SECTIONS
+            .withLatestFrom(props$.pluck('updateCurrentColumn'))
+            .do(([columns, updateCurrentColumn]) => updateCurrentColumn && updateCurrentColumn(columns))
+            // create the property from the Id stream
+            .ignoreElements()
+    );
+};
 
 /**
  * enhancer that uses the `backgroundId` property to select the background object
