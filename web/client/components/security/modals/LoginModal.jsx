@@ -86,7 +86,7 @@ class LoginModal extends React.Component {
     };
 
     render() {
-        return (<Modal {...this.props.options} show={this.props.show} onHide={this.handleOnHide}>
+        return (<Modal {...this.props.options} backdrop="static" show={this.props.show} onHide={this.handleOnHide}>
             <Modal.Header key="passwordChange" closeButton>
                 <Modal.Title><Message msgId="user.login"/></Modal.Title>
             </Modal.Header>
