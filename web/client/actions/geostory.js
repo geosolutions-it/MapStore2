@@ -157,7 +157,7 @@ export const updateCurrentPage = ({sectionId}) => ({
 /**
  * moves one section/content from `source` to the `target` container at the `position` position.
  * @param {string} source source path of the section/content to move
- * @param {string} target target path in the story, where to place dragged item
+ * @param {string} target target path in the story, where to place the moved content
  * @param {string|number} position new position of the target drop
  * @param {string} newId id of the new card that is created, it is temporary
  * @param {string} updatePath path to the new item where old id will be restored
