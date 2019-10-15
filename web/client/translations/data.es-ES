@@ -488,6 +488,9 @@
                 "invalid_object": "Respuesta de servicio no válida",
                 "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
                 "invalid_classes": "Max debe ser mayor que min en todas las clases"
+            },
+            "error": {
+                "defaultGroupOnTop": "El grupo {groupTitle} se establece como grupo objetivo predeterminado, por lo tanto, debe permanecer en la parte superior"
             }
         },
         "print":{
