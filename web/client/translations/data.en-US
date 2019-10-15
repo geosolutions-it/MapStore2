@@ -1974,6 +1974,20 @@
                 "imageFilter": "Filter images"
             }
         },
+        "backgroundDialog": {
+            "addTitle": "Add New Background",
+            "editTitle": "Edit Current Background",
+            "title": "Title",
+            "add": "Add",
+            "thumbnail": "Thumbnail",
+            "additionalParameters": "Additional Parameters",
+            "parameter": "Parameter",
+            "value": "Value"
+        },
+        "backgroundSelector": {
+            "addTooltip": "Add new background",
+            "editTooltip": "Edit current background"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Back",

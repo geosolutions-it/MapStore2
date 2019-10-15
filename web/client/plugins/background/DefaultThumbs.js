@@ -1,3 +1,11 @@
+/**
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 const ROADMAP = require('./assets/img/ROADMAP.jpg');
 const TERRAIN = require('./assets/img/TERRAIN.jpg');
 const SATELLITE = require('./assets/img/SATELLITE.jpg');

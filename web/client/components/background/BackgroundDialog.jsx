@@ -1,9 +1,17 @@
+/**
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 const React = require('react');
 const PropTypes = require('prop-types');
 const Select = require('react-select');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const {pick, omit, get, keys, isNumber, isBoolean} = require('lodash');
+const Message = require('../I18N/Message');
 const ResizableModal = require('../misc/ResizableModal');
 const {Form, FormGroup, ControlLabel, FormControl, Button, Glyphicon} = require('react-bootstrap');
 const Thumbnail = require('../maps/forms/Thumbnail');
@@ -63,7 +71,7 @@ class BackgroundDialog extends React.Component {
     renderStyleSelector() {
         return this.props.capabilities ? (
             <FormGroup>
-                <ControlLabel>Style</ControlLabel>
+                <ControlLabel><Message msgId="layerProperties.style"/></ControlLabel>
                 <Select
                     onChange={event => this.setState({style: event ? event.value : undefined})}
                     clearable
@@ -75,13 +83,13 @@ class BackgroundDialog extends React.Component {
 
     render() {
         return (<ResizableModal
-            title={this.props.editing ? "Edit Current Background" : "Add Background"}
+            title={<Message msgId={this.props.editing ? 'backgroundDialog.editTitle' : 'backgroundDialog.addTitle'}/>}
             show
             fade
             onClose={() => { this.props.onClose(); this.resetParameters(); }}
             buttons={this.props.loading ? [] : [
                 {
-                    text: this.props.editing ? 'Save' : 'Add',
+                    text: <Message msgId={this.props.editing ? 'save' : 'backgroundDialog.add'}/>,
                     bsStyle: 'primary',
                     onClick: () => {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
@@ -101,7 +109,7 @@ class BackgroundDialog extends React.Component {
             ]}>
             {this.props.loading ? this.renderLoading() : <Form style={{padding: 8}}>
                 <FormGroup>
-                    <ControlLabel>Thumbnail</ControlLabel>
+                    <ControlLabel><Message msgId="backgroundDialog.thumbnail"/></ControlLabel>
                     <div className="shadow-soft" style={{width: 180, margin: 'auto'}}>
                         <Thumbnail
                             onUpdate = {(data, url) => this.setState({thumbnail: {data, url}})}
@@ -112,16 +120,16 @@ class BackgroundDialog extends React.Component {
                     </div>
                 </FormGroup>
                 <FormGroup>
-                    <ControlLabel>Title</ControlLabel>
+                    <ControlLabel><Message msgId="layerProperties.title"/></ControlLabel>
                     <FormControl
                         value={this.state.title}
                         placeholder="Enter displayed name"
                         onChange={event => this.setState({title: event.target.value})}/>
                 </FormGroup>
                 <FormGroup controlId="formControlsSelect">
-                    <ControlLabel>Format</ControlLabel>
+                    <ControlLabel><Message msgId="layerProperties.format"/></ControlLabel>
                     <Select
-                        onChange = {event => this.setState({format: event.value})}
+                        onChange={event => this.setState({format: event.value})}
                         value={this.state.format}
                         clearable={false}
                         options={[{
@@ -145,7 +153,7 @@ class BackgroundDialog extends React.Component {
                 {this.renderStyleSelector()}
                 <FormGroup>
                     <div style={{display: 'flex', alignItems: 'center'}}>
-                        <ControlLabel style={{flex: 1}}>Additional Parameters </ControlLabel>
+                        <ControlLabel style={{flex: 1}}><Message msgId="backgroundDialog.additionalParameters"/></ControlLabel>
                         <Button
                             className="square-button-md"
                             style={{borderColor: 'transparent'}}
@@ -161,7 +169,7 @@ class BackgroundDialog extends React.Component {
                     {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
                         <FormControl
                             style={{flex: 1, marginRight: 8, minWidth: 0}}
-                            placeholder="Parameter"
+                            placeholder={<Message msgId="backgroundDialog.parameter/>"/>}
                             value={val.param}
                             onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
                         {val.type === 'boolean' ?
@@ -180,7 +188,7 @@ class BackgroundDialog extends React.Component {
                             </div> :
                             <FormControl
                                 style={{flex: 1, marginRight: 8, minWidth: 0}}
-                                placeholder="Value"
+                                placeholder={<Message msgId="backgroundDialog.value"/>}
                                 value = {val.val.toString()}
                                 onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)}/>}
                         <Select
