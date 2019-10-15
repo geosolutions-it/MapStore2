@@ -7,6 +7,7 @@
  */
 import {get, find} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
+import { isAdminUserSelector, isUserSelector } from './security';
 
 /**
  * Returns a selector using a path inside the current story
@@ -53,6 +54,11 @@ export const saveDialogSelector = state => controlSelectorCreator(Controls.SHOW_
  * @param {object} state application state
  */
 export const resourceSelector = state => get(state, 'geostory.resource');
+/**
+ * Selects the edit permission of the resource
+ * @param {object} state the application state
+ */
+export const canEditSelector = state => get(resourceSelector(state), 'canEdit', false);
 /**
  * Selects the loading state of geostory.
  * @param {object} state the application state
@@ -110,3 +116,8 @@ export const resourcesSelector = state => get(currentStorySelector(state), "reso
  * @returns {function} function that returns a selector
  */
 export const resourceByIdSelectorCreator = id => state => find(resourcesSelector(state), {id});
+/**
+ * return the status of the possibility to edit the story
+ * @param {object} state
+ */
+export const isEditAllowedSelector = state => isAdminUserSelector(state) || (isUserSelector(state) && canEditSelector(state));

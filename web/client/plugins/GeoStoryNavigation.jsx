@@ -14,6 +14,7 @@ import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
 import {
     currentStorySelector,
+    isEditAllowedSelector,
     currentPageSelector,
     modeSelector
 } from '../selectors/geostory';
@@ -23,6 +24,7 @@ import Navigation from '../components/geostory/navigation/Navigation';
 const GeoStoryNavigation = ({
     mode = Modes.VIEW,
     currentPage,
+    isEditAllowed,
     setEditingMode = () => { },
     story = {}
 }) => (mode === Modes.VIEW ? <div
@@ -31,6 +33,7 @@ const GeoStoryNavigation = ({
     style={{width: "100%", position: 'relative' }}>
     <Navigation
         currentPage={currentPage}
+        isEditAllowed={isEditAllowed}
         scrollTo={(id, options = { behavior: "smooth" }) => () => {
             scrollToContent(id, options);
         }}
@@ -47,6 +50,7 @@ export default createPlugin('GeoStoryNavigation', {
         createStructuredSelector({
             mode: modeSelector,
             currentPage: currentPageSelector,
+            isEditAllowed: isEditAllowedSelector,
             story: currentStorySelector
         }), {
             setEditingMode: setEditing
