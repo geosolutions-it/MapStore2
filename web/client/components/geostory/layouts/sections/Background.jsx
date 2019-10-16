@@ -16,6 +16,7 @@ import ContentToolbar from '../../contents/ContentToolbar';
 import Message from '../../../I18N/Message';
 import { Portal } from 'react-overlays';
 import pattern from './patterns/grid.svg';
+import { SectionTypes } from './../../../../utils/GeoStoryUtils';
 
 /**
  * Background.
@@ -45,6 +46,7 @@ class Background extends Component {
         type: PropTypes.oneOf(lists.MediaTypes),
         disableToolbarPortal: PropTypes.bool,
         backgroundPlaceholder: PropTypes.object,
+        sectionType: PropTypes.string,
         src: PropTypes.string
     };
 
@@ -61,6 +63,7 @@ class Background extends Component {
 
     render() {
         const parentNode = !this.props.disableToolbarPortal && this.refs && this.refs.div && this.refs.div.parentNode;
+        const defaultTools = this.props.sectionType === SectionTypes.TITLE ? ['editMedia', 'cover' ] : ['editMedia' ];
         const toolbar = (
             <ContentToolbar
                 {...this.props}
@@ -71,7 +74,7 @@ class Background extends Component {
                     value: 'dark',
                     label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
                 }]}
-                tools={this.props.tools && this.props.tools[this.props.type] || [ 'editMedia' ]}
+                tools={this.props.tools && this.props.type && this.props.tools[this.props.type] || defaultTools}
             />
         );
         return (
