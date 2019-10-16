@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, GeoSolutions Sas.
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -15,7 +15,7 @@ const { isLoggedIn } = require('../../selectors/security');
 
 const Message = require('../../components/I18N/Message');
 
-class EmptyDashboards extends React.Component {
+class EmptyGeostories extends React.Component {
     static propTypes = {
         loggedIn: PropTypes.bool
     }
@@ -35,4 +35,4 @@ module.exports = connect(
     createSelector(isLoggedIn, (loggedIn) => ({
         loggedIn: !!loggedIn
     })),
-)(EmptyDashboards);
+)(EmptyGeostories);

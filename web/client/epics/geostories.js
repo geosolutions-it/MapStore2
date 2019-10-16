@@ -7,7 +7,7 @@
  */
 const Rx = require('rxjs');
 const { MAPS_LIST_LOADING, ATTRIBUTE_UPDATED} = require('../actions/maps');
-const { MAP_DELETED, MAP_METADATA_UPDATED } = require('../actions/maps');
+
 const { SAVED: GEOSTORY_SAVED } = require('../actions/geostory');
 
 const { SEARCH_GEOSTORIES, DELETE_GEOSTORY, GEOSTORY_DELETED, RELOAD, searchGeostories, geostoriesListLoaded, geostoryDeleted, geostoriesLoading } = require('../actions/geostories');
@@ -74,7 +74,7 @@ module.exports = {
             }))
         )),
     reloadOnGeostories: (action$, { getState = () => { } }) =>
-        action$.ofType(GEOSTORY_DELETED, MAP_DELETED, MAP_METADATA_UPDATED, RELOAD, ATTRIBUTE_UPDATED, GEOSTORY_SAVED)
+        action$.ofType(GEOSTORY_DELETED, RELOAD, ATTRIBUTE_UPDATED, GEOSTORY_SAVED)
             .delay(1000) // delay as a workaround for geostore issue #178
             .switchMap( () => Rx.Observable.of(searchGeostories(
                 searchTextSelector(getState()),

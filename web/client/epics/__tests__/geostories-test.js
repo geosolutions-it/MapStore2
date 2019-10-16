@@ -103,27 +103,6 @@ describe('geostories epics', () => {
                 }
             });
         });
-        it('reload on mapMetadataUpdate', (done) => {
-            const startActions = [mapMetadataUpdated(1, "name", "description")];
-            testEpic(reloadOnGeostories, 1, startActions, ([a]) => {
-                expect(a.type).toBe(SEARCH_GEOSTORIES);
-                expect(a.params.start).toBe(0);
-                expect(a.params.limit).toBe(12);
-                expect(a.searchText).toBe("test");
-                done();
-            }, {
-                geostories: {
-                    searchText: "test",
-                    options: {
-                        params: {
-                            start: 0,
-                            limit: 12
-                        }
-                    }
-                }
-            });
-        });
-    });
     it('searchGeostories error', (done) => {
         const baseUrl = "base/web/client/test-resources/geostore/extjs/search/NODATA#";
         ConfigUtils.getDefaults = () => ({

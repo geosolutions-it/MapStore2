@@ -14,8 +14,6 @@ const {
     deleteGeostory, DELETE_GEOSTORY,
     geostoryDeleted, GEOSTORY_DELETED,
     reloadGeostories, RELOAD
-
-
 } = require('../geostories');
 describe('geostories (browse) actions', () => {
     it('setGeostoriesAvailable', () => {
