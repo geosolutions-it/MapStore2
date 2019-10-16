@@ -17,7 +17,9 @@ describe('FeatureInfoFormatSelector', () => {
     const data = {
         k0: "v0",
         k1: "v1",
-        k2: "v2"
+        k2: "v2",
+        //  duplicated key value needed to test that featureInfo with same formats are selectable.
+        k3: "v2"
     };
     const defaultVal = data.k1;
 
