@@ -67,7 +67,7 @@ describe('Title component', () => {
                 html: '<h1>Title</h1>'
             }
         ];
-        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover mode="edit"/>, document.getElementById("container"));
+        ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} sectionType="title" cover mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
         expect(el).toExist();
@@ -81,7 +81,7 @@ describe('Title component', () => {
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
-        testToolbarButtons(["pencil"], container);
+        testToolbarButtons(["pencil", "cover"], container);
     });
 
     it('Title rendering cover set to false', () => {
