@@ -28,7 +28,6 @@ export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
-export const MOVED = "GEOSTORY:MOVED";
 export const MOVE = "GEOSTORY:MOVE";
 
 /**
@@ -158,27 +157,17 @@ export const updateCurrentPage = ({sectionId}) => ({
  * moves one section/content from `source` to the `target` container at the `position` position.
  * @param {string} source source path of the section/content to move
  * @param {string} target target path in the story, where to place the moved content
- * @param {string|number} position new position of source object the target container
- * @param {string} newId id of the new card that is created, it is temporary
- * @param {string} updatePath path to the new item where old id will be restored
+ * @param {string|number} position position where to place the dropped item.
+ * We are removing the source item and
+ * adding it again to the position where the target item was,
+ * making the other item to shift beyond it
+ *                       0  1  2      0  1  2  3
+ * i0 dragged to i2 ==> i1 i2 i3 ==> i1 i2 i0 i3
+ *                       0  1  2      0  1  2  3
+ * i3 dragged to i1 ==> i0 i1 i2 ==> i0 i3 i1 i2
  */
-export const move = (source, target, position, newId, updatePath) => ({
+export const move = (source, target, position) => ({
     type: MOVE,
-    source,
-    target,
-    position,
-    newId,
-    updatePath
-});
-
-/**
- * clean up states after sort operation
- * @param {string} source source path that is being dragged
- * @param {string} target target path in the story, where to place dragged item
- * @param {string|number} position new position of the target drop
- */
-export const moved = (source, target, position) => ({
-    type: MOVED,
     source,
     target,
     position

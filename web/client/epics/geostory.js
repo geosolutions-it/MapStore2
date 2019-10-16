@@ -36,7 +36,6 @@ import {
     loadGeostory,
     loadingGeostory,
     loadGeostoryError,
-    moved,
     remove,
     setCurrentStory,
     saveGeoStoryError,
@@ -298,15 +297,13 @@ export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
  * @returns {Observable} a stream that emits actions for sorting
  */
 export const sortContentEpic = (action$, {getState = () => {}}) =>
-    action$.ofType(MOVE).switchMap(({source, target, position, newId, updatePath}) => {
+    action$.ofType(MOVE).switchMap(({source, target, position}) => {
         const state = getState();
         const current = createPathSelector(source)(state);
 
         // remove first so, the highlight works correctly
         return Observable.of(
             remove(source),
-            add(target, position > 0 ? position - 1 : 0, { ...current, id: newId }),
-            update(updatePath, {id: current.id}, "merge" ),
-            moved(source, target, position)
+            add(target, position, current)
         );
     });

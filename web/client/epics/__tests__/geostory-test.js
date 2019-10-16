@@ -29,7 +29,6 @@ import {
 } from '../geostory';
 import {
     ADD,
-    MOVED,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
@@ -831,11 +830,6 @@ describe('Geostory Epics', () => {
                     case REMOVE:
                         expect(a.path).toBe(source);
                         break;
-                    case MOVED:
-                        expect(a.position).toBe(position);
-                        expect(a.source).toBe(source);
-                        expect(a.target).toBe(target);
-                        break;
                     default:
                         expect(true).toBe(false);
                         break;
@@ -913,11 +907,6 @@ describe('Geostory Epics', () => {
                         break;
                     case REMOVE:
                         expect(a.path).toBe(source);
-                        break;
-                    case MOVED:
-                        expect(a.position).toBe(position);
-                        expect(a.source).toBe(source);
-                        expect(a.target).toBe(target);
                         break;
                     default:
                         expect(true).toBe(false);

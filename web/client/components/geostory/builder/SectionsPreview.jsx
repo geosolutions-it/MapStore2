@@ -83,7 +83,7 @@ const previewContents = {
                     if (itemDataTo.containerId === itemDataFrom.containerId) {
                         const source = `sections[{ "id": "${id}" }].contents[{"id":"${contents[0].id}"}].contents[{"id":"${itemDataFrom.id}"}]`;
                         const target = `sections[{ "id": "${id}" }].contents[{"id":"${contents[0].id}"}].contents`;
-                        const position = sortIdTo + 1;
+                        const position = sortIdTo;
                         const newId = uuid();
                         onSort(source, target, position, newId, `sections[{ "id": "${id}" }].contents[{"id":"${contents[0].id}"}].contents[{"id":"${newId}"}]`);
                     }
@@ -132,7 +132,7 @@ const previewContents = {
                     if (itemDataTo.containerId === itemDataFrom.containerId) {
                         const source = `sections[{ "id": "${sectionId}" }].contents[{"id":"${id}"}].contents[{"id":"${itemDataFrom.id}"}]`;
                         const target = `sections[{ "id": "${sectionId}" }].contents[{"id":"${id}"}].contents`;
-                        const position = sortIdTo + 1;
+                        const position = sortIdTo;
                         const newId = uuid();
                         onSort(source, target, position, newId, `sections[{ "id": "${sectionId}" }].contents[{"id":"${id}"}].contents[{"id":"${newId}"}]`);
                     }
@@ -176,7 +176,7 @@ const previewContents = {
                     if (itemDataTo.containerId === itemDataFrom.containerId) {
                         const source = `sections[{ "id": "${id}" }].contents[{"id":"${itemDataFrom.id}"}]`;
                         const target = `sections[{ "id": "${id}" }].contents`;
-                        const position = sortIdTo + 1;
+                        const position = sortIdTo;
                         const newId = uuid();
                         onSort(source, target, position, newId, `sections[{ "id": "${id}" }].contents[{"id":"${newId}"}]`);
                     }
@@ -291,7 +291,7 @@ export default ({ sections = [], scrollTo, onSelect = () => {}, isCollapsed, cur
             const newId = uuid();
             const source = `sections[{ "id": "${itemDataFrom.id}" }]`;
             const target = `sections`;
-            const position = sortIdTo + 1;
+            const position = sortIdTo;
             onSort(source, target, position, newId, `sections[{ "id": "${newId}" }]`);
         }
     }}

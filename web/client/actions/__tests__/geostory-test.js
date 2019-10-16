@@ -23,7 +23,6 @@ import {
     selectCard, SELECT_CARD,
     toggleCardPreview, TOGGLE_CARD_PREVIEW,
     SAVE, saveStory,
-    moved, MOVED,
     move, MOVE
 } from '../geostory';
 
@@ -130,24 +129,9 @@ describe('test geostory action creators', () => {
         const source = "source";
         const target = "target";
         const position = 0;
-        const newId = "newId";
-        const updatePath = "updatePath";
-        const retVal = move(source, target, position, newId, updatePath);
+        const retVal = move(source, target, position);
         expect(retVal).toExist();
         expect(retVal.type).toBe(MOVE);
-        expect(retVal.source).toBe(source);
-        expect(retVal.target).toBe(target);
-        expect(retVal.position).toBe(position);
-        expect(retVal.newId).toBe(newId);
-        expect(retVal.updatePath).toBe(updatePath);
-    });
-    it('moved', () => {
-        const source = "source";
-        const target = "target";
-        const position = 0;
-        const retVal = moved(source, target, position);
-        expect(retVal).toExist();
-        expect(retVal.type).toBe(MOVED);
         expect(retVal.source).toBe(source);
         expect(retVal.target).toBe(target);
         expect(retVal.position).toBe(position);
