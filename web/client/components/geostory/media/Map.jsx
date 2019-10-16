@@ -51,12 +51,12 @@ export default compose(
         className="ms-media ms-media-map" style={{
             objectFit: fit
         }}>
+        {/* BaseMap component overrides the MapView id with map's id */}
         <MapView
             onMapViewChanges={onMapViewChanges}
-            id={"media" + id}
             map={{
                 ...m,
-                id
+                id: `media-${id}`
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
             options={applyDefaults(options)}
