@@ -249,7 +249,7 @@
     "continuoustest": "karma start ./build/karma.conf.continuous-test.js --colors",
     "mvntest": "karma start ./build/karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",
-    "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs",
+    "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers FirefoxHeadless --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs",
     "generate-icons": "node ./build/generateIcons.js"
   },
   "author": "GeoSolutions",
