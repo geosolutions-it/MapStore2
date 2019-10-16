@@ -24,7 +24,7 @@ import {
     storySaved
 } from '../../actions/geostory';
 import {
-    cardPreviewEnabledSelector,
+    isCollapsedSelector,
     currentStorySelector,
     modeSelector,
     sectionsSelector,
@@ -144,8 +144,8 @@ describe('geostory reducer', () => {
     });
     it('TOGGLE_CARD_PREVIEW', () => {
         expect(
-            cardPreviewEnabledSelector({ geostory: geostory({
-                cardPreviewEnabled: false
+            isCollapsedSelector({ geostory: geostory({
+                isCollapsed: false
             },
             toggleCardPreview())})
         ).toEqual(true);

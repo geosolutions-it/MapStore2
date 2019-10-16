@@ -29,6 +29,7 @@ const Immersive = ({
     path,
     contents = [],
     mode,
+    sectionType,
     inViewRef,
     viewWidth,
     viewHeight
@@ -53,6 +54,7 @@ const Immersive = ({
             path={path}
             update={updateBackground}
             remove={remove}
+            sectionType={sectionType}
             sectionId={id}
             backgroundId={background.id}
             key={background.id}

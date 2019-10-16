@@ -23,8 +23,8 @@ class AddBar extends React.Component {
         id: PropTypes.string,
         type: PropTypes.string,
         buttons: PropTypes.array,
-        containerWidth: PropTypes.oneOf(PropTypes.number, PropTypes.string),
-        containerHeight: PropTypes.oneOf(PropTypes.number, PropTypes.string),
+        containerWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        containerHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         addButtonClassName: PropTypes.string
     };
 

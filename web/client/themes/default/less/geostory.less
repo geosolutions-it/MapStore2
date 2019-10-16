@@ -51,7 +51,27 @@
     }
 }
 
+.ms-geostory {
+    .ms2-border-layout-content {
+        .ms2-border-layout-content {
+            background-color: @ms-story-bg-grey;
+        }
+    }
+}
+
 .ms-geostory-builder {
+    .ms-story-empty-content-parent {
+        display: contents;
+        .ms-story-empty-content-child {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%);
+        }
+    }
+    .ms-story-title-editable:hover{
+        cursor: text;
+    }
 
     /* used to calculate correctly width of children */
     > .ms2-border-layout-body > .ms2-border-layout-content {
@@ -61,6 +81,7 @@
 
     .ms-geostory-builder-header {
         padding: 8px 0;
+        border-bottom: 1px solid @ms-story-bg-grey;
     }
 
     /*
@@ -71,11 +92,43 @@
         we should not use bootstrap components inside our custom component
         in particular Row and Col because their behaviors rely on the screen page width
         */
+        .msSideGrid {
+            margin: 8px;
+            width: ~"calc(100% - 16px)";
+        }
         .row {
             margin: 0;
         }
         .col-xs-12 {
             padding: 0;
+        }
+
+        .mapstore-side-card.ms-highlight {
+            outline: 2px solid @ms-story-highlight;
+        }
+        /* removing transition because it was slowing down the change of color text */
+        .mapstore-side-card {
+            transition: none;
+        }
+        .ms-dragging {
+            cursor: grab;
+            & > div {
+                opacity: 0.1;
+            }
+        }
+        .ms-over:not(.ms-dragging) {
+            &.ms-above {
+                & > div {
+                    padding-bottom: @square-btn-medium-size;
+                    border-bottom: 2px solid @ms2-color-primary;
+                }
+            }
+            &.ms-below {
+                & > div {
+                    padding-top: @square-btn-medium-size;
+                    border-top: 2px solid @ms2-color-primary;
+                }
+            }
         }
     }
 
@@ -93,10 +146,18 @@
                 margin: auto; /* center first child in preview */
                 align-self: center; /* center first child in preview (ie) */
             }
+            .glyphicon {
+                font-size: 64px;
+            }
+            img {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
     }
 }
-
 .ms-cascade-story {
 
     /////////////
@@ -590,8 +651,11 @@
 
         }
     }
-    .empty-state-container .empty-state-main-view .empty-state-description {
-        text-align: center;
+    .empty-state-container {
+        position: relative;
+        .empty-state-main-view .empty-state-description {
+            text-align: center;
+        }
     }
 
     /////////////////////

@@ -13,7 +13,7 @@ import Content from '../SectionContent';
 import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 const SCROLLABLE_CONTAINER_ID = "TEST_SCROLLABLE_CONTAINER";
 
-import { ContentTypes } from '../../../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes } from '../../../../utils/GeoStoryUtils';
 
 const TestScrollableContainer = ({ children, height }) => <div id={SCROLLABLE_CONTAINER_ID} style={{ height, overflowY: "auto" }} >{children}</div>;
 describe('Section Content (Container) component', () => {
@@ -39,7 +39,7 @@ describe('Section Content (Container) component', () => {
         expect(el).toExist();
     });
     it('Content rendering known type (image)', () => {
-        ReactDOM.render(<Content {...STORY.sections[0].contents[1]} />, document.getElementById("container"));
+        ReactDOM.render(<Content type={MediaTypes.IMAGE} {...STORY.sections[0].contents[0]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content-image');
         expect(el).toExist();

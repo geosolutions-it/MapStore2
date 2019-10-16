@@ -6,19 +6,25 @@
       "type": "paragraph",
       "id": "SomeID",
       "title": "Abstract",
-      "contents": [
-        {
-          "id": "SomeID",
-          "type": "text",
-          "background": {},
-          "html": "<p>this is some html content</p>"
-        },
-        {
-          "id": "SomeID2",
-          "type": "image",
-          "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-        }
-      ]
+      "contents": [{
+        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+        "type": "column",
+        "size": "full",
+         "align": "center",
+        "contents": [
+          {
+            "id": "SomeID",
+            "type": "text",
+            "background": {},
+            "html": "<p>this is some html content</p>"
+          },
+          {
+            "id": "SomeID2",
+            "type": "image",
+            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+          }
+        ]
+      }]
     },
     {
       "type": "immersive",
