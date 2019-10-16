@@ -72,6 +72,9 @@ const dropSpec = {
                 const clientY = monitor.getClientOffset().y - boundingRect.top;
                 if (headDomNode) {
                     const thirdY = (boundingRect.bottom - boundingRect.top) / 3;
+                    if (props.isDragging || (props.node && props.node.placeholder)) {
+                        return;
+                    }
                     if (item.newParentNodeId === props.parentNodeId && draggedItemIndex < hoveredItemIndex && clientY < thirdY) {
                         return;
                     }
