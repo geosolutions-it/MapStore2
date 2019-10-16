@@ -790,29 +790,26 @@ describe('Geostory Epics', () => {
             }, S1);
         });
         it('sortContentEpic sorting two sections', done => {
-            const source = `sections[{"id": "SECTION-TITLE-1"}]`;
+            const id = "SECTION-TITLE-1";
+            const source = `sections[{"id": "${id}"}]`;
             const target = "sections";
             const position = 2;
-            const newId = "newId";
-            const updatePath = `sections[{"id": "${newId}"}]`;
             const moveAction = move(
                 source,
                 target,
-                position,
-                newId,
-                updatePath
+                position
             );
-            const NUM_ACTIONS = 4;
+            const NUM_ACTIONS = 2;
             testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 actions.forEach(({type, ...a}) => {
                     switch (type) {
                     case ADD:
                         expect(a.path).toBe(target);
-                        expect(a.position).toBe(position - 1 );
+                        expect(a.position).toBe(position);
                         expect(a.element).toEqual({
                             "type": "title",
-                            "id": "newId",
+                            "id": id,
                             "title": "Abstract",
                             "contents": [
                                 {
@@ -821,11 +818,6 @@ describe('Geostory Epics', () => {
                                 }
                             ]
                         });
-                        break;
-                    case UPDATE:
-                        expect(a.path).toBe(updatePath);
-                        expect(a.element).toEqual({id: "SECTION-TITLE-1"});
-                        expect(a.mode).toBe("merge");
                         break;
                     case REMOVE:
                         expect(a.path).toBe(source);
@@ -875,35 +867,27 @@ describe('Geostory Epics', () => {
             });
         });
         it('sortContentEpic sorting two items under paragraph', done => {
-            const source = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"0264c912-2814-47fa-8050-ea11cf11e833"}]`;
+            const id = "0264c912-2814-47fa-8050-ea11cf11e833";
+            const source = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"${id}"}]`;
             const target = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents`;
             const position = 1;
-            const newId = "newId";
-            const updatePath = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"${newId}"}]`;
             const moveAction = move(
                 source,
                 target,
-                position,
-                newId,
-                updatePath
+                position
             );
-            const NUM_ACTIONS = 4;
+            const NUM_ACTIONS = 2;
             testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 actions.forEach(({type, ...a}) => {
                     switch (type) {
                     case ADD:
                         expect(a.path).toBe(target);
-                        expect(a.position).toBe(position - 1);
+                        expect(a.position).toBe(position);
                         expect(a.element).toEqual({
-                            "id": newId,
+                            "id": id,
                             "type": "text"
                         });
-                        break;
-                    case UPDATE:
-                        expect(a.path).toBe(updatePath);
-                        expect(a.element).toEqual({id: "0264c912-2814-47fa-8050-ea11cf11e833"});
-                        expect(a.mode).toBe("merge");
                         break;
                     case REMOVE:
                         expect(a.path).toBe(source);
