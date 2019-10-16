@@ -45,10 +45,7 @@ function backgroundselector(state = null, action) {
                 if (background.id === action.id) {
                     return assign({}, background, {
                         id: action.id,
-                        thumbnail: {
-                            url: action.thumbnail,
-                            data: action.thumbnailData
-                        }
+                        thumbnail: action.thumbnailData
                     });
                 }
                 return assign({}, background);

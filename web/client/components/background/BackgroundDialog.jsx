@@ -93,14 +93,14 @@ class BackgroundDialog extends React.Component {
                     bsStyle: 'primary',
                     onClick: () => {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
-                        this.props.updateThumbnail(this.state.thumbnail.data, this.state.thumbnail.url, backgroundId);
+                        this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
                         this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
                                 additionalParameters: omit(
                                     this.state.additionalParameters.reduce((accum, p) => assign(accum, {[p.param]: p.val}), {}),
                                     ['source', 'format', 'style', 'title']
                                 ),
-                                thumbURL: this.state.thumbnail.url,
+                                thumbURLBlob: this.state.thumbnail.url,
                                 group: 'background'
                             }));
                         this.resetParameters();

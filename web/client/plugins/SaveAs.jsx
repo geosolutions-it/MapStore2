@@ -14,14 +14,15 @@ const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
-const {createThumbnail, onDisplayMetadataEdit, metadataChanged, createBackgroundThumbnail, triggerSaveMap} = require('../actions/maps');
+const {saveMapResource, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
+const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {mapTypeSelector} = require('../selectors/maptype');
-const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {indexOf} = require('lodash');
+const uuid = require('uuid/v1');
 
 const MapUtils = require('../utils/MapUtils');
 
@@ -47,8 +48,8 @@ const selector = createSelector(
         layers,
         groups,
         additionalOptions,
-        ...saveAsState,
-        backgrounds
+        backgrounds,
+        ...saveAsState
     }));
 
 class SaveAs extends React.Component {
@@ -60,6 +61,7 @@ class SaveAs extends React.Component {
         mapType: PropTypes.string,
         layers: PropTypes.array,
         groups: PropTypes.array,
+        backgrounds: PropTypes.array,
         params: PropTypes.object,
         metadata: PropTypes.object,
         currentMap: PropTypes.object,
@@ -75,9 +77,7 @@ class SaveAs extends React.Component {
         resetCurrentMap: PropTypes.func,
         metadataChanged: PropTypes.func,
         onMapSave: PropTypes.func,
-        loadMapInfo: PropTypes.func,
-        textSearchConfig: PropTypes.object,
-        backgrounds: PropTypes.array
+        textSearchConfig: PropTypes.object
     };
 
     static contextTypes = {
@@ -141,8 +141,10 @@ class SaveAs extends React.Component {
 
     // this method creates the content for the Map Resource
     createV2Map = () => {
-        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
+        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups,
+            this.props.backgrounds, this.props.textSearchConfig, this.props.additionalOptions);
     };
+
     saveMap = (id, name, description) => {
         this.props.editMap(this.props.currentMap);
         let thumbComponent = this.refs.metadataModal.refs.thumbnail;
@@ -152,15 +154,14 @@ class SaveAs extends React.Component {
             description,
             attributes
         };
-        const thumbName = thumbComponent.generateUUID();
         if (metadata.name !== "") {
-            thumbComponent.getThumbnailDataUri((data) => {
-                this.props.onMapSave({
-                    backgrounds: this.props.backgrounds,
+            thumbComponent.getThumbnailDataUri( (data) => {
+                this.props.onMapSave({category: "MAP", data: this.createV2Map(), metadata, linkedResources: data && {thumbnail: {
                     data,
-                    metadata: metadata,
-                    thumbName
-                });
+                    category: "THUMBNAIL",
+                    name: thumbComponent.generateUUID(),
+                    tail: `/raw?decode=datauri&v=${uuid()}`
+                }} || {}});
             });
         }
     };
@@ -173,11 +174,10 @@ module.exports = {
             onClose: () => onDisplayMetadataEdit(false),
             onUpdateCurrentMap: updateCurrentMap,
             onErrorCurrentMap: errorCurrentMap,
-            onMapSave: triggerSaveMap,
+            onMapSave: saveMapResource,
             metadataChanged,
             editMap,
             resetCurrentMap,
-            createBackgroundThumbnail,
             onDisplayMetadataEdit,
             onCreateThumbnail: createThumbnail
         })(assign(SaveAs, {

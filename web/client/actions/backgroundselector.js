@@ -72,11 +72,10 @@ export function setCurrentBackgroundLayer(layerId) {
     };
 }
 
-export function updateThumbnail(thumbnailData, thumbnail, backgroundId) {
+export function updateThumbnail(thumbnailData, backgroundId) {
     return {
         type: UPDATE_BACKGROUND_THUMBNAIL,
         thumbnailData,
-        thumbnail,
         id: backgroundId
     };
 }
