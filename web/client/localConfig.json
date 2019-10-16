@@ -73,7 +73,7 @@
               },
               "default_map_backgrounds": {
                 "type": "backgrounds",
-                "title": "Default Backgrounds",
+                "title": "defaultMapBackgroundsServiceTitle",
                 "autoload": true,
                 "backgrounds": [{
                     "type": "osm",

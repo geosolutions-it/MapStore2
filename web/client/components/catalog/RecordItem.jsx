@@ -32,7 +32,7 @@ const Button = tooltip(ButtonRB);
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
 
-const BackgroundDialog = require('../background/BackgroundDialog');
+import BackgroundDialog from '../background/BackgroundDialog';
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -69,7 +69,6 @@ class RecordItem extends React.Component {
     };
 
     static defaultProps = {
-        modalParams: {},
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
@@ -119,7 +118,6 @@ class RecordItem extends React.Component {
     }
 
     componentWillUnmount() {
-
         document.removeEventListener('click', this.handleClick, false);
     }
 

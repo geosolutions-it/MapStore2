@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const {isNil} = require("lodash");
+const {isNil, has, omit} = require("lodash");
 const assign = require("object-assign");
 const PropTypes = require("prop-types");
 const React = require("react");
@@ -341,8 +341,11 @@ class Catalog extends React.Component {
     };
 
     getServices = () => {
-        return Object.keys(this.props.services).map(s => {
-            return assign({}, this.props.services[s], {label: this.props.services[s].title, value: s});
+        const startKeys = has(this.props.services, 'default_map_backgrounds') ? ['default_map_backgrounds'] : [];
+        return startKeys.concat(Object.keys(omit(this.props.services, 'default_map_backgrounds'))).map(s => {
+            return assign({}, this.props.services[s], {
+                label: LocaleUtils.getMessageById(this.context.messages, this.props.services[s].title), value: s
+            });
         });
     };
 

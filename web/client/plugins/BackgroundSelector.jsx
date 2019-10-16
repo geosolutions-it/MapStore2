@@ -9,15 +9,15 @@
 const {connect} = require('react-redux');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties, updateNode} = require('../actions/layers');
-const {addBackground, addBackgroundProperties,
+const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
     updateThumbnail, removeBackground, clearModalParameters, backgroundEdited} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
 const {backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
-const {modalParamsSelector,
-    isDeletedIdSelector, backgroundListSelector, backgroundLayersSelector} = require('../selectors/backgroundselector');
+const {modalParamsSelector, isDeletedIdSelector, backgroundListSelector,
+    backgroundLayersSelector, confirmDeleteBackgroundModalSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {allBackgroundLayerSelector} = require('../selectors/layers');
 
@@ -37,8 +37,9 @@ const backgroundSelector = createSelector([
     currentBackgroundSelector,
     tempBackgroundSelector,
     state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
-    state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, layers, controls, currentLayer, tempLayer, style, enabledCatalog) => ({
+    state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
+    confirmDeleteBackgroundModalSelector],
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, layers, controls, currentLayer, tempLayer, style, enabledCatalog, confirmDeleteBackgroundModalObj) => ({
     modalParams,
     backgroundList,
     deletedId,
@@ -51,6 +52,7 @@ const backgroundSelector = createSelector([
     enabled: controls.enabled,
     style,
     enabledCatalog,
+    confirmDeleteBackgroundModal: confirmDeleteBackgroundModalObj,
     projection
 }));
 
@@ -92,7 +94,8 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onUpdateThumbnail: updateThumbnail,
     removeBackground,
     clearModal: clearModalParameters,
-    addBackgroundProperties
+    addBackgroundProperties,
+    onRemoveBackground: confirmDeleteBackgroundModal
 }, (stateProps, dispatchProps, ownProps) => ({
     ...stateProps,
     ...dispatchProps,

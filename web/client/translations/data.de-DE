@@ -1973,6 +1973,27 @@
                 "imageFilter": "Filtern Sie Bilder"
             }
         },
+        "backgroundDialog": {
+            "addTitle": "Neuen Hintergrund hinzufügen",
+            "editTitle": "Aktuellen Hintergrund bearbeiten",
+            "title": "Titel",
+            "titlePlaceholder": "Den angezeigten Namen eingeben",
+            "add": "Hinzufügen",
+            "additionalParameters": "Zusätzliche Parameter",
+            "addAdditionalParameterTooltip": "Parameter hinzufügen",
+            "removeAdditionalParameterTooltip": "Parameter entfernen",
+            "parameter": "Parameter",
+            "value": "Wert",
+            "string": "Reihe",
+            "number": "Nummer",
+            "boolean": "Boolean"
+        },
+        "defaultMapBackgroundsServiceTitle": "Standardhintergründe",
+        "backgroundSelector": {
+            "addTooltip": "Neuen Hintergrund hinzufügen",
+            "editTooltip": "Aktuellen Hintergrund bearbeiten",
+            "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?"
+        },
         "tutorial": {
             "title": "Anleitung",
             "back": "zurück",

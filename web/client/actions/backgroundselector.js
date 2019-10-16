@@ -22,6 +22,7 @@ export const UPDATE_BACKGROUND_THUMBNAIL = 'UPDATE_BACKGROUND_THUMBNAIL';
 export const BACKGROUNDS_CLEAR = 'BACKGROUNDS_CLEAR';
 export const CREATE_BACKGROUNDS_LIST = 'CREATE_BACKGROUNDS_LIST';
 export const CLEAR_MODAL_PARAMETERS = 'CLEAR_MODAL_PARAMETERS';
+export const CONFIRM_DELETE_BACKGROUND_MODAL = 'CONFIRM_DELETE_BACKGROUND_MODAL';
 
 export function createBackgroundsList(backgrounds) {
     return {
@@ -87,13 +88,24 @@ export function removeBackground(backgroundId) {
         backgroundId
     };
 }
+
 export function clearBackgrounds() {
     return {
         type: BACKGROUNDS_CLEAR
     };
 }
+
 export function clearModalParameters() {
     return {
         type: CLEAR_MODAL_PARAMETERS
+    };
+}
+
+export function confirmDeleteBackgroundModal(show, layerTitle = null, layerId = null) {
+    return {
+        type: CONFIRM_DELETE_BACKGROUND_MODAL,
+        show,
+        layerTitle,
+        layerId
     };
 }

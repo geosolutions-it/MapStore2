@@ -1978,15 +1978,22 @@
             "addTitle": "Add New Background",
             "editTitle": "Edit Current Background",
             "title": "Title",
+            "titlePlaceholder": "Enter displayed name",
             "add": "Add",
-            "thumbnail": "Thumbnail",
             "additionalParameters": "Additional Parameters",
+            "addAdditionalParameterTooltip": "Add parameter",
+            "removeAdditionalParameterTooltip": "Remove parameter",
             "parameter": "Parameter",
-            "value": "Value"
+            "value": "Value",
+            "string": "String",
+            "number": "Number",
+            "boolean": "Boolean"
         },
+        "defaultMapBackgroundsServiceTitle": "Default Backgrounds",
         "backgroundSelector": {
             "addTooltip": "Add new background",
-            "editTooltip": "Edit current background"
+            "editTooltip": "Edit current background",
+            "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
         },
         "tutorial": {
             "title": "Tutorial",

@@ -1973,6 +1973,27 @@
                 "imageFilter": "Filtra immagini"
             }
         },
+        "backgroundDialog": {
+            "addTitle": "Aggiungi nuovo sfondo",
+            "editTitle": "Modifica sfondo corrente",
+            "title": "Titolo",
+            "titlePlaceholder": "Inserisci il nome visualizzato",
+            "add": "Inserisci",
+            "additionalParameters": "Parametri aggiuntivi",
+            "addAdditionalParameterTooltip": "Aggiungi parametro",
+            "removeAdditionalParameterTooltip": "Rimuovi parametro",
+            "parameter": "Parametro",
+            "value": "Valore",
+            "string": "Stringa",
+            "number": "Numero",
+            "boolean": "Booleano"
+        },
+        "defaultMapBackgroundsServiceTitle": "Sfondi predefiniti",
+        "backgroundSelector": {
+            "addTooltip": "Aggiungi nuovo sfondo",
+            "editTooltip": "Modifica sfondo corrente",
+            "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Indietro",

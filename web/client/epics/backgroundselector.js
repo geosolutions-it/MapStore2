@@ -15,7 +15,7 @@ const {setControlProperty, toggleControl} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {changeSelectedService, catalogClose} = require('../actions/catalog');
 const {changeLayerProperties, removeNode} = require('../actions/layers');
-const {allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
+const {allBackgroundLayerSelector, getLayerFromId, currentBackgroundSelector} = require('../selectors/layers');
 const {backgroundLayersSelector} = require('../selectors/backgroundselector');
 const {getLayerCapabilities} = require('../observables/wms');
 const {formatCapabitiliesOptions} = require('../utils/LayersUtils');
@@ -92,8 +92,11 @@ const backgroundRemovedEpic = (action$, store) =>
         .mergeMap(({backgroundId}) => {
             const state = store.getState();
             const layerToRemove = getLayerFromId(state, backgroundId);
-            const backgroundLayers = backgroundLayersSelector(state);
-            const nextLayer = head(backgroundLayers.filter(laa => laa.id !== backgroundId && !laa.invalid));
+            const backgroundLayers = backgroundLayersSelector(state) || [];
+            const currentLayer = currentBackgroundSelector(state) || {};
+            const nextLayer = backgroundId === currentLayer.id ?
+                head(backgroundLayers.filter(laa => laa.id !== backgroundId && !laa.invalid)) :
+                currentLayer;
             return layerToRemove ? Rx.Observable.of(
                 removeNode(backgroundId, 'layers'),
                 changeLayerProperties(nextLayer.id, {visibility: true}),

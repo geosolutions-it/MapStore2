@@ -5,20 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const Select = require('react-select');
-const assign = require('object-assign');
-const uuidv1 = require('uuid/v1');
-const {pick, omit, get, keys, isNumber, isBoolean} = require('lodash');
-const Message = require('../I18N/Message');
-const ResizableModal = require('../misc/ResizableModal');
-const {Form, FormGroup, ControlLabel, FormControl, Button, Glyphicon} = require('react-bootstrap');
-const Thumbnail = require('../maps/forms/Thumbnail');
-const Loader = require('../misc/Loader');
+import React from 'react';
+import PropTypes from 'prop-types';
+import Select from 'react-select';
+import assign from 'object-assign';
+import uuidv1 from 'uuid/v1';
+import {pick, omit, get, keys, isNumber, isBoolean} from 'lodash';
+import Message from '../I18N/Message';
+import ResizableModal from '../misc/ResizableModal';
+import {Form, FormGroup, ControlLabel, FormControl, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
+import Thumbnail from '../maps/forms/Thumbnail';
+import LocaleUtils from '../../utils/LocaleUtils';
+import tooltip from '../misc/enhancers/tooltip';
+const Button = tooltip(ButtonRB);
 
 
-class BackgroundDialog extends React.Component {
+export default class BackgroundDialog extends React.Component {
     static propTypes = {
         loading: PropTypes.bool,
         editing: PropTypes.bool,
@@ -38,6 +40,11 @@ class BackgroundDialog extends React.Component {
         additionalParameters: PropTypes.object,
         addParameter: PropTypes.func
     };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
     static defaultProps = {
         updateThumbnail: () => {},
         onClose: () => {},
@@ -64,10 +71,6 @@ class BackgroundDialog extends React.Component {
 
     state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: []};
 
-    renderLoading() {
-        return <Loader size={50} style={{margin: '8px auto'}}/>;
-    }
-
     renderStyleSelector() {
         return this.props.capabilities ? (
             <FormGroup>
@@ -86,6 +89,8 @@ class BackgroundDialog extends React.Component {
             title={<Message msgId={this.props.editing ? 'backgroundDialog.editTitle' : 'backgroundDialog.addTitle'}/>}
             show
             fade
+            clickOutEnabled={false}
+            loading={this.props.loading}
             onClose={() => { this.props.onClose(); this.resetParameters(); }}
             buttons={this.props.loading ? [] : [
                 {
@@ -107,9 +112,8 @@ class BackgroundDialog extends React.Component {
                     }
                 }
             ]}>
-            {this.props.loading ? this.renderLoading() : <Form style={{padding: 8}}>
+            {<Form style={{padding: 8}}>
                 <FormGroup>
-                    <ControlLabel><Message msgId="backgroundDialog.thumbnail"/></ControlLabel>
                     <div className="shadow-soft" style={{width: 180, margin: 'auto'}}>
                         <Thumbnail
                             onUpdate = {(data, url) => this.setState({thumbnail: {data, url}})}
@@ -123,7 +127,7 @@ class BackgroundDialog extends React.Component {
                     <ControlLabel><Message msgId="layerProperties.title"/></ControlLabel>
                     <FormControl
                         value={this.state.title}
-                        placeholder="Enter displayed name"
+                        placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.titlePlaceholder")}
                         onChange={event => this.setState({title: event.target.value})}/>
                 </FormGroup>
                 <FormGroup controlId="formControlsSelect">
@@ -156,6 +160,7 @@ class BackgroundDialog extends React.Component {
                         <ControlLabel style={{flex: 1}}><Message msgId="backgroundDialog.additionalParameters"/></ControlLabel>
                         <Button
                             className="square-button-md"
+                            tooltipId="backgroundDialog.addAdditionalParameterTooltip"
                             style={{borderColor: 'transparent'}}
                             onClick={() => {
                                 const cnt = Math.max(...(this.state.additionalParameters.length > 0 ?
@@ -169,7 +174,7 @@ class BackgroundDialog extends React.Component {
                     {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
                         <FormControl
                             style={{flex: 1, marginRight: 8, minWidth: 0}}
-                            placeholder={<Message msgId="backgroundDialog.parameter/>"/>}
+                            placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.parameter")}
                             value={val.param}
                             onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
                         {val.type === 'boolean' ?
@@ -188,7 +193,7 @@ class BackgroundDialog extends React.Component {
                             </div> :
                             <FormControl
                                 style={{flex: 1, marginRight: 8, minWidth: 0}}
-                                placeholder={<Message msgId="backgroundDialog.value"/>}
+                                placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.value")}
                                 value = {val.val.toString()}
                                 onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)}/>}
                         <Select
@@ -197,18 +202,26 @@ class BackgroundDialog extends React.Component {
                             clearable={false}
                             value={val.type}
                             options={[{
-                                label: 'String',
+                                label: LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.string"),
                                 value: 'string'
                             }, {
-                                label: 'Number',
+                                label: LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.number"),
                                 value: 'number'
                             },
                             {
-                                label: 'Boolean',
+                                label: LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.boolean"),
                                 value: 'boolean'
                             }
                             ]}/>
-                        <Button onClick={() => this.setState({additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)} ) } className="square-button-md" style={{borderColor: 'transparent'}}><Glyphicon glyph="trash"/></Button>
+                        <Button
+                            onClick={() => this.setState({
+                                additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)
+                            })}
+                            tooltipId="backgroundDialog.removeAdditionalParameterTooltip"
+                            className="square-button-md"
+                            style={{borderColor: 'transparent'}}>
+                            <Glyphicon glyph="trash"/>
+                        </Button>
                     </div>))}
                 </FormGroup>
             </Form>}
@@ -258,5 +271,3 @@ class BackgroundDialog extends React.Component {
     }
     resetParameters = () => this.setState({additionalParameters: []});
 }
-
-module.exports = BackgroundDialog;

@@ -6,25 +6,17 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {createSelector} = require('reselect');
-const {layersSelector} = require('../selectors/layers');
-const {mapTypeSelector} = require('../selectors/maptype');
-const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
+import {createSelector} from 'reselect';
+import {layersSelector} from '../selectors/layers';
+import {mapTypeSelector} from '../selectors/maptype';
+import {invalidateUnsupportedLayer} from '../utils/LayersUtils';
 
-const metadataSourceSelector = (state) => state.backgroundSelector && state.backgroundSelector.source;
-const modalParamsSelector = (state) => state.backgroundSelector && state.backgroundSelector.modalParams;
-const backgroundListSelector = (state) => state.backgroundSelector && state.backgroundSelector.backgrounds;
-const isDeletedIdSelector = (state) => state.backgroundSelector && state.backgroundSelector.lastRemovedId;
-const removedBackgroundsThumbIdsSelector = (state) => state.backgroundSelector && state.backgroundSelector.removedBackgroundsThumbIds;
-const backgroundLayersSelector = createSelector(layersSelector, mapTypeSelector, (layers, maptype) => {
+export const metadataSourceSelector = (state) => state.backgroundSelector && state.backgroundSelector.source;
+export const modalParamsSelector = (state) => state.backgroundSelector && state.backgroundSelector.modalParams;
+export const backgroundListSelector = (state) => state.backgroundSelector && state.backgroundSelector.backgrounds;
+export const isDeletedIdSelector = (state) => state.backgroundSelector && state.backgroundSelector.lastRemovedId;
+export const removedBackgroundsThumbIdsSelector = (state) => state.backgroundSelector && state.backgroundSelector.removedBackgroundsThumbIds;
+export const confirmDeleteBackgroundModalSelector = (state) => state.backgroundSelector && state.backgroundSelector.confirmDeleteBackgroundModal;
+export const backgroundLayersSelector = createSelector(layersSelector, mapTypeSelector, (layers, maptype) => {
     return layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [];
 });
-
-module.exports = {
-    metadataSourceSelector,
-    modalParamsSelector,
-    backgroundListSelector,
-    isDeletedIdSelector,
-    removedBackgroundsThumbIdsSelector,
-    backgroundLayersSelector
-};

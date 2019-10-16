@@ -1973,6 +1973,27 @@
                 "imageFilter": "Filtrer les images"
             }
         },
+        "backgroundDialog": {
+            "addTitle": "Ajouter un nouveau fond",
+            "editTitle": "Modifier le fond actuel",
+            "title": "Titre",
+            "titlePlaceholder": "Entrez le nom affiché",
+            "add": "Ajouter",
+            "additionalParameters": "Paramètres additionnels",
+            "addAdditionalParameterTooltip": "Ajouter un paramètre",
+            "removeAdditionalParameterTooltip": "Supprimer le paramètre",
+            "parameter": "Paramètre",
+            "value": "Valeur",
+            "string": "String",
+            "number": "Nombre",
+            "boolean": "Booléen"
+        },
+        "defaultMapBackgroundsServiceTitle": "Arrière-plans par défaut",
+        "backgroundSelector": {
+            "addTooltip": "Ajouter un nouveau fond",
+            "editTooltip": "Modifier le fond actuel",
+            "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",

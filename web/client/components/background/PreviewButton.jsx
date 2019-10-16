@@ -8,7 +8,6 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../I18N/Message');
 const Toolbar = require('../misc/toolbar/Toolbar');
 
 require('./css/previewbutton.css');
@@ -63,13 +62,13 @@ class PreviewButton extends React.Component {
                     buttons={[
                         {
                             glyph: 'plus',
-                            tooltip: <Message msgId="backgroundSelector.addTooltip"/>,
+                            tooltipId: "backgroundSelector.addTooltip",
                             onClick: () => this.props.onAdd(),
                             visible: !this.props.enabledCatalog
                         },
                         {
                             glyph: 'wrench',
-                            tooltip: <Message msgId="backgroundSelector.editTooltip"/>,
+                            tooltipId: "backgroundSelector.editTooltip",
                             visible: !this.props.enabledCatalog && !!(this.props.currentLayer.type === 'wms' || this.props.currentLayer.type === 'wmts'),
                             onClick: () => this.props.onEdit()
                         }

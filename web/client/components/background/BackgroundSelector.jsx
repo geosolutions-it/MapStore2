@@ -9,14 +9,16 @@
 const React = require('react');
 const assign = require('object-assign');
 
+const Message = require('../I18N/Message');
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
 const ToolbarButton = require('../misc/toolbar/ToolbarButton');
-const BackgroundDialog = require('./BackgroundDialog');
+const BackgroundDialog = require('./BackgroundDialog').default;
+const ConfirmDialog = require('../misc/ConfirmDialog');
 
 const PropTypes = require('prop-types');
-const {head, get} = require('lodash');
+const {get} = require('lodash');
 require('./css/background.css');
 
 class BackgroundSelector extends React.Component {
@@ -44,6 +46,8 @@ class BackgroundSelector extends React.Component {
         addBackgroundProperties: PropTypes.func,
         onUpdateThumbnail: PropTypes.func,
         removeBackground: PropTypes.func,
+        onRemoveBackground: PropTypes.func,
+        confirmDeleteBackgroundModal: PropTypes.object,
         deletedId: PropTypes.string,
         modalParams: PropTypes.object,
         updateNode: PropTypes.func,
@@ -66,6 +70,7 @@ class BackgroundSelector extends React.Component {
         thumbs: {
             unknown: require('./img/default.jpg')
         },
+        onRemoveBackground: () => {},
         onPropertiesChange: () => {},
         onToggle: () => {},
         onLayerChange: () => {},
@@ -96,14 +101,14 @@ class BackgroundSelector extends React.Component {
                     }}
                     className="background-preview-container"
                 >
-                    <ToolbarButton
-                        glyph="remove"
+                    {this.props.layers.length > 1 && <ToolbarButton
+                        glyph="trash"
                         className="square-button-md background-remove-button"
                         bsStyle="primary"
                         onClick={() => {
-                            this.props.removeBackground(layer.id);
+                            this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
                         }}
-                    />
+                    />}
                     <PreviewIcon
                         projection={this.props.projection}
                         vertical={vertical}
@@ -174,7 +179,7 @@ class BackgroundSelector extends React.Component {
             height: buttonSize,
             width: buttonSize * visibleIconsLength
         };
-        const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id)) || layer;
+        const editedLayer = this.props.currentLayer;
         const backgroundDialogParams = {
             title: editedLayer.title,
             format: editedLayer.format,
@@ -185,8 +190,24 @@ class BackgroundSelector extends React.Component {
                 url: this.getThumb(editedLayer)
             }
         };
+        const {show: showConfirm, layerId: confirmLayerId, layerTitle: confirmLayerTitle} =
+            this.props.confirmDeleteBackgroundModal || {show: false};
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
+                <ConfirmDialog
+                    modal
+                    show={showConfirm}
+                    onClose={() => this.props.onRemoveBackground(false)}
+                    onConfirm={() => {
+                        this.props.removeBackground(confirmLayerId);
+                        this.props.onRemoveBackground(false);
+                    }}
+                    confirmButtonBSStyle="default"
+                    confirmButtonContent={<Message msgId="confirm"/>}
+                    closeText={<Message msgId="cancel"/>}
+                    closeGlyph="1-close">
+                    <Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>
+                </ConfirmDialog>
                 {this.props.modalParams && this.props.modalParams.editing && <BackgroundDialog
                     onClose={this.props.clearModal}
                     onSave={layerToAdd => {

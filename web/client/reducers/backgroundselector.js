@@ -7,7 +7,7 @@
  */
 
 const { ADD_BACKGROUND, SET_BACKGROUND_MODAL_PARAMS, UPDATE_BACKGROUND_THUMBNAIL, BACKGROUNDS_CLEAR,
-    REMOVE_BACKGROUND, CREATE_BACKGROUNDS_LIST, CLEAR_MODAL_PARAMETERS} = require('../actions/backgroundselector');
+    REMOVE_BACKGROUND, CREATE_BACKGROUNDS_LIST, CLEAR_MODAL_PARAMETERS, CONFIRM_DELETE_BACKGROUND_MODAL} = require('../actions/backgroundselector');
 const {RESET_CATALOG} = require('../actions/catalog');
 const assign = require('object-assign');
 
@@ -86,6 +86,15 @@ function backgroundselector(state = null, action) {
             .map(background => ({id: background.id, thumbId: background.thumbId}));
 
         return assign({}, state, {backgrounds: newBackgrounds});
+    }
+    case CONFIRM_DELETE_BACKGROUND_MODAL: {
+        return assign({}, state, {
+            confirmDeleteBackgroundModal: {
+                show: action.show,
+                layerTitle: action.layerTitle,
+                layerId: action.layerId
+            }
+        });
     }
     default:
         return state;
