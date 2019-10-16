@@ -103,6 +103,7 @@ describe('geostories epics', () => {
                 }
             });
         });
+    });
     it('searchGeostories error', (done) => {
         const baseUrl = "base/web/client/test-resources/geostore/extjs/search/NODATA#";
         ConfigUtils.getDefaults = () => ({
