@@ -19,6 +19,7 @@ class CreateNewMap extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
         showNewDashboard: PropTypes.bool,
+        showNewGeostory: PropTypes.bool,
         colProps: PropTypes.object,
         isLoggedIn: PropTypes.bool,
         allowedRoles: PropTypes.array,
@@ -33,6 +34,7 @@ class CreateNewMap extends React.Component {
     static defaultProps = {
         mapType: "leaflet",
         showNewDashboard: true,
+        showNewGeostory: true,
         isLoggedIn: false,
         allowedRoles: ["ADMIN", "USER"],
         colProps: {
@@ -57,6 +59,11 @@ class CreateNewMap extends React.Component {
                             <Glyphicon glyph="add-dashboard" />
                         </Button>
                         : null}
+                    {this.props.showNewGeostory ?
+                        <Button tooltipId="resources.geostories.newGeostory" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/geostory/newgeostory/"); }}>
+                            <Glyphicon glyph="geostory" />
+                        </Button>
+                        : null}
                 </ButtonToolbar>
             </Col>
         </Grid>);
@@ -70,6 +77,7 @@ class CreateNewMap extends React.Component {
  * @class CreateNewMap
  * @static
  * @prop {boolean} cfg.showNewDashboard show/hide th create new dashboard button.
+ * @prop {boolean} cfg.showNewGeostory show/hide th create new geostory button.
  * @prop {string[]} cfg.allowedRoles array of users roles allowed to create maps and/or dashboards. default: `["ADMIN", "USER"]`. Users that don't have these roles will never see the buttons.
  */
 module.exports = {
