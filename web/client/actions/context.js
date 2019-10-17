@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 export const LOAD_CONTEXT = "CONTEXT:LOAD";
-export const CONTEXT_LOADED  = "CONTEXT:LOADED";
+export const SET_CURRENT_CONTEXT = "CONTEXT:SET_CURRENT_CONTEXT";
 export const SET_RESOURCE = "CONTEXT:SET_RESOURCE";
 
 /**
@@ -17,4 +17,4 @@ export const SET_RESOURCE = "CONTEXT:SET_RESOURCE";
  */
 export const loadContext = ({mapId, contextId}) => ({type: LOAD_CONTEXT, mapId, contextId});
 
-export const contextLoaded = ({context}) =>
+export const setContext = (context) => ({ type: SET_CURRENT_CONTEXT, context });
