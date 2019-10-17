@@ -1,0 +1,52 @@
+diff --git a/package.json b/package.json
+index 1d7d4951..ae68ff99 100644
+--- a/package.json
++++ b/package.json
+@@ -79,7 +79,6 @@
+     "webpack-dev-server": "3.7.2",
+     "webpack-parallel-uglify-plugin": "1.1.2"
+   },
+-  "//": "replace react-sortable-items with official on npm when it will support React 15",
+   "dependencies": {
+     "@boundlessgeo/jsonix": "2.4.3",
+     "@carnesen/redux-add-action-listener-enhancer": "0.0.1",
+@@ -236,7 +235,7 @@
+     "cleandoc": "rimraf web/docs && rimraf web/client/mapstore/docs",
+     "doctest": "docma -c build/docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running npm start",
+     "i18n": "node  utility/translations/findMissingTranslations.js",
+-    "postinstall": "node utility/build/checkCesium.js && rimraf node_modules/leaflet-simple-graticule/node_modules && rimraf node_modules/react-sortable-items/node_modules/react-dom",
++    "postinstall": "node utility/build/checkCesium.js && rimraf node_modules/leaflet-simple-graticule/node_modules",
+     "clean": "rimraf ./web/client/dist",
+     "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress  --colors --config build/prod-webpack.config.js",
+     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
+diff --git a/web/client/themes/default/less/toc.less b/web/client/themes/default/less/toc.less
+index f068f2cb..5c52f7bc 100644
+--- a/web/client/themes/default/less/toc.less
++++ b/web/client/themes/default/less/toc.less
+@@ -181,10 +181,6 @@
+ }
+ 
+ 
+-#mapstore-layers > .Sortable > .toc-default-group > span > .toc-group-children {
+-    margin-left: 8px;
+-    margin-right: 8px;
+-}
+ 
+ .toc-default-group {
+ 
+@@ -247,7 +243,7 @@
+         float: right;
+         margin-right: 10px;
+     }
+-    
++
+     .toc-filter-icon.disabled {
+         opacity: 0.5;
+     }
+@@ -804,4 +800,4 @@
+ 
+ #mapstore-add-toc-group {
+     padding: 15px;
+-}
+\ No newline at end of file
++}

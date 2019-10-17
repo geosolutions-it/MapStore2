@@ -26,11 +26,11 @@ module.exports = {
     }, {
         name: 'context',
         path: "/context/:contextId",
-        component: require('./pages/Context')
+        component: require('./pages/Context').default
     }, {
-        name: 'contextMap',
+        name: 'context',
         path: "/context/:contextId/:mapId",
-        component: require('./pages/Context')
+        component: require('./pages/Context').default
     }, {
         name: "manager",
         path: "/manager",

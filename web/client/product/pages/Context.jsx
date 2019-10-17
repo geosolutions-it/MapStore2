@@ -8,9 +8,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {isEqual} from 'lodash';
+import {compose, lifecycle} from 'recompose';
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
-import {loadMapConfig} from '../../actions/config';
-import {initMap} from '../../actions/map';
+import { loadContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, currentContextSelector } from '../../selectors/context';
@@ -19,7 +20,6 @@ class Context extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
-        loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -40,7 +40,27 @@ class Context extends React.Component {
     }
 }
 
-export default connect(createStructuredSelector({
-    context: currentContextSelector,
-    monitoredState: contextMonitoredStateSelector
-}))(Context);
+export default compose(
+    connect(
+        createStructuredSelector({
+            context: currentContextSelector,
+            monitoredState: contextMonitoredStateSelector
+        }), {
+            loadContext
+        }
+    ),
+    lifecycle({
+        componentWillMount() {
+            const params = this.props.match.params;
+            this.props.loadContext(params);
+        },
+        componentDidUpdate(oldProps) {
+            const paramsChanged = !isEqual(this.props.match.params, this.props.match.params )
+            const newParams = oldProps.match.params;
+
+            if (paramsChanged) {
+                this.loadContext(newParams);
+            }
+        }
+    })
+)(Context);
