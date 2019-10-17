@@ -330,8 +330,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
         const node = LayersUtils.getNode(currentGroups, g);
         return node && node.nodes ? groupSaveFormatted(node) : null;
     }).filter(g => g);
-    
-    const backgrounds = currentBackgrounds.filter(background => !!background.thumbnail && !!background.thumbnail.data);
+
+    const backgrounds = currentBackgrounds.filter(background => !!background.thumbnail);
 
     // extract sources map
     const sources = LayersUtils.extractSourcesFromLayers(layers);

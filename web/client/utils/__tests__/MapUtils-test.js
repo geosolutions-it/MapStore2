@@ -255,7 +255,6 @@ describe('Test the MapUtils', () => {
                 layers: [{
                     allowedSRS: {},
                     thumbURL: "THUMB_URL",
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -302,7 +301,6 @@ describe('Test the MapUtils', () => {
                 {
                     allowedSRS: {},
                     thumbURL: undefined,
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -349,7 +347,6 @@ describe('Test the MapUtils', () => {
                 {
                     allowedSRS: {},
                     thumbURL: undefined,
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -396,7 +393,6 @@ describe('Test the MapUtils', () => {
                 {
                     allowedSRS: {},
                     thumbURL: undefined,
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -565,7 +561,6 @@ describe('Test the MapUtils', () => {
                     expanded: true
                 }],
                 layers: [{
-                    thumbId: undefined,
                     allowedSRS: {},
                     thumbURL: "THUMB_URL",
                     availableStyles: undefined,
@@ -613,7 +608,6 @@ describe('Test the MapUtils', () => {
                 },
                 {
                     allowedSRS: {},
-                    thumbId: undefined,
                     thumbURL: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
@@ -660,7 +654,6 @@ describe('Test the MapUtils', () => {
                 },
                 {
                     allowedSRS: {},
-                    thumbId: undefined,
                     thumbURL: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
@@ -848,7 +841,6 @@ describe('Test the MapUtils', () => {
                 layers: [{
                     allowedSRS: {},
                     thumbURL: undefined,
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -895,7 +887,6 @@ describe('Test the MapUtils', () => {
                 {
                     allowedSRS: {},
                     thumbURL: undefined,
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -942,7 +933,6 @@ describe('Test the MapUtils', () => {
                 {
                     allowedSRS: {},
                     thumbURL: undefined,
-                    thumbId: undefined,
                     availableStyles: undefined,
                     layerFilter: undefined,
                     bbox: {},
@@ -1165,7 +1155,6 @@ describe('Test the MapUtils', () => {
                     thematic: undefined,
                     tooltipOptions: undefined,
                     tooltipPlacement: undefined,
-                    thumbId: undefined,
                     params: {} } ],
                 groups: [ {
                     id: 'Default', expanded: true
@@ -1287,8 +1276,7 @@ describe('Test the MapUtils', () => {
                     origin: undefined,
                     thematic: undefined,
                     tooltipOptions: undefined,
-                    tooltipPlacement: undefined,
-                    thumbId: undefined
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1427,8 +1415,7 @@ describe('Test the MapUtils', () => {
                     origin: undefined,
                     thematic: undefined,
                     tooltipOptions: undefined,
-                    tooltipPlacement: undefined,
-                    thumbId: undefined
+                    tooltipPlacement: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

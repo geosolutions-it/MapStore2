@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties, updateNode} = require('../actions/layers');
 const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
-    updateThumbnail, removeBackground, clearModalParameters, backgroundEdited} = require('../actions/backgroundselector');
+    updateThumbnail, removeBackground, clearModalParameters, backgroundEdited, setCurrentBackgroundLayer} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
 const {backgroundControlsSelector,
@@ -97,7 +97,8 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     removeBackground,
     clearModal: clearModalParameters,
     addBackgroundProperties,
-    onRemoveBackground: confirmDeleteBackgroundModal
+    onRemoveBackground: confirmDeleteBackgroundModal,
+    setCurrentBackgroundLayer
 }, (stateProps, dispatchProps, ownProps) => ({
     ...stateProps,
     ...dispatchProps,

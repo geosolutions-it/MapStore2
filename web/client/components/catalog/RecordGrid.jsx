@@ -39,6 +39,7 @@ class RecordGrid extends React.Component {
         clearModal: PropTypes.func,
         onAddBackground: PropTypes.func,
         showTemplate: PropTypes.bool,
+        formatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
     };
 
@@ -82,6 +83,7 @@ class RecordGrid extends React.Component {
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
                     currentLocale={this.props.currentLocale}
+                    formatOptions={this.props.formatOptions}
                     layerBaseConfig={this.props.layerBaseConfig}
                 />
             </Col>

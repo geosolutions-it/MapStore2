@@ -15,7 +15,7 @@ const {setControlProperty} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {changeSelectedService} = require('../actions/catalog');
 const {changeLayerProperties, removeNode} = require('../actions/layers');
-const {allBackgroundLayerSelector, getLayerFromId, currentBackgroundSelector} = require('../selectors/layers');
+const {getLayerFromId, currentBackgroundSelector} = require('../selectors/layers');
 const {backgroundLayersSelector} = require('../selectors/backgroundselector');
 const {getLayerCapabilities} = require('../observables/wms');
 const {formatCapabitiliesOptions} = require('../utils/LayersUtils');
@@ -43,12 +43,24 @@ const addBackgroundPropertiesEpic = (action$) =>
                 : defaultAction;
         });
 
-const backgroundsListInit = (action$, store) =>
+const backgroundsListInit = (action$) =>
     action$.ofType(MAP_CONFIG_LOADED)
-        .switchMap(() => {
-            const state = store.getState();
-            const backgrounds = allBackgroundLayerSelector(state);
-            return Rx.Observable.of(createBackgroundsList(backgrounds));
+        .switchMap(({config}) => {
+            const backgrounds = config.map && config.map.backgrounds || [];
+            const layerUpdateActions = backgrounds.filter(background => !!background.thumbnail).map(background => {
+                const toBlob = (data) => {
+                    const bytes = atob(data.split(',')[1]);
+                    const mimeType = data.split(',')[0].split(':')[1].split(';')[0];
+                    let buffer = new ArrayBuffer(bytes.length);
+                    let byteArray = new Uint8Array(buffer);
+                    for (let i = 0; i < bytes.length; ++i) {
+                        byteArray[i] = bytes.charCodeAt(i);
+                    }
+                    return URL.createObjectURL(new Blob([buffer], {type: mimeType}));
+                };
+                return changeLayerProperties(background.id, {thumbURL: toBlob(background.thumbnail)});
+            });
+            return Rx.Observable.of(...layerUpdateActions.concat(createBackgroundsList(backgrounds)));
         });
 
 const setCurrentBackgroundLayerEpic = (action$, store) =>

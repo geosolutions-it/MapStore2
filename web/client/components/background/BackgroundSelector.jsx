@@ -18,7 +18,6 @@ const BackgroundDialog = require('./BackgroundDialog').default;
 const ConfirmDialog = require('../misc/ConfirmDialog');
 
 const PropTypes = require('prop-types');
-const {get} = require('lodash');
 
 class BackgroundSelector extends React.Component {
     static propTypes = {
@@ -46,6 +45,7 @@ class BackgroundSelector extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         removeBackground: PropTypes.func,
         onRemoveBackground: PropTypes.func,
+        setCurrentBackgroundLayer: PropTypes.func,
         confirmDeleteBackgroundModal: PropTypes.object,
         deletedId: PropTypes.string,
         modalParams: PropTypes.object,
@@ -58,6 +58,7 @@ class BackgroundSelector extends React.Component {
     static defaultProps = {
         addBackgroundProperties: () => {},
         onBackgroundEdit: () => {},
+        setCurrentBackgroundLayer: () => {},
         source: 'backgroundSelector',
         start: 0,
         style: {},
@@ -88,7 +89,7 @@ class BackgroundSelector extends React.Component {
     }
 
     getThumb = (layer) => {
-        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || layer.thumbURLBlob || this.props.thumbs.unknown;
+        return layer.thumbURL || this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || this.props.thumbs.unknown;
     };
 
     getIcons = (side, frame, margin, vertical) => {
@@ -122,7 +123,8 @@ class BackgroundSelector extends React.Component {
                         layer={layer}
                         onToggle={this.props.onToggle}
                         onPropertiesChange={this.props.onPropertiesChange}
-                        onLayerChange={this.props.onLayerChange}/>
+                        onLayerChange={this.props.onLayerChange}
+                        setCurrentBackgroundLayer={this.props.setCurrentBackgroundLayer}/>
                 </div>
             );
         }) : [];
@@ -181,13 +183,14 @@ class BackgroundSelector extends React.Component {
             width: buttonSize * visibleIconsLength
         };
         const editedLayer = this.props.currentLayer;
+        const backgroundListEntry = (this.props.backgroundList || []).find(background => background.id === editedLayer.id);
         const backgroundDialogParams = {
             title: editedLayer.title,
             format: editedLayer.format,
             style: editedLayer.style,
             additionalParameters: editedLayer.additionalParameters,
             thumbnail: {
-                data: get((this.props.backgroundList || []).find(background => background.id === editedLayer.id), 'thumbnail.data'),
+                data: backgroundListEntry && backgroundListEntry.thumbnail,
                 url: this.getThumb(editedLayer)
             }
         };

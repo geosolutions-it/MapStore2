@@ -440,7 +440,7 @@ const LayersUtils = {
             id: layer.id,
             features: layer.features,
             format: layer.format,
-            thumbURL: layer.thumbURL,
+            thumbURL: layer.thumbURL && layer.thumbURL.split(':')[0] === 'blob' ? undefined : layer.thumbURL,
             group: layer.group,
             search: layer.search,
             source: layer.source,

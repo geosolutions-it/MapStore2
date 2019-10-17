@@ -82,6 +82,7 @@ class Catalog extends React.Component {
         layers: PropTypes.array,
         onUpdateThumbnail: PropTypes.func,
         clearModal: PropTypes.func,
+        formatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
     };
 
@@ -134,6 +135,22 @@ class Catalog extends React.Component {
         services: {},
         wrapOptions: false,
         zoomToLayer: true,
+        formatOptions: [{
+            label: 'image/png',
+            value: 'image/png'
+        }, {
+            label: 'image/png8',
+            value: 'image/png8'
+        }, {
+            label: 'image/jpeg',
+            value: 'image/jpeg'
+        }, {
+            label: 'image/vnd.jpeg-png',
+            value: 'image/vnd.jpeg-png'
+        }, {
+            label: 'image/gif',
+            value: 'image/gif'
+        }],
         layerBaseConfig: {}
     };
 
@@ -282,6 +299,7 @@ class Catalog extends React.Component {
                 hideIdentifier={this.props.hideIdentifier}
                 hideExpand={this.props.hideExpand}
                 onAddBackground={this.props.onAddBackground}
+                formatOptions={this.props.formatOptions}
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
                     this.search({services: this.props.services, selectedService: this.props.selectedService});
@@ -514,22 +532,7 @@ class Catalog extends React.Component {
                                         <Select
                                             value="image/png"
                                             clearable={false}
-                                            options={[{
-                                                label: 'image/png',
-                                                value: 'image/png'
-                                            }, {
-                                                label: 'image/png8',
-                                                value: 'image/png8'
-                                            }, {
-                                                label: 'image/jpeg',
-                                                value: 'image/jpeg'
-                                            }, {
-                                                label: 'image/vnd.jpeg-png',
-                                                value: 'image/vnd.jpeg-png'
-                                            }, {
-                                                label: 'image/gif',
-                                                value: 'image/gif'
-                                            }]}/>
+                                            options={this.props.formatOptions}/>
                                     </Col >
                                 </FormGroup>
                             </div>

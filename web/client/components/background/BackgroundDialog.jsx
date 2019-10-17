@@ -38,7 +38,10 @@ export default class BackgroundDialog extends React.Component {
         style: PropTypes.string,
         thumbnail: PropTypes.object,
         additionalParameters: PropTypes.object,
-        addParameter: PropTypes.func
+        addParameter: PropTypes.func,
+        formatOptions: PropTypes.array,
+        parameterTypeOptions: PropTypes.array,
+        booleanOptions: PropTypes.array
     };
 
     static contextTypes = {
@@ -58,8 +61,40 @@ export default class BackgroundDialog extends React.Component {
         title: '',
         format: 'image/png',
         thumbnail: {},
-        additionalParameters: {}
-
+        additionalParameters: {},
+        formatOptions: [{
+            label: 'image/png',
+            value: 'image/png'
+        }, {
+            label: 'image/png8',
+            value: 'image/png8'
+        }, {
+            label: 'image/jpeg',
+            value: 'image/jpeg'
+        }, {
+            label: 'image/vnd.jpeg-png',
+            value: 'image/vnd.jpeg-png'
+        }, {
+            label: 'image/gif',
+            value: 'image/gif'
+        }],
+        parameterTypeOptions: [{
+            label: "backgroundDialog.string",
+            value: 'string'
+        }, {
+            label: "backgroundDialog.number",
+            value: 'number'
+        }, {
+            label: "backgroundDialog.boolean",
+            value: 'boolean'
+        }],
+        booleanOptions: [{
+            label: 'True',
+            value: true
+        }, {
+            label: 'False',
+            value: false
+        }]
     };
 
     constructor(props) {
@@ -120,9 +155,9 @@ export default class BackgroundDialog extends React.Component {
                             {
                                 additionalParameters: omit(
                                     this.state.additionalParameters.reduce((accum, p) => assign(accum, {[p.param]: p.val}), {}),
-                                    ['source', 'format', 'style', 'title']
+                                    ['source', 'title']
                                 ),
-                                thumbURLBlob: this.state.thumbnail.url,
+                                thumbURL: this.state.thumbnail.url,
                                 group: 'background'
                             }));
                         this.resetParameters();
@@ -137,7 +172,7 @@ export default class BackgroundDialog extends React.Component {
                             onUpdate={(data, url) => this.setState({thumbnail: {data, url}})}
                             onError={(errors) => this.setState({thumbnailErrors: errors})}
                             message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
-                            suggestion=''
+                            suggestion=""
                             map={{
                                 newThumbnail: get(this.state.thumbnail, 'url')
                             }}
@@ -157,22 +192,7 @@ export default class BackgroundDialog extends React.Component {
                         onChange={event => this.setState({format: event.value})}
                         value={this.state.format}
                         clearable={false}
-                        options={[{
-                            label: 'image/png',
-                            value: 'image/png'
-                        }, {
-                            label: 'image/png8',
-                            value: 'image/png8'
-                        }, {
-                            label: 'image/jpeg',
-                            value: 'image/jpeg'
-                        }, {
-                            label: 'image/vnd.jpeg-png',
-                            value: 'image/vnd.jpeg-png'
-                        }, {
-                            label: 'image/gif',
-                            value: 'image/gif'
-                        }]}
+                        options={this.props.formatOptions}
                     />
                 </FormGroup>
                 {this.renderStyleSelector()}
@@ -204,13 +224,7 @@ export default class BackgroundDialog extends React.Component {
                                     onChange={e => this.addAdditionalParameter(e.value, 'val', val.id, val.type)}
                                     clearable={false}
                                     value={val.val}
-                                    options={[{
-                                        label: 'True',
-                                        value: true
-                                    }, {
-                                        label: 'False',
-                                        value: false
-                                    }]}/>
+                                    options={this.props.booleanOptions}/>
                             </div> :
                             <FormControl
                                 style={{flex: 1, marginRight: 8, minWidth: 0}}
@@ -222,18 +236,10 @@ export default class BackgroundDialog extends React.Component {
                             onChange={event => this.addAdditionalParameter(val.val, 'val', val.id, event.value)}
                             clearable={false}
                             value={val.type}
-                            options={[{
-                                label: LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.string"),
-                                value: 'string'
-                            }, {
-                                label: LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.number"),
-                                value: 'number'
-                            },
-                            {
-                                label: LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.boolean"),
-                                value: 'boolean'
-                            }
-                            ]}/>
+                            options={this.props.parameterTypeOptions.map(({label, ...other}) => ({
+                                ...other,
+                                label: LocaleUtils.getMessageById(this.context.messages, label)
+                            }))}/>
                         <Button
                             onClick={() => this.setState({
                                 additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)

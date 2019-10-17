@@ -9,7 +9,6 @@
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
-const ConfigUtils = require('../utils/ConfigUtils');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
@@ -22,41 +21,34 @@ const {
     mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory,
-    mapUpdating, savingMap, mapCreated, mapError, saveMapWithBackgrounds, SAVE_MAP_WITH_BACKGROUNDS, TRIGGER_SAVE_MAP,
-    saveMapResource, thumbnailError, loadMaps
+    mapUpdating, savingMap, mapCreated, mapError, loadMaps
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
-const {updateNode} = require('../actions/layers');
-const {updateThumbnail, clearModalParameters, createBackgroundsList, clearBackgrounds} = require('../actions/backgroundselector');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector,
     searchTextSelector,
     searchParamsSelector
 } = require('../selectors/maps');
-const {removedBackgroundsThumbIdsSelector} = require('../selectors/backgroundselector');
-const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {
-    mapIdSelector, mapInfoDetailsUriFromIdSelector, mapSelector
+    mapIdSelector, mapInfoDetailsUriFromIdSelector
 } = require('../selectors/map');
 const {
     currentMapDetailsTextSelector, currentMapIdSelector,
     currentMapDetailsUriSelector, currentMapSelector,
     currentMapDetailsChangedSelector, currentMapOriginalDetailsTextSelector
 } = require('../selectors/currentmap');
-const {layersSelector, groupsSelector, allBackgroundLayerSelector} = require('../selectors/layers');
 const {userParamsSelector} = require('../selectors/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
 
-const {getIdFromUri, saveMapConfiguration} = require('../utils/MapUtils');
+const {getIdFromUri} = require('../utils/MapUtils');
 
 const {getErrorMessage} = require('../utils/LocaleUtils');
 const Persistence = require("../api/persistence");
-const uuid = require('uuid/v1');
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
@@ -361,14 +353,6 @@ const createMapResource = (resource) => Persistence.createResource(resource)
 const mapSaveMapResourceEpic = (action$) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => (!resource.id ? createMapResource(resource) : updateMapResource(resource)));
-
-const updateMap = (response, backgroundID) => {
-    const thumbnailUrl = ConfigUtils.getDefaults().geoStoreUrl + "data/" + response + "/raw?decode=datauri";
-    // add encodedThumbnailUrl and id to the background thumbnail source
-    return Rx.Observable.of(
-        updateNode(backgroundID, "layers", { thumbURL: thumbnailUrl, thumbId: response }),
-        updateThumbnail(null, null, backgroundID));
-};
 
 module.exports = {
     loadMapsEpic,

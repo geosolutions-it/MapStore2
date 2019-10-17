@@ -78,11 +78,7 @@ function backgroundselector(state = null, action) {
         });
     }
     case CREATE_BACKGROUNDS_LIST: {
-        const backgrounds = action.backgrounds;
-        const newBackgrounds = backgrounds.filter(background => background.thumbId !== undefined)
-            .map(background => ({id: background.id, thumbId: background.thumbId}));
-
-        return assign({}, state, {backgrounds: newBackgrounds});
+        return assign({}, state, {backgrounds: action.backgrounds});
     }
     case CONFIRM_DELETE_BACKGROUND_MODAL: {
         return assign({}, state, {

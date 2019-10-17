@@ -15,7 +15,6 @@ const MAP_INFO_LOADED = 'MAP_INFO_LOADED';
 const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
 
 function configureMap(conf, mapId) {
-    console.log('map config loaded:', conf, 'id', mapId);
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
@@ -50,7 +49,6 @@ function loadMapConfig(configName, mapId) {
     };
 }
 function mapInfoLoaded(info, mapId) {
-    console.log('map info loaded:', info, 'id', mapId);
     return {
         type: MAP_INFO_LOADED,
         mapId,

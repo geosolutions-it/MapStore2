@@ -78,7 +78,7 @@ export function allowBackgroundsDeletion(allow) {
     return {
         type: ALLOW_BACKGROUNDS_DELETION,
         allow
-    }
+    };
 }
 
 export function updateThumbnail(thumbnailData, backgroundId) {

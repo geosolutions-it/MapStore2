@@ -65,7 +65,8 @@ class RecordItem extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         deletedId: PropTypes.string,
         clearModal: PropTypes.func,
-        showTemplate: PropTypes.bool
+        showTemplate: PropTypes.bool,
+        formatOptions: PropTypes.array
     };
 
     static defaultProps = {
@@ -241,6 +242,7 @@ class RecordItem extends React.Component {
                     this.props.onAddBackground(layer.id);
                 }}
                 updateThumbnail={this.props.onUpdateThumbnail}
+                formatOptions={this.props.formatOptions}
                 {...this.props.modalParams}
             />
         );
