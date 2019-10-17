@@ -188,7 +188,7 @@ class Catalog extends React.Component {
     };
 
     renderLoading = () => {
-        return (<div className="catalog-results loading"><Loader size="176" /></div>);
+        return (<div className="catalog-results loading"><Loader size={176} /></div>);
     }
 
     renderSaving = () => {
