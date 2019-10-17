@@ -1979,6 +1979,7 @@
             "title": "Titolo",
             "titlePlaceholder": "Inserisci il nome visualizzato",
             "add": "Inserisci",
+            "thumbnailMessage": "Le dimensioni delle immagini devono essere quadrate di 98 px x 98 px o 128 px x 128 px, max 500kb",
             "additionalParameters": "Parametri aggiuntivi",
             "addAdditionalParameterTooltip": "Aggiungi parametro",
             "removeAdditionalParameterTooltip": "Rimuovi parametro",

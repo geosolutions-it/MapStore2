@@ -9,11 +9,11 @@
 const {createSelector} = require('reselect');
 const {get, pick} = require('lodash');
 
-const defaultServicesSelector = (state) => get(state, "catalog.default.services");
+const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
 const servicesSelector = (state) => get(state, "catalog.services");
-const servicesSelectorWithBackgrounds = createSelector(defaultServicesSelector, servicesSelector, (defaultServices, services) => ({
+const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => ({
     ...services,
-    ...(pick(defaultServices, "default_map_backgrounds"))
+    ...(pick(staticServices, "default_map_backgrounds"))
 }));
 
 module.exports = {
@@ -22,12 +22,12 @@ module.exports = {
     resultSelector: (state) => get(state, "catalog.result"),
     serviceListOpenSelector: (state) => get(state, "catalog.openCatalogServiceList"),
     newServiceSelector: (state) => get(state, "catalog.newService"),
-    defaultServicesSelector,
+    staticServicesSelector,
     servicesSelector,
     servicesSelectorWithBackgrounds,
     newServiceTypeSelector: (state) => get(state, "catalog.newService.type", "csw"),
     selectedCatalogSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"]`),
-    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, get(state, `catalog.default.services["${get(state, 'catalog.selectedService')}"].type`, "csw")),
+    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw")),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
     formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),

@@ -71,6 +71,20 @@
                 "title": "GeoSolutions GeoServer CSW",
                 "autoload": true
               },
+              "gs_stable_wms": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                "type": "wms",
+                "title": "GeoSolutions GeoServer WMS",
+                "autoload": false
+              },
+              "gs_stable_wmts": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+                "type": "wmts",
+                "title": "GeoSolutions GeoServer WMTS",
+                "autoload": false
+              }
+            },
+            "staticServices": {
               "default_map_backgrounds": {
                 "type": "backgrounds",
                 "title": "defaultMapBackgroundsServiceTitle",
@@ -112,18 +126,6 @@
                     "fixed": true,
                     "type": "empty"
                 }]
-              },
-              "gs_stable_wms": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
-                "type": "wms",
-                "title": "GeoSolutions GeoServer WMS",
-                "autoload": false
-              },
-              "gs_stable_wmts": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
-                "type": "wmts",
-                "title": "GeoSolutions GeoServer WMTS",
-                "autoload": false
               }
             }
           }

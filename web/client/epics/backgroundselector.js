@@ -11,9 +11,9 @@ const Rx = require('rxjs');
 const {head} = require('lodash');
 const {ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, SET_CURRENT_BACKGROUND_LAYER, BACKGROUND_ADDED, BACKGROUND_EDITED, REMOVE_BACKGROUND, createBackgroundsList, clearModalParameters,
     setBackgroundModalParams, setCurrentBackgroundLayer, allowBackgroundsDeletion} = require('../actions/backgroundselector');
-const {setControlProperty, toggleControl} = require('../actions/controls');
+const {setControlProperty} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
-const {changeSelectedService, catalogClose} = require('../actions/catalog');
+const {changeSelectedService} = require('../actions/catalog');
 const {changeLayerProperties, removeNode} = require('../actions/layers');
 const {allBackgroundLayerSelector, getLayerFromId, currentBackgroundSelector} = require('../selectors/layers');
 const {backgroundLayersSelector} = require('../selectors/backgroundselector');

@@ -10,7 +10,7 @@ const {head, get} = require('lodash');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const getRecords = (url, startPosition, maxRecords, text, options, layers = []) => {
-    const backgroundList = get(ConfigUtils.getDefaults(), 'initialState.defaultState.catalog.default.services.default_map_backgrounds.backgrounds');
+    const backgroundList = get(ConfigUtils.getDefaults(), 'initialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds');
     const filteredBg = backgroundList.filter(bg => !head(layers.filter(layer => layer.type === bg.type && layer.source === bg.source && layer.name === bg.name)));
     const textBg = filteredBg.filter(bg => !text || bg.title.indexOf(text) > -1);
     const records = textBg.filter((bg, idx) => idx >= startPosition - 1 && idx < maxRecords + startPosition - 1);
