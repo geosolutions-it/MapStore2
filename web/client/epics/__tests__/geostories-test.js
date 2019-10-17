@@ -17,7 +17,6 @@ const {
 } = require('../geostories');
 
 const { storySaved } = require('../../actions/geostory');
-const { mapMetadataUpdated } = require('../../actions/maps');
 
 
 const {
