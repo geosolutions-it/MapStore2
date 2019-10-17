@@ -11,7 +11,7 @@ import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'dr
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { Editor } from 'react-draft-wysiwyg';
-import { branch, compose, renderComponent, withHandlers, withProps, withState } from "recompose";
+import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
 import { EMPTY_CONTENT, SectionTypes } from "../../../../utils/GeoStoryUtils";
 
@@ -28,9 +28,8 @@ export default compose(
     withState('contentEditing', 'setContentEditing', false),
     withState('editorState', 'onEditorStateChange'),
     withHandlers({
-        toggleEditing: ({ sectionType, onEditorStateChange = () => {}, setContentEditing = () => {}, save = () => {} }) => (editing, html) => {
+        toggleEditing: ({ sectionType, onEditorStateChange = () => {}, setContentEditing = () => {} }) => (editing, html) => {
             if (!editing) {
-                save(html);
                 setContentEditing(false);
             } else {
                 const contentBlock = htmlToDraft(html);
@@ -49,14 +48,20 @@ export default compose(
     branch(
         ({contentEditing}) => !!contentEditing,
         compose(
-            withHandlers({
-                onBlur: ({toggleEditing = () => {}, editorState}) => () => {
+            lifecycle({
+                componentWillUnmount() {
+                    const {editorState, save = () => {}} = this.props;
                     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
                     // it can happen that first block is empty, i.e. there is a carriage return
                     const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
                     const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
                     // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
-                    toggleEditing(false, rawText ? html : EMPTY_CONTENT);
+                    save(rawText ? html : EMPTY_CONTENT);
+                }
+            }),
+            withHandlers({
+                onBlur: ({toggleEditing = () => {}}) => () => {
+                    toggleEditing(false);
                 }
             }),
             // default properties for editor
