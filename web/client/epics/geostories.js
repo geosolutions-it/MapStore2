@@ -60,7 +60,7 @@ module.exports = {
                             }))
                         ))
             ),
-    deleteDashboard: action$ => action$
+    deleteGeostory: action$ => action$
         .ofType(DELETE_GEOSTORY)
         .switchMap(id => deleteResource(id).map(() => geostoryDeleted(id)))
         .let(wrapStartStop(

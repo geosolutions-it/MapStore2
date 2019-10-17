@@ -22,7 +22,7 @@ const { compose } = require('recompose');
 
 const GeostoryGrid = require('./geostories/GeostoriesGrid');
 const PaginationToolbar = require('./geostories/PaginationToolbar');
-const EmptyDashboardsView = require('./geostories/EmptyGeostoriesView');
+const EmptyGeostoriesView = require('./geostories/EmptyGeostoriesView');
 
 const geostoriesCountSelector = createSelector(
     totalCountSelector,
@@ -30,12 +30,12 @@ const geostoriesCountSelector = createSelector(
 );
 
 
-class Dashboards extends React.Component {
+class Geostories extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
         title: PropTypes.any,
         onMount: PropTypes.func,
-        loadDashboards: PropTypes.func,
+        loadGeostories: PropTypes.func,
         resources: PropTypes.array,
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
@@ -50,7 +50,7 @@ class Dashboards extends React.Component {
     static defaultProps = {
         mapType: "leaflet",
         onMount: () => {},
-        loadDashboards: () => {},
+        loadGeostories: () => {},
         fluid: false,
         title: <h3><Message msgId="resources.geostories.titleNoCount" /></h3>,
         mapsOptions: {start: 0, limit: 12},
@@ -101,11 +101,11 @@ const GeoStoriesPlugin = compose(
         () => ({
             glyph: "geostory",
             title: <Message msgId="resources.geostories.noGeostoryAvailable" />,
-            description: <EmptyDashboardsView />
+            description: <EmptyGeostoriesView />
         })
 
     )
-)(Dashboards);
+)(Geostories);
 
 module.exports = {
     GeoStoriesPlugin: assign(GeoStoriesPlugin, {

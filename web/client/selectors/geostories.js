@@ -12,6 +12,6 @@ module.exports = {
     resultsSelector: state => state && state.geostories && state.geostories.results,
     totalCountSelector: state => state && state.geostories && state.geostories.totalCount,
     isLoadingSelector: state => state && state.geostories && state.geostories.loading,
-    areDashboardsAvailable: state => state && state.geostories && state.geostories.available,
+    areGeostoriesAvailable: state => state && state.geostories && state.geostories.available,
     isEditDialogOpen: state => state && state.geostories && state.geostories.showModal && state.geostories.showModal.edit
 };

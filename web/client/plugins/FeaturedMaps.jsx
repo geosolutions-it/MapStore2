@@ -66,14 +66,14 @@ class FeaturedMaps extends React.Component {
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
                 maps={items}
                 colProps={this.props.colProps}
-                viewerUrl={(map) => {
-                    if (map.category && map.category.name === "DASHBOARD") {
-                        return this.context.router.history.push(`/dashboard/${map.id}`);
+                viewerUrl={(res) => {
+                    if (res.category && res.category.name === "DASHBOARD") {
+                        return this.context.router.history.push(`/dashboard/${res.id}`);
                     }
-                    if (map.category && map.category.name === "GEOSTORY") {
-                        return this.context.router.history.push(`/geostory/${map.id}`);
+                    if (res.category && res.category.name === "GEOSTORY") {
+                        return this.context.router.history.push(`/geostory/${res.id}`);
                     }
-                    return this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);
+                    return this.context.router.history.push("/viewer/" + this.props.mapType + "/" + res.id);
                 }}
                 metadataModal={MetadataModal}
                 bottom={this.props.bottom}

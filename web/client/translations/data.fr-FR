@@ -320,7 +320,7 @@
                 "noGeostoryAvailable": "Aucun story disponible",
                 "createANewOne": "Créer un nouveau",
                 "deleteError": "Une erreur s'est produite lors de la suppression de la ressource",
-                "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des stories"
+                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement des stories"
             }
         },
         "map": {
