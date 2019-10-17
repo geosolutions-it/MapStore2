@@ -127,7 +127,6 @@ function editGroupError(group, error) {
 function editNewGroup(group) {
     return {
         type: EDITGROUP,
-        status: STATUS_SUCCESS,
         group
     };
 }
