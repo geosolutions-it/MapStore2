@@ -15,21 +15,27 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
-const {triggerSaveMap} = require('../actions/maps');
+const {saveMapResource} = require('../actions/maps');
 
 const ConfirmModal = require('../components/maps/modals/ConfirmModal');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
-const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
-
+const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const MapUtils = require('../utils/MapUtils');
 const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const selector = createSelector(
-    mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, backgroundListSelector,
+    mapSelector,
+    mapOptionsToSaveSelector,
+    layersSelector,
+    groupsSelector,
+    showSelector,
+    textSearchConfigSelector,
+    backgroundListSelector,
     (map, additionalOptions, layers, groups, show, textSearchConfig, backgrounds) => ({
         currentZoomLvl: map && map.zoom,
         show,
@@ -53,9 +59,9 @@ class Save extends React.Component {
         map: PropTypes.object,
         layers: PropTypes.array,
         groups: PropTypes.array,
+        backgrounds: PropTypes.array,
         params: PropTypes.object,
-        textSearchConfig: PropTypes.object,
-        backgrounds: PropTypes.array
+        textSearchConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -95,11 +101,10 @@ class Save extends React.Component {
     goForTheUpdate = () => {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
+                const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups,
+                    this.props.backgrounds, this.props.textSearchConfig, this.props.additionalOptions);
                 const {name, description} = this.props.map.info;
-                this.props.onMapSave({
-                    backgrounds: this.props.backgrounds,
-                    metadata: {name, description}
-                });
+                this.props.onMapSave({id: this.props.mapId, data: resultingmap, metadata: {name, description}, category: "MAP"});
                 this.props.onClose();
             }
         }
@@ -110,7 +115,7 @@ module.exports = {
     SavePlugin: connect(selector,
         {
             onClose: toggleControl.bind(null, 'save', false),
-            onMapSave: triggerSaveMap,
+            onMapSave: saveMapResource,
             loadMapInfo
         })(assign(Save, {
         BurgerMenu: {
@@ -134,7 +139,7 @@ module.exports = {
                         return { };
                     }
                 }
-                return {style: {display: "none"}};
+                return { style: {display: "none"} };
             }
         }
     }))

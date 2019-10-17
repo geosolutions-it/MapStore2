@@ -370,68 +370,6 @@ const updateMap = (response, backgroundID) => {
         updateThumbnail(null, null, backgroundID));
 };
 
-const createBackgroundThumbnail = (thumbnail, categoryThumbnail, backgroundID) => {
-    if (thumbnail && thumbnail.url && thumbnail.data) {
-        const metadata = {
-            name: thumbnail.url
-        };
-
-        return Persistence.createResource({metadata: metadata, data: thumbnail.data, category: categoryThumbnail, backgroundID})
-            .map((response) => ({response, backgroundID}));
-    }
-
-    return Rx.Observable.of(null);
-};
-
-const mapSaveBackgroundThumbnails = (action$) =>
-    action$.ofType(TRIGGER_SAVE_MAP)
-        .switchMap((action) => {
-            // list of source id's of backgrounds with removed thumbnails
-            const resourcesToRemove = action.data.backgrounds
-                .filter(background => background.thumbnail && background.thumbnail.data && background.thumbId)
-                .map(background => background.thumbId);
-            return Rx.Observable.forkJoin(Rx.Observable.of(null),
-                ...action.data.backgrounds.map(layer =>
-                    createBackgroundThumbnail(layer.thumbnail, "BACKGROUND_THUMBNAIL", layer.id))
-            ).switchMap(results => {
-                return Rx.Observable.from(results.filter(response => !!response)
-                    .map(response => updateMap(response.response, response.backgroundID)))
-                    .mergeAll()
-                    .concat(Rx.Observable.of(
-                        clearModalParameters(),
-                        saveMapWithBackgrounds(action.data.thumbName, action.data.metadata, action.data.data, resourcesToRemove)
-                    )).catch(e => Rx.Observable.of(thumbnailError(null, e)));
-            });
-        });
-
-const mapSaveUpdatedBackgroundThumbnails = (action$, store) =>
-    action$.ofType(SAVE_MAP_WITH_BACKGROUNDS)
-        .switchMap((action) => {
-            const state = store.getState();
-            const id = mapIdSelector(state);
-            const groups = groupsSelector(state);
-            const textSearchConfig = (st) => st.searchconfig && st.searchconfig.textSearchConfig;
-            const additionalOptions = mapOptionsToSaveSelector(state);
-            const backgrounds = allBackgroundLayerSelector(state);
-            const removedBackgroundsThumbIds = removedBackgroundsThumbIdsSelector(state) || [];
-            return Rx.Observable.forkJoin(Rx.Observable.of(null),
-                ...action.resourcesToRemove.concat(removedBackgroundsThumbIds).map(resource => deleteResourceById(resource))
-            ).mergeMap(() =>
-                Rx.Observable.of(clearBackgrounds(), createBackgroundsList(backgrounds), saveMapResource({
-                    id: id,
-                    category: "MAP",
-                    data: saveMapConfiguration(mapSelector(state), layersSelector(state), groups, textSearchConfig(state), additionalOptions),
-                    metadata: action.metadata,
-                    linkedResources: action.data && {thumbnail: {
-                        data: action.data,
-                        category: "THUMBNAIL",
-                        name: action.mapThumb,
-                        tail: `/raw?decode=datauri&v=${uuid()}`
-                    }} || {}
-                }))
-            );
-        });
-
 module.exports = {
     loadMapsEpic,
     resetCurrentMapEpic,
@@ -444,7 +382,5 @@ module.exports = {
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic,
     mapSaveMapResourceEpic,
-    mapSaveBackgroundThumbnails,
-    mapSaveUpdatedBackgroundThumbnails,
     reloadMapsEpic
 };

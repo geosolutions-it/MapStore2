@@ -88,7 +88,7 @@ class BackgroundSelector extends React.Component {
     }
 
     getThumb = (layer) => {
-        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
+        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || layer.thumbURLBlob || this.props.thumbs.unknown;
     };
 
     getIcons = (side, frame, margin, vertical) => {
