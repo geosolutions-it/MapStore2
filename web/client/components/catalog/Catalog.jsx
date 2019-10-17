@@ -506,11 +506,11 @@ class Catalog extends React.Component {
                                         }
                                     </Col>
                                 </FormGroup>)}
-                                <FormGroup>
-                                    <Col xs={6} >
+                                <FormGroup style={{display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd'}}>
+                                    <Col xs={6}>
                                         <ControlLabel>Format</ControlLabel>
                                     </Col >
-                                    <Col xs={6} >
+                                    <Col xs={6}>
                                         <Select
                                             value="image/png"
                                             clearable={false}

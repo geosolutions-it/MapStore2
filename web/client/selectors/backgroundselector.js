@@ -17,6 +17,8 @@ export const backgroundListSelector = (state) => state.backgroundSelector && sta
 export const isDeletedIdSelector = (state) => state.backgroundSelector && state.backgroundSelector.lastRemovedId;
 export const removedBackgroundsThumbIdsSelector = (state) => state.backgroundSelector && state.backgroundSelector.removedBackgroundsThumbIds;
 export const confirmDeleteBackgroundModalSelector = (state) => state.backgroundSelector && state.backgroundSelector.confirmDeleteBackgroundModal;
+export const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
+export const allowBackgroundsDeletionSelector = (state) => state.backgroundSelector && state.backgroundSelector.allowDeletion;
 export const backgroundLayersSelector = createSelector(layersSelector, mapTypeSelector, (layers, maptype) => {
     return layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [];
 });

@@ -10,7 +10,7 @@ const Rx = require('rxjs');
 
 const {head} = require('lodash');
 const {ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, SET_CURRENT_BACKGROUND_LAYER, BACKGROUND_ADDED, BACKGROUND_EDITED, REMOVE_BACKGROUND, createBackgroundsList, clearModalParameters,
-    setBackgroundModalParams, setCurrentBackgroundLayer} = require('../actions/backgroundselector');
+    setBackgroundModalParams, setCurrentBackgroundLayer, allowBackgroundsDeletion} = require('../actions/backgroundselector');
 const {setControlProperty, toggleControl} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {changeSelectedService, catalogClose} = require('../actions/catalog');
@@ -24,6 +24,7 @@ const accessMetadataExplorer = (action$) =>
     action$.ofType(ADD_BACKGROUND)
         .switchMap(() => Rx.Observable.of(
             setControlProperty('metadataexplorer', 'enabled', true),
+            allowBackgroundsDeletion(false),
             changeSelectedService('default_map_backgrounds')
         ));
 
@@ -70,9 +71,7 @@ const backgroundAddedEpic = (action$, store) =>
             return addedLayer ? Rx.Observable.of(
                 changeLayerProperties(addedLayer.id, {visibility: true}),
                 setCurrentBackgroundLayer(addedLayer.id),
-                clearModalParameters(),
-                catalogClose(),
-                toggleControl('backgroundSelector', null)
+                clearModalParameters()
             ) : Rx.Observable.empty();
         });
 

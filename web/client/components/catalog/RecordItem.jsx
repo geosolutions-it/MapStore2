@@ -132,7 +132,7 @@ class RecordItem extends React.Component {
 
     };
 
-    renderButtons = (record) => {
+    renderButtons = (record, disabled) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -142,12 +142,12 @@ class RecordItem extends React.Component {
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
-        const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name));
 
         // let's create the buttons
         let buttons = [];
-        if (background && !disabled) {
-            buttons.push(
+        if (background) {
+            buttons.push(disabled ?
+                <Message msgId="catalog.backgroundAlreadyAdded"/> :
                 <Button
                     key="wms-button"
                     tooltipId="catalog.addToMap"
@@ -251,13 +251,14 @@ class RecordItem extends React.Component {
         const {wms, wmts} = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
+        const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name));
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then these defaults also have to change
         return record ? (<div>
             {this.props.modalParams && this.props.modalParams.identifier === record.identifier && !this.props.modalParams.editing ?
                 this.renderBackgroundDialog() : null}
             <SideCard
-                style={{transform: "none"}}
+                style={{transform: "none", opacity: disabled ? 0.4 : 1}}
                 fullText={this.state.fullText}
                 preview={!this.props.hideThumbnail &&
                     this.renderThumb(record && record.thumbnail ||
@@ -291,7 +292,7 @@ class RecordItem extends React.Component {
                             }
                         }}
                         buttons={[
-                            ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
+                            ...(record && this.renderButtons(record, disabled) || []).map(Element => ({ Element: () => Element })),
                             {
                                 glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
                                 visible: this.state.visibleExpand,

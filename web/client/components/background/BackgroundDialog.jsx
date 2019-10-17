@@ -84,6 +84,23 @@ export default class BackgroundDialog extends React.Component {
         ) : null;
     }
 
+    renderThumbnailErrors() {
+        const errorMessages = {
+            "FORMAT": <Message msgId="map.errorFormat" />,
+            "SIZE": <Message msgId="map.errorSize" />
+        };
+        return this.state.thumbnailErrors && this.state.thumbnailErrors.length > 0 ? (
+            <div className="dropzone-errorBox alert-danger">
+                <p><Message msgId="map.error"/></p>
+                {(this.state.thumbnailErrors.map(err =>
+                    <div id={"error" + err} key={"error" + err} className={"error" + err}>
+                        {errorMessages[err]}
+                    </div>
+                ))}
+            </div>
+        ) : null;
+    }
+
     render() {
         return (<ResizableModal
             title={<Message msgId={this.props.editing ? 'backgroundDialog.editTitle' : 'backgroundDialog.addTitle'}/>}
@@ -112,11 +129,15 @@ export default class BackgroundDialog extends React.Component {
                     }
                 }
             ]}>
-            {<Form style={{padding: 8}}>
+            {<Form className="background-dialog">
+                {this.renderThumbnailErrors()}
                 <FormGroup>
                     <div className="shadow-soft" style={{width: 180, margin: 'auto'}}>
                         <Thumbnail
-                            onUpdate = {(data, url) => this.setState({thumbnail: {data, url}})}
+                            onUpdate={(data, url) => this.setState({thumbnail: {data, url}})}
+                            onError={(errors) => this.setState({thumbnailErrors: errors})}
+                            message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
+                            suggestion=''
                             map={{
                                 newThumbnail: get(this.state.thumbnail, 'url')
                             }}
@@ -178,7 +199,7 @@ export default class BackgroundDialog extends React.Component {
                             value={val.param}
                             onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
                         {val.type === 'boolean' ?
-                            <div style={{flex: 1, marginRight: 8}}>
+                            <div style={{flex: 1.19, marginRight: 8}}>
                                 <Select
                                     onChange={e => this.addAdditionalParameter(e.value, 'val', val.id, val.type)}
                                     clearable={false}

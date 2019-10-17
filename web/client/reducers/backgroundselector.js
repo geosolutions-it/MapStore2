@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ADD_BACKGROUND, SET_BACKGROUND_MODAL_PARAMS, UPDATE_BACKGROUND_THUMBNAIL, BACKGROUNDS_CLEAR,
+const { ADD_BACKGROUND, SET_BACKGROUND_MODAL_PARAMS, UPDATE_BACKGROUND_THUMBNAIL, BACKGROUNDS_CLEAR, ALLOW_BACKGROUNDS_DELETION,
     REMOVE_BACKGROUND, CREATE_BACKGROUNDS_LIST, CLEAR_MODAL_PARAMETERS, CONFIRM_DELETE_BACKGROUND_MODAL} = require('../actions/backgroundselector');
 const {RESET_CATALOG} = require('../actions/catalog');
 const assign = require('object-assign');
@@ -95,6 +95,9 @@ function backgroundselector(state = null, action) {
                 layerId: action.layerId
             }
         });
+    }
+    case ALLOW_BACKGROUNDS_DELETION: {
+        return assign({}, state, {allowDeletion: action.allow || false});
     }
     default:
         return state;

@@ -33,6 +33,7 @@ import {error, success} from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties} from '../actions/controls';
 import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
+import {allowBackgroundsDeletion} from '../actions/backgroundselector';
 import {
     authkeyParamNameSelector,
     delayAutoSearchSelector,
@@ -347,6 +348,7 @@ export default (API) => ({
                     setControlProperties('metadataexplorer', "enabled", false, "group", null),
                     changeCatalogMode("view"),
                     resetCatalog()
-                ].concat(metadataSource === 'backgroundSelector' ? [changeSelectedService(head(keys(services)))] : [])));
+                ].concat(metadataSource === 'backgroundSelector' ?
+                    [changeSelectedService(head(keys(services))), allowBackgroundsDeletion(true)] : [])));
             })
 });

@@ -19,7 +19,6 @@ const ConfirmDialog = require('../misc/ConfirmDialog');
 
 const PropTypes = require('prop-types');
 const {get} = require('lodash');
-require('./css/background.css');
 
 class BackgroundSelector extends React.Component {
     static propTypes = {
@@ -52,6 +51,7 @@ class BackgroundSelector extends React.Component {
         modalParams: PropTypes.object,
         updateNode: PropTypes.func,
         clearModal: PropTypes.func,
+        allowDeletion: PropTypes.bool,
         projection: PropTypes.string
     };
 
@@ -67,6 +67,7 @@ class BackgroundSelector extends React.Component {
         tempLayer: {},
         size: {width: 0, height: 0},
         dimensions: {},
+        allowDeletion: true,
         thumbs: {
             unknown: require('./img/default.jpg')
         },
@@ -101,7 +102,7 @@ class BackgroundSelector extends React.Component {
                     }}
                     className="background-preview-container"
                 >
-                    {this.props.layers.length > 1 && <ToolbarButton
+                    {this.props.allowDeletion && this.props.layers.length > 1 && <ToolbarButton
                         glyph="trash"
                         className="square-button-md background-remove-button"
                         bsStyle="primary"

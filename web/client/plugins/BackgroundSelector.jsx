@@ -17,7 +17,7 @@ const {backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
 const {modalParamsSelector, isDeletedIdSelector, backgroundListSelector,
-    backgroundLayersSelector, confirmDeleteBackgroundModalSelector} = require('../selectors/backgroundselector');
+    backgroundLayersSelector, confirmDeleteBackgroundModalSelector, allowBackgroundsDeletionSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {allBackgroundLayerSelector} = require('../selectors/layers');
 
@@ -38,8 +38,9 @@ const backgroundSelector = createSelector([
     tempBackgroundSelector,
     state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
     state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
-    confirmDeleteBackgroundModalSelector],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, layers, controls, currentLayer, tempLayer, style, enabledCatalog, confirmDeleteBackgroundModalObj) => ({
+    confirmDeleteBackgroundModalSelector,
+    allowBackgroundsDeletionSelector],
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, layers, controls, currentLayer, tempLayer, style, enabledCatalog, confirmDeleteBackgroundModalObj, allowDeletion) => ({
     modalParams,
     backgroundList,
     deletedId,
@@ -53,6 +54,7 @@ const backgroundSelector = createSelector([
     style,
     enabledCatalog,
     confirmDeleteBackgroundModal: confirmDeleteBackgroundModalObj,
+    allowDeletion,
     projection
 }));
 
