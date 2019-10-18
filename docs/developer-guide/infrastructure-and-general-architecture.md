@@ -5,13 +5,14 @@ MapStore leverages a full separation of concerns between the **backend** and the
 The frontend is a Javascript web application communicating with MapStore own web services using AJAX and external ones through an internal, configurable, _proxy_.
 
 The backend is a suite of web services, developed in Java and deployed into a J2EE container (e.g. Apache Tomcat).
+
 ![General Infrastructure](https://docs.google.com/drawings/d/1X-yA-_GQ6HqhoYQfIbuxzdt8c-9fD0K3tf1WVbXecSE/pub?w=480&h=360)
 
 ## Frontend
 
 The frontend is based on the [ReactJS](https://facebook.github.io/react/) library and the [Redux](http://rackt.github.io/redux/) architecture, which is a specific implementation of the [Flux](http://facebook.github.io/flux/) architecture.
 
-<img src="https://facebook.github.io/flux/img/flux-simple-f8-diagram-with-client-action-1300w.png" style="max-width:500px" alt="Flux infrastructure" />
+![Flux infrastructure](https://facebook.github.io/flux/img/flux-simple-f8-diagram-with-client-action-1300w.png?w=500)
 
 It allows plugging different mapping libraries (with **Leaflet** and **OpenLayers 3** as our first implementation targets) abstracting libraries implementation details using ReactJS _web components_ and _actions based communication_.
 
