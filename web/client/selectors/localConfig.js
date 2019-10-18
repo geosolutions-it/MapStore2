@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {get} from 'lodash';
 
 /**
  * selector for localConfig from application state
@@ -20,3 +21,9 @@ export const localConfigSelector = state => state.localConfig;
  * @returns {array} the monitor state array
  */
 export const monitorStateSelector = state => (localConfigSelector(state) || {}).monitorState;
+
+/**
+ * Creates a selector to get the plugins from localConfig where
+ * @param {string} page the page of the plugins for which we want to get the plugins (desktop, mobile, maps...)
+ */
+export const pluginsSelectorCreator = (page) => state => get(localConfigSelector(state), `plugins.${page}`);
