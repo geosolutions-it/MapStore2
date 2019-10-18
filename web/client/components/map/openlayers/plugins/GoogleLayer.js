@@ -43,13 +43,13 @@ Layers.registerType('google', {
             gmaps[mapId].setMapTypeId(layersMap[options.name]);
             let mapContainer = document.getElementById(mapId + 'gmaps');
             let setCenter = function() {
-                if (mapContainer.style.visibility !== 'hidden') {
+                if (gmaps[mapId] && mapContainer.style.visibility !== 'hidden') {
                     const center = transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
                     gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
                 }
             };
             let setZoom = function() {
-                if (mapContainer.style.visibility !== 'hidden') {
+                if (gmaps[mapId] && mapContainer.style.visibility !== 'hidden') {
                     gmaps[mapId].setZoom(map.getView().getZoom());
                 }
             };
@@ -131,7 +131,7 @@ Layers.registerType('google', {
             let resizeGoogleLayerIfRotated = function() {
                 let degrees = /[\+\-]?\d+\.?\d*/i;
                 let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
-                if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
+                if (gmaps[mapId] && newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
                     let rotation = parseFloat(newTrans.match(degrees)[0]);
                     let size = calculateRotatedSize(-rotation, map.getSize());
                     mapContainer.style.width = size.width + 'px';
@@ -190,6 +190,9 @@ Layers.registerType('google', {
         return null;
     },
     update(layer, newOptions, oldOptions, map, mapId) {
+        if (!gmaps[mapId]) {
+            return;
+        }
         let google = window.google;
         if (!oldOptions.visibility && newOptions.visibility) {
             let view = map.getView();

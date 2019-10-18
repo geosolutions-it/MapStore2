@@ -213,24 +213,26 @@ export default class BackgroundDialog extends React.Component {
                         </Button>
                     </div>
                     {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
-                        <FormControl
-                            style={{flex: 1, marginRight: 8, minWidth: 0}}
-                            placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.parameter")}
-                            value={val.param}
-                            onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
-                        {val.type === 'boolean' ?
-                            <div style={{flex: 1.19, marginRight: 8}}>
-                                <Select
-                                    onChange={e => this.addAdditionalParameter(e.value, 'val', val.id, val.type)}
-                                    clearable={false}
-                                    value={val.val}
-                                    options={this.props.booleanOptions}/>
-                            </div> :
+                        <div style={{display: 'flex', flex: 1, marginRight: 8}}>
                             <FormControl
-                                style={{flex: 1, marginRight: 8, minWidth: 0}}
-                                placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.value")}
-                                value = {val.val.toString()}
-                                onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)}/>}
+                                style={{width: '50%', marginRight: 8, minWidth: 0}}
+                                placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.parameter")}
+                                value={val.param}
+                                onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
+                            {val.type === 'boolean' ?
+                                <div style={{width: '50%'}}>
+                                    <Select
+                                        onChange={e => this.addAdditionalParameter(e.value, 'val', val.id, val.type)}
+                                        clearable={false}
+                                        value={val.val}
+                                        options={this.props.booleanOptions}/>
+                                </div> :
+                                <FormControl
+                                    style={{width: '50%', minWidth: 0}}
+                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.value")}
+                                    value = {val.val.toString()}
+                                    onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)}/>}
+                        </div>
                         <Select
                             style={{flex: 1, width: 90}}
                             onChange={event => this.addAdditionalParameter(val.val, 'val', val.id, event.value)}

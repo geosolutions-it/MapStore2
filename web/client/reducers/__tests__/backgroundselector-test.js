@@ -38,13 +38,12 @@ describe('Test the backgroundSelector reducer', () => {
     it('add thumbnail to the background', () => {
         const state = backgroundselector({modalParams: {identifier: '1'}, backgrounds: [{id: '1'}]}, {
             type: UPDATE_BACKGROUND_THUMBNAIL,
-            thumbnail: 'url',
             thumbnailData: 'binary',
             id: '1'
         });
         expect(state.backgrounds.length).toBe(1);
         expect(state.modalParams).toEqual({identifier: '1'});
-        expect(state.backgrounds[0].thumbnail).toEqual({url: 'url', data: 'binary'});
+        expect(state.backgrounds[0].thumbnail).toEqual('binary');
     });
     it('clear modal parameters state', () => {
         const state = backgroundselector({modalParams: {identifier: 'id'}, backgrounds: [{id: '1'}]}, {
@@ -63,10 +62,10 @@ describe('Test the backgroundSelector reducer', () => {
     it('create a list of thumbs resource ID', () => {
         const state = backgroundselector({}, {
             type: CREATE_BACKGROUNDS_LIST,
-            backgrounds: [{id: '1', thumbId: 9939}]
+            backgrounds: [{id: '1', thumbnail: 'data'}]
         });
         expect(state.backgrounds).toExist();
         expect(state.backgrounds.length).toBe(1);
-        expect(state.backgrounds[0]).toEqual({id: '1', thumbId: 9939});
+        expect(state.backgrounds[0]).toEqual({id: '1', thumbnail: 'data'});
     });
 });

@@ -31,13 +31,11 @@ describe('Test backgroundSelector actions', () => {
         expect(e.source).toBe('backgroundSelector');
     });
     it('test adding or updating thumbnails', () => {
-        let e = updateThumbnail('binary Code', 'https:/link', '1983');
+        let e = updateThumbnail('binary Code', '1983');
         expect(e).toExist();
         expect(e.type).toBe(UPDATE_BACKGROUND_THUMBNAIL);
         expect(e.thumbnailData).toExist();
         expect(e.thumbnailData).toBe('binary Code');
-        expect(e.thumbnail).toExist();
-        expect(e.thumbnail).toBe('https:/link');
         expect(e.id).toExist();
         expect(e.id).toBe('1983');
     });
