@@ -284,7 +284,7 @@
 		},
         "resources": {
             "deleteConfirmTitle": "Are you sure",
-            "deleteConfirmMessage": "Are you sure you want do delete this resource?",
+            "deleteConfirmMessage": "Are you sure you want to delete this resource?",
             "deleteConfirmButtonText": "Delete",
             "deleteCancelButtonText": "Close",
             "resource": {
