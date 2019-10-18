@@ -15,6 +15,8 @@ const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, s
     ...services,
     ...(pick(staticServices, "default_map_backgrounds"))
 }));
+const selectedStaticServiceTypeSelector =
+    (state) => get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw");
 
 module.exports = {
     groupSelector: (state) => get(state, "controls.metadataexplorer.group"),
@@ -27,7 +29,8 @@ module.exports = {
     servicesSelectorWithBackgrounds,
     newServiceTypeSelector: (state) => get(state, "catalog.newService.type", "csw"),
     selectedCatalogSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"]`),
-    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw")),
+    selectedStaticServiceTypeSelector,
+    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, selectedStaticServiceTypeSelector(state)),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
     formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),

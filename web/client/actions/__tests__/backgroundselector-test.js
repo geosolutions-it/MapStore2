@@ -24,50 +24,50 @@ import {CREATE_BACKGROUNDS_LIST,
 
 describe('Test backgroundSelector actions', () => {
     it('test accessing catalog from backgroundSelector', () => {
-        let e = addBackground('backgroundSelector');
-        expect(e).toExist();
-        expect(e.type).toBe(ADD_BACKGROUND);
-        expect(e.source).toExist();
-        expect(e.source).toBe('backgroundSelector');
+        const action = addBackground('backgroundSelector');
+        expect(action).toExist();
+        expect(action.type).toBe(ADD_BACKGROUND);
+        expect(action.source).toExist();
+        expect(action.source).toBe('backgroundSelector');
     });
     it('test adding or updating thumbnails', () => {
-        let e = updateThumbnail('binary Code', '1983');
-        expect(e).toExist();
-        expect(e.type).toBe(UPDATE_BACKGROUND_THUMBNAIL);
-        expect(e.thumbnailData).toExist();
-        expect(e.thumbnailData).toBe('binary Code');
-        expect(e.id).toExist();
-        expect(e.id).toBe('1983');
+        const action = updateThumbnail('binary Code', '1983');
+        expect(action).toExist();
+        expect(action.type).toBe(UPDATE_BACKGROUND_THUMBNAIL);
+        expect(action.thumbnailData).toExist();
+        expect(action.thumbnailData).toBe('binary Code');
+        expect(action.id).toExist();
+        expect(action.id).toBe('1983');
     });
     it('test adding or updating thumbnails', () => {
-        let e = createBackgroundsList([1234, 1232, 9982]);
-        expect(e).toExist();
-        expect(e.type).toBe(CREATE_BACKGROUNDS_LIST);
-        expect(e.backgrounds).toExist();
-        expect(e.backgrounds.length).toBe(3);
+        const action = createBackgroundsList([1234, 1232, 9982]);
+        expect(action).toExist();
+        expect(action.type).toBe(CREATE_BACKGROUNDS_LIST);
+        expect(action.backgrounds).toExist();
+        expect(action.backgrounds.length).toBe(3);
     });
     it('test adding background properties', () => {
-        let e = addBackgroundProperties({name: 'thumb'}, true);
-        expect(e).toExist();
-        expect(e.type).toBe(ADD_BACKGROUND_PROPERTIES);
-        expect(e.modalParams).toExist();
-        expect(e.modalParams.name).toBe('thumb');
+        const action = addBackgroundProperties({name: 'thumb'}, true);
+        expect(action).toExist();
+        expect(action.type).toBe(ADD_BACKGROUND_PROPERTIES);
+        expect(action.modalParams).toExist();
+        expect(action.modalParams.name).toBe('thumb');
     });
     it('test removing background thumbnail info by Id', () => {
-        let e = removeBackground('1983');
-        expect(e).toExist();
-        expect(e.type).toBe(REMOVE_BACKGROUND);
-        expect(e.backgroundId).toExist();
-        expect(e.backgroundId).toBe('1983');
+        const action = removeBackground('1983');
+        expect(action).toExist();
+        expect(action.type).toBe(REMOVE_BACKGROUND);
+        expect(action.backgroundId).toExist();
+        expect(action.backgroundId).toBe('1983');
     });
     it('test clearing backgrounds', () => {
-        let e = clearBackgrounds();
-        expect(e).toExist();
-        expect(e.type).toBe(BACKGROUNDS_CLEAR);
+        const action = clearBackgrounds();
+        expect(action).toExist();
+        expect(action.type).toBe(BACKGROUNDS_CLEAR);
     });
     it('test clearing background\'s properties', () => {
-        let e = clearModalParameters();
-        expect(e).toExist();
-        expect(e.type).toBe(CLEAR_MODAL_PARAMETERS);
+        const action = clearModalParameters();
+        expect(action).toExist();
+        expect(action.type).toBe(CLEAR_MODAL_PARAMETERS);
     });
 });
