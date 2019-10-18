@@ -1160,7 +1160,8 @@
                 "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
                 "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
-            }
+            },
+            "backgroundAlreadyAdded": "Agregado al selector de fondo"
         },
         "uploader": {
             "filename": "Nombre del fichero",
