@@ -311,6 +311,16 @@
                 "title": "Karten ({count})",
                 "noMapAvailable": "Keine Karte verfügbar",
                 "createNewOne": "Erstelle ein neues"
+            },
+            "geostories": {
+                "newGeostory": "Neues Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "GeoStory erstellen",
+                "noGeostoryAvailable": "Kein story verfügbar",
+                "createANewOne": "Erstelle ein neues",
+                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
+                "errorLoadingGeostories": "Beim Laden von stories ist ein Fehler aufgetreten"
             }
         },
         "map": {
@@ -1884,7 +1894,8 @@
                 "editMedia": "Ändern Sie die Medienquelle",
                 "remove": "Entfernen",
                 "removeConfirmTitle": "Bist du sicher?",
-                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?"
+                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
+                "editMap": "Bearbeiten Sie die ursprüngliche Kartenausdehnung"
             },
             "builder": {
                 "defaults": {
@@ -1892,15 +1903,19 @@
                     "htmlPlaceholder": "Text hier einfügen...",
                     "titleTitle": "Titelbereich",
                     "titleParagraph": "Absatz Abschnitt",
+                    "titleImmersiveContent": "Immersiver Inhalt",
                     "titleImmersive": "Immersive Section",
                     "titleMedia": "Medienbereich",
+                    "titleImage": "Bild",
+                    "titleText": "Text",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Ausgewählten Abschnitt entfernen",
                 "preview": "Vorschau zeigen",
                 "edit": "Bearbeiten Sie die Geschichte",
-                "hide": "Vorschau in Karten ausblenden",
-                "show": "Vorschau in Karten anzeigen",
+                "noContents": "Keine Inhalte verfügbar",
+                "collapseAll": "Alles einklappen",
+                "expandAll": "Alle erweitern",
                 "fullscreen": "Vorschau im Vollbild anzeigen",
                 "settings": {
                     "tooltip": "die Einstellungen",

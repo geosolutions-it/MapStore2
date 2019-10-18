@@ -21,13 +21,12 @@ const ContainerDimensions = emptyState(
     ({add = () => {}}) => ({
         iconFit: false,
         style: {
-            position: "absolute",
+            position: "relative",
             width: "50%",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)"
         },
-        // TODO: localize
         glyph: 'geostory',
         title: <Message msgId="geostory.emptyTitle"/>,
         description: <Message msgId="geostory.emptyDescription"/>,

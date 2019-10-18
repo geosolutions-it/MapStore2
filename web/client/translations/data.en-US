@@ -311,6 +311,16 @@
                 "title": "Maps ({count})",
                 "noMapAvailable": "No map available",
                 "createNewOne": "Create a new one"
+            },
+            "geostories": {
+                "newGeostory": "New Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "Create Story",
+                "noGeostoryAvailable": "No story available",
+                "createANewOne": "Create a new one",
+                "deleteError": "There was an error deleting the resource",
+                "errorLoadingGeostories": "There was an error loading stories"
             }
         },
         "map": {
@@ -1886,7 +1896,8 @@
                 "editMedia": "Change media source",
                 "remove": "Remove",
                 "removeConfirmTitle": "Are you sure?",
-                "removeConfirmContent": "Do you want to remove this content from the story?"
+                "removeConfirmContent": "Do you want to remove this content from the story?",
+                "editMap": "Edit initial map extent"
             },
             "builder": {
                 "defaults": {
@@ -1895,14 +1906,18 @@
                     "titleTitle": "Title Section",
                     "titleParagraph": "Paragraph Section",
                     "titleImmersive": "Immersive Section",
+                    "titleImmersiveContent": "Immersive Content",
                     "titleMedia": "Media Section",
+                    "titleImage": "Image",
+                    "titleText": "Text",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Remove selected section",
                 "preview": "Show preview",
                 "edit": "Edit story",
-                "hide": "Hide preview in cards",
-                "show": "Show preview in cards",
+                "noContents": "No Contents Available",
+                "collapseAll": "Collapse all",
+                "expandAll": "Expand all",
                 "fullscreen": "Show preview in fullscreen",
                 "settings": {
                     "tooltip": "Settings",

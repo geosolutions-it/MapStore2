@@ -127,11 +127,12 @@ export default class OpenlayersMap extends React.Component {
                 target: document.querySelector(this.props.mapOptions.attribution.container)
             } : {})
         }, this.props.mapOptions.controls));
+
         let map = new Map({
             layers: [],
             controls: controls,
             interactions: interactions,
-            target: this.props.id,
+            target: `${this.props.id}`,
             view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
 

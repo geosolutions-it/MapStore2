@@ -29,6 +29,7 @@ const Immersive = ({
     path,
     contents = [],
     mode,
+    sectionType,
     inViewRef,
     viewWidth,
     viewHeight
@@ -44,7 +45,7 @@ const Immersive = ({
             disableToolbarPortal
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
-                [MediaTypes.MAP]: ['editMedia', 'fit', 'size', 'align', 'theme']
+                [MediaTypes.MAP]: ['editMedia', 'editMap', 'fit', 'size', 'align', 'theme']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
@@ -53,6 +54,7 @@ const Immersive = ({
             path={path}
             update={updateBackground}
             remove={remove}
+            sectionType={sectionType}
             sectionId={id}
             backgroundId={background.id}
             key={background.id}

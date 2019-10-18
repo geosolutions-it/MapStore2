@@ -24,9 +24,11 @@ import {
     editMediaForBackgroundEpic,
     cleanUpEmptyStoryContainers,
     saveGeoStoryResource,
-    reloadGeoStoryOnLoginLogout
+    reloadGeoStoryOnLoginLogout,
+    sortContentEpic
 } from '../geostory';
 import {
+    ADD,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
@@ -40,7 +42,8 @@ import {
     SAVED,
     SET_RESOURCE,
     GEOSTORY_LOADED,
-    ADD_RESOURCE
+    ADD_RESOURCE,
+    move
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -421,7 +424,7 @@ describe('Geostory Epics', () => {
             geostory: {}
         });
     });
-    it('test openMediaEditorForNewMedia, adding a media content and choosing an image', (done) => {
+    it('test openMediaEditorForNewMedia, adding a media content and choosing an image already present in resources', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
             add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
@@ -444,7 +447,14 @@ describe('Geostory Epics', () => {
             });
             done();
         }, {
-            geostory: {},
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "geostory",
+                        data: {}
+                    }]
+                }
+            },
             mediaEditor: {
                 settings: {
                     mediaType: "image"
@@ -452,7 +462,43 @@ describe('Geostory Epics', () => {
             }
         });
     });
-    it('test openMediaEditorForNewMedia, adding an empty media content (image)', (done) => {
+    it('test openMediaEditorForNewMedia, adding a media content and choosing an image not present in resources', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
+            chooseMedia({id: "geostory"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case ADD_RESOURCE:
+                    expect(a.data.id).toBe("geostory");
+                    expect(a.mediaType).toBe(MediaTypes.IMAGE);
+                    break;
+                case UPDATE:
+                    expect(a.element.type).toEqual(MediaTypes.IMAGE);
+                    expect(a.mode).toEqual("merge");
+                    expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":"102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}]`);
+                    break;
+                case SHOW:
+                    expect(a.owner).toEqual("geostory");
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
+                }
+            }
+        });
+    });
+    it('test openMediaEditorForNewMedia, and hide without applying', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
             add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: ""}),
@@ -461,9 +507,7 @@ describe('Geostory Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(a => {
                 switch (a.type) {
-                case UPDATE:
-                    expect(a.element).toEqual({type: MediaTypes.IMAGE});
-                    expect(a.mode).toEqual("merge");
+                case REMOVE:
                     expect(a.path).toEqual(`sections[{id: "abc"}].contents[{id: "def"}][{"id":""}]`);
                     break;
                 case SHOW:
@@ -484,7 +528,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('test openMediaEditorForNewMedia, adding a media section and choosing an image', (done) => {
-        const NUM_ACTIONS = 2;
+        const NUM_ACTIONS = 3;
         const element = {
             id: '57cd0993-ad29-438a-b02a-d8f110de5d81',
             type: 'paragraph',
@@ -510,8 +554,12 @@ describe('Geostory Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(a => {
                 switch (a.type) {
+                case ADD_RESOURCE:
+                    expect(a.data.id).toBe("geostory");
+                    expect(a.mediaType).toBe(MediaTypes.IMAGE);
+                    break;
                 case UPDATE:
-                    expect(a.element).toEqual({resourceId: "geostory", type: MediaTypes.IMAGE});
+                    expect(a.element.type).toEqual(MediaTypes.IMAGE);
                     expect(a.mode).toEqual("merge");
                     expect(a.path).toEqual(`sections[{"id":"57cd0993-ad29-438a-b02a-d8f110de5d81"}].contents[0].contents[0]`);
                     break;
@@ -739,6 +787,145 @@ describe('Geostory Epics', () => {
                     done();
                 }, S2);
             }, S1);
+        });
+        it('sortContentEpic sorting two sections', done => {
+            const id = "SECTION-TITLE-1";
+            const source = `sections[{"id": "${id}"}]`;
+            const target = "sections";
+            const position = 2;
+            const moveAction = move(
+                source,
+                target,
+                position
+            );
+            const NUM_ACTIONS = 2;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position);
+                        expect(a.element).toEqual({
+                            "type": "title",
+                            "id": id,
+                            "title": "Abstract",
+                            "contents": [
+                                {
+                                    "id": "title_content_id1",
+                                    "type": "text"
+                                }
+                            ]
+                        });
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "type": "title",
+                                "id": "SECTION-TITLE-1",
+                                "title": "Abstract",
+                                "contents": [
+                                    {
+                                        "id": "title_content_id1",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text",
+                                                "html": "<p>This is a list of the <strong><ins>highest astronomical observatories</ins></strong> in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.insert text here...</p>\n"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
+        });
+        it('sortContentEpic sorting two items under paragraph', done => {
+            const id = "0264c912-2814-47fa-8050-ea11cf11e833";
+            const source = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"${id}"}]`;
+            const target = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents`;
+            const position = 1;
+            const moveAction = move(
+                source,
+                target,
+                position
+            );
+            const NUM_ACTIONS = 2;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position);
+                        expect(a.element).toEqual({
+                            "id": id,
+                            "type": "text"
+                        });
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
+                                                "type": "image"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
         });
     });
 });

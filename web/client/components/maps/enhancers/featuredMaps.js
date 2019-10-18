@@ -61,6 +61,8 @@ const getIcon = record => {
         return "1-map";
     case "DASHBOARD":
         return "dashboard";
+    case "GEOSTORY":
+        return "geostory";
     default:
         return null;
     }

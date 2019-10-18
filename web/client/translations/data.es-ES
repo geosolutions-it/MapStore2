@@ -311,6 +311,16 @@
                 "title": "Mapas ({count})",
                 "noMapAvailable": "No hay mapa disponible",
                 "createNewOne": "Crea uno nuevo"
+            },
+            "geostories": {
+                "newGeostory": "Nuevo Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "Crear Story",
+                "noGeostoryAvailable": "No hay story disponible",
+                "createANewOne": "Crea uno nuevo",
+                "deleteError": "Hubo un error al eliminar el recurso",
+                "errorLoadingGeostories": "Hubo un error al cargar los stories"
             }
         },
         "map": {
@@ -1884,7 +1894,8 @@
                 "editMedia": "Cambiar fuente de medios",
                 "remove": "Eliminar",
                 "removeConfirmTitle": "¿Estás seguro?",
-                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?"
+                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
+                "editMap": "Modifier l'étendue initiale de la carte"
             },
             "builder": {
                 "defaults": {
@@ -1893,14 +1904,18 @@
                     "titleTitle": "Sección de título",
                     "titleParagraph": "Sección de párrafo",
                     "titleImmersive": "Sección inmersiva",
+                    "titleImmersiveContent": "Contenido inmersivo",
                     "titleMedia": "Sección de multimedia",
+                    "titleImage": "Imagen",
+                    "titleText": "Texto",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Eliminar la sección seleccionada",
                 "preview": "Mostrar vista previa",
                 "edit": "Editar historia",
-                "hide": "Ocultar vista previa en tarjetas",
-                "show": "Mostrar vista previa en tarjetas",
+                "noContents": "No hay contenidos disponibles",
+                "collapseAll": "Desplegar todo",
+                "expandAll": "Expandir todo",
                 "fullscreen": "Mostrar vista previa en pantalla completa",
                 "settings": {
                     "tooltip": "Configuraciones",

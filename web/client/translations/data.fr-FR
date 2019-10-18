@@ -311,6 +311,16 @@
                 "title": "Cartes ({count})",
                 "noMapAvailable": "Aucune carte disponible",
                 "createNewOne": "Créer un nouveau"
+            },
+            "geostories": {
+                "newGeostory": "Nouveau Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "Créer un Story",
+                "noGeostoryAvailable": "Aucun story disponible",
+                "createANewOne": "Créer un nouveau",
+                "deleteError": "Une erreur s'est produite lors de la suppression de la ressource",
+                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement des stories"
             }
         },
         "map": {
@@ -1884,7 +1894,8 @@
                 "editMedia": "Changer de source média",
                 "remove": "Supprimer",
                 "removeConfirmTitle": "Bist du sicher?",
-                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?"
+                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
+                "editMap": "Edit initial map extent"
             },
             "builder": {
                 "defaults": {
@@ -1893,14 +1904,18 @@
                     "titleTitle": "Section de titre",
                     "titleParagraph": "Section de paragraphe",
                     "titleImmersive": "Section immersive",
+                    "titleImmersiveContent": "Contenu immersif",
                     "titleMedia": "Section multimédia",
+                    "titleImage": "Image",
+                    "titleText": "Texte",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Supprimer la section sélectionnée",
                 "preview": "Afficher l'aperçu",
                 "edit": "Modifier l'histoire",
-                "hide": "Masquer l'aperçu dans les cartes",
-                "show": "Afficher l'aperçu en cartes",
+                "noContents": "Pas de contenu disponible",
+                "collapseAll": "Réduire tout",
+                "expandAll": "Développer tout",
                 "fullscreen": "Afficher l'aperçu en plein écran",
                 "settings": {
                     "tooltip": "Réglages",

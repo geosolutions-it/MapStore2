@@ -22,6 +22,7 @@ const React = require('react');
  * @prop {function}     onMouseEnter    callback on card mouse enter
  * @prop {function}     onMouseLeave    callback on card mouse leave
  * @prop {node}         preview         insert a glyphicon or img node
+ * @prop {node|string}  dragSymbol      insert a glyphicon or string for  drag symbol
  * @prop {bool}         selected        highlight the card with selected style
  * @prop {string}       size            size of card, 'sm' for small
  * @prop {object}       style           inline style
@@ -45,6 +46,7 @@ module.exports = ({
     stylePreview = {},
     styleTools = {},
     title,
+    dragSymbol = "+",
     tools,
     ...props
 } = {}) =>
@@ -55,6 +57,11 @@ module.exports = ({
         onMouseLeave={onMouseLeave}
         style={style}>
         <div className="ms-head">
+            {props.isDraggable && props.connectDragSource && props.connectDragSource(
+                <div className="mapstore-side-card-tool text-center">
+                    <div style={{ width: 10, overflow: 'hidden' }} >{dragSymbol}</div>
+                </div>
+            )}
             {preview && <div className="mapstore-side-preview" style={stylePreview}>
                 {preview}
             </div>}

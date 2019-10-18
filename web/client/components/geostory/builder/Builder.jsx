@@ -8,13 +8,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 import BorderLayout from '../../layout/BorderLayout';
 import SectionsPreview from './SectionsPreview';
-
 import Toolbar from '../../misc/toolbar/Toolbar';
 import { lists, Modes } from '../../../utils/GeoStoryUtils';
-
+import withConfirm from '../../misc/toolbar/withConfirm';
+import Message from '../../I18N/Message';
+import ToolbarButton from '../../misc/toolbar/ToolbarButton';
+const DeleteButton = withConfirm(ToolbarButton);
 /**
  * Base Component that shows basic editing tools and SlidesPreview
  * of a geo-story.
@@ -22,36 +23,51 @@ import { lists, Modes } from '../../../utils/GeoStoryUtils';
  * @param {string} [mode='view'] can be 'edit' or 'view'
  * @param {function} [setEditing] handler for setEditing button in toolbar
  */
+
+
 class Builder extends React.Component {
 
     static propTypes = {
         story: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
         onToggleCardPreview: PropTypes.func,
-        cardSelected: PropTypes.string,
-        cardPreviewEnabled: PropTypes.bool,
+        isCollapsed: PropTypes.bool,
+        isToolbarEnabled: PropTypes.bool,
         scrollTo: PropTypes.func,
-        setEditing: PropTypes.func
+        setEditing: PropTypes.func,
+        currentPage: PropTypes.object,
+        onSort: PropTypes.func,
+        onSelect: PropTypes.func,
+        onRemove: PropTypes.func,
+        onUpdate: PropTypes.func,
+        selected: PropTypes.string
     };
 
     static defaultProps = {
         mode: Modes.VIEW,
-        cardSelected: "",
         setEditing: () => {},
         onToggleCardPreview: () => {},
         story: {},
-        cardPreviewEnabled: true
+        isCollapsed: true,
+        isToolbarEnabled: true,
+        onSort: () => {}
     };
 
     render() {
         const {
-            cardSelected,
             story,
             scrollTo,
             setEditing,
             mode,
-            cardPreviewEnabled,
-            onToggleCardPreview
+            isCollapsed,
+            isToolbarEnabled,
+            onToggleCardPreview,
+            currentPage,
+            selected,
+            onRemove,
+            onSort,
+            onUpdate,
+            onSelect
         } = this.props;
         return (<BorderLayout
             className="ms-geostory-builder"
@@ -66,13 +82,23 @@ class Builder extends React.Component {
                         }}
                         buttons={[
                             {
-                                tooltipId: "geostory.builder.delete",
-                                glyph: "trash",
-                                disabled: !cardSelected
+                                Element: () => (<DeleteButton
+                                    glyph="trash"
+                                    visible
+                                    bsStyle= "primary"
+                                    className="square-button-md no-border"
+                                    tooltipId="geostory.builder.delete"
+                                    confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
+                                    disabled= {!isToolbarEnabled || !selected }
+                                    confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
+                                    onClick={ () => {
+                                        onRemove(selected && `sections[{ "id": "${selected}" }]` || "");
+                                    }} />)
                             },
                             {
                                 tooltipId: "geostory.builder.preview",
                                 glyph: "eye-open",
+                                disabled: !isToolbarEnabled,
                                 onClick: () => setEditing(mode === Modes.VIEW)
                             },
                             {
@@ -81,19 +107,29 @@ class Builder extends React.Component {
                                 disabled: true // TODO: restore when implemented
                             },
                             {
-                                tooltipId: `geostory.builder.${cardPreviewEnabled ? "hide" : "show"}`,
-                                glyph: "list-alt",
-                                bsStyle: cardPreviewEnabled ? "success" : "primary",
+                                tooltipId: `geostory.builder.${isCollapsed ? "expandAll" : "collapseAll"}`,
+                                glyph: isCollapsed ? "chevron-left" : "chevron-down",
+                                bsStyle: "primary",
+                                disabled: !isToolbarEnabled,
                                 onClick: () => onToggleCardPreview()
                             }
                         ]}/>
                 </div>
             }>
-            <SectionsPreview
+            {isToolbarEnabled ? <SectionsPreview
+                currentPage={currentPage}
                 scrollTo={scrollTo}
-                cardPreviewEnabled={cardPreviewEnabled}
+                onSelect={onSelect}
+                selected={selected}
+                onUpdate={onUpdate}
+                isCollapsed={isCollapsed}
                 sections={story && story.sections}
-            />
+                onSort={onSort}
+            /> : <div className="ms-story-empty-content-parent">
+                <div className="ms-story-empty-content-child">
+                    <Message msgId="geostory.builder.noContents" />
+                </div>
+            </div>}
         </BorderLayout>
         );
     }

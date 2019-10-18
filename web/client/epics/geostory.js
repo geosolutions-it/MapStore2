@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -7,7 +8,11 @@
  */
 
 import { Observable } from 'rxjs';
-import {head, isNaN, isString, isNil, lastIndexOf} from 'lodash';
+import head from 'lodash/head';
+import isNaN from 'lodash/isNaN';
+import isString from 'lodash/isString';
+import isNil from 'lodash/isNil';
+import lastIndexOf from 'lodash/lastIndexOf';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -20,22 +25,24 @@ const {
 } = require('../api/persistence');
 
 import {
-    addResource,
     ADD,
-    REMOVE,
     LOAD_GEOSTORY,
+    MOVE,
+    REMOVE,
+    SAVE,
+    addResource,
+    add,
+    geostoryLoaded,
     loadGeostory,
     loadingGeostory,
     loadGeostoryError,
+    remove,
     setCurrentStory,
     saveGeoStoryError,
-    storySaved,
     setControl,
     setResource,
-    update,
-    remove,
-    SAVE,
-    geostoryLoaded
+    storySaved,
+    update
 } from '../actions/geostory';
 
 import {
@@ -55,11 +62,34 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 
-import { getEffectivePath } from '../reducers/geostory';
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
+const updateMediaSection = (store, path) => action$ =>
+    action$.ofType(CHOOSE_MEDIA)
+        .switchMap( ({resource = {}}) => {
+            let actions = [];
+            const state = store.getState();
+            const mediaType = currentMediaTypeSelector(state);
+            const sourceId = sourceIdSelector(state);
+
+            // if resources comes from geostory the id is at root level
+            // otherwise it checks for the original resource id present in data
+            const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
+
+            let resourceId = resource.id;
+            if (resourceAlreadyPresent) {
+                resourceId = resourceAlreadyPresent.id;
+            } else {
+            // if the resource is new, add it to the story resources list
+                resourceId = uuid();
+                actions = [...actions, addResource(resourceId, mediaType, resource)];
+            }
+
+            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
+            return Observable.from(actions);
+        });
 
 /**
  * opens the media editor for new image with content type media is passed
@@ -73,35 +103,22 @@ export const openMediaEditorForNewMedia = (action$, store) =>
             return isMediaContent || isMediaSection(element);
         })
         .switchMap(({path: arrayPath, element}) => {
+            let mediaPath = "";
+            if (isMediaSection(element) && arrayPath === "sections") {
+                        mediaPath = ".contents[0].contents[0]";
+            }
+            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
             return Observable.of(
                 showMediaEditor('geostory') // open mediaEditor
             )
                 .merge(
-                    action$.ofType(CHOOSE_MEDIA, HIDE)
-                        .switchMap( ({type, resource = {}}) => {
-                            let mediaPath = "";
-                            if (isMediaSection(element) && arrayPath === "sections") {
-                                mediaPath = ".contents[0].contents[0]";
-                            }
-                            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
-                            // if HIDE then update only the type but not the resource, this allows to use placeholder
-                            return type === HIDE ?
-                                Observable.of(
-                                    update(
-                                        path,
-                                        { type: currentMediaTypeSelector(store.getState()) },
-                                        "merge" )
-                                ) :
-                                Observable.of(
-                                    update(
-                                        path,
-                                        { resourceId: resource.id, type: currentMediaTypeSelector(store.getState()) }, // TODO take type from mediaEditor state or from resource
-                                        "merge"
-                                    )
-                                );
+                    action$.let(updateMediaSection(store, path)),
+                    action$.ofType(HIDE)
+                        .switchMap(() => {
+                            return Observable.of(remove(
+                                path));
                         })
-                        .takeUntil(action$.ofType(EDIT_MEDIA))
-                );
+                ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
 
@@ -172,30 +189,8 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 showMediaEditor(owner),
                 selectItem(selectedResource)
             )
-                .merge(
-                    action$.ofType(CHOOSE_MEDIA)
-                        .switchMap( ({resource = {}}) => {
-                            let actions = [];
-                            const state = store.getState();
-                            const mediaType = currentMediaTypeSelector(state);
-                            const sourceId = sourceIdSelector(state);
-
-                            // if resources comes from geostory the id is at root level
-                            // otherwise it checks for the original resource id present in data
-                            const resourceAlreadyPresent = head(resourcesSelector(state).filter(r => r.data && (sourceId !== SourceTypes.GEOSTORY && r.data.id || r.id) === resource.id));
-
-                            let resourceId = resource.id;
-                            if (resourceAlreadyPresent) {
-                                resourceId = resourceAlreadyPresent.id;
-                            } else {
-                                // if the resource is new, add it to the story resources list
-                                resourceId = uuid();
-                                actions = [...actions, addResource(resourceId, mediaType, resource)];
-                            }
-
-                            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
-                            return Observable.from(actions);
-                        })
+                          .merge(
+                    action$.let(updateMediaSection(store, path))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
                 );
@@ -276,7 +271,7 @@ export const reloadGeoStoryOnLoginLogout = (action$) =>
  * Removes containers that are empty after a REMOVE action from GeoStory.
  * In case of nested contents, it could call recursively until all the empty containers are empty
  * @param {Observable} action$ stream of redux actions
- * @param {object} store simplified redux store redux store
+ * @param {object} store simplified redux store
  * @returns {Observable} a stream that emits remove action for the container, if empty.
  */
 export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
@@ -293,4 +288,22 @@ export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
             }
         }
         return Observable.empty();
+    });
+
+/**
+ * trigger actions for sorting in GeostoryEditor
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions for sorting
+ */
+export const sortContentEpic = (action$, {getState = () => {}}) =>
+    action$.ofType(MOVE).switchMap(({source, target, position}) => {
+        const state = getState();
+        const current = createPathSelector(source)(state);
+
+        // remove first so, the highlight works correctly
+        return Observable.of(
+            remove(source),
+            add(target, position, current)
+        );
     });

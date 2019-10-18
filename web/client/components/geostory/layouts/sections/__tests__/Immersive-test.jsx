@@ -146,6 +146,6 @@ describe('Immersive component', () => {
 
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
-        testToolbarButtons(["pencil", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
+        testToolbarButtons(["pencil", "1-map", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
     });
 });

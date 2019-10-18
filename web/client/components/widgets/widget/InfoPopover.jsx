@@ -37,7 +37,7 @@ class InfoPopover extends React.Component {
         placement: PropTypes.string,
         left: PropTypes.number,
         top: PropTypes.number,
-        trigger: PropTypes.oneOf([PropTypes.array, PropTypes.bool])
+        trigger: PropTypes.oneOfType([PropTypes.array, PropTypes.bool])
     };
 
     static defaultProps = {
