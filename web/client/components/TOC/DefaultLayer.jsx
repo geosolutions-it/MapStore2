@@ -152,10 +152,11 @@ class DefaultLayer extends React.Component {
                 ? indicator.glyph && <GlyphIndicator key={indicator.key} glyph={indicator.glyph} {...indicator.props} />
                 : null);
     }
-    renderNode = (grab, hide, selected, error, warning, other) => {
+    renderNode = (grab, hide, selected, error, warning, isDummy, other) => {
         const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
         || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
-        const head = (
+        const head = (isDummy ?
+            <div style={{padding: 0, height: 10}} className="toc-default-layer-head"/> :
             <div className="toc-default-layer-head">
                 {grab}
                 {this.renderVisibility()}
@@ -175,10 +176,10 @@ class DefaultLayer extends React.Component {
             </div>
         );
         return (
-            <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + 'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                {this.props.connectDragPreview(head)}
-                {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
-                {isEmpty ? null : this.renderCollapsible()}
+            <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + 'toc-default-layer' + hide + selected + error + warning} style={this.props.style} type="layer" {...other}>
+                {other.isDraggable && !isDummy ? this.props.connectDragPreview(head) : head}
+                {!isDummy || !this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
+                {isDummy && isEmpty ? null : this.renderCollapsible()}
             </Node>
         );
     }
@@ -191,14 +192,15 @@ class DefaultLayer extends React.Component {
         const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
         const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
-        const filteredNode = this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, other) : null;
+        const isDummy = !!this.props.node.dummy;
+        const filteredNode = !isDummy && this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, isDummy, other) : null;
         const tocListItem = (
-            <div className="toc-list-item">
-                {!this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode}
+            <div style={isDummy ? {opacity: 0, boxShadow: 'none'} : {}} className="toc-list-item">
+                {!this.props.filterText || (this.props.filterText && isDummy) ? this.renderNode(grab, hide, selected, error, warning, isDummy, other) : filteredNode}
             </div>
         );
         if (other.node.showComponent !== false && !other.node.hide && this.props.filter(this.props.node)) {
-            return connectDropTarget(other.isDraggable ? connectDragSource(tocListItem) : tocListItem);
+            return connectDropTarget(other.isDraggable && !isDummy ? connectDragSource(tocListItem) : tocListItem);
         }
         return null;
     }

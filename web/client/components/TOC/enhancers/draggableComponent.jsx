@@ -61,8 +61,8 @@ const dropSpec = {
         // Currently for layer list item it sets sortIndex of a dragged element to a sortIndex of that item,
         // when user's cursor passes a Y coordinate that divides item's bounding rect in half
         // For group list items it inserts dragged element above the group item in it's parent node if we
-        // are hovering above the upper third of a component, into the group item if we are hovering above the lower
-        // third of a component and into the group itself if hovering above the middle(that's where group's name text is)
+        // are hovering above the upper third of a component and into the group item if we are hovering above the lower
+        // two thirds of a component
         if (monitor.isOver({shallow: true})) {
             const componentDomNode = ReactDOM.findDOMNode(component);
             const headDomNode = componentDomNode.getElementsByClassName('toc-default-group-head')[0];
@@ -93,13 +93,9 @@ const dropSpec = {
                                 }
                             };
                         }
-                    } else if (clientY >= thirdY && clientY <= 2 * thirdY) {
+                    } else {
                         item.sortIndex = 0;
                         item.newParentNodeId = props.node.id;
-                        item.illegalDrop = null;
-                    } else {
-                        item.sortIndex = props.sortIndex + 1;
-                        item.newParentNodeId = props.parentNodeId;
                         item.illegalDrop = null;
                     }
                 } else {

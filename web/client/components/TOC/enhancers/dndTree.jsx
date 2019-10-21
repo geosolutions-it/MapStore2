@@ -35,6 +35,22 @@ const updateNodes = (nodes, dndState) => {
     });
 };
 
+const insertDummies = (node, dndState) => {
+    const {node: draggedNode, newParentNodeId, parentNodeId} = dndState;
+
+    return {...node, nodes: node.nodes.map((curNode, ix) => {
+        if (curNode.nodes && !curNode.placeholder && !curNode.hide && !(draggedNode && curNode.id === draggedNode.id)) {
+            const newCurNode = insertDummies(curNode, dndState);
+            return [newCurNode].concat(node.nodes[ix + 1] &&
+                (node.nodes[ix + 1].placeholder ||
+                    (draggedNode && node.id === newParentNodeId && newParentNodeId === parentNodeId && node.nodes[ix + 1].id === draggedNode.id)) ?
+                [] :
+                [{id: curNode.id + '__dummy', dummy: true}]);
+        }
+        return [curNode];
+    }).flat()};
+};
+
 /**
 * TOC list dnd enhancer. Manages dnd state, i.e. modifies incoming props.nodes according to the current dnd state
 * (basically just determines how and where to insert a placeholder node)
@@ -54,10 +70,13 @@ const dndTree = branch(
         }),
         Component => ({dndState, nodes, ...props}) => {
             const {node: draggedNode, parentNodeId, newParentNodeId, illegalDrop} = dndState;
-            const newNodes = updateNodes([{id: 'root', nodes}], dndState)[0].nodes;
+            const newRoot = updateNodes([{id: 'root', nodes}], dndState)[0];
+            const hiddenNodes = newParentNodeId === parentNodeId && !illegalDrop ?
+                newRoot.nodes :
+                changeNode(newRoot.nodes, draggedNode.id, {hide: true});
+            const rootWithDummies = insertDummies({id: 'root', nodes: hiddenNodes}, dndState);
             return (
-                <Component {...props} nodes={newParentNodeId === parentNodeId &&
-                    !illegalDrop ? newNodes : changeNode(newNodes, draggedNode.id, {hide: true})}/>
+                <Component {...props} nodes={rootWithDummies.nodes}/>
             );
         }
     )

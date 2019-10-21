@@ -13,6 +13,7 @@ require('./css/groupchildren.css');
 class GroupChildren extends React.Component {
     static propTypes = {
         node: PropTypes.object,
+        dndDummy: PropTypes.object,
         filter: PropTypes.func,
         onSort: PropTypes.func,
         onError: PropTypes.func,
@@ -39,7 +40,7 @@ class GroupChildren extends React.Component {
                 node: node,
                 parentNodeId: this.props.node ? this.props.node.id : '',
                 key: node.id,
-                sortIndex: node.hide ? i : i++,
+                sortIndex: node.hide || node.dummy ? i : i++,
                 onSort: this.props.onSort,
                 onError: this.props.onError,
                 level: this.props.level,

@@ -39,8 +39,8 @@ class TOC extends React.Component {
                 parentNodeId: 'root',
                 onSort: this.props.onSort,
                 onError: this.props.onError,
-                sortIndex: node.hide ? i : i++,
-                key: node.name || 'default',
+                sortIndex: node.hide || node.dummy ? i : i++,
+                key: node.name || node.id || 'default',
                 isDraggable: !!this.props.onSort && !(node.nodes && node.name === 'Default'),
                 setDndState: this.props.setDndState
             }));
