@@ -1,8 +1,8 @@
 const assign = require('object-assign');
 const nodePath = require('path');
 
-module.exports = ({files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
-    browsers: [ 'ChromeHeadless' ],
+module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
+    browsers,
 
     browserNoActivityTimeout: 30000,
 
