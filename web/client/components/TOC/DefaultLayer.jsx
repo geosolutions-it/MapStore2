@@ -178,8 +178,8 @@ class DefaultLayer extends React.Component {
         return (
             <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + 'toc-default-layer' + hide + selected + error + warning} style={this.props.style} type="layer" {...other}>
                 {other.isDraggable && !isDummy ? this.props.connectDragPreview(head) : head}
-                {!isDummy || !this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
-                {isDummy && isEmpty ? null : this.renderCollapsible()}
+                {isDummy || !this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
+                {isDummy || isEmpty ? null : this.renderCollapsible()}
             </Node>
         );
     }
