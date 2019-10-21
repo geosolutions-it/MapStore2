@@ -329,14 +329,24 @@ describe('Geostory Epics', () => {
         });
 
         it('loadGeostoryEpic loading a story without permissions for a non logged user', (done) => {
-            const NUM_ACTIONS = 1;
+            const NUM_ACTIONS = 5;
             mockAxios.onGet().reply(403);
             testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
-                actions.map((a) => {
+                actions.map((a, i) => {
                     switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
                     case LOAD_GEOSTORY_ERROR:
                         expect(a.error.status).toEqual(403);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(a.message).toEqual("geostory.errors.loading.pleaseLogin");
                         break;
                     default: expect(true).toBe(false);
                         break;

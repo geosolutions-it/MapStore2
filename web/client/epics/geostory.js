@@ -206,10 +206,6 @@ export const editMediaForBackgroundEpic = (action$, store) =>
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_GEOSTORY)
     .switchMap( ({id}) => {
-        const user = isLoggedIn(getState());
-        if (!user) {
-            return Observable.of(loadGeostoryError({status: 403}));
-        }
         return Observable.defer(() => {
             if (id && isNaN(parseInt(id, 10))) {
                 return axios.get(`configs/${id}.json`)
@@ -227,6 +223,10 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
             })
             .switchMap(({ data, ...resource }) => {
                 const isAdmin = isAdminUserSelector(getState());
+                const user = isLoggedIn(getState());
+                if (!user && isNaN(parseInt(id, 10))) {
+                    return Observable.of(loadGeostoryError({status: 403}));
+                }
                 return Observable.from([
                     setEditing(resource && resource.canEdit || isAdmin),
                     geostoryLoaded(id),
