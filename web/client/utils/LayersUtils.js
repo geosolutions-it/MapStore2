@@ -481,7 +481,6 @@ const LayersUtils = {
             tooltipOptions: layer.tooltipOptions,
             tooltipPlacement: layer.tooltipPlacement
         },
-        layer.additionalParameters ? { additionalParameters: layer.additionalParameters } : {},
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {});
     },

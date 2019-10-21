@@ -304,14 +304,13 @@ class MapPlugin extends React.Component {
 
     renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
-        const layers = this.props.layers.map(layer => ({...layer, ...layer.additionalParameters}));
-        return [...layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
+        return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}
                 </plugins.Layer>
             );
-        }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, layers.length) || []);
+        }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length) || []);
     };
 
     renderLayerContent = (layer, projection) => {

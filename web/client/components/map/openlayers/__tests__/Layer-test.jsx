@@ -1247,11 +1247,11 @@ describe('Openlayers layer', () => {
         let div = document.getElementById("mapgmaps");
         expect(div).toExist();
 
-    //    // if only one layer for google exists, the div will be hidden
-    //    let newOpts = assign({}, options, {visibility: false});
-    //    layer = ReactDOM.render(
-    //        <OpenlayersLayer type="google" options={newOpts} map={map} mapId="map"/>, document.getElementById("container"));
-    //    expect(div.style.visibility).toBe('hidden');
+        // if only one layer for google exists, the div will be hidden
+        let newOpts = assign({}, options, {visibility: false});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="google" options={newOpts} map={map} mapId="map"/>, document.getElementById("container"));
+        expect(div.style.visibility).toBe('hidden');
     });
 
     it('rotates google layer when ol map is', () => {

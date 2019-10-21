@@ -253,7 +253,8 @@ class RecordItem extends React.Component {
         const {wms, wmts} = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
-        const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name));
+        const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name ||
+            layer.type === background.type && layer.source === background.source && layer.name === background.name));
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then these defaults also have to change
         return record ? (<div>

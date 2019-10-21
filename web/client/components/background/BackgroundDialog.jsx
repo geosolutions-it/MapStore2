@@ -142,6 +142,7 @@ export default class BackgroundDialog extends React.Component {
             show
             fade
             clickOutEnabled={false}
+            bodyClassName="ms-flex modal-properties-container background-dialog"
             loading={this.props.loading}
             onClose={() => { this.props.onClose(); this.resetParameters(); }}
             buttons={this.props.loading ? [] : [
@@ -150,35 +151,31 @@ export default class BackgroundDialog extends React.Component {
                     bsStyle: 'primary',
                     onClick: () => {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
+                        const curThumbURL = this.props.layer.thumbURL || '';
                         this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
                         this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
-                                additionalParameters: omit(
+                                params: omit(
                                     this.state.additionalParameters.reduce((accum, p) => assign(accum, {[p.param]: p.val}), {}),
                                     ['source', 'title']
                                 ),
-                                thumbURL: this.state.thumbnail.url,
                                 group: 'background'
-                            }));
+                            }, !curThumbURL && !this.state.thumbnail.data ? {} : {thumbURL: this.state.thumbnail.url}));
                         this.resetParameters();
                     }
                 }
             ]}>
-            {<Form className="background-dialog">
+            {<Form>
                 {this.renderThumbnailErrors()}
-                <FormGroup>
-                    <div className="shadow-soft" style={{width: 180, margin: 'auto'}}>
-                        <Thumbnail
-                            onUpdate={(data, url) => this.setState({thumbnail: {data, url}})}
-                            onError={(errors) => this.setState({thumbnailErrors: errors})}
-                            message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
-                            suggestion=""
-                            map={{
-                                newThumbnail: get(this.state.thumbnail, 'url')
-                            }}
-                        />
-                    </div>
-                </FormGroup>
+                <Thumbnail
+                    onUpdate={(data, url) => this.setState({thumbnail: {data, url}})}
+                    onError={(errors) => this.setState({thumbnailErrors: errors})}
+                    message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
+                    suggestion=""
+                    map={{
+                        newThumbnail: get(this.state.thumbnail, 'url') || "NODATA"
+                    }}
+                />
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.title"/></ControlLabel>
                     <FormControl
