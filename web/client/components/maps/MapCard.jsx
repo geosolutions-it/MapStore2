@@ -10,10 +10,9 @@ const React = require('react');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const FitIcon = require('../misc/FitIcon');
-
 const thumbUrl = require('./style/default.jpg');
 const assign = require('object-assign');
-const ConfirmModal = require('./modals/ConfirmModal');
+const ConfirmModal = require('../misc/ResizableModal');
 
 class MapCard extends React.Component {
     static propTypes = {
@@ -159,15 +158,23 @@ class MapCard extends React.Component {
                 <ConfirmModal
                     ref="deleteMapModal"
                     show={this.state ? this.state.displayDeleteDialog : false}
-                    onHide={this.close}
                     onClose={this.close}
-                    onConfirm={this.onConfirmDelete}
-                    titleText={this.props.map.title || this.props.map.name || <Message msgId="resources.deleteConfirmTitle" />}
-                    confirmText={<Message msgId="yes" />}
-                    cancelText={<Message msgId="no" />}
-                    body={<Message msgId="resources.deleteConfirmMessage" />} />
+                    title={this.props.map.title || this.props.map.name || <Message msgId="resources.deleteConfirmTitle" />}
+                    buttons={[{
+                        bsStyle: "primary",
+                        text: <Message msgId="yes" />,
+                        onClick: this.onConfirmDelete
+                    }, {
+                        text: <Message msgId="no" />,
+                        onClick: this.close
+                    }]}
+                    fitContent
+                >
+                    <div className="ms-detail-body">
+                        <Message msgId="resources.deleteConfirmMessage" />
+                    </div>
+                </ConfirmModal>
             </div>
-
         );
     }
 
