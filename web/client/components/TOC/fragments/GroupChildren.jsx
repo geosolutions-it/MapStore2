@@ -13,7 +13,6 @@ require('./css/groupchildren.css');
 class GroupChildren extends React.Component {
     static propTypes = {
         node: PropTypes.object,
-        dndDummy: PropTypes.object,
         filter: PropTypes.func,
         onSort: PropTypes.func,
         onError: PropTypes.func,

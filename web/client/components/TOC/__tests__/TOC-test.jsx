@@ -9,6 +9,7 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const TestUtils = require('react-dom/test-utils');
 const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 
@@ -146,5 +147,58 @@ describe('Layers component', () => {
         const domNode = ReactDOM.findDOMNode(element);
         expect(domNode).toExist();
         expect(domNode.children.length).toBe(layers.length);
+    });
+
+    it('test node sortIndex assignment', () => {
+        const nodes = [{
+            id: 'layer00',
+            name: 'layer00',
+            visibility: true,
+            type: 'wms',
+            url: 'fakeurl'
+        }, {
+            id: 'Group1',
+            name: 'Group1',
+            nodes: []
+        }, {
+            id: 'layer01',
+            name: 'layer01',
+            visibility: true,
+            type: 'wms',
+            url: 'fakeurl'
+        }, {
+            id: 'layer02',
+            hide: true
+        }, {
+            id: 'Group2',
+            name: 'Group2',
+            nodes: []
+        }];
+
+        class TestComponent extends React.Component {
+            render() {
+                return <div></div>;
+            }
+        }
+
+        const comp = ReactDOM.render(<TOC nodes={nodes}><TestComponent/></TOC>, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+
+        const elements = TestUtils.scryRenderedComponentsWithType(comp, TestComponent);
+        expect(elements.length).toBe(7);
+
+        const sortIndexes = {
+            "layer00": 0,
+            "Group1": 1,
+            "Group1__dummy": 2,
+            "layer01": 2,
+            "layer02": 3,
+            "Group2": 3,
+            "Group2__dummy": 4
+        };
+
+        elements.forEach(el => expect(el.props.sortIndex).toBe(sortIndexes[el.props.node.id]));
     });
 });
