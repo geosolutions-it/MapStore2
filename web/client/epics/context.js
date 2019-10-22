@@ -6,43 +6,56 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
 
-import {getResource} from '../api/persistence';
+import { getResource } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 
 import { LOAD_CONTEXT, loading, setContext, setResource } from '../actions/context';
-import {loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} from '../actions/config';
+import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
 import { wrapStartStop } from '../observables/epics';
+import ConfigUtils from '../utils/ConfigUtils';
+
 
 const createContextFlow = (id, action$, getState) =>
-    id !== "default"
+    (id !== "default"
         ? getResource(id)
-            .switchMap( (resource) =>  Observable.of(setResource(resource), setContext(resource.data)))
+            // TODO: setContext should put in ConfigUtils some variables
+            // TODO: solve the problem of initial state used to configure plugins partially
+            .switchMap((resource) => Observable.of(setResource(resource), setContext(resource.data)))
         : Observable.of(
-            setContext(pluginsSelectorCreator("desktop")(getState()))
-        ); // TODO: use default context ID
+            setContext({
+                plugins: {
+                    desktop: pluginsSelectorCreator("desktop")(getState())
+                }
+            }) // TODO: select mobile if mobile browser
+        )
+    ).catch(e => {
+        console.log(e);
+        return Observable.of(loading(false, "loading")); // TODO: error
+    }); // TODO: use default context ID
 
 /**
  * Handles map load
  * @param {string|number} id id of the map
  * @param {*} action$ stream of actions
  */
-const createMapFlow = (id = '0', action$) => {
-    return Observable.of(loadMapConfig(id, id)).merge(
+const createMapFlow = (mapId = '0', action$) => {
+    const { configUrl } = ConfigUtils.getConfigUrl({ mapId });
+    return Observable.of(loadMapConfig(configUrl, mapId)).merge(
         action$.ofType(MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR)
-            .switchMap( ({type}) => {
+            .switchMap(({ type }) => {
                 if (type === MAP_CONFIG_LOAD_ERROR) {
-                    Observable.empty(); // TODO: handle error
+                    return Observable.empty(); // TODO: handle error
                 }
-                Observable.empty(); // complete;
+                return Observable.empty(); // complete;
             })
     );
 };
 
-export const loadContextAndMap = (action$, {getState = () => {}} = {}) =>
-    action$.ofType(LOAD_CONTEXT).switchMap( ({mapId, contextId}) =>
+export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextId }) =>
         Observable.merge(
             createContextFlow(contextId, action$, getState),
             createMapFlow(mapId, action$, getState)

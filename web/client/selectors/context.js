@@ -7,8 +7,11 @@
  */
 import { createSelector } from 'reselect';
 import { monitorStateSelector } from './localConfig';
+import { get } from 'lodash';
+import ConfigUtils from '../utils/ConfigUtils';
 
-import {getMonitoredState} from '../utils/PluginsUtils';
+
+import { getMonitoredState } from '../utils/PluginsUtils';
 /**
  * Selects the current context
  * @param {object} state the state
@@ -23,11 +26,26 @@ export const currentContextSelector = state => state.context && state.context.cu
  */
 const monitoredStateSelector = state => getMonitoredState(state, monitorStateSelector(state));
 
+export const isLoadingSelector = state => get(state, 'loading');
+export const isErrorSelector = () => false;
+export const defaultPluginsSelector = createSelector(
+    () => ConfigUtils.getConfigProp("plugins").desktop,
+    plugins => ({ desktop: [...plugins, "Context"] } )
+);
+export const loadingPluginsSelector = state => defaultPluginsSelector(state);
+export const errorPluginsSelector = state => loadingPluginsSelector(state);
+export const currentPluginsSelector = state => get(currentContextSelector(state), "plugins");
+
+export const pluginsSelector = state =>
+    isLoadingSelector(state)
+        ? loadingPluginsSelector(state)
+        : isErrorSelector(state)
+            ? errorPluginsSelector(state)
+            : currentPluginsSelector(state) || defaultPluginsSelector(state);
 /*
  * Adds the current context to the monitoredState. To update on every change of it.
  */
 export const contextMonitoredStateSelector = createSelector(
-    currentContextSelector,
     monitoredStateSelector,
-    (context, monitoredState) => JSON.stringify(context) + monitoredState
+    (monitoredState) => JSON.stringify(monitoredState)
 );

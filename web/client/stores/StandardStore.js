@@ -28,11 +28,14 @@ const { routerMiddleware, connectRouter } = require('connected-react-router');
 
 const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
+const configEpics = require('../epics/config');
 const timeManagerEpics = require('../epics/dimension');
+
 const standardEpics = {
     ...layersEpics,
     ...controlsEpics,
-    ...timeManagerEpics
+    ...timeManagerEpics,
+    ...configEpics
 };
 
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins = {}, storeOpts = {}) => {

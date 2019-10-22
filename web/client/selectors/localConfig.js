@@ -22,8 +22,10 @@ export const localConfigSelector = state => state.localConfig;
  */
 export const monitorStateSelector = state => (localConfigSelector(state) || {}).monitorState;
 
+export const pluginsObjectSelector = state => get(localConfigSelector(state), `plugins`);
+
 /**
  * Creates a selector to get the plugins from localConfig where
  * @param {string} page the page of the plugins for which we want to get the plugins (desktop, mobile, maps...)
  */
-export const pluginsSelectorCreator = (page) => state => get(localConfigSelector(state), `plugins.${page}`);
+export const pluginsSelectorCreator = (page) => state => get(pluginsObjectSelector(state), page);

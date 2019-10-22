@@ -12,7 +12,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 /**
  * Plugin for GeoStory visualization
- * @name GeoStory
+ * @name Context
  * @memberof plugins
  */
 export default createPlugin("Context", {
