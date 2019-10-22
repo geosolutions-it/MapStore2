@@ -54,6 +54,9 @@
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
         },
+        "geostory": {
+
+        },
         "catalog": {
           "default": {
             "newService": {

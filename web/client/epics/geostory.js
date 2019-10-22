@@ -41,6 +41,7 @@ import {
     saveGeoStoryError,
     setControl,
     setResource,
+    setEditing,
     storySaved,
     update
 } from '../actions/geostory';
@@ -57,7 +58,7 @@ import { show, error } from '../actions/notifications';
 import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
-import { isLoggedIn } from '../selectors/security';
+import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
@@ -204,13 +205,13 @@ export const editMediaForBackgroundEpic = (action$, store) =>
  */
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_GEOSTORY)
-    .switchMap( ({id}) =>
-        Observable.defer(() => {
+    .switchMap( ({id}) => {
+        return Observable.defer(() => {
             if (id && isNaN(parseInt(id, 10))) {
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({data}));
+                    .then(({data}) => ({data, canEdit: true}));
             }
             return getResource(id);
         })
@@ -220,13 +221,19 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return true;
             })
-            .switchMap(({ data, ...resource }) =>
-                Observable.of(
+            .switchMap(({ data, ...resource }) => {
+                const isAdmin = isAdminUserSelector(getState());
+                const user = isLoggedIn(getState());
+                if (!user && isNaN(parseInt(id, 10))) {
+                    return Observable.of(loadGeostoryError({status: 403}));
+                }
+                return Observable.from([
+                    setEditing(resource && resource.canEdit || isAdmin),
                     geostoryLoaded(id),
                     setCurrentStory(isString(data) ? JSON.parse(data) : data),
                     setResource(resource)
-                )
-            )
+                ]);
+            })
             // adds loading status to the start and to the end of the stream and handles exceptions
             .let(wrapStartStop(
                 loadingGeostory(true, "loading"),
@@ -236,6 +243,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     if (e.status === 403 ) {
                         message = "geostory.errors.loading.pleaseLogin";
                         if (isLoggedIn(getState())) {
+                            // TODO only in view mode
                             message = "geostory.errors.loading.geostoryNotAccessible";
                         }
                     } else if (e.status === 404) {
@@ -253,8 +261,8 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                         loadGeostoryError({...e, messageId: message})
                     );
                 }
-            ))
-    );
+            ));
+    });
 /**
  * Triggers reload of last loaded story when user login-logout
  * @param {Observable} action$ the stream of redux actions
