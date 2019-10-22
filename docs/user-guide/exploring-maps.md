@@ -9,7 +9,7 @@ From the *Home Page*, **Click** on the *New Map* icon <img src="../img/new-map-i
 
 MapStore WebGIS Portal Interface
 --------------------------------
-To better explain the map viewer, we have specially added a layer. You will learn more on layers in the [Table of Contents (TOC)](toc.md) and [Menu Bar](menu-bar) sections.
+To better explain the map viewer, we have specially added a layer. You will learn more on layers in the [Table of Contents (TOC)](toc.md) and [Menu Bar](menu-bar.md) sections.
 
 <img src="../img/gui.jpg" style="max-width:700px;" />
 

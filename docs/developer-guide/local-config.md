@@ -84,9 +84,9 @@ This is the main structure:
 
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
-For adding a new locale or configuring currently supported locales, go check [this](internationalization) out.
+For adding a new locale or configuring currently supported locales, go check [this](internationalization.md) out.
 
-For configuring plugins, see the [Configuring Plugins Section](plugins-documentation) and the [plugin reference page](./api/plugins)
+For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md) and the [plugin reference page](plugins-architecture.md)
 
 ## Explanation of some config properties
 - **loadAfterTheme** is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
