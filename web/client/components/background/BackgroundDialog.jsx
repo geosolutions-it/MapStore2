@@ -165,7 +165,7 @@ export default class BackgroundDialog extends React.Component {
                     }
                 }
             ]}>
-            {<Form>
+            {<Form style={{width: '100%'}}>
                 {this.renderThumbnailErrors()}
                 <Thumbnail
                     onUpdate={(data, url) => this.setState({thumbnail: {data, url}})}

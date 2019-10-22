@@ -221,12 +221,10 @@ export function catalogClose() {
 }
 
 export function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
-    return (dispatch, getState) => {
-        const state = getState();
-        const layers = layersSelector(state);
+    return (dispatch) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
         dispatch(setLoading(true));
-        API[format].getRecords(url, startPosition, maxRecords, filter, options, layers).then((result) => {
+        API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
             if (result.error) {
                 dispatch(recordsLoadError(result));
             } else {
