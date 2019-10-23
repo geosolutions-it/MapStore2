@@ -10,6 +10,7 @@ const React = require('react');
 const moment = require('moment');
 const { isNaN } = require('lodash');
 const { Form, FormGroup, ControlLabel, FormControl, InputGroup } = require('react-bootstrap');
+
 const Message = require('../I18N/Message');
 const InfoPopover = require('../widgets/widget/InfoPopover');
 
@@ -121,12 +122,12 @@ module.exports = ({
                     }
                 )} />
             <FormControl disabled={!fixedStep} componentClass="select" value={stepUnit} onChange={({ target = {} }) => onSettingChange("stepUnit", target.value)} >
-                <option value="years"><Message msgId="playback.settings.step.year" msgParams={{ number: timeStep || 1 }} /></option>
-                <option value="weeks"><Message msgId="playback.settings.step.week" msgParams={{ number: timeStep || 1 }} /></option>
-                <option value="days"><Message msgId="playback.settings.step.day" msgParams={{ number: timeStep || 1 }} /></option>
-                <option value="hour"><Message msgId="playback.settings.step.hour" msgParams={{ number: timeStep || 1 }} /></option>
-                <option value="minutes"><Message msgId="playback.settings.step.minute" msgParams={{ number: timeStep || 1 }} /></option>
-                <option value="seconds"><Message msgId="playback.settings.step.second" msgParams={{ number: timeStep || 1 }} /></option>
+                <Message msgId="playback.settings.step.year" msgParams={{ number: timeStep || 1 }}>{msg => <option value="years">{msg}</option>}</Message>
+                <Message msgId="playback.settings.step.week" msgParams={{ number: timeStep || 1 }}>{msg => <option value="weeks">{msg}</option>}</Message>
+                <Message msgId="playback.settings.step.day" msgParams={{ number: timeStep || 1 }}>{msg => <option value="days">{msg}</option>}</Message>
+                <Message msgId="playback.settings.step.hour" msgParams={{ number: timeStep || 1 }}>{msg => <option value="hour">{msg}</option>}</Message>
+                <Message msgId="playback.settings.step.minute" msgParams={{ number: timeStep || 1 }}>{msg => <option value="minutes">{msg}</option>}</Message>
+                <Message msgId="playback.settings.step.second" msgParams={{ number: timeStep || 1 }}>{msg => <option value="seconds">{msg}</option>}</Message>
             </FormControl>
         </Form>
     </FormGroup>

@@ -21,8 +21,24 @@ class Message extends React.Component {
         intl: PropTypes.object
     };
 
+    renderFormattedMsg = ({msgId, msgParams, children}) => {
+        if (children && typeof children === 'function') {
+            return (<FormattedMessage id={msgId} values={msgParams}>{msg => {
+                return children(msg);
+            }}</FormattedMessage>);
+        }
+        return (<FormattedMessage id={msgId} values={msgParams} />);
+    }
+
+    renderMsg = ({msgId, children}) => {
+        if (children && typeof children === 'function') {
+            return children(msgId);
+        }
+        return (<span>{msgId || ""}</span>);
+    }
+
     render() {
-        return this.context.intl ? <FormattedMessage id={this.props.msgId} values={this.props.msgParams}/> : <span>{this.props.msgId || ""}</span>;
+        return this.context.intl ? this.renderFormattedMsg(this.props) : this.renderMsg(this.props);
     }
 }
 

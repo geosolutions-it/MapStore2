@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
-
+const TestUtils = require('react-dom/test-utils');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var I18N = require('../I18N');
@@ -64,5 +64,15 @@ describe('This test for I18N.Message', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toBe(testMsg);
+    });
+
+    it('should be able to render functional children', () => {
+        const currentData = data["en-US"];
+        var testMsg = currentData.messages[msgId];
+
+        const cmp = ReactDOM.render(<Localized messages={eng.messages} locale="en-US"><I18N.Message msgId={msgId}>{msg => <option>{msg}</option>}</I18N.Message></Localized>, document.getElementById("container"));
+        const option = TestUtils.findRenderedDOMComponentWithTag(cmp, 'option');
+        expect(option).toExist();
+        expect(option.innerHTML).toBe(testMsg);
     });
 });
