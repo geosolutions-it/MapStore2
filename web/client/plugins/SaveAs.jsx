@@ -141,7 +141,6 @@ class SaveAs extends React.Component {
     };
 
     saveMap = (id, name, description) => {
-        this.props.editMap(this.props.currentMap);
         let thumbComponent = this.refs.metadataModal.refs.thumbnail;
         let attributes = {"owner": this.props.user && this.props.user.name || null};
         let metadata = {
@@ -157,6 +156,7 @@ class SaveAs extends React.Component {
                     name: thumbComponent.generateUUID(),
                     tail: `/raw?decode=datauri&v=${uuid()}`
                 }} || {}});
+                this.props.editMap(this.props.currentMap);
             });
         }
     };

@@ -46,7 +46,7 @@ class Metadata extends React.Component {
 
     render() {
         return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
-            <FormGroup>
+            <FormGroup validationState={this.isMapNameValid()} >
                 <ControlLabel>{this.props.nameFieldText}</ControlLabel>
                 <FormControl ref="mapName"
                     key="mapName"
@@ -77,6 +77,10 @@ class Metadata extends React.Component {
 
     changeDescription = (e) => {
         this.props.onChange('description', e.target.value);
+    };
+
+    isMapNameValid = () => {
+        return (this.props && this.props.map.metadata &&  this.props.map.metadata.name === '' && this.props.save) ? 'error' : null;
     };
 }
 
