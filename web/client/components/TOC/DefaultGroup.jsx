@@ -23,6 +23,7 @@ class DefaultGroup extends React.Component {
         onToggle: PropTypes.func,
         level: PropTypes.number,
         onSort: PropTypes.func,
+        onError: PropTypes.func,
         propertiesChangeHandler: PropTypes.func,
         groupVisibilityCheckbox: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
@@ -103,6 +104,7 @@ class DefaultGroup extends React.Component {
             <GroupChildren
                 level={this.props.level + 1}
                 onSort={this.props.onSort}
+                onError={this.props.onError}
                 setDndState={this.props.setDndState}
                 position="collapsible">
                 {this.props.children}
@@ -112,7 +114,7 @@ class DefaultGroup extends React.Component {
         if (this.props.node.showComponent && !this.props.node.hide) {
             return (
                 <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + "toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
-                    {this.props.isDraggable ? connectDragPreview(connectDropTarget(connectDragSource(groupHead))) : groupHead}
+                    {connectDragPreview(connectDropTarget(this.props.isDraggable ? connectDragSource(groupHead) : groupHead))}
                     {this.props.isDragging || this.props.node.placeholder ? null : groupChildren}
                 </Node>
             );

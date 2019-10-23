@@ -372,4 +372,21 @@ describe('test DefaultLayer module component', () => {
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
     });
+
+    it('test dummy node', () => {
+        const node = {
+            id: 'Group1__dummy',
+            dummy: true
+        };
+
+        const comp = ReactDOM.render(<Layer node={node}/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(domNode.style).toExist();
+        expect(domNode.style.opacity).toBe('0');
+        expect(domNode.style.boxShadow).toBe('none');
+        const headNode = domNode.getElementsByClassName('toc-default-layer-head')[0];
+        expect(headNode).toExist();
+        expect(headNode.childNodes.length).toBe(0);
+    });
 });

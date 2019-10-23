@@ -498,6 +498,9 @@
                 "invalid_object": "Ungültige Serviceantwort",
                 "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
                 "invalid_classes": "Max muss in jeder Klasse größer als min sein"
+            },
+            "error": {
+                "defaultGroupOnTop": "Die Gruppe {groupTitle} ist als Standardzielgruppe festgelegt und muss daher oben bleiben"
             }
         },
         "print":{
