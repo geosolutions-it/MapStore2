@@ -51,7 +51,6 @@ const CONTENTS = [
 ];
 
 describe('Immersive component', () => {
-
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -61,7 +60,6 @@ describe('Immersive component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('Immersive rendering with defaults', () => {
         ReactDOM.render(<Immersive />, document.getElementById("container"));
         const container = document.getElementById('container');

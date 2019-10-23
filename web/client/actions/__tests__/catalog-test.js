@@ -189,7 +189,7 @@ describe('Test correctness of the catalog actions', () => {
             } catch (ex) {
                 done(ex);
             }
-        });
+        }, () => {});
     });
     it('getRecords Error', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseException.xml', 1, 1)((result) => {
@@ -204,7 +204,7 @@ describe('Test correctness of the catalog actions', () => {
             } catch (ex) {
                 done(ex);
             }
-        });
+        }, () => {});
     });
     it('getRecords Dublin Core', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
@@ -229,7 +229,7 @@ describe('Test correctness of the catalog actions', () => {
             } catch (ex) {
                 done(ex);
             }
-        });
+        }, () => {});
     });
     it('add layer and describe it', (done) => {
         const verify = (action) => {

@@ -32,7 +32,8 @@ describe("test the PreviewIcon", () => {
         const actions = {
             onPropertiesChange: () => {},
             onToggle: () => {},
-            onLayerChange: () => {}
+            onLayerChange: () => {},
+            setCurrentBackgroundLayer: () => {}
         };
 
         const layer = {
@@ -44,8 +45,9 @@ describe("test the PreviewIcon", () => {
         const spyPropertiesChange = expect.spyOn(actions, 'onPropertiesChange');
         const spyToggle = expect.spyOn(actions, 'onToggle');
         const spyLayerChange = expect.spyOn(actions, 'onLayerChange');
+        const spySetCurrentBackgroundLayer = expect.spyOn(actions, 'setCurrentBackgroundLayer');
 
-        const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} vertical layer={layer}/>, document.getElementById("container"));
+        const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} setCurrentBackgroundLayer={actions.setCurrentBackgroundLayer} vertical layer={layer}/>, document.getElementById("container"));
         expect(previewIcon).toExist();
         const node = ReactDOM.findDOMNode(previewIcon);
         expect(node).toExist();
@@ -56,6 +58,7 @@ describe("test the PreviewIcon", () => {
         expect(spyPropertiesChange).toHaveBeenCalled();
         expect(spyToggle).toHaveBeenCalled();
         expect(spyPropertiesChange).toHaveBeenCalledWith("layer", {visibility: true});
+        expect(spySetCurrentBackgroundLayer).toHaveBeenCalledWith("layer");
 
     });
 

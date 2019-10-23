@@ -53,7 +53,8 @@ class Thumbnail extends React.Component {
         onDeleteThumbnail: () => {},
         // I18N
         message: <Message msgId="map.message"/>,
-        suggestion: <Message msgId="map.suggestion"/>
+        suggestion: <Message msgId="map.suggestion"/>,
+        map: {}
     };
 
     state = {};

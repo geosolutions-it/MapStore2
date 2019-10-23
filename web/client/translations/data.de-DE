@@ -1163,7 +1163,8 @@
                 "duplicatedServiceTitle": "Ein Service mit diesem Titel existiert bereits, bitte ändere den Titel",
                 "serviceDeletedCorrectly": "Der Service wurde korrekt gelöscht",
                 "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL"
-            }
+            },
+            "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt"
         },
         "uploader": {
             "filename": "Datei Name",
@@ -1990,6 +1991,28 @@
                 "videoFilter": "Filtern Sie Videos",
                 "imageFilter": "Filtern Sie Bilder"
             }
+        },
+        "backgroundDialog": {
+            "addTitle": "Neuen Hintergrund hinzufügen",
+            "editTitle": "Aktuellen Hintergrund bearbeiten",
+            "title": "Titel",
+            "titlePlaceholder": "Den angezeigten Namen eingeben",
+            "add": "Hinzufügen",
+            "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel oder 128 x 128 Pixel sein, maximal 500kb",
+            "additionalParameters": "Zusätzliche Parameter",
+            "addAdditionalParameterTooltip": "Parameter hinzufügen",
+            "removeAdditionalParameterTooltip": "Parameter entfernen",
+            "parameter": "Parameter",
+            "value": "Wert",
+            "string": "Reihe",
+            "number": "Nummer",
+            "boolean": "Boolean"
+        },
+        "defaultMapBackgroundsServiceTitle": "Standardhintergründe",
+        "backgroundSelector": {
+            "addTooltip": "Neuen Hintergrund hinzufügen",
+            "editTooltip": "Aktuellen Hintergrund bearbeiten",
+            "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?"
         },
         "tutorial": {
             "title": "Anleitung",

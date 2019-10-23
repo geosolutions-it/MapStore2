@@ -1,14 +1,17 @@
 .mapstore-switch-panel {
-    .panel {
+    padding: 8px;
+    &.panel {
         border: none;
-        box-shadow: none;
+        .shadow-soft;
         border: none;
-        margin: 0;
+        margin: 8px;
     }
     .panel-heading {
         height: @square-btn-size;
         border: none;
         padding: 0;
+        background-color: @ms2-color-background;
+        color: @ms2-color-text;
         .pull-left {
             line-height: @square-btn-size;
         }
@@ -90,5 +93,15 @@
                 height: 0;
             }
         }
+    }
+}
+
+.catalog-panel {
+    .form-group {
+        width: 100%;
+    }
+
+    .ms2-border-layout-body {
+        overflow-x: hidden;
     }
 }

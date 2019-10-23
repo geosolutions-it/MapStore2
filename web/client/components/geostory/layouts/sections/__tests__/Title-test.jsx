@@ -22,7 +22,6 @@ describe('Title component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('Title rendering with defaults', () => {
         ReactDOM.render(<Title />, document.getElementById("container"));
         const container = document.getElementById('container');

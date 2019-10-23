@@ -1164,7 +1164,8 @@
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
                 "serviceDeletedCorrectly": "The service was deleted correctly",
                 "errorServiceUrl": "Service not available. Please, check the provided url"
-            }
+            },
+            "backgroundAlreadyAdded": "Added to background selector"
         },
         "uploader": {
             "filename": "File Name",
@@ -1991,6 +1992,28 @@
                 "videoFilter": "Filter videos",
                 "imageFilter": "Filter images"
             }
+        },
+        "backgroundDialog": {
+            "addTitle": "Add New Background",
+            "editTitle": "Edit Current Background",
+            "title": "Title",
+            "titlePlaceholder": "Enter displayed name",
+            "add": "Add",
+            "thumbnailMessage": "Size of images should be a square of 98px x 98px or 128px x 128px, max 500kb",
+            "additionalParameters": "Additional Parameters",
+            "addAdditionalParameterTooltip": "Add parameter",
+            "removeAdditionalParameterTooltip": "Remove parameter",
+            "parameter": "Parameter",
+            "value": "Value",
+            "string": "String",
+            "number": "Number",
+            "boolean": "Boolean"
+        },
+        "defaultMapBackgroundsServiceTitle": "Default Backgrounds",
+        "backgroundSelector": {
+            "addTooltip": "Add new background",
+            "editTooltip": "Edit current background",
+            "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
         },
         "tutorial": {
             "title": "Tutorial",

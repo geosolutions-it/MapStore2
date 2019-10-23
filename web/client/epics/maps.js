@@ -34,7 +34,6 @@ const {
     searchTextSelector,
     searchParamsSelector
 } = require('../selectors/maps');
-
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
 } = require('../selectors/map');
@@ -43,7 +42,6 @@ const {
     currentMapDetailsUriSelector, currentMapSelector,
     currentMapDetailsChangedSelector, currentMapOriginalDetailsTextSelector
 } = require('../selectors/currentmap');
-
 const {userParamsSelector} = require('../selectors/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
 
@@ -350,12 +348,12 @@ const createMapResource = (resource) => Persistence.createResource(resource)
     ))
     .startWith(savingMap(resource.metadata));
 /**
- * Create or update map reosurce with persistence api
+ * Create or update map resource with persistence api
  */
 const mapSaveMapResourceEpic = (action$) =>
     action$.ofType(SAVE_MAP_RESOURCE)
-        .exhaustMap(({resource}) => (!resource.id ? createMapResource(resource) : updateMapResource(resource))
-        );
+        .exhaustMap(({resource}) => (!resource.id ? createMapResource(resource) : updateMapResource(resource)));
+
 module.exports = {
     loadMapsEpic,
     resetCurrentMapEpic,

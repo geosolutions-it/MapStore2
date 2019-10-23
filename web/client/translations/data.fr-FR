@@ -1163,7 +1163,8 @@
                 "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
                 "serviceDeletedCorrectly": "Le service a été correctement effacé",
                 "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie"
-            }
+            },
+            "backgroundAlreadyAdded": "Ajouté au sélecteur de fond"
         },
         "uploader": {
             "filename": "Nom du fichier",
@@ -1990,6 +1991,28 @@
                 "videoFilter": "Filtrer les vidéos",
                 "imageFilter": "Filtrer les images"
             }
+        },
+        "backgroundDialog": {
+            "addTitle": "Ajouter un nouveau fond",
+            "editTitle": "Modifier le fond actuel",
+            "title": "Titre",
+            "titlePlaceholder": "Entrez le nom affiché",
+            "add": "Ajouter",
+            "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px ou 128px x 128px, maximum 500kb",
+            "additionalParameters": "Paramètres additionnels",
+            "addAdditionalParameterTooltip": "Ajouter un paramètre",
+            "removeAdditionalParameterTooltip": "Supprimer le paramètre",
+            "parameter": "Paramètre",
+            "value": "Valeur",
+            "string": "String",
+            "number": "Nombre",
+            "boolean": "Booléen"
+        },
+        "defaultMapBackgroundsServiceTitle": "Arrière-plans par défaut",
+        "backgroundSelector": {
+            "addTooltip": "Ajouter un nouveau fond",
+            "editTooltip": "Modifier le fond actuel",
+            "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
         },
         "tutorial": {
             "title": "Tutoriel",

@@ -18,6 +18,7 @@ const {saveMapResource, createThumbnail, onDisplayMetadataEdit, metadataChanged}
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
+const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {indexOf} = require('lodash');
@@ -40,12 +41,14 @@ const selector = createSelector(
     groupsSelector,
     mapOptionsToSaveSelector,
     saveAsStateSelector,
-    (map, layers, groups, additionalOptions, saveAsState) => ({
+    backgroundListSelector,
+    (map, layers, groups, additionalOptions, saveAsState, backgrounds) => ({
         currentZoomLvl: map && map.zoom,
         map,
         layers,
         groups,
         additionalOptions,
+        backgrounds,
         ...saveAsState
     }));
 
@@ -58,6 +61,7 @@ class SaveAs extends React.Component {
         mapType: PropTypes.string,
         layers: PropTypes.array,
         groups: PropTypes.array,
+        backgrounds: PropTypes.array,
         params: PropTypes.object,
         metadata: PropTypes.object,
         currentMap: PropTypes.object,
@@ -137,7 +141,8 @@ class SaveAs extends React.Component {
 
     // this method creates the content for the Map Resource
     createV2Map = () => {
-        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
+        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups,
+            this.props.backgrounds, this.props.textSearchConfig, this.props.additionalOptions);
     };
 
     saveMap = (id, name, description) => {

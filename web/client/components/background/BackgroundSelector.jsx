@@ -9,16 +9,20 @@
 const React = require('react');
 const assign = require('object-assign');
 
+const Message = require('../I18N/Message');
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
+const ToolbarButton = require('../misc/toolbar/ToolbarButton');
+const BackgroundDialog = require('./BackgroundDialog').default;
+const ConfirmDialog = require('../misc/ConfirmDialog');
 
 const PropTypes = require('prop-types');
 
-require('./css/background.css');
-
 class BackgroundSelector extends React.Component {
     static propTypes = {
+        backgroundList: PropTypes.array,
+        backgrounds: PropTypes.array,
         start: PropTypes.number,
         style: PropTypes.object,
         enabled: PropTypes.bool,
@@ -32,10 +36,30 @@ class BackgroundSelector extends React.Component {
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
         onStartChange: PropTypes.func,
+        onAdd: PropTypes.func,
+        enabledCatalog: PropTypes.bool,
+        onRemove: PropTypes.func,
+        onBackgroundEdit: PropTypes.func,
+        source: PropTypes.string,
+        addBackgroundProperties: PropTypes.func,
+        onUpdateThumbnail: PropTypes.func,
+        removeBackground: PropTypes.func,
+        onRemoveBackground: PropTypes.func,
+        setCurrentBackgroundLayer: PropTypes.func,
+        confirmDeleteBackgroundModal: PropTypes.object,
+        deletedId: PropTypes.string,
+        modalParams: PropTypes.object,
+        updateNode: PropTypes.func,
+        clearModal: PropTypes.func,
+        allowDeletion: PropTypes.bool,
         projection: PropTypes.string
     };
 
     static defaultProps = {
+        addBackgroundProperties: () => {},
+        onBackgroundEdit: () => {},
+        setCurrentBackgroundLayer: () => {},
+        source: 'backgroundSelector',
         start: 0,
         style: {},
         enabled: false,
@@ -44,13 +68,18 @@ class BackgroundSelector extends React.Component {
         tempLayer: {},
         size: {width: 0, height: 0},
         dimensions: {},
+        allowDeletion: true,
         thumbs: {
-            unknown: require('./img/dafault.jpg')
+            unknown: require('./img/default.jpg')
         },
+        onRemoveBackground: () => {},
         onPropertiesChange: () => {},
         onToggle: () => {},
         onLayerChange: () => {},
-        onStartChange: () => {}
+        onStartChange: () => {},
+        onAdd: () => {},
+        onRemove: () => {},
+        clearModal: () => {}
     };
 
     componentWillUnmount() {
@@ -60,13 +89,44 @@ class BackgroundSelector extends React.Component {
     }
 
     getThumb = (layer) => {
-        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
+        return layer.thumbURL || this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || this.props.thumbs.unknown;
     };
 
     getIcons = (side, frame, margin, vertical) => {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
             let thumb = this.getThumb(layer);
-            return <PreviewIcon projection={this.props.projection} vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
+            return (
+                <div
+                    style={{
+                        width: (vertical ? margin : 0) + (vertical ? 0 : margin) + side + frame,
+                        height: margin + side + frame
+                    }}
+                    className="background-preview-container"
+                >
+                    {this.props.allowDeletion && this.props.layers.length > 1 && <ToolbarButton
+                        glyph="trash"
+                        className="square-button-md background-remove-button"
+                        bsStyle="primary"
+                        onClick={() => {
+                            this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
+                        }}
+                    />}
+                    <PreviewIcon
+                        projection={this.props.projection}
+                        vertical={vertical}
+                        key={idx}
+                        src={thumb}
+                        currentLayer={this.props.currentLayer}
+                        margin={margin}
+                        side={side}
+                        frame={frame}
+                        layer={layer}
+                        onToggle={this.props.onToggle}
+                        onPropertiesChange={this.props.onPropertiesChange}
+                        onLayerChange={this.props.onLayerChange}
+                        setCurrentBackgroundLayer={this.props.setCurrentBackgroundLayer}/>
+                </div>
+            );
         }) : [];
     };
 
@@ -80,7 +140,6 @@ class BackgroundSelector extends React.Component {
 
         return {pagination, listSize, visibleIconsLength};
     };
-
     renderBackgroundSelector = () => {
         const configuration = assign({
             side: 78,
@@ -98,7 +157,7 @@ class BackgroundSelector extends React.Component {
 
         const labelHeight = this.props.enabled ? sideButton - frame * 2 : 0;
         const layer = this.props.enabled ? this.props.tempLayer : this.props.currentLayer;
-        const src = this.getThumb(layer);
+
         const icons = this.getIcons(side, frame, margin, configuration.vertical);
 
         const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, 0, configuration.vertical ? this.props.size.height : this.props.size.width, icons.length);
@@ -123,14 +182,71 @@ class BackgroundSelector extends React.Component {
             height: buttonSize,
             width: buttonSize * visibleIconsLength
         };
-
+        const editedLayer = this.props.currentLayer;
+        const backgroundListEntry = (this.props.backgroundList || []).find(background => background.id === editedLayer.id);
+        const backgroundDialogParams = {
+            title: editedLayer.title,
+            format: editedLayer.format,
+            style: editedLayer.style,
+            additionalParameters: editedLayer.params,
+            thumbnail: {
+                data: backgroundListEntry && backgroundListEntry.thumbnail,
+                url: this.getThumb(editedLayer)
+            }
+        };
+        const {show: showConfirm, layerId: confirmLayerId, layerTitle: confirmLayerTitle} =
+            this.props.confirmDeleteBackgroundModal || {show: false};
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
-            <div className={'background-plugin-position'} style={this.props.style}>
-                <PreviewButton showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
-                <div className="background-list-container" style={listContainerStyle}>
-                    <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
+            <span>
+                <ConfirmDialog
+                    modal
+                    show={showConfirm}
+                    onClose={() => this.props.onRemoveBackground(false)}
+                    onConfirm={() => {
+                        this.props.removeBackground(confirmLayerId);
+                        this.props.onRemoveBackground(false);
+                    }}
+                    confirmButtonBSStyle="default"
+                    confirmButtonContent={<Message msgId="confirm"/>}
+                    closeText={<Message msgId="cancel"/>}
+                    closeGlyph="1-close">
+                    <Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>
+                </ConfirmDialog>
+                {this.props.modalParams && this.props.modalParams.editing && <BackgroundDialog
+                    onClose={this.props.clearModal}
+                    onSave={layerToAdd => {
+                        this.props.updateNode(layerToAdd.id, 'layers', layerToAdd);
+                        this.props.onBackgroundEdit(layerToAdd.id);
+                    }}
+                    updateThumbnail={this.props.onUpdateThumbnail}
+                    {...backgroundDialogParams}
+                    {...this.props.modalParams}
+                />}
+                <div className={'background-plugin-position'} style={this.props.style}>
+                    <PreviewButton
+                        onEdit={() => {
+                            this.props.addBackgroundProperties({
+                                layer: editedLayer,
+                                editing: true
+                            });
+                        }}
+                        layers={this.props.layers}
+                        enabledCatalog={this.props.enabledCatalog}
+                        currentLayer={this.props.currentLayer}
+                        onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')}
+                        showLabel={configuration.label}
+                        src={this.getThumb(layer)}
+                        side={sideButton}
+                        frame={frame}
+                        margin={margin}
+                        labelHeight={labelHeight}
+                        label={layer.title}
+                        onToggle={this.props.onToggle}/>
+                    <div className="background-list-container" style={listContainerStyle}>
+                        <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
+                    </div>
                 </div>
-            </div>
+            </span>
         );
     };
 

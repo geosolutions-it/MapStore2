@@ -1163,7 +1163,8 @@
                 "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
                 "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
-            }
+            },
+            "backgroundAlreadyAdded": "Agregado al selector de fondo"
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1990,6 +1991,28 @@
                 "videoFilter": "Filtrar videos",
                 "imageFilter": "Filtrar imágenes"
             }
+        },
+        "backgroundDialog": {
+            "addTitle": "Agregar nuevo fondo",
+            "editTitle": "Editar fondo actual",
+            "title": "Título",
+            "titlePlaceholder": "Ingrese el nombre que se muestra",
+            "add": "Añadir",
+            "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px o 128 px x 128 px, máximo 500kb",
+            "additionalParameters": "Parámetros adicionales",
+            "addAdditionalParameterTooltip": "Agregar parámetro",
+            "removeAdditionalParameterTooltip": "Eliminar parámetro",
+            "parameter": "Parámetro",
+            "value": "Valor",
+            "string": "Sarta",
+            "number": "Número",
+            "boolean": "Booleano"
+        },
+        "defaultMapBackgroundsServiceTitle": "Fondos predeterminados",
+        "backgroundSelector": {
+            "addTooltip": "Agregar nuevo fondo",
+            "editTooltip": "Editar fondo actual",
+            "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
         },
         "tutorial": {
             "title": "Tutorial",

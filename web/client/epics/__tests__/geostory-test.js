@@ -764,7 +764,6 @@ describe('Geostory Epics', () => {
             }
         });
     });
-
     describe('reloadGeoStoryOnLoginLogout', () => {
         it('on login', done => {
             testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), loginSuccess()], () => {

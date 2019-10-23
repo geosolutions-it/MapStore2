@@ -148,7 +148,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toNotExist();
-
     });
     // test data
     it('creates the component with data', () => {
@@ -157,7 +156,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
     });
     it('check WMTS resource', () => {
         let actions = {
@@ -178,7 +176,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -202,7 +199,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -232,7 +228,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -259,7 +254,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -287,7 +281,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -336,7 +329,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -388,7 +380,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -422,7 +413,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -453,7 +443,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
@@ -541,7 +530,6 @@ describe('This test for RecordItem', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe('mapstore-side-card');
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
