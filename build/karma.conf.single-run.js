@@ -2,6 +2,7 @@ const path = require("path");
 
 module.exports = function karmaConfig(config) {
     const testConfig = require('./testConfig')({
+        browsers: ['ChromeHeadless', 'FirefoxHeadless'],
         files: [
             'build/tests-travis.webpack.js',
             { pattern: './web/client/test-resources/**/*', included: false },

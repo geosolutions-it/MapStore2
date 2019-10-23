@@ -2,10 +2,11 @@ dist: xenial
 language: node_js
 node_js:
   - 8.15.1
-script: 
+script:
   - npm run travis
 addons:
   firefox: latest
+  chrome: 63
 before_install:
     - node -v
     - npm -v
