@@ -1278,13 +1278,13 @@ export default class DrawSupport extends React.Component {
     };
 
     olGeomFromType = ({type, coordinates, radius, center, projection, options}) => {
-
+        // TODO check correct number of nesting arrays of coordinates for each case
         let geometry;
         switch (type) {
         case "Point": case "Marker": case "Text": { geometry = new Point(coordinates ? coordinates : []); break; }
         case "LineString": { geometry = new LineString(coordinates ? coordinates : []); break; }
-        case "MultiPoint": { geometry = new MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
-        case "MultiLineString": { geometry = new MultiLineString(coordinates ? [coordinates] : []); break; }
+        case "MultiPoint": { geometry = new MultiPoint(coordinates ? coordinates : []); break; }
+        case "MultiLineString": { geometry = new MultiLineString(coordinates ? coordinates : []); break; }
         case "MultiPolygon": { geometry = new MultiPolygon(coordinates ? coordinates : []); break; }
         // default is Polygon
         default: {
