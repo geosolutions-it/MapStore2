@@ -15,7 +15,7 @@ const { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } = require('../acti
 const { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } = require('../actions/context');
 
 const {INIT_MAP} = require('../actions/map');
-const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR} = require('../actions/config');
 const {mapSelector} = require('../selectors/map');
 const {LOCATION_CHANGE} = require('connected-react-router');
 const {LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
@@ -113,8 +113,8 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
 const updateContextFeedbackMaskVisibility = action$ =>
     action$.ofType(LOAD_CONTEXT)
         .switchMap(() => {
-            const loadActions = [LOAD_FINISHED, CONTEXT_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR];
-            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR; // TODO: handle context config error
+            const loadActions = [LOAD_FINISHED, CONTEXT_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
+            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR || type === MAP_INFO_LOAD_ERROR; // TODO: handle context config error
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'context');
             return Rx.Observable.merge(
                 updateObservable,

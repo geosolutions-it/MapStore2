@@ -18,10 +18,10 @@ const start = (stream$, actions = []) => stream$
  * @param {object|object[]} endAction end action(s)
  * @param {function} exception an optional function that returns the stream for exceptions
  */
-const wrapStartStop = (startAction, endAction, exceptionStream$) => stream$ =>
-    (exceptionStream$ ?
+const wrapStartStop = (startAction, endAction, createExceptionStream) => stream$ =>
+    (createExceptionStream ?
         start(stream$, castArray(startAction))
-            .catch(exceptionStream$)
+            .catch(createExceptionStream)
         : start(stream$, castArray(startAction))
     ).concat(
         Rx.Observable.from(castArray(endAction))

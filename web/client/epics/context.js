@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 
 import { getResource } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
+import { isLoggedIn } from '../selectors/security';
 
 import { LOAD_CONTEXT, loading, setContext, setResource, contextLoadError, loadFinished } from '../actions/context';
 import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
@@ -18,6 +19,14 @@ import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
 
 
+function MapError(error) {
+    this.originalError = error;
+    this.name = 'map';
+}
+function ContextError(error) {
+    this.originalError = error;
+    this.name = "context";
+}
 const createContextFlow = (id, action$, getState) =>
     (id !== "default"
         ? getResource(id)
@@ -31,9 +40,7 @@ const createContextFlow = (id, action$, getState) =>
                 }
             }) // TODO: select mobile if mobile browser
         )
-    ).catch(e => {
-        return Observable.of(contextLoadError({ error: e })); // TODO: error
-    }); // TODO: use default context ID
+    ); // TODO: use default context ID
 
 /**
  * Handles map load. Delegates to config epics triggering loadMapConfig
@@ -53,15 +60,39 @@ const createMapFlow = (mapId = '0', action$) => {
     );
 };
 
+const errorToMessageId = (name, e, getState = () => {}) => {
+    let message = `context.errors.${name}.unknownError`;
+    if (e.status === 403) {
+        message = `context.errors.${name}.pleaseLogin`;
+        if (isLoggedIn(getState())) {
+            message = `context.errors.${name}.notAccessible`;
+        }
+    } if (e.status === 404) {
+        message = `context.errors.${name}.notFound`;
+    }
+    return message;
+}
+
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextId }) =>
-        Observable.merge(
-            createContextFlow(contextId, action$, getState),
-            createMapFlow(mapId, action$, getState)
-        ).let(
-            wrapStartStop(
-                loading(true, "loading"),
-                [loading(false, "loading"), loadFinished()]
+        Observable
+            // create streams to recovery map and context
+            .merge(
+                createContextFlow(contextId, action$, getState).catch(e => {throw new ContextError(e); }),
+                createMapFlow(mapId, action$, getState).catch(e => { throw new MapError(e); })
             )
-        )
+            // if everything went right, trigger loadFinished
+            .concat(Observable.of(loadFinished()))
+            // wrap with loading events
+            .let(
+                wrapStartStop(
+                    loading(true, "loading"),
+                    [loading(false, "loading")],
+                    e => {
+                        const messageId = errorToMessageId(e.name, e.originalError, getState);
+                        // prompt login should be triggered here
+                        return Observable.of(contextLoadError({ error: {...e.originalError, messageId} }) );
+                    }
+                )
+            )
     );
