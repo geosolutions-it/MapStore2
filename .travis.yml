@@ -6,7 +6,7 @@ script:
   - npm run travis
 addons:
   firefox: latest
-  chrome: 63
+  chrome: 63.0.3239
 before_install:
     - node -v
     - npm -v
