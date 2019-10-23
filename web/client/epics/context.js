@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { getResource } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 
-import { LOAD_CONTEXT, loading, setContext, setResource } from '../actions/context';
+import { LOAD_CONTEXT, loading, setContext, setResource, contextLoadError, loadFinished } from '../actions/context';
 import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
 import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -32,25 +32,24 @@ const createContextFlow = (id, action$, getState) =>
             }) // TODO: select mobile if mobile browser
         )
     ).catch(e => {
-        console.log(e);
-        return Observable.of(loading(false, "loading")); // TODO: error
+        return Observable.of(contextLoadError({ error: e })); // TODO: error
     }); // TODO: use default context ID
 
 /**
- * Handles map load
+ * Handles map load. Delegates to config epics triggering loadMapConfig
  * @param {string|number} id id of the map
  * @param {*} action$ stream of actions
  */
 const createMapFlow = (mapId = '0', action$) => {
     const { configUrl } = ConfigUtils.getConfigUrl({ mapId });
     return Observable.of(loadMapConfig(configUrl, mapId)).merge(
-        action$.ofType(MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR)
-            .switchMap(({ type }) => {
+        action$.ofType(MAP_CONFIG_LOAD_ERROR)
+            .switchMap(({ type, error }) => {
                 if (type === MAP_CONFIG_LOAD_ERROR) {
-                    return Observable.empty(); // TODO: handle error
+                    throw error;
                 }
-                return Observable.empty(); // complete;
-            })
+
+            }).takeUntil(action$.ofType(MAP_CONFIG_LOADED))
     );
 };
 
@@ -62,7 +61,7 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
         ).let(
             wrapStartStop(
                 loading(true, "loading"),
-                loading(false, "loading")
+                [loading(false, "loading"), loadFinished()]
             )
         )
     );
