@@ -23,6 +23,7 @@ import XYZ from 'ol/source/XYZ';
 import WMTSUtils from '../../../../utils/WMTSUtils';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
+import { createXYZ } from 'ol/tilegrid';
 
 const createLayer = (options) => {
 
@@ -41,7 +42,9 @@ const createLayer = (options) => {
         }
     );
 
-    const tileMatrixSet = options.tileMatrixSet.find(tM => tM.identifier === tileMatrixSetName);
+    const tileMatrixSet = options.tileMatrixSet.find(tM => {
+        return tM.identifier === tileMatrixSetName;
+    });
     const { identifier: tilingSchemeId, tileMatrix } = tileMatrixSet || {};
     const scales = tileMatrix && tileMatrix.map(({ scaleDenominator }) => scaleDenominator);
     const mapResolutions = MapUtils.getResolutions();
@@ -67,22 +70,22 @@ const createLayer = (options) => {
                 parseFloat(bbox.bounds.maxx),
                 parseFloat(bbox.bounds.maxy)
             ], getTransform(bbox.crs, options.srs))
-        : null;
+        : undefined;
 
-    const tileGrid = new TileGrid({
+    const tileGrid = tileMatrixSet && new TileGrid({
         minZoom: 0,
         origins,
         origin: !origins ? [20037508.3428, -20037508.3428] : undefined,
         resolutions,
         tileSizes,
         tileSize: !tileSizes ? [256, 256] : undefined
-    });
+    }) || createXYZ();
 
     const tileUrl = ((options.tileUrls || []).find(({ format }) => format === options.format) || {}).url;
     const url = (tileUrl || '')
         .replace(/\{styleId\}/, options.style)
         .replace(/\{tileMatrixSetId\}/, tilingSchemeId)
-        .replace(/\{tileMatrix\}/, `${tilingSchemeId}:{z}`)
+        .replace(/\{tileMatrix\}/, tilingSchemeId === 'WebMercatorQuad' ? '{z}' : `${tilingSchemeId}:{z}`) // TODO: update z correctly
         .replace(/\{tileRow\}/, '{y}')
         .replace(/\{tileCol\}/, '{x}');
 
@@ -114,7 +117,8 @@ const createLayer = (options) => {
             msId: options.id,
             source: source,
             visible: options.visibility !== false,
-            zIndex: options.zIndex
+            zIndex: options.zIndex,
+            declutter: true
         });
         applyStyle(options.vectorStyle, layer);
         return layer;
@@ -138,13 +142,13 @@ const createLayer = (options) => {
 };
 Layers.registerType('ogc', {
     create: createLayer,
-    update: (layer, newOptions, oldOptions) => {
+    update: (layer, newOptions, oldOptions, map) => {
         if (oldOptions.securityToken !== newOptions.securityToken
         || oldOptions.srs !== newOptions.srs
         || oldOptions.format !== newOptions.format
         || oldOptions._v_ !== newOptions._v_
         || oldOptions.style !== newOptions.style) {
-            return createLayer(newOptions);
+            return createLayer(newOptions, map);
         }
         if (get(oldOptions, 'vectorStyle.body') !== get(newOptions, 'vectorStyle.body')
         || get(oldOptions, 'vectorStyle.url') !== get(newOptions, 'vectorStyle.url')) {

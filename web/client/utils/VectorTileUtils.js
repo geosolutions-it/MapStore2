@@ -9,7 +9,8 @@
 export const VECTOR_FORMATS = [
     'application/vnd.mapbox-vector-tile',
     'application/json;type=geojson',
-    'application/json;type=topojson'
+    'application/json;type=topojson',
+    'application/geo+json'
 ];
 
 export const isVectorFormat = (format) => VECTOR_FORMATS.indexOf(format) !== -1;

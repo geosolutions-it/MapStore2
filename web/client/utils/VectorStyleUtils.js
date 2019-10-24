@@ -681,7 +681,7 @@ function mimeTypeToStyleFormat(mimeType) {
     const formats = [
         {
             format: 'mbstyle',
-            types: [ 'application/vnd.geoserver.mbstyle+json' ]
+            types: [ 'application/vnd.geoserver.mbstyle+json', 'application/vnd.mapbox.style+json' ]
         },
         {
             format: 'sld',

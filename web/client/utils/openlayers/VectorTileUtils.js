@@ -14,7 +14,8 @@ import { getStyle } from '../../components/map/openlayers/VectorStyle';
 export const OL_VECTOR_FORMATS = {
     'application/vnd.mapbox-vector-tile': MVT,
     'application/json;type=geojson': GeoJSON,
-    'application/json;type=topojson': TopoJSON
+    'application/json;type=topojson': TopoJSON,
+    'application/geo+json': GeoJSON
 };
 
 export const applyStyle = (vectorStyle, layer) => {

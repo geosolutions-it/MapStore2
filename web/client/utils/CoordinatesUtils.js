@@ -391,11 +391,14 @@ const CoordinatesUtils = {
         if (srs === 'EPSG:3857' && !allowedSRS['EPSG:3857'] && allowedSRS['EPSG:900913']) {
             return 'EPSG:900913';
         }
+        if (srs === 'WebMercatorQuad' && !allowedSRS.WebMercatorQuad && allowedSRS['EPSG:900913']) {
+            return 'EPSG:900913';
+        }
         return srs;
     },
     getEquivalentSRS(srs) {
-        if (srs === 'EPSG:900913' || srs === 'EPSG:3857') {
-            return ['EPSG:3857', 'EPSG:900913'];
+        if (srs === 'EPSG:900913' || srs === 'EPSG:3857' || srs === 'WebMercatorQuad') {
+            return ['EPSG:3857', 'EPSG:900913', 'WebMercatorQuad'];
         }
         return [srs];
     },
