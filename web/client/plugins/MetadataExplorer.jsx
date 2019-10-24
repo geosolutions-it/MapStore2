@@ -15,7 +15,7 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
-    changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
+    changeUrl, changeTitle, changeAutoload, changeType, changeServiceFormat, changeSelectedService,
     addLayer, addLayerError, focusServicesList, changeText,
     changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate, catalogClose} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
@@ -212,6 +212,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onLayerAdd: addLayer,
     toggleControl: catalogClose,
     onChangeFormat: changeCatalogFormat,
+    onChangeServiceFormat: changeServiceFormat,
     onChangeUrl: changeUrl,
     onChangeType: changeType,
     onChangeTitle: changeTitle,

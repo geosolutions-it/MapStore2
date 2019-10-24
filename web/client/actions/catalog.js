@@ -42,6 +42,7 @@ export const CHANGE_TITLE = 'CATALOG:CHANGE_TITLE';
 export const CHANGE_TEXT = 'CATALOG:CHANGE_TEXT';
 export const CHANGE_TYPE = 'CATALOG:CHANGE_TYPE';
 export const CHANGE_AUTOLOAD = 'CATALOG:CHANGE_AUTOLOAD';
+export const CHANGE_SERVICE_FORMAT = 'CATALOG:CHANGE_SERVICE_FORMAT';
 export const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
 export const CHANGE_URL = 'CATALOG:CHANGE_URL';
 export const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
@@ -149,6 +150,12 @@ export function changeAutoload(autoload) {
     return {
         type: CHANGE_AUTOLOAD,
         autoload
+    };
+}
+export function changeServiceFormat(format) {
+    return {
+        type: CHANGE_SERVICE_FORMAT,
+        format
     };
 }
 export function changeType(newType) {

@@ -44,12 +44,13 @@ class Catalog extends React.Component {
         onAddService: PropTypes.func,
         onChangeAutoload: PropTypes.func,
         onChangeCatalogMode: PropTypes.func,
-        onChangeFormat: PropTypes.func,
+        onChangeServiceFormat: PropTypes.func,
         onChangeMetadataTemplate: PropTypes.func,
         onChangeTitle: PropTypes.func,
         onChangeText: PropTypes.func,
         onChangeType: PropTypes.func,
         onChangeUrl: PropTypes.func,
+        onChangeFormat: PropTypes.func,
         onChangeSelectedService: PropTypes.func,
         onDeleteService: PropTypes.func,
         onToggleTemplate: PropTypes.func,
@@ -105,7 +106,8 @@ class Catalog extends React.Component {
         newService: {
             title: "",
             type: "wms",
-            url: ""
+            url: "",
+            format: "image/png"
         },
         onAddService: () => {},
         onChangeAutoload: () => {},
@@ -116,6 +118,7 @@ class Catalog extends React.Component {
         onChangeText: () => {},
         onChangeType: () => {},
         onChangeUrl: () => {},
+        onChangeServiceFormat: () => {},
         onChangeSelectedService: () => {},
         onToggleTemplate: () => {},
         onToggleAdvancedSettings: () => {},
@@ -299,6 +302,7 @@ class Catalog extends React.Component {
                 hideIdentifier={this.props.hideIdentifier}
                 hideExpand={this.props.hideExpand}
                 onAddBackground={this.props.onAddBackground}
+                defaultFormat={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].format}
                 formatOptions={this.props.formatOptions}
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
@@ -530,9 +534,10 @@ class Catalog extends React.Component {
                                     </Col >
                                     <Col xs={6}>
                                         <Select
-                                            value="image/png"
-                                            clearable={false}
-                                            options={this.props.formatOptions}/>
+                                            value={this.props.newService && this.props.newService.format}
+                                            clearable
+                                            options={this.props.formatOptions}
+                                            onChange={event => this.props.onChangeServiceFormat(event && event.value)}/>
                                     </Col >
                                 </FormGroup>
                             </div>
