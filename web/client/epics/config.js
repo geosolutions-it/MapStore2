@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Rx = require('rxjs');
-const axios = require('../libs/ajax');
-const {LOAD_MAP_CONFIG, configureMap, configureError} = require('../actions/config');
+import Rx from 'rxjs';
+import axios from '../libs/ajax';
+import {LOAD_MAP_CONFIG, configureMap, configureError} from '../actions/config';
 
-const loadMapConfigAndConfigureMap = action$ =>
+export const loadMapConfigAndConfigureMap = action$ =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap( ({configName, mapId}) =>
             Rx.Observable.defer( () => axios.get(configName) )
@@ -28,7 +28,3 @@ const loadMapConfigAndConfigureMap = action$ =>
                 .catch((e) => Rx.Observable.of(configureError(e, mapId)))
         );
 
-
-module.exports = {
-    loadMapConfigAndConfigureMap
-};

@@ -26,7 +26,7 @@ export const currentContextSelector = state => state.context && state.context.cu
  */
 const monitoredStateSelector = state => getMonitoredState(state, monitorStateSelector(state));
 
-export const isLoadingSelector = state => get(state, 'loading');
+export const isLoadingSelector = state => get(state, 'context.loading');
 export const isErrorSelector = () => false;
 export const defaultPluginsSelector = createSelector(
     () => ConfigUtils.getConfigProp("plugins").desktop,
@@ -36,6 +36,13 @@ export const loadingPluginsSelector = state => defaultPluginsSelector(state);
 export const errorPluginsSelector = state => loadingPluginsSelector(state);
 export const currentPluginsSelector = state => get(currentContextSelector(state), "plugins");
 
+/**
+ * Selects the plugins configuration depending on the current state.
+ * It loads the defaultPlugins, the loadingPlugins, the errorPlugins or the contextPlugins.
+ * For the moment in case of loading or error it loads default plugins from localConfig.
+ *
+ * @param {object} state the application state
+ */
 export const pluginsSelector = state =>
     isLoadingSelector(state)
         ? loadingPluginsSelector(state)
@@ -49,3 +56,10 @@ export const contextMonitoredStateSelector = createSelector(
     monitoredStateSelector,
     (monitoredState) => JSON.stringify(monitoredState)
 );
+
+/**
+ * Returns the full resource. Accordingly with stories, dashboards and so on,
+ * this content is the original resource, with id, permission (canRead, canWrite) and attributes.
+ * @param {object} state the app state
+ */
+export const resourceSelector = ({context = {}} = {}) => context.resource;

@@ -7,6 +7,27 @@
  */
 import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE } from "../actions/context";
 import {set} from '../utils/ImmutableUtils';
+
+/**
+ * Reducers for context page and configs.
+ * Example:
+ * ```
+ * {
+ * currentContext: {// the context object
+ *     plugins: {
+ *         desktop: [...]
+ *     },
+ *     resource: {} // the original (geostore) resource, with canEdit, canWrite properties, id etc...
+ *     loading: true|false
+ *     loadingFlags: {
+ *         saving: true|false // loading flags, to store more specific information about what is loading
+ *     }
+ * }
+ * }
+ * ```
+ * @name context
+ * @memberof reducers
+ */
 export default (state = {}, action) => {
     switch (action.type) {
     case SET_CURRENT_CONTEXT: {

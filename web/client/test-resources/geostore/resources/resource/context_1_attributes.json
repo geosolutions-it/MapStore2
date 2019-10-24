@@ -1,0 +1,21 @@
+{
+  "AttributeList": {
+    "Attribute": [
+      {
+        "name": "featured",
+        "type": "STRING",
+        "value": true
+      },
+      {
+        "name": "owner",
+        "type": "STRING",
+        "value": "admin"
+      },
+      {
+        "name": "thumbnail",
+        "type": "STRING",
+        "value": "rest%2Fgeostore%2Fdata%2F10283%2Fraw%3Fdecode%3Ddatauri%26v%3Dc4ef7b80-8def-11e9-bf75-cf6e2c4151cf"
+      }
+    ]
+  }
+}

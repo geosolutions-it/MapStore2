@@ -19,8 +19,8 @@ export const loadContext = ({ mapId, contextId }) => ({ type: LOAD_CONTEXT, mapI
 
 export const SET_CURRENT_CONTEXT = "CONTEXT:SET_CURRENT_CONTEXT";
 /**
- *
- * @param {object} context
+ * Sets the context passed in the state
+ * @param {object} context the context
  */
 export const setContext = (context) => ({ type: SET_CURRENT_CONTEXT, context });
 
