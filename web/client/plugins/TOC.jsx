@@ -484,7 +484,7 @@ const securityEnhancer = (Component) => (props) => {
 
     const activateParameter = (allow, activate) => {
         const isUserAdmin = user && user.role === 'ADMIN' || false;
-        return allow ? activate : isUserAdmin ? activate : false;
+        return (allow || isUserAdmin) ? activate : false;
     };
 
     const activateProps = {
