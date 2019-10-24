@@ -339,7 +339,12 @@
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
                     "activateAddGroupButton": true,
-                    "activateMetedataTool": false
+                    "activateMetedataTool": false,
+                    "addLayersPermissions": true,
+                    "removeLayersPermissions": true,
+                    "sortingPermissions": true,
+                    "addGroupsPermissions": true,
+                    "removeGroupsPermissions": true
                 }
             },
             "AddGroup",

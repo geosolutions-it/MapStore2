@@ -102,6 +102,7 @@ class Toolbar extends React.Component {
         activateTool: {
             activateToolsContainer: true,
             activateRemoveLayer: true,
+            activateRemoveGroup: true,
             activateZoomTool: true,
             activateQueryTool: true,
             activateDownloadTool: true,
@@ -259,7 +260,7 @@ class Toolbar extends React.Component {
                             </Button>
                         </OverlayTrigger>
                         : null}
-                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                    {(this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'LAYERS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') || this.props.activateTool.activateRemoveGroup && (status === 'GROUP' || status === 'GROUPS' || status === 'GROUP_LOAD_ERROR' || status === 'GROUPS_LOAD_ERROR')) && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                         <OverlayTrigger
                             key="removeNode"
                             placement="top"
