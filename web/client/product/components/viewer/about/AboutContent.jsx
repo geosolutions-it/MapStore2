@@ -20,7 +20,7 @@ class About extends React.Component {
             }}>
                 <h1>MapStore</h1>
                 <p>
-                    <I18N.Message msgId="about_p0-0"/> <a href="http://openlayers.org/">OpenLayers 3</a> <I18N.Message msgId="about_p0-1"/> <a href="http://leafletjs.com/">Leaflet</a>.
+                    <I18N.Message msgId="about_p0-0"/> <a href="http://openlayers.org/">OpenLayers</a> <I18N.Message msgId="about_p0-1"/> <a href="http://leafletjs.com/">Leaflet</a>.
                 </p>
                 <p><I18N.Message msgId="about_p1"/></p>
                 <ul>
