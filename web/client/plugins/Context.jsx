@@ -11,7 +11,7 @@ import context from '../reducers/context';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
- * Plugin for GeoStory visualization
+ * Plugin for Context support. Adds state handlers to the application (reducer and epics).
  * @name Context
  * @memberof plugins
  */
