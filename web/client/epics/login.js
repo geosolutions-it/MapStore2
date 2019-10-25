@@ -5,12 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
-const {DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
-const { LOAD_GEOSTORY_ERROR } = require('../actions/geostory');
-const { LOAD_CONTEXT_ERROR } = require('../actions/context');
+const { refreshAccessToken, sessionValid, logout, loginPromptClosed, LOGIN_SUCCESS, LOGOUT, LOGIN_REQUIRED} = require('../actions/security');
 
-const {loadMapConfig, configureError, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const {loadMapConfig, configureError} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
 const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
 const {initCatalog} = require('../actions/catalog');
@@ -20,10 +17,9 @@ const {isLoggedIn} = require('../selectors/security');
 const ConfigUtils = require('../utils/ConfigUtils');
 const AuthenticationAPI = require('../api/GeoStoreDAO');
 const Rx = require('rxjs');
-const { LOCATION_CHANGE, push } = require('connected-react-router');
+const { LOCATION_CHANGE } = require('connected-react-router');
 const url = require('url');
 const {get} = require('lodash');
-const {feedbackMaskLoading} = require('../actions/feedbackMask');
 
 /**
  * Refresh the access_token every 5 minutes
@@ -68,16 +64,16 @@ const reloadMapConfig = (action$, store) =>
         });
 
 const promptLoginOnMapError = (actions$, store) =>
-    actions$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, LOAD_CONTEXT_ERROR) // TODO: externalize using a prompt login action
-        .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
+    actions$.ofType(LOGIN_REQUIRED)
         .switchMap(() => {
             return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
             // send to homepage if close is pressed on login modal
                 .merge(
                     actions$.ofType(SET_CONTROL_PROPERTY)
-                        .filter(actn => actn.control === 'LoginForm' && actn.property === 'enabled' && actn.value === false && !isLoggedIn(store.getState()))
-                        .exhaustMap(() => Rx.Observable.of(feedbackMaskLoading(), push('/')))
-                        .takeUntil(actions$.ofType(LOGIN_SUCCESS))
+                        // login close event
+                        .filter(action => action.control === 'LoginForm' && action.property === 'enabled' && action.value === false && !isLoggedIn(store.getState()))
+                        .exhaustMap(() => Rx.Observable.of(loginPromptClosed()))
+                        .takeUntil(actions$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
                 );
         });
 

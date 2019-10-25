@@ -16,6 +16,8 @@ const {loadMaps} = require('./maps');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
+const LOGIN_PROMPT_CLOSED = "LOGIN:LOGIN_PROMPT_CLOSED";
+const LOGIN_REQUIRED = "LOGIN:LOGIN_REQUIRED";
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_FAIL = 'LOGIN_FAIL';
 const RESET_ERROR = 'RESET_ERROR';
@@ -56,6 +58,25 @@ function logout(redirectUrl) {
     return {
         type: LOGOUT,
         redirectUrl: redirectUrl
+    };
+}
+
+/**
+ * Asks for  login
+ */
+function loginRequired() {
+    return {
+        type: LOGIN_REQUIRED
+    };
+}
+
+/**
+ * event of login close after a LOGIN_REQUIRED event
+ * @param {string} owner
+ */
+function loginPromptClosed() {
+    return {
+        type: LOGIN_PROMPT_CLOSED
     };
 }
 
@@ -142,6 +163,8 @@ function verifySession() {
 
 module.exports = {
     LOGIN_SUBMIT,
+    LOGIN_PROMPT_CLOSED,
+    LOGIN_REQUIRED,
     CHANGE_PASSWORD,
     CHANGE_PASSWORD_SUCCESS,
     CHANGE_PASSWORD_FAIL,
@@ -152,6 +175,8 @@ module.exports = {
     REFRESH_SUCCESS,
     SESSION_VALID,
     login,
+    loginPromptClosed,
+    loginRequired,
     loginSuccess,
     loginFail,
     logout,

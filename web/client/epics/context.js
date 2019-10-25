@@ -8,13 +8,17 @@
 
 import { Observable } from 'rxjs';
 
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { getResource } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 import { isLoggedIn } from '../selectors/security';
 
-import { LOAD_CONTEXT, loading, setContext, setResource, contextLoadError, loadFinished } from '../actions/context';
+import { LOAD_CONTEXT, LOAD_FINISHED, loadContext, loading, setContext, setResource, contextLoadError, loadFinished, CONTEXT_LOAD_ERROR } from '../actions/context';
 import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
+import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
+
+
 import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
 
@@ -71,16 +75,18 @@ const errorToMessageId = (name, e, getState = () => {}) => {
         message = `context.errors.${name}.notFound`;
     }
     return message;
-}
-
+};
+/**
+ * Handles the load of map and context together.
+ * @param {observable} action$ stream of actions
+ * @param {object} store
+ */
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextId }) =>
-        Observable
-            // create streams to recovery map and context
-            .merge(
-                createContextFlow(contextId, action$, getState).catch(e => {throw new ContextError(e); }),
-                createMapFlow(mapId, action$, getState).catch(e => { throw new MapError(e); })
-            )
+        Observable.merge(
+            createContextFlow(contextId, action$, getState).catch(e => {throw new ContextError(e); }),
+            createMapFlow(mapId, action$, getState).catch(e => { throw new MapError(e); })
+        )
             // if everything went right, trigger loadFinished
             .concat(Observable.of(loadFinished()))
             // wrap with loading events
@@ -96,3 +102,22 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
                 )
             )
     );
+
+/**
+ * Handles the reload of the context and map.
+ * @param {observable} action$ stream of actions
+ */
+export const handleLoginLogoutContextReload = action$ => {
+    return Observable.merge(
+        // in case of forbidden error...
+        action$.ofType(CONTEXT_LOAD_ERROR)
+            .filter(({ error }) => error.status === 403)
+            .switchMap( () =>  action$.ofType(LOGIN_SUCCESS).take(1).takeUntil(action$.ofType(LOCATION_CHANGE))), // ...wait for login success
+        // Or if context was loaded
+        action$.ofType(LOAD_FINISHED)
+            .switchMap(() => action$.ofType(LOGOUT).take(1).takeUntil(action$.ofType(LOCATION_CHANGE))) // ...and then the user logged out
+    // then reload the last context and map
+    ).withLatestFrom(
+        action$.ofType(LOAD_CONTEXT)
+    ).switchMap(([, args]) => Observable.of(loadContext(args)));
+};
