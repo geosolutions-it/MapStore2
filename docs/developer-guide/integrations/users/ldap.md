@@ -9,7 +9,7 @@ Configuring MapStore to use LDAP means to synchronize it's back-end users databa
 MapStore back-end is also known as [GeoStore](https://github.com/geosolutions-it/geostore).
 To configure LDAP with GeoStore you can follow the [Wiki page](https://github.com/geosolutions-it/geostore/wiki/LDAP-Authentication) editing a file called `geostore-spring-security.xml`.
 
-The easier way to configure it in mapstore is to follow the [instructions]((https://github.com/geosolutions-it/geostore/wiki/LDAP-Authentication)) linked above for GeoStore editing the `geostore-spring-security.xml` file inside the final war file.
+The easier way to configure it in mapstore is to follow the [instructions](https://github.com/geosolutions-it/geostore/wiki/LDAP-Authentication) linked above for GeoStore editing the `geostore-spring-security.xml` file inside the final war file.
 
 All the following considerations regard the possibility to set-up LDAP configuration in a custom project and externalizing your secrets credentials.
 

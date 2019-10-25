@@ -9,10 +9,12 @@
 import csw from '../api/CSW';
 import wms from '../api/WMS';
 import wmts from '../api/WMTS';
+import backgrounds from '../api/mapBackground';
 var API = {
     csw,
     wms,
-    wmts
+    wmts,
+    backgrounds
 };
 
 import {addLayer as addNewLayer, changeLayerProperties} from './layers';
@@ -21,12 +23,14 @@ import * as LayersUtils from '../utils/LayersUtils';
 import * as ConfigUtils from '../utils/ConfigUtils';
 import {find} from 'lodash';
 import {authkeyParamNameSelector} from '../selectors/catalog';
+import {layersSelector} from '../selectors/layers';
 
 
 export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
 export const TEXT_SEARCH = 'CATALOG:TEXT_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
+export const CATALOG_CLOSE = 'CATALOG:CATALOG_CLOSE';
 export const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
 export const CHANGE_CATALOG_FORMAT = 'CATALOG:CHANGE_CATALOG_FORMAT';
 export const ADD_LAYER_ERROR = 'CATALOG:ADD_LAYER_ERROR';
@@ -210,8 +214,14 @@ export function initCatalog(apis = API) {
     };
 }
 
+export function catalogClose() {
+    return {
+        type: CATALOG_CLOSE
+    };
+}
+
 export function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
-    return (dispatch /* , getState */) => {
+    return (dispatch) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
         dispatch(setLoading(true));
         API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
@@ -242,7 +252,7 @@ export function describeError(layer, error) {
 export function addLayerAndDescribe(layer) {
     return (dispatch, getState) => {
         const state = getState();
-        const layers = state && state.layers && state.layers.flat;
+        const layers = layersSelector(state);
         const id = LayersUtils.getLayerId(layer, layers || []);
         dispatch(addNewLayer({...layer, id}));
         if (layer.type === 'wms') {

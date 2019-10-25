@@ -12,17 +12,19 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-    showSettings, hideSettings, updateSettings, updateNode, moveNode, removeNode,
+    moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
     browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
+const {error} = require('../actions/notifications');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
 const {generalInfoFormatSelector} = require("../selectors/mapInfo");
+const {userSelector} = require('../selectors/security');
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -83,8 +85,9 @@ const tocSelector = createSelector(
         activeSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector,
-        isCesium
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive) => ({
+        isCesium,
+        userSelector
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user) => ({
         enabled,
         groups,
         settings,
@@ -126,7 +129,8 @@ const tocSelector = createSelector(
             }
         ]),
         catalogActive,
-        activateWidgetTool
+        activateWidgetTool,
+        user
     })
 );
 
@@ -176,6 +180,7 @@ class LayerTree extends React.Component {
         activateMapTitle: PropTypes.bool,
         activateToolsContainer: PropTypes.bool,
         activateRemoveLayer: PropTypes.bool,
+        activateRemoveGroup: PropTypes.bool,
         activateLegendTool: PropTypes.bool,
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
@@ -204,6 +209,7 @@ class LayerTree extends React.Component {
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
         onAddGroup: PropTypes.func,
+        onError: PropTypes.func,
         onGetMetadataRecord: PropTypes.func,
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
@@ -246,6 +252,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateMetedataTool: true,
         activateRemoveLayer: true,
+        activateRemoveGroup: true,
         activateQueryTool: true,
         activateDownloadTool: false,
         activateWidgetTool: false,
@@ -281,6 +288,7 @@ class LayerTree extends React.Component {
         noFilterResults: false,
         onAddLayer: () => {},
         onAddGroup: () => {},
+        onError: () => {},
         onGetMetadataRecord: () => {},
         hideLayerMetadata: () => {},
         activateAddLayerButton: false,
@@ -364,6 +372,7 @@ class LayerTree extends React.Component {
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
+                                activateRemoveGroup: this.props.activateRemoveGroup,
                                 activateZoomTool: this.props.activateZoomTool,
                                 activateQueryTool: this.props.activateQueryTool,
                                 activateDownloadTool: this.props.activateDownloadTool,
@@ -449,7 +458,7 @@ class LayerTree extends React.Component {
                             <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
                         </div>
                         :
-                        <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
+                        <TOC onError={this.props.onError} onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
                             <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
                         </TOC>
                     }
@@ -465,6 +474,29 @@ class LayerTree extends React.Component {
         return this.renderTOC();
     }
 }
+
+const securityEnhancer = (Component) => (props) => {
+    const { addLayersPermissions = true,
+        removeLayersPermissions = true,
+        sortingPermissions = true,
+        addGroupsPermissions = true,
+        removeGroupsPermissions = true, user, ...other} = props;
+
+    const activateParameter = (allow, activate) => {
+        const isUserAdmin = user && user.role === 'ADMIN' || false;
+        return (allow || isUserAdmin) ? activate : false;
+    };
+
+    const activateProps = {
+        activateAddLayerButton: activateParameter(addLayersPermissions, props.activateAddLayerButton),
+        activateRemoveLayer: activateParameter(removeLayersPermissions, props.activateRemoveLayer),
+        activateSortLayer: activateParameter(sortingPermissions, props.activateSortLayer),
+        activateAddGroupButton: activateParameter(addGroupsPermissions, props.activateAddGroupButton),
+        activateRemoveGroup: activateParameter(removeGroupsPermissions, props.activateRemoveGroup)
+    };
+
+    return <Component {...other} {...activateProps}/>;
+};
 
 
 /**
@@ -602,15 +634,17 @@ const TOCPlugin = connect(tocSelector, {
     onAddLayer: setControlProperties.bind(null, "metadataexplorer", "enabled", true, "group"),
     onAddGroup: setControlProperties.bind(null, "addgroup", "enabled", true, "parent"),
     onGetMetadataRecord: getMetadataRecordById,
+    onError: error,
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion
-})(LayerTree);
+})(securityEnhancer(LayerTree));
 
 const API = {
     csw: require('../api/CSW'),
     wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
+    wmts: require('../api/WMTS'),
+    backgrounds: require('../api/mapBackground')
 };
 
 module.exports = {

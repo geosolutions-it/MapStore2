@@ -248,7 +248,7 @@
             {
               "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
               "type": "image",
-              "title": "UNKNOWN",
+              "title": "Image",
               "resourceId": "eaebe073-d514-4601-8c85-94f00f67ef70",
               "size": "medium"
             }
@@ -267,6 +267,7 @@
           "align": "left",
           "size": "small",
           "theme": "bright",
+          "title": "Immersive Content",
           "contents": [
             {
               "id": "fc1a167c-58e1-4701-8cc1-dc3a89a6fd07",
@@ -329,6 +330,7 @@
           "align": "right",
           "size": "small",
           "theme": "bright",
+          "title": "Immersive Content",
           "contents": [
             {
               "id": "169b17b7-21a2-47ad-a69d-1882ab286851",
@@ -338,7 +340,7 @@
             {
               "id": "aa8251ef-6acc-499e-a992-2a033b8e0687",
               "type": "image",
-              "title": "UNKNOWN",
+              "title": "Image",
               "resourceId": "c4b1a878-e12d-40e8-983c-4c35ea721447"
             }
           ],
@@ -366,6 +368,7 @@
           "align": "right",
           "size": "small",
           "theme": "bright",
+          "title": "Immersive Content",
           "contents": [
             {
               "id": "bbae2888-612c-4af6-95bf-d1ff442a1d15",
@@ -375,7 +378,7 @@
             {
               "id": "41b78dcb-e1ca-4130-a890-fa72dc6d44f1",
               "type": "image",
-              "title": "UNKNOWN",
+              "title": "Image",
               "resourceId": "95170aa4-ad68-4a57-9be8-7ff00b30eda6"
             }
           ],
@@ -403,6 +406,7 @@
           "align": "right",
           "size": "small",
           "theme": "bright",
+          "title": "Immersive Content",
           "contents": [
             {
               "id": "e44702e4-4428-413f-a23e-86ada2506047",
@@ -412,7 +416,7 @@
             {
               "id": "df0882ca-926f-439f-9f0f-34c2633b4cb9",
               "type": "image",
-              "title": "UNKNOWN",
+              "title": "Image",
               "resourceId": "23b34678-9f0c-4498-9ba2-ceffe0b071be"
             }
           ],
@@ -440,6 +444,7 @@
           "align": "left",
           "size": "small",
           "theme": "dark",
+          "title": "Immersive Content",
           "contents": [
             {
               "id": "df8927be-41a6-45bb-817c-b586206896e3",
@@ -462,6 +467,7 @@
           "align": "center",
           "size": "small",
           "theme": "dark-text",
+          "title": "Immersive Content",
           "contents": [
             {
               "id": "c1b925bd-620c-4432-8aaa-32efeeeff821",

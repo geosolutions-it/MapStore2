@@ -1,4 +1,22 @@
-const {get} = require('lodash');
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+const {createSelector} = require('reselect');
+const {get, pick} = require('lodash');
+
+const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
+const servicesSelector = (state) => get(state, "catalog.services");
+const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => ({
+    ...services,
+    ...(pick(staticServices, "default_map_backgrounds"))
+}));
+const selectedStaticServiceTypeSelector =
+    (state) => get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw");
 
 module.exports = {
     groupSelector: (state) => get(state, "controls.metadataexplorer.group"),
@@ -6,10 +24,13 @@ module.exports = {
     resultSelector: (state) => get(state, "catalog.result"),
     serviceListOpenSelector: (state) => get(state, "catalog.openCatalogServiceList"),
     newServiceSelector: (state) => get(state, "catalog.newService"),
-    servicesSelector: (state) => get(state, "catalog.services"),
+    staticServicesSelector,
+    servicesSelector,
+    servicesSelectorWithBackgrounds,
     newServiceTypeSelector: (state) => get(state, "catalog.newService.type", "csw"),
     selectedCatalogSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"]`),
-    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, "csw"),
+    selectedStaticServiceTypeSelector,
+    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, selectedStaticServiceTypeSelector(state)),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
     formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),

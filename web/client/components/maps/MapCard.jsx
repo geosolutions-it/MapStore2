@@ -10,10 +10,9 @@ const React = require('react');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const FitIcon = require('../misc/FitIcon');
-
 const thumbUrl = require('./style/default.jpg');
 const assign = require('object-assign');
-const ConfirmModal = require('./modals/ConfirmModal');
+const ConfirmModal = require('../misc/ResizableModal');
 
 class MapCard extends React.Component {
     static propTypes = {
@@ -74,7 +73,8 @@ class MapCard extends React.Component {
     onClick = (evt) => {
         // Users can select Title and Description without triggering the click
         var selection = window.getSelection();
-        if (!selection.toString()) {
+        const selectedText = selection.toString();
+        if (!selectedText) {
             this.stopPropagate(evt);
             this.props.viewerUrl(this.props.map);
         }
@@ -136,34 +136,45 @@ class MapCard extends React.Component {
                 }
             }
         ];
-
         return (
-            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
-                actions={availableAction} onClick={this.onClick}
-            >
-                <div className="map-thumb-description">{this.props.map.description}</div>
-                {this.props.map.icon ?
-                    <div key="icon" style={{
-                        width: "20px",
-                        height: "20px",
-                        margin: "5px 10px",
-                        color: "white",
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0 }} >
-                        <FitIcon glyph={this.props.map.icon} />
-                    </div> : null}
+            <div>
+                <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
+                    actions={availableAction} onClick={this.onClick}
+                >
+                    <div className="map-thumb-description">{this.props.map.description}</div>
+                    {this.props.map.icon ?
+                        <div key="icon" style={{
+                            width: "20px",
+                            height: "20px",
+                            margin: "5px 10px",
+                            color: "white",
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0
+                        }} >
+                            <FitIcon glyph={this.props.map.icon} />
+                        </div> : null}
+                </GridCard>
                 <ConfirmModal
                     ref="deleteMapModal"
                     show={this.state ? this.state.displayDeleteDialog : false}
-                    onHide={this.close}
                     onClose={this.close}
-                    onConfirm={this.onConfirmDelete}
-                    titleText={this.props.map.title || this.props.map.name || <Message msgId="resources.deleteConfirmTitle" />}
-                    confirmText={<Message msgId="yes" />}
-                    cancelText={<Message msgId="no" />}
-                    body={<Message msgId="resources.deleteConfirmMessage" />} />
-            </GridCard>
+                    title={this.props.map.title || this.props.map.name || <Message msgId="resources.deleteConfirmTitle" />}
+                    buttons={[{
+                        bsStyle: "primary",
+                        text: <Message msgId="yes" />,
+                        onClick: this.onConfirmDelete
+                    }, {
+                        text: <Message msgId="no" />,
+                        onClick: this.close
+                    }]}
+                    fitContent
+                >
+                    <div className="ms-detail-body">
+                        <Message msgId="resources.deleteConfirmMessage" />
+                    </div>
+                </ConfirmModal>
+            </div>
         );
     }
 

@@ -30,8 +30,16 @@ class FeatureInfoFormatSelector extends React.Component {
     };
 
     render() {
-        var list = Object.keys(this.props.availableInfoFormat).map((infoFormat) => {
-            let val = this.props.availableInfoFormat[infoFormat];
+        const filtered = Object.keys(this.props.availableInfoFormat).reduce((acc, key) => {
+            const values = Object.keys(acc).map(item => acc[item]);
+            const exist = values.some(item => item === this.props.availableInfoFormat[key]);
+            if (!exist) {
+                acc[key] = this.props.availableInfoFormat[key];
+            }
+            return acc;
+        }, {});
+        var list = Object.keys(filtered).map((infoFormat) => {
+            let val = filtered[infoFormat];
             let label = infoFormat;
             return <option value={val} key={val}>{label}</option>;
         });

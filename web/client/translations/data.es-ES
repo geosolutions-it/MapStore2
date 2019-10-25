@@ -311,6 +311,16 @@
                 "title": "Mapas ({count})",
                 "noMapAvailable": "No hay mapa disponible",
                 "createNewOne": "Crea uno nuevo"
+            },
+            "geostories": {
+                "newGeostory": "Nuevo Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "Crear Story",
+                "noGeostoryAvailable": "No hay story disponible",
+                "createANewOne": "Crea uno nuevo",
+                "deleteError": "Hubo un error al eliminar el recurso",
+                "errorLoadingGeostories": "Hubo un error al cargar los stories"
             }
         },
         "map": {
@@ -488,6 +498,9 @@
                 "invalid_object": "Respuesta de servicio no válida",
                 "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
                 "invalid_classes": "Max debe ser mayor que min en todas las clases"
+            },
+            "error": {
+                "defaultGroupOnTop": "El grupo {groupTitle} se establece como grupo objetivo predeterminado, por lo tanto, debe permanecer en la parte superior"
             }
         },
         "print":{
@@ -1150,7 +1163,8 @@
                 "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
                 "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
-            }
+            },
+            "backgroundAlreadyAdded": "Agregado al selector de fondo"
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1884,7 +1898,8 @@
                 "editMedia": "Cambiar fuente de medios",
                 "remove": "Eliminar",
                 "removeConfirmTitle": "¿Estás seguro?",
-                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?"
+                "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
+                "editMap": "Modifier l'étendue initiale de la carte"
             },
             "builder": {
                 "defaults": {
@@ -1893,14 +1908,18 @@
                     "titleTitle": "Sección de título",
                     "titleParagraph": "Sección de párrafo",
                     "titleImmersive": "Sección inmersiva",
+                    "titleImmersiveContent": "Contenido inmersivo",
                     "titleMedia": "Sección de multimedia",
+                    "titleImage": "Imagen",
+                    "titleText": "Texto",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Eliminar la sección seleccionada",
                 "preview": "Mostrar vista previa",
                 "edit": "Editar historia",
-                "hide": "Ocultar vista previa en tarjetas",
-                "show": "Mostrar vista previa en tarjetas",
+                "noContents": "No hay contenidos disponibles",
+                "collapseAll": "Desplegar todo",
+                "expandAll": "Expandir todo",
                 "fullscreen": "Mostrar vista previa en pantalla completa",
                 "settings": {
                     "tooltip": "Configuraciones",
@@ -1972,6 +1991,28 @@
                 "videoFilter": "Filtrar videos",
                 "imageFilter": "Filtrar imágenes"
             }
+        },
+        "backgroundDialog": {
+            "addTitle": "Agregar nuevo fondo",
+            "editTitle": "Editar fondo actual",
+            "title": "Título",
+            "titlePlaceholder": "Ingrese el nombre que se muestra",
+            "add": "Añadir",
+            "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px o 128 px x 128 px, máximo 500kb",
+            "additionalParameters": "Parámetros adicionales",
+            "addAdditionalParameterTooltip": "Agregar parámetro",
+            "removeAdditionalParameterTooltip": "Eliminar parámetro",
+            "parameter": "Parámetro",
+            "value": "Valor",
+            "string": "Sarta",
+            "number": "Número",
+            "boolean": "Booleano"
+        },
+        "defaultMapBackgroundsServiceTitle": "Fondos predeterminados",
+        "backgroundSelector": {
+            "addTooltip": "Agregar nuevo fondo",
+            "editTooltip": "Editar fondo actual",
+            "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
         },
         "tutorial": {
             "title": "Tutorial",

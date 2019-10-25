@@ -23,7 +23,6 @@ const actions = {
     onSetUnsavedStyle: () => {},
     onError: () => {}
 };
-
 describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

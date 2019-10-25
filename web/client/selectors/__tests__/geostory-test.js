@@ -9,12 +9,15 @@ import expect from 'expect';
 
 import {
     modeSelector,
-    cardPreviewEnabledSelector,
+    isCollapsedSelector,
     createPathSelector,
     currentStorySelector,
+    isEditAllowedSelector,
     sectionsSelector,
     sectionSelectorCreator,
     sectionAtIndexSelectorCreator,
+    resourceSelector,
+    canEditSelector,
     resourcesSelector,
     resourceByIdSelectorCreator,
     resourceIdSelectorCreator,
@@ -24,7 +27,7 @@ import {
 } from "../geostory";
 
 describe('geostory selectors', () => { // TODO: check default
-    it('cardPreviewEnabledSelector', () => { expect(cardPreviewEnabledSelector({geostory: {cardPreviewEnabled: false}})).toEqual(false); });
+    it('isCollapsedSelector', () => { expect(isCollapsedSelector({geostory: {isCollapsed: false}})).toEqual(false); });
     it('currentStorySelector', () => { expect(currentStorySelector({geostory: {currentStory: {}}})).toEqual({}); });
     it('createPathSelector', () => {
         const path = 'sections[{"id": "section_id"}].contents[{"id": "content_id"}]';
@@ -40,6 +43,12 @@ describe('geostory selectors', () => { // TODO: check default
     it('sectionSelectorCreator', () => { expect(sectionSelectorCreator("id")({geostory: {currentStory: {sections: [{id: "id"}]}}})).toEqual({id: "id"}); });
     it('sectionAtIndexSelectorCreator', () => { expect(sectionAtIndexSelectorCreator(0)({geostory: {currentStory: {sections: [{id: "id"}]}}})).toEqual({id: "id"}); });
     it('resourcesSelector', () => { expect(resourcesSelector({geostory: {currentStory: {resources: []}}})).toEqual([]); });
+    it('canEditSelector false', () => { expect(canEditSelector({geostory: {resource: {id: 123}}})).toEqual(false); });
+    it('canEditSelector true', () => { expect(canEditSelector({geostory: {resource: {canEdit: true}}})).toEqual(true); });
+    it('isEditAllowedSelector, logged ADMIN, can edit', () => { expect(isEditAllowedSelector({geostory: {resource: {canEdit: true}}, security: {user: {role: "ADMIN"}}})).toEqual(true); });
+    it('isEditAllowedSelector, logged USER, cannot edit', () => { expect(isEditAllowedSelector({geostory: {resource: {canEdit: false}}, security: {user: {role: "USER"}}})).toEqual(false); });
+    it('isEditAllowedSelector, logged ADMIN, local resource', () => { expect(isEditAllowedSelector({geostory: {resource: {}}, security: {user: {role: "ADMIN"}}})).toEqual(true); });
+    it('resourceSelector', () => { expect(resourceSelector({geostory: {resource: {id: 123}}})).toEqual({id: 123}); });
     it('resourceByIdSelectorCreator', () => { expect(resourceByIdSelectorCreator("id")({geostory: {currentStory: {resources: [{id: "id"}]}}})).toEqual({id: "id"}); });
     it('saveDialogSelector', () => {
         expect(saveDialogSelector({

@@ -12,8 +12,8 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
-const { clickedPointWithFeaturesSelector} = require('./mapInfo');
-const { defaultQueryableFilter } = require('../utils/MapInfoUtils');
+const {clickedPointWithFeaturesSelector} = require('./mapInfo');
+const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
 
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
 const {flattenGroups} = require('../utils/TOCUtils');
@@ -164,5 +164,4 @@ module.exports = {
     centerToMarkerSelector,
     elementSelector,
     selectedLayerLoadingErrorSelector
-
 };

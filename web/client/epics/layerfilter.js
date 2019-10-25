@@ -25,7 +25,6 @@ const {getSelectedLayer} = require("../selectors/layers");
 const {changeDrawingStatus} = require('../actions/draw');
 const FilterUtils = require('../utils/FilterUtils');
 
-
 const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields} = {}) => {
     return !!(filterFields && head(filterFields)
     || spatialField && spatialField.method && spatialField.operation && spatialField.geometry

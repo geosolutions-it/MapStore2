@@ -32,7 +32,8 @@ describe('Test Catalog panel', () => {
         const item = ReactDOM.render(<Catalog
             services={{"csw": {
                 type: "csw",
-                url: "url"
+                url: "url",
+                title: "csw"
             }}}
             selectedService="csw"
             onSearch={(props) => {

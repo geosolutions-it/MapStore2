@@ -6,13 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const React = require('react');
+const PropTypes = require('prop-types');
+
 const sizeToClass = size => size > 100
     ? 'full'
     : size > 40
         ? 'medium'
         : 'small';
-const React = require('react');
-module.exports = ({ size, style = {}, className}) => (<div className={className}
+
+const Loader = ({ size, style = {}, className}) => (<div className={className}
     style={{ width: size, height: size, overflow: "hidden", ...style }}>
     <div className={`mapstore-${sizeToClass(size)}-size-loader`}></div>
 </div>);
+
+Loader.propTypes = {
+    size: PropTypes.number,
+    className: PropTypes.string,
+    style: PropTypes.object
+};
+
+module.exports = Loader;

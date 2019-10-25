@@ -59,7 +59,7 @@ export default class OpenlayersLayer extends React.Component {
         const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
 
-        if (newProps.position !== this.props.position && this.layer.setZIndex) {
+        if (newProps.position !== this.props.position && this.layer && this.layer.setZIndex) {
             this.layer.setZIndex(newProps.position);
         }
         if (this.props.options) {

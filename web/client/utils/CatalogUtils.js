@@ -319,6 +319,21 @@ const converters = {
             });
         }
         return null;
+    },
+    backgrounds: (records) => {
+        if (records && records.records) {
+            return records.records.map(record => {
+                return {
+                    description: record.title,
+                    title: record.title,
+                    identifier: record.name,
+                    thumbnail: record.thumbURL,
+                    references: [],
+                    background: record
+                };
+            });
+        }
+        return null;
     }
 };
 const buildSRSMap = (srs) => {

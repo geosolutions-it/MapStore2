@@ -7,7 +7,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {isObject, isArray, trim } from 'lodash';
+import {isObject, head, isArray, trim } from 'lodash';
 import {Image, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
 
 import {
@@ -30,6 +30,9 @@ import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
 
 import defaultThumb from './img/default.jpg';
+import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
+
+import BackgroundDialog from '../background/BackgroundDialog';
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -47,17 +50,31 @@ class RecordItem extends React.Component {
         onCopy: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
+        onAddBackground: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
+        zoomToLayer: PropTypes.bool,
+        onPropertiesChange: PropTypes.func,
+        onLayerChange: PropTypes.func,
+        layers: PropTypes.array,
+        onAdd: PropTypes.func,
+        source: PropTypes.string,
+        modalParams: PropTypes.object,
+        onAddBackgroundProperties: PropTypes.func,
+        onUpdateThumbnail: PropTypes.func,
+        deletedId: PropTypes.string,
+        clearModal: PropTypes.func,
         showTemplate: PropTypes.bool,
-        zoomToLayer: PropTypes.bool
+        formatOptions: PropTypes.array
     };
 
     static defaultProps = {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
+        onUpdateThumbnail: () => {},
+        onAddBackgroundProperties: () => {},
         hideThumbnail: false,
         hideIdentifier: false,
         hideExpand: false,
@@ -66,10 +83,17 @@ class RecordItem extends React.Component {
         onError: () => {},
         onLayerAdd: () => {},
         onZoomToExtent: () => {},
-        showGetCapLinks: true,
-        showTemplate: false,
+        onPropertiesChange: () => {},
+        onLayerChange: () => {},
+        clearModal: () => {},
         style: {},
-        zoomToLayer: true
+        showGetCapLinks: false,
+        zoomToLayer: true,
+        layers: [],
+        onAdd: () => {},
+        source: 'metadataExplorer',
+        showTemplate: false,
+        changeLayerProperties: () => {}
     };
     state = {
         visibleExpand: false
@@ -109,7 +133,7 @@ class RecordItem extends React.Component {
 
     };
 
-    renderButtons = (record) => {
+    renderButtons = (record, disabled) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -118,32 +142,53 @@ class RecordItem extends React.Component {
         const {wms, wmts} = extractOGCServicesReferences(record);
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
+        const background = record && record.background;
 
         // let's create the buttons
         let buttons = [];
-        // TODO addWmsLayer and addwmtsLayer do almost the same thing and they should be unified
-        if (wms) {
-            buttons.push(
+        if (background) {
+            buttons.push(disabled ?
+                <Message msgId="catalog.backgroundAlreadyAdded"/> :
                 <Button
                     key="wms-button"
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
-                    onClick={() => { this.addWmsLayer(wms); }}
+                    bsSize={this.props.buttonSize}
+                    onClick={() => {
+                        const layer = {...background, id: background.name, visibility: false};
+                        this.props.onLayerAdd(layer);
+                        this.props.onAddBackground(layer.id);
+                    }}
                     key="addlayer">
                     <Glyphicon glyph="plus" />
                 </Button>
             );
         }
-        if (wmts) {
+        if (wms || wmts) {
+            const type = wms ? 'wms' : 'wmts';
             buttons.push(
                 <Button
-                    key="wmts-button"
+                    key={`${type}-button`}
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
-                    onClick={() => { this.addwmtsLayer(wmts); }}
-                    key="addwmtsLayer">
+                    bsSize={this.props.buttonSize}
+                    onClick={() => {
+                        const layer = this.makeLayer(type, wms || wmts);
+                        if (layer) {
+                            if (this.props.source === 'backgroundSelector') {
+                                this.props.onAddBackgroundProperties({
+                                    identifier: record.identifier,
+                                    editing: false,
+                                    layer
+                                }, true);
+                            } else {
+                                this.addLayer(layer);
+                            }
+                        }
+                    }}
+                    key={`add${type}layer`}>
                     <Glyphicon glyph="plus" />
                 </Button>
             );
@@ -155,7 +200,10 @@ class RecordItem extends React.Component {
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
-                    onClick={() => { this.addEsriLayer(); }}
+                    bsSize={this.props.buttonSize}
+                    onClick={() => {
+                        this.addLayer(esriToLayer(this.props.record, this.props.layerBaseConfig));
+                    }}
                     key="addwmtsLayer">
                     <Glyphicon glyph="plus" />
                 </Button>
@@ -185,17 +233,39 @@ class RecordItem extends React.Component {
             : record.metadataTemplate ? '' : (isArray(record.description) ? record.description.join(", ") : record.description);
     };
 
+    renderBackgroundDialog() {
+        return (
+            <BackgroundDialog
+                onClose={this.props.clearModal}
+                onSave={layer => {
+                    this.addLayer(layer);
+                    this.props.onAddBackground(layer.id);
+                }}
+                updateThumbnail={this.props.onUpdateThumbnail}
+                formatOptions={this.props.formatOptions}
+                {...this.props.modalParams}
+            />
+        );
+    }
+
     render() {
-        let record = this.props.record;
+        const record = this.props.record;
         const {wms, wmts} = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
+        const background = record && record.background;
+        const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name ||
+            layer.type === background.type && layer.source === background.source && layer.name === background.name));
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
-        // IMPORTANT: if those values are changed then this defaults needs to change too
-        return record ? (
+        // IMPORTANT: if those values are changed then these defaults also have to change
+        return record ? (<div>
+            {this.props.modalParams && this.props.modalParams.identifier === record.identifier && !this.props.modalParams.editing ?
+                this.renderBackgroundDialog() : null}
             <SideCard
-                style={{transform: "none"}}
+                style={{transform: "none", opacity: disabled ? 0.4 : 1}}
                 fullText={this.state.fullText}
-                preview={!this.props.hideThumbnail && this.renderThumb(record && record.thumbnail, record)}
+                preview={!this.props.hideThumbnail &&
+                    this.renderThumb(record && record.thumbnail ||
+                        background && defaultBackgroundThumbs[background.source][background.name], record)}
                 title={record && this.getTitle(record.title)}
                 description={<div className ref={sideCardDesc => {
                     this.sideCardDesc = sideCardDesc;
@@ -203,7 +273,7 @@ class RecordItem extends React.Component {
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                        <div>{!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        <div>{!wms && !wmts && !esri && !background && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"
@@ -225,7 +295,7 @@ class RecordItem extends React.Component {
                             }
                         }}
                         buttons={[
-                            ...(record && this.renderButtons(record) || []).map(Element => ({ Element: () => Element })),
+                            ...(record && this.renderButtons(record, disabled) || []).map(Element => ({ Element: () => Element })),
                             {
                                 glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
                                 visible: this.state.visibleExpand,
@@ -234,57 +304,49 @@ class RecordItem extends React.Component {
                             }
                         ]}/>
                 }/>
-        ) : null;
+        </div>) : null;
     }
 
-    addWmsLayer = (wms) => {
-        const allowedSRS = buildSRSMap(wms.SRS);
-        if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
-            this.props.onError('catalog.srs_not_allowed');
-        } else {
-            this.props.onLayerAdd(
-                recordToLayer(this.props.record, "wms", {
-                    removeParams: this.props.authkeyParamNames,
-                    catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
-                }, this.props.layerBaseConfig));
-            if (this.props.record.boundingBox && this.props.zoomToLayer) {
-                let extent = this.props.record.boundingBox.extent;
-                let crs = this.props.record.boundingBox.crs;
-                this.props.onZoomToExtent(extent, crs);
-            }
-        }
+    isLinkCopied = (key) => {
+        return this.state[key];
     };
 
-    addwmtsLayer = (wmts) => {
-        const allowedSRS = buildSRSMap(wmts.SRS);
-        if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
+    setLinkCopiedStatus = (key, status) => {
+        this.setState({[key]: status});
+    };
+
+    makeLayer = (type, ogcReferences) => {
+        const allowedSRS = buildSRSMap(ogcReferences.SRS);
+        if (ogcReferences.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
-        } else {
-            this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", {
-                removeParams: this.props.authkeyParamNames
-            }, this.props.layerBaseConfig));
+            return null;
+        }
+
+        return recordToLayer(this.props.record, type, {
+            removeParams: this.props.authkeyParamNames,
+            ...(type === 'wms' ? {catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ?
+                this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
+                this.props.record.identifier : null} : {})
+        }, this.props.layerBaseConfig);
+    }
+
+    addLayer = (layer) => {
+        if (layer) {
+            this.props.onLayerAdd(layer);
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
                 this.props.onZoomToExtent(extent, crs);
             }
         }
-    };
-    addEsriLayer = () => {
-        this.props.onLayerAdd(esriToLayer(this.props.record, this.props.layerBaseConfig));
-        if (this.props.record.boundingBox && this.props.zoomToLayer) {
-            let extent = this.props.record.boundingBox.extent;
-            let crs = this.props.record.boundingBox.crs;
-            this.props.onZoomToExtent(extent, crs);
-        }
-    };
+    }
+
     /**
      * it manages visibility of expand button.
      * it checks if the width of descriptionRuler is higher than the width of the desc-section
      * @return {boolean} the value of the check
     */
     displayExpand = () => {
-
         const descriptionRulerWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
         const descriptionWidth = this.sideCardDesc ? this.sideCardDesc.clientWidth : 0;
         return descriptionRulerWidth > descriptionWidth;

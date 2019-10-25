@@ -127,7 +127,7 @@ here a list of what we had to update:
  * update your package.json with latest versions of webpack, webpack plugins and karma libs and integrations (Take a look to the changes on package.json in the pull request if you want a detailed list of what to update in this case).
  * change your test proxy configuration with the new one.
 
-More details on the [webpack site](https://webpack.js.org/guides/migrating/).
+More details on the [webpack site](https://webpack.js.org/migrate/).
 
 
 ### react-intl update to  2.x

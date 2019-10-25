@@ -284,7 +284,7 @@
 		},
         "resources": {
             "deleteConfirmTitle": "Are you sure",
-            "deleteConfirmMessage": "Are you sure you want do delete this resource?",
+            "deleteConfirmMessage": "Are you sure you want to delete this resource?",
             "deleteConfirmButtonText": "Delete",
             "deleteCancelButtonText": "Close",
             "resource": {
@@ -311,6 +311,16 @@
                 "title": "Maps ({count})",
                 "noMapAvailable": "No map available",
                 "createNewOne": "Create a new one"
+            },
+            "geostories": {
+                "newGeostory": "New Story",
+                "title": "Stories ({count})",
+                "titleNoCount": "Stories",
+                "create": "Create Story",
+                "noGeostoryAvailable": "No story available",
+                "createANewOne": "Create a new one",
+                "deleteError": "There was an error deleting the resource",
+                "errorLoadingGeostories": "There was an error loading stories"
             }
         },
         "map": {
@@ -488,6 +498,9 @@
                 "invalid_object": "Invalid service response",
                 "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
                 "invalid_classes": "Max must be greater than min in every class"
+            },
+            "error": {
+                "defaultGroupOnTop": "The {groupTitle} group is set as default target group, therefore it must remain on top"
             }
         },
         "print":{
@@ -1151,7 +1164,8 @@
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
                 "serviceDeletedCorrectly": "The service was deleted correctly",
                 "errorServiceUrl": "Service not available. Please, check the provided url"
-            }
+            },
+            "backgroundAlreadyAdded": "Added to background selector"
         },
         "uploader": {
             "filename": "File Name",
@@ -1910,7 +1924,8 @@
                 "editMedia": "Change media source",
                 "remove": "Remove",
                 "removeConfirmTitle": "Are you sure?",
-                "removeConfirmContent": "Do you want to remove this content from the story?"
+                "removeConfirmContent": "Do you want to remove this content from the story?",
+                "editMap": "Edit initial map extent"
             },
             "builder": {
                 "defaults": {
@@ -1919,14 +1934,18 @@
                     "titleTitle": "Title Section",
                     "titleParagraph": "Paragraph Section",
                     "titleImmersive": "Immersive Section",
+                    "titleImmersiveContent": "Immersive Content",
                     "titleMedia": "Media Section",
+                    "titleImage": "Image",
+                    "titleText": "Text",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Remove selected section",
                 "preview": "Show preview",
                 "edit": "Edit story",
-                "hide": "Hide preview in cards",
-                "show": "Show preview in cards",
+                "noContents": "No Contents Available",
+                "collapseAll": "Collapse all",
+                "expandAll": "Expand all",
                 "fullscreen": "Show preview in fullscreen",
                 "settings": {
                     "tooltip": "Settings",
@@ -1998,6 +2017,28 @@
                 "videoFilter": "Filter videos",
                 "imageFilter": "Filter images"
             }
+        },
+        "backgroundDialog": {
+            "addTitle": "Add New Background",
+            "editTitle": "Edit Current Background",
+            "title": "Title",
+            "titlePlaceholder": "Enter displayed name",
+            "add": "Add",
+            "thumbnailMessage": "Size of images should be a square of 98px x 98px or 128px x 128px, max 500kb",
+            "additionalParameters": "Additional Parameters",
+            "addAdditionalParameterTooltip": "Add parameter",
+            "removeAdditionalParameterTooltip": "Remove parameter",
+            "parameter": "Parameter",
+            "value": "Value",
+            "string": "String",
+            "number": "Number",
+            "boolean": "Boolean"
+        },
+        "defaultMapBackgroundsServiceTitle": "Default Backgrounds",
+        "backgroundSelector": {
+            "addTooltip": "Add new background",
+            "editTooltip": "Edit current background",
+            "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
         },
         "tutorial": {
             "title": "Tutorial",

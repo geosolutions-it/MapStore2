@@ -11,7 +11,7 @@ const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const thumbUrl = require('../maps/style/default.jpg');
 const assign = require('object-assign');
-const ConfirmModal = require('./modals/ConfirmModal');
+const ConfirmModal = require('../misc/ResizableModal');
 
 class ResourceCard extends React.Component {
     static propTypes = {
@@ -130,22 +130,31 @@ class ResourceCard extends React.Component {
         ];
 
         return (
-            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.resource.title || this.props.resource.name}
-                actions={availableAction} onClick={this.onClick}
-            >
-                <div className="map-thumb-description">{this.props.resource.description}</div>
+            <div>
+                <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.resource.title || this.props.resource.name}
+                    actions={availableAction} onClick={this.onClick}
+                >
+                    <div className="map-thumb-description">{this.props.resource.description}</div>
+                </GridCard>
                 <ConfirmModal
                     show={this.state ? this.state.displayDeleteDialog : false}
-                    onHide={this.close}
                     onClose={this.close}
-                    onConfirm={this.onConfirmDelete}
                     title={this.props.resource.title || this.props.resource.name || <Message msgId="resources.deleteConfirmTitle" />}
-                    cancelText={<Message msgId="no" />}
-                    confirmText={<Message msgId="yes" />}
+                    buttons={[{
+                        bsStyle: "primary",
+                        text: <Message msgId="yes" />,
+                        onClick: this.onConfirmDelete
+                    }, {
+                        text: <Message msgId="no" />,
+                        onClick: this.close
+                    }]}
+                    fitContent
                 >
-                    <Message msgId="resources.deleteConfirmMessage" />
+                    <div className="ms-detail-body">
+                        <Message msgId="resources.deleteConfirmMessage" />
+                    </div>
                 </ConfirmModal>
-            </GridCard>
+            </div>
         );
     }
 

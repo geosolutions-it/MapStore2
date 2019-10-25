@@ -106,6 +106,22 @@ describe('Test correctness of the usergroups actions', () => {
             }
         });
     });
+
+    it('close UserGroup edit', (done) => {
+        const retFun = editGroup();
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            expect(action.type).toBe(EDITGROUP);
+            count++;
+            if (count === 1) {
+                expect(action.group).toNotExist();
+                expect(action.status).toNotExist();
+                done();
+            }
+        });
+    });
+
     it('edit UserGroup error', (done) => {
         const retFun = editGroup({id: 99999});
         expect(retFun).toExist();

@@ -54,6 +54,9 @@
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
         },
+        "geostory": {
+
+        },
         "catalog": {
           "default": {
             "newService": {
@@ -82,6 +85,50 @@
                 "type": "wmts",
                 "title": "GeoSolutions GeoServer WMTS",
                 "autoload": false
+              }
+            },
+            "staticServices": {
+              "default_map_backgrounds": {
+                "type": "backgrounds",
+                "title": "defaultMapBackgroundsServiceTitle",
+                "autoload": true,
+                "backgrounds": [{
+                    "type": "osm",
+                    "title": "Open Street Map",
+                    "name": "mapnik",
+                    "source": "osm",
+                    "group": "background"
+                }, {
+                    "type": "tileprovider",
+                    "title": "NASAGIBS Night 2012",
+                    "provider": "NASAGIBS.ViirsEarthAtNight2012",
+                    "name": "Night2012",
+                    "source": "nasagibs",
+                    "group": "background"
+                }, {
+                    "type": "tileprovider",
+                    "title": "OpenTopoMap",
+                    "provider": "OpenTopoMap",
+                    "name": "OpenTopoMap",
+                    "source": "OpenTopoMap",
+                    "group": "background"
+                }, {
+                    "format": "image/jpeg",
+                    "group": "background",
+                    "name": "s2cloudless:s2cloudless",
+                    "opacity": 1,
+                    "title": "Sentinel 2 Cloudless",
+                    "type": "wms",
+                    "url": "https://1maps.geo-solutions.it/geoserver/wms",
+                    "source": "s2cloudless",
+                    "singleTile": false
+                }, {
+                    "source": "ol",
+                    "group": "background",
+                    "title": "Empty Background",
+                    "fixed": true,
+                    "type": "empty"
+                }]
               }
             }
           }
@@ -292,7 +339,12 @@
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
                     "activateAddGroupButton": true,
-                    "activateMetedataTool": false
+                    "activateMetedataTool": false,
+                    "addLayersPermissions": true,
+                    "removeLayersPermissions": true,
+                    "sortingPermissions": true,
+                    "addGroupsPermissions": true,
+                    "removeGroupsPermissions": true
                 }
             },
             "AddGroup",
@@ -532,7 +584,18 @@
               },
               "fluid": true
             }
-          }, "MailingLists", "Footer", {
+          },
+          {
+            "name": "GeoStories",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              },
+              "fluid": true
+            }
+          }
+          , "MailingLists", "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",

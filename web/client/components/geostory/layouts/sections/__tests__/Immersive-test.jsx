@@ -51,7 +51,6 @@ const CONTENTS = [
 ];
 
 describe('Immersive component', () => {
-
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -61,7 +60,6 @@ describe('Immersive component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('Immersive rendering with defaults', () => {
         ReactDOM.render(<Immersive />, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -148,6 +146,6 @@ describe('Immersive component', () => {
 
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
-        testToolbarButtons(["pencil", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
+        testToolbarButtons(["pencil", "1-map", "1-full-screen", "resize-horizontal", "align-center", "dropper"], container);
     });
 });

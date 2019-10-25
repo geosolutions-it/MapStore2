@@ -23,6 +23,7 @@ class PreviewIcon extends React.Component {
         onPropertiesChange: PropTypes.func,
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
+        setCurrentBackgroundLayer: PropTypes.func,
         projection: PropTypes.string
     };
 
@@ -47,7 +48,11 @@ class PreviewIcon extends React.Component {
         const type = this.props.layer.visibility ? ' bg-primary' : ' bg-body';
         const valid = ((validCrs || compatibleWmts || this.props.layer.type === "wms" || this.props.layer.type === "empty") && !this.props.layer.invalid );
 
-        const click = !valid ? () => {} : () => { this.props.onToggle(); this.props.onPropertiesChange(this.props.layer.id, {visibility: true}); this.props.onLayerChange('currentLayer', this.props.layer); };
+        const click = !valid ? () => {} : () => {
+            this.props.onToggle();
+            this.props.onPropertiesChange(this.props.layer.id, {visibility: true});
+            this.props.setCurrentBackgroundLayer(this.props.layer.id);
+        };
         return (
             <div className={containerClass + type + (valid ? '' : ' disabled-icon')} style={{padding: this.props.frame / 2, marginLeft: this.props.vertical ? this.props.margin : 0, marginRight: this.props.vertical ? 0 : this.props.margin, marginBottom: this.props.margin, width: this.props.side + this.props.frame, height: this.props.side + this.props.frame}}>
                 <div className="background-preview-icon-frame" style={{width: this.props.side, height: this.props.side}}>

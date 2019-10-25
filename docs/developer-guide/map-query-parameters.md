@@ -8,11 +8,11 @@ In latest releases the **bbox** query param has been introduced whose value corr
 for example:
 `?bbox=-177.84667968750014,-1.8234225930143395,-9.096679687500114,61.700290838326204`
 
-For more details on it see [sharing a map](../user-guide/share). This **bbox** has been maintained as independent parameter for retro compatibility reasons since the URL query parameters logic is changing.
+For more details on it see [sharing a map](../user-guide/share.md). This **bbox** has been maintained as independent parameter for retro compatibility reasons since the URL query parameters logic is changing.
 
 ## Dynamically dispatching initial actions in MapStore
 
-To dispatch additional actions when the map viewer is started, the **actions** query parameter can be used. Only actions from a configured whitelist can be dispatched in this way (see the [configuration section](../configuration-files/local-config) for more details).
+To dispatch additional actions when the map viewer is started, the **actions** query parameter can be used. Only actions from a configured whitelist can be dispatched in this way (see the [configuration section](../configuration-files/) for more details).
 
 ```
 // list of actions types that are available to be launched dynamically from query param (#3817)

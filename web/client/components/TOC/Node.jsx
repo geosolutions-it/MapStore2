@@ -58,7 +58,7 @@ var Node = createReactClass({
         if (this.props.animateCollapse) {
             collapsible = <CSSTransitionGroup transitionName="TOC-Node" transitionEnterTimeout={250} transitionLeaveTimeout={250}>{collapsible}</CSSTransitionGroup>;
         }
-        let content = (<div key={this.props.node.name} className={(expanded ? prefix + "-expanded" : prefix + "-collapsed") + " " + this.props.className} style={nodeStyle} >
+        let content = (<div key={this.props.node.name} className={(expanded ? prefix + "-expanded" : prefix + "-collapsed") + " " + this.props.className} style={this.props.node.dummy ? {padding: 0} : nodeStyle} >
             {this.renderChildren((child) => child && child.props.position !== 'collapsible')}
             {collapsible}
         </div>);

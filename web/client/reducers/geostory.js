@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, toPath, isObject, isArray, castArray } from "lodash";
+import { get, isString, isNumber, findIndex, isObject, isArray, castArray } from "lodash";
 import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
+import { getEffectivePath } from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -19,45 +20,20 @@ import {
     UPDATE,
     UPDATE_CURRENT_PAGE,
     REMOVE,
+    SELECT_CARD,
     SET_CONTROL,
     SET_RESOURCE,
     SAVED,
     SAVE_ERROR
 } from '../actions/geostory';
 
+import { selectedCardSelector } from "../selectors/geostory";
+
 
 let INITIAL_STATE = {
     mode: 'edit', // TODO: change in to Modes.VIEW
-    cardPreviewEnabled: true
+    isCollapsed: false
 };
-
-/**
- * transforms the path with  into a path with predicates into a path with array indexes
- * @private
- * @param {string|string[]} rawPath path to transform in real path
- * @param {object} state the state to check to inspect the tree and get the real path
- */
-export const getEffectivePath = (rawPath, state) => {
-    const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`
-    // use curly brackets elements as predicates of findIndex to get the correct index.
-    return rawPathArray.reduce((path, current) => {
-        if (current && current.indexOf('{') === 0) {
-            const predicate = JSON.parse(current);
-            const currentArray = get(state, path);
-            const index = findIndex(
-                currentArray,
-                predicate
-            );
-            if (index >= 0) {
-                return [...path, index];
-            }
-            // if the predicate is not found, it will ignore the unknown part
-            return path;
-        }
-        return [...path, current];
-    }, []);
-};
-
 
 /**
  * Return the index of the where to place an item.
@@ -206,6 +182,9 @@ export default (state = INITIAL_STATE, action) => {
     case SET_CURRENT_STORY: {
         return set('currentStory', action.story, state);
     }
+    case SELECT_CARD: {
+        return set(`selectedCard`, selectedCardSelector({geostory: state}) === action.card ? "" : action.card, state);
+    }
     case SET_CONTROL: {
         const { control, value } = action;
         return set(`controls.${control}`, value, state);
@@ -225,7 +204,7 @@ export default (state = INITIAL_STATE, action) => {
         return set(`errors.save`, castArray(action.error), state);
     }
     case TOGGLE_CARD_PREVIEW: {
-        return set('cardPreviewEnabled', !state.cardPreviewEnabled, state);
+        return set('isCollapsed', !state.isCollapsed, state);
     }
     case UPDATE: {
         const { path: rawPath, mode } = action;

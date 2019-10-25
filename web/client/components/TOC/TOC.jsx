@@ -17,6 +17,7 @@ class TOC extends React.Component {
         nodes: PropTypes.array,
         id: PropTypes.string,
         onSort: PropTypes.func,
+        onError: PropTypes.func,
         setDndState: PropTypes.func
     };
 
@@ -37,9 +38,10 @@ class TOC extends React.Component {
                 node: node,
                 parentNodeId: 'root',
                 onSort: this.props.onSort,
-                sortIndex: node.hide ? i : i++,
-                key: node.name || 'default',
-                isDraggable: !!this.props.onSort,
+                onError: this.props.onError,
+                sortIndex: node.hide || node.dummy ? i : i++,
+                key: node.name || node.id || 'default',
+                isDraggable: !!this.props.onSort && !(node.nodes && node.name === 'Default'),
                 setDndState: this.props.setDndState
             }));
         }

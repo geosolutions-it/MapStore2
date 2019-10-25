@@ -24,9 +24,11 @@ import {
     editMediaForBackgroundEpic,
     cleanUpEmptyStoryContainers,
     saveGeoStoryResource,
-    reloadGeoStoryOnLoginLogout
+    reloadGeoStoryOnLoginLogout,
+    sortContentEpic
 } from '../geostory';
 import {
+    ADD,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
@@ -40,7 +42,9 @@ import {
     SAVED,
     SET_RESOURCE,
     GEOSTORY_LOADED,
-    ADD_RESOURCE
+    ADD_RESOURCE,
+    move,
+    CHANGE_MODE
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -51,7 +55,7 @@ import {
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { ContentTypes, MediaTypes, Controls } from '../../utils/GeoStoryUtils';
+import { Modes, ContentTypes, MediaTypes, Controls } from '../../utils/GeoStoryUtils';
 
 let mockAxios;
 describe('Geostory Epics', () => {
@@ -208,217 +212,286 @@ describe('Geostory Epics', () => {
             });
         });
     });
-    it('loadGeostoryEpic loading one sample story', (done) => {
-        const NUM_ACTIONS = 4;
-        mockAxios.onGet().reply(200, TEST_STORY);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual(TEST_STORY);
-                    break;
-                case SET_RESOURCE: {
-                    expect(a.resource).toExist(); // TODO: test values
-                    break;
-                }
-                case GEOSTORY_LOADED: {
-                    expect(a.id).toExist();
-                    break;
-                }
-                default: expect(true).toBe(false);
-                    break;
-                }
-            });
-            done();
-        }, {
-            geostory: {}
-        });
-    });
-    it('loadGeostoryEpic loading wrong story', (done) => {
-        const NUM_ACTIONS = 5;
-        mockAxios.onGet().reply(404);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual({});
-                    break;
-                case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryDoesNotExist");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(a.message).toEqual("geostory.errors.loading.geostoryDoesNotExist");
-                    break;
-                default: expect(true).toBe(false);
-                    break;
+    describe('loadGeostoryEpic', () => {
+        it('loadGeostoryEpic loading one sample story, as USER', (done) => {
+            const NUM_ACTIONS = 6;
+            mockAxios.onGet().reply(200, TEST_STORY);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual(TEST_STORY);
+                        break;
+                    case SET_RESOURCE: {
+                        expect(a.resource).toExist();
+                        break;
+                    }
+                    case CHANGE_MODE: {
+                        expect(a.mode).toBe(Modes.EDIT);
+                        break;
+                    }
+                    case GEOSTORY_LOADED: {
+                        expect(a.id).toExist();
+                        break;
+                    }
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: {
+                        role: "USER"
+                    }
                 }
             });
-            done();
-        }, {
-            geostory: {}
         });
-    });
+        it('loadGeostoryEpic loading one sample story, as ADMIN', (done) => {
+            const NUM_ACTIONS = 6;
+            mockAxios.onGet().reply(200, TEST_STORY);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual(TEST_STORY);
+                        break;
+                    case SET_RESOURCE: {
+                        expect(a.resource).toExist();
+                        break;
+                    }
+                    case CHANGE_MODE: {
+                        expect(a.mode).toBe(Modes.EDIT);
+                        break;
+                    }
+                    case GEOSTORY_LOADED: {
+                        expect(a.id).toExist();
+                        break;
+                    }
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: {
+                        role: "ADMIN"
+                    }
+                }
+            });
+        });
+        it('loadGeostoryEpic loading wrong story', (done) => {
+            const NUM_ACTIONS = 5;
+            mockAxios.onGet().reply(404);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryDoesNotExist");
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(a.message).toEqual("geostory.errors.loading.geostoryDoesNotExist");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: {
+                        role: "ADMIN"
+                    }
+                }
+            });
+        });
 
-    it('loadGeostoryEpic loading a story without permissions for a non logged user', (done) => {
-        const NUM_ACTIONS = 5;
-        mockAxios.onGet().reply(403);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual({});
-                    break;
-                case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("geostory.errors.loading.pleaseLogin");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(a.message).toEqual("geostory.errors.loading.pleaseLogin");
-                    break;
-                default: expect(true).toBe(false);
-                    break;
+        it('loadGeostoryEpic loading a story without permissions for a non logged user', (done) => {
+            const NUM_ACTIONS = 5;
+            mockAxios.onGet().reply(403);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        expect(a.error.status).toEqual(403);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(a.message).toEqual("geostory.errors.loading.pleaseLogin");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: null
                 }
             });
-            done();
-        }, {
-            geostory: {}
         });
-    });
-    it('loadGeostoryEpic loading a story without permissions for a logged user', (done) => {
-        const NUM_ACTIONS = 5;
-        mockAxios.onGet().reply(403);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual({});
-                    break;
-                case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryNotAccessible");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(a.message).toEqual("geostory.errors.loading.geostoryNotAccessible");
-                    break;
-                default: expect(true).toBe(false);
-                    break;
+        it('loadGeostoryEpic loading a story without permissions for a logged user', (done) => {
+            const NUM_ACTIONS = 5;
+            mockAxios.onGet().reply(403);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        expect(a.error.messageId).toEqual("geostory.errors.loading.geostoryNotAccessible");
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(a.message).toEqual("geostory.errors.loading.geostoryNotAccessible");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: {
+                        name: "Nina"
+                    }
                 }
             });
-            done();
-        }, {
-            geostory: {},
-            security: {
-                user: {
-                    name: "Nina"
-                }
-            }
         });
-    });
-    it('loadGeostoryEpic loading a story with unknownError', (done) => {
-        const NUM_ACTIONS = 5;
-        mockAxios.onGet().reply(500);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual({});
-                    break;
-                case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("geostory.errors.loading.unknownError");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(a.message).toEqual("geostory.errors.loading.unknownError");
-                    break;
-                default: expect(true).toBe(false);
-                    break;
+        it('loadGeostoryEpic loading a story with unknownError', (done) => {
+            const NUM_ACTIONS = 5;
+            mockAxios.onGet().reply(500);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        expect(a.error.messageId).toEqual("geostory.errors.loading.unknownError");
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(a.message).toEqual("geostory.errors.loading.unknownError");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: {
+                        name: "Nina"
+                    }
                 }
             });
-            done();
-        }, {
-            geostory: {}
         });
-    });
-    /*
-     * TODO: investigate why it fails only in travis, (tested locally with both firefox and chrome),
-     * with firefox it works but i have some problems of stability
-    */
-    it.skip('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
-        const NUM_ACTIONS = 6;
-        mockAxios.onGet().reply(200, `{"description":"Sample story with 1 paragraph and 1 immersive section, two columns","type":"cascade","sections":[{"type":"paragraph","id":"SomeID","title":"Abstract","contents":[{"id":"SomeID","type":'text',"background":{},"html":"<p>this is some html content</p>"}]}]}`);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("StoryWithError"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual({});
-                    break;
-                case LOAD_GEOSTORY_ERROR:
-                    expect(a.error.messageId).toEqual("Unexpected token \' in JSON at position 200");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(a.message).toEqual("Unexpected token \' in JSON at position 200");
-                    break;
-                default: expect(true).toBe(false);
-                    break;
-                }
+        /*
+        * TODO: investigate why it fails only in travis, (tested locally with both firefox and chrome),
+        * with firefox it works but i have some problems of stability
+        */
+        it.skip('loadGeostoryEpic loading a story with malformed json configuration', (done) => {
+            const NUM_ACTIONS = 6;
+            mockAxios.onGet().reply(200, `{"description":"Sample story with 1 paragraph and 1 immersive section, two columns","type":"cascade","sections":[{"type":"paragraph","id":"SomeID","title":"Abstract","contents":[{"id":"SomeID","type":'text',"background":{},"html":"<p>this is some html content</p>"}]}]}`);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("StoryWithError"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        expect(a.error.messageId).toEqual("Unexpected token \' in JSON at position 200");
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(a.message).toEqual("Unexpected token \' in JSON at position 200");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {}
             });
-            done();
-        }, {
-            geostory: {}
         });
-    });
-    it('loadGeostoryEpic loading a bad story format', (done) => {
-        const NUM_ACTIONS = 4;
-        mockAxios.onGet().reply(200, false);
-        testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((a, i) => {
-                switch (a.type) {
-                case LOADING_GEOSTORY:
-                    expect(a.name).toBe("loading");
-                    expect(a.value).toBe(i === 0);
-                    break;
-                case SET_CURRENT_STORY:
-                    expect(a.story).toEqual({});
-                    break;
-                case LOAD_GEOSTORY_ERROR:
-                    break;
-                case SHOW_NOTIFICATION:
-                    break;
-                default: expect(true).toBe(false);
-                    break;
+        it('loadGeostoryEpic loading a bad story format', (done) => {
+            const NUM_ACTIONS = 4;
+            mockAxios.onGet().reply(200, false);
+            testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("wrongStoryName"), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((a, i) => {
+                    switch (a.type) {
+                    case LOADING_GEOSTORY:
+                        expect(a.name).toBe("loading");
+                        expect(a.value).toBe(i === 0);
+                        break;
+                    case SET_CURRENT_STORY:
+                        expect(a.story).toEqual({});
+                        break;
+                    case LOAD_GEOSTORY_ERROR:
+                        break;
+                    case SHOW_NOTIFICATION:
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {},
+                security: {
+                    user: {
+                        name: "Nina"
+                    }
                 }
             });
-            done();
-        }, {
-            geostory: {}
         });
     });
     it('test openMediaEditorForNewMedia, adding a media content and choosing an image already present in resources', (done) => {
@@ -691,7 +764,6 @@ describe('Geostory Epics', () => {
             }
         });
     });
-
     describe('reloadGeoStoryOnLoginLogout', () => {
         it('on login', done => {
             testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), loginSuccess()], () => {
@@ -785,6 +857,145 @@ describe('Geostory Epics', () => {
                     done();
                 }, S2);
             }, S1);
+        });
+        it('sortContentEpic sorting two sections', done => {
+            const id = "SECTION-TITLE-1";
+            const source = `sections[{"id": "${id}"}]`;
+            const target = "sections";
+            const position = 2;
+            const moveAction = move(
+                source,
+                target,
+                position
+            );
+            const NUM_ACTIONS = 2;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position);
+                        expect(a.element).toEqual({
+                            "type": "title",
+                            "id": id,
+                            "title": "Abstract",
+                            "contents": [
+                                {
+                                    "id": "title_content_id1",
+                                    "type": "text"
+                                }
+                            ]
+                        });
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "type": "title",
+                                "id": "SECTION-TITLE-1",
+                                "title": "Abstract",
+                                "contents": [
+                                    {
+                                        "id": "title_content_id1",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text",
+                                                "html": "<p>This is a list of the <strong><ins>highest astronomical observatories</ins></strong> in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.insert text here...</p>\n"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
+        });
+        it('sortContentEpic sorting two items under paragraph', done => {
+            const id = "0264c912-2814-47fa-8050-ea11cf11e833";
+            const source = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents[{"id":"${id}"}]`;
+            const target = `sections[{"id": "SECTION-PARAGRAPH-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}].contents`;
+            const position = 1;
+            const moveAction = move(
+                source,
+                target,
+                position
+            );
+            const NUM_ACTIONS = 2;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position);
+                        expect(a.element).toEqual({
+                            "id": id,
+                            "type": "text"
+                        });
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
+                                                "type": "image"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
         });
     });
 });

@@ -12,11 +12,14 @@ import { createStructuredSelector } from 'reselect';
 
 import {
     currentStorySelector,
-    cardPreviewEnabledSelector,
-    modeSelector
+    isCollapsedSelector,
+    isToolbarEnabledSelector,
+    modeSelector,
+    selectedCardSelector,
+    currentPageSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
-import { setEditing, toggleCardPreview } from '../actions/geostory';
+import { setEditing, toggleCardPreview, move, selectCard, remove, update } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
@@ -25,10 +28,17 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 const GeoStoryEditor = ({
     mode = Modes.VIEW,
+    isCollapsed,
+    story = {},
+    currentPage,
+    selected,
+    isToolbarEnabled,
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
-    cardPreviewEnabled,
-    story = {}
+    onSelect = () => {},
+    onRemove = () => {},
+    onUpdate = () => {},
+    onSort = () => {}
 }) => (mode === Modes.EDIT ? <div
     key="left-column"
     className="ms-geostory-editor"
@@ -39,9 +49,17 @@ const GeoStoryEditor = ({
         }}
         story={story}
         mode={mode}
+        selected={selected}
+        onSelect={onSelect}
+        onRemove={onRemove}
+        isToolbarEnabled={isToolbarEnabled}
+        mode={mode}
+        onUpdate={onUpdate}
+        currentPage={currentPage}
         setEditing={setEditingMode}
-        cardPreviewEnabled={cardPreviewEnabled}
+        isCollapsed={isCollapsed}
         onToggleCardPreview={onToggleCardPreview}
+        onSort={onSort}
     />
 </div> : null);
 /**
@@ -52,12 +70,19 @@ const GeoStoryEditor = ({
 export default createPlugin('GeoStoryEditor', {
     component: connect(
         createStructuredSelector({
-            cardPreviewEnabled: cardPreviewEnabledSelector,
+            isCollapsed: isCollapsedSelector,
             mode: modeSelector,
-            story: currentStorySelector
+            story: currentStorySelector,
+            currentPage: currentPageSelector,
+            isToolbarEnabled: isToolbarEnabledSelector,
+            selected: selectedCardSelector
         }), {
             setEditingMode: setEditing,
-            onToggleCardPreview: toggleCardPreview
+            onToggleCardPreview: toggleCardPreview,
+            onSelect: selectCard,
+            onUpdate: update,
+            onRemove: remove,
+            onSort: move
         }
     )(GeoStoryEditor),
     reducers: {

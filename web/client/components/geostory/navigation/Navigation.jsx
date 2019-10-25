@@ -24,6 +24,7 @@ export default ({
     setEditing = () => {},
     story = {},
     currentPage,
+    isEditAllowed,
     progress = 0 // current page progress (current page + 1/totPages)
 }) => (<div
     className="ms-geostory-navigation-bar"
@@ -63,6 +64,7 @@ export default ({
                 {
                     glyph: 'pencil',
                     tooltip: 'Edit story',
+                    visible: isEditAllowed,
                     onClick: () => setEditing(true)
                 }
             ]} />

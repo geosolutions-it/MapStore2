@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {get, find} from 'lodash';
-import {getEffectivePath} from '../reducers/geostory';
-import { Controls } from '../utils/GeoStoryUtils';
+import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
+import { isAdminUserSelector, isUserSelector } from './security';
 
 /**
  * Returns a selector using a path inside the current story
@@ -18,7 +18,7 @@ export const createPathSelector = path => state => get(state, getEffectivePath(`
 /**
  * return the current status of cardPreview, if true, the preview will appear in the builder
  */
-export const cardPreviewEnabledSelector = state => get(state, "geostory.cardPreviewEnabled", false);
+export const isCollapsedSelector = state => get(state, "geostory.isCollapsed", false);
 /**
  * gets the currentStory from the state
  * @returns {object} the object the represents the state
@@ -55,6 +55,11 @@ export const saveDialogSelector = state => controlSelectorCreator(Controls.SHOW_
  */
 export const resourceSelector = state => get(state, 'geostory.resource');
 /**
+ * Selects the edit permission of the resource
+ * @param {object} state the application state
+ */
+export const canEditSelector = state => get(resourceSelector(state), 'canEdit', false);
+/**
  * Selects the loading state of geostory.
  * @param {object} state the application state
  */
@@ -73,6 +78,14 @@ export const saveErrorSelector = state => get(errorsSelector(state), 'save');
  * gets the sections array of the current story
  */
 export const sectionsSelector = state => get(currentStorySelector(state), "sections", []);
+/**
+ * return the status of toolbar, if true is enabled and usable, otherwise it is disabled i.e. non clickable
+ */
+export const isToolbarEnabledSelector = state => sectionsSelector(state).length > 0;
+/**
+ * gets the selectedCard
+ */
+export const selectedCardSelector = state => get(state, "geostory.selectedCard", "");
 /**
  * Returns a selector for the section with the provided ID.
  * @param {string} id the ID of the section to get
@@ -103,3 +116,8 @@ export const resourcesSelector = state => get(currentStorySelector(state), "reso
  * @returns {function} function that returns a selector
  */
 export const resourceByIdSelectorCreator = id => state => find(resourcesSelector(state), {id});
+/**
+ * return the status of the possibility to edit the story
+ * @param {object} state
+ */
+export const isEditAllowedSelector = state => isAdminUserSelector(state) || (isUserSelector(state) && canEditSelector(state));

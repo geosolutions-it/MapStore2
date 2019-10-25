@@ -238,10 +238,11 @@ describe('Test the MapUtils', () => {
             zoom: 10
         };
 
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
+                backgrounds: [],
                 groups: [{
                     id: 'Default',
                     expanded: true
@@ -447,6 +448,433 @@ describe('Test the MapUtils', () => {
         });
     });
 
+    it('save map configuration with backgrounds', () => {
+
+        const flat = [
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer001",
+                loading: true,
+                name: "layer001",
+                params: {},
+                search: {},
+                singleTile: false,
+                thumbURL: "THUMB_URL",
+                title: "layer001",
+                type: "wms",
+                url: "",
+                visibility: true,
+                catalogURL: "url"
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer002",
+                loading: true,
+                name: "layer002",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer002",
+                type: "wms",
+                url: "",
+                visibility: true,
+                catalogURL: "url"
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer003",
+                loading: true,
+                name: "layer003",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer003",
+                type: "wms",
+                url: "",
+                visibility: true,
+                catalogURL: "url"
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer004",
+                loading: true,
+                name: "layer004",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer004",
+                type: "wms",
+                url: "",
+                visibility: true,
+                catalogURL: "url",
+                origin: [100000, 100000]
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer005",
+                loading: true,
+                name: "layer005",
+                group: "background",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer005",
+                type: "wms",
+                url: "",
+                thumbURL: "blob:http://name.domain/id",
+                visibility: true,
+                catalogURL: "url",
+                origin: [100000, 100000]
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer006",
+                loading: true,
+                name: "layer006",
+                group: "background",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer006",
+                type: "wms",
+                url: "",
+                visibility: false,
+                catalogURL: "url",
+                origin: [100000, 100000]
+            }
+        ];
+
+        const groups = [
+            {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
+            {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
+                ]}
+        ];
+
+        const backgrounds = [{id: 'layer005', thumbnail: 'data'}, {id: 'layer006', thumbnail: null}];
+
+        const mapConfig = {
+            center: {x: 0, y: 0, crs: 'EPSG:4326'},
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            projection: 'EPSG:900913',
+            units: 'm',
+            zoom: 10
+        };
+
+        const saved = saveMapConfiguration(mapConfig, flat, groups, backgrounds, '', {});
+        expect(saved).toEqual({
+            map: {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                backgrounds: [{id: 'layer005', thumbnail: 'data'}],
+                groups: [{
+                    id: 'Default',
+                    expanded: true
+                }, {
+                    id: 'custom',
+                    expanded: false
+                }, {
+                    id: 'custom.nested001',
+                    expanded: true
+                }],
+                layers: [{
+                    allowedSRS: {},
+                    thumbURL: "THUMB_URL",
+                    availableStyles: undefined,
+                    layerFilter: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer001",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer001",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer001",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    layerFilter: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer002",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer002",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer002",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    layerFilter: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer003",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer003",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer003",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    layerFilter: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer004",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer004",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer004",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: [100000, 100000],
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    layerFilter: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: "background",
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer005",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer005",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer005",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: [100000, 100000],
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    layerFilter: undefined,
+                    bbox: {},
+                    requestEncoding: undefined,
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: "background",
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer006",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer006",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer006",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: false,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: [100000, 100000],
+                    thematic: undefined,
+                    tooltipOptions: undefined,
+                    tooltipPlacement: undefined
+                }],
+                mapOptions: {},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                text_serch_config: '',
+                units: 'm',
+                zoom: 10
+            },
+            version: 2
+        });
+    });
+
     it('save map configuration with map options', () => {
         const flat = [
             {
@@ -546,10 +974,11 @@ describe('Test the MapUtils', () => {
             }
         };
 
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
         expect(saved).toEqual({
             map: {
                 center: { crs: 'EPSG:4326', x: 0, y: 0 },
+                backgrounds: [],
                 groups: [{
                     id: 'Default',
                     expanded: true
@@ -824,10 +1253,11 @@ describe('Test the MapUtils', () => {
             zoom: 10
         };
 
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
+                backgrounds: [],
                 groups: [{
                     id: 'Default',
                     expanded: true
@@ -1080,7 +1510,7 @@ describe('Test the MapUtils', () => {
             }
         };
 
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
         expect(saved).toEqual({
             version: 2,
             map: {
@@ -1098,6 +1528,7 @@ describe('Test the MapUtils', () => {
                         resolutions: [ 84666.66666666688, 42333.33333333344, 21166.66666666672, 10583.33333333336, 5291.66666666668, 2645.83333333334, 1322.91666666667, 661.458333333335, 529.166666666668, 396.875000000001, 264.583333333334, 132.291666666667, 66.1458333333335, 39.6875000000001, 26.4583333333334, 13.2291666666667, 6.61458333333335, 3.96875000000001, 2.64583333333334, 1.32291666666667, 0.661458333333335 ]
                     }
                 },
+                backgrounds: [],
                 layers: [{
                     id: 'annotations',
                     features: [ {
@@ -1218,10 +1649,11 @@ describe('Test the MapUtils', () => {
             units: 'm',
             zoom: 10
         };
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
+                backgrounds: [],
                 groups: [{
                     id: 'Default',
                     expanded: true
@@ -1357,10 +1789,11 @@ describe('Test the MapUtils', () => {
             units: 'm',
             zoom: 10
         };
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
+                backgrounds: [],
                 groups: [{
                     id: 'Default',
                     expanded: true

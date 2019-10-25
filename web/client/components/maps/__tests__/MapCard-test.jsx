@@ -32,7 +32,7 @@ describe('This test for MapCard', () => {
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
         expect(mapItemDom).toExist();
 
-        expect(mapItemDom.className).toBe('gridcard map-thumb');
+        expect(mapItemDom.childNodes[0].className).toBe('gridcard map-thumb');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
         expect(headings.length).toBe(1);
     });
@@ -46,7 +46,7 @@ describe('This test for MapCard', () => {
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
         expect(mapItemDom).toExist();
 
-        expect(mapItemDom.className).toBe('gridcard map-thumb');
+        expect(mapItemDom.childNodes[0].className).toBe('gridcard map-thumb');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
         expect(headings.length).toBe(1);
         expect(headings[0].innerHTML).toBe(testName);

@@ -19,6 +19,7 @@ class RecordGrid extends React.Component {
         onZoomToExtent: PropTypes.func,
         zoomToLayer: PropTypes.bool,
         onLayerAdd: PropTypes.func,
+        onPropertiesChange: PropTypes.func,
         onError: PropTypes.func,
         records: PropTypes.array,
         authkeyParamNames: PropTypes.array,
@@ -30,7 +31,15 @@ class RecordGrid extends React.Component {
         hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
         hideExpand: PropTypes.bool,
+        source: PropTypes.string,
+        onAddBackgroundProperties: PropTypes.func,
+        modalParams: PropTypes.object,
+        layers: PropTypes.object,
+        onUpdateThumbnail: PropTypes.func,
+        clearModal: PropTypes.func,
+        onAddBackground: PropTypes.func,
         showTemplate: PropTypes.bool,
+        formatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
     };
 
@@ -38,6 +47,7 @@ class RecordGrid extends React.Component {
         column: {xs: 12},
         currentLocale: 'en-US',
         onLayerAdd: () => {},
+        onPropertiesChange: () => {},
         onError: () => {},
         records: [],
         zoomToLayer: true,
@@ -49,7 +59,15 @@ class RecordGrid extends React.Component {
         return (
             <Col {...this.props.column} key={record.identifier}>
                 <Item
+                    clearModal={this.props.clearModal}
+                    layers={this.props.layers}
+                    modalParams={this.props.modalParams}
+                    onUpdateThumbnail={this.props.onUpdateThumbnail}
+                    onAddBackgroundProperties={this.props.onAddBackgroundProperties}
+                    onAddBackground={this.props.onAddBackground}
+                    source={this.props.source}
                     onLayerAdd={this.props.onLayerAdd}
+                    onPropertiesChange={this.props.onPropertiesChange}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
                     hideThumbnail={this.props.hideThumbnail}
@@ -65,6 +83,7 @@ class RecordGrid extends React.Component {
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
                     currentLocale={this.props.currentLocale}
+                    formatOptions={this.props.formatOptions}
                     layerBaseConfig={this.props.layerBaseConfig}
                 />
             </Col>

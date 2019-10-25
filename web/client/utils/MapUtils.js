@@ -306,7 +306,7 @@ const groupSaveFormatted = (node) => {
 };
 
 
-function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, additionalOptions) {
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, additionalOptions) {
 
     const map = {
         center: currentMap.center,
@@ -330,6 +330,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         const node = LayersUtils.getNode(currentGroups, g);
         return node && node.nodes ? groupSaveFormatted(node) : null;
     }).filter(g => g);
+
+    const backgrounds = currentBackgrounds.filter(background => !!background.thumbnail);
 
     // extract sources map
     const sources = LayersUtils.extractSourcesFromLayers(layers);
@@ -365,7 +367,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, text_serch_config: textSearchConfig}, !isEmpty(sources) && {sources} || {}),
+        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_serch_config: textSearchConfig},
+            !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
 }

@@ -48,5 +48,6 @@ module.exports = {
     userRoleSelector,
     securityTokenSelector: state => state.security && state.security.token,
     userGroupSecuritySelector,
-    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN"
+    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN",
+    isUserSelector: (state) => userRoleSelector(state) === "USER"
 };

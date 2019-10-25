@@ -8,7 +8,11 @@
  */
 
 import { Observable } from 'rxjs';
-import {head, isNaN, isString, isNil, lastIndexOf} from 'lodash';
+import head from 'lodash/head';
+import isNaN from 'lodash/isNaN';
+import isString from 'lodash/isString';
+import isNil from 'lodash/isNil';
+import lastIndexOf from 'lodash/lastIndexOf';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -21,22 +25,25 @@ const {
 } = require('../api/persistence');
 
 import {
-    addResource,
     ADD,
-    REMOVE,
     LOAD_GEOSTORY,
+    MOVE,
+    REMOVE,
+    SAVE,
+    addResource,
+    add,
+    geostoryLoaded,
     loadGeostory,
     loadingGeostory,
     loadGeostoryError,
+    remove,
     setCurrentStory,
     saveGeoStoryError,
-    storySaved,
     setControl,
     setResource,
-    update,
-    remove,
-    SAVE,
-    geostoryLoaded
+    setEditing,
+    storySaved,
+    update
 } from '../actions/geostory';
 
 import {
@@ -51,14 +58,13 @@ import { show, error } from '../actions/notifications';
 import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
-import { isLoggedIn } from '../selectors/security';
+import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
 import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 
-import { getEffectivePath } from '../reducers/geostory';
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 const updateMediaSection = (store, path) => action$ =>
@@ -199,13 +205,13 @@ export const editMediaForBackgroundEpic = (action$, store) =>
  */
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_GEOSTORY)
-    .switchMap( ({id}) =>
-        Observable.defer(() => {
+    .switchMap( ({id}) => {
+        return Observable.defer(() => {
             if (id && isNaN(parseInt(id, 10))) {
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({data}));
+                    .then(({data}) => ({data, canEdit: true}));
             }
             return getResource(id);
         })
@@ -215,13 +221,19 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return true;
             })
-            .switchMap(({ data, ...resource }) =>
-                Observable.of(
+            .switchMap(({ data, ...resource }) => {
+                const isAdmin = isAdminUserSelector(getState());
+                const user = isLoggedIn(getState());
+                if (!user && isNaN(parseInt(id, 10))) {
+                    return Observable.of(loadGeostoryError({status: 403}));
+                }
+                return Observable.from([
+                    setEditing(resource && resource.canEdit || isAdmin),
                     geostoryLoaded(id),
                     setCurrentStory(isString(data) ? JSON.parse(data) : data),
                     setResource(resource)
-                )
-            )
+                ]);
+            })
             // adds loading status to the start and to the end of the stream and handles exceptions
             .let(wrapStartStop(
                 loadingGeostory(true, "loading"),
@@ -231,6 +243,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     if (e.status === 403 ) {
                         message = "geostory.errors.loading.pleaseLogin";
                         if (isLoggedIn(getState())) {
+                            // TODO only in view mode
                             message = "geostory.errors.loading.geostoryNotAccessible";
                         }
                     } else if (e.status === 404) {
@@ -248,8 +261,8 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                         loadGeostoryError({...e, messageId: message})
                     );
                 }
-            ))
-    );
+            ));
+    });
 /**
  * Triggers reload of last loaded story when user login-logout
  * @param {Observable} action$ the stream of redux actions
@@ -266,7 +279,7 @@ export const reloadGeoStoryOnLoginLogout = (action$) =>
  * Removes containers that are empty after a REMOVE action from GeoStory.
  * In case of nested contents, it could call recursively until all the empty containers are empty
  * @param {Observable} action$ stream of redux actions
- * @param {object} store simplified redux store redux store
+ * @param {object} store simplified redux store
  * @returns {Observable} a stream that emits remove action for the container, if empty.
  */
 export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
@@ -283,4 +296,22 @@ export const cleanUpEmptyStoryContainers = (action$, {getState = () => {}}) =>
             }
         }
         return Observable.empty();
+    });
+
+/**
+ * trigger actions for sorting in GeostoryEditor
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions for sorting
+ */
+export const sortContentEpic = (action$, {getState = () => {}}) =>
+    action$.ofType(MOVE).switchMap(({source, target, position}) => {
+        const state = getState();
+        const current = createPathSelector(source)(state);
+
+        // remove first so, the highlight works correctly
+        return Observable.of(
+            remove(source),
+            add(target, position, current)
+        );
     });

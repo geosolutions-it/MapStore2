@@ -40,7 +40,7 @@
 }
 
 .dropzone .dropzone-content-image {
-    padding-top:40px;
+    padding-top: 40px;
     transition: all 0.2s ease-in;
     font-size: normal;
     text-align: center;
@@ -48,7 +48,6 @@
 
 .dropzone:hover .dropzone-content-image {
     transition: all 0.2s ease-in;
-    font-size: large;
 }
 
 .dropzone-thumbnail-container img {

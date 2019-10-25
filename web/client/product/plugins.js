@@ -47,6 +47,7 @@ module.exports = {
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         FullScreenPlugin: require('../plugins/FullScreen'),
         GeoStoryPlugin: require('../plugins/GeoStory').default,
+        GeoStoriesPlugin: require('../plugins/GeoStories'),
         GeoStoryEditorPlugin: require('../plugins/GeoStoryEditor').default,
         GeoStorySavePlugin: require('../plugins/GeoStorySave').GeoStorySave,
         GeoStorySaveAsPlugin: require('../plugins/GeoStorySave').GeoStorySaveAs,

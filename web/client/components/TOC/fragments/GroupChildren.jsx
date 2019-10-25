@@ -15,6 +15,7 @@ class GroupChildren extends React.Component {
         node: PropTypes.object,
         filter: PropTypes.func,
         onSort: PropTypes.func,
+        onError: PropTypes.func,
         setDndState: PropTypes.func,
         level: PropTypes.number
     };
@@ -38,8 +39,9 @@ class GroupChildren extends React.Component {
                 node: node,
                 parentNodeId: this.props.node ? this.props.node.id : '',
                 key: node.id,
-                sortIndex: node.hide ? i : i++,
+                sortIndex: node.hide || node.dummy ? i : i++,
                 onSort: this.props.onSort,
+                onError: this.props.onError,
                 level: this.props.level,
                 isDraggable: !!this.props.onSort,
                 setDndState: this.props.setDndState
