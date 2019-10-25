@@ -12,8 +12,6 @@ const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/cont
 const { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } = require('../../actions/security');
 const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig } = require('../login');
 
-const { FEEDBACK_MASK_LOADING } = require('../../actions/feedbackMask');
-
 const { testEpic } = require('./epicTestUtils');
 
 describe('login Epics', () => {
@@ -78,7 +76,6 @@ describe('login Epics', () => {
             testEpic(promptLoginOnMapError, 1, loginRequired(), epicResult, {});
         });
         it('not-public dashboard', (done) => {
-;
             const epicResult = actions => {
                 try {
                     const setControlAction = actions[0];
