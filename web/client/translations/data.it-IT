@@ -1622,6 +1622,31 @@
             },
             "emptyTitle": "La dashboard è vuota"
         },
+        "context": {
+            "loadingSpinner": "Caricamento Contesto",
+            "errors": {
+                "loading": {
+                    "title": "Errore di caricamento del contesto",
+                    "notAccessible": "Risorsa non accessibile",
+                    "pleaseLogin": "Alcune risorse potrebbero non essere pubbliche. Si prega di provare ad effettuare il login",
+                    "unknownError": "Si è verificato un errore durante il caricamento della mappa o del contesto. Si prega di contattare l'amministratore",
+                    "notFound": "Risorsa non trovata"
+                },
+                "context": {
+                    "notAccessible": "Non si hanno i permessi di accesso a questo contesto. Si prega di contattare l'amministratore per ottenere l'accesso",
+                    "pleaseLogin": "Questo contesto non è pubblico. Si prega di provare ad effettuare il login",
+                    "unknownError": "Si è verificato un errore durante il caricamento del contesto. Si prega di contattare l'amministratore",
+                    "notFound": "Il contesto che si sta tentando di accedere non esiste"
+                },
+                "map": {
+                    "notAccessible": "Non si hanno i permessi di accesso a questa mappa. Si prega di contattare l'amministratore per ottenere l'accesso",
+                    "pleaseLogin": "Questa mappa mappa non è pubblica. Si prega di provare ad effettuare il login",
+                    "unknownError": "Si è verificato un errore durante il caricamento della mappa. Si prega di contattare l'amministratore",
+                    "notFound": "La mappa si sta tentando di accedere non esiste"
+                },
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. provare '{data}'"
+            }
+        },
         "wizard": {
             "next": "Avanti",
             "prev": "Indietro",

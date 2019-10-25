@@ -1622,6 +1622,31 @@
             },
             "emptyTitle": "Le tableau de bord est vide"
         },
+        "context": {
+            "loadingSpinner": "Chargement Contexte",
+            "errors": {
+                "loading": {
+                    "title": "Erreur du contexte de chargement",
+                    "notAccessible": "Ressource non accessible",
+                    "pleaseLogin": "Certaines ressources ne peut pas être public. S'il vous plaît essayer de vous connecter",
+                    "unknownError": "Il y avait une erreur de chargement de la carte ou le contexte. S'il vous plaît contacter l'administrateur",
+                    "notFound": "Ressource introuvable"
+                },
+                "context": {
+                    "notAccessible": "Vous ne disposez pas de l'autorisation droit d'accès à ce contexte. S'il vous plaît contacter l'administrateur pour obtenir l'accès",
+                    "pleaseLogin": "Ce contexte n'est pas publique. S'il vous plaît essayer de vous connecter",
+                    "unknownError": "Il y avait une erreur de chargement du contexte. S'il vous plaît contacter l'administrateur",
+                    "notFound": "Le contexte que vous essayez d'accéder n'existe pas"
+                },
+                "map": {
+                    "notAccessible": "Vous ne disposez pas de l'autorisation droit d'accès à cette carte. S'il vous plaît contacter l'administrateur pour obtenir l'accès",
+                    "pleaseLogin": "Cette carte ou la carte ne sont pas publiques. S'il vous plaît essayer de vous connecter",
+                    "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
+                    "notFound": "La carte que vous essayez d'accéder n'existe pas"
+                },
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. essayer « {data} »"
+            }
+        },
         "wizard": {
             "next": "Suivant",
             "prev": "Précédent",
