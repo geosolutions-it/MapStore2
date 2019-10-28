@@ -10,27 +10,38 @@ import expect from 'expect';
 import { testEpic } from './epicTestUtils';
 import ajax from '../../libs/ajax';
 
-import { configureMap, LOAD_MAP_CONFIG } from "../../actions/config";
+import { configureMap, configureError, LOAD_MAP_CONFIG } from "../../actions/config";
 import {
     loadContext,
+    LOAD_CONTEXT,
     LOADING,
     SET_RESOURCE,
     SET_CURRENT_CONTEXT,
-    LOAD_FINISHED
+    LOAD_FINISHED,
+    contextLoadError,
+    CONTEXT_LOAD_ERROR,
+    loadFinished
 
 } from "../../actions/context";
+
+import {
+    loginSuccess,
+    logout
+} from '../../actions/security';
 
 import CONTEXT_SHORT_RESOURCE from '../../test-resources/geostore/resources/resource/context_1.json';
 import CONTEXT_DATA from '../../test-resources/geostore/data/context_1.json';
 import CONTEXT_ATTRIBUTES from '../../test-resources/geostore/resources/resource/context_1_attributes.json';
 
-import { loadContextAndMap } from "../context";
+import { loadContextAndMap, handleLoginLogoutContextReload } from "../context";
 import MockAdapter from 'axios-mock-adapter';
 
 
 let mockAxios;
 
 describe('context epics', () => {
+    const mapId = 1;
+    const contextId = 2;
     describe('loadContextAndMap', () => {
         beforeEach(done => {
             mockAxios = new MockAdapter(ajax);
@@ -41,20 +52,21 @@ describe('context epics', () => {
             mockAxios.restore();
             setTimeout(done);
         });
-        it('test context and map load flow', done => {
-
-            const mapId = 1;
-            const contextId = 2;
-
+        // setup mockAxios to reply with a context, with the status provided
+        const createContextResponse = (status = 200) => {
             mockAxios.onGet(`/mapstore/rest/geostore/extjs/resource/${contextId}`).reply(() => {
-                return [200, CONTEXT_SHORT_RESOURCE];
+                return [status, CONTEXT_SHORT_RESOURCE];
             });
             mockAxios.onGet(`/mapstore/rest/geostore/data/${contextId}`).reply(() => {
-                return [200, CONTEXT_DATA];
+                return [status, CONTEXT_DATA];
             });
             mockAxios.onGet(`/mapstore/rest/geostore/resources/resource/${contextId}/attributes`).reply(() => {
-                return [200, CONTEXT_ATTRIBUTES];
+                return [status, CONTEXT_ATTRIBUTES];
             });
+        };
+
+        it('successful context and map load flow', done => {
+            createContextResponse();
             const act = [
                 loadContext({ mapId, contextId }),
                 configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
@@ -74,6 +86,89 @@ describe('context epics', () => {
                 done();
             });
 
+        });
+        /*
+         * check error actions
+         */
+        const checkLoadErrors = (startActions, initialState, messageId, done) => {
+            testEpic(loadContextAndMap, 4, startActions, ([loadingAction, loadMapAction, errorAction, loadEndAction]) => {
+                expect(loadingAction.type).toBe(LOADING);
+                expect(loadingAction.value).toBe(true);
+                expect(loadMapAction.type).toBe(LOAD_MAP_CONFIG);
+                expect(errorAction.type).toBe(CONTEXT_LOAD_ERROR);
+                expect(errorAction.error.status).toBe(403);
+                expect(errorAction.error.messageId).toBe(messageId);
+                expect(loadEndAction.type).toBe(LOADING);
+                expect(loadEndAction.value).toBe(false);
+                done();
+            }, initialState);
+        };
+        const NOT_LOGGED_STATE = {};
+        const LOGGED_STATE = {
+            security: {
+                user: {
+                    role: "USER"
+                }
+            }
+        };
+        describe('handle map load error', () => {
+            it('403 forbidden, not logged in', done => {
+                createContextResponse();
+                const actions = [
+                    loadContext({ mapId, contextId }),
+                    configureError({status: 403}) // THIS ACTION FAKES MAP LOAD FLOW END
+                ];
+                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.map.pleaseLogin', done);
+
+            });
+            it('403 forbidden, logged in', done => {
+                createContextResponse();
+                const actions = [
+                    loadContext({ mapId, contextId }),
+                    configureError({ status: 403 }) // THIS ACTION FAKES MAP LOAD FLOW END
+                ];
+                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.map.notAccessible', done);
+
+            });
+        });
+        describe('handle context load error', () => {
+            it('403 forbidden, not logged in', done => {
+                createContextResponse(403);
+                const actions = [
+                    loadContext({ mapId, contextId }),
+                    configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
+                ];
+                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.context.pleaseLogin', done);
+
+            });
+            it('403 forbidden, logged in', done => {
+                createContextResponse(403);
+                const actions = [
+                    loadContext({ mapId, contextId }),
+                    configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
+                ];
+                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.context.notAccessible', done);
+            });
+        });
+    });
+    describe('handleLoginLogoutContextReload', () => {
+        it('reload when forbidden, then the user login', done => {
+            const actions = [loadContext({ mapId, contextId }), contextLoadError({ error: { status: 403 } }), loginSuccess()];
+            testEpic(handleLoginLogoutContextReload, 1, actions, ([reloadAction]) => {
+                expect(reloadAction.type).toBe(LOAD_CONTEXT);
+                expect(reloadAction.mapId).toBe(mapId);
+                expect(reloadAction.contextId).toBe(contextId);
+                done();
+            });
+        });
+        it('reload when loaded, then the user logout', done => {
+            const actions = [loadContext({ mapId, contextId }), loadFinished(), logout()];
+            testEpic(handleLoginLogoutContextReload, 1, actions, ([reloadAction]) => {
+                expect(reloadAction.type).toBe(LOAD_CONTEXT);
+                expect(reloadAction.mapId).toBe(mapId);
+                expect(reloadAction.contextId).toBe(contextId);
+                done();
+            });
         });
     });
 

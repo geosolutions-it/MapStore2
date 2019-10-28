@@ -61,5 +61,9 @@ describe('Test correctness of the close actions', () => {
         expect(retval.userDetails).toBe("aaa");
         expect(retval.authProvider).toBe("bbb");
     });
+    it('loginRequired, loginPromptClosed', () => {
+        expect(security.loginRequired().type).toBe(security.LOGIN_REQUIRED);
+        expect(security.loginPromptClosed().type).toBe(security.LOGIN_PROMPT_CLOSED);
+    });
 
 });
