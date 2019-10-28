@@ -27,10 +27,14 @@ export const currentContextSelector = state => state.context && state.context.cu
 const monitoredStateSelector = state => getMonitoredState(state, monitorStateSelector(state));
 
 export const isLoadingSelector = state => get(state, 'context.loading');
-export const isErrorSelector = () => false;
+
+/**
+ * returns the default plugins for context. By default always adds the Context plugin
+ * (context plugin now provides epics and reducers, they should be anyway loaded)
+ */
 export const defaultPluginsSelector = createSelector(
-    () => ConfigUtils.getConfigProp("plugins").desktop,
-    plugins => ({ desktop: [...plugins, "Context"] } )
+    () => get(ConfigUtils.getConfigProp("plugins"), 'desktop'),
+    (plugins = []) => ({ desktop: [...plugins, "Context"] } )
 );
 export const loadingPluginsSelector = state => defaultPluginsSelector(state);
 export const errorPluginsSelector = state => loadingPluginsSelector(state);
@@ -46,9 +50,7 @@ export const currentPluginsSelector = state => get(currentContextSelector(state)
 export const pluginsSelector = state =>
     isLoadingSelector(state)
         ? loadingPluginsSelector(state)
-        : isErrorSelector(state)
-            ? errorPluginsSelector(state)
-            : currentPluginsSelector(state) || defaultPluginsSelector(state);
+        : currentPluginsSelector(state) || defaultPluginsSelector(state);
 /*
  * Adds the current context to the monitoredState. To update on every change of it.
  */
