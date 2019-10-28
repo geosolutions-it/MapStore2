@@ -83,6 +83,10 @@ export const sectionsSelector = state => get(currentStorySelector(state), "secti
  */
 export const isToolbarEnabledSelector = state => sectionsSelector(state).length > 0;
 /**
+ * return the status of settings panel, if true is visible
+ */
+export const isSettingsEnabledSelector = state => get(state, "geostory.isSettingsEnabled", true);
+/**
  * gets the selectedCard
  */
 export const selectedCardSelector = state => get(state, "geostory.selectedCard", "");
@@ -125,7 +129,7 @@ export const resourceByIdSelectorCreator = id => state => find(resourcesSelector
   * with special behaviour for paragraph where column is ignored
   * @param {object} state application state
   */
-export const navigableItemsSelector = state => {
+export const navigableItemsSelectorCreator = ({withImmersiveSection = false} = {}) => state => {
     const sections = sectionsSelector(state);
     return sections.reduce((p, c) => {
         if (c.type === SectionTypes.TITLE) {
@@ -137,21 +141,25 @@ export const navigableItemsSelector = state => {
             return [...p, c];
         }
         if (c.type === SectionTypes.IMMERSIVE) {
-            // include immersive columns only
+            // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
-                return [...pImm, {...column, sectionId: pImm.id}];
+                return [ ...pImm, {...column, sectionId: pImm.id}];
             }, []) || [];
+            if (withImmersiveSection) {
+                return [ ...p, c, ...allImmContents];
+            }
             return [...p, ...allImmContents];
         }
         return p;
     }, []);
 };
+
 /**
  * gets the current position of currentPage
  * @returns {function} function that returns a selector
  */
-export const totalItemsSelector = state => navigableItemsSelector(state).length;
-export const currentPositionSelector = state => findIndex(navigableItemsSelector(state), {
+export const totalItemsSelector = state => navigableItemsSelectorCreator()(state).length;
+export const currentPositionSelector = state => findIndex(navigableItemsSelectorCreator()(state), {
     id: currentPageSelector(state).columns &&
         currentPageSelector(state).columns[currentPageSelector(state).sectionId]
         ? currentPageSelector(state).columns[currentPageSelector(state).sectionId]

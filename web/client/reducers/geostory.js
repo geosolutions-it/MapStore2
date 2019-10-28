@@ -15,20 +15,22 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
-    SET_CURRENT_STORY,
-    TOGGLE_CARD_PREVIEW,
-    UPDATE,
-    UPDATE_CURRENT_PAGE,
-    UPDATE_CURRENT_COLUMN,
     REMOVE,
+    SAVED,
+    SAVE_ERROR,
+    SET_CURRENT_STORY,
     SELECT_CARD,
     SET_CONTROL,
     SET_RESOURCE,
-    SAVED,
-    SAVE_ERROR
+    TOGGLE_CARD_PREVIEW,
+    TOGGLE_SETTINGS_PANEL,
+    UPDATE,
+    UPDATE_CURRENT_PAGE,
+    UPDATE_CURRENT_COLUMN
 } from '../actions/geostory';
 
 import { selectedCardSelector } from "../selectors/geostory";
+
 
 let INITIAL_STATE = {
     mode: 'edit', // TODO: change in to Modes.VIEW
@@ -206,6 +208,9 @@ export default (state = INITIAL_STATE, action) => {
     }
     case TOGGLE_CARD_PREVIEW: {
         return set('isCollapsed', !state.isCollapsed, state);
+    }
+    case TOGGLE_SETTINGS_PANEL: {
+        return set('isSettingsEnabled', !state.isSettingsEnabled, state);
     }
     case UPDATE: {
         const { path: rawPath, mode } = action;

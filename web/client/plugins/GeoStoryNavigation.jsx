@@ -13,7 +13,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
 import {
-    navigableItemsSelector,
+    navigableItemsSelectorCreator,
     currentPageSelector,
     currentPositionSelector,
     totalItemsSelector,
@@ -55,7 +55,7 @@ export default createPlugin('GeoStoryNavigation', {
             currentPage: currentPageSelector,
             currentPosition: currentPositionSelector,
             totalItems: totalItemsSelector,
-            navigableItems: navigableItemsSelector
+            navigableItems: navigableItemsSelectorCreator()
         }), {
             setEditingMode: setEditing
         }

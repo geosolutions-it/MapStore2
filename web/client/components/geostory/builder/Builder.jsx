@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 import BorderLayout from '../../layout/BorderLayout';
 import SectionsPreview from './SectionsPreview';
+import Settings from './Settings';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import { lists, Modes } from '../../../utils/GeoStoryUtils';
 import withConfirm from '../../misc/toolbar/withConfirm';
@@ -24,18 +25,21 @@ const DeleteButton = withConfirm(ToolbarButton);
  * @param {function} [setEditing] handler for setEditing button in toolbar
  */
 
-
 class Builder extends React.Component {
 
     static propTypes = {
+        currentPage: PropTypes.object,
+        settingsItems: PropTypes.array,
         story: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
         onToggleCardPreview: PropTypes.func,
+        onToggleSettingsPanel: PropTypes.func,
+        onToggleSettings: PropTypes.func,
         isCollapsed: PropTypes.bool,
         isToolbarEnabled: PropTypes.bool,
+        isSettingsEnabled: PropTypes.bool,
         scrollTo: PropTypes.func,
         setEditing: PropTypes.func,
-        currentPage: PropTypes.object,
         onSort: PropTypes.func,
         onSelect: PropTypes.func,
         onRemove: PropTypes.func,
@@ -47,9 +51,12 @@ class Builder extends React.Component {
         mode: Modes.VIEW,
         setEditing: () => {},
         onToggleCardPreview: () => {},
+        onToggleSettingsPanel: () => {},
+        onToggleSettings: () => {},
         story: {},
         isCollapsed: true,
         isToolbarEnabled: true,
+        isSettingsEnabled: true,
         onSort: () => {}
     };
 
@@ -61,7 +68,11 @@ class Builder extends React.Component {
             mode,
             isCollapsed,
             isToolbarEnabled,
+            isSettingsEnabled,
+            settingsItems,
             onToggleCardPreview,
+            onToggleSettingsPanel,
+            onToggleSettings,
             currentPage,
             selected,
             onRemove,
@@ -104,7 +115,7 @@ class Builder extends React.Component {
                             {
                                 tooltipId: "geostory.builder.settings.tooltip",
                                 glyph: "cog",
-                                disabled: true // TODO: restore when implemented
+                                onClick: () => onToggleSettingsPanel()
                             },
                             {
                                 tooltipId: `geostory.builder.${isCollapsed ? "expandAll" : "collapseAll"}`,
@@ -116,7 +127,11 @@ class Builder extends React.Component {
                         ]}/>
                 </div>
             }>
-            {isToolbarEnabled ? <SectionsPreview
+            {isSettingsEnabled && <Settings
+                items={settingsItems}
+                onToggleSettings={onToggleSettings}
+            />}
+            {isToolbarEnabled && !isSettingsEnabled ? <SectionsPreview
                 currentPage={currentPage}
                 scrollTo={scrollTo}
                 onSelect={onSelect}
@@ -125,11 +140,11 @@ class Builder extends React.Component {
                 isCollapsed={isCollapsed}
                 sections={story && story.sections}
                 onSort={onSort}
-            /> : <div className="ms-story-empty-content-parent">
+            /> : !isSettingsEnabled ? <div className="ms-story-empty-content-parent">
                 <div className="ms-story-empty-content-child">
                     <Message msgId="geostory.builder.noContents" />
                 </div>
-            </div>}
+            </div> : null}
         </BorderLayout>
         );
     }

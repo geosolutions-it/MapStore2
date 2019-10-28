@@ -26,6 +26,7 @@ export const SET_CONTROL = "GEOSTORY:SET_CONTROL";
 export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
+export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 export const UPDATE_CURRENT_COLUMN = "GEOSTORY:UPDATE_CURRENT_COLUMN";
@@ -133,6 +134,10 @@ export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
  * Turn on/off preview in cards.
 */
 export const toggleCardPreview = () => ({ type: TOGGLE_CARD_PREVIEW});
+/**
+ * Turn on/off settings panel.
+*/
+export const toggleSettingsPanel = () => ({ type: TOGGLE_SETTINGS_PANEL});
 /**
  * Updates a value or an object in the current Story. Useful to update contents, settings and so on.
  * @param {string} path the path of the element to modify. It can contain path like this `sections[{"id": "abc"}].contents[{"id": "def"}]` to resolve the predicate between brackets.

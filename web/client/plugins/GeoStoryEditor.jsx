@@ -12,14 +12,25 @@ import { createStructuredSelector } from 'reselect';
 
 import {
     currentStorySelector,
+    navigableItemsSelectorCreator,
+    currentPageSelector,
     isCollapsedSelector,
     isToolbarEnabledSelector,
+    isSettingsEnabledSelector,
     modeSelector,
-    selectedCardSelector,
-    currentPageSelector
+    selectedCardSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
-import { setEditing, toggleCardPreview, move, selectCard, remove, update } from '../actions/geostory';
+import {
+    move,
+    remove,
+    setEditing,
+    selectCard,
+    toggleCardPreview,
+    toggleSettingsPanel,
+    toggleSettings,
+    update
+} from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
@@ -31,10 +42,14 @@ const GeoStoryEditor = ({
     isCollapsed,
     story = {},
     currentPage,
+    settingsItems,
     selected,
     isToolbarEnabled,
+    isSettingsEnabled,
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
+    onToggleSettingsPanel = () => {},
+    onToggleSettings = () => {},
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
@@ -53,12 +68,16 @@ const GeoStoryEditor = ({
         onSelect={onSelect}
         onRemove={onRemove}
         isToolbarEnabled={isToolbarEnabled}
+        isSettingsEnabled={isSettingsEnabled}
         mode={mode}
         onUpdate={onUpdate}
         currentPage={currentPage}
         setEditing={setEditingMode}
+        settingsItems={settingsItems}
         isCollapsed={isCollapsed}
         onToggleCardPreview={onToggleCardPreview}
+        onToggleSettingsPanel={onToggleSettingsPanel}
+        onToggleSettings={onToggleSettings}
         onSort={onSort}
     />
 </div> : null);
@@ -74,11 +93,15 @@ export default createPlugin('GeoStoryEditor', {
             mode: modeSelector,
             story: currentStorySelector,
             currentPage: currentPageSelector,
+            settingsItems: navigableItemsSelectorCreator({withImmersiveSection: true}),
             isToolbarEnabled: isToolbarEnabledSelector,
+            isSettingsEnabled: isSettingsEnabledSelector,
             selected: selectedCardSelector
         }), {
             setEditingMode: setEditing,
             onToggleCardPreview: toggleCardPreview,
+            onToggleSettingsPanel: toggleSettingsPanel,
+            onToggleSettings: toggleSettings,
             onSelect: selectCard,
             onUpdate: update,
             onRemove: remove,
