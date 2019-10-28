@@ -516,7 +516,7 @@ export default class DrawSupport extends React.Component {
                         this.appendToMultiGeometry(drawMethod, geomAlreadyPresent, drawnGeom);
                     } else {
                         // create new multi geom
-                        newMultiGeom = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: [drawnGeom.getCoordinates()]}));
+                        newMultiGeom = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: drawnGeom.getCoordinates()}));
                     }
 
                     if (drawnGeom.getType() !== getSimpleGeomType(previousGeometries.getType())) {
