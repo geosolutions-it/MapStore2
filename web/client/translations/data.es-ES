@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfigurados (almacenados opcionalmente en una base de datos GeoStore)",
         "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
         "about_h20": "Licencia",
-        "about_p3": "MapStore es un software libre y de código abiertas, basado en OpenLayers 3, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
+        "about_p3": "MapStore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
         "about_p5-0": "Para más información, consulte",
         "about_a0": "esta",
         "about_p5-1": "página.",
