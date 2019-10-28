@@ -20,7 +20,7 @@ describe('Timeline/Playback Settings component', () => {
         expect(el).toExist();
     });
     it('rendering with values', () => {
-        ReactDOM.render(<Settings following stepUnit="days" timeStep={1} frameDuration={1} />, document.getElementById("container"));
+        ReactDOM.render(<Settings following stepUnit="days" timeStep={1} frameDuration={1} fixedStep />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
         expect(el).toExist();
