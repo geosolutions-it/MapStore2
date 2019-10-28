@@ -300,7 +300,7 @@ const storeDetailsInfoEpic = (action$, store) =>
                 )
                     .switchMap((attributes) => {
                         let details = find(attributes, {name: 'details'});
-                        if (!details) {
+                        if (!details || details.value === 'NODATA') {
                             return Rx.Observable.empty();
                         }
                         return Rx.Observable.of(
