@@ -56,7 +56,7 @@ describe('MapStore2 API', () => {
         MapStore2.create('container', {
             epics: {
                 testEpic1: action$ => action$
-                    .bufferCount(5).do((actions) => {
+                    .bufferCount(6).do((actions) => {
                         expect(findIndex(actions, a => a.type === INIT_MAP)).toBeLessThan(findIndex(actions, a => a.type === MAP_CONFIG_LOADED));
                         done();
                     }).ignoreElements()

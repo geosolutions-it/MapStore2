@@ -9,12 +9,8 @@
 const expect = require('expect');
 const { INIT_CATALOG } = require('../../actions/catalog');
 const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/controls');
-const { loginSuccess, logout, logoutWithReload } = require('../../actions/security');
+const { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } = require('../../actions/security');
 const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig } = require('../login');
-const { configureError } = require('../../actions/config');
-const { dashboardLoadError } = require('../../actions/dashboard');
-const { loadGeostoryError } = require('../../actions/geostory');
-const { FEEDBACK_MASK_LOADING } = require('../../actions/feedbackMask');
 
 const { testEpic } = require('./epicTestUtils');
 
@@ -70,62 +66,48 @@ describe('login Epics', () => {
     // TODO: move these tests in feedback mask and/or on single plugins
     describe('prompt login on not-public resources', () => {
         it('not-public map', (done) => {
-            const e = {
-                status: 403
-            };
+
             const epicResult = actions => {
                 expect(actions.length).toBe(1);
                 const action = actions[0];
                 expect(action.type).toBe(SET_CONTROL_PROPERTY);
                 done();
             };
-            testEpic(promptLoginOnMapError, 1, configureError(e, 123), epicResult, {});
+            testEpic(promptLoginOnMapError, 1, loginRequired(), epicResult, {});
         });
         it('not-public dashboard', (done) => {
-            const error = {
-                status: 403
-            };
             const epicResult = actions => {
                 try {
-                    expect(actions.length).toBe(3);
                     const setControlAction = actions[0];
                     expect(setControlAction.type).toBe(SET_CONTROL_PROPERTY);
                     expect(setControlAction.control).toBe('LoginForm');
                     expect(setControlAction.property).toBe('enabled');
+                    expect(setControlAction.value).toBe(true);
                     const feedbackAction = actions[1];
-                    expect(feedbackAction.type).toBe(FEEDBACK_MASK_LOADING);
-                    const pushAction = actions[2];
-                    expect(pushAction.type).toBe('@@router/CALL_HISTORY_METHOD');
-                    expect(pushAction.payload).toEqual({ method: 'push', args: ['/'] });
+                    expect(feedbackAction.type).toBe(LOGIN_PROMPT_CLOSED);
                 } catch (e) {
                     done(e);
                 }
                 done();
             };
-            testEpic(promptLoginOnMapError, 3, [dashboardLoadError(error), setControlProperty('LoginForm', 'enabled', false)], epicResult, {});
+            testEpic(promptLoginOnMapError, 2, [loginRequired(), setControlProperty('LoginForm', 'enabled', false)], epicResult, {});
         });
         it('not-public story', (done) => {
-            const error = {
-                status: 403
-            };
             const epicResult = actions => {
                 try {
-                    expect(actions.length).toBe(3);
                     const setControlAction = actions[0];
                     expect(setControlAction.type).toBe(SET_CONTROL_PROPERTY);
                     expect(setControlAction.control).toBe('LoginForm');
                     expect(setControlAction.property).toBe('enabled');
+                    expect(setControlAction.value).toBe(true);
                     const feedbackAction = actions[1];
-                    expect(feedbackAction.type).toBe(FEEDBACK_MASK_LOADING);
-                    const pushAction = actions[2];
-                    expect(pushAction.type).toBe('@@router/CALL_HISTORY_METHOD');
-                    expect(pushAction.payload).toEqual({ method: 'push', args: ['/'] });
+                    expect(feedbackAction.type).toBe(LOGIN_PROMPT_CLOSED);
                 } catch (e) {
                     done(e);
                 }
                 done();
             };
-            testEpic(promptLoginOnMapError, 3, [loadGeostoryError(error), setControlProperty('LoginForm', 'enabled', false)], epicResult, {});
+            testEpic(promptLoginOnMapError, 2, [loginRequired(), setControlProperty('LoginForm', 'enabled', false)], epicResult, {});
         });
     });
 });

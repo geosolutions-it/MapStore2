@@ -7,50 +7,32 @@
  */
 
 const expect = require('expect');
-const {loadMapConfig, loadMapInfo, MAP_CONFIG_LOAD_ERROR, MAP_CONFIG_LOADED} = require('../config');
-
-const loggedGetState = () => ({
-    security: {
-        authHeader: "Basic dGVzdDp0ZXN0"
-    }
-});
+const { configureError, loadMapConfig, loadMapInfo, configureMap, MAP_CONFIG_LOAD_ERROR, LOAD_MAP_CONFIG, MAP_CONFIG_LOADED} = require('../config');
 
 describe('Test configuration related actions', () => {
-    it('does not load a missing configuration file', (done) => {
-        loadMapConfig('missingConfig.json')((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(MAP_CONFIG_LOAD_ERROR);
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+    it('loadMapConfig', () => {
+        const retVal = loadMapConfig("test", 1);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(LOAD_MAP_CONFIG);
+        expect(retVal.configName).toBe("test");
+        expect(retVal.mapId).toBe(1);
     });
 
-    it('loads an existing configuration file', (done) => {
-        loadMapConfig('base/web/client/test-resources/testConfig.json', loggedGetState)((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(MAP_CONFIG_LOADED);
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+    it('configureMap', () => {
+        const mapId = 1;
+        const DATA = {};
+        const retVal = configureMap(DATA, mapId);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(MAP_CONFIG_LOADED);
+        expect(retVal);
     });
 
-    it('loads an broken configuration file', (done) => {
-        loadMapConfig('base/web/client/test-resources/testConfig.broken.json', loggedGetState)((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe('MAP_CONFIG_LOAD_ERROR');
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+    it('configureError', () => {
+        const retVal = configureError();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(MAP_CONFIG_LOAD_ERROR);
     });
+
     it('getResource access info', (done) => {
         loadMapInfo('base/web/client/test-resources/geostore/ShortResource.json', 1)((actionCreator) => {
             try {

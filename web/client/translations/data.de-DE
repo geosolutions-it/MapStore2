@@ -1622,6 +1622,31 @@
             },
             "emptyTitle": "Das Armaturenbrett ist leer"
         },
+        "context": {
+            "loadingSpinner": "Loading Context",
+            "errors": {
+                "loading": {
+                    "title": "Fehler beim Laden Kontext",
+                    "notAccessible": "Ressource nicht zugänglich",
+                    "pleaseLogin": "Einige Ressource kann nicht öffentlich. Bitte versuchen Sie sich einloggen",
+                    "unknownError": "Es gab einen Fehler in der Karte oder den Kontext geladen. Bitte kontaktieren Sie den Administrator",
+                    "notFound": "Ressource nicht gefunden"
+                },
+                "context": {
+                    "notAccessible": "Sie haben nicht das Recht, die Erlaubnis zu diesem Kontext zuzugreifen. Bitte kontaktieren Sie den Administrator-Zugriff zu erhalten",
+                    "pleaseLogin": "Dieser Zusammenhang ist nicht öffentlich. Bitte versuchen Sie sich einloggen",
+                    "unknownError": "Es gab einen Fehler den Kontext geladen. Bitte kontaktieren Sie den Administrator",
+                    "notFound": "Der Kontext Sie zugreifen möchten, existiert nicht"
+                },
+                "map": {
+                    "notAccessible": "Sie haben nicht das Recht, die Erlaubnis zu dieser Karte zuzugreifen. Bitte kontaktieren Sie den Administrator-Zugriff zu erhalten",
+                    "pleaseLogin": "Diese Karte oder die Karte ist nicht öffentlich. Bitte versuchen Sie sich einloggen",
+                    "unknownError": "Es gab einen Fehler in der Karte geladen werden. Bitte kontaktieren Sie den Administrator",
+                    "notFound": "Die Karte, die Sie zugreifen möchten, existiert nicht"
+                },
+                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits. versuchen '{data}'"
+            }
+        },
         "wizard": {
             "next": "Nächster",
             "prev": "Bisherige",

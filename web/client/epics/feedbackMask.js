@@ -9,15 +9,19 @@
 
 const Rx = require('rxjs');
 const {split, get, isNil} = require('lodash');
+const { LOCATION_CHANGE, push } = require('connected-react-router');
+
 const {FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE, feedbackMaskLoading, feedbackMaskLoaded, feedbackMaskEnabled, detectedNewPage} = require('../actions/feedbackMask');
+const { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } = require('../actions/security');
 const {LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
 const { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } = require('../actions/geostory');
-
+const { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } = require('../actions/context');
 const {INIT_MAP} = require('../actions/map');
-const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR} = require('../actions/config');
+
 const {mapSelector} = require('../selectors/map');
-const {LOCATION_CHANGE} = require('connected-react-router');
-const {LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
+const { isLoggedIn } = require('../selectors/security');
+
 
 /**
  * Enabled/disabled mask based on map load feedback, in case of error enable feedbackMask.
@@ -104,6 +108,26 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
         });
 
 /**
+ * Enabled/disabled mask based on context load feedback, in case of error enable feedbackMask.
+ * @param {Observable} action$ stream of actions. Manages `LOAD_GEOSTORY, `GEOSTORY_LOADED`, `GEOSTORY_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
+ * @memberof epics.feedbackMask
+ * @return {Observable}
+ */
+const updateContextFeedbackMaskVisibility = action$ =>
+    action$.ofType(LOAD_CONTEXT)
+        .switchMap(() => {
+            const loadActions = [LOAD_FINISHED, CONTEXT_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
+            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR || type === MAP_INFO_LOAD_ERROR; // TODO: handle context config error
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'context');
+            return Rx.Observable.merge(
+                updateObservable,
+                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .switchMap(() => updateObservable)
+                    .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
+            );
+        });
+
+/**
  * Detect if the page has changed, if so it will stop loading and disable feedbackMask state.
  * It needed to stop nested stream of updateDashboardVisibility and updateMapVisibility
  * @param {Observable} action$ stream of actions. Manages `LOCATION_CHANGE`
@@ -124,6 +148,26 @@ const detectNewPage = (action$, store) =>
             feedbackMaskEnabled(false),
             detectedNewPage(split(action.payload.location.pathname, '/')[1])
         ));
+
+/**
+ * Prompts login when page some resource is not accessible and you're not logged in
+ * @param {stream} action$ the action stream
+ */
+const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
+    action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR)
+        .filter((action) => action.error && action.error.status === 403)
+        .filter(() => !isLoggedIn(store.getState()))
+        .exhaustMap(
+            () =>
+                Rx.Observable.of(loginRequired()) // prompt login
+                    .concat(
+                        action$.ofType(LOGIN_PROMPT_CLOSED) // then if for login close
+                            .take(1)
+                            .switchMap(() => Rx.Observable.of(feedbackMaskLoading(), push('/'))) // go to home page
+
+                    ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
+        );
+
 /**
  * Epics for feedbackMask functionality
  * @name epics.feedbackMask
@@ -131,7 +175,9 @@ const detectNewPage = (action$, store) =>
  */
 module.exports = {
     updateMapVisibility,
+    updateContextFeedbackMaskVisibility,
     updateDashboardVisibility,
     updateGeoStoryFeedbackMaskVisibility,
-    detectNewPage
+    detectNewPage,
+    feedbackMaskPromptLogin
 };

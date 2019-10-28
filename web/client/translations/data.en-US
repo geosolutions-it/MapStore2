@@ -1606,9 +1606,6 @@
             "errors":{
                 "loading": {
                     "title": "Error loading dashboard",
-                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
-                    "pleaseLogin": "This dashboard is not public. Please try to login",
-                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
                     "unknownError": "There was an error loading the dashboard. Please contact the administrator",
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
@@ -1622,6 +1619,34 @@
                 "hideConnections": "HideConnections"
             },
             "emptyTitle": "The dashboard is empty"
+        },
+        "context": {
+            "loadingSpinner": "Loading Context",
+            "errors":{
+                "loading": {
+                    "title": "Error loading context",
+                    "notAccessible": "You don't have permission to access some resource. Please contact the resource owner",
+                    "pleaseLogin": "Some resource may not be public. Please try to login",
+                    "unknownError": "There was an error loading the map or the context. Please contact the administrator",
+                    "notFound": "Resource not found",
+	                "notAccessible": "Resource not accessible"
+                },
+                "context": {
+                    "notAccessible": "You don't have permission to access this context. Please contact the resource owner",
+                    "pleaseLogin": "This context is not public. Please try to login",
+                    "unknownError": "There was an error loading the context. Please contact the administrator",
+                    "notFound": "The context you are trying to access doesn't exist",
+	                "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
+                },
+                "map": {
+                    "notAccessible": "You don't have permission to access this map. Please contact the resource owner",
+                    "pleaseLogin": "This map or the map is not public. Please try to login",
+                    "unknownError": "There was an error loading the map. Please contact the administrator",
+                    "notFound": "The map you are trying to access doesn't exist",
+	                "notAccessible": "You don't have the right permission to access to this map. Please contact the administrator to get access"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            }
         },
         "wizard": {
             "next": "Next",

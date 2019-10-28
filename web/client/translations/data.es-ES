@@ -1622,6 +1622,31 @@
             },
             "emptyTitle": "El panel de control está vacío"
         },
+                "context": {
+            "loadingSpinner": "Cargando Contexto",
+            "errors": {
+                "loading": {
+                    "title": "del contexto de carga de error",
+                    "notAccessible": "Recurso no accesible",
+                    "pleaseLogin": "Algunos de recursos puede no ser pública. Por favor, intente iniciar la sesión",
+                    "unknownError": "Hubo un error al cargar el mapa o el contexto. Por favor, póngase en contacto con el administrador",
+                    "notFound": "Recurso no encontrado"
+                },
+                "context": {
+                    "notAccessible": "Usted no tiene permiso derecho de acceso a este contexto. Por favor, póngase en contacto con el administrador para obtener acceso",
+                    "pleaseLogin": "Este contexto no es pública. Por favor, intente iniciar la sesión",
+                    "unknownError": "Hubo un error al cargar el contexto. Por favor, póngase en contacto con el administrador",
+                    "notFound": "El contexto que está intentando acceder no existe"
+                },
+                "map": {
+                    "notAccessible": "Usted no tiene permiso derecho de acceso a este mapa. Por favor, póngase en contacto con el administrador para obtener acceso",
+                    "pleaseLogin": "Este mapa o el mapa no es público. Por favor, intente iniciar la sesión",
+                    "unknownError": "Hubo un error al cargar el mapa. Por favor, póngase en contacto con el administrador",
+                    "notFound": "El mapa que está intentando acceder no existe"
+                },
+                "resourceAlreadyExists": "Un recurso con este nombre ya existe. Try '{datos}'"
+            }
+        },
         "wizard": {
             "next": "Siguiente",
             "prev": "Anterior",

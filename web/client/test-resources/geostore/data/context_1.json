@@ -1,0 +1,134 @@
+{
+  "plugins": {
+    "desktop": [
+      {
+        "name": "Map",
+        "cfg": {
+          "tools": [
+            "locate"
+          ],
+          "mapOptions": {
+            "openlayers": {
+              "interactions": {
+                "pinchRotate": false,
+                "altShiftDragRotate": false
+              },
+              "attribution": {
+                "container": "#mapstore-map-footer-container"
+              }
+            },
+            "leaflet": {
+              "attribution": {
+                "container": "#mapstore-map-footer-container"
+              }
+            }
+          },
+          "toolsOptions": {
+            "scalebar": {
+              "container": "#mapstore-map-footer-container"
+            }
+          }
+        }
+      },
+      {
+        "name": "DrawerMenu",
+        "hide": "{!(request.query && request.query.forceDrawer)}"
+      },
+      {
+        "name": "BackgroundSelector",
+        "cfg": {
+          "bottom": 40,
+          "dimensions": {
+            "side": 65,
+            "sidePreview": 65,
+            "frame": 3,
+            "margin": 5,
+            "label": false,
+            "vertical": true
+          }
+        }
+      },
+      {
+        "name": "Identify",
+        "cfg": {
+          "showFullscreen": true,
+          "position": "bottom",
+          "size": 0.5,
+          "fluid": true,
+          "viewerOptions": {
+            "container": "{context.ReactSwipe}"
+          }
+        }
+      },
+      {
+        "name": "ZoomAll",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      {
+        "name": "Locate",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      {
+        "name": "TOC",
+        "cfg": {
+          "activateMapTitle": false,
+          "activateSettingsTool": false,
+          "activateMetedataTool": false,
+          "activateRemoveLayer": false
+        }
+      },
+      "AddGroup",
+      "MapFooter",
+      {
+        "name": "Settings",
+        "cfg": {
+          "wrap": true
+        }
+      },
+      {
+        "name": "Search",
+        "cfg": {
+          "showOptions": false,
+          "withToggle": [
+            "max-width: 768px",
+            "min-width: 768px"
+          ]
+        }
+      },
+      {
+        "name": "Toolbar",
+        "id": "NavigationBar",
+        "cfg": {
+          "id": "navigationBar"
+        }
+      },
+      {
+        "name": "MapLoading",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      "Cookie",
+      "OmniBar",
+      {
+        "name": "GoFull",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      "FeedbackMask"
+    ]
+  }
+}

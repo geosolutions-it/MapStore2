@@ -24,6 +24,14 @@ module.exports = {
         path: "/viewer/:mapId",
         component: require('./pages/MapViewer')
     }, {
+        name: 'context',
+        path: "/context/:contextId",
+        component: require('./pages/Context').default
+    }, {
+        name: 'context',
+        path: "/context/:contextId/:mapId",
+        component: require('./pages/Context').default
+    }, {
         name: "manager",
         path: "/manager",
         component: require('./pages/Manager')

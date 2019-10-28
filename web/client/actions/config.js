@@ -8,6 +8,7 @@
 
 var axios = require('../libs/ajax');
 
+const LOAD_MAP_CONFIG = "MAP_LOAD_MAP_CONFIG";
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
 const MAP_INFO_LOAD_START = 'MAP_INFO_LOAD_START';
@@ -32,20 +33,10 @@ function configureError(e, mapId) {
 }
 
 function loadMapConfig(configName, mapId) {
-    return (dispatch) => {
-        return axios.get(configName).then((response) => {
-            if (typeof response.data === 'object') {
-                dispatch(configureMap(response.data, mapId));
-            } else {
-                try {
-                    JSON.parse(response.data);
-                } catch (e) {
-                    dispatch(configureError('Configuration file broken (' + configName + '): ' + e.message, mapId));
-                }
-            }
-        }).catch((e) => {
-            dispatch(configureError(e, mapId));
-        });
+    return {
+        type: LOAD_MAP_CONFIG,
+        configName,
+        mapId
     };
 }
 function mapInfoLoaded(info, mapId) {
@@ -92,6 +83,16 @@ function loadMapInfo(url, mapId) {
     };
 
 }
-module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR,
-    MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR,
-    loadMapConfig, loadMapInfo, configureMap, configureError, mapInfoLoaded};
+module.exports = {
+    LOAD_MAP_CONFIG,
+    MAP_CONFIG_LOADED,
+    MAP_CONFIG_LOAD_ERROR,
+    MAP_INFO_LOAD_START,
+    MAP_INFO_LOADED,
+    MAP_INFO_LOAD_ERROR,
+    loadMapConfig,
+    loadMapInfo,
+    configureMap,
+    configureError,
+    mapInfoLoaded
+};

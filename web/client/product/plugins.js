@@ -32,6 +32,7 @@ module.exports = {
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
         CRSSelectorPlugin: require('../plugins/CRSSelector'),
         ContentTabs: require('../plugins/ContentTabs'),
+        ContextPlugin: require('../plugins/Context').default,
         CookiePlugin: require('../plugins/Cookie'),
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         Dashboard: require('../plugins/Dashboard'),
