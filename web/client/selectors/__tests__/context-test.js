@@ -25,8 +25,6 @@ import {
 import CONTEXT_DATA from '../../test-resources/geostore/data/context_1.json';
 import CONTEXT_SHORT_RESOURCE from '../../test-resources/geostore/resources/resource/context_1.json';
 
-
-
 const stateMocker = createStateMocker({context});
 describe('context selectors', () => {
     it('currentContextSelector', () => {
