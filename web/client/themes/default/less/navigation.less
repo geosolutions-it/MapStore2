@@ -7,6 +7,15 @@
     display: flex;
     flex-direction: column;
 
+    .scroll-menu-arrow--disabled {
+        pointer-events: none;
+        button {
+            color: #ddd;
+        }
+        button:hover, button:focus, button:active {
+            background: none;
+        }
+    }
     .progress-bar {
         background-color: #ddd;
         height: 4px;

@@ -65,6 +65,8 @@ export default ({
     return (
         <div className="ms-horizontal-menu">
             <ScrollMenu
+                hideArrows
+                hideSingleArrow
                 alignCenter={false}
                 scrollBy={scrollBy}
                 data={getItems(items, currentPage)}

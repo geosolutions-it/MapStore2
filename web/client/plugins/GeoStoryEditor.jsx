@@ -15,8 +15,9 @@ import {
     navigableItemsSelectorCreator,
     currentPageSelector,
     isCollapsedSelector,
-    isToolbarEnabledSelector,
     isSettingsEnabledSelector,
+    settingsSelector,
+    isToolbarEnabledSelector,
     modeSelector,
     selectedCardSelector
 } from '../selectors/geostory';
@@ -29,6 +30,7 @@ import {
     toggleCardPreview,
     toggleSettingsPanel,
     toggleSettings,
+    toggleVisibilityItem,
     update
 } from '../actions/geostory';
 
@@ -41,6 +43,7 @@ const GeoStoryEditor = ({
     mode = Modes.VIEW,
     isCollapsed,
     story = {},
+    settings = {},
     currentPage,
     settingsItems,
     selected,
@@ -50,6 +53,7 @@ const GeoStoryEditor = ({
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
     onToggleSettings = () => {},
+    onToggleVisibilityItem = () => {},
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
@@ -63,6 +67,7 @@ const GeoStoryEditor = ({
             scrollToContent(id, options);
         }}
         story={story}
+        settings={settings}
         mode={mode}
         selected={selected}
         onSelect={onSelect}
@@ -78,6 +83,7 @@ const GeoStoryEditor = ({
         onToggleCardPreview={onToggleCardPreview}
         onToggleSettingsPanel={onToggleSettingsPanel}
         onToggleSettings={onToggleSettings}
+        onToggleVisibilityItem={onToggleVisibilityItem}
         onSort={onSort}
     />
 </div> : null);
@@ -94,6 +100,7 @@ export default createPlugin('GeoStoryEditor', {
             story: currentStorySelector,
             currentPage: currentPageSelector,
             settingsItems: navigableItemsSelectorCreator({withImmersiveSection: true}),
+            settings: settingsSelector,
             isToolbarEnabled: isToolbarEnabledSelector,
             isSettingsEnabled: isSettingsEnabledSelector,
             selected: selectedCardSelector
@@ -102,6 +109,7 @@ export default createPlugin('GeoStoryEditor', {
             onToggleCardPreview: toggleCardPreview,
             onToggleSettingsPanel: toggleSettingsPanel,
             onToggleSettings: toggleSettings,
+            onToggleVisibilityItem: toggleVisibilityItem,
             onSelect: selectCard,
             onUpdate: update,
             onRemove: remove,

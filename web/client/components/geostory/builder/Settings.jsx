@@ -11,6 +11,7 @@ import Message from '../../I18N/Message';
 import { SectionTypes } from './../../../utils/GeoStoryUtils';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Logo from './Logo';
+import noLogo from '../../background/img/default.jpg';
 
 /**
  * Shows list of settings for the story
@@ -18,6 +19,7 @@ import Logo from './Logo';
 export default ({
     items,
     onToggleSettings = () => {},
+    onToggleVisibilityItem = () => {},
     settings = {
         isLogoEnabled: true,
         isNavbarEnabled: false,
@@ -25,12 +27,12 @@ export default ({
     }
 }) => (
     <Form className="ms-geostory-settings">
+        <div className="text-center"><h4>Story Settings</h4></div>
         <FormGroup>
             <ControlLabel><Message msgId="Title"/></ControlLabel>
             <SwitchButton
-                onChange={onToggleSettings("isTitleEnabled")}
+                onChange={() => onToggleSettings("isTitleEnabled")}
                 className="ms-geostory-settings-switch"
-
                 checked={settings.isTitleEnabled}
             />
             <FormControl
@@ -41,32 +43,33 @@ export default ({
         <FormGroup>
             <ControlLabel><Message msgId="Logo"/></ControlLabel>
             <SwitchButton
-                onChange={onToggleSettings("isLogoEnabled")}
+                onChange={() => onToggleSettings("isLogoEnabled")}
                 className="ms-geostory-settings-switch"
                 checked={settings.isLogoEnabled}
             />
             <Logo
                 className="ms-geostory-settings-logo"
-                src="https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg"
+                src={ settings.isLogoEnabled ? "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg" : noLogo}
             />
         </FormGroup>
         <FormGroup>
             <ControlLabel><Message msgId="Navbar"/></ControlLabel>
             <SwitchButton
-                onChange={onToggleSettings("isNavbarEnabled")}
+                onChange={() => onToggleSettings("isNavbarEnabled")}
                 className="ms-geostory-settings-switch"
                 checked={settings.isNavbarEnabled}
             />
         </FormGroup>
         <FormGroup>
             {
-                settings.isNavbarEnabled && items.map(({title, type}) => {
+                settings.isNavbarEnabled && items.map(({id, title, type, isVisible}) => {
                     if (type === SectionTypes.IMMERSIVE) {
                         return (<div className="ms-geostory-settings-immersive-section">{title}</div>);
                     }
                     return (<Checkbox
-                        onChange={() => {}}
-                        checked>
+                        onChange={() => onToggleVisibilityItem(id)}
+                        checked={isVisible}
+                    >
                         {title}
                     </Checkbox>);
                 })

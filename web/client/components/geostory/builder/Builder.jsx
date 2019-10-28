@@ -16,7 +16,7 @@ import { lists, Modes } from '../../../utils/GeoStoryUtils';
 import withConfirm from '../../misc/toolbar/withConfirm';
 import Message from '../../I18N/Message';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
-const DeleteButton = withConfirm(ToolbarButton);
+const WithConfirmButton = withConfirm(ToolbarButton);
 /**
  * Base Component that shows basic editing tools and SlidesPreview
  * of a geo-story.
@@ -31,10 +31,12 @@ class Builder extends React.Component {
         currentPage: PropTypes.object,
         settingsItems: PropTypes.array,
         story: PropTypes.object,
+        settings: PropTypes.object,
         mode: PropTypes.oneOf(lists.Modes),
         onToggleCardPreview: PropTypes.func,
         onToggleSettingsPanel: PropTypes.func,
         onToggleSettings: PropTypes.func,
+        onToggleVisibilityItem: PropTypes.func,
         isCollapsed: PropTypes.bool,
         isToolbarEnabled: PropTypes.bool,
         isSettingsEnabled: PropTypes.bool,
@@ -53,16 +55,19 @@ class Builder extends React.Component {
         onToggleCardPreview: () => {},
         onToggleSettingsPanel: () => {},
         onToggleSettings: () => {},
+        onToggleVisibilityItem: () => {},
         story: {},
+        settings: {},
         isCollapsed: true,
         isToolbarEnabled: true,
-        isSettingsEnabled: true,
+        isSettingsEnabled: false,
         onSort: () => {}
     };
 
     render() {
         const {
             story,
+            settings,
             scrollTo,
             setEditing,
             mode,
@@ -73,6 +78,7 @@ class Builder extends React.Component {
             onToggleCardPreview,
             onToggleSettingsPanel,
             onToggleSettings,
+            onToggleVisibilityItem,
             currentPage,
             selected,
             onRemove,
@@ -93,9 +99,9 @@ class Builder extends React.Component {
                         }}
                         buttons={[
                             {
-                                Element: () => (<DeleteButton
+                                visible: !isSettingsEnabled,
+                                Element: () => (<WithConfirmButton
                                     glyph="trash"
-                                    visible
                                     bsStyle= "primary"
                                     className="square-button-md no-border"
                                     tooltipId="geostory.builder.delete"
@@ -109,12 +115,14 @@ class Builder extends React.Component {
                             {
                                 tooltipId: "geostory.builder.preview",
                                 glyph: "eye-open",
+                                visible: !isSettingsEnabled,
                                 disabled: !isToolbarEnabled,
                                 onClick: () => setEditing(mode === Modes.VIEW)
                             },
                             {
                                 tooltipId: "geostory.builder.settings.tooltip",
                                 glyph: "cog",
+                                visible: !isSettingsEnabled,
                                 onClick: () => onToggleSettingsPanel()
                             },
                             {
@@ -122,14 +130,37 @@ class Builder extends React.Component {
                                 glyph: isCollapsed ? "chevron-left" : "chevron-down",
                                 bsStyle: "primary",
                                 disabled: !isToolbarEnabled,
+                                visible: !isSettingsEnabled,
                                 onClick: () => onToggleCardPreview()
+                            },
+                            {
+                                // TODO i18n
+                                visible: isSettingsEnabled,
+                                Element: () => (<WithConfirmButton
+                                    bsStyle= "primary"
+                                    glyph="back"
+                                    className="square-button-md no-border"
+                                    tooltipId="geostory.contentToolbar.remove"
+                                    confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
+                                    confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
+                                    onClick={ () => {
+                                        onToggleSettingsPanel();
+                                    }} />)
+                            },
+                            {
+                                tooltipId: `geostory.builder.settings.save`,
+                                glyph: "floppy-disk",
+                                visible: isSettingsEnabled,
+                                onClick: () => onToggleSettingsPanel(true)
                             }
                         ]}/>
                 </div>
             }>
             {isSettingsEnabled && <Settings
                 items={settingsItems}
+                settings={settings}
                 onToggleSettings={onToggleSettings}
+                onToggleVisibilityItem={onToggleVisibilityItem}
             />}
             {isToolbarEnabled && !isSettingsEnabled ? <SectionsPreview
                 currentPage={currentPage}

@@ -55,7 +55,7 @@ export default createPlugin('GeoStoryNavigation', {
             currentPage: currentPageSelector,
             currentPosition: currentPositionSelector,
             totalItems: totalItemsSelector,
-            navigableItems: navigableItemsSelectorCreator()
+            navigableItems: navigableItemsSelectorCreator({withVisibility: false})
         }), {
             setEditingMode: setEditing
         }

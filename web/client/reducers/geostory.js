@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
-import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
+import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
 import { getEffectivePath } from '../utils/GeoStoryUtils';
 
 import {
@@ -23,19 +23,23 @@ import {
     SET_CONTROL,
     SET_RESOURCE,
     TOGGLE_CARD_PREVIEW,
+    TOGGLE_SETTINGS,
     TOGGLE_SETTINGS_PANEL,
+    TOGGLE_VISIBILITY_ITEM,
     UPDATE,
     UPDATE_CURRENT_PAGE,
     UPDATE_CURRENT_COLUMN
 } from '../actions/geostory';
 
-import { selectedCardSelector } from "../selectors/geostory";
+import { selectedCardSelector, sectionsSelector } from "../selectors/geostory";
 
 
 let INITIAL_STATE = {
     mode: 'edit', // TODO: change in to Modes.VIEW
     isCollapsed: false,
-    currentPage: {}
+    currentPage: {},
+    settings: {},
+    oldSettings: {}
 };
 
 /**
@@ -209,8 +213,37 @@ export default (state = INITIAL_STATE, action) => {
     case TOGGLE_CARD_PREVIEW: {
         return set('isCollapsed', !state.isCollapsed, state);
     }
+    case TOGGLE_SETTINGS: {
+        return set(`settings.${action.option}`, !state.settings[action.option], state);
+        // return state;
+    }
+    case TOGGLE_VISIBILITY_ITEM: {
+        const sections = sectionsSelector({geostory: state});
+        let newElement = {};
+        const rawPath = sections.reduce((pSection, cSection) => {
+            if (cSection.id === action.id) {
+                newElement = {...cSection, isVisible: !cSection.isVisible};
+                return `${pSection}[{"id":"${cSection.id}"}]`;
+            }
+            return pSection + cSection.contents.reduce((p, c) => {
+                if (c.id === action.id) {
+                    newElement = {...c, isVisible: !c.isVisible};
+                    return `[{"id":"${cSection.id}"}].contents[{"id":"${c.id}"}]`;
+                }
+                return p;
+            }, "");
+        }, "sections");
+        return set(getEffectivePath(`currentStory.${rawPath}`, state), newElement, state);
+    }
     case TOGGLE_SETTINGS_PANEL: {
-        return set('isSettingsEnabled', !state.isSettingsEnabled, state);
+
+        const newStatus = !state.isSettingsEnabled;
+        return compose(
+            set('isSettingsEnabled', newStatus),
+            set('oldSettings', newStatus ? state.settings : {}),
+            // when closing (newStatus=false) check if is because of the save, in that case keep changes otherwise restore previous settings
+            set('settings', newStatus ? state.settings : action.withSave ? state.settings : state.oldSettings)
+        )(state);
     }
     case UPDATE: {
         const { path: rawPath, mode } = action;

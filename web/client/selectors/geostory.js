@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, find, findIndex} from 'lodash';
+import {get, find, findIndex, isEqual} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes } from './../utils/GeoStoryUtils';
 
@@ -85,7 +85,12 @@ export const isToolbarEnabledSelector = state => sectionsSelector(state).length 
 /**
  * return the status of settings panel, if true is visible
  */
-export const isSettingsEnabledSelector = state => get(state, "geostory.isSettingsEnabled", true);
+export const isSettingsEnabledSelector = state => get(state, "geostory.isSettingsEnabled", false);
+/**
+ * return the settings of the story
+ */
+export const settingsSelector = state => get(state, "geostory.settings", {});
+export const settingsChanged = state => !isEqual(settingsSelector(state), (state, "geostory.oldSettings", {}));
 /**
  * gets the selectedCard
  */
@@ -129,21 +134,24 @@ export const resourceByIdSelectorCreator = id => state => find(resourcesSelector
   * with special behaviour for paragraph where column is ignored
   * @param {object} state application state
   */
-export const navigableItemsSelectorCreator = ({withImmersiveSection = false} = {}) => state => {
+export const navigableItemsSelectorCreator = ({withImmersiveSection = false, withVisibility = true} = {}) => state => {
     const sections = sectionsSelector(state);
     return sections.reduce((p, c) => {
-        if (c.type === SectionTypes.TITLE) {
+        if (c.type === SectionTypes.TITLE && (withVisibility || c.isVisible)) {
             // include only the section
             return [...p, c];
         }
-        if (c.type === SectionTypes.PARAGRAPH) {
+        if (c.type === SectionTypes.PARAGRAPH && (withVisibility || c.isVisible)) {
             // include only the section
             return [...p, c];
         }
         if (c.type === SectionTypes.IMMERSIVE) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
-                return [ ...pImm, {...column, sectionId: pImm.id}];
+                if (withVisibility || column.isVisible) {
+                    return [ ...pImm, {...column, sectionId: pImm.id}];
+                }
+                return pImm;
             }, []) || [];
             if (withImmersiveSection) {
                 return [ ...p, c, ...allImmContents];
