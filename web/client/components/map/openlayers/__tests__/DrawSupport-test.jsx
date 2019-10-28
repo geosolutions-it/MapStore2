@@ -72,7 +72,7 @@ const renderAndClick = (props = {}, options = {}) => {
 };
 
 
-describe.only('Test DrawSupport', () => {
+describe('Test DrawSupport', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         setTimeout(done);
