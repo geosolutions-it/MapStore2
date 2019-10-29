@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -37,9 +38,13 @@ class Builder extends React.Component {
         onToggleSettingsPanel: PropTypes.func,
         onToggleSettings: PropTypes.func,
         onToggleVisibilityItem: PropTypes.func,
+        onChangeTitle: PropTypes.func,
+        onUpdateLogo: PropTypes.func,
+        onErrorsLogo: PropTypes.func,
         isCollapsed: PropTypes.bool,
         isToolbarEnabled: PropTypes.bool,
         isSettingsEnabled: PropTypes.bool,
+        isSettingsChanged: PropTypes.bool,
         scrollTo: PropTypes.func,
         setEditing: PropTypes.func,
         onSort: PropTypes.func,
@@ -54,7 +59,6 @@ class Builder extends React.Component {
         setEditing: () => {},
         onToggleCardPreview: () => {},
         onToggleSettingsPanel: () => {},
-        onToggleSettings: () => {},
         onToggleVisibilityItem: () => {},
         story: {},
         settings: {},
@@ -63,7 +67,6 @@ class Builder extends React.Component {
         isSettingsEnabled: false,
         onSort: () => {}
     };
-
     render() {
         const {
             story,
@@ -74,11 +77,15 @@ class Builder extends React.Component {
             isCollapsed,
             isToolbarEnabled,
             isSettingsEnabled,
+            isSettingsChanged,
             settingsItems,
             onToggleCardPreview,
             onToggleSettingsPanel,
             onToggleSettings,
             onToggleVisibilityItem,
+            onChangeTitle,
+            onUpdateLogo,
+            onErrorsLogo,
             currentPage,
             selected,
             onRemove,
@@ -86,6 +93,7 @@ class Builder extends React.Component {
             onUpdate,
             onSelect
         } = this.props;
+        const SettingsButton = isSettingsChanged ? WithConfirmButton : ToolbarButton;
         return (<BorderLayout
             className="ms-geostory-builder"
             header={
@@ -136,11 +144,11 @@ class Builder extends React.Component {
                             {
                                 // TODO i18n
                                 visible: isSettingsEnabled,
-                                Element: () => (<WithConfirmButton
+                                Element: () => (<SettingsButton
                                     bsStyle= "primary"
-                                    glyph="back"
+                                    glyph="arrow-left"
                                     className="square-button-md no-border"
-                                    tooltipId="geostory.contentToolbar.remove"
+                                    tooltipId="geostory.contentToolbar.settings.back"
                                     confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
                                     confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
                                     onClick={ () => {
@@ -160,6 +168,9 @@ class Builder extends React.Component {
                 items={settingsItems}
                 settings={settings}
                 onToggleSettings={onToggleSettings}
+                onChangeTitle={onChangeTitle}
+                onUpdateLogo={onUpdateLogo}
+                onErrorsLogo={onErrorsLogo}
                 onToggleVisibilityItem={onToggleVisibilityItem}
             />}
             {isToolbarEnabled && !isSettingsEnabled ? <SectionsPreview

@@ -12,7 +12,9 @@ import { getEffectivePath } from '../utils/GeoStoryUtils';
 import {
     ADD,
     ADD_RESOURCE,
+    CHANGE_TITLE,
     CHANGE_MODE,
+    ERRORS_LOGO,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
     REMOVE,
@@ -27,20 +29,12 @@ import {
     TOGGLE_SETTINGS_PANEL,
     TOGGLE_VISIBILITY_ITEM,
     UPDATE,
+    UPDATE_LOGO,
     UPDATE_CURRENT_PAGE,
     UPDATE_CURRENT_COLUMN
 } from '../actions/geostory';
 
-import { selectedCardSelector, sectionsSelector } from "../selectors/geostory";
-
-
-let INITIAL_STATE = {
-    mode: 'edit', // TODO: change in to Modes.VIEW
-    isCollapsed: false,
-    currentPage: {},
-    settings: {},
-    oldSettings: {}
-};
+import { selectedCardSelector } from "../selectors/geostory";
 
 /**
  * Return the index of the where to place an item.
@@ -130,6 +124,13 @@ const getIndexToInsert = (array, position) => {
  * }
  *
  */
+let INITIAL_STATE = {
+    mode: 'edit', // TODO: change in to Modes.VIEW
+    isCollapsed: false,
+    currentPage: {},
+    oldSettings: {}
+};
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
     case ADD: {
@@ -159,10 +160,16 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_MODE: {
         return set('mode', action.mode, state);
     }
+    case CHANGE_TITLE: {
+        return set('currentStory.settings.title', action.title, state);
+    }
     case EDIT_RESOURCE: {
         const { id, mediaType: type, data } = action;
         const newState = arrayUpdate("currentStory.resources", { id, type, data }, { id }, state);
         return newState;
+    }
+    case ERRORS_LOGO: {
+        return set('currentStory.settings.errorsLogo', action, state);
     }
     case LOADING_GEOSTORY: {
         // anyway sets loading to true
@@ -187,7 +194,13 @@ export default (state = INITIAL_STATE, action) => {
         return unset(path, state);
     }
     case SET_CURRENT_STORY: {
-        return set('currentStory', action.story, state);
+        let settings = action.story.settings || {
+            isLogoEnabled: false,
+            isTitleEnabled: true,
+            isNavbarEnabled: false,
+            visibleItems: {} // eventually populate visibleItems for each id with false (default)
+        };
+        return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
         return set(`selectedCard`, selectedCardSelector({geostory: state}) === action.card ? "" : action.card, state);
@@ -202,7 +215,10 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SET_RESOURCE: {
         const { resource } = action;
-        return set(`resource`, resource, state);
+        return compose(
+            set(`resource`, resource),
+            set('currentStory.settings.storyTitle', resource.name) // TODO check that resource has name prop
+        )(state);
     }
     case SAVED: {
         return unset(`errors.save`, state);
@@ -214,35 +230,21 @@ export default (state = INITIAL_STATE, action) => {
         return set('isCollapsed', !state.isCollapsed, state);
     }
     case TOGGLE_SETTINGS: {
-        return set(`settings.${action.option}`, !state.settings[action.option], state);
-        // return state;
+        const visibility = get(state, `currentStory.settings.${action.option}`);
+        return set(`currentStory.settings.${action.option}`, !visibility, state);
     }
     case TOGGLE_VISIBILITY_ITEM: {
-        const sections = sectionsSelector({geostory: state});
-        let newElement = {};
-        const rawPath = sections.reduce((pSection, cSection) => {
-            if (cSection.id === action.id) {
-                newElement = {...cSection, isVisible: !cSection.isVisible};
-                return `${pSection}[{"id":"${cSection.id}"}]`;
-            }
-            return pSection + cSection.contents.reduce((p, c) => {
-                if (c.id === action.id) {
-                    newElement = {...c, isVisible: !c.isVisible};
-                    return `[{"id":"${cSection.id}"}].contents[{"id":"${c.id}"}]`;
-                }
-                return p;
-            }, "");
-        }, "sections");
-        return set(getEffectivePath(`currentStory.${rawPath}`, state), newElement, state);
+        const visibility = get(state, `currentStory.settings.visibleItems[${action.id}]`);
+        return set(`currentStory.settings.visibleItems[${action.id}]`, !visibility, state);
     }
     case TOGGLE_SETTINGS_PANEL: {
 
         const newStatus = !state.isSettingsEnabled;
         return compose(
             set('isSettingsEnabled', newStatus),
-            set('oldSettings', newStatus ? state.settings : {}),
+            set('oldSettings', newStatus ? state.currentStory.settings : {}),
             // when closing (newStatus=false) check if is because of the save, in that case keep changes otherwise restore previous settings
-            set('settings', newStatus ? state.settings : action.withSave ? state.settings : state.oldSettings)
+            set('currentStory.settings', newStatus ? state.currentStory.settings : action.withSave ? state.currentStory.settings : state.oldSettings)
         )(state);
     }
     case UPDATE: {
@@ -255,6 +257,10 @@ export default (state = INITIAL_STATE, action) => {
         }
         return set(path, newElement, state);
     }
+    case UPDATE_LOGO: {
+        return set('currentStory.settings.logo', action, state);
+    }
+
     case UPDATE_CURRENT_PAGE: {
         return set('currentPage', { ...state.currentPage, sectionId: action.sectionId }, state);
     }

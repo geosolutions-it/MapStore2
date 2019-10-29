@@ -89,8 +89,10 @@ export const isSettingsEnabledSelector = state => get(state, "geostory.isSetting
 /**
  * return the settings of the story
  */
-export const settingsSelector = state => get(state, "geostory.settings", {});
-export const settingsChanged = state => !isEqual(settingsSelector(state), (state, "geostory.oldSettings", {}));
+export const settingsSelector = state => get(state, "geostory.currentStory.settings", {});
+export const visibleItemsSelector = state => get(settingsSelector(state), "visibleItems", {});
+export const oldSettingsSelector = state => get(state, "geostory.oldSettings", {});
+export const settingsChangedSelector = state => !isEqual(settingsSelector(state), oldSettingsSelector(state));
 /**
  * gets the selectedCard
  */
@@ -136,19 +138,20 @@ export const resourceByIdSelectorCreator = id => state => find(resourcesSelector
   */
 export const navigableItemsSelectorCreator = ({withImmersiveSection = false, withVisibility = true} = {}) => state => {
     const sections = sectionsSelector(state);
+    const visibleItems = visibleItemsSelector(state);
     return sections.reduce((p, c) => {
-        if (c.type === SectionTypes.TITLE && (withVisibility || c.isVisible)) {
+        if (c.type === SectionTypes.TITLE && (withVisibility || visibleItems[c.id])) {
             // include only the section
             return [...p, c];
         }
-        if (c.type === SectionTypes.PARAGRAPH && (withVisibility || c.isVisible)) {
+        if (c.type === SectionTypes.PARAGRAPH && (withVisibility || visibleItems[c.id])) {
             // include only the section
             return [...p, c];
         }
         if (c.type === SectionTypes.IMMERSIVE) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
-                if (withVisibility || column.isVisible) {
+                if (withVisibility || visibleItems[column.id]) {
                     return [ ...pImm, {...column, sectionId: pImm.id}];
                 }
                 return pImm;

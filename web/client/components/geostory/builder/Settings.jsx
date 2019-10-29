@@ -5,26 +5,31 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
 import {Form, FormControl, FormGroup, Checkbox, ControlLabel} from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import { SectionTypes } from './../../../utils/GeoStoryUtils';
 import SwitchButton from '../../misc/switch/SwitchButton';
-import Logo from './Logo';
-import noLogo from '../../background/img/default.jpg';
+import Thumbnail from '../../maps/forms/Thumbnail';
+import {withState, compose} from 'recompose';
 
+const updateTitle = compose(
+    withState("storyTitle", "setStoryTitle", ({settings}) => settings.storyTitle)
+);
 /**
  * Shows list of settings for the story
  */
-export default ({
+export default updateTitle(({
+    storyTitle,
     items,
+    settings,
     onToggleSettings = () => {},
+    onChangeTitle = () => {},
+    onUpdateThumbnail = () => {},
+    onErrorsThumbnail = () => {},
     onToggleVisibilityItem = () => {},
-    settings = {
-        isLogoEnabled: true,
-        isNavbarEnabled: false,
-        isTitleEnabled: false
-    }
+    setStoryTitle = () => {}
 }) => (
     <Form className="ms-geostory-settings">
         <div className="text-center"><h4>Story Settings</h4></div>
@@ -37,7 +42,10 @@ export default ({
             />
             <FormControl
                 disabled={!settings.isTitleEnabled}
-                placeholder={"title"}
+                value={storyTitle}
+                onChange={evt => setStoryTitle(evt.target.value) }
+                onBlur={evt => onChangeTitle(evt.target.value) }
+                placeholder={"title"} // TODO I18N
             />
         </FormGroup>
         <FormGroup>
@@ -47,9 +55,16 @@ export default ({
                 className="ms-geostory-settings-switch"
                 checked={settings.isLogoEnabled}
             />
-            <Logo
+            <Thumbnail
                 className="ms-geostory-settings-logo"
-                src={ settings.isLogoEnabled ? "https://demo.geo-solutions.it/mockups/mapstore2/geostory/assets/img/stsci-h-p1821a-m-1699x2000.jpg" : noLogo}
+                withLabel={false}
+                onUpdate={(data, url) => onUpdateThumbnail({data, url})}
+                onError={(errors) => onErrorsThumbnail(errors)}
+                message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
+                suggestion=""
+                map={{
+                    newThumbnail: settings.thumbnail && settings.thumbnail.url || "NODATA"
+                }}
             />
         </FormGroup>
         <FormGroup>
@@ -62,13 +77,13 @@ export default ({
         </FormGroup>
         <FormGroup>
             {
-                settings.isNavbarEnabled && items.map(({id, title, type, isVisible}) => {
+                settings.isNavbarEnabled && items.map(({id, title, type}) => {
                     if (type === SectionTypes.IMMERSIVE) {
                         return (<div className="ms-geostory-settings-immersive-section">{title}</div>);
                     }
                     return (<Checkbox
                         onChange={() => onToggleVisibilityItem(id)}
-                        checked={isVisible}
+                        checked={settings.visibleItems && settings.visibleItems[id]}
                     >
                         {title}
                     </Checkbox>);
@@ -76,4 +91,4 @@ export default ({
             }
         </FormGroup>
     </Form>
-);
+));

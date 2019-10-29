@@ -12,17 +12,20 @@ import { createStructuredSelector } from 'reselect';
 
 import {
     currentStorySelector,
-    navigableItemsSelectorCreator,
     currentPageSelector,
     isCollapsedSelector,
     isSettingsEnabledSelector,
-    settingsSelector,
     isToolbarEnabledSelector,
     modeSelector,
-    selectedCardSelector
+    navigableItemsSelectorCreator,
+    selectedCardSelector,
+    settingsSelector,
+    settingsChangedSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
+    changeTitle,
+    errorsLogo,
     move,
     remove,
     setEditing,
@@ -31,6 +34,7 @@ import {
     toggleSettingsPanel,
     toggleSettings,
     toggleVisibilityItem,
+    updateLogo,
     update
 } from '../actions/geostory';
 
@@ -44,6 +48,7 @@ const GeoStoryEditor = ({
     isCollapsed,
     story = {},
     settings = {},
+    isSettingsChanged = false,
     currentPage,
     settingsItems,
     selected,
@@ -54,6 +59,9 @@ const GeoStoryEditor = ({
     onToggleSettingsPanel = () => {},
     onToggleSettings = () => {},
     onToggleVisibilityItem = () => {},
+    onUpdateLogo = () => {},
+    onErrorsLogo = () => {},
+    onChangeTitle = () => {},
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
@@ -68,6 +76,7 @@ const GeoStoryEditor = ({
         }}
         story={story}
         settings={settings}
+        isSettingsChanged={isSettingsChanged}
         mode={mode}
         selected={selected}
         onSelect={onSelect}
@@ -83,6 +92,9 @@ const GeoStoryEditor = ({
         onToggleCardPreview={onToggleCardPreview}
         onToggleSettingsPanel={onToggleSettingsPanel}
         onToggleSettings={onToggleSettings}
+        onUpdateLogo={onUpdateLogo}
+        onErrorsLogo={onErrorsLogo}
+        onChangeTitle={onChangeTitle}
         onToggleVisibilityItem={onToggleVisibilityItem}
         onSort={onSort}
     />
@@ -101,19 +113,23 @@ export default createPlugin('GeoStoryEditor', {
             currentPage: currentPageSelector,
             settingsItems: navigableItemsSelectorCreator({withImmersiveSection: true}),
             settings: settingsSelector,
+            isSettingsChanged: settingsChangedSelector,
             isToolbarEnabled: isToolbarEnabledSelector,
             isSettingsEnabled: isSettingsEnabledSelector,
             selected: selectedCardSelector
         }), {
             setEditingMode: setEditing,
+            onChangeTitle: changeTitle,
+            onErrorsLogo: errorsLogo,
             onToggleCardPreview: toggleCardPreview,
             onToggleSettingsPanel: toggleSettingsPanel,
             onToggleSettings: toggleSettings,
             onToggleVisibilityItem: toggleVisibilityItem,
-            onSelect: selectCard,
-            onUpdate: update,
             onRemove: remove,
-            onSort: move
+            onSelect: selectCard,
+            onSort: move,
+            onUpdate: update,
+            onUpdateLogo: updateLogo
         }
     )(GeoStoryEditor),
     reducers: {

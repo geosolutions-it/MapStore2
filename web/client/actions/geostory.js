@@ -12,7 +12,9 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
+export const CHANGE_TITLE = "GEOSTORY:CHANGE_TITLE";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
+export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
@@ -30,6 +32,7 @@ export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
 export const TOGGLE_VISIBILITY_ITEM = "GEOSTORY:TOGGLE_VISIBILITY_ITEM";
 export const TOGGLE_SETTINGS = "GEOSTORY:TOGGLE_SETTINGS";
 export const UPDATE = "GEOSTORY:UPDATE";
+export const UPDATE_LOGO = "GEOSTORY:UPDATE_LOGO";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 export const UPDATE_CURRENT_COLUMN = "GEOSTORY:UPDATE_CURRENT_COLUMN";
 export const MOVE = "GEOSTORY:MOVE";
@@ -192,3 +195,8 @@ export const move = (source, target, position) => ({
     target,
     position
 });
+
+
+export const changeTitle = (title) => ({type: CHANGE_TITLE, title});
+export const updateLogo = ({url, data}) => ({type: UPDATE_LOGO, url, data});
+export const errorsLogo = (errors) => ({type: ERRORS_LOGO, errors});

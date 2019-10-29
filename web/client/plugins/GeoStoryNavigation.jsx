@@ -13,11 +13,12 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
 import {
-    navigableItemsSelectorCreator,
     currentPageSelector,
     currentPositionSelector,
-    totalItemsSelector,
-    modeSelector
+    modeSelector,
+    navigableItemsSelectorCreator,
+    settingsSelector,
+    totalItemsSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import Navigation from '../components/geostory/navigation/Navigation';
@@ -27,6 +28,7 @@ const GeoStoryNavigation = ({
     currentPage,
     currentPosition,
     totalItems,
+    settings,
     setEditingMode = () => { },
     navigableItems = []
 }) => (mode === Modes.VIEW ? <div
@@ -34,6 +36,7 @@ const GeoStoryNavigation = ({
     className="ms-geostory-navigation"
     style={{width: "100%", position: 'relative' }}>
     <Navigation
+        settings={settings}
         currentPage={currentPage}
         currentPosition={currentPosition}
         totalItems={totalItems}
@@ -52,6 +55,7 @@ export default createPlugin('GeoStoryNavigation', {
     component: connect(
         createStructuredSelector({
             mode: modeSelector,
+            settings: settingsSelector,
             currentPage: currentPageSelector,
             currentPosition: currentPositionSelector,
             totalItems: totalItemsSelector,

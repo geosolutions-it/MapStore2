@@ -22,6 +22,7 @@ class Thumbnail extends React.Component {
         glyphiconRemove: PropTypes.string,
         style: PropTypes.object,
         loading: PropTypes.bool,
+        withLabel: PropTypes.bool,
         map: PropTypes.object,
         // CALLBACKS
         onDrop: PropTypes.func,
@@ -42,6 +43,7 @@ class Thumbnail extends React.Component {
 
     static defaultProps = {
         loading: false,
+        withLabel: true,
         glyphiconRemove: "remove-circle",
         // CALLBACKS
         onDrop: () => {},
@@ -197,7 +199,7 @@ class Thumbnail extends React.Component {
                 <div className="dropzone-thumbnail-container" style={{
                     pointerEvents: this.props.map.saving ? "none" : "auto"
                 }}>
-                    <label className="control-label"><Message msgId="map.thumbnail"/></label>
+                    {this.props.withLabel && <label className="control-label"><Message msgId="map.thumbnail"/></label>}
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
                         { this.getThumbnailUrl() ?
                             <div>
