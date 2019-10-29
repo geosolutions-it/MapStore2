@@ -407,7 +407,7 @@ class MetadataModal extends React.Component {
                 }, {
                     text: <Message msgId="save" />,
                     onClick: () => { this.onSave(); },
-                    disabled: this.props.map.saving
+                    disabled: this.props.map.saving || !this.isValidForm()
                 }]}
                 showClose={!this.props.map.saving}
                 onClose={this.onCloseMapPropertiesModal}>
@@ -504,6 +504,8 @@ class MetadataModal extends React.Component {
     isThumbnailChanged = () => {
         return this.refs && this.refs.thumbnail && this.refs.thumbnail.files && this.refs.thumbnail.files.length > 0;
     };
+
+    isValidForm = () => get(this.props.map, "metadata.name");
 }
 
 module.exports = MetadataModal;
