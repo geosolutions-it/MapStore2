@@ -809,7 +809,7 @@ export default class DrawSupport extends React.Component {
                     newDrawMethod = "Polygon";
                     const radius = previousFt && previousFt.getProperties() && previousFt.getProperties().radius || 10000;
                     let center = event.coordinate;
-                    const coords = this.polygonCoordsFromCircle(center, 100);
+                    const coords = this.polygonCoordsFromCircle(center, radius);
                     olFt = this.getNewFeature(newDrawMethod, coords);
                     // TODO verify center is projected in 4326 and is an array
                     center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
