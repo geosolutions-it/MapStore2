@@ -39,6 +39,7 @@ export default class BackgroundDialog extends React.Component {
         thumbnail: PropTypes.object,
         additionalParameters: PropTypes.object,
         addParameter: PropTypes.func,
+        defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
         parameterTypeOptions: PropTypes.array,
         booleanOptions: PropTypes.array
@@ -59,7 +60,6 @@ export default class BackgroundDialog extends React.Component {
         layer: {},
         capabilities: {},
         title: '',
-        format: 'image/png',
         thumbnail: {},
         additionalParameters: {},
         formatOptions: [{
@@ -152,6 +152,7 @@ export default class BackgroundDialog extends React.Component {
                     onClick: () => {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
                         const curThumbURL = this.props.layer.thumbURL || '';
+                        const format = this.state.format || this.props.defaultFormat;
                         this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
                         this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
@@ -159,6 +160,7 @@ export default class BackgroundDialog extends React.Component {
                                     this.state.additionalParameters.reduce((accum, p) => assign(accum, {[p.param]: p.val}), {}),
                                     ['source', 'title']
                                 ),
+                                format,
                                 group: 'background'
                             }, !curThumbURL && !this.state.thumbnail.data ? {} : {thumbURL: this.state.thumbnail.url}));
                         this.resetParameters();
@@ -186,9 +188,9 @@ export default class BackgroundDialog extends React.Component {
                 <FormGroup controlId="formControlsSelect">
                     <ControlLabel><Message msgId="layerProperties.format"/></ControlLabel>
                     <Select
-                        onChange={event => this.setState({format: event.value})}
-                        value={this.state.format}
-                        clearable={false}
+                        onChange={event => this.setState({format: event && event.value})}
+                        value={this.state.format || this.props.defaultFormat}
+                        clearable
                         options={this.props.formatOptions}
                     />
                 </FormGroup>

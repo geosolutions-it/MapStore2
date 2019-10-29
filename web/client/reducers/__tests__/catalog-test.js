@@ -32,7 +32,7 @@ const catalog = require('../catalog');
 const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
     FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE,
     CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
-    changeText, setLoading} = require('../../actions/catalog');
+    changeText, changeServiceFormat, setLoading} = require('../../actions/catalog');
 const {MAP_CONFIG_LOADED} = require('../../actions/config');
 const sampleRecord = {
     boundingBox: {
@@ -179,6 +179,12 @@ describe('Test the catalog reducer', () => {
         expect(state.loadingError).toBe(null);
         expect(state.layerError).toBe(null);
         expect(state.format).toBe(format);
+    });
+    it('CHANGE_SERVICE_FORMAT', () => {
+        const format = "image/jpeg";
+        const state = catalog({}, changeServiceFormat(format));
+        expect(state.newService).toExist();
+        expect(state.newService.format).toBe(format);
     });
     it('CHANGE_SELECTED_SERVICE', () => {
         const serviceName = "wms";
