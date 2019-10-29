@@ -9,7 +9,7 @@
         "about_p0-0": "MapStore là khung để phát triển các ứng dụng lập bản đồ trên mạng sử dụng các thư viện bản đồ chuẩn, như là",
         "about_p0-1": "và",
         "about_p1": "MapStore có một số ứng dụng ví dụ:",
-        "about_p3": "MapStore là phần mềm miễn phí và nguồn mở, dựa trên OpenLayers 3, Leaflet và ReactJS và được cấp phép theo Giấy phép BSD đơn giản hóa.",
+        "about_p3": "MapStore là phần mềm miễn phí và nguồn mở, dựa trên OpenLayers, Leaflet và ReactJS và được cấp phép theo Giấy phép BSD đơn giản hóa.",
         "about_p5-0": "Để biết thêm thông tin, hãy kiểm tra",
         "about_p5-1": "trang.",
         "about_p6": "MapStore2 được tạo bởi:",
@@ -1595,7 +1595,7 @@
                 "title": "Thông tin"
             },
             "intro": {
-                "text": "khung để xây dựng các ứng dụng bản đồ trên web sử dụng các thư viện bản đồ chuẩn, như OpenLayers 3 và Leaflet.",
+                "text": "khung để xây dựng các ứng dụng bản đồ trên web sử dụng các thư viện bản đồ chuẩn, như OpenLayers và Leaflet.",
                 "title": "Chào mừng bạn trên MapStore2"
             },
             "introCesium": {

@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer je jednostavni preglednik predefiniranih karata (po izboru pohranjenih u bazi koristeći GeoStore)",
         "about_ul0_li1": "MapPublisher je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd. Za više informacija provjerite",
         "about_h20": "Licenca",
-        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibliotekama i licenciran je pod jednostavnom BSD licencom.",
+        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers, Leaflet i ReactJS bibliotekama i licenciran je pod jednostavnom BSD licencom.",
         "about_p5-0": "Za više informacija posjetite",
         "about_a0": "ovu",
         "about_p5-1": "stranicu.",
@@ -1874,7 +1874,7 @@
             "error": "Greška: cilj nije pronađen",
             "intro": {
                 "title": "Dobrodošli u MapStore",
-                "text": "framework za izradu web mapping aplikacija koristeći standardne biblioteke kao što su OpenLayers 3 i Leaflet."
+                "text": "framework za izradu web mapping aplikacija koristeći standardne biblioteke kao što su OpenLayers i Leaflet."
             },
             "drawerMenu": {
                 "title": "Glavni izbornik",

@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer ist ein einfache Anwendung zur Ansicht von vorkonfigurierten Karten (die optional in einer Datenbank mittels GeoStore gespeichert wurden)",
         "about_ul0_li1": "MapPublisher wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen, die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren. Für mehr Informationen siehe die",
         "about_h20": "Lizenz",
-        "about_p3": "MapStore ist kostenlos und Open Source, basierend auf OpenLayers 3, Leaflet und ReactJS und ist unter der vereinfachten BSD Lizenz lizenziert.",
+        "about_p3": "MapStore ist kostenlos und Open Source, basierend auf OpenLayers, Leaflet und ReactJS und ist unter der vereinfachten BSD Lizenz lizenziert.",
         "about_p5-0": "Für mehr Informationen siehe",
         "about_a0": "diese",
         "about_p5-1": "Seite.",
@@ -2051,7 +2051,7 @@
             "error": "Fehler: Ziel wurde nicht gefunden",
             "intro": {
                 "title": "Willkommen bei MapStore",
-                "text": "Framework zum Erstellen von Web Mapping-Anwendungen mit Standard-Mapping-Bibliotheken wie OpenLayers 3 und Leaflet."
+                "text": "Framework zum Erstellen von Web Mapping-Anwendungen mit Standard-Mapping-Bibliotheken wie OpenLayers und Leaflet."
             },
             "drawerMenu": {
                 "title": "Hauptmenü",

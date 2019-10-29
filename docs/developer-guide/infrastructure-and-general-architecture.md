@@ -14,7 +14,7 @@ The frontend is based on the [ReactJS](https://facebook.github.io/react/) librar
 
 <img src="../img/infrastructure-architecture/Flux-infrastucture.png" style="width:700px;" alt="Flux infrastructure"/>
 
-It allows plugging different mapping libraries (with **Leaflet** and **OpenLayers 3** as our first implementation targets) abstracting libraries implementation details using ReactJS _web components_ and _actions based communication_.
+It allows plugging different mapping libraries (with **Leaflet** and **OpenLayers** as our first implementation targets) abstracting libraries implementation details using ReactJS _web components_ and _actions based communication_.
 
 ![MapStore - Frontend](https://docs.google.com/drawings/d/1k8Qja6ZFeOpoW3WqbZJvU3f7PvKpL-oTGq0vErQng44/pub?w=480&h=360)
 
