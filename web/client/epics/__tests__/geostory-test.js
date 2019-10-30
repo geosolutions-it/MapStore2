@@ -25,7 +25,8 @@ import {
     cleanUpEmptyStoryContainers,
     saveGeoStoryResource,
     reloadGeoStoryOnLoginLogout,
-    sortContentEpic
+    sortContentEpic,
+    setFocusOnMapEditing
 } from '../geostory';
 import {
     ADD,
@@ -44,7 +45,8 @@ import {
     GEOSTORY_LOADED,
     ADD_RESOURCE,
     move,
-    CHANGE_MODE
+    CHANGE_MODE,
+    TOGGLE_CONTENT_FOCUS
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -996,6 +998,79 @@ describe('Geostory Epics', () => {
                     }
                 }
             });
+        });
+    });
+    it('setFocusOnMapEditing when an update action withe editMap true is thrown', done => {
+        const editMapAction = {
+            type: UPDATE,
+            path: 'sections[{"id": "title_section_id1"}].contents[{"id": "title_content_id1"}].background.editMap',
+            element: true,
+            mode: 'replace'};
+        const NUM_ACTIONS = 1;
+        testEpic(setFocusOnMapEditing, NUM_ACTIONS, editMapAction, (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.forEach(({type, ...a}) => {
+                switch (type) {
+                case TOGGLE_CONTENT_FOCUS:
+                    expect(a.target.id).toBe("title_content_id1");
+                    expect(a.section.id).toBe("title_section_id1");
+                    expect(a.parents).toEqual({});
+                    expect(a.isBackground).toBeTruthy();
+                    expect(a.path).toBe('sections[{"id": "title_section_id1"}].contents[{"id": "title_content_id1"}].background');
+                    break;
+                default:
+                    expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+
+        }, {geostory: {
+            currentStory: {
+                resources: [
+                    {
+                        id: '411bff40-ecf4-11e9-b1f4-a9d2c8b34ea4',
+                        type: 'map',
+                        data: {
+                            id: 451,
+                            type: 'map'
+                        }
+                    }
+                ],
+                sections: [
+                    {
+                        type: 'title',
+                        id: 'title_section_id1',
+                        title: 'Abstract',
+                        cover: false,
+                        contents: [
+                            {
+                                id: 'title_content_id1',
+                                type: 'text',
+                                background: {
+                                    fit: 'cover',
+                                    size: 'full',
+                                    align: 'center',
+                                    theme: 'bright',
+                                    resourceId: '411bff40-ecf4-11e9-b1f4-a9d2c8b34ea4',
+                                    type: 'map',
+                                    editMap: false,
+                                    map: {
+                                        center: {
+                                            x: 11.078502237796778,
+                                            y: 43.77085364810367,
+                                            crs: 'EPSG:4326'
+                                        },
+                                        zoom: 11,
+                                        mapStateSource: '8d1d46d8-600f-401f-b024-ab6e8b6623e2'
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
         });
     });
 });

@@ -29,6 +29,7 @@ export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 export const MOVE = "GEOSTORY:MOVE";
+export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -171,4 +172,23 @@ export const move = (source, target, position) => ({
     source,
     target,
     position
+});
+
+/**
+ * Toggle focus on content
+ * @param {boolean} status if true set the focus otherwise remove
+ * @param {object} target the target content to be focused
+ * @param {object} section the story section parent of the target
+ * @param {object} parents all the target's ancestor, parent section excluded
+ * @param {boolean} isBackground true if the target is the background of the target
+ * @param {string} path target path in the current story
+ */
+export const setFocusOnContent = (status, target, section, parents, isBackground, path) => ({
+    type: TOGGLE_CONTENT_FOCUS,
+    status,
+    target,
+    section,
+    parents,
+    isBackground,
+    path
 });

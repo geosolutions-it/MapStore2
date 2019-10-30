@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
+import {compose} from 'recompose';
 
 import emptyState from '../../misc/enhancers/emptyState';
 import currentPageSectionManager from './sections/enhancers/currentPageSectionManager';
@@ -15,6 +16,8 @@ import Section from './sections/Section';
 import AddBar from '../common/AddBar';
 import Message from '../../I18N/Message';
 import {Modes, SectionTypes, SectionTemplates} from '../../../utils/GeoStoryUtils';
+
+import withFocusMask from './sections/enhancers/withFocusMask';
 
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
@@ -73,8 +76,9 @@ const Cascade = ({
     onVisibilityChange = () => {},
     editMedia = () => {},
     update = () => {},
-    remove = () => {}
-}) => (<BorderLayout className={`ms-cascade-story ms-${mode}`}>
+    remove = () => {},
+    focusedContent
+}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${focusedContent ? 'no-overflow' : ''}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
@@ -86,6 +90,7 @@ const Cascade = ({
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
                             <Section
+                                focusedContent={focusedContent}
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
@@ -107,4 +112,7 @@ const Cascade = ({
     </ContainerDimensions>
 </BorderLayout>);
 
-export default currentPageSectionManager(Cascade);
+export default compose(
+    currentPageSectionManager,
+    withFocusMask({ showFocusMask: ({focusedContent: {target = {}} = {}}) => target.id })
+)(Cascade);

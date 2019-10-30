@@ -1924,7 +1924,10 @@
                 "remove": "Eliminar",
                 "removeConfirmTitle": "¿Estás seguro?",
                 "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
-                "editMap": "Modifier l'étendue initiale de la carte"
+                "editMap": "Modifier la carte",
+                "resetMap": "Restablece el mapa a su configuración original",
+                "resetMapConfirm": "Restablecer configuración del mapa",
+                "resetConfirmContent": "¿Restaurar la configuración del mapa a la original?"
             },
             "builder": {
                 "defaults": {
@@ -1972,6 +1975,9 @@
                     "geostoryNotAccessible": "No tienes permiso para acceder a esta historia. Por favor, póngase en contacto con el propietario del recurso",
                     "geostoryDoesNotExist": "Esta historia no existe"
                 }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Configurar mapa"
             }
         },
         "saveDialog": {

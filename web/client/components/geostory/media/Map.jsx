@@ -6,29 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { find } from 'lodash';
-import { createSelector } from 'reselect';
-import { connect } from "react-redux";
-import { compose, withProps, branch, withHandlers} from 'recompose';
+import { compose, branch, withHandlers} from 'recompose';
 import uuid from "uuid";
 
-import { resourcesSelector } from '../../../selectors/geostory';
 import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
-import {createMapObject, applyDefaults } from '../../../utils/GeoStoryUtils';
+import { applyDefaults } from '../../../utils/GeoStoryUtils';
 import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
+
+import connectMap from '../common/enhancers/map';
 
 export default compose(
     branch(
         ({ resourceId }) => resourceId,
-        compose(
-            connect(createSelector(resourcesSelector, (resources) => ({ resources }))),
-            withProps(
-                ({ resources, resourceId, map = {}}) => {
-                    const resource = find(resources, { id: resourceId }) || {};
-                    return { map: createMapObject(resource.data, map) };
-                }
-            )
-        )
+        connectMap,
     ),
     withHandlers({
         onMapViewChanges: ({ editMap = false, update = () => {}}) => ({center, zoom}) => {
@@ -36,7 +26,7 @@ export default compose(
                 center,
                 zoom,
                 mapStateSource: uuid()
-            });
+            }, 'merge');
         }
     }),
 )(({

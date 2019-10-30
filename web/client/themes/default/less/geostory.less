@@ -27,6 +27,9 @@
 .ms-story-color-contrast { color: contrast(@ms-story-bg); }
 .ms-story-color-no-contrast { color: @ms-story-bg; }
 
+
+.no-overflow {overflow: hidden !important;}
+
 /* TEXT EDITOR TODO: externalize */
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
 @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -155,6 +158,17 @@
                 height: 100%;
                 object-fit: cover;
             }
+        }
+    }
+}
+.ms-geostory-map-editor{
+    .ms-geostory-map-editor-header {
+        padding: 8px 0;
+        margin-bottom: 5px;
+        border-bottom: 1px solid @ms-story-bg-grey;
+        .ms-geostory-map-editor-toolbar{
+            min-width: 20px;
+            margin-top: 5px;
         }
     }
 }

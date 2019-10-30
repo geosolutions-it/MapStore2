@@ -43,7 +43,8 @@ class Section extends React.Component {
         viewWidth: PropTypes.number,
         inViewRef: PropTypes.func,
         excludeClassName: PropTypes.string,
-        cover: PropTypes.bool
+        cover: PropTypes.bool,
+        focusedContent: PropTypes.object
     };
 
     static defaultProps = {
@@ -78,6 +79,7 @@ class Section extends React.Component {
                 contents={this.props.contents}
                 viewWidth={this.props.viewWidth}
                 viewHeight={this.props.viewHeight}
+                focusedContent={this.props.focusedContent}
             />
         );
     }

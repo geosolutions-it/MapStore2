@@ -21,7 +21,9 @@ import {
     setControl,
     setResource,
     saveGeoStoryError,
-    storySaved
+    storySaved,
+    setFocusOnContent
+
 } from '../../actions/geostory';
 import {
     isCollapsedSelector,
@@ -34,7 +36,10 @@ import {
     currentPageSelector,
     loadingSelector,
     controlSelectorCreator,
-    errorsSelector
+    errorsSelector,
+    getCurrentFocusedContentEl,
+    isFocusOnContentSelector,
+    getFocusedContentSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -208,6 +213,27 @@ describe('geostory reducer', () => {
             })
         ).toBe(SAMPLE_RESOURCE);
     });
+    it('setFocusOnContent', () => {
+        const STATE_STORY_1 = geostory(undefined, setCurrentStory(TEST_STORY));
+        const action = setFocusOnContent(true, {id: "col1"}, {id: "SomeID2"}, {}, true, 'sections[{"id": "SomeID2"}].contents[{"id": "col1"}].background');
+        const state = {geostory: geostory(STATE_STORY_1, action)};
+        expect(state).toExist();
+        expect(isFocusOnContentSelector(state)).toBeTruthy();
+
+        const focusedContent = getFocusedContentSelector(state);
+        expect(focusedContent).toExist();
+        expect(focusedContent.target).toExist();
+        expect(focusedContent.target.id).toBe("col1");
+        expect(focusedContent.section).toExist();
+        expect(focusedContent.section.id).toBe("SomeID2");
+        expect(focusedContent.isBackground).toBeTruthy();
+        expect(focusedContent.path).toBe('sections[{"id": "SomeID2"}].contents[{"id": "col1"}].background');
+
+        const  focusedContentEl = getCurrentFocusedContentEl(state);
+        expect(focusedContentEl).toExist();
+        expect(focusedContentEl).toEqual({});
+    });
+
     describe('setControl', () => {
         Object.keys(Controls).forEach(k => {
             const CONTROL = Controls[k];
