@@ -15,6 +15,8 @@ const { mapSelector } = require('../selectors/map');
 const { layersSelector, groupsSelector } = require('../selectors/layers');
 const { backgroundListSelector } = require('../selectors/backgroundselector');
 const { mapOptionsToSaveSelector } = require('../selectors/mapsave');
+const {basicError} = require('../utils/NotificationUtils');
+const {getErrorMessage} = require('../utils/LocaleUtils');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const PersistMap = {
@@ -31,4 +33,9 @@ module.exports = {
                     .do((data) => download(data, "map.json", "application/json"))
                     .map(() => setControlProperty('export', 'enabled', false))
             )
+            .catch((e) => Rx.Observable.of(basicError({
+                ...getErrorMessage(e),
+                autoDismiss: 6,
+                position: 'tc'
+            })))
 };

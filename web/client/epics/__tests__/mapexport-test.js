@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { testEpic } = require('./epicTestUtils');
-const { exportMapContext: exportMapContextEpic } = require('../mapexport');
-const { exportMap } = require('../../actions/mapexport');
-const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
+import expect from 'expect';
+import { testEpic } from './epicTestUtils';
+import { exportMapContext as exportMapContextEpic } from '../mapexport';
+import { exportMap } from '../../actions/mapexport';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
 describe('Map Export Epics', () => {
     it('export map', (done) => {
@@ -18,6 +19,7 @@ describe('Map Export Epics', () => {
             expect(actions.length).toBe(1);
             const action = actions[0];
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
+            expect(action.control).toBe('export');
             done();
         };
         const state = {
@@ -38,5 +40,16 @@ describe('Map Export Epics', () => {
             }
         };
         testEpic(exportMapContextEpic, 1, exportMap(), epicResult, state);
+    });
+
+    it('fail to export map', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(SHOW_NOTIFICATION);
+            expect(action.level).toBe('error');
+            done();
+        };
+        testEpic(exportMapContextEpic, 1, exportMap(), epicResult, {});
     });
 });
