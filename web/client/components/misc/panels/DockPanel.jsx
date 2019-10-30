@@ -54,9 +54,10 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
         children,
         onFullscreen = () => {},
         fixed = false,
+        noResize = false,
         hideHeader
     }) =>
-        <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') + className}>
+        <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') +  (noResize ? 'react-dock-no-resize ' : '') + className}>
             <Dock
                 fluid={fluid || fullscreen}
                 position={position}

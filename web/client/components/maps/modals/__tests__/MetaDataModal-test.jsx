@@ -188,4 +188,65 @@ describe('This test for MetadataModal', () => {
         expect(detailsSheetArray.length).toBe(0);
     });
 
+    it('save button is disabled when name is empty and user is unable to save', () => {
+        const thumbnail = "myThumnbnailUrl";
+        const errors = [];
+        const map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            category: {
+                name: "MAP"
+            },
+            metadata: {
+                name: '',
+                description: ''
+            },
+            errors: errors
+        };
+        const actions = {
+            onSave: () => { }
+        };
+
+        const spyonOnSave = expect.spyOn(actions, 'onSave');
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal" onSave={actions.onSave} />, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+        const modalDivList = document.getElementsByClassName("modal-content");
+        const modalButtons = modalDivList.item(0).getElementsByTagName('button');
+        const saveButton = modalButtons[1];
+        expect(saveButton.disabled).toBeTruthy();
+        ReactTestUtils.Simulate.click(saveButton);
+        expect(spyonOnSave).toNotHaveBeenCalled();
+    });
+
+    it('save button is enabled when name is filled and user is able to save', () => {
+        const thumbnail = "myThumnbnailUrl";
+        const errors = [];
+        const map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            category: {
+                name: "MAP"
+            },
+            metadata: {
+                name: 'some name',
+                description: ''
+            },
+            errors: errors
+        };
+        const actions = {
+            onSave: () => { }
+        };
+
+        const spyonOnSave = expect.spyOn(actions, 'onSave');
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal" onSave={actions.onSave} />, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+        const modalDivList = document.getElementsByClassName("modal-content");
+        const modalButtons = modalDivList.item(0).getElementsByTagName('button');
+        const saveButton = modalButtons[1];
+        expect(saveButton.disabled).toBeFalsy();
+        ReactTestUtils.Simulate.click(saveButton);
+        expect(spyonOnSave).toHaveBeenCalled();
+    });
 });
