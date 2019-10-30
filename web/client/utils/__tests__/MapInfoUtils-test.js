@@ -465,5 +465,5 @@ describe('MapInfoUtils', () => {
         const expected1 = '<a href="http://www.google.com">test</a>';
         expect(updateCorruptedLinks(description1)).toBe(expected1);
         expect(updateCorruptedLinks(description2)).toBe(description2);
-    })
+    });
 });
