@@ -25,6 +25,7 @@ const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 const bbox = require('@turf/bbox');
+const { updateCorruptedLinks } = require('../../../utils/MapInfoUtils');
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -408,12 +409,12 @@ class AnnotationsEditor extends React.Component {
         if (editing) {
             switch (field.type) {
             case 'html':
-                return <ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+                return <ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val, field.type); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             case 'component':
                 const Component = fieldValue;
-                return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+                return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value, field.type); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             default:
-                return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+                return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value, field.type); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             }
 
         }
@@ -631,8 +632,12 @@ class AnnotationsEditor extends React.Component {
         this.props.onCancelEdit();
     };
 
-    change = (field, value) => {
-        this.props.onChangeProperties(field, value);
+    change = (field, value, type) => {
+        if (type === 'html') {
+            this.props.onChangeProperties(field, updateCorruptedLinks(value));
+        } else {
+            this.props.onChangeProperties(field, value);
+        }
     };
 
     isCurrentStyle = (m) => {

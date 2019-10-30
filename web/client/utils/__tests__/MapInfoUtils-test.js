@@ -20,7 +20,8 @@ var {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
-    filterRequestParams
+    filterRequestParams,
+    updateCorruptedLinks
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -458,5 +459,11 @@ describe('MapInfoUtils', () => {
         expect(buildIdentifyRequest(wmts3, props).request.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop1 = 'value')");
 
     });
-
+    it('should update corrupted links', () => {
+        const description1 = '<a href="www.google.com">test</a>';
+        const description2 = '<p>test paragraph</p>';
+        const expected1 = '<a href="http://www.google.com">test</a>';
+        expect(updateCorruptedLinks(description1)).toBe(expected1);
+        expect(updateCorruptedLinks(description2)).toBe(description2);
+    })
 });

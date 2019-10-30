@@ -233,6 +233,30 @@ const MapInfoUtils = {
             return op;
         }, {});
         return options;
+    },
+    /** Method for fixing all corrupted links without http:// in text
+     * @param value {string} text/html to fix
+     */
+    updateCorruptedLinks: (value) => {
+        const corruptedLinkRegExp = /href="[^http]/;
+        return corruptedLinkRegExp.test(value) ? MapInfoUtils.adjustLink(value, value.matchAll(corruptedLinkRegExp)) : value;
+    },
+    /**
+     * returns fixed url in links
+     * @param value {string} text/html to fix
+     * @param valueIterator {object} RegExpStringIterator returned by matchAll string method
+     */
+    adjustLink: (value, valueIterator) => {
+        const next = valueIterator.next();
+        if (next.done) return value;
+
+        const found = next.value[0];
+        const updatedValue = [
+            value.substring(0, next.value.index),
+            value.substring(next.value.index)
+                .replace(found, found.replace('"', '"http://'))
+        ].join("");
+        return MapInfoUtils.adjustLink(updatedValue, valueIterator);
     }
 };
 
