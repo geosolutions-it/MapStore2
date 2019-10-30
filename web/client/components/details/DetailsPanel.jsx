@@ -74,19 +74,23 @@ class DetailsPanel extends React.Component {
             </span>);
 
         return (<ContainerDimensions>
-            { ({ width }) =>
-                <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
-                        <BorderLayout>
-                            <div className="ms-details-preview-container">
-                                {!this.props.detailsText ?
-                                    <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
-                                    <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html:
-                                                this.props.detailsText === NO_DETAILS_AVAILABLE ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable") : this.props.detailsText }} />}
-                            </div>
-                        </BorderLayout>
-                    </Panel>
-                </Dock>
+            {({ width }) =>
+                <div className="react-dock-no-resize">
+                    <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                        <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
+                            <BorderLayout>
+                                <div className="ms-details-preview-container">
+                                    {!this.props.detailsText ?
+                                        <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> :
+                                        <div className="ms-details-preview" dangerouslySetInnerHTML={{
+                                            __html:
+                                                this.props.detailsText === NO_DETAILS_AVAILABLE ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable") : this.props.detailsText
+                                        }} />}
+                                </div>
+                            </BorderLayout>
+                        </Panel>
+                    </Dock>
+                </div>
             }
         </ContainerDimensions>);
     }
