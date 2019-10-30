@@ -511,7 +511,7 @@ describe('maps Epics', () => {
             "mapId": mapId2
         }});
     });
-    it.only('test storeDetailsInfoEpic when api doesnt return details', (done) => {
+    it('test storeDetailsInfoEpic when api doesnt return details', (done) => {
         const mock = new MockAdapter(axios);
         mock.onGet().reply(200, mapAttributesWithoutDetails);
         testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
