@@ -368,5 +368,4 @@ module.exports = {
     saveResourceDetailsEpic,
     mapSaveMapResourceEpic,
     reloadMapsEpic
-    // EMPTY_RESOURCE_VALUE
 };

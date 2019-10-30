@@ -34,7 +34,7 @@ const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 const axios = require('../../libs/ajax');
 const MockAdapter = require('axios-mock-adapter');
-const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
+const { EMPTY_RESOURCE_VALUE } = require('../../utils/MapInfoUtils');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const params = {start: 0, limit: 12 };
