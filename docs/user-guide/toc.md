@@ -20,7 +20,7 @@ Adding Layers
 
 * You can expand the layer legend by clicking on the arrow icon <img src="../img/legend-icon.jpg" style="max-width:60px;"/>.
 
-     <img src="../img/layer-legend.jpg" style="max-width:200px;"/>
+    <img src="../img/layer-legend.jpg" style="max-width:200px;"/>
 
 * You can control the layer transparency by scrolling left and right the transparency bar <img src="../img/transparency-bar.jpg" style="max-width:60px;"/>.
 
@@ -54,11 +54,13 @@ Now let us suppose that we want to add new layers and arrange them in new groups
 
 As before, the catalog will open on the right side of the portal.
 
- * **Search** the layer *North America sample imagery* then **Add** it to the map.
+* **Search** the layer *North America sample imagery* then **Add** it to the map.
 
     <img src="../img/second-layer.jpg" style="max-width:500px;"/>
 
-* The order of the layers in the TOC determines the drawing order in the data frame. **Drag** and **Drop** the *USA Population* layer over the  *North America sample imagery* layer in order to get a right drawing order.
+The order of the layers in the TOC determines the drawing order in the data frame.
+
+*  **Drag** and **Drop** the *USA Population* layer over the  *North America sample imagery* layer in order to get a right drawing order.
 
     <img src="../img/order-layers.jpg" style="max-width:500px;"/>
 
@@ -70,39 +72,44 @@ As before, the catalog will open on the right side of the portal.
 
     <img src="../img/new_group.png" style="max-width:350px;"/>
 
-* Now, **Click** on *North America sample imagery* to select it. A set of options will be shown, it will be addressed in details shortly. For now **Click** the settings icon of the layer.
+In order to change a layer's group, you can simply drag and drop that layer inside the desidered group.
 
-     <img src="../img/imagery.jpg" style="max-width:350px;"/>
+* **Drag** and **Drop** the *North America sample imagery* inside the new *Imagery* group.
 
-* You will be addressed to a new page. Under the Group field, **Select**  the new group *Imagery*
+    <img src="../img/layer-in-group.jpg" style="max-width:350px;"/>
 
-      <img src="../img/group_imagery.png" style="max-width:350px;"/>
+In addition to creating a new main group (at the same level of *USA*), you can also create or set new sub-groups (maximum 4 sub-group levels are allowed). 
 
-* **Save** the edits.
-
-A new group called Imagery will be created containing the layer North America sample imagery.
-
-<img src="../img/group-imagery-1.jpg" style="max-width:350px;"/>
-
-Instead of creating a new main group (at the same level USA) you can also create or set sub-groups
-
-* Select for example the **Imagery** group and click the <img src="../img/add_group_button.png" style="max-width:30px;"/> icon in the toolbar.
+* Select for example the *USA* group and **Click** the <img src="../img/add_group_button.png" style="max-width:30px;"/> icon in the toolbar.
 
     <img src="../img/north_america_subgroup.png" style="max-width:350px;"/>
 
 * **Type** the subgroup name and **Click** on <img src="../img/add_group_confirm_button.png" style="max-width:30px;"/>.
 
-    <img src="../img/new_subgroup.png" style="max-width:350px;"/>
+    <img src="../img/new-subgroup.jpg" style="max-width:350px;"/>
 
-* **Select** the *North America sample imagery* layer, open its settings.
+Groups and sub-groups, no matter their level, can be nested inside other groups and sub-groups, or can be separated from their mother-level to form new main groups. These operation can be performed, again, with the drag and drop function.
 
-* Select the group *North America* and click **Save**
+!!! warning
+    The only constraints applied to the groups manager refer to the default group, created when the first layer is added to the Table of Content. At the moment is impossible to change the position or nest the default group inside another group or sub-group, but it's allowed to rename it or to nest groups or sub-groups inside it.  
 
-    <img src="../img/add_layer_to_subgroups.png" style="max-width:350px;"/>
+* **Drag** and **Drop** the *North America* sub-group inside the *Imagery* group.
 
-* Take a look at the TOC to see the results.
+    <img src="../img/subgroup-in-group.jpg" style="max-width:350px;"/>
 
-    <img src="../img/subgroup_with_layers_in_toc.png" style="max-width:350px;"/>
+It is also possible to change the group of a specific layer from the selected layer's settings button. 
+
+* Now, **Click** on *North America sample imagery* to select it. A set of options will be shown, it will be addressed in details shortly. For now **Click** the settings icon of the layer. 
+
+    <img src="../img/layer-settings.jpg" style="max-width:350px;"/>
+
+* You will be addressed to a new page. Under the Group field, **Open** the dropdown menu and you will see all the groups and sub-groups where it's possible to nest the layer. **Click** on the *Imagery/North America* option in order to nest the layer inside the *North America* sub-group.
+
+    <img src="../img/layer-to-subgroup.jpg" style="max-width:350px;"/>
+
+* **Save** the edits and take a look at the TOC to see the results.
+
+    <img src="../img/layer-moved.jpg" style="max-width:350px;"/>
 
 Managing Layers
 ---------------
