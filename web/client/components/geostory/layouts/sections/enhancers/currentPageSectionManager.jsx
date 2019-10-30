@@ -34,7 +34,6 @@ const createCurrentPageUpdateStream = (intersection$, props$) =>
             return head(visibleItemsKeys);
         })
         // optimization to avoid not useful events
-        .distinctUntilChanged()
         // create the property from the Id stream
         .withLatestFrom(props$.pluck('updateCurrentPage'))
         .do(([sectionId, updateCurrentPage]) => updateCurrentPage && updateCurrentPage({sectionId}))

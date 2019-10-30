@@ -61,7 +61,6 @@ const createBackgroundIdStream = (intersection$, props$) => {
                 return maxItem;
             })
             // optimization to avoid not useful events
-            // .distinctUntilChanged()
             .withLatestFrom(props$.pluck('updateCurrentPage'))
             .do(([columnId, updateCurrentPage]) => updateCurrentPage && updateCurrentPage({columnId}))
             // create the property from the Id stream
@@ -98,6 +97,40 @@ export const backgroundPropWithHandler = compose(
     backgroundProp,
     updateBackgroundEnhancer
 );
+
+export const throttlePageUpdateEnhancer = compose(
+    mapPropsStream(props$ => {
+        const { handler: updateCurrentPage, stream: updateCurrentPage$ } = createEventHandler();
+        let oldColumnId = "EMPTY";
+        let oldSectionId = "EMPTY";
+        return Observable.combineLatest(
+            props$,
+
+            updateCurrentPage$
+                .filter(({columnId, sectionId}) => {
+                    if (columnId && oldColumnId !== columnId) {
+                        oldColumnId = columnId;
+                        return true;
+                    }
+                    if (sectionId && oldSectionId !== sectionId) {
+                        oldSectionId = sectionId;
+                        return true;
+                    }
+                    return false;
+                })
+                .withLatestFrom(props$.pluck('updateCurrentPage'))
+                .do(([arg, origUpdateCurrentPage]) => origUpdateCurrentPage && origUpdateCurrentPage(arg))
+                .ignoreElements()
+                .startWith({}),
+
+            (...propsParts) => ({
+                ...(propsParts.reduce((props = {}, part) => ({ ...props, ...part }), {})),
+                updateCurrentPage
+            })
+        );
+    })
+);
+
 
 export default compose(
     mapPropsStream(props$ => {
