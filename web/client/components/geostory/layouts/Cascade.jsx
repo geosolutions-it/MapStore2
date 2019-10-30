@@ -71,7 +71,7 @@ const Cascade = ({
     sections = [],
     add = () => {},
     onVisibilityChange = () => {},
-    updateCurrentColumn = () => {},
+    updateCurrentPage = () => {},
     editMedia = () => {},
     update = () => {},
     remove = () => {}
@@ -90,7 +90,7 @@ const Cascade = ({
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
-                                updateCurrentColumn={updateCurrentColumn}
+                                updateCurrentPage={updateCurrentPage}
                                 update={update}
                                 remove={remove}
                                 key={sectionId}

@@ -21,7 +21,6 @@ import {
     setResource,
     saveGeoStoryError,
     storySaved,
-    updateCurrentColumn,
     updateCurrentPage
 } from '../../actions/geostory';
 import {
@@ -209,7 +208,7 @@ describe('geostory reducer', () => {
             })
         ).toBe(SAMPLE_RESOURCE);
     });
-    it('updateCurrentColumn', () => {
+    it('updateCurrentPage', () => {
         expect(
             currentPageSelector({
                 geostory: geostory({
@@ -224,11 +223,11 @@ describe('geostory reducer', () => {
                             }]
                         }]
                     }
-                }, updateCurrentColumn("column_id_1"))
+                }, updateCurrentPage({columnId: "column_id_1"}))
             }).columns
         ).toEqual({ section_1: 'column_id_1' });
     });
-    it('updateCurrentColumn', () => {
+    it('updateCurrentPage', () => {
         expect(
             currentPageSelector({
                 geostory: geostory({
@@ -243,7 +242,7 @@ describe('geostory reducer', () => {
                             }]
                         }]
                     }
-                }, updateCurrentColumn("column_id_1"))
+                }, updateCurrentPage({columnId: "column_id_1"}))
             }).columns
         ).toEqual({ section_1: 'column_id_2' });
     });

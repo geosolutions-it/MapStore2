@@ -44,7 +44,7 @@ const createBackgroundIdStream = (intersection$, props$) => {
                 return maxItem;
             })
             // optimization to avoid not useful events
-            .distinctUntilChanged() // HERE THERE IS A PROBLEM BECAUSE IT DOES NOT PUSH SOME EVENTS ESPECIALLY FROM TWO DIFFERENT IMMERSIVE SECTIONS
+            .distinctUntilChanged()
             // create the property from the Id stream
             .map(backgroundId => ({
                 backgroundId
@@ -61,9 +61,9 @@ const createBackgroundIdStream = (intersection$, props$) => {
                 return maxItem;
             })
             // optimization to avoid not useful events
-            // .distinctUntilChanged() // HERE THERE IS A PROBLEM BECAUSE IT DOES NOT PUSH SOME EVENTS ESPECIALLY FROM TWO DIFFERENT IMMERSIVE SECTIONS
-            .withLatestFrom(props$.pluck('updateCurrentColumn'))
-            .do(([columns, updateCurrentColumn]) => updateCurrentColumn && updateCurrentColumn(columns))
+            // .distinctUntilChanged()
+            .withLatestFrom(props$.pluck('updateCurrentPage'))
+            .do(([columnId, updateCurrentPage]) => updateCurrentPage && updateCurrentPage({columnId}))
             // create the property from the Id stream
             .ignoreElements()
     );

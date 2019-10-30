@@ -23,8 +23,7 @@ import {
     selectCard, SELECT_CARD,
     toggleCardPreview, TOGGLE_CARD_PREVIEW,
     SAVE, saveStory,
-    move, MOVE,
-    updateCurrentColumn, UPDATE_CURRENT_COLUMN
+    move, MOVE
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -111,12 +110,6 @@ describe('test geostory action creators', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(UPDATE_CURRENT_PAGE);
         expect(retVal.sectionId).toBe('TEST');
-    });
-    it('updateCurrentColumn', () => {
-        const retVal = updateCurrentColumn("ID_COLUMN");
-        expect(retVal).toExist();
-        expect(retVal.type).toBe(UPDATE_CURRENT_COLUMN);
-        expect(retVal.columnId).toBe("ID_COLUMN");
     });
     it('saveStory', () => {
         const SAMPLE_RESOURCE = { id: 1234, data: { } };

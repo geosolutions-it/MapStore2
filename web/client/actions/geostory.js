@@ -149,14 +149,12 @@ export const update = (path, element, mode = "replace") => ({
  * updates the current page with current value of sectionId (future can be extended adding other info about current content).
  * @param {object} param0 current page information. Contains `sectionId`
  */
-export const updateCurrentPage = ({sectionId}) => ({
+export const updateCurrentPage = ({sectionId, columnId}) => ({
     type: UPDATE_CURRENT_PAGE,
-    sectionId
-});
-export const updateCurrentColumn = (columnId) => ({
-    type: UPDATE_CURRENT_COLUMN,
+    sectionId,
     columnId
 });
+
 
 /**
  * moves one section/content from `source` to the `target` container at the `position` position.

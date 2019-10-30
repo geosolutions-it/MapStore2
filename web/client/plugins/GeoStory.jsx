@@ -14,7 +14,7 @@ import {compose, withPropsOnChange, withHandlers} from 'recompose';
 import {createPlugin} from '../utils/PluginsUtils';
 import { Modes } from '../utils/GeoStoryUtils';
 import { getMessageById } from '../utils/LocaleUtils';
-import { add, update, updateCurrentPage, updateCurrentColumn, remove } from '../actions/geostory';
+import { add, update, updateCurrentPage, remove } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
 import { currentStorySelector, modeSelector } from '../selectors/geostory';
@@ -53,7 +53,6 @@ export default createPlugin("GeoStory", {
                 add,
                 update,
                 updateCurrentPage,
-                updateCurrentColumn,
                 remove,
                 editMedia
             }

@@ -37,7 +37,7 @@ class Section extends React.Component {
         update: PropTypes.func,
         editMedia: PropTypes.func,
         remove: PropTypes.func,
-        updateCurrentColumn: PropTypes.func,
+        updateCurrentPage: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
@@ -52,7 +52,7 @@ class Section extends React.Component {
         add: () => {},
         update: () => {},
         editMedia: () => {},
-        updateCurrentColumn: () => {},
+        updateCurrentPage: () => {},
         remove: () => {},
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
@@ -74,7 +74,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
-                updateCurrentColumn={this.props.updateCurrentColumn}
+                updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}
                 mode={this.props.mode}
                 cover={this.props.cover}
