@@ -9,12 +9,12 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const Message = require('../I18N/Message');
 const {Glyphicon, Panel} = require('react-bootstrap');
-const ContainerDimensions = require('react-container-dimensions').default;
 const Dock = require('react-dock').default;
 const BorderLayout = require('../layout/BorderLayout');
 const {NO_DETAILS_AVAILABLE} = require('../../actions/maps');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const Spinner = require('react-spinkit');
+const ResizeDetector = require('react-resize-detector').default;
 
 class DetailsPanel extends React.Component {
     static propTypes = {
@@ -73,22 +73,27 @@ class DetailsPanel extends React.Component {
                         <span>×</span>}</button>
             </span>);
 
-        return (<ContainerDimensions>
-            { ({ width }) =>
-                <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
-                        <BorderLayout>
-                            <div className="ms-details-preview-container">
-                                {!this.props.detailsText ?
-                                    <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
-                                    <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html:
-                                                this.props.detailsText === NO_DETAILS_AVAILABLE ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable") : this.props.detailsText }} />}
-                            </div>
-                        </BorderLayout>
-                    </Panel>
-                </Dock>
-            }
-        </ContainerDimensions>);
+        return (
+            <ResizeDetector handleWidth>
+                { ({ width }) =>
+                    <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} fluid size={this.props.width / width > 1 ? 1 : this.props.width / width}>
+                        <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
+                            <BorderLayout>
+                                <div className="ms-details-preview-container">
+                                    {!this.props.detailsText ?
+                                        <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
+                                        <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html:
+                                                    this.props.detailsText === NO_DETAILS_AVAILABLE
+                                                        ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable")
+                                                        : this.props.detailsText
+                                        }} />}
+                                </div>
+                            </BorderLayout>
+                        </Panel>
+                    </Dock>
+                }
+            </ResizeDetector>
+        );
     }
 }
 
