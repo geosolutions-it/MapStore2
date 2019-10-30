@@ -49,8 +49,7 @@ const {getIdFromUri} = require('../utils/MapUtils');
 
 const {getErrorMessage} = require('../utils/LocaleUtils');
 const Persistence = require("../api/persistence");
-
-const EMPTY_RESOURCE_VALUE = "NODATA";
+const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
@@ -368,6 +367,6 @@ module.exports = {
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic,
     mapSaveMapResourceEpic,
-    reloadMapsEpic,
-    EMPTY_RESOURCE_VALUE
+    reloadMapsEpic
+    // EMPTY_RESOURCE_VALUE
 };

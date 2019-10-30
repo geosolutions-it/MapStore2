@@ -27,14 +27,14 @@ const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
     fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic,
-    EMPTY_RESOURCE_VALUE } = require('../maps');
+    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic } = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 const axios = require('../../libs/ajax');
 const MockAdapter = require('axios-mock-adapter');
+const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const params = {start: 0, limit: 12 };
