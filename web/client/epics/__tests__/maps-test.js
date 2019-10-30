@@ -116,6 +116,11 @@ const mapAttributesEmptyDetails = {
         ]
     }
 };
+const mapAttributesWithoutDetails = {
+    "AttributeList": {
+        "Attribute": []
+    }
+};
 
 describe('maps Epics', () => {
     const oldGetDefaults = ConfigUtils.getDefaults;
@@ -498,6 +503,17 @@ describe('maps Epics', () => {
     it('test storeDetailsInfoEpic when api returns NODATA value', (done) => {
         const mock = new MockAdapter(axios);
         mock.onGet().reply(200, mapAttributesEmptyDetails);
+        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+            done();
+        }, {mapInitialConfig: {
+            "mapId": mapId2
+        }});
+    });
+    it.only('test storeDetailsInfoEpic when api doesnt return details', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onGet().reply(200, mapAttributesWithoutDetails);
         testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
