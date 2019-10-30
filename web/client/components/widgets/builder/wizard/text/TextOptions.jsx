@@ -13,6 +13,7 @@ const TitleInput = localizedProps("placeholder")(FormControl);
 
 const ReactQuill = require('react-quill');
 const Editor = localizedProps("placeholder")(ReactQuill);
+const { updateCorruptedLinks } = require('../../../../../utils/MapInfoUtils');
 
 module.exports = ({ data = {}, onChange = () => { }}) => (
     <div>
@@ -31,7 +32,7 @@ module.exports = ({ data = {}, onChange = () => { }}) => (
                 [{'list': 'bullet' }, {'align': [] }],
                 [{'color': [] }, {'background': [] }, 'clean'], ['image', 'link']
             ]
-        }} placeholder="widgets.builder.wizard.textPlaceholder" value={data && data.text || ''} onChange={(val) => onChange("text", val)} />
+        }} placeholder="widgets.builder.wizard.textPlaceholder" value={data && data.text || ''} onChange={(val) => onChange("text", updateCorruptedLinks(val))} />
     </div>
 );
 
