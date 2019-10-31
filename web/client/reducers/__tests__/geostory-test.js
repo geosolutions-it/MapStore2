@@ -215,7 +215,7 @@ describe('geostory reducer', () => {
     });
     it('setFocusOnContent', () => {
         const STATE_STORY_1 = geostory(undefined, setCurrentStory(TEST_STORY));
-        const action = setFocusOnContent(true, {id: "col1"}, "#SomeID2 .ms-section-background-container", {}, true, 'sections[{"id": "SomeID2"}].contents[{"id": "col1"}].background');
+        const action = setFocusOnContent(true, {id: "col1"}, "#SomeID2 .ms-section-background-container", true, 'sections[{"id": "SomeID2"}].contents[{"id": "col1"}].background');
         const state = {geostory: geostory(STATE_STORY_1, action)};
         expect(state).toExist();
         expect(isFocusOnContentSelector(state)).toBeTruthy();
