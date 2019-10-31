@@ -506,6 +506,7 @@ describe('maps Epics', () => {
         testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+            mock.restore();
             done();
         }, {mapInitialConfig: {
             "mapId": mapId2
@@ -517,6 +518,7 @@ describe('maps Epics', () => {
         testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+            mock.restore();
             done();
         }, {mapInitialConfig: {
             "mapId": mapId2
