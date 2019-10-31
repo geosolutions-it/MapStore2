@@ -333,7 +333,7 @@
           "title": "Immersive Content",
           "contents": [
             {
-              "id": "immersive_2_content_2",
+              "id": "immersive_2_content_1",
               "type": "text",
               "html": "<p><strong><ins>Mauna Kea Observatory</ins></strong></p>\n"
             },
@@ -376,7 +376,7 @@
               "html": "<p><strong><ins>Chacaltaya Astrophysical Observatory</ins></strong></p>\n"
             },
             {
-              "id": "immersive_2_content_2",
+              "id": "immersive_3_content_2",
               "type": "image",
               "title": "Image",
               "resourceId": "95170aa4-ad68-4a57-9be8-7ff00b30eda6"

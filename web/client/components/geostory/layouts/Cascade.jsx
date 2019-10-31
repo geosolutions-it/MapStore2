@@ -8,7 +8,7 @@
 import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
 import {compose} from 'recompose';
-import { throttlePageUpdateEnhancer } from './sections/enhancers/immersiveBackgroundManager';
+import { throttlePageUpdateEnhancer } from './sections/enhancers/updateCurrentPageEnhancer';
 
 import emptyState from '../../misc/enhancers/emptyState';
 import currentPageSectionManager from './sections/enhancers/currentPageSectionManager';

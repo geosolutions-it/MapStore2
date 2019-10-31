@@ -69,7 +69,8 @@ export default ({
                 scrollBy={scrollBy}
                 data={getItems(items, currentPage)}
                 arrowLeft={ArrowLeft}
-                scrollToSelected
+                hideArrows
+                hideSingleArrow
                 arrowRight={ArrowRight}
                 selected={selected}
                 onSelect={id => {

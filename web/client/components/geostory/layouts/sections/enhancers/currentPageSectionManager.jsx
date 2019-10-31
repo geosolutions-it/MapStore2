@@ -29,12 +29,11 @@ const createCurrentPageUpdateStream = (intersection$, props$) =>
         }), {})
         // select the current section id
         .map((items = {}) => {
-
+            // get the first visible item as current page
             const visibleItemsKeys = Object.keys(items).filter(k => items[k].visible);
             return head(visibleItemsKeys);
         })
         // optimization to avoid not useful events
-        // create the property from the Id stream
         .withLatestFrom(props$.pluck('updateCurrentPage'))
         .do(([sectionId, updateCurrentPage]) => updateCurrentPage && updateCurrentPage({sectionId}))
         .ignoreElements();

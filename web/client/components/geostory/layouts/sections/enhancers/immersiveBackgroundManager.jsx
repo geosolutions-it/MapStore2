@@ -98,40 +98,6 @@ export const backgroundPropWithHandler = compose(
     updateBackgroundEnhancer
 );
 
-export const throttlePageUpdateEnhancer = compose(
-    mapPropsStream(props$ => {
-        const { handler: updateCurrentPage, stream: updateCurrentPage$ } = createEventHandler();
-        let oldColumnId = "EMPTY";
-        let oldSectionId = "EMPTY";
-        return Observable.combineLatest(
-            props$,
-
-            updateCurrentPage$
-                .filter(({columnId, sectionId}) => {
-                    if (columnId && oldColumnId !== columnId) {
-                        oldColumnId = columnId;
-                        return true;
-                    }
-                    if (sectionId && oldSectionId !== sectionId) {
-                        oldSectionId = sectionId;
-                        return true;
-                    }
-                    return false;
-                })
-                .withLatestFrom(props$.pluck('updateCurrentPage'))
-                .do(([arg, origUpdateCurrentPage]) => origUpdateCurrentPage && origUpdateCurrentPage(arg))
-                .ignoreElements()
-                .startWith({}),
-
-            (...propsParts) => ({
-                ...(propsParts.reduce((props = {}, part) => ({ ...props, ...part }), {})),
-                updateCurrentPage
-            })
-        );
-    })
-);
-
-
 export default compose(
     mapPropsStream(props$ => {
         // create an handler for intersection events
