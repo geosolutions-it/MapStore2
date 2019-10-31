@@ -1685,6 +1685,7 @@
             "errorSaving": "Có lỗi khi lưu nhóm này",
             "groupDescription": "Mô tả",
             "groupMembers": "Các thành viên:",
+            "selectMemberPlaceholder": "Chọn thành viên ...",
             "groupName": "Tên nhóm",
             "groups": "Các nhóm",
             "manageGroups": "Quản lý nhóm",

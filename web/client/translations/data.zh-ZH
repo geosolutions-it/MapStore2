@@ -984,6 +984,7 @@
           "creatingGroup": "Creating...",
           "groupMembers": "Members:",
           "addMember": "Add Member:",
+          "selectMemberPlaceholder": "选择会员...",
           "noUsers": "No users for this group",
           "errorSaving": "There was an error saving this group",
           "errorDelete": "There was an error deleting this group",

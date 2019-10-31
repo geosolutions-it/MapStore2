@@ -1043,6 +1043,7 @@
           "creatingGroup": "Erstellen...",
           "groupMembers": "Mitglied:",
           "addMember": "Mitglied hinzufügen",
+          "selectMemberPlaceholder": "Mitglied auswählen ...",
           "noUsers": "Keine Benutzer für diese Gruppe gefunden",
           "errorSaving": "Es gab einen Fehler beim Speichern dieser Gruppe",
           "errorDelete": "Es gab einen Fehler beim Löschen dieser Gruppe",
