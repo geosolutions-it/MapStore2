@@ -8,12 +8,12 @@
     flex-direction: column;
 
     .progress-bar {
-        background-color: #ddd;
+        background-color: @ms-story-bg-grey;
         height: 4px;
         width: 100%;
 
         .progress-percent{
-            background-color: #078aa3;
+            background-color: @ms2-color-primary;
             height: 4px;
             transition: width 0.3s;
         }
@@ -21,8 +21,8 @@
     .ms-geostory-navigation-initial-toolbar{
         padding: 4;
         display: flex;
-        background-color: #ffffff;
-        border-bottom: 1px solid #ddd;
+        background-color: @ms-story-bg;
+        border-bottom: 1px solid @ms-story-bg-grey;
     }
     .scroll-menu-arrow.scroll-menu-arrow--disabled {
         opacity: 0;
@@ -48,8 +48,8 @@
         cursor: pointer;
     }
     .menu-item.active {
-        background-color: #078aa3;
-        color: white;
+        background-color: @ms2-color-primary;
+        color: @ms2-color-background;
     }
     .scroll-menu-arrow {
         cursor: pointer;
