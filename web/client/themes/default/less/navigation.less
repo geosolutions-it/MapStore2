@@ -9,7 +9,6 @@
 
     .scroll-menu-arrow--disabled {
         opacity: 0;
-        transition: opacity 1s;
         pointer-events: none;
         button:hover, button:focus, button:active {
             background: none;
@@ -26,8 +25,9 @@
             transition: width 0.3s;
         }
     }
-    .ms-geostory-navigation-view-toolbar{
+    .ms-geostory-navigation-metadata{
         display: flex;
+        flex-direction: row-reverse;
         flex: 1;
     }
     .ms-geostory-navigation-elements{
@@ -49,15 +49,16 @@
     @media only screen and (min-width: 601px) {
         .ms-horizontal-menu {
             max-width: 50%;
-            right: 5px;
             position: absolute;
         }
     }
     @media only screen and (max-width: 600px) {
         .ms-horizontal-menu {
-            width: 90%;
-            right: 5px;
+            width: calc(~"100% - 37px");
             position: absolute;
+        }
+        .ms-geostory-navigation-title, .ms-geostory-navigation-logo{
+            display: none;
         }
     }
     .menu-item {

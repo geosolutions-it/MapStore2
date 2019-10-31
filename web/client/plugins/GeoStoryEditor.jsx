@@ -24,8 +24,7 @@ import {
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
-    changeTitle,
-    errorsLogo,
+    updateSettings,
     move,
     remove,
     setEditing,
@@ -34,7 +33,6 @@ import {
     toggleSettingsPanel,
     toggleSettings,
     toggleVisibilityItem,
-    updateLogo,
     update
 } from '../actions/geostory';
 
@@ -44,24 +42,23 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 
 const GeoStoryEditor = ({
-    mode = Modes.VIEW,
+    currentPage,
     isCollapsed,
+    isSettingsChanged = false,
+    isSettingsEnabled,
+    isToolbarEnabled,
+    mode = Modes.VIEW,
     story = {},
     settings = {},
-    isSettingsChanged = false,
-    currentPage,
     settingsItems,
     selected,
-    isToolbarEnabled,
-    isSettingsEnabled,
+
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
     onToggleSettings = () => {},
     onToggleVisibilityItem = () => {},
-    onUpdateLogo = () => {},
-    onErrorsLogo = () => {},
-    onChangeTitle = () => {},
+    onUpdateSettings = () => {},
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
@@ -71,32 +68,30 @@ const GeoStoryEditor = ({
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
+        currentPage={currentPage}
+        isCollapsed={isCollapsed}
+        isSettingsChanged={isSettingsChanged}
+        isSettingsEnabled={isSettingsEnabled}
+        isToolbarEnabled={isToolbarEnabled}
+        mode={mode}
         scrollTo={(id, options = { behavior: "smooth" }) => {
             scrollToContent(id, options);
         }}
-        story={story}
-        settings={settings}
-        isSettingsChanged={isSettingsChanged}
-        mode={mode}
         selected={selected}
-        onSelect={onSelect}
-        onRemove={onRemove}
-        isToolbarEnabled={isToolbarEnabled}
-        isSettingsEnabled={isSettingsEnabled}
-        mode={mode}
-        onUpdate={onUpdate}
-        currentPage={currentPage}
-        setEditing={setEditingMode}
+        settings={settings}
         settingsItems={settingsItems}
-        isCollapsed={isCollapsed}
-        onToggleCardPreview={onToggleCardPreview}
-        onToggleSettingsPanel={onToggleSettingsPanel}
-        onToggleSettings={onToggleSettings}
-        onUpdateLogo={onUpdateLogo}
-        onErrorsLogo={onErrorsLogo}
-        onChangeTitle={onChangeTitle}
-        onToggleVisibilityItem={onToggleVisibilityItem}
+        story={story}
+
+        setEditing={setEditingMode}
+        onRemove={onRemove}
+        onSelect={onSelect}
         onSort={onSort}
+        onToggleCardPreview={onToggleCardPreview}
+        onToggleSettings={onToggleSettings}
+        onToggleSettingsPanel={onToggleSettingsPanel}
+        onToggleVisibilityItem={onToggleVisibilityItem}
+        onUpdate={onUpdate}
+        onUpdateSettings={onUpdateSettings}
     />
 </div> : null);
 /**
@@ -119,8 +114,7 @@ export default createPlugin('GeoStoryEditor', {
             selected: selectedCardSelector
         }), {
             setEditingMode: setEditing,
-            onChangeTitle: changeTitle,
-            onErrorsLogo: errorsLogo,
+            onUpdateSettings: updateSettings,
             onToggleCardPreview: toggleCardPreview,
             onToggleSettingsPanel: toggleSettingsPanel,
             onToggleSettings: toggleSettings,
@@ -128,8 +122,7 @@ export default createPlugin('GeoStoryEditor', {
             onRemove: remove,
             onSelect: selectCard,
             onSort: move,
-            onUpdate: update,
-            onUpdateLogo: updateLogo
+            onUpdate: update
         }
     )(GeoStoryEditor),
     reducers: {

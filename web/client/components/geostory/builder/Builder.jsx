@@ -38,9 +38,7 @@ class Builder extends React.Component {
         onToggleSettingsPanel: PropTypes.func,
         onToggleSettings: PropTypes.func,
         onToggleVisibilityItem: PropTypes.func,
-        onChangeTitle: PropTypes.func,
-        onUpdateLogo: PropTypes.func,
-        onErrorsLogo: PropTypes.func,
+        onUpdateSettings: PropTypes.func,
         isCollapsed: PropTypes.bool,
         isToolbarEnabled: PropTypes.bool,
         isSettingsEnabled: PropTypes.bool,
@@ -83,9 +81,7 @@ class Builder extends React.Component {
             onToggleSettingsPanel,
             onToggleSettings,
             onToggleVisibilityItem,
-            onChangeTitle,
-            onUpdateLogo,
-            onErrorsLogo,
+            onUpdateSettings,
             currentPage,
             selected,
             onRemove,
@@ -168,9 +164,7 @@ class Builder extends React.Component {
                 items={settingsItems}
                 settings={settings}
                 onToggleSettings={onToggleSettings}
-                onChangeTitle={onChangeTitle}
-                onUpdateLogo={onUpdateLogo}
-                onErrorsLogo={onErrorsLogo}
+                onUpdateSettings={onUpdateSettings}
                 onToggleVisibilityItem={onToggleVisibilityItem}
             />}
             {isToolbarEnabled && !isSettingsEnabled ? <SectionsPreview

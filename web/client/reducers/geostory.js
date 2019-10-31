@@ -12,9 +12,7 @@ import { getEffectivePath } from '../utils/GeoStoryUtils';
 import {
     ADD,
     ADD_RESOURCE,
-    CHANGE_TITLE,
     CHANGE_MODE,
-    ERRORS_LOGO,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
     REMOVE,
@@ -29,8 +27,8 @@ import {
     TOGGLE_SETTINGS_PANEL,
     TOGGLE_VISIBILITY_ITEM,
     UPDATE,
-    UPDATE_LOGO,
     UPDATE_CURRENT_PAGE,
+    UPDATE_SETTINGS,
     UPDATE_CURRENT_COLUMN
 } from '../actions/geostory';
 
@@ -125,7 +123,7 @@ const getIndexToInsert = (array, position) => {
  *
  */
 let INITIAL_STATE = {
-    mode: 'edit', // TODO: change in to Modes.VIEW
+    mode: 'view', // TODO: change in to Modes.VIEW
     isCollapsed: false,
     currentPage: {},
     oldSettings: {}
@@ -160,16 +158,10 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_MODE: {
         return set('mode', action.mode, state);
     }
-    case CHANGE_TITLE: {
-        return set('currentStory.settings.title', action.title, state);
-    }
     case EDIT_RESOURCE: {
         const { id, mediaType: type, data } = action;
         const newState = arrayUpdate("currentStory.resources", { id, type, data }, { id }, state);
         return newState;
-    }
-    case ERRORS_LOGO: {
-        return set('currentStory.settings.errorsLogo', action, state);
     }
     case LOADING_GEOSTORY: {
         // anyway sets loading to true
@@ -197,8 +189,14 @@ export default (state = INITIAL_STATE, action) => {
         let settings = action.story.settings || {
             isLogoEnabled: false,
             isTitleEnabled: true,
-            isNavbarEnabled: false,
-            visibleItems: {} // eventually populate visibleItems for each id with false (default)
+            isNavbarEnabled: true,
+            visibleItems: {
+                '4372f8a2-4af2-43b3-97ab-e8975ceace54': true,
+                '7e16f518-a929-4f69-ac54-401e3284a169': true,
+                '09437688-b6a5-42a6-8eed-59aec7661a09': true,
+                title_section_id1: true,
+                'b9b758ba-bf93-48f5-9bcd-92292e7d9858': true
+            } // eventually populate visibleItems for each id with false (default)
         };
         return set('currentStory', {...action.story, settings}, state);
     }
@@ -218,6 +216,7 @@ export default (state = INITIAL_STATE, action) => {
         return compose(
             set(`resource`, resource),
             set('currentStory.settings.storyTitle', resource.name) // TODO check that resource has name prop
+
         )(state);
     }
     case SAVED: {
@@ -257,10 +256,9 @@ export default (state = INITIAL_STATE, action) => {
         }
         return set(path, newElement, state);
     }
-    case UPDATE_LOGO: {
-        return set('currentStory.settings.logo', action, state);
+    case UPDATE_SETTINGS: {
+        return set(`currentStory.settings.${action.prop}`, action.value, state);
     }
-
     case UPDATE_CURRENT_PAGE: {
         return set('currentPage', { ...state.currentPage, sectionId: action.sectionId }, state);
     }

@@ -12,7 +12,7 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
-export const CHANGE_TITLE = "GEOSTORY:CHANGE_TITLE";
+export const UPDATE_SETTINGS = "GEOSTORY:UPDATE_SETTINGS";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
@@ -197,6 +197,4 @@ export const move = (source, target, position) => ({
 });
 
 
-export const changeTitle = (title) => ({type: CHANGE_TITLE, title});
-export const updateLogo = ({url, data}) => ({type: UPDATE_LOGO, url, data});
-export const errorsLogo = (errors) => ({type: ERRORS_LOGO, errors});
+export const updateSettings = (prop, value) => ({type: UPDATE_SETTINGS, prop, value});

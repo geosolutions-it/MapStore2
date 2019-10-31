@@ -43,31 +43,6 @@ export default ({
                 </div>
             </div>
             <div className="ms-geostory-navigation-elements">
-                <div className="ms-geostory-navigation-view-toolbar">
-                    <Toolbar
-                        btnDefaultProps={{
-                            className: 'square-button-md no-border',
-                            bsStyle: 'default',
-                            tooltipPosition: 'bottom'
-                        }}
-                        buttons={[
-                            {
-                                glyph: 'pencil',
-                                tooltip: 'navigation.edit',
-                                onClick: () => setEditing(true)
-                            }
-                        ]} />
-                    {settings && settings.isLogoEnabled &&
-                        <div className="ms-geostory-navigation-logo">
-                            LOGO
-                        </div>
-                    }
-                    {settings && settings.isTitleEnabled &&
-                        <div className="ms-geostory-navigation-title">
-                            {settings.storyTitle}
-                        </div>
-                    }
-                </div>
                 {navigableItems && navigableItems.length ?
                     (<div className="ms-geostory-navigation-navigableItems">
                         <ScrollMenu
@@ -76,6 +51,33 @@ export default ({
                             scrollTo={scrollTo}
                         />
                     </div>) : null}
+                <div className="ms-geostory-navigation-metadata">
+                    <div className="ms-geostory-navigation-toolbar">
+                        <Toolbar
+                            btnDefaultProps={{
+                                className: 'square-button-md no-border',
+                                bsStyle: 'default',
+                                tooltipPosition: 'bottom'
+                            }}
+                            buttons={[
+                                {
+                                    glyph: 'pencil',
+                                    tooltip: 'navigation.edit',
+                                    onClick: () => setEditing(true)
+                                }
+                            ]} />
+                    </div>
+                    {settings && settings.isLogoEnabled &&
+                        <div className="ms-geostory-navigation-logo">
+                            <img src={settings.thumbnail && settings.thumbnail.url || ""} height={32}/>
+                        </div>
+                    }
+                    {settings && settings.isTitleEnabled &&
+                        <div className="ms-geostory-navigation-title">
+                            {settings.storyTitle}
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     );

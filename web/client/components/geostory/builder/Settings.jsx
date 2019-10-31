@@ -7,28 +7,62 @@
  */
 
 import React from 'react';
-import {Form, FormControl, FormGroup, Checkbox, ControlLabel} from 'react-bootstrap';
+import {Form, FormControl, FormGroup, /*Checkbox, */ControlLabel} from 'react-bootstrap';
 import Message from '../../I18N/Message';
-import { SectionTypes } from './../../../utils/GeoStoryUtils';
+// import { SectionTypes } from './../../../utils/GeoStoryUtils';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Thumbnail from '../../maps/forms/Thumbnail';
 import {withState, compose} from 'recompose';
-
+import CheckboxTree from 'react-checkbox-tree';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css';
+/*
+const nodes = [{
+    value: 'Abstract',
+    label: 'Abstract'
+}, {
+    value: 'Paragraph Section',
+    label: 'Paragraph Section'
+}, {
+    value: 'Immersive Section 1',
+    label: 'Immersive Section 1',
+    children: [
+        { value: 'Immersive Content 1', label: 'Immersive Content' },
+        { value: 'Immersive Content 2', label: 'Immersive Content' }
+    ]
+}, {
+    value: 'Title Section',
+    label: 'Title Section'
+}, {
+    value: 'Immersive Section 2',
+    label: 'Immersive Section 2',
+    children: [
+        { value: 'Immersive Content 3', label: 'Immersive Content' },
+        { value: 'Immersive Content 4', label: 'Immersive Content' },
+        { value: 'Immersive Content 5', label: 'Immersive Content' },
+        { value: 'Immersive Content 6', label: 'Immersive Content' },
+        { value: 'Immersive Content 7', label: 'Immersive Content' }
+    ]
+}];
+*/
 const updateTitle = compose(
-    withState("storyTitle", "setStoryTitle", ({settings}) => settings.storyTitle)
+    withState("storyTitle", "setStoryTitle", ({settings}) => settings.storyTitle),
+    withState("checked", "setChecked", ({settings}) => settings.checked),
+    withState("expanded", "setExpanded", ({settings}) => settings.expanded)
 );
 /**
  * Shows list of settings for the story
  */
 export default updateTitle(({
+    checked,
+    expanded,
     storyTitle,
-    items,
+    items = [],
     settings,
     onToggleSettings = () => {},
-    onChangeTitle = () => {},
-    onUpdateThumbnail = () => {},
-    onErrorsThumbnail = () => {},
-    onToggleVisibilityItem = () => {},
+    onUpdateSettings = () => {},
+    // onToggleVisibilityItem = () => {},
+    setChecked = () => {},
+    setExpanded = () => {},
     setStoryTitle = () => {}
 }) => (
     <Form className="ms-geostory-settings">
@@ -44,7 +78,7 @@ export default updateTitle(({
                 disabled={!settings.isTitleEnabled}
                 value={storyTitle}
                 onChange={evt => setStoryTitle(evt.target.value) }
-                onBlur={evt => onChangeTitle(evt.target.value) }
+                onBlur={evt => onUpdateSettings("storyTitle", evt.target.value) }
                 placeholder={"title"} // TODO I18N
             />
         </FormGroup>
@@ -55,17 +89,19 @@ export default updateTitle(({
                 className="ms-geostory-settings-switch"
                 checked={settings.isLogoEnabled}
             />
-            <Thumbnail
+            {   settings.isLogoEnabled && (<Thumbnail
                 className="ms-geostory-settings-logo"
                 withLabel={false}
-                onUpdate={(data, url) => onUpdateThumbnail({data, url})}
-                onError={(errors) => onErrorsThumbnail(errors)}
+                onUpdate={(data, url) => onUpdateSettings("thumbnail", {data, url})}
+                onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
                 message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
                 suggestion=""
+                thumbnailErrors={settings.thumbnailErrors}
                 map={{
                     newThumbnail: settings.thumbnail && settings.thumbnail.url || "NODATA"
                 }}
-            />
+            />)
+            }
         </FormGroup>
         <FormGroup>
             <ControlLabel><Message msgId="Navbar"/></ControlLabel>
@@ -77,7 +113,7 @@ export default updateTitle(({
         </FormGroup>
         <FormGroup>
             {
-                settings.isNavbarEnabled && items.map(({id, title, type}) => {
+                /* settings.isNavbarEnabled && items.map(({id, title, type}) => {
                     if (type === SectionTypes.IMMERSIVE) {
                         return (<div className="ms-geostory-settings-immersive-section">{title}</div>);
                     }
@@ -87,8 +123,17 @@ export default updateTitle(({
                     >
                         {title}
                     </Checkbox>);
-                })
+                }) */
             }
+            <CheckboxTree
+                showNodeIcon={false}
+                nativeCheckboxes
+                nodes={items && items.map(({contents, title, id }) => ({value: id || "", label: title || "title", children: contents && contents.map(c => ({value: c.id, label: c.title}) || [] )}))}
+                checked={checked}
+                expanded={expanded}
+                onCheck={checkedVal => setChecked(checkedVal)}
+                onExpand={expandVal => setExpanded(expandVal)}
+            />
         </FormGroup>
     </Form>
 ));
