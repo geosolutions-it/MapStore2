@@ -9,8 +9,6 @@ import ContainerDimensions from 'react-container-dimensions';
  *  Setting stopEventsOnTarget (target obj)
  *  or stopEventsOnTargets properties to true will stop events also on target
  */
-
-
 export default class FocusMask extends React.Component {
     static propTypes = {
         targets: PropTypes.arrayOf(PropTypes.shape({

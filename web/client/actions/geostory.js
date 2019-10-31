@@ -177,18 +177,16 @@ export const move = (source, target, position) => ({
 /**
  * Toggle focus on content
  * @param {boolean} status if true set the focus otherwise remove
- * @param {object} target the target content to be focused
- * @param {object} section the story section parent of the target
- * @param {object} parents all the target's ancestor, parent section excluded
- * @param {boolean} isBackground true if the target is the background of the target
+ * @param {object: {id: string, type: string}} target the target content to be focused
+ * @param {string} selector css selector of target element
+ * @param {boolean} hideContent true if the target is the background of the target
  * @param {string} path target path in the current story
  */
-export const setFocusOnContent = (status, target, section, parents, isBackground, path) => ({
+export const setFocusOnContent = (status, target, selector, hideContent, path) => ({
     type: TOGGLE_CONTENT_FOCUS,
     status,
     target,
-    section,
-    parents,
-    isBackground,
+    selector,
+    hideContent,
     path
 });

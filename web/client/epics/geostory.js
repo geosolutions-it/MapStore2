@@ -329,7 +329,7 @@ export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
                 const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
                 const target = flatPath.pop();
                 const section = flatPath.shift();
-                const parents = flatPath.reduce((p, {id}) => ({...p, id}), {});
-                const isBackground = path[path.length - 2] === "background";
-            return setFocusOnContent(status, target, section, parents, isBackground, rowPath.replace(".editMap", ""));
+                const hideContent = path[path.length - 2] === "background";
+                const selector = hideContent && `#${section.id} .ms-section-background-container` || `#${target.id}`;
+            return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
      });

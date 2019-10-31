@@ -140,14 +140,13 @@ describe('test geostory action creators', () => {
         expect(retVal.position).toBe(position);
     });
     it('set focus on a content', () => {
-        const retVal = setFocusOnContent(false, "target", "section", "parents", true, "path");
+        const retVal = setFocusOnContent(false, "target", "selector", true, "path");
         expect(retVal).toExist();
         expect(retVal.type).toBe(TOGGLE_CONTENT_FOCUS);
         expect(retVal.status).toBe(false);
         expect(retVal.target).toBe("target");
-        expect(retVal.section).toBe("section");
-        expect(retVal.parents).toBe("parents");
-        expect(retVal.isBackground).toBe(true);
+        expect(retVal.selector).toBe("selector");
+        expect(retVal.hideContent).toBe(true);
         expect(retVal.path).toBe("path");
     });
 });

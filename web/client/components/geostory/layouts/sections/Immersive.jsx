@@ -37,8 +37,8 @@ const Immersive = ({
     focusedContent,
     contentId
 }) => {
-    const hideTitle = focusedContent && focusedContent.isBackground && (get(focusedContent, "target.id") === contentId);
-    const visibility = hideTitle ? 'hidden' : 'visible';
+    const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
+    const visibility = hideContent ? 'hidden' : 'visible';
     return (<section
         className="ms-section ms-section-immersive"
         id={id}
@@ -89,7 +89,7 @@ const Immersive = ({
             }}
             focusedContent={focusedContent}
         />
-        {mode === Modes.EDIT && <AddBar
+        {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{

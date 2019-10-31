@@ -13,22 +13,15 @@ import FocusMask from '../../../../misc/FocusMask';
  * Configure FocusMask for geostory map editing
  *
  * @param {function} showFocusMask function that returns true if the mask have to be shown. Gets props as argument
- * @param {getFocusedTarget} getFocusedTarget function that returns target object with css selector and stopEventsOnTarget
  * @param {object} options for the focus mask:
  *  - padding: padding around focused targets
- *  - borderRadius: This will cause a complete remount and re-render of the wrapped component, that may be a problem if you're using lifecycle methods, so by default is false
+ *  - borderRadius: hole border radius
  *  - stopEventsOnTargets: stop passing events to targets
  *  - onMaskClicked: onMaskClicked optional
  */
 export default (
     {
         showFocusMask = () => {},
-        getFocusedTarget = ({target, section, isBackground}) => {
-            if (isBackground) {
-                return {selector: `#${section.id} .ms-section-background-container`};
-            }
-            return {selector: `#${target.id}`};
-        },
         defaultTargets = {selector: '.ms-geostory-map-editor'}
     },
     {
@@ -44,7 +37,7 @@ export default (
             <React.Fragment>
                 {children}
                 <FocusMask
-                    targets={[getFocusedTarget(focusedContent), defaultTargets]}
+                    targets={[focusedContent, defaultTargets]}
                     padding={padding}
                     borderRadius={borderRadius}
                     stopEventsOnTargets={stopEventsOnTargets}

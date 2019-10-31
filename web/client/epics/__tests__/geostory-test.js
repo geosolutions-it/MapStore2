@@ -1013,9 +1013,8 @@ describe('Geostory Epics', () => {
                 switch (type) {
                 case TOGGLE_CONTENT_FOCUS:
                     expect(a.target.id).toBe("title_content_id1");
-                    expect(a.section.id).toBe("title_section_id1");
-                    expect(a.parents).toEqual({});
-                    expect(a.isBackground).toBeTruthy();
+                    expect(a.selector).toBe("#title_section_id1 .ms-section-background-container");
+                    expect(a.hideContent).toBeTruthy();
                     expect(a.path).toBe('sections[{"id": "title_section_id1"}].contents[{"id": "title_content_id1"}].background');
                     break;
                 default:

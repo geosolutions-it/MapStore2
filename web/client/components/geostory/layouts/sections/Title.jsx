@@ -40,8 +40,8 @@ export default backgroundPropWithHandler(({
     focusedContent
 }) => {
 
-    const hideTitle = get(focusedContent, "target.id") === contentId;
-    const visibility = hideTitle ?  'hidden' : 'visible';
+    const hideContent = get(focusedContent, "target.id") === contentId;
+    const visibility = hideContent ?  'hidden' : 'visible';
     return (
         <section
             ref={inViewRef}
@@ -100,7 +100,7 @@ export default backgroundPropWithHandler(({
                 }}
                 focusedContent={focusedContent}
             />
-            {mode === Modes.EDIT && !hideTitle && <AddBar
+            {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}
                 containerHeight={viewHeight}
                 buttons={[{

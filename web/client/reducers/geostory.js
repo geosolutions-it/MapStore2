@@ -223,8 +223,8 @@ export default (state = INITIAL_STATE, action) => {
         return set('currentPage', currentPage, state); // maybe a merge is better
     }
     case TOGGLE_CONTENT_FOCUS: {
-        const {status, target, section, parents, isBackground = false, path} = action;
-        const focusedContent = status ? {target, section, parents, isBackground, path} : undefined;
+        const {status, target, selector = "", hideContent = false, path} = action;
+        const focusedContent = status ? {target, selector, hideContent, path} : undefined;
         return set(`focusedContent`, focusedContent, state);
     }
     default:
