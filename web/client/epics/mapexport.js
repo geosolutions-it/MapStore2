@@ -7,35 +7,33 @@
  */
 const Rx = require('rxjs');
 const MapUtils = require('../utils/MapUtils');
-const {download} = require('../utils/FileUtils');
-const {EXPORT_MAP} = require('../actions/mapexport');
+const { download } = require('../utils/FileUtils');
+const { EXPORT_MAP } = require('../actions/mapexport');
 const { setControlProperty } = require('../actions/controls');
 
 const { mapSelector } = require('../selectors/map');
 const { layersSelector, groupsSelector } = require('../selectors/layers');
 const { backgroundListSelector } = require('../selectors/backgroundselector');
 const { mapOptionsToSaveSelector } = require('../selectors/mapsave');
-const {basicError} = require('../utils/NotificationUtils');
-const {getErrorMessage} = require('../utils/LocaleUtils');
+const { basicError } = require('../utils/NotificationUtils');
+const { getErrorMessage } = require('../utils/LocaleUtils');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const PersistMap = {
     mapstore2: (state) => JSON.stringify(MapUtils.saveMapConfiguration(mapSelector(state), layersSelector(state), groupsSelector(state), backgroundListSelector(state), textSearchConfigSelector(state), mapOptionsToSaveSelector(state)))
 };
 
+export const exportMapContext = (action$, { getState = () => { } } = {}) =>
+    action$
+        .ofType(EXPORT_MAP)
+        .switchMap(({ format }) =>
+            Rx.Observable.of(PersistMap[format](getState()))
+                .do((data) => download(data, "map.json", "application/json"))
+                .map(() => setControlProperty('export', 'enabled', false))
+        )
+        .catch((e) => Rx.Observable.of(basicError({
+            ...getErrorMessage(e),
+            autoDismiss: 6,
+            position: 'tc'
+        })));
 
-module.exports = {
-    exportMapContext: (action$, {getState = () => {}} = {} ) =>
-        action$
-            .ofType(EXPORT_MAP)
-            .switchMap( ({format}) =>
-                Rx.Observable.of(PersistMap[format](getState()))
-                    .do((data) => download(data, "map.json", "application/json"))
-                    .map(() => setControlProperty('export', 'enabled', false))
-            )
-            .catch((e) => Rx.Observable.of(basicError({
-                ...getErrorMessage(e),
-                autoDismiss: 6,
-                position: 'tc'
-            })))
-};
