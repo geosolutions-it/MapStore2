@@ -29,7 +29,7 @@ export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
-export const TOGGLE_VISIBILITY_ITEM = "GEOSTORY:TOGGLE_VISIBILITY_ITEM";
+export const CHANGE_CHECKED_SETTINGS_ITEMS = "GEOSTORY:CHANGE_CHECKED_SETTINGS_ITEMS";
 export const TOGGLE_SETTINGS = "GEOSTORY:TOGGLE_SETTINGS";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_LOGO = "GEOSTORY:UPDATE_LOGO";
@@ -150,7 +150,7 @@ export const toggleSettingsPanel = (withSave = false) => ({ type: TOGGLE_SETTING
 /**
  * Turn on/off visibility of items in the navbar.
 */
-export const toggleVisibilityItem = (id) => ({ type: TOGGLE_VISIBILITY_ITEM, id});
+export const changeCheckedSettingsItems = (checked) => ({ type: CHANGE_CHECKED_SETTINGS_ITEMS, checked});
 /**
  * Updates a value or an object in the current Story. Useful to update contents, settings and so on.
  * @param {string} path the path of the element to modify. It can contain path like this `sections[{"id": "abc"}].contents[{"id": "def"}]` to resolve the predicate between brackets.

@@ -7,9 +7,8 @@
  */
 
 import React from 'react';
-import {Form, FormControl, FormGroup, /*Checkbox, */ControlLabel} from 'react-bootstrap';
+import {Form, FormControl, FormGroup, /* Checkbox, */ControlLabel} from 'react-bootstrap';
 import Message from '../../I18N/Message';
-// import { SectionTypes } from './../../../utils/GeoStoryUtils';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Thumbnail from '../../maps/forms/Thumbnail';
 import {withState, compose} from 'recompose';
@@ -42,30 +41,27 @@ const nodes = [{
         { value: 'Immersive Content 6', label: 'Immersive Content' },
         { value: 'Immersive Content 7', label: 'Immersive Content' }
     ]
-}];
-*/
+}];*/
+
 const updateTitle = compose(
     withState("storyTitle", "setStoryTitle", ({settings}) => settings.storyTitle),
-    withState("checked", "setChecked", ({settings}) => settings.checked),
-    withState("expanded", "setExpanded", ({settings}) => settings.expanded)
+    withState("expanded", "setExpanded", ({settings}) => settings.expanded || [])
 );
 /**
  * Shows list of settings for the story
  */
 export default updateTitle(({
-    checked,
-    expanded,
+    expanded = [],
     storyTitle,
     items = [],
     settings,
     onToggleSettings = () => {},
+    onChangeCheckedSettingsItems = () => {},
     onUpdateSettings = () => {},
-    // onToggleVisibilityItem = () => {},
-    setChecked = () => {},
     setExpanded = () => {},
     setStoryTitle = () => {}
-}) => (
-    <Form className="ms-geostory-settings">
+}) => {
+    return (<Form className="ms-geostory-settings">
         <div className="text-center"><h4>Story Settings</h4></div>
         <FormGroup>
             <ControlLabel><Message msgId="Title"/></ControlLabel>
@@ -98,7 +94,7 @@ export default updateTitle(({
                 suggestion=""
                 thumbnailErrors={settings.thumbnailErrors}
                 map={{
-                    newThumbnail: settings.thumbnail && settings.thumbnail.url || "NODATA"
+                    newThumbnail: settings.thumbnail && settings.thumbnail.data || settings.thumbnail.url || "NODATA"
                 }}
             />)
             }
@@ -118,7 +114,7 @@ export default updateTitle(({
                         return (<div className="ms-geostory-settings-immersive-section">{title}</div>);
                     }
                     return (<Checkbox
-                        onChange={() => onToggleVisibilityItem(id)}
+                        onChange={() => onChangeCheckedSettingsItems(id)}
                         checked={settings.visibleItems && settings.visibleItems[id]}
                     >
                         {title}
@@ -128,12 +124,13 @@ export default updateTitle(({
             <CheckboxTree
                 showNodeIcon={false}
                 nativeCheckboxes
-                nodes={items && items.map(({contents, title, id }) => ({value: id || "", label: title || "title", children: contents && contents.map(c => ({value: c.id, label: c.title}) || [] )}))}
-                checked={checked}
+                nodes={items}
+                checked={settings.checked || []}
                 expanded={expanded}
-                onCheck={checkedVal => setChecked(checkedVal)}
+                onCheck={checkedVal => onChangeCheckedSettingsItems(checkedVal)}
                 onExpand={expandVal => setExpanded(expandVal)}
             />
         </FormGroup>
-    </Form>
-));
+    </Form>);
+}
+);

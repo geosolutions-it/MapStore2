@@ -37,7 +37,7 @@ class Builder extends React.Component {
         onToggleCardPreview: PropTypes.func,
         onToggleSettingsPanel: PropTypes.func,
         onToggleSettings: PropTypes.func,
-        onToggleVisibilityItem: PropTypes.func,
+        onChangeCheckedSettingsItems: PropTypes.func,
         onUpdateSettings: PropTypes.func,
         isCollapsed: PropTypes.bool,
         isToolbarEnabled: PropTypes.bool,
@@ -57,7 +57,7 @@ class Builder extends React.Component {
         setEditing: () => {},
         onToggleCardPreview: () => {},
         onToggleSettingsPanel: () => {},
-        onToggleVisibilityItem: () => {},
+        onChangeCheckedSettingsItems: () => {},
         story: {},
         settings: {},
         isCollapsed: true,
@@ -80,7 +80,7 @@ class Builder extends React.Component {
             onToggleCardPreview,
             onToggleSettingsPanel,
             onToggleSettings,
-            onToggleVisibilityItem,
+            onChangeCheckedSettingsItems,
             onUpdateSettings,
             currentPage,
             selected,
@@ -165,7 +165,7 @@ class Builder extends React.Component {
                 settings={settings}
                 onToggleSettings={onToggleSettings}
                 onUpdateSettings={onUpdateSettings}
-                onToggleVisibilityItem={onToggleVisibilityItem}
+                onChangeCheckedSettingsItems={onChangeCheckedSettingsItems}
             />}
             {isToolbarEnabled && !isSettingsEnabled ? <SectionsPreview
                 currentPage={currentPage}

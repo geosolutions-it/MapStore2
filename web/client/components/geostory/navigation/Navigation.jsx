@@ -69,7 +69,7 @@ export default ({
                     </div>
                     {settings && settings.isLogoEnabled &&
                         <div className="ms-geostory-navigation-logo">
-                            <img src={settings.thumbnail && settings.thumbnail.url || ""} height={32}/>
+                            <img src={settings.thumbnail && settings.thumbnail.data || settings.thumbnail.url || ""} height={32}/>
                         </div>
                     }
                     {settings && settings.isTitleEnabled &&

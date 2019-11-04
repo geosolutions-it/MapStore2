@@ -17,7 +17,7 @@ import {
     isSettingsEnabledSelector,
     isToolbarEnabledSelector,
     modeSelector,
-    navigableItemsSelectorCreator,
+    settingsItemsSelector,
     selectedCardSelector,
     settingsSelector,
     settingsChangedSelector
@@ -32,7 +32,7 @@ import {
     toggleCardPreview,
     toggleSettingsPanel,
     toggleSettings,
-    toggleVisibilityItem,
+    changeCheckedSettingsItems,
     update
 } from '../actions/geostory';
 
@@ -57,7 +57,7 @@ const GeoStoryEditor = ({
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
     onToggleSettings = () => {},
-    onToggleVisibilityItem = () => {},
+    onChangeCheckedSettingsItems = () => {},
     onUpdateSettings = () => {},
     onSelect = () => {},
     onRemove = () => {},
@@ -89,7 +89,7 @@ const GeoStoryEditor = ({
         onToggleCardPreview={onToggleCardPreview}
         onToggleSettings={onToggleSettings}
         onToggleSettingsPanel={onToggleSettingsPanel}
-        onToggleVisibilityItem={onToggleVisibilityItem}
+        onChangeCheckedSettingsItems={onChangeCheckedSettingsItems}
         onUpdate={onUpdate}
         onUpdateSettings={onUpdateSettings}
     />
@@ -106,7 +106,7 @@ export default createPlugin('GeoStoryEditor', {
             mode: modeSelector,
             story: currentStorySelector,
             currentPage: currentPageSelector,
-            settingsItems: navigableItemsSelectorCreator({withImmersiveSection: true}),
+            settingsItems: settingsItemsSelector,
             settings: settingsSelector,
             isSettingsChanged: settingsChangedSelector,
             isToolbarEnabled: isToolbarEnabledSelector,
@@ -118,7 +118,7 @@ export default createPlugin('GeoStoryEditor', {
             onToggleCardPreview: toggleCardPreview,
             onToggleSettingsPanel: toggleSettingsPanel,
             onToggleSettings: toggleSettings,
-            onToggleVisibilityItem: toggleVisibilityItem,
+            onChangeCheckedSettingsItems: changeCheckedSettingsItems,
             onRemove: remove,
             onSelect: selectCard,
             onSort: move,

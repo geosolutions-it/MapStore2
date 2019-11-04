@@ -25,7 +25,7 @@ import {
     TOGGLE_CARD_PREVIEW,
     TOGGLE_SETTINGS,
     TOGGLE_SETTINGS_PANEL,
-    TOGGLE_VISIBILITY_ITEM,
+    CHANGE_CHECKED_SETTINGS_ITEMS,
     UPDATE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTINGS,
@@ -232,9 +232,8 @@ export default (state = INITIAL_STATE, action) => {
         const visibility = get(state, `currentStory.settings.${action.option}`);
         return set(`currentStory.settings.${action.option}`, !visibility, state);
     }
-    case TOGGLE_VISIBILITY_ITEM: {
-        const visibility = get(state, `currentStory.settings.visibleItems[${action.id}]`);
-        return set(`currentStory.settings.visibleItems[${action.id}]`, !visibility, state);
+    case CHANGE_CHECKED_SETTINGS_ITEMS: {
+        return set(`currentStory.settings.checked`, action.checked, state);
     }
     case TOGGLE_SETTINGS_PANEL: {
 
