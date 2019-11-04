@@ -137,11 +137,11 @@ class PermissionEditor extends React.Component {
     };
 
     renderPermissionRows = () => {
-        if (this.props.rules.length === 0) {
+        const rules = this.props.rules.filter(rule => rule.group);
+        if (rules.length === 0) {
             return <tr><td colSpan="3"><Message msgId="map.permissions.noRules" /></td></tr>;
         }
-        return this.props.rules
-            .filter(rule => rule.group)
+        return rules
             .map(({canWrite, group}, index) => {
                 return (
                     <tr key={index} className={index / 2 === 0 ? "even" : "odd"}>
@@ -172,7 +172,6 @@ class PermissionEditor extends React.Component {
             });
     }
     render() {
-
         return (
             <div>
                 <Table className="permissions-table" stripped condensed hover>
