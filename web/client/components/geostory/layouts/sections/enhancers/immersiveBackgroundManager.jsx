@@ -63,7 +63,6 @@ const createBackgroundIdStream = (intersection$, props$) => {
             // optimization to avoid not useful events
             .withLatestFrom(props$.pluck('updateCurrentPage'))
             .do(([columnId, updateCurrentPage]) => updateCurrentPage && updateCurrentPage({columnId}))
-            // create the property from the Id stream
             .ignoreElements()
     );
 };
