@@ -134,7 +134,8 @@ module.exports = props => {
                             />
                         </div>
                     </Row>
-                ].filter(headRow => headRow)}>
+                ].filter(headRow => headRow)}
+                noResize>
                 <Viewer
                     index={index}
                     setIndex={setIndex}
