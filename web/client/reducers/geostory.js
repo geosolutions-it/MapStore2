@@ -74,6 +74,11 @@ const getIndexToInsert = (array, position) => {
  * @example
  * {
  *     "mode": "edit", // 'edit' or 'view',
+ *     "defaultSettings": {
+ *       "isLogoEnabled": false,
+ *       "isTitleEnabled": false,
+ *       "isNavbarEnabled": false
+ *     },
  *     "currentStory": {
  *      "resources": [] // resources (media) of the story
  *     // sections
@@ -185,7 +190,9 @@ export default (state = INITIAL_STATE, action) => {
         return unset(path, state);
     }
     case SET_CURRENT_STORY: {
-        return set('currentStory', action.story, state);
+        let defaultSettings = state.defaultSettings || {};
+        let settings = action.story.settings || defaultSettings;
+        return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
         return set(`selectedCard`, selectedCardSelector({geostory: state}) === action.card ? "" : action.card, state);
@@ -246,6 +253,7 @@ export default (state = INITIAL_STATE, action) => {
         return set(`currentStory.settings.${action.prop}`, action.value, state);
     }
     case UPDATE_CURRENT_PAGE: {
+        /** if column update state only if the column for the current immersive section has changed */
         if (action.columnId) {
             const section = find(state.currentStory.sections, s => find(s.contents, {id: action.columnId}));
             if (section && find(section.contents, {id: action.columnId})) {
@@ -259,6 +267,7 @@ export default (state = INITIAL_STATE, action) => {
             }
             return state;
         }
+        // always update state if section changes
         return set('currentPage', { ...state.currentPage, sectionId: action.sectionId }, state);
     }
     default:
