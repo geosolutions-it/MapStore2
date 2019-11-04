@@ -1927,6 +1927,9 @@
                 "removeConfirmContent": "Do you want to remove this content from the story?",
                 "editMap": "Edit initial map extent"
             },
+            "navigation": {
+                "edit": "Edit story"
+            },
             "builder": {
                 "defaults": {
                     "htmlTitlePlaceholder": "Insert title",

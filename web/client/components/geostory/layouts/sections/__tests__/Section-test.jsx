@@ -49,6 +49,7 @@ describe('Section component', () => {
             it(`${type}`, done => {
                 ReactDOM.render(<Section
                     type={type}
+                    {...STORY.sections[1]}
                     mediaType={type}
                     id={`test-${type}-section`}
                     onVisibilityChange={({id, visible, entry}) => {

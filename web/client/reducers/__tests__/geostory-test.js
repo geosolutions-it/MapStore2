@@ -17,11 +17,11 @@ import {
     update,
     remove,
     toggleCardPreview,
-    updateCurrentPage,
     setControl,
     setResource,
     saveGeoStoryError,
-    storySaved
+    storySaved,
+    updateCurrentPage
 } from '../../actions/geostory';
 import {
     isCollapsedSelector,
@@ -123,12 +123,6 @@ describe('geostory reducer', () => {
             expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].newProp).toBe("PROP");
         });
     });
-    it('geostory updateCurrentPage', () => {
-        const action = updateCurrentPage({sectionId: "ID"});
-        const state = geostory( undefined, action);
-        const currentPage = currentPageSelector({geostory: state});
-        expect(currentPage.sectionId).toBe("ID");
-    });
     it('ADD_RESOURCE', () => {
         expect(
             resourcesSelector({ geostory: geostory({}, addResource("id", "image", {}))})
@@ -207,6 +201,52 @@ describe('geostory reducer', () => {
                 geostory: geostory(undefined, setResource(SAMPLE_RESOURCE))
             })
         ).toBe(SAMPLE_RESOURCE);
+    });
+    describe('updateCurrentPage tests', () => {
+        it('geostory updateCurrentPage, with sectionId', () => {
+            const action = updateCurrentPage({sectionId: "ID"});
+            const state = geostory( undefined, action);
+            const currentPage = currentPageSelector({geostory: state});
+            expect(currentPage.sectionId).toBe("ID");
+        });
+        it('updateCurrentPage, updating columns, with columnId', () => {
+            expect(
+                currentPageSelector({
+                    geostory: geostory({
+                        currentPage: {
+                            columns: {}
+                        },
+                        currentStory: {
+                            sections: [{
+                                id: "section_1",
+                                contents: [{
+                                    id: "column_id_1"
+                                }]
+                            }]
+                        }
+                    }, updateCurrentPage({columnId: "column_id_1"}))
+                }).columns
+            ).toEqual({ section_1: 'column_id_1' });
+        });
+        it('updateCurrentPage, not updating columns, with columnId', () => {
+            expect(
+                currentPageSelector({
+                    geostory: geostory({
+                        currentPage: {
+                            columns: { section_1: 'column_id_2'}
+                        },
+                        currentStory: {
+                            sections: [{
+                                id: "section_1",
+                                contents: [{
+                                    id: "column_id_2"
+                                }]
+                            }]
+                        }
+                    }, updateCurrentPage({columnId: "column_id_1"}))
+                }).columns
+            ).toEqual({ section_1: 'column_id_2' });
+        });
     });
     describe('setControl', () => {
         Object.keys(Controls).forEach(k => {

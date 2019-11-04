@@ -1926,6 +1926,9 @@
                 "removeConfirmContent": "Vuoi rimuovere questi contenuti dalla storia?",
                 "editMap": "Modifica l'estensione iniziale della mappa"
             },
+            "navigation": {
+                "edit": "Modifica storia"
+            },
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",

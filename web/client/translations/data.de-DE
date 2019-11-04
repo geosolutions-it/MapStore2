@@ -1926,6 +1926,9 @@
                 "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
                 "editMap": "Bearbeiten Sie die ursprüngliche Kartenausdehnung"
             },
+            "navigation": {
+                "edit": "Bearbeiten Sie die Geschichte"
+            },
             "builder": {
                 "defaults": {
                     "htmlTitlePlaceholder": "Titel einfügen",
