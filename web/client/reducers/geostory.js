@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
-import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
+import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
 import { getEffectivePath } from '../utils/GeoStoryUtils';
 
 import {
@@ -15,25 +15,23 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
-    SET_CURRENT_STORY,
-    TOGGLE_CARD_PREVIEW,
-    UPDATE,
-    UPDATE_CURRENT_PAGE,
     REMOVE,
+    SAVED,
+    SAVE_ERROR,
+    SET_CURRENT_STORY,
     SELECT_CARD,
     SET_CONTROL,
     SET_RESOURCE,
-    SAVED,
-    SAVE_ERROR
+    TOGGLE_CARD_PREVIEW,
+    TOGGLE_SETTINGS,
+    TOGGLE_SETTINGS_PANEL,
+    CHANGE_CHECKED_SETTINGS_ITEMS,
+    UPDATE,
+    UPDATE_CURRENT_PAGE,
+    UPDATE_SETTINGS
 } from '../actions/geostory';
 
 import { selectedCardSelector } from "../selectors/geostory";
-
-let INITIAL_STATE = {
-    mode: 'edit', // TODO: change in to Modes.VIEW
-    isCollapsed: false,
-    currentPage: {}
-};
 
 /**
  * Return the index of the where to place an item.
@@ -123,6 +121,13 @@ const getIndexToInsert = (array, position) => {
  * }
  *
  */
+let INITIAL_STATE = {
+    mode: 'view', // TODO: change in to Modes.VIEW
+    isCollapsed: false,
+    currentPage: {},
+    oldSettings: {}
+};
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
     case ADD: {
@@ -195,7 +200,11 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SET_RESOURCE: {
         const { resource } = action;
-        return set(`resource`, resource, state);
+        return compose(
+            set(`resource`, resource),
+            set('currentStory.settings.storyTitle', resource.name) // TODO check that resource has name prop
+
+        )(state);
     }
     case SAVED: {
         return unset(`errors.save`, state);
@@ -206,6 +215,23 @@ export default (state = INITIAL_STATE, action) => {
     case TOGGLE_CARD_PREVIEW: {
         return set('isCollapsed', !state.isCollapsed, state);
     }
+    case TOGGLE_SETTINGS: {
+        const visibility = get(state, `currentStory.settings.${action.option}`);
+        return set(`currentStory.settings.${action.option}`, !visibility, state);
+    }
+    case CHANGE_CHECKED_SETTINGS_ITEMS: {
+        return set(`currentStory.settings.checked`, action.checked, state);
+    }
+    case TOGGLE_SETTINGS_PANEL: {
+
+        const newStatus = !state.isSettingsEnabled;
+        return compose(
+            set('isSettingsEnabled', newStatus),
+            set('oldSettings', newStatus ? state.currentStory.settings : {}),
+            // when closing (newStatus=false) check if is because of the save, in that case keep changes otherwise restore previous settings
+            set('currentStory.settings', newStatus ? state.currentStory.settings : action.withSave ? state.currentStory.settings : state.oldSettings)
+        )(state);
+    }
     case UPDATE: {
         const { path: rawPath, mode } = action;
         let { element: newElement } = action;
@@ -215,6 +241,9 @@ export default (state = INITIAL_STATE, action) => {
             newElement = { ...oldElement, ...newElement };
         }
         return set(path, newElement, state);
+    }
+    case UPDATE_SETTINGS: {
+        return set(`currentStory.settings.${action.prop}`, action.value, state);
     }
     case UPDATE_CURRENT_PAGE: {
         if (action.columnId) {

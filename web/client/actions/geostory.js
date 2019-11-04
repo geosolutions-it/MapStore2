@@ -12,6 +12,7 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
+export const UPDATE_SETTINGS = "GEOSTORY:UPDATE_SETTINGS";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
@@ -26,9 +27,11 @@ export const SET_CONTROL = "GEOSTORY:SET_CONTROL";
 export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
+export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
+export const CHANGE_CHECKED_SETTINGS_ITEMS = "GEOSTORY:CHANGE_CHECKED_SETTINGS_ITEMS";
+export const TOGGLE_SETTINGS = "GEOSTORY:TOGGLE_SETTINGS";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
-export const UPDATE_CURRENT_COLUMN = "GEOSTORY:UPDATE_CURRENT_COLUMN";
 export const MOVE = "GEOSTORY:MOVE";
 
 /**
@@ -134,6 +137,18 @@ export const setCurrentStory = (story) => ({ type: SET_CURRENT_STORY, story});
 */
 export const toggleCardPreview = () => ({ type: TOGGLE_CARD_PREVIEW});
 /**
+ * Turn on/off settings options in panel, like logo etc.
+*/
+export const toggleSettings = (option) => ({ type: TOGGLE_SETTINGS, option});
+/**
+ * Turn on/off settings panel.
+*/
+export const toggleSettingsPanel = (withSave = false) => ({ type: TOGGLE_SETTINGS_PANEL, withSave});
+/**
+ * Turn on/off visibility of items in the navbar.
+*/
+export const changeCheckedSettingsItems = (checked) => ({ type: CHANGE_CHECKED_SETTINGS_ITEMS, checked});
+/**
  * Updates a value or an object in the current Story. Useful to update contents, settings and so on.
  * @param {string} path the path of the element to modify. It can contain path like this `sections[{"id": "abc"}].contents[{"id": "def"}]` to resolve the predicate between brackets.
  * @param {object} element the object to update
@@ -175,3 +190,6 @@ export const move = (source, target, position) => ({
     target,
     position
 });
+
+
+export const updateSettings = (prop, value) => ({type: UPDATE_SETTINGS, prop, value});

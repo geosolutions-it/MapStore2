@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, find, findIndex} from 'lodash';
+import {get, find, findIndex, isEqual} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes } from './../utils/GeoStoryUtils';
 
@@ -83,6 +83,17 @@ export const sectionsSelector = state => get(currentStorySelector(state), "secti
  */
 export const isToolbarEnabledSelector = state => sectionsSelector(state).length > 0;
 /**
+ * return the status of settings panel, if true is visible
+ */
+export const isSettingsEnabledSelector = state => get(state, "geostory.isSettingsEnabled", false);
+/**
+ * return the settings of the story
+ */
+export const settingsSelector = state => get(state, "geostory.currentStory.settings", {});
+export const visibleItemsSelector = state => get(settingsSelector(state), "checked", []).reduce((p, c) => ({...p, [c]: true}), {});
+export const oldSettingsSelector = state => get(state, "geostory.oldSettings", {});
+export const settingsChangedSelector = state => !isEqual(settingsSelector(state), oldSettingsSelector(state));
+/**
  * gets the selectedCard
  */
 export const selectedCardSelector = state => get(state, "geostory.selectedCard", "");
@@ -123,37 +134,61 @@ export const resourceByIdSelectorCreator = id => state => find(resourcesSelector
 /**
   * it creates a single array of sections and their contents,
   * with special behaviour for paragraph where column is ignored
-  * @param {object} state application state
+  * @prop {object} options to configure how the items will be returned
+  * @prop {boolean} options.withImmersiveSection to include or not the immersive section item
+  * @prop {boolean} options.includeAlways itf true, the item will be included in the list, if not it will be checked
   */
-export const navigableItemsSelector = state => {
+export const navigableItemsSelectorCreator = ({withImmersiveSection = false, includeAlways = true} = {}) => state => {
     const sections = sectionsSelector(state);
+    const visibleItems = visibleItemsSelector(state);
     return sections.reduce((p, c) => {
-        if (c.type === SectionTypes.TITLE) {
+        if (c.type === SectionTypes.TITLE && (includeAlways || visibleItems[c.id])) {
             // include only the section
             return [...p, c];
         }
-        if (c.type === SectionTypes.PARAGRAPH) {
+        if (c.type === SectionTypes.PARAGRAPH && (includeAlways || visibleItems[c.id])) {
             // include only the section
             return [...p, c];
         }
         if (c.type === SectionTypes.IMMERSIVE) {
-            // include immersive columns only
+            // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
-                return [...pImm, {...column, sectionId: pImm.id}];
+                if (includeAlways || visibleItems[column.id]) {
+                    return [ ...pImm, {...column, sectionId: pImm.id}];
+                }
+                return pImm;
             }, []) || [];
+            if (withImmersiveSection) {
+                return [ ...p, c, ...allImmContents];
+            }
             return [...p, ...allImmContents];
         }
         return p;
     }, []);
 };
+
 /**
  * gets the current position of currentPage
  * @returns {function} function that returns a selector
  */
-export const totalItemsSelector = state => navigableItemsSelector(state).length;
-export const currentPositionSelector = state => findIndex(navigableItemsSelector(state), {
+export const totalItemsSelector = state => navigableItemsSelectorCreator({includeAlways: true})(state).length;
+export const currentPositionSelector = state => findIndex(navigableItemsSelectorCreator({includeAlways: true})(state), {
     id: currentPageSelector(state).columns &&
         currentPageSelector(state).columns[currentPageSelector(state).sectionId]
         ? currentPageSelector(state).columns[currentPageSelector(state).sectionId]
         : currentPageSelector(state).sectionId || ""
 });
+
+
+export const settingsItemsSelector = state => {
+    const sections = sectionsSelector(state);
+    return sections.reduce((p, c) => {
+        if (c.type === SectionTypes.IMMERSIVE) {
+            const children = c.contents && c.contents.map((column) => {
+                return {label: column.title, value: column.id};
+            }) || [];
+            return [ ...p, {label: c.title, value: c.id, children}];
+        }
+        return [...p, {label: c.title, value: c.id}];
+    }, []);
+};

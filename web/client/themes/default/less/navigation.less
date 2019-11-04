@@ -7,6 +7,13 @@
     display: flex;
     flex-direction: column;
 
+    .scroll-menu-arrow--disabled {
+        opacity: 0;
+        pointer-events: none;
+        button:hover, button:focus, button:active {
+            background: none;
+        }
+    }
     .progress-bar {
         background-color: @ms-story-bg-grey;
         height: 4px;
@@ -18,27 +25,40 @@
             transition: width 0.3s;
         }
     }
-    .ms-geostory-navigation-initial-toolbar{
-        padding: 4;
+    .ms-geostory-navigation-metadata{
+        display: flex;
+        flex-direction: row-reverse;
+        flex: 1;
+    }
+    .ms-geostory-navigation-elements{
+        padding: 4px;
+        flex: 1;
         display: flex;
         background-color: @ms-story-bg;
         border-bottom: 1px solid @ms-story-bg-grey;
     }
-    .scroll-menu-arrow.scroll-menu-arrow--disabled {
-        opacity: 0;
+    .ms-geostory-navigation-logo, .ms-geostory-navigation-title {
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+    }
+    .ms-geostory-navigation-navigableItems {
+        display: flex;
+        flex: 1;
     }
     @media only screen and (min-width: 601px) {
         .ms-horizontal-menu {
-            width: 30%;
-            right: 5px;
+            max-width: 20%;
             position: absolute;
         }
     }
     @media only screen and (max-width: 600px) {
         .ms-horizontal-menu {
-            width: 90%;
-            right: 5px;
+            width: calc(~"100% - 37px");
             position: absolute;
+        }
+        .ms-geostory-navigation-title, .ms-geostory-navigation-logo{
+            display: none;
         }
     }
     .menu-item {

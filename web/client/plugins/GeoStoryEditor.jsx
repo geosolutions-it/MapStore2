@@ -12,14 +12,29 @@ import { createStructuredSelector } from 'reselect';
 
 import {
     currentStorySelector,
+    currentPageSelector,
     isCollapsedSelector,
+    isSettingsEnabledSelector,
     isToolbarEnabledSelector,
     modeSelector,
+    settingsItemsSelector,
     selectedCardSelector,
-    currentPageSelector
+    settingsSelector,
+    settingsChangedSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
-import { setEditing, toggleCardPreview, move, selectCard, remove, update } from '../actions/geostory';
+import {
+    updateSettings,
+    move,
+    remove,
+    setEditing,
+    selectCard,
+    toggleCardPreview,
+    toggleSettingsPanel,
+    toggleSettings,
+    changeCheckedSettingsItems,
+    update
+} from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
@@ -27,14 +42,23 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 
 const GeoStoryEditor = ({
-    mode = Modes.VIEW,
-    isCollapsed,
-    story = {},
     currentPage,
-    selected,
+    isCollapsed,
+    isSettingsChanged = false,
+    isSettingsEnabled,
     isToolbarEnabled,
+    mode = Modes.VIEW,
+    story = {},
+    settings = {},
+    settingsItems,
+    selected,
+
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
+    onToggleSettingsPanel = () => {},
+    onToggleSettings = () => {},
+    onChangeCheckedSettingsItems = () => {},
+    onUpdateSettings = () => {},
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
@@ -44,22 +68,30 @@ const GeoStoryEditor = ({
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <Builder
+        currentPage={currentPage}
+        isCollapsed={isCollapsed}
+        isSettingsChanged={isSettingsChanged}
+        isSettingsEnabled={isSettingsEnabled}
+        isToolbarEnabled={isToolbarEnabled}
+        mode={mode}
         scrollTo={(id, options = { behavior: "smooth" }) => {
             scrollToContent(id, options);
         }}
-        story={story}
-        mode={mode}
         selected={selected}
-        onSelect={onSelect}
-        onRemove={onRemove}
-        isToolbarEnabled={isToolbarEnabled}
-        mode={mode}
-        onUpdate={onUpdate}
-        currentPage={currentPage}
+        settings={settings}
+        settingsItems={settingsItems}
+        story={story}
+
         setEditing={setEditingMode}
-        isCollapsed={isCollapsed}
-        onToggleCardPreview={onToggleCardPreview}
+        onRemove={onRemove}
+        onSelect={onSelect}
         onSort={onSort}
+        onToggleCardPreview={onToggleCardPreview}
+        onToggleSettings={onToggleSettings}
+        onToggleSettingsPanel={onToggleSettingsPanel}
+        onChangeCheckedSettingsItems={onChangeCheckedSettingsItems}
+        onUpdate={onUpdate}
+        onUpdateSettings={onUpdateSettings}
     />
 </div> : null);
 /**
@@ -74,15 +106,23 @@ export default createPlugin('GeoStoryEditor', {
             mode: modeSelector,
             story: currentStorySelector,
             currentPage: currentPageSelector,
+            settingsItems: settingsItemsSelector,
+            settings: settingsSelector,
+            isSettingsChanged: settingsChangedSelector,
             isToolbarEnabled: isToolbarEnabledSelector,
+            isSettingsEnabled: isSettingsEnabledSelector,
             selected: selectedCardSelector
         }), {
             setEditingMode: setEditing,
+            onUpdateSettings: updateSettings,
             onToggleCardPreview: toggleCardPreview,
-            onSelect: selectCard,
-            onUpdate: update,
+            onToggleSettingsPanel: toggleSettingsPanel,
+            onToggleSettings: toggleSettings,
+            onChangeCheckedSettingsItems: changeCheckedSettingsItems,
             onRemove: remove,
-            onSort: move
+            onSelect: selectCard,
+            onSort: move,
+            onUpdate: update
         }
     )(GeoStoryEditor),
     reducers: {

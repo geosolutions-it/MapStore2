@@ -23,6 +23,7 @@ import ScrollMenu from './ScrollMenu';
  * @prop {number} totalItems totalItems is the total number of sections present in the story
  */
 export default ({
+    settings,
     scrollTo = () => {},
     setEditing = () => {},
     navigableItems = [],
@@ -41,30 +42,41 @@ export default ({
                 >
                 </div>
             </div>
-            <div className="ms-geostory-navigation-initial-toolbar">
-                <Toolbar
-                    btnDefaultProps={{
-                        className: 'square-button-md no-border',
-                        bsStyle: 'default',
-                        tooltipPosition: 'bottom'
-                    }}
-                    buttons={[
-                        {
-                            glyph: 'pencil',
-                            tooltip: 'navigation.edit',
-                            onClick: () => setEditing(true)
-                        }
-                    ]} />
-
-                <div style={{ flex: 1, display: 'flex' }}>
-                    <ButtonToolbar
-                        style={{ marginRight: 0, marginLeft: 'auto' }}>
+            <div className="ms-geostory-navigation-elements">
+                {navigableItems && navigableItems.length ?
+                    (<div className="ms-geostory-navigation-navigableItems">
                         <ScrollMenu
                             items={navigableItems}
                             currentPage={currentPage}
                             scrollTo={scrollTo}
                         />
-                    </ButtonToolbar>
+                    </div>) : null}
+                <div className="ms-geostory-navigation-metadata">
+                    <div className="ms-geostory-navigation-toolbar">
+                        <Toolbar
+                            btnDefaultProps={{
+                                className: 'square-button-md no-border',
+                                bsStyle: 'default',
+                                tooltipPosition: 'bottom'
+                            }}
+                            buttons={[
+                                {
+                                    glyph: 'pencil',
+                                    tooltip: 'navigation.edit',
+                                    onClick: () => setEditing(true)
+                                }
+                            ]} />
+                    </div>
+                    {settings && settings.isLogoEnabled &&
+                        <div className="ms-geostory-navigation-logo">
+                            <img src={settings.thumbnail && settings.thumbnail.data || settings.thumbnail.url || ""} height={32}/>
+                        </div>
+                    }
+                    {settings && settings.isTitleEnabled &&
+                        <div className="ms-geostory-navigation-title">
+                            {settings.storyTitle}
+                        </div>
+                    }
                 </div>
             </div>
         </div>

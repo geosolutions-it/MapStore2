@@ -60,6 +60,48 @@
 }
 
 .ms-geostory-builder {
+    .ms-geostory-settings {
+        padding: 8px;
+        .ms-geostory-settings-logo{
+            position: relative;
+            display: block;
+        }
+        .ms-geostory-settings-switch {
+            float: right;
+            position: relative;
+            top: unset;
+        }
+        .ms-geostory-settings-immersive-section {
+            padding-left: 20px;
+        }
+        .dropzone:hover .dropzone-content-image-added {
+            visibility: visible;
+            z-index: 2;
+            transition: none;
+            background: rgba(0,0,0,.7);
+        }
+
+        .dropzone .dropzone-content-image {
+            padding-top: 40px;
+            font-size: unset;
+            transition: none;
+            text-align: center;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+        }
+        .react-checkbox-tree {
+            .rct-node {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            label {
+                font-weight: normal;
+                font-size: 14px;
+            }
+        }
+
+    }
     .ms-story-empty-content-parent {
         display: contents;
         .ms-story-empty-content-child {
@@ -554,7 +596,7 @@
                     }
                     .rdw-link-modal {
                         overflow-y: auto;
-                        
+
                     }
                     .rdw-link-modal-btn {
                         width: 50px;

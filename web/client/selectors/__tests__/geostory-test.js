@@ -24,7 +24,7 @@ import {
     errorsSelector,
     loadingSelector,
     currentPositionSelector,
-    navigableItemsSelector,
+    navigableItemsSelectorCreator,
     totalItemsSelector
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
@@ -63,7 +63,7 @@ describe('geostory selectors', () => { // TODO: check default
     });
     it('loadingSelector', () => expect(loadingSelector({ geostory: { loading: true } })).toBe(true));
     it('errorsSelector', () => expect(errorsSelector({ geostory: { errors: ["some", "error"] } })).toBeTruthy());
-    it('navigableItemsSelector', () => expect(navigableItemsSelector({
+    it('navigableItemsSelectorCreator', () => expect(navigableItemsSelectorCreator()({
         geostory: {
             currentStory: TEST_STORY
         }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title' ]));

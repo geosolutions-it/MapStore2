@@ -6,12 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import capitalize from "lodash/capitalize";
-import get from 'lodash/get';
-import find from 'lodash/find';
+import {find, get, capitalize} from "lodash";
 import {Glyphicon} from 'react-bootstrap';
-import compose from 'recompose/compose';
-import withProps from 'recompose/withProps';
+import {withProps, compose} from 'recompose';
 import { connect } from "react-redux";
 import { createSelector } from 'reselect';
 import uuid from "uuid";

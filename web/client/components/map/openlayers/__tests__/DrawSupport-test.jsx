@@ -1264,6 +1264,35 @@ describe('Test DrawSupport', () => {
         expect(coords[0].length).toBe(101);
 
     });
+
+    it.only('drawsupport test for polygonCoordsFromCircle', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[circle]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        const center = [1, 1];
+        const radius = 123459;
+        const coords = support.polygonCoordsFromCircle(center, radius);
+
+        expect(coords[0].length).toBe(101);
+
+    });
     it('test createOLGeometry type Circle geodesic', () => {
         const support = ReactDOM.render(<DrawSupport options={{geodesic: true}}/>, document.getElementById("container"));
         const type = 'Circle';

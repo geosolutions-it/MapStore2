@@ -7,8 +7,7 @@
  */
 import React from 'react';
 import ContentEditable from 'react-contenteditable';
-import compose from 'recompose/compose';
-import withState from 'recompose/withState';
+import {withState, compose} from 'recompose';
 
 const manageUpdates = compose(
     withState("text", "setText", ({title}) => title)
