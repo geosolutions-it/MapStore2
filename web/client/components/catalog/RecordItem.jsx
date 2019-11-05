@@ -328,7 +328,7 @@ class RecordItem extends React.Component {
             removeParams: this.props.authkeyParamNames,
             ...(type === 'wms' ? {catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ?
                 this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
-                this.props.record.identifier : null} : {})
+                this.props.record.identifier : null, format: this.props.defaultFormat} : {format: this.props.defaultFormat})
         }, this.props.layerBaseConfig);
     }
 

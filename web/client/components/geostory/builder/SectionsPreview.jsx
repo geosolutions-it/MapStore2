@@ -167,7 +167,7 @@ const previewContents = {
                 })} />
         </div>
     ),
-    immersive: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort }) => (
+    immersive: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort, currentPage }) => (
         <div style={{ position: 'relative' }}>
             <DraggableSideGrid
                 containerId={id}
@@ -188,6 +188,9 @@ const previewContents = {
                         : content.type;
                     const PreviewContents = previewContents[content.type];
                     return {
+                        className: currentPage && currentPage.columns && currentPage.columns[id] && currentPage.columns[id] === content.id && currentPage.sectionId === id
+                            ? 'ms-highlight'
+                            : '',
                         id: content.id,
                         preview: <Icon type={contentType} />,
                         tools: <Toolbar
@@ -269,6 +272,7 @@ const sectionToItem = ({
                 onSort={onSort}
                 onUpdate={onUpdate}
                 onSelect={onSelect}
+                currentPage={currentPage}
                 selected={selected}
                 scrollTo={scrollTo}
                 isCollapsed={isCollapsed}

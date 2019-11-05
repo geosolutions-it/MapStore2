@@ -7,12 +7,12 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactTestUtils from "react-dom/test-utils";
 
+import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 import expect from 'expect';
 import Navigation from '../Navigation';
-import ReactTestUtils from "react-dom/test-utils";
-import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
-
+const SELECTED_ID = STORY.sections[0].id;
 
 describe('GeoStory Navigation component', () => {
     beforeEach((done) => {
@@ -45,19 +45,17 @@ describe('GeoStory Navigation component', () => {
             scrollTo: () => { }
         };
         const spyScrollTo = expect.spyOn(actions, 'scrollTo');
-        ReactDOM.render(<Navigation story={STORY} scrollTo={actions.scrollTo} />, document.getElementById("container"));
-        expect(document.querySelectorAll('.btn-tray').length).toBe(3);
+        ReactDOM.render(<Navigation currentPage={{ sectionId: SELECTED_ID}}  navigableItems={STORY.sections} scrollTo={actions.scrollTo} />, document.getElementById("container"));
+        expect(document.querySelectorAll('.btn-tray').length).toBe(2);
         ReactTestUtils.Simulate.click(document.querySelector('.btn-tray')); // <-- trigger
         expect(spyScrollTo).toHaveBeenCalled();
-        expect(spyScrollTo.calls[0].arguments[0]).toBe(STORY.sections[0].id);
+        expect(spyScrollTo.calls[0].arguments[0]).toBe(STORY.sections[1].id);
     });
     it('current section page is highlighted', () => {
-        const SELECTED_ID = STORY.sections[0].id;
-        const EL_ID = `ms-geostory-nav-${SELECTED_ID}`;
-        ReactDOM.render(<Navigation currentPage={{ sectionId: SELECTED_ID}} story={STORY} />, document.getElementById("container"));
-        const selectedElement = document.getElementById(EL_ID);
+        ReactDOM.render(<Navigation currentPage={{ sectionId: SELECTED_ID}} navigableItems={STORY.sections} />, document.getElementById("container"));
+        const selectedElement = document.querySelector("button.active");
         expect(selectedElement).toExist();
-        expect(selectedElement.className.indexOf('primary')).toBeGreaterThan(0);
+        expect(selectedElement.innerText).toBe("Abstract");
     });
 
 });

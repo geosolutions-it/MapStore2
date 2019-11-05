@@ -1929,6 +1929,9 @@
                 "resetMapConfirm": "Ripristina Configurazione",
                 "resetConfirmContent": "Ripristinare la configurazione di mappa originale?"
             },
+            "navigation": {
+                "edit": "Modifica storia"
+            },
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",

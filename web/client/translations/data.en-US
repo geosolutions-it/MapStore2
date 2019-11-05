@@ -1930,6 +1930,9 @@
                 "resetMapConfirm": "Reset Map Configuration",
                 "resetConfirmContent": "Restore the map configuration to the original one?"
             },
+            "navigation": {
+                "edit": "Edit story"
+            },
             "builder": {
                 "defaults": {
                     "htmlTitlePlaceholder": "Insert title",

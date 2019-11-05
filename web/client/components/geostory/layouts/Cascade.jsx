@@ -8,6 +8,7 @@
 import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
 import {compose} from 'recompose';
+import { throttlePageUpdateEnhancer } from './sections/enhancers/updateCurrentPageEnhancer';
 
 import emptyState from '../../misc/enhancers/emptyState';
 import currentPageSectionManager from './sections/enhancers/currentPageSectionManager';
@@ -74,6 +75,7 @@ const Cascade = ({
     sections = [],
     add = () => {},
     onVisibilityChange = () => {},
+    updateCurrentPage = () => {},
     editMedia = () => {},
     update = () => {},
     remove = () => {},
@@ -94,6 +96,7 @@ const Cascade = ({
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
+                                updateCurrentPage={updateCurrentPage}
                                 update={update}
                                 remove={remove}
                                 key={sectionId}
@@ -113,6 +116,7 @@ const Cascade = ({
 </BorderLayout>);
 
 export default compose(
+    throttlePageUpdateEnhancer,
     currentPageSectionManager,
     withFocusMask({ showFocusMask: ({focusedContent: {target = {}} = {}}) => target.id })
 )(Cascade);

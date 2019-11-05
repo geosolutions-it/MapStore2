@@ -165,7 +165,8 @@ class MetadataExplorerComponent extends React.Component {
                         title={<Message msgId="catalog.title"/>}
                         onClose={() => this.props.toggleControl()}
                         glyph="folder-open"
-                        style={this.props.dockStyle}>
+                        style={this.props.dockStyle}
+                        noResize>
                         <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
                             {panel}
                         </Panel>

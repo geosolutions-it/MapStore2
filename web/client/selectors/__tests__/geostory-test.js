@@ -12,7 +12,6 @@ import {
     isCollapsedSelector,
     createPathSelector,
     currentStorySelector,
-    isEditAllowedSelector,
     sectionsSelector,
     sectionSelectorCreator,
     sectionAtIndexSelectorCreator,
@@ -23,8 +22,12 @@ import {
     resourceIdSelectorCreator,
     saveDialogSelector,
     errorsSelector,
-    loadingSelector
+    loadingSelector,
+    currentPositionSelector,
+    navigableItemsSelector,
+    totalItemsSelector
 } from "../geostory";
+import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
 describe('geostory selectors', () => { // TODO: check default
     it('isCollapsedSelector', () => { expect(isCollapsedSelector({geostory: {isCollapsed: false}})).toEqual(false); });
@@ -45,9 +48,6 @@ describe('geostory selectors', () => { // TODO: check default
     it('resourcesSelector', () => { expect(resourcesSelector({geostory: {currentStory: {resources: []}}})).toEqual([]); });
     it('canEditSelector false', () => { expect(canEditSelector({geostory: {resource: {id: 123}}})).toEqual(false); });
     it('canEditSelector true', () => { expect(canEditSelector({geostory: {resource: {canEdit: true}}})).toEqual(true); });
-    it('isEditAllowedSelector, logged ADMIN, can edit', () => { expect(isEditAllowedSelector({geostory: {resource: {canEdit: true}}, security: {user: {role: "ADMIN"}}})).toEqual(true); });
-    it('isEditAllowedSelector, logged USER, cannot edit', () => { expect(isEditAllowedSelector({geostory: {resource: {canEdit: false}}, security: {user: {role: "USER"}}})).toEqual(false); });
-    it('isEditAllowedSelector, logged ADMIN, local resource', () => { expect(isEditAllowedSelector({geostory: {resource: {}}, security: {user: {role: "ADMIN"}}})).toEqual(true); });
     it('resourceSelector', () => { expect(resourceSelector({geostory: {resource: {id: 123}}})).toEqual({id: 123}); });
     it('resourceByIdSelectorCreator', () => { expect(resourceByIdSelectorCreator("id")({geostory: {currentStory: {resources: [{id: "id"}]}}})).toEqual({id: "id"}); });
     it('saveDialogSelector', () => {
@@ -63,4 +63,12 @@ describe('geostory selectors', () => { // TODO: check default
     });
     it('loadingSelector', () => expect(loadingSelector({ geostory: { loading: true } })).toBe(true));
     it('errorsSelector', () => expect(errorsSelector({ geostory: { errors: ["some", "error"] } })).toBeTruthy());
+    it('navigableItemsSelector', () => expect(navigableItemsSelector({
+        geostory: {
+            currentStory: TEST_STORY
+        }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title' ]));
+    it('currentPositionSelector ', () => expect(currentPositionSelector({ geostory: { currentStory: TEST_STORY, currentPage: {
+        sectionId: "SomeID"
+    } } })).toBe(0));
+    it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(4));
 });

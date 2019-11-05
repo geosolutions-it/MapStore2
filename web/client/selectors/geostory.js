@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, find} from 'lodash';
+import {get, find, findIndex} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
-import { isAdminUserSelector, isUserSelector } from './security';
+import { SectionTypes } from './../utils/GeoStoryUtils';
 
 /**
  * Returns a selector using a path inside the current story
@@ -28,7 +28,7 @@ export const currentStorySelector = state => get(state, "geostory.currentStory")
  * gets the current story page information (sectionId)
  * @param {object} state the application state
  */
-export const currentPageSelector = state => get(state, 'geostory.currentPage');
+export const currentPageSelector = state => get(state, 'geostory.currentPage', {});
 /**
  * gets the current mode (view, edit) from the state
  * @returns {string} current mode. One of "view" / "edit"
@@ -117,10 +117,47 @@ export const resourcesSelector = state => get(currentStorySelector(state), "reso
  */
 export const resourceByIdSelectorCreator = id => state => find(resourcesSelector(state), {id});
 /**
- * return the status of the possibility to edit the story
- * @param {object} state
+ * gets the total number of sections
+ * @returns {function} function that returns a selector
  */
-export const isEditAllowedSelector = state => isAdminUserSelector(state) || (isUserSelector(state) && canEditSelector(state));
+/**
+  * it creates a single array of sections and their contents,
+  * with special behaviour for paragraph where column is ignored
+  * @param {object} state application state
+  */
+export const navigableItemsSelector = state => {
+    const sections = sectionsSelector(state);
+    return sections.reduce((p, c) => {
+        if (c.type === SectionTypes.TITLE) {
+            // include only the section
+            return [...p, c];
+        }
+        if (c.type === SectionTypes.PARAGRAPH) {
+            // include only the section
+            return [...p, c];
+        }
+        if (c.type === SectionTypes.IMMERSIVE) {
+            // include immersive columns only
+            const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
+                return [...pImm, {...column, sectionId: pImm.id}];
+            }, []) || [];
+            return [...p, ...allImmContents];
+        }
+        return p;
+    }, []);
+};
+/**
+ * gets the current position of currentPage
+ * @returns {function} function that returns a selector
+ */
+export const totalItemsSelector = state => navigableItemsSelector(state).length;
+export const currentPositionSelector = state => findIndex(navigableItemsSelector(state), {
+    id: currentPageSelector(state).columns &&
+        currentPageSelector(state).columns[currentPageSelector(state).sectionId]
+        ? currentPageSelector(state).columns[currentPageSelector(state).sectionId]
+        : currentPageSelector(state).sectionId || ""
+});
+
 /**
  * return if at least one content has its exclusive focus active
  * @param {object} state
@@ -137,5 +174,3 @@ export const getFocusedContentSelector = state => get(state, "geostory.focusedCo
  * @param {object} state
  */
 export const getCurrentFocusedContentEl = state =>  createPathSelector(get(state, "geostory.focusedContent.path", ""))(state);
-
-

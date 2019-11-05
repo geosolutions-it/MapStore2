@@ -1929,6 +1929,9 @@
                 "resetMapConfirm": "Kartenkonfiguration zurücksetzen",
                 "resetConfirmContent": "Die ursprüngliche Kartenkonfiguration wiederherstellen?"
             },
+            "navigation": {
+                "edit": "Bearbeiten Sie die Geschichte"
+            },
             "builder": {
                 "defaults": {
                     "htmlTitlePlaceholder": "Titel einfügen",

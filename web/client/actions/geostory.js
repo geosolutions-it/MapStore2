@@ -28,6 +28,7 @@ export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
+export const UPDATE_CURRENT_COLUMN = "GEOSTORY:UPDATE_CURRENT_COLUMN";
 export const MOVE = "GEOSTORY:MOVE";
 export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
 
@@ -149,10 +150,12 @@ export const update = (path, element, mode = "replace") => ({
  * updates the current page with current value of sectionId (future can be extended adding other info about current content).
  * @param {object} param0 current page information. Contains `sectionId`
  */
-export const updateCurrentPage = ({sectionId}) => ({
+export const updateCurrentPage = ({sectionId, columnId}) => ({
     type: UPDATE_CURRENT_PAGE,
-    sectionId
+    sectionId,
+    columnId
 });
+
 
 /**
  * moves one section/content from `source` to the `target` container at the `position` position.
