@@ -73,6 +73,6 @@ It is possible to remove a background from Basemap Switcher by clicking on Remov
 <p style="text-align:center;"><img src="../img/bck-delete.jpg" style="max-width:400px;" /></p>
 
 !!! note
-    By default, creating a new map, all backgrounds from *Default Backgrounds* Service are added to the Basemap Switcher, and in catalog they appear unselectable (it's not allowed to add the same default background more than once). As soon as you remove one from the Basemap Switcher, it becomes again selectable from the catalog.
+    By default, when creating a new map, all backgrounds from *Default Backgrounds* Service are added to the Basemap Switcher, and in Catalog they appear unselectable (it's not allowed to add the same default background twice). As soon as you remove one from the Basemap Switcher, it becomes selectable from the Catalog.
 
     <p style="text-align:center;"><img src="../img/bck-unselectable.jpg" style="max-width:600px;" /></p>
