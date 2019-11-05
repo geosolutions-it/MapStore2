@@ -23,7 +23,7 @@ Add background
 The catalog window opens, with the possibility of access the Remote Services.
 
 !!! warning
-    *Default Backgrounds* service is available only accessing the catalog from the Basemap Switcher, but if you add a new Remote Service accessing catalog from the Basemap Switcher, that Remote Service is available also from Burger Menu. More information about Remote Services managing can be found in [Catalog](catalog.md) section. 
+    *Default Backgrounds* service is available only accessing the catalog from the Basemap Switcher, but if you add a new Remote Service accessing catalog from the Basemap Switcher, that Remote Service is available also from Burger Menu. More information about Remote Services can be found in [Catalog](catalog.md) section. 
 
 * **Switch** the Remote Service to *GeoSolutions GeoServer WMS* and **Search** for the following layer: *ne_110m_ocean*. 
 
