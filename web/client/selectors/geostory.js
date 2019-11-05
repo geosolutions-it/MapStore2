@@ -75,26 +75,35 @@ export const errorsSelector = state => get(state, 'geostory.errors');
  */
 export const saveErrorSelector = state => get(errorsSelector(state), 'save');
 /**
- * gets the sections array of the current story
+ * @returns the sections array of the current story
  */
 export const sectionsSelector = state => get(currentStorySelector(state), "sections", []);
 /**
- * return the status of toolbar, if true is enabled and usable, otherwise it is disabled i.e. non clickable
+ * @returns the status of toolbar, if true is enabled and usable, otherwise it is disabled i.e. non clickable
  */
 export const isToolbarEnabledSelector = state => sectionsSelector(state).length > 0;
 /**
- * return the status of settings panel, if true is visible
+ * @returns the status of settings panel, if true is visible
  */
 export const isSettingsEnabledSelector = state => get(state, "geostory.isSettingsEnabled", false);
 /**
- * return the settings of the story
+ * @returns the settings of the story
  */
 export const settingsSelector = state => get(state, "geostory.currentStory.settings", {});
+/**
+ * @returns the checked elements in the settings
+ */
 export const visibleItemsSelector = state => get(settingsSelector(state), "checked", []).reduce((p, c) => ({...p, [c]: true}), {});
+/**
+ * @returns old settings
+ */
 export const oldSettingsSelector = state => get(state, "geostory.oldSettings", {});
+/**
+ * @returns the status if settings has changed
+ */
 export const settingsChangedSelector = state => !isEqual(settingsSelector(state), oldSettingsSelector(state));
 /**
- * gets the selectedCard
+ * @returns the selectedCard
  */
 export const selectedCardSelector = state => get(state, "geostory.selectedCard", "");
 /**
@@ -185,10 +194,10 @@ export const settingsItemsSelector = state => {
     return sections.reduce((p, c) => {
         if (c.type === SectionTypes.IMMERSIVE) {
             const children = c.contents && c.contents.map((column) => {
-                return {label: column.title, value: column.id};
+                return {label: column.title || "", value: column.id};
             }) || [];
-            return [ ...p, {label: c.title, value: c.id, children}];
+            return [ ...p, {label: c.title || "", value: c.id, children}];
         }
-        return [...p, {label: c.title, value: c.id}];
+        return [...p, {label: c.title || "", value: c.id}];
     }, []);
 };

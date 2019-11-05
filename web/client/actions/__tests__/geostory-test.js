@@ -19,11 +19,14 @@ import {
     LOADING_GEOSTORY, loadingGeostory,
     LOAD_GEOSTORY_ERROR, loadGeostoryError,
     editResource, EDIT_RESOURCE,
+    move, MOVE,
     remove, REMOVE,
     selectCard, SELECT_CARD,
-    toggleCardPreview, TOGGLE_CARD_PREVIEW,
     SAVE, saveStory,
-    move, MOVE
+    toggleSettingsPanel, TOGGLE_SETTINGS_PANEL,
+    toggleSettings, TOGGLE_SETTINGS,
+    toggleCardPreview, TOGGLE_CARD_PREVIEW,
+    updateSettings, UPDATE_SETTINGS
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -135,5 +138,28 @@ describe('test geostory action creators', () => {
         expect(retVal.source).toBe(source);
         expect(retVal.target).toBe(target);
         expect(retVal.position).toBe(position);
+    });
+    it('toggleSettings', () => {
+        const option = "isLogoEnabled";
+        const retVal = toggleSettings(option);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(TOGGLE_SETTINGS);
+        expect(retVal.option).toBe(option);
+    });
+    it('toggleSettingsPanel', () => {
+        const withSave = true;
+        const retVal = toggleSettingsPanel(withSave );
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(TOGGLE_SETTINGS_PANEL);
+        expect(retVal.withSave).toBe(withSave);
+    });
+    it('updateSettings', () => {
+        const prop = "isLogoEnabled";
+        const value = true;
+        const retVal = updateSettings(prop, value);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(UPDATE_SETTINGS);
+        expect(retVal.prop).toBe(prop);
+        expect(retVal.value).toBe(value);
     });
 });

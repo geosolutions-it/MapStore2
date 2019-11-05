@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import {ButtonToolbar} from 'react-bootstrap';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';

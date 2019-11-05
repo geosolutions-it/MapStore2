@@ -21,20 +21,26 @@ import {
     setResource,
     saveGeoStoryError,
     storySaved,
-    updateCurrentPage
+    toggleSettings,
+    toggleSettingsPanel,
+    updateCurrentPage,
+    updateSettings
 } from '../../actions/geostory';
 import {
     isCollapsedSelector,
+    isSettingsEnabledSelector,
     currentStorySelector,
     modeSelector,
     sectionsSelector,
     sectionAtIndexSelectorCreator,
+    oldSettingsSelector,
     resourceSelector,
     resourcesSelector,
     currentPageSelector,
     loadingSelector,
     controlSelectorCreator,
-    errorsSelector
+    errorsSelector,
+    settingsSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -49,7 +55,7 @@ describe('geostory reducer', () => {
         expect(modeSelector({geostory: geostory(undefined, setEditing(false))})).toBe(Modes.VIEW);
     });
     it('setCurrentStory sets story', () => {
-        expect(currentStorySelector({ geostory: geostory(undefined, setCurrentStory(TEST_STORY)) })).toBe(TEST_STORY);
+        expect(currentStorySelector({ geostory: geostory(undefined, setCurrentStory(TEST_STORY)) })).toEqual({...TEST_STORY, settings: {}});
     });
     describe('add Section', () => {
         const STATE_STORY_1 = geostory(undefined, setCurrentStory(TEST_STORY));
@@ -193,14 +199,77 @@ describe('geostory reducer', () => {
     // note: this is the GeoSore resource, with permissions, id and so on.
     it('setResource', () => {
         const SAMPLE_RESOURCE = {
+            name: "name",
             canEdit: true,
             canDelete: true
         };
-        expect(
-            resourceSelector({
-                geostory: geostory(undefined, setResource(SAMPLE_RESOURCE))
-            })
-        ).toBe(SAMPLE_RESOURCE);
+        const state = geostory(undefined, setResource(SAMPLE_RESOURCE));
+        expect( resourceSelector({ geostory: state }) ).toBe(SAMPLE_RESOURCE);
+        expect( settingsSelector({ geostory: state }).storyTitle ).toBe(SAMPLE_RESOURCE.name);
+    });
+    it('toggleSettings', () => {
+        let state = geostory({currentStory: {
+            settings: {
+                isLogoEnabled: true
+            }}}, toggleSettings("isLogoEnabled"));
+        expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(false);
+
+        state = geostory(undefined, toggleSettings("isLogoEnabled"));
+        expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(true);
+    });
+    it('updateSettings', () => {
+        const checked = ["id"];
+        let state = geostory({currentStory: {
+            settings: {
+                checked: []
+            }}}, updateSettings("checked", checked));
+        expect( settingsSelector({ geostory: state }).checked ).toBe(checked);
+    });
+    describe('toggleSettingsPanel tests', () => {
+        it('restoring oldSettings when closing', () => {
+            let state = geostory({
+                isSettingsEnabled: true,
+                oldSettings: {
+                    isLogoEnabled: true
+                },
+                currentStory: {
+                    settings: {
+                        isLogoEnabled: false
+                    }
+                }}, toggleSettingsPanel(false));
+            expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(true);
+            expect( oldSettingsSelector({ geostory: state }) ).toEqual({});
+            expect( isSettingsEnabledSelector({ geostory: state }) ).toEqual(false);
+        });
+        it('saving new settings oldSettings when closing', () => {
+            let state = geostory({
+                isSettingsEnabled: true,
+                oldSettings: {
+                    isLogoEnabled: true
+                },
+                currentStory: {
+                    settings: {
+                        isLogoEnabled: false
+                    }
+                }}, toggleSettingsPanel(true));
+            expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(false);
+            expect( oldSettingsSelector({ geostory: state }) ).toEqual({});
+            expect( isSettingsEnabledSelector({ geostory: state }) ).toEqual(false);
+        });
+        it('opening settings panel', () => {
+            const settings = {
+                isLogoEnabled: false
+            };
+            let state = geostory({
+                isSettingsEnabled: false,
+                currentStory: {
+                    settings
+                }}, toggleSettingsPanel());
+            expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(false);
+            expect( oldSettingsSelector({ geostory: state }) ).toEqual(settings);
+            expect( isSettingsEnabledSelector({ geostory: state }) ).toEqual(true);
+
+        });
     });
     describe('updateCurrentPage tests', () => {
         it('geostory updateCurrentPage, with sectionId', () => {

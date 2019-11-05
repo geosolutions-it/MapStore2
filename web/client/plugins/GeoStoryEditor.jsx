@@ -32,7 +32,6 @@ import {
     toggleCardPreview,
     toggleSettingsPanel,
     toggleSettings,
-    changeCheckedSettingsItems,
     update
 } from '../actions/geostory';
 
@@ -57,7 +56,6 @@ const GeoStoryEditor = ({
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
     onToggleSettings = () => {},
-    onChangeCheckedSettingsItems = () => {},
     onUpdateSettings = () => {},
     onSelect = () => {},
     onRemove = () => {},
@@ -89,7 +87,6 @@ const GeoStoryEditor = ({
         onToggleCardPreview={onToggleCardPreview}
         onToggleSettings={onToggleSettings}
         onToggleSettingsPanel={onToggleSettingsPanel}
-        onChangeCheckedSettingsItems={onChangeCheckedSettingsItems}
         onUpdate={onUpdate}
         onUpdateSettings={onUpdateSettings}
     />
@@ -118,7 +115,6 @@ export default createPlugin('GeoStoryEditor', {
             onToggleCardPreview: toggleCardPreview,
             onToggleSettingsPanel: toggleSettingsPanel,
             onToggleSettings: toggleSettings,
-            onChangeCheckedSettingsItems: changeCheckedSettingsItems,
             onRemove: remove,
             onSelect: selectCard,
             onSort: move,

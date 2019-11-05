@@ -56,7 +56,6 @@ export default updateTitle(({
     items = [],
     settings,
     onToggleSettings = () => {},
-    onChangeCheckedSettingsItems = () => {},
     onUpdateSettings = () => {},
     setExpanded = () => {},
     setStoryTitle = () => {}
@@ -108,26 +107,13 @@ export default updateTitle(({
             />
         </FormGroup>
         <FormGroup>
-            {
-                /* settings.isNavbarEnabled && items.map(({id, title, type}) => {
-                    if (type === SectionTypes.IMMERSIVE) {
-                        return (<div className="ms-geostory-settings-immersive-section">{title}</div>);
-                    }
-                    return (<Checkbox
-                        onChange={() => onChangeCheckedSettingsItems(id)}
-                        checked={settings.visibleItems && settings.visibleItems[id]}
-                    >
-                        {title}
-                    </Checkbox>);
-                }) */
-            }
             <CheckboxTree
                 showNodeIcon={false}
                 nativeCheckboxes
                 nodes={items}
                 checked={settings.checked || []}
                 expanded={expanded}
-                onCheck={checkedVal => onChangeCheckedSettingsItems(checkedVal)}
+                onCheck={checkedVal => onUpdateSettings("checked", checkedVal)}
                 onExpand={expandVal => setExpanded(expandVal)}
             />
         </FormGroup>

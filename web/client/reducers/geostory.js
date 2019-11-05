@@ -25,7 +25,6 @@ import {
     TOGGLE_CARD_PREVIEW,
     TOGGLE_SETTINGS,
     TOGGLE_SETTINGS_PANEL,
-    CHANGE_CHECKED_SETTINGS_ITEMS,
     UPDATE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTINGS
@@ -226,9 +225,6 @@ export default (state = INITIAL_STATE, action) => {
         const visibility = get(state, `currentStory.settings.${action.option}`);
         return set(`currentStory.settings.${action.option}`, !visibility, state);
     }
-    case CHANGE_CHECKED_SETTINGS_ITEMS: {
-        return set(`currentStory.settings.checked`, action.checked, state);
-    }
     case TOGGLE_SETTINGS_PANEL: {
 
         const newStatus = !state.isSettingsEnabled;
@@ -236,7 +232,7 @@ export default (state = INITIAL_STATE, action) => {
             set('isSettingsEnabled', newStatus),
             set('oldSettings', newStatus ? state.currentStory.settings : {}),
             // when closing (newStatus=false) check if is because of the save, in that case keep changes otherwise restore previous settings
-            set('currentStory.settings', newStatus ? state.currentStory.settings : action.withSave ? state.currentStory.settings : state.oldSettings)
+            set('currentStory.settings', newStatus ? state.currentStory.settings : (action.withSave ? state.currentStory.settings : state.oldSettings))
         )(state);
     }
     case UPDATE: {

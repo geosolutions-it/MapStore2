@@ -1265,7 +1265,7 @@ describe('Test DrawSupport', () => {
 
     });
 
-    it.only('drawsupport test for polygonCoordsFromCircle', () => {
+    it('drawsupport test for polygonCoordsFromCircle', () => {
         const fakeMap = {
             addLayer: () => {},
             removeLayer: () => {},
