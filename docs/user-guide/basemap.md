@@ -41,7 +41,7 @@ The Add New Background window opens, allowing the user to assign the following s
 
 * **Choose** *image/jpeg* as format (the supported formats are the following: png, png8, jpeg or vnd.jpeg-png);
 
-* **Choose** *gs:ocean* as style (it's the only availbale for this layer, but there could be more than one);
+* **Choose** *gs:ocean* as style (it's the only available for this layer, but there could be more than one);
 
 * **Add** a String Parameter called *interpolation* with *nearest neighbor* as Value, a Number Parameter called *buffer* with *100* as Value and a Boolean Parameter called *tiled* with *True* as Value (these parameters will be added to the WMS request). 
 
