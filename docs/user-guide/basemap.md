@@ -58,7 +58,7 @@ It is possible to edit only current backgrounds by clicking on settings icon on 
 
 <p style="text-align:center;"><img src="../img/bck-settings.jpg" style="max-width:600px;" /></p>
 
-The Edit Current Background window opens, allowing the user to costumize the same set of informations costumizable adding a new background (see [previous section](#add-background)).
+The Edit Current Background window opens, allowing the user to customize the same set of information when adding a new background (see [previous section](#add-background)).
 
 <p style="text-align:center;"><img src="../img/edit-back-window.jpg" style="max-width:400px;" /></p>
 
