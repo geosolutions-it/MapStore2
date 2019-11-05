@@ -91,7 +91,7 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 ## Explanation of some config properties
 - **loadAfterTheme** is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
 - **initialState** is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
-- **projectionDefs** is an object that contains definitions for Coordinate Reference Systems
+- **projectionDefs** is an array of objects that contain definitions for Coordinate Reference Systems
 
 ### initialState configuration
 It can contain:
@@ -191,7 +191,7 @@ Example:<br>
 ```
 
 ### projectionDefs configuration
-Custom CRS can be configured here. For example:
+Custom CRS can be configured here, at root level of localConfig.json file. For example:
 ```
 "projectionDefs": [{
   "code": "EPSG:3003",
@@ -207,7 +207,7 @@ Explanation of these properties:
 - **extent** - projected bounds of the projection
 - **worldExtent** - bounds of the projection in WGS84
 
-These parameters for a projection of interest can be looked up on [epsg.io](https://epsg.io)
+These parameters for a projection of interest can be found on [epsg.io](https://epsg.io)
 
 ### CRS Selector configuration
 CRS Selector is a plugin, that is configured in the plugins section. It should look like this:
@@ -237,11 +237,11 @@ CRS Selector is a plugin, that is configured in the plugins section. It should l
 ```
 Configuration parameters are to be placed in the "cfg" object. These parameters are:
 
-- **additionalCRS** - object, that contains additional Coordinate Reference Systems, defined in **projectionDefs**, that are to be available in the CRS Selector, alongside default projections.
+- **additionalCRS** - object, that contains additional Coordinate Reference Systems. This configuration parameter lets you specify which projections, defined in **projectionDefs**, should be displayed in the CRS Selector, alongside default projections.
 Every additional CRS is a property of **additionalCRS** object. The name of that property is a code of a corresponding projection definition in **projectionDefs**. The value of that property is an object
 with the following properties:
     - **label** - a string, that will be displayed in the CRS Selector as a name of the projection
-- **filterAllowedCRS** - which default projections are to be available in the selector. Currently available default projections are:
+- **filterAllowedCRS** - which default projections are to be available in the selector. Default projections are:
     - EPSG:3857
     - EPSG:4326
-- **allowedRoles** - CRS Selector will be accessible only to users who have one of the listed roles. If this parameter is empty, CRS Selector will be available for any logged in user.
+- **allowedRoles** - CRS Selector will be accessible only to these roles. By default, CRS Selector will be available for any logged in user.
