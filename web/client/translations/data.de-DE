@@ -321,6 +321,16 @@
                 "createANewOne": "Erstelle ein neues",
                 "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von stories ist ein Fehler aufgetreten"
+            },
+            "contexts": {
+                "newContext": "Neuer Ansichtskontext",
+                "title": "Kontexte ({count})",
+                "titleNoCount": "Kontexte",
+                "create": "Kontext erstellen",
+                "noContextAvailable": "Kein Kontext verfügbar",
+                "errorLoadingContexts": "Beim Laden der Kontexte ist ein Fehler aufgetreten",
+                "createANewOne": "Erstelle ein neues",
+                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten"
             }
         },
         "map": {
@@ -2038,6 +2048,24 @@
             "addTooltip": "Neuen Hintergrund hinzufügen",
             "editTooltip": "Aktuellen Hintergrund bearbeiten",
             "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?"
+        },
+        "stepper": {
+            "back": "Zurück",
+            "next": "Nächste"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Allgemeine Einstellungen",
+                "title": "Erstellen Sie einen neuen App-Kontext",
+                "name": "Name",
+                "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
+                "windowTitle": "Fenstertitel",
+                "windowTitlePlaceholder": "Fenstertitel eingeben..."
+            },
+            "saveErrorNotification": {
+                "title": "Das Speichern des Kontexts ist fehlgeschlagen",
+                "defaultMessage": "Unbekannter Fehler"
+            }
         },
         "tutorial": {
             "title": "Anleitung",

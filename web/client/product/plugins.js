@@ -33,6 +33,8 @@ module.exports = {
         CRSSelectorPlugin: require('../plugins/CRSSelector'),
         ContentTabs: require('../plugins/ContentTabs'),
         ContextPlugin: require('../plugins/Context').default,
+        ContextsPlugin: require('../plugins/Contexts').default,
+        ContextCreatorPlugin: require('../plugins/ContextCreator').default,
         CookiePlugin: require('../plugins/Cookie'),
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         Dashboard: require('../plugins/Dashboard'),

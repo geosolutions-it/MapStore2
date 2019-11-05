@@ -321,6 +321,16 @@
                 "createANewOne": "Create a new one",
                 "deleteError": "There was an error deleting the resource",
                 "errorLoadingGeostories": "There was an error loading stories"
+            },
+            "contexts": {
+                "newContext": "New View Context",
+                "title": "Contexts ({count})",
+                "titleNoCount": "Contexts",
+                "create": "Create Context",
+                "noContextAvailable": "No context available",
+                "deleteError": "There was an error deleting the resource",
+                "errorLoadingContexts": "There was an error loading contexts",
+                "createANewOne": "Create a new one"
             }
         },
         "map": {
@@ -2039,6 +2049,24 @@
             "addTooltip": "Add new background",
             "editTooltip": "Edit current background",
             "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
+        },
+        "stepper": {
+            "back": "Back",
+            "next": "Next"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "General Settings",
+                "title": "Create new app context",
+                "name": "Name",
+                "namePlaceholder": "Enter app context name...",
+                "windowTitle": "Window title",
+                "windowTitlePlaceholder": "Enter window title..."
+            },
+            "saveErrorNotification": {
+                "title": "Context saving failed",
+                "defaultMessage": "Unknown error"
+            }
         },
         "tutorial": {
             "title": "Tutorial",

@@ -32,6 +32,10 @@ module.exports = {
         path: "/context/:contextId/:mapId",
         component: require('./pages/Context').default
     }, {
+        name: 'context-creator',
+        path: "/context-creator/:stepId",
+        component: require('./pages/ContextCreator').default
+    }, {
         name: "manager",
         path: "/manager",
         component: require('./pages/Manager')

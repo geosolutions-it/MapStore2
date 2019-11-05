@@ -594,6 +594,16 @@
               },
               "fluid": true
             }
+          },
+          {
+            "name": "Contexts",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              },
+              "fluid": true
+            }
           }
           , "MailingLists", "Footer", {
           "name": "Cookie",
@@ -672,6 +682,29 @@
               "containerPosition": "header"
             }
           },
+          "Notifications",
+          {
+            "name": "FeedbackMask",
+            "cfg": {
+              "containerPosition": "header"
+            }
+          }
+        ],
+        "context-creator": [
+          {
+            "name": "OmniBar",
+            "cfg": {
+              "containerPosition": "header",
+              "className": "navbar shadow navbar-home"
+            }
+          },
+          "Login",
+          "BurgerMenu",
+          "Language",
+          "NavMenu",
+          "Attribution",
+          "Home",
+          "ContextCreator",
           "Notifications",
           {
             "name": "FeedbackMask",

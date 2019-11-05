@@ -321,6 +321,16 @@
                 "createANewOne": "Crea uno nuevo",
                 "deleteError": "Hubo un error al eliminar el recurso",
                 "errorLoadingGeostories": "Hubo un error al cargar los stories"
+            },
+            "contexts": {
+                "newContext": "Nuevo contexto de vista",
+                "title": "Contextos ({count})",
+                "titleNoCount": "Contextos",
+                "create": "Crear contexto",
+                "noContextAvailable": "No hay contexto disponible",
+                "errorLoadingContexts": "Se produjo un error al cargar los contextos",
+                "createANewOne": "Crea uno nuevo",
+                "deleteError": "Hubo un error al eliminar el recurso"
             }
         },
         "map": {
@@ -2038,6 +2048,24 @@
             "addTooltip": "Agregar nuevo fondo",
             "editTooltip": "Editar fondo actual",
             "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
+        },
+        "stepper": {
+            "back": "Atrás",
+            "next": "Siguiente"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Configuración general",
+                "title": "Crear nuevo contexto de aplicación",
+                "name": "Nombre",
+                "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
+                "windowTitle": "Título de la ventana",
+                "windowTitlePlaceholder": "Ingrese el título de la ventana..."
+            },
+            "saveErrorNotification": {
+                "title": "Error al guardar el contextod",
+                "defaultMessage": "Error desconocido"
+            }
         },
         "tutorial": {
             "title": "Tutorial",
