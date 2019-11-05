@@ -50,7 +50,7 @@ The Service manager window opens, where the user can start to insert the informa
 
 * **Type** the Title (e.g. *GeoPortal of Firenze*).
 
-In addition to basic informations, the user can costumize the Service with other useful parameters: Search on selection, Preview and Image format.
+In addition to basic information, the user can customize the Service with other useful parameters: Search on selection, Preview and Image format.
 
 * **Expand** the Advanced Settings window;
 
