@@ -13,7 +13,7 @@ import {invalidateUnsupportedLayer} from '../utils/LayersUtils';
 
 export const metadataSourceSelector = (state) => state.backgroundSelector && state.backgroundSelector.source;
 export const modalParamsSelector = (state) => state.backgroundSelector && state.backgroundSelector.modalParams;
-export const backgroundListSelector = (state) => state.backgroundSelector && state.backgroundSelector.backgrounds;
+export const backgroundListSelector = (state) => state.backgroundSelector && state.backgroundSelector.backgrounds || [];
 export const isDeletedIdSelector = (state) => state.backgroundSelector && state.backgroundSelector.lastRemovedId;
 export const removedBackgroundsThumbIdsSelector = (state) => state.backgroundSelector && state.backgroundSelector.removedBackgroundsThumbIds;
 export const confirmDeleteBackgroundModalSelector = (state) => state.backgroundSelector && state.backgroundSelector.confirmDeleteBackgroundModal;
