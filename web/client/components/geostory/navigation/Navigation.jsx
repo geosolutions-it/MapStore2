@@ -61,14 +61,14 @@ export default ({
                             buttons={[
                                 {
                                     glyph: 'pencil',
-                                    tooltip: 'navigation.edit',
+                                    tooltip: 'geostory.navigation.edit',
                                     onClick: () => setEditing(true)
                                 }
                             ]} />
                     </div>
                     {settings && settings.isLogoEnabled &&
                         <div className="ms-geostory-navigation-logo">
-                            <img src={settings.thumbnail && settings.thumbnail.data || settings.thumbnail.url || ""} height={32}/>
+                            <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
                         </div>
                     }
                     {settings && settings.isTitleEnabled &&

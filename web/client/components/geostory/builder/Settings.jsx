@@ -93,7 +93,7 @@ export default updateTitle(({
                 suggestion=""
                 thumbnailErrors={settings.thumbnailErrors}
                 map={{
-                    newThumbnail: settings.thumbnail && settings.thumbnail.data || settings.thumbnail.url || "NODATA"
+                    newThumbnail: settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || "NODATA"
                 }}
             />)
             }
