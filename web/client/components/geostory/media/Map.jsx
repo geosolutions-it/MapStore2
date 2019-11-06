@@ -31,7 +31,7 @@ export default compose(
         connectMap,
     ),
     withHandlers({
-        onMapViewChanges: ({ map: {center, zoom}, editMap = false, update = () => {}}) => ({center: newCenter, zoom: newZoom}) => {
+        onMapViewChanges: ({ map: {center = {}, zoom} = {}, editMap = false, update = () => {}}) => ({center: newCenter, zoom: newZoom}) => {
             const equalCenter =  isNearlyEqual(newCenter.x, center.x) && isNearlyEqual(newCenter.y, center.y);
 
             editMap && (!equalCenter || zoom !== newZoom) && update("map", {
