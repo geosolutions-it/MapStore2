@@ -1952,18 +1952,22 @@
                 "settings": {
                     "tooltip": "Configuraciones",
                     "back": "Volver al constructor",
+                    "backConfirmTitle": "Configuraciones modificadas",
+                    "backConfirmBody": "Está cerrando el panel de configuraciones sin guardar sus cambios",
+                    "backConfirmNo": "Cancelar",
+                    "backConfirmYes": "Cerrar",
                     "save": "Guardar ajustes",
-                    "headerTitle" : "Configuración de la historia",
-                    "title" : "Titulo",
-                    "titlePlaceholder" : "Ingrese título",
-                    "logo" : "Logo",
-                    "logoPlaceholder" : "Ingrese la fuente del logotipo (formato de imagen)",
-                    "autoplay" : "Auto-reproducción",
-                    "enableAutoplay" : "Habilitar reproducción automática",
-                    "autoplayInterval" : "Intervalo de reproducción automática (segundos)",
-                    "autoplayIntervalPlaceholder" : "Habilitar intervalo de reproducción automática",
-                    "navbar" : "Barra de navegación",
-                    "showNavbar" : "Mostrar barra de navegación"
+                    "headerTitle": "Configuración de la historia",
+                    "title": "Titulo",
+                    "titlePlaceholder": "Ingrese título",
+                    "logo": "Logo",
+                    "logoPlaceholder": "El logotipo no debe superar los 48 px de altura y se sugiere un ancho de 96 px. max 500kb",
+                    "autoplay": "Auto-reproducción",
+                    "enableAutoplay": "Habilitar reproducción automática",
+                    "autoplayInterval": "Intervalo de reproducción automática (segundos)",
+                    "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
+                    "navbar": "Barra de navegación",
+                    "showNavbar": "Mostrar barra de navegación"
                 }
             },
             "errors": {

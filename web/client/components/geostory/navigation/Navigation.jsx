@@ -38,44 +38,46 @@ export default ({
                     style={{
                         width: `${(currentPosition + 1) / totalItems * 100}%`
                     }}
-                >
-                </div>
+                />
             </div>
-            <div className="ms-geostory-navigation-elements">
-                {navigableItems && navigableItems.length ?
-                    (<div className="ms-geostory-navigation-navigableItems">
-                        <ScrollMenu
-                            items={navigableItems}
-                            currentPage={currentPage}
-                            scrollTo={scrollTo}
-                        />
-                    </div>) : null}
-                <div className="ms-geostory-navigation-metadata">
-                    <div className="ms-geostory-navigation-toolbar">
-                        <Toolbar
-                            btnDefaultProps={{
-                                className: 'square-button-md no-border',
-                                bsStyle: 'default',
-                                tooltipPosition: 'bottom'
-                            }}
-                            buttons={[
-                                {
-                                    glyph: 'pencil',
-                                    tooltip: 'geostory.navigation.edit',
-                                    onClick: () => setEditing(true)
-                                }
-                            ]} />
+            <div className="ms-geostory-navigation-tools">
+
+                <div className="ms-geostory-navigation-toolbar">
+                    <Toolbar
+                        btnDefaultProps={{
+                            className: 'square-button-md no-border',
+                            bsStyle: 'default',
+                            tooltipPosition: 'bottom'
+                        }}
+                        buttons={[
+                            {
+                                glyph: 'pencil',
+                                tooltipId: 'geostory.navigation.edit',
+                                onClick: () => setEditing(true)
+                            }
+                        ]} />
+                </div>
+                <div className="ms-geostory-navigation-elements">
+                    {navigableItems && navigableItems.length ?
+                        (<div className="ms-geostory-navigation-navigableItems">
+                            <ScrollMenu
+                                items={navigableItems}
+                                currentPage={currentPage}
+                                scrollTo={scrollTo}
+                            />
+                        </div>) : null}
+                    <div className="ms-geostory-navigation-metadata">
+                        {settings && settings.isLogoEnabled &&
+                            <div className="ms-geostory-navigation-logo">
+                                <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
+                            </div>
+                        }
+                        {settings && settings.isTitleEnabled &&
+                            <div className="ms-geostory-navigation-title">
+                                {settings.storyTitle}
+                            </div>
+                        }
                     </div>
-                    {settings && settings.isLogoEnabled &&
-                        <div className="ms-geostory-navigation-logo">
-                            <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
-                        </div>
-                    }
-                    {settings && settings.isTitleEnabled &&
-                        <div className="ms-geostory-navigation-title">
-                            {settings.storyTitle}
-                        </div>
-                    }
                 </div>
             </div>
         </div>

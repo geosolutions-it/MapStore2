@@ -1952,18 +1952,22 @@
                 "settings": {
                     "tooltip": "die Einstellungen",
                     "back": "Zurück zum Baumeister",
+                    "backConfirmTitle": "Geänderte Einstellungen",
+                    "backConfirmBody": "Sie schließen das Einstellungsfenster, ohne Ihre Änderungen zu speichern",
+                    "backConfirmNo": "Stornieren",
+                    "backConfirmYes": "Schließen",
                     "save": "Einstellungen speichern",
-                    "headerTitle" : "Story-Einstellungen",
-                    "title" : "Titel",
-                    "titlePlaceholder" : "Titel eingeben",
-                    "logo" : "Logo",
-                    "logoPlaceholder" : "Logoquelle eingeben (Bildformat)",
-                    "autoplay" : "Automatisches Abspielen",
-                    "enableAutoplay" : "Aktivieren Sie die automatische Wiedergabe",
-                    "autoplayInterval" : "Autoplay-Intervall (Sekunden)",
-                    "autoplayIntervalPlaceholder" : "Aktivieren Sie das Autoplay-Intervall",
-                    "navbar" : "Navbar",
-                    "showNavbar" : "Navigationsleiste anzeigen"
+                    "headerTitle": "Story-Einstellungen",
+                    "title": "Titel",
+                    "titlePlaceholder": "Titel eingeben",
+                    "logo": "Logo",
+                    "logoPlaceholder": "Das Logo darf nicht höher als 48 px sein und es wird eine Breite von 96 px empfohlen. max 500kb",
+                    "autoplay": "Automatisches Abspielen",
+                    "enableAutoplay": "Aktivieren Sie die automatische Wiedergabe",
+                    "autoplayInterval": "Autoplay-Intervall (Sekunden)",
+                    "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
+                    "navbar": "Navigationsleiste",
+                    "showNavbar": "Navigationsleiste anzeigen"
                 }
             },
             "errors": {

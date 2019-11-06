@@ -92,4 +92,4 @@ const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 
  * negative rootMargin allows to get the top element highlighted (trigger visibility event)
  * if it's present in the viewport after initial 100px
 */
-export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-100px" })(Section);
+export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-110px" })(Section);

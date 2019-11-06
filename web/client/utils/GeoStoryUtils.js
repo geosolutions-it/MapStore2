@@ -17,6 +17,7 @@ import isArray from "lodash/isArray";
 import values from "lodash/values";
 import filter from "lodash/filter";
 import merge from "lodash/merge";
+import includes from "lodash/includes";
 import uuid from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
@@ -297,4 +298,17 @@ export const getEffectivePath = (rawPath, state) => {
         }
         return [...path, current];
     }, []);
+};
+
+/** finding section id from a give column id (immersive content)
+ * @param {object[]} immSections sections to loop on
+ * @param {*} columnId to use to find its section parent
+ */
+export const findSectionIdFromColumnId = (immSections, columnId) => {
+    return immSections.reduce((p, c) => {
+        if (includes(c.contents.map(cont => cont.id), columnId)) {
+            return c.id;
+        }
+        return p;
+    }, null);
 };

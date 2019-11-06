@@ -89,7 +89,11 @@ export const isSettingsEnabledSelector = state => get(state, "geostory.isSetting
 /**
  * @returns the settings of the story
  */
-export const settingsSelector = state => get(state, "geostory.currentStory.settings", {});
+export const settingsSelector = state => get(currentStorySelector(state), "settings", {});
+/**
+ * @returns the checked items in settings of the story
+ */
+export const settingsCheckedSelector = state => get(settingsSelector(state), "checked", []);
 /**
  * @returns the checked elements in the settings
  */
@@ -188,7 +192,10 @@ export const currentPositionSelector = state => findIndex(navigableItemsSelector
         : currentPageSelector(state).sectionId || ""
 });
 
-
+/**
+ * return the items to be shown in the checkbox tree in settings panel
+ * @param {*} state application state
+ */
 export const settingsItemsSelector = state => {
     const sections = sectionsSelector(state);
     return sections.reduce((p, c) => {

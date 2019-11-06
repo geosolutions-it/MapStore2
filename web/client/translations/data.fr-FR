@@ -1922,9 +1922,9 @@
                 "fit": "Adapter l'espace conteneur",
                 "editMedia": "Changer de source média",
                 "remove": "Supprimer",
-                "removeConfirmTitle": "Bist du sicher?",
-                "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
-                "editMap": "Edit initial map extent"
+                "removeConfirmTitle": "Êtes-vous sûr?",
+                "removeConfirmContent": "Voulez-vous supprimer ce contenu de l'histoire?",
+                "editMap": "Modifier l'étendue initiale de la carte"
             },
             "navigation": {
                 "edit": "Modifier l'histoire"
@@ -1952,18 +1952,22 @@
                 "settings": {
                     "tooltip": "Réglages",
                     "back": "Retour au constructeur",
+                    "backConfirmTitle": "Paramètres modifiés",
+                    "backConfirmBody": "Vous fermez le panneau des paramètres sans enregistrer vos modifications",
+                    "backConfirmNo": "Annuler",
+                    "backConfirmYes": "Fermez",
                     "save": "Enregistrer les paramètres",
-                    "headerTitle" : "Paramètres de l'histoire",
-                    "title" : "Titre",
-                    "titlePlaceholder" : "Entrez le titre",
-                    "logo" : "Logo",
-                    "logoPlaceholder" : "Entrez le logo source (format d'image)",
-                    "autoplay" : "Lecture automatique",
-                    "enableAutoplay" : "Activer la lecture automatique",
-                    "autoplayInterval" : "Intervalle de lecture automatique (secondes)",
-                    "autoplayIntervalPlaceholder" : "Activer l'intervalle de lecture automatique",
-                    "navbar" : "Barre de navigation",
-                    "showNavbar" : "Afficher la barre de navigation"
+                    "headerTitle": "Paramètres de l'histoire",
+                    "title": "Titre",
+                    "titlePlaceholder": "Entrez le titre",
+                    "logo": "Logo",
+                    "logoPlaceholder": "Le logo ne doit pas dépasser 48 px de hauteur et il est suggéré une largeur de 96 px. max 500kb",
+                    "autoplay": "Lecture automatique",
+                    "enableAutoplay": "Activer la lecture automatique",
+                    "autoplayInterval": "Intervalle de lecture automatique (secondes)",
+                    "autoplayIntervalPlaceholder": "Activer l'intervalle de lecture automatique",
+                    "navbar": "Barre de navigation",
+                    "showNavbar": "Afficher la barre de navigation"
                 }
             },
             "errors": {

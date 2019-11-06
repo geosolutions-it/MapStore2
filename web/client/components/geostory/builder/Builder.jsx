@@ -6,17 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
+import { Modes, lists } from '../../../utils/GeoStoryUtils';
+import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import ToolbarButton from '../../misc/toolbar/ToolbarButton';
+import withConfirm from '../../misc/toolbar/withConfirm';
 import SectionsPreview from './SectionsPreview';
 import Settings from './Settings';
-import Toolbar from '../../misc/toolbar/Toolbar';
-import { lists, Modes } from '../../../utils/GeoStoryUtils';
-import withConfirm from '../../misc/toolbar/withConfirm';
-import Message from '../../I18N/Message';
-import ToolbarButton from '../../misc/toolbar/ToolbarButton';
+
 const WithConfirmButton = withConfirm(ToolbarButton);
 /**
  * Base Component that shows basic editing tools and SlidesPreview
@@ -141,9 +142,11 @@ class Builder extends React.Component {
                                     bsStyle= "primary"
                                     glyph="arrow-left"
                                     className="square-button-md no-border"
-                                    tooltipId="geostory.contentToolbar.settings.back"
-                                    confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
-                                    confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
+                                    tooltipId="geostory.builder.settings.back"
+                                    confirmTitle={<Message msgId="geostory.builder.settings.backConfirmTitle" />}
+                                    confirmContent={<Message msgId="geostory.builder.settings.backConfirmBody" />}
+                                    confirmNo={<Message msgId="geostory.builder.settings.backConfirmNo" />}
+                                    confirmYes={<Message msgId="geostory.builder.settings.backConfirmYes" />}
                                     onClick={ () => {
                                         onToggleSettingsPanel();
                                     }} />)

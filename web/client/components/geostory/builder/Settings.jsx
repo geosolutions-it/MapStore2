@@ -14,34 +14,9 @@ import Thumbnail from '../../maps/forms/Thumbnail';
 import {withState, compose} from 'recompose';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-/*
-const nodes = [{
-    value: 'Abstract',
-    label: 'Abstract'
-}, {
-    value: 'Paragraph Section',
-    label: 'Paragraph Section'
-}, {
-    value: 'Immersive Section 1',
-    label: 'Immersive Section 1',
-    children: [
-        { value: 'Immersive Content 1', label: 'Immersive Content' },
-        { value: 'Immersive Content 2', label: 'Immersive Content' }
-    ]
-}, {
-    value: 'Title Section',
-    label: 'Title Section'
-}, {
-    value: 'Immersive Section 2',
-    label: 'Immersive Section 2',
-    children: [
-        { value: 'Immersive Content 3', label: 'Immersive Content' },
-        { value: 'Immersive Content 4', label: 'Immersive Content' },
-        { value: 'Immersive Content 5', label: 'Immersive Content' },
-        { value: 'Immersive Content 6', label: 'Immersive Content' },
-        { value: 'Immersive Content 7', label: 'Immersive Content' }
-    ]
-}];*/
+import localizedProps from '../../misc/enhancers/localizedProps';
+
+const InputLocalized = localizedProps("placeholder")(FormControl);
 
 const updateTitle = compose(
     withState("storyTitle", "setStoryTitle", ({settings}) => settings.storyTitle),
@@ -69,12 +44,12 @@ export default updateTitle(({
                 className="ms-geostory-settings-switch"
                 checked={settings.isTitleEnabled}
             />
-            <FormControl
+            <InputLocalized
                 disabled={!settings.isTitleEnabled}
                 value={storyTitle}
                 onChange={evt => setStoryTitle(evt.target.value) }
                 onBlur={evt => onUpdateSettings("storyTitle", evt.target.value) }
-                placeholder={"title"} // TODO I18N
+                placeholder="geostory.builder.settings.titlePlaceholder"
             />
         </FormGroup>
         <FormGroup>
@@ -89,7 +64,7 @@ export default updateTitle(({
                 withLabel={false}
                 onUpdate={(data, url) => onUpdateSettings("thumbnail", {data, url})}
                 onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
-                message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
+                message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
                 suggestion=""
                 thumbnailErrors={settings.thumbnailErrors}
                 map={{

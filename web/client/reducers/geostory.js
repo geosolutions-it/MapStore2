@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
+import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray, uniq } from "lodash";
 import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
-import { getEffectivePath } from '../utils/GeoStoryUtils';
+import { getEffectivePath, SectionTypes, findSectionIdFromColumnId } from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -30,7 +30,7 @@ import {
     UPDATE_SETTINGS
 } from '../actions/geostory';
 
-import { selectedCardSelector } from "../selectors/geostory";
+import { selectedCardSelector, settingsSelector, sectionsSelector, settingsCheckedSelector } from "../selectors/geostory";
 
 /**
  * Return the index of the where to place an item.
@@ -206,9 +206,10 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SET_RESOURCE: {
         const { resource } = action;
+        const settings = settingsSelector({geostory: state});
         return compose(
             set(`resource`, resource),
-            set('currentStory.settings.storyTitle', resource.name) // TODO check that resource has name prop
+            set('currentStory.settings.storyTitle', settings.storyTitle || resource.name) // TODO check that resource has name prop
 
         )(state);
     }
@@ -227,12 +228,18 @@ export default (state = INITIAL_STATE, action) => {
     }
     case TOGGLE_SETTINGS_PANEL: {
 
+        // when opening, the expanded items will be calculated based on checked ones
         const newStatus = !state.isSettingsEnabled;
+        const immSections = sectionsSelector({geostory: state}).filter(({type}) => type === SectionTypes.IMMERSIVE);
+        const settings = settingsSelector({geostory: state});
+        const checked = settingsCheckedSelector({geostory: state});
+        const expanded = uniq(checked.map(chId => findSectionIdFromColumnId(immSections, chId)).filter(i => i));
+
         return compose(
             set('isSettingsEnabled', newStatus),
-            set('oldSettings', newStatus ? state.currentStory.settings : {}),
-            // when closing (newStatus=false) check if is because of the save, in that case keep changes otherwise restore previous settings
-            set('currentStory.settings', newStatus ? state.currentStory.settings : (action.withSave ? state.currentStory.settings : state.oldSettings))
+            set('oldSettings', newStatus ? settings : {}),
+            // when closing (newStatus=false) check if it is because of the save, in that case keep changes otherwise restore previous settings
+            set('currentStory.settings', newStatus ? {...settings, expanded} : (action.withSave ? settings : state.oldSettings))
         )(state);
     }
     case UPDATE: {
