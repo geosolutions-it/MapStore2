@@ -1788,7 +1788,7 @@ describe('featuregrid Epics', () => {
             }
         };
 
-        it.only('toggle featureGrid when drawer is opened - MOBILE ONLY', done => {
+        it('toggle featureGrid when drawer is opened - MOBILE ONLY', done => {
             const epicResult = actions => {
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(HIDE_MAPINFO_MARKER);
@@ -1798,7 +1798,7 @@ describe('featuregrid Epics', () => {
 
             testEpic(hideFeatureGridOnDrawerOpenMobile, 2, toggleControl('drawer', null), epicResult, TEST_STATE_BASE);
         });
-        it.only('do not toggle featureGrid when drawer is closed - MOBILE ONLY', done => {
+        it('do not toggle featureGrid when drawer is closed - MOBILE ONLY', done => {
             const TEST_STATE_CLOSED_DRAWER = set('controls.drawer.enabled', false, TEST_STATE_BASE);
             const epicResult = actions => {
                 expect(actions.length).toBe(1);
@@ -1808,7 +1808,7 @@ describe('featuregrid Epics', () => {
 
             testEpic(addTimeoutEpic(hideFeatureGridOnDrawerOpenMobile, 10), 1, toggleControl('drawer', null), epicResult, TEST_STATE_CLOSED_DRAWER);
         });
-        it.only('do not toggle featureGrid when drawer is opened - DESKTOP MODE', done => {
+        it('do not toggle featureGrid when drawer is opened - DESKTOP MODE', done => {
             const TEST_STATE_NOT_MOBILE = set('browser.mobile', false, TEST_STATE_BASE);
             const epicResult = actions => {
                 expect(actions.length).toBe(1);
@@ -1818,7 +1818,7 @@ describe('featuregrid Epics', () => {
 
             testEpic(addTimeoutEpic(hideFeatureGridOnDrawerOpenMobile, 10), 1, toggleControl('drawer', null), epicResult, TEST_STATE_NOT_MOBILE);
         });
-        it.only('do not toggle featureGrid when drawer is closed - DESKTOP MODE', done => {
+        it('do not toggle featureGrid when drawer is closed - DESKTOP MODE', done => {
             const TEST_STATE_CLOSED_DRAWER = set('controls.drawer.enabled', false, TEST_STATE_BASE);
             const TEST_STATE_NOT_MOBILE = set('browser.mobile', false, TEST_STATE_CLOSED_DRAWER);
             const epicResult = actions => {
