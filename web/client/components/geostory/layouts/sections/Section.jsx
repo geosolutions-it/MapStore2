@@ -37,6 +37,7 @@ class Section extends React.Component {
         update: PropTypes.func,
         editMedia: PropTypes.func,
         remove: PropTypes.func,
+        updateCurrentPage: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
         contents: PropTypes.array,
         viewHeight: PropTypes.number,
@@ -51,6 +52,7 @@ class Section extends React.Component {
         add: () => {},
         update: () => {},
         editMedia: () => {},
+        updateCurrentPage: () => {},
         remove: () => {},
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
@@ -72,6 +74,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
+                updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}
                 mode={this.props.mode}
                 cover={this.props.cover}
@@ -85,4 +88,8 @@ class Section extends React.Component {
 const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
 
 // add the visibilityHandler to intercept current section (for current page state update)
-export default visibilityHandler({ threshold: DEFAULT_THRESHOLD })(Section);
+/*
+ * negative rootMargin allows to get the top element highlighted (trigger visibility event)
+ * if it's present in the viewport after initial 100px
+*/
+export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-100px" })(Section);

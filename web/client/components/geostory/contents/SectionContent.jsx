@@ -25,7 +25,7 @@ const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 
 export default compose(
     // make maths for contents relative to their scope for edit methods
     // so inside the content you can simply call update('html', value) or add update('contents[{id: "some-sub-content-id"}])
-    visibilityHandler({ threshold: DEFAULT_THRESHOLD }),
+    visibilityHandler({ threshold: DEFAULT_THRESHOLD}),
     wrap(ContentWrapper),
     setDisplayName("SectionContent"),
     branch(

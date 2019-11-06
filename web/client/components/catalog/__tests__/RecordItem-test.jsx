@@ -745,4 +745,26 @@ describe('This test for RecordItem', () => {
         expect(desc.length).toBe(1);
         expect(desc[0].innerText.indexOf("sample title and description catalog.notAvailable") !== -1).toBe(true);
     });
+    it('check default format is added to layer props', () => {
+        const defaultFormat = 'image/jpeg';
+        let actions = {
+            onLayerAdd: () => {}
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<RecordItem
+            defaultFormat={defaultFormat}
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].format).toBe(defaultFormat);
+    });
 });

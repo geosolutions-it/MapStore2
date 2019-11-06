@@ -1936,6 +1936,9 @@
                 "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
                 "editMap": "Modifier l'étendue initiale de la carte"
             },
+            "navigation": {
+                "edit": "Editar historia"
+            },
             "builder": {
                 "defaults": {
                     "htmlTitlePlaceholder": "Insertar título",

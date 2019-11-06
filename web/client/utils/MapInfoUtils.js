@@ -19,6 +19,8 @@ const MapInfoUtils = {
     //           default format ↴
     AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'],
 
+    EMPTY_RESOURCE_VALUE: 'NODATA',
+
     VIEWERS: {},
     /**
      * @return a filtered version of INFO_FORMATS object.

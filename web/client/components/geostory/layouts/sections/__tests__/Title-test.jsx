@@ -138,6 +138,6 @@ describe('Title component', () => {
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
-        testToolbarButtons(["pencil", "1-map", "resize-vertical", "resize-horizontal", "align-center", "dropper"], container);
+        testToolbarButtons(["pencil", "1-map", "fit", "resize-vertical", "resize-horizontal", "align-center", "dropper"], container);
     });
 });

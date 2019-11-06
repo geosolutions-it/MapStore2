@@ -49,12 +49,13 @@ const {getIdFromUri} = require('../utils/MapUtils');
 
 const {getErrorMessage} = require('../utils/LocaleUtils');
 const Persistence = require("../api/persistence");
+const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
     const mapId = map.id;
     // create
-    if ((isNil(attrVal) || attrVal === "NODATA") && !isNil(resource)) {
+    if ((isNil(attrVal) || attrVal === EMPTY_RESOURCE_VALUE) && !isNil(resource)) {
         return createAssociatedResource({...resource, attribute, mapId, type, messages});
     }
     if (isNil(resource)) {
@@ -151,7 +152,7 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
             const state = store.getState();
             const mapId = currentMapIdSelector(state);
             const detailsUri = currentMapDetailsUriSelector(state);
-            if (!detailsUri || detailsUri === "NODATA") {
+            if (!detailsUri || detailsUri === EMPTY_RESOURCE_VALUE) {
                 return Rx.Observable.of(
                     updateDetails("", true, "")
                 );
@@ -300,7 +301,7 @@ const storeDetailsInfoEpic = (action$, store) =>
                 )
                     .switchMap((attributes) => {
                         let details = find(attributes, {name: 'details'});
-                        if (!details) {
+                        if (!details || details.value === EMPTY_RESOURCE_VALUE) {
                             return Rx.Observable.empty();
                         }
                         return Rx.Observable.of(

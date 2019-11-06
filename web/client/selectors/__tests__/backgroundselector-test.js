@@ -38,6 +38,10 @@ describe('Test backgroundselector selectors', () => {
         const list = backgroundListSelector(state);
         expect(list).toEqual(backgrounds);
     });
+    it('backgroundListSelector return empty when backgrounds is not defined', () => {
+        const list = backgroundListSelector({backgroundSelector: {}});
+        expect(list).toEqual([]);
+    });
     it('test isDeletedIdSelector', () => {
         const deleted = isDeletedIdSelector(state);
         expect(deleted).toBe('61c9e030-4967-11e9-a528-a79c388c845f');

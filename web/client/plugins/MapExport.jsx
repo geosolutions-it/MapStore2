@@ -24,6 +24,7 @@ const { Glyphicon, Button } = require('react-bootstrap');
 
 const Dialog = require('../components/misc/StandardDialog');
 const Select = require('react-select');
+import * as epics from '../epics/mapexport';
 
 const enhanceExport = compose(
     connect(
@@ -68,7 +69,7 @@ const MapExport = enhanceExport(
     </Dialog>
 );
 
-module.exports = {
+const MapExportPlugin = {
     MapExportPlugin: assign(MapExport, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
@@ -82,5 +83,7 @@ module.exports = {
             doNotHide: true
         }
     }),
-    epics: require('../epics/mapexport')
+    epics: epics
 };
+
+export default MapExportPlugin;
