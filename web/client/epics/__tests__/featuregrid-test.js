@@ -13,7 +13,7 @@ const { set } = require('../../utils/ImmutableUtils');
 
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
+const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
 
 const {
     toggleEditMode,
@@ -90,7 +90,8 @@ const {
     autoReopenFeatureGridOnFeatureInfoClose,
     featureGridChangePage,
     featureGridSort,
-    replayOnTimeDimensionChange
+    replayOnTimeDimensionChange,
+    hideFeatureGridOnDrawerOpenMobile
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1774,5 +1775,59 @@ describe('featuregrid Epics', () => {
             }, TEST_STATE_TIME_ACTIVE_CLOSED);
         });
 
+    });
+    describe('hideFeatureGridOnDrawerOpenMobile', () => {
+        const TEST_STATE_BASE = {
+            controls: {
+                drawer: {
+                    enabled: true
+                }
+            },
+            browser: {
+                mobile: true
+            }
+        };
+
+        it.only('toggle featureGrid when drawer is opened - MOBILE ONLY', done => {
+            const epicResult = actions => {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(HIDE_MAPINFO_MARKER);
+                expect(actions[1].type).toBe(OPEN_FEATURE_GRID);
+                done();
+            };
+
+            testEpic(hideFeatureGridOnDrawerOpenMobile, 2, toggleControl('drawer', null), epicResult, TEST_STATE_BASE);
+        });
+        it.only('do not toggle featureGrid when drawer is closed - MOBILE ONLY', done => {
+            const TEST_STATE_CLOSED_DRAWER = set('controls.drawer.enabled', false, TEST_STATE_BASE);
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(hideFeatureGridOnDrawerOpenMobile, 10), 1, toggleControl('drawer', null), epicResult, TEST_STATE_CLOSED_DRAWER);
+        });
+        it.only('do not toggle featureGrid when drawer is opened - DESKTOP MODE', done => {
+            const TEST_STATE_NOT_MOBILE = set('browser.mobile', false, TEST_STATE_BASE);
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(hideFeatureGridOnDrawerOpenMobile, 10), 1, toggleControl('drawer', null), epicResult, TEST_STATE_NOT_MOBILE);
+        });
+        it.only('do not toggle featureGrid when drawer is closed - DESKTOP MODE', done => {
+            const TEST_STATE_CLOSED_DRAWER = set('controls.drawer.enabled', false, TEST_STATE_BASE);
+            const TEST_STATE_NOT_MOBILE = set('browser.mobile', false, TEST_STATE_CLOSED_DRAWER);
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(hideFeatureGridOnDrawerOpenMobile, 10), 1, toggleControl('drawer', null), epicResult, TEST_STATE_NOT_MOBILE);
+        });
     });
 });
