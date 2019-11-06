@@ -8,6 +8,7 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const ReactTestUtils = require('react-dom/test-utils');
 
 const AutocompleteFieldHOC = require('../AutocompleteFieldHOC');
 
@@ -104,5 +105,30 @@ describe('AutocompleteFieldHOC', () => {
         };
         const cmp = ReactDOM.render(<AutocompleteFieldHOC {...conf} />, document.getElementById("container"));
         expect(cmp).toExist();
+    });
+
+    it('create a AutocompleteFieldHOC with pagination fields', () => {
+        const props = {
+            filterField: {
+                attribute: "NAME",
+                options: {
+                    "NAME": ['val1', 'val2', 'val3', 'val4', 'val5']
+                },
+                fieldOptions: {
+                    currentPage: 1,
+                    valuesCount: 5,
+                    maxFeaturesWPS: 3
+                },
+                loading: false
+            }
+        };
+
+        const component = ReactDOM.render(<AutocompleteFieldHOC {...props} />, document.getElementById('container'));
+        window.console.log({...component});
+        const DOM = ReactDOM.findDOMNode(component);
+        ReactTestUtils.Simulate.click(DOM.querySelector('button'));
+        const pagination = DOM.querySelector('.autocomplete-toolbar');
+        expect(component).toExist();
+        expect(pagination).toExist();
     });
 });
