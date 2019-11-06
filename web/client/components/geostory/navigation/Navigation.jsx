@@ -28,6 +28,7 @@ export default ({
     navigableItems = [],
     currentPage, // current page progress (current page + 1/totPages),
     totalItems = 1,
+    isEditAllowed = true,
     currentPosition = 0
 }) => {
     return (
@@ -52,6 +53,7 @@ export default ({
                         buttons={[
                             {
                                 glyph: 'pencil',
+                                visible: isEditAllowed,
                                 tooltipId: 'geostory.navigation.edit',
                                 onClick: () => setEditing(true)
                             }

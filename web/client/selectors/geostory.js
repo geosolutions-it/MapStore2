@@ -8,6 +8,7 @@
 import {get, find, findIndex, isEqual} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes } from './../utils/GeoStoryUtils';
+import { isAdminUserSelector } from './security';
 
 /**
  * Returns a selector using a path inside the current story
@@ -59,6 +60,12 @@ export const resourceSelector = state => get(state, 'geostory.resource');
  * @param {object} state the application state
  */
 export const canEditSelector = state => get(resourceSelector(state), 'canEdit', false);
+
+/**
+ * Selects the edit permission of the resource
+ * @param {object} state the application state
+ */
+export const isEditAllowedSelector = state => canEditSelector(state) || isAdminUserSelector(state);
 /**
  * Selects the loading state of geostory.
  * @param {object} state the application state
