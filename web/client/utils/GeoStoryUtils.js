@@ -260,14 +260,18 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
         return {
             id: uuid(),
             type,
-            title: localize("geostory.builder.defaults.titleMedia")
+            title: localize("geostory.builder.defaults.titleMedia"),
+            size: 'full',
+            align: 'center'
         };
     }
     default:
         return {
             id: uuid(),
             type,
-            title: localize("geostory.builder.defaults.titleUnknown")
+            title: localize("geostory.builder.defaults.titleUnknown"),
+            size: 'full',
+            align: 'center'
         };
     }
 };

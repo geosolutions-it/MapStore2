@@ -16,10 +16,11 @@ import withConfirm from "../../misc/toolbar/withConfirm";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
-    size: ({ size, update = () => {} }) => ({
+    size: ({ align, sectionType, size, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={size}
             glyph="resize-horizontal"
+            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             tooltipId="geostory.contentToolbar.contentSize"
             options={[{
                 value: 'small',
@@ -40,11 +41,12 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('size', selected)}/>
     }),
-    align: ({ size, align, update = () => {} }) => ({
+    align: ({ size, align, sectionType, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={align}
             disabled={size === 'full'}
             glyph="align-center"
+            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             tooltipId="geostory.contentToolbar.contentAlign"
             options={[{
                 value: 'left',
@@ -61,9 +63,10 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('align', selected)}/>
     }),
-    theme: ({ theme, update = () => {}, fit, themeOptions, size }) => ({
+    theme: ({ theme, align, sectionType, update = () => {}, fit, themeOptions, size }) => ({
         Element: () => <ToolbarDropdownButton
             value={theme}
+            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             glyph="dropper"
             tooltipId="geostory.contentToolbar.contentTheme"
             disabled={fit === 'cover' && size === 'full'}
