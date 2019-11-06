@@ -91,6 +91,7 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 ## Explanation of some config properties
 - **loadAfterTheme** is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
 - **initialState** is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
+- **projectionDefs** is an array of objects that contain definitions for Coordinate Reference Systems
 
 ### initialState configuration
 It can contain:
@@ -132,6 +133,7 @@ Inside defaultState you can set default catalog services adding the following ke
   }
 }
 ```
+
 Set `selectedService` value to one of the ID of the services object ("Demo CSW Service" for example).
 <br>This will become the default service opened and used in the catalog panel.
 <br>For each service set the key of the service as the ID.
@@ -187,3 +189,59 @@ Example:<br>
   }
 }
 ```
+
+### projectionDefs configuration
+Custom CRS can be configured here, at root level of localConfig.json file. For example:
+```
+"projectionDefs": [{
+  "code": "EPSG:3003",
+  "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
+  "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
+  "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
+}]
+```
+Explanation of these properties:
+
+- **code** - a code string that will identify the added projection
+- **def** - projection definition in PROJ.4 format
+- **extent** - projected bounds of the projection
+- **worldExtent** - bounds of the projection in WGS84
+
+These parameters for a projection of interest can be found on [epsg.io](https://epsg.io)
+
+### CRS Selector configuration
+CRS Selector is a plugin, that is configured in the plugins section. It should look like this:
+```
+"plugins": {
+  ...
+  "desktop": [
+    ...}, {
+      "name": "CRSSelector",
+      "cfg": {
+        "additionalCRS": {
+          "EPSG:3003": {
+            label: "Monte Mario"
+          }
+        },
+        "filterAllowedCRS": [
+          "EPSG:4326",
+          "EPSG:3857"
+        ],
+        "allowedRoles": [
+          "ADMIN"
+        ]
+      }
+    }, {
+  ]
+}
+```
+Configuration parameters are to be placed in the "cfg" object. These parameters are:
+
+- **additionalCRS** - object, that contains additional Coordinate Reference Systems. This configuration parameter lets you specify which projections, defined in **projectionDefs**, should be displayed in the CRS Selector, alongside default projections.
+Every additional CRS is a property of **additionalCRS** object. The name of that property is a code of a corresponding projection definition in **projectionDefs**. The value of that property is an object
+with the following properties:
+    - **label** - a string, that will be displayed in the CRS Selector as a name of the projection
+- **filterAllowedCRS** - which default projections are to be available in the selector. Default projections are:
+    - EPSG:3857
+    - EPSG:4326
+- **allowedRoles** - CRS Selector will be accessible only to these roles. By default, CRS Selector will be available for any logged in user.
