@@ -1927,7 +1927,11 @@
                 "editMap": "Modifier la carte",
                 "resetMap": "Restablece el mapa a su configuración original",
                 "resetMapConfirm": "Restablecer configuración del mapa",
-                "resetConfirmContent": "¿Restaurar la configuración del mapa a la original?"
+                "resetConfirmContent": "¿Restaurar la configuración del mapa a la original?",
+                "saveChanges": "Guardar cambios",
+                "closeMapEditing": "Cerrar",
+                "confirmCloseMapEditing": "Cerrar edición de mapas",
+                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?"
             },
             "navigation": {
                 "edit": "Editar historia"

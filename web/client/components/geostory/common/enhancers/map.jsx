@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {withProps, compose, withHandlers, withStateHandlers, branch} from 'recompose';
+import {withProps, compose, withHandlers, withStateHandlers, branch, withPropsOnChange} from 'recompose';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import { find } from 'lodash';
+import { find, isEqual} from 'lodash';
 
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
 import {resourcesSelector, getCurrentFocusedContentEl} from '../../../../selectors/geostory';
@@ -20,7 +20,7 @@ import withNodeSelection from '../../../widgets/builder/wizard/map/enhancers/han
 
 import withConfirm from '../../../misc/toolbar/withConfirm';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
-const ResetButton = withConfirm(ToolbarButton);
+const ConfirmButton = withConfirm(ToolbarButton);
 
 /**
  * create a map property merging a resource map and a content map obj
@@ -32,7 +32,7 @@ export default compose(
         ({ resources, resourceId, map = {}}) => {
             const cleanedMap = {...map, layers: (map.layers || []).map(l => l ? l : undefined)};
             const resource = find(resources, { id: resourceId }) || {};
-            return { map: createMapObject(resource.data, cleanedMap) };
+            return { map: createMapObject(resource.data, cleanedMap)};
         }
     ));
 /**
@@ -61,23 +61,28 @@ export const handleMapUpdate = withHandlers({
 export const handleToolbar = withHandlers({
     toggleEditing: ({editMap, update, focusedContent}) => () =>
         update(focusedContent.path + ".editMap", !editMap),
-    onReset: ({update, focusedContent = {}}) => () =>
-        update(focusedContent.path + `.map`, undefined)
+    onReset: ({update, focusedContent: {path = ""} = {}}) => () => {
+        update(path + `.map`, undefined);
+    },
+    discardAndClose: ({update, focusedContent = {}}) => (contentMap) => {
+        update(focusedContent.path + `.map`, contentMap);
+        update(focusedContent.path + ".editMap", false);
+    }
 });
 /**
  * It adds toolbar button and handling of layer selection
  */
 export const withToolbar = compose(
-    withProps(({editMap, toggleEditing, disableReset, onReset}) => ({
+    withProps(({pendingChanges, saveChanges, disableReset, onReset}) => ({
         buttons: [{
-            glyph: "1-map",
+            glyph: "floppy-open",
             visible: true,
-            bsStyle: editMap ? "success" : "primary",
-            tooltipId: "geostory.contentToolbar.editMap",
-            onClick: toggleEditing
+            disabled: !pendingChanges,
+            tooltipId: "geostory.contentToolbar.saveChanges",
+            onClick: saveChanges
         }, {
-            Element: () => (<ResetButton
-                glyph="1-close"
+            Element: () => (<ConfirmButton
+                glyph="repeat"
                 visible
                 bsStyle= "primary"
                 className="square-button-md no-border"
@@ -111,3 +116,40 @@ export const withToolbar = compose(
                 onClick: () => {setEditNode(selectedNodes[0]);}
             }, ...buttons]
         }))));
+
+
+/**
+* Add save changes logic.
+*/
+export const withSaveChanges = compose(
+    withPropsOnChange(["focusedContent"], ({map, focusedEl: {map: contentMap} = {} } ) => ({contentMap, lastSavedMap: map})),
+    withStateHandlers(({contentMap, lastSavedMap}) => ({contentMap, lastSavedMap}), {
+        saveChanges: ({}, {map, focusedEl: {map: contentMap = {}} = {} }) => {
+            return () => {
+                return {contentMap, lastSavedMap: map};
+            };
+        }}),
+    withPropsOnChange(["lastSavedMap", "map"], ({map, lastSavedMap}) => {
+        return {pendingChanges: !isEqual(lastSavedMap, map)};
+    })
+);
+/**
+* Add close confirm if there are some pending changes
+*/
+export const withConfirmClose = compose(
+    withProps(({toggleEditing})  => ({
+        CloseBtn: (props) => (
+            <ToolbarButton  onClick={toggleEditing} {...props} />)
+    })),
+    branch(
+        ({pendingChanges}) => pendingChanges,
+        withProps(({discardAndClose, contentMap}) => ({
+            CloseBtn: (props) => (
+                <ConfirmButton
+                    onClick={ () =>discardAndClose(contentMap)}
+                    confirmTitle={<Message msgId="geostory.contentToolbar.confirmCloseMapEditing" />}
+                    confirmContent={<Message msgId="geostory.contentToolbar.pendingChangesDiscardConfirm" />}
+                    {...props}/>)
+        }))
+    )
+);

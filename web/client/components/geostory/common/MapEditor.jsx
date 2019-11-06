@@ -7,16 +7,18 @@
  */
 
 import React from 'react';
+import  {Row, Col} from 'react-bootstrap';
 
 import {compose, branch, withProps, defaultProps} from 'recompose';
 
 import { Modes} from '../../../utils/GeoStoryUtils';
 
-
 import connectMap, {withFocusedContentMap,
     handleMapUpdate,
     handleToolbar,
-    withToolbar} from './enhancers/map';
+    withToolbar,
+    withSaveChanges,
+    withConfirmClose} from './enhancers/map';
 
 import localizeStringMap from '../../misc/enhancers/localizeStringMap';
 
@@ -53,14 +55,20 @@ const MapEditor = ({
     onNodeSelect =  () => {},
     buttons = [],
     editNode,
-    closeNodeEditor
+    closeNodeEditor,
+    CloseBtn = () => (null)
 }) => (mode === Modes.EDIT && isFocused ? <div
     key="left-column"
     style={{ order: -1, width: 400, position: 'relative' }}>
     <BorderLayout className="ms-geostory-map-editor"
         header={
             <div className="ms-geostory-map-editor-header text-center">
-                <StepHeader title={<Message msgId={`geostory.mapEditor.configureMapOptions`} />}/>
+                <Row>
+                    <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
+                        <CloseBtn glyph="1-close" className="pull-left on-close-btn square-button no-border " tooltipId="geostory.contentToolbar.closeMapEditing"/>
+                        <div className="mapstore-step-title"><Message msgId={`geostory.mapEditor.configureMapOptions`} /></div>
+                    </Col>
+                </Row>
                 <Toolbar
                     btnGroupProps={{
                         className: "ms-geostory-map-editor-toolbar"
@@ -93,8 +101,10 @@ export default branch(
         }),
         withFocusedContentMap,
         connectMap,
+        withSaveChanges,
         handleMapUpdate,
         handleToolbar,
-        withToolbar
+        withToolbar,
+        withConfirmClose
     )
 )(MapEditor);

@@ -1927,7 +1927,11 @@
                 "editMap": "Modifica mappa",
                 "resetMap": "Ripristina mappa originale",
                 "resetMapConfirm": "Ripristina Configurazione",
-                "resetConfirmContent": "Ripristinare la configurazione di mappa originale?"
+                "resetConfirmContent": "Ripristinare la configurazione di mappa originale?",
+                "saveChanges": "Salva le modifiche",
+                "closeMapEditing": "Chiudi editing",
+                "confirmCloseMapEditing": "Chiudi editing mappa",
+                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?"
             },
             "navigation": {
                 "edit": "Modifica storia"

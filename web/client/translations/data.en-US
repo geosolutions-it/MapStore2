@@ -1928,7 +1928,11 @@
                 "editMap": "Edit map configuration",
                 "resetMap": "Reset the map to its original configuration",
                 "resetMapConfirm": "Reset Map Configuration",
-                "resetConfirmContent": "Restore the map configuration to the original one?"
+                "resetConfirmContent": "Restore the map configuration to the original one?",
+                "saveChanges": "Save changes",
+                "closeMapEditing": "Close",
+                "confirmCloseMapEditing": "Close Map Editing",
+                "pendingChangesDiscardConfirm": "Discard current map changes?"
             },
             "navigation": {
                 "edit": "Edit story"
