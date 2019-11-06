@@ -1,5 +1,7 @@
+<!-- Thank you so much for your time taking to contribute, your work is appreciated! 😃 -->
+
 ## Description
-A few sentences describing the overall goals of the pull request' s commits.
+<!-- A few sentences describing the overall goals of the pull request' s commits. -->
 
 ## Issues
  - #<issue>
@@ -10,17 +12,15 @@ A few sentences describing the overall goals of the pull request' s commits.
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
 
-
 **What kind of change does this PR introduce?** (check one with "x", remove the others)
-
  - [ ] Bugfix
  - [ ] Feature
  - [ ] Code style update (formatting, local variables)
  - [ ] Refactoring (no functional changes, no api changes)
  - [ ] Build related changes
  - [ ] CI related changes
+ - [ ] Documentation
  - [ ] Other... Please describe:
-
 
 **What is the current behavior?** (You can also link to an open issue here)
 
@@ -29,10 +29,9 @@ A few sentences describing the overall goals of the pull request' s commits.
 
 
 **Does this PR introduce a breaking change?** (check one with "x", remove the other)
-
  - [ ] Yes, and I documented them in migration notes
  - [ ] No
 
-If this PR contains a breaking change, please describe the impact and migration path for existing applications: ...
+<!-- If this PR contains a breaking change, please describe the impact and migration path for existing applications -->
 
 **Other information**:
