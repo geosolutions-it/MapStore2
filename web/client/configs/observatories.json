@@ -249,6 +249,7 @@
               "id": "paragraph_1_content_2",
               "type": "image",
               "title": "Image",
+              "align": "center",
               "resourceId": "eaebe073-d514-4601-8c85-94f00f67ef70",
               "size": "medium"
             }
@@ -341,6 +342,8 @@
               "id": "immersive_2_content_2",
               "type": "image",
               "title": "Image",
+              "size": "full",
+              "align": "center",
               "resourceId": "c4b1a878-e12d-40e8-983c-4c35ea721447"
             }
           ],
@@ -379,6 +382,8 @@
               "id": "immersive_3_content_2",
               "type": "image",
               "title": "Image",
+              "size": "full",
+              "align": "center",
               "resourceId": "95170aa4-ad68-4a57-9be8-7ff00b30eda6"
             }
           ],
@@ -409,14 +414,16 @@
           "title": "Immersive Content",
           "contents": [
             {
-              "id": "immersive_3_content_1",
+              "id": "immersive_4_content_1",
               "type": "text",
               "html": "<h5><strong><ins>Indian Astronomical Observatory</ins></strong></h5>\n"
             },
             {
-              "id": "immersive_3_content_2",
+              "id": "immersive_4_content_2",
               "type": "image",
               "title": "Image",
+              "size": "full",
+              "align": "center",
               "resourceId": "23b34678-9f0c-4498-9ba2-ceffe0b071be"
             }
           ],
@@ -447,7 +454,7 @@
           "title": "Immersive Content",
           "contents": [
             {
-              "id": "immersive_4_content_1",
+              "id": "immersive_5_content_1",
               "type": "text",
               "html": "<h5><strong><ins>The Best Stargazing is at the Northern Tip of India</ins></strong></h5>\n<p>For some of the best stargazing in the world, many make the trek to Ladakh at the northern tip of India. The region is home to the Indian Astronomical Observatory, specifically situated for its unique geology. Located on cold, remote desert land, the area experiences very little rainfall and hardly any snow. The high altitude—2.5 miles above sea level—also allows scientists to collect more data than would be possible at a lower altitude. For visitors of the observatory, the summer months give way to a perfectly clear sky. As soon as the sun sets, visitors are treated to a blanket of extraordinary stars and light.</p>\n<p></p>\n<p>From Great Big Story</p>\n"
             }
@@ -470,7 +477,7 @@
           "title": "Immersive Content",
           "contents": [
             {
-              "id": "immersive_5_content_1",
+              "id": "immersive_6_content_1",
               "type": "text",
               "html": "<p style=\"text-align:center;\"><strong><ins>Map of all Observatories listed in Wikipedia</ins></strong></p>\n"
             }
