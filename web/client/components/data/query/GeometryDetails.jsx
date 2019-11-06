@@ -64,8 +64,7 @@ class GeometryDetails extends React.Component {
             }
         }
 
-        let bbox = !this.props.useMapProjection ?
-            CoordinatesUtils.reprojectBbox(coordinates, 'EPSG:4326', this.props.geometry.projection) : coordinates;
+        let bbox = CoordinatesUtils.reprojectBbox(coordinates, 'EPSG:4326', this.props.projection);
 
         let geometry = {
             type: this.props.geometry.type,
@@ -123,8 +122,7 @@ class GeometryDetails extends React.Component {
         return (name === 'radius' && !this.isWGS84() && step * 10000) || step;
     };
     getBBOXDimensions = (geometry) => {
-        const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
-            CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
+        const extent =  CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326');
 
         return {
             // minx
@@ -140,7 +138,10 @@ class GeometryDetails extends React.Component {
     getCircleDimensions = (geometry) => {
         // Show the center coordinates in 4326
         const center = CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326');
-        const radius = CoordinatesUtils.reproject([geometry.radius, 0.0], geometry.projection, this.props.projection).x;
+        const centerReproject = CoordinatesUtils.reproject(geometry.center, geometry.projection, this.props.projection);
+        const radiusEnd = CoordinatesUtils.reproject([geometry.center[0] + geometry.radius, geometry.center[1]], geometry.projection, this.props.projection);
+        const radius = Math.sqrt((radiusEnd.x - centerReproject.x) * (radiusEnd.x - centerReproject.x) +
+            (radiusEnd.y - centerReproject.y) * (radiusEnd.y - centerReproject.y));
 
         return {
             x: center.x,
