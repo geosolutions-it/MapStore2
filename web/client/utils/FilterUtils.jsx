@@ -653,14 +653,15 @@ const FilterUtils = {
         return null;
     },
     processCQLFilterGroup: function(root, objFilter) {
-        let cql = this.processCQLFilterFields(root, objFilter);
+        const fixedRoot = root.logic === 'NOR' ? {...root, logic: 'AND', negateAll: true} : root;
+        let cql = this.processCQLFilterFields(fixedRoot, objFilter);
 
-        let subGroups = this.findSubGroups(root, objFilter.groupFields);
+        let subGroups = this.findSubGroups(fixedRoot, objFilter.groupFields);
         if (subGroups.length > 0) {
             const subGroupCql = subGroups
-                .map((subGroup) => "(" + this.processCQLFilterGroup(subGroup, objFilter) + ")")
-                .join(" " + root.logic + " ");
-            return cql ? [cql, subGroupCql].join(" " + root.logic + " ") : subGroupCql;
+                .map((subGroup) => (fixedRoot.negateAll ? "NOT (" : "(") + this.processCQLFilterGroup(subGroup, objFilter) + ")")
+                .join(" " + fixedRoot.logic + " ");
+            return cql ? [cql, subGroupCql].join(" " + fixedRoot.logic + " ") : subGroupCql;
         }
 
         return cql;
@@ -849,7 +850,7 @@ const FilterUtils = {
                     break;
                 }
                 if (fieldFilter) {
-                    filter.push(fieldFilter);
+                    filter.push(group.negateAll ? 'NOT (' + fieldFilter + ')' : fieldFilter);
                 }
             });
 
