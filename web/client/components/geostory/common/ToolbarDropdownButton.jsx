@@ -23,6 +23,7 @@ export default function ToolbarDropdownButton({
     onSelect = () => {},
     glyph = '',
     tooltipId,
+    pullRight = false,
     className = 'square-button-md no-border',
     disabled
 }) {
@@ -31,6 +32,7 @@ export default function ToolbarDropdownButton({
         <DropdownButton
             noCaret
             tooltipId={tooltipId}
+            pullRight={pullRight}
             className={className}
             disabled={disabled}
             title={<Glyphicon glyph={glyphOption || glyph}/>}>
