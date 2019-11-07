@@ -67,7 +67,7 @@ class AutocompleteFieldHOC extends React.Component {
         const firstPage = this.props.filterField.fieldOptions.currentPage === 1 || !this.props.filterField.fieldOptions.currentPage;
         const lastPage = this.props.filterField.fieldOptions.currentPage === numberOfPages || !this.props.filterField.fieldOptions.currentPage;
         return assign({}, this.props.pagination, {
-            paginated: options.length !== 1,
+            paginated: options.length !== 0 && !(firstPage && options.length === 1),
             firstPage,
             lastPage,
             loadPrevPage: () => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1, delayDebounce: 0}),
