@@ -1924,7 +1924,14 @@
                 "remove": "Elimina",
                 "removeConfirmTitle": "Sei sicuro?",
                 "removeConfirmContent": "Vuoi rimuovere questi contenuti dalla storia?",
-                "editMap": "Modifica l'estensione iniziale della mappa"
+                "editMap": "Modifica mappa",
+                "resetMap": "Ripristina mappa originale",
+                "resetMapConfirm": "Ripristina Configurazione",
+                "resetConfirmContent": "Ripristinare la configurazione di mappa originale?",
+                "saveChanges": "Salva le modifiche",
+                "closeMapEditing": "Chiudi editing",
+                "confirmCloseMapEditing": "Chiudi editing mappa",
+                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?"
             },
             "navigation": {
                 "edit": "Modifica storia"
@@ -1975,6 +1982,9 @@
                     "geostoryNotAccessible": "Non sei autorizzato ad accedere a questa storia. Si prega di contattare il proprietario della risorsa",
                     "geostoryDoesNotExist": "Questa storia non esiste"
                 }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Configurazione mappa"
             }
         },
          "saveDialog": {

@@ -30,6 +30,7 @@ export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 export const UPDATE_CURRENT_COLUMN = "GEOSTORY:UPDATE_CURRENT_COLUMN";
 export const MOVE = "GEOSTORY:MOVE";
+export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -174,4 +175,21 @@ export const move = (source, target, position) => ({
     source,
     target,
     position
+});
+
+/**
+ * Toggle focus on content
+ * @param {boolean} status if true set the focus otherwise remove
+ * @param {object: {id: string, type: string}} target the target content to be focused
+ * @param {string} selector css selector of target element
+ * @param {boolean} hideContent true if the target is the background of the target
+ * @param {string} path target path in the current story
+ */
+export const setFocusOnContent = (status, target, selector, hideContent, path) => ({
+    type: TOGGLE_CONTENT_FOCUS,
+    status,
+    target,
+    selector,
+    hideContent,
+    path
 });

@@ -24,7 +24,8 @@ import {
     SET_CONTROL,
     SET_RESOURCE,
     SAVED,
-    SAVE_ERROR
+    SAVE_ERROR,
+    TOGGLE_CONTENT_FOCUS
 } from '../actions/geostory';
 
 import { selectedCardSelector } from "../selectors/geostory";
@@ -32,6 +33,7 @@ import { selectedCardSelector } from "../selectors/geostory";
 let INITIAL_STATE = {
     mode: 'edit', // TODO: change in to Modes.VIEW
     isCollapsed: false,
+    focusedContent: {},
     currentPage: {}
 };
 
@@ -231,6 +233,11 @@ export default (state = INITIAL_STATE, action) => {
             return state;
         }
         return set('currentPage', { ...state.currentPage, sectionId: action.sectionId }, state);
+    }
+    case TOGGLE_CONTENT_FOCUS: {
+        const {status, target, selector = "", hideContent = false, path} = action;
+        const focusedContent = status ? {target, selector, hideContent, path} : undefined;
+        return set(`focusedContent`, focusedContent, state);
     }
     default:
         return state;

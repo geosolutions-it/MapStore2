@@ -17,18 +17,20 @@ import { getMessageById } from '../utils/LocaleUtils';
 import { add, update, updateCurrentPage, remove } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
-import { currentStorySelector, modeSelector } from '../selectors/geostory';
+import { currentStorySelector, modeSelector, getFocusedContentSelector} from '../selectors/geostory';
 import { currentMessagesSelector } from '../selectors/locale';
 import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
 import Story from '../components/geostory/Story';
+import MapEditor from '../components/geostory/common/MapEditor';
 
 const GeoStory = ({
     story,
     mode = Modes.VIEW,
     ...props
 }) => (<BorderLayout
-    className="ms-geostory">
+    className="ms-geostory"
+    columns={[<MapEditor {...props} mode={mode} />]}>
     <Story
         {...story}
         {...props} // add actions
@@ -48,7 +50,8 @@ export default createPlugin("GeoStory", {
             createStructuredSelector({
                 mode: modeSelector,
                 story: currentStorySelector,
-                messages: currentMessagesSelector
+                messages: currentMessagesSelector,
+                focusedContent: getFocusedContentSelector
             }), {
                 add,
                 update,

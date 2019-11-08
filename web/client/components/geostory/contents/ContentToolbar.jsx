@@ -16,9 +16,10 @@ import withConfirm from "../../misc/toolbar/withConfirm";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
-    size: ({ align, sectionType, size, update = () => {} }) => ({
+    size: ({editMap: disabled = false, align, sectionType, size, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={size}
+            disabled={disabled}
             glyph="resize-horizontal"
             pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             tooltipId="geostory.contentToolbar.contentSize"
@@ -41,10 +42,10 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('size', selected)}/>
     }),
-    align: ({ size, align, sectionType, update = () => {} }) => ({
+    align: ({ editMap: disabled = false, size, align, sectionType, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={align}
-            disabled={size === 'full'}
+            disabled={size === 'full' || disabled}
             glyph="align-center"
             pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             tooltipId="geostory.contentToolbar.contentAlign"
@@ -63,13 +64,13 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('align', selected)}/>
     }),
-    theme: ({ theme, align, sectionType, update = () => {}, fit, themeOptions, size }) => ({
+    theme: ({ editMap: disabled = false, theme, align, sectionType, update = () => {}, fit, themeOptions, size }) => ({
         Element: () => <ToolbarDropdownButton
             value={theme}
             pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             glyph="dropper"
             tooltipId="geostory.contentToolbar.contentTheme"
-            disabled={fit === 'cover' && size === 'full'}
+            disabled={fit === 'cover' && size === 'full' || disabled}
             options={themeOptions || [{
                 value: 'bright',
                 label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
@@ -85,36 +86,40 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('theme', selected)}/>
     }),
-    fit: ({ fit, update = () => {} }) => ({
+    fit: ({editMap: disabled = false, fit, update = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: fit,
         glyph: fit === "contain" ? "fit-cover" : "fit-contain",
+        disabled,
         visible: true,
         tooltipId: fit === "contain" ? "geostory.contentToolbar.cover" : "geostory.contentToolbar.fit",
         onClick: () => update('fit', fit === "contain" ? "cover" : "contain")
     }),
-    cover: ({ cover, updateSection = () => {} }) => ({
+    cover: ({editMap: disabled = false, cover, updateSection = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
         value: cover,
         glyph: cover ? "height-auto" : "height-view",
         visible: true,
+        disabled,
         tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
         onClick: () => updateSection({cover: !cover}, "merge")
     }),
-    editMedia: ({ path, editMedia = () => {} }) => ({
+    editMedia: ({editMap: disabled = false, path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
         visible: true,
+        disabled,
         tooltipId: "geostory.contentToolbar.editMedia",
         onClick: () => {
             editMedia({path});
         }
     }),
     // remove content
-    remove: ({ path, remove = () => { } }) => ({
+    remove: ({ editMap: disabled = false, path, remove = () => { } }) => ({
         Element: () => (<DeleteButton
             glyph={"trash"}
             visible
+            disabled={disabled}
             className={BUTTON_CLASSES}
             tooltipId={"geostory.contentToolbar.remove"}
             confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
@@ -128,6 +133,7 @@ const toolButtons = {
         // using normal ToolbarButton because this has no options
         glyph: "1-map",
         visible: true,
+        disabled: editMap,
         bsStyle: editMap ? "success" : "default",
         tooltipId: "geostory.contentToolbar.editMap",
         onClick: () => {

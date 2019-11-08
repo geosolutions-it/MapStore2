@@ -18,6 +18,8 @@ import AddBar from '../common/AddBar';
 import Message from '../../I18N/Message';
 import {Modes, SectionTypes, SectionTemplates} from '../../../utils/GeoStoryUtils';
 
+import withFocusMask from './sections/enhancers/withFocusMask';
+
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
     ({add = () => {}}) => ({
@@ -76,8 +78,9 @@ const Cascade = ({
     updateCurrentPage = () => {},
     editMedia = () => {},
     update = () => {},
-    remove = () => {}
-}) => (<BorderLayout className={`ms-cascade-story ms-${mode}`}>
+    remove = () => {},
+    focusedContent
+}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${focusedContent ? 'no-overflow' : ''}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
@@ -89,6 +92,7 @@ const Cascade = ({
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
                             <Section
+                                focusedContent={focusedContent}
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
@@ -113,5 +117,6 @@ const Cascade = ({
 
 export default compose(
     throttlePageUpdateEnhancer,
-    currentPageSectionManager
+    currentPageSectionManager,
+    withFocusMask({ showFocusMask: ({focusedContent: {target = {}} = {}}) => target.id })
 )(Cascade);

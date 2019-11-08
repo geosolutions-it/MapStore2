@@ -157,3 +157,20 @@ export const currentPositionSelector = state => findIndex(navigableItemsSelector
         ? currentPageSelector(state).columns[currentPageSelector(state).sectionId]
         : currentPageSelector(state).sectionId || ""
 });
+
+/**
+ * return if at least one content has its exclusive focus active
+ * @param {object} state
+ */
+export const isFocusOnContentSelector = state => get(state, "geostory.focusedContent.target") !== undefined;
+/**
+ * return focused content
+ * @param {object} state
+ */
+export const getFocusedContentSelector = state => get(state, "geostory.focusedContent");
+
+/**
+ * return current focused content obj
+ * @param {object} state
+ */
+export const getCurrentFocusedContentEl = state =>  createPathSelector(get(state, "geostory.focusedContent.path", ""))(state);
