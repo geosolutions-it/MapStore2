@@ -167,15 +167,15 @@ const MapStore2 = {
         const {loadVersion} = require('../actions/version');
         const {versionSelector} = require('../selectors/version');
         const {loadAfterThemeSelector} = require('../selectors/config');
-
+        const componentConfig = {
+            component: component || embedded,
+            config: {
+                pluginsConfig: options.plugins || defaultPlugins
+            }
+        };
         const StandardContainer = connect((state) => ({
             locale: state.locale || {},
-            componentConfig: {
-                component: component || embedded,
-                config: {
-                    pluginsConfig: options.plugins || defaultPlugins
-                }
-            },
+            componentConfig,
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
         }))(require('../components/app/StandardContainer'));
