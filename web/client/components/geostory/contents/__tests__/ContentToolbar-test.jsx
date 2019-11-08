@@ -96,6 +96,56 @@ describe('ContentToolbar component', () => {
     });
     describe('tools', () => {
         // TODO: align, theme, size...
+        it(`align`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["align"]}
+                fit="contain"
+                align="center"
+                path="TEST_PATH"
+            />, document.getElementById("container"));
+            const list = document.querySelectorAll('.ms-content-toolbar li a span');
+            expect(list).toExist();
+            expect(list.length).toBe(3);
+            expect(list[0].innerText).toBe("geostory.contentToolbar.leftAlignLabel");
+            expect(list[1].innerText).toBe("geostory.contentToolbar.centerAlignLabel");
+            expect(list[2].innerText).toBe("geostory.contentToolbar.rightAlignLabel");
+            done();
+        });
+        it(`size`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["size"]}
+                fit="contain"
+                size="full"
+                align="center"
+                path="TEST_PATH"
+            />, document.getElementById("container"));
+            const list = document.querySelectorAll('.ms-content-toolbar li a span');
+            expect(list).toExist();
+            expect(list.length).toBe(4);
+            expect(list[0].innerText).toBe("geostory.contentToolbar.smallSizeLabel");
+            expect(list[1].innerText).toBe("geostory.contentToolbar.mediumSizeLabel");
+            expect(list[2].innerText).toBe("geostory.contentToolbar.largeSizeLabel");
+            expect(list[3].innerText).toBe("geostory.contentToolbar.fullSizeLabel");
+            done();
+        });
+        it(`theme`, (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["theme"]}
+                fit="contain"
+                size="full"
+                align="center"
+                theme="bright"
+                path="TEST_PATH"
+            />, document.getElementById("container"));
+            const list = document.querySelectorAll('.ms-content-toolbar li a span');
+            expect(list).toExist();
+            expect(list.length).toBe(4);
+            expect(list[0].innerText).toBe("geostory.contentToolbar.brightThemeLabel");
+            expect(list[1].innerText).toBe("geostory.contentToolbar.brightTextThemeLabel");
+            expect(list[2].innerText).toBe("geostory.contentToolbar.darkThemeLabel");
+            expect(list[3].innerText).toBe("geostory.contentToolbar.darkTextThemeLabel");
+            done();
+        });
         it(`remove`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={["remove"]}

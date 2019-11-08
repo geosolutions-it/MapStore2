@@ -138,6 +138,7 @@ export default class BackgroundDialog extends React.Component {
 
     render() {
         return (<ResizableModal
+            fitContent
             title={<Message msgId={this.props.editing ? 'backgroundDialog.editTitle' : 'backgroundDialog.addTitle'}/>}
             show
             fade

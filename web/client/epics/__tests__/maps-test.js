@@ -27,11 +27,14 @@ const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
     fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
+    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic } = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
+const axios = require('../../libs/ajax');
+const MockAdapter = require('axios-mock-adapter');
+const { EMPTY_RESOURCE_VALUE } = require('../../utils/MapInfoUtils');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const params = {start: 0, limit: 12 };
@@ -101,6 +104,24 @@ const testMap = {
         }
     ]
 };
+
+const mapAttributesEmptyDetails = {
+    "AttributeList": {
+        "Attribute": [
+            {
+                "name": "details",
+                "type": "STRING",
+                "value": EMPTY_RESOURCE_VALUE
+            }
+        ]
+    }
+};
+const mapAttributesWithoutDetails = {
+    "AttributeList": {
+        "Attribute": []
+    }
+};
+
 describe('maps Epics', () => {
     const oldGetDefaults = ConfigUtils.getDefaults;
     let store;
@@ -355,8 +376,8 @@ describe('maps Epics', () => {
     });
     it('test deleteMapAndAssociatedResourcesEpic, only map deleted, details and thumbnail not provided', (done) => {
         testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic, 50), 3, deleteMap(mapId8, {}), actions => {
-            map8.thumbnail = "NODATA";
-            map8.details = "NODATA";
+            map8.thumbnail = EMPTY_RESOURCE_VALUE;
+            map8.details = EMPTY_RESOURCE_VALUE;
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
@@ -474,6 +495,30 @@ describe('maps Epics', () => {
                     expect(true).toBe(false);
                 }
             });
+            done();
+        }, {mapInitialConfig: {
+            "mapId": mapId2
+        }});
+    });
+    it('test storeDetailsInfoEpic when api returns NODATA value', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onGet().reply(200, mapAttributesEmptyDetails);
+        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+            mock.restore();
+            done();
+        }, {mapInitialConfig: {
+            "mapId": mapId2
+        }});
+    });
+    it('test storeDetailsInfoEpic when api doesnt return details', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onGet().reply(200, mapAttributesWithoutDetails);
+        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+            mock.restore();
             done();
         }, {mapInitialConfig: {
             "mapId": mapId2

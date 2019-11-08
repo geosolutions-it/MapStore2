@@ -16,11 +16,12 @@ import withConfirm from "../../misc/toolbar/withConfirm";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
-    size: ({editMap: disabled = false, size, update = () => {} }) => ({
+    size: ({editMap: disabled = false, align, sectionType, size, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={size}
             disabled={disabled}
             glyph="resize-horizontal"
+            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             tooltipId="geostory.contentToolbar.contentSize"
             options={[{
                 value: 'small',
@@ -41,11 +42,12 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('size', selected)}/>
     }),
-    align: ({editMap: disabled = false, size, align, update = () => {} }) => ({
+    align: ({ editMap: disabled = false, size, align, sectionType, update = () => {} }) => ({
         Element: () => <ToolbarDropdownButton
             value={align}
             disabled={size === 'full' || disabled}
             glyph="align-center"
+            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             tooltipId="geostory.contentToolbar.contentAlign"
             options={[{
                 value: 'left',
@@ -62,9 +64,10 @@ const toolButtons = {
             }]}
             onSelect={(selected) => update('align', selected)}/>
     }),
-    theme: ({editMap: disabled = false, theme, update = () => {}, fit, themeOptions, size }) => ({
+    theme: ({ editMap: disabled = false, theme, align, sectionType, update = () => {}, fit, themeOptions, size }) => ({
         Element: () => <ToolbarDropdownButton
             value={theme}
+            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
             glyph="dropper"
             tooltipId="geostory.contentToolbar.contentTheme"
             disabled={fit === 'cover' && size === 'full' || disabled}

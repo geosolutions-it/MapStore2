@@ -34,7 +34,7 @@
         top: 15%;
         left: ~"calc((100% - 500px) / 2)";
         width: 500px;
-        max-height: 70%;
+        height: 70%;
         margin: 0;
         border: none;
         .shadow;
@@ -82,7 +82,7 @@
                 max-height: 30%;
                 height: unset;
             }
-    
+
             &.ms-sm {
                 max-height: 40%;
                 height: unset;
@@ -225,6 +225,8 @@
 }
 
 .ms-modal-quill-container {
+    min-height: 300px;
+
     .quill {
         display: flex;
         flex-direction: column;
