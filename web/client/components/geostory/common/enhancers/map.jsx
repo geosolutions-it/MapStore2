@@ -73,13 +73,13 @@ export const handleToolbar = withHandlers({
  * It adds toolbar button and handling of layer selection
  */
 export const withToolbar = compose(
-    withProps(({pendingChanges, saveChanges, disableReset, onReset}) => ({
+    withProps(({pendingChanges, toggleEditing, disableReset, onReset}) => ({
         buttons: [{
-            glyph: "floppy-open",
+            glyph: "floppy-disk",
             visible: true,
             disabled: !pendingChanges,
             tooltipId: "geostory.contentToolbar.saveChanges",
-            onClick: saveChanges
+            onClick: toggleEditing
         }, {
             Element: () => (<ConfirmButton
                 glyph="repeat"
@@ -123,13 +123,7 @@ export const withToolbar = compose(
 */
 export const withSaveChanges = compose(
     withPropsOnChange(["focusedContent"], ({map, focusedEl: {map: contentMap} = {} } ) => ({contentMap, lastSavedMap: map})),
-    withStateHandlers(({contentMap, lastSavedMap}) => ({contentMap, lastSavedMap}), {
-        saveChanges: ({}, {map, focusedEl: {map: contentMap = {}} = {} }) => {
-            return () => {
-                return {contentMap, lastSavedMap: map};
-            };
-        }}),
-    withPropsOnChange(["lastSavedMap", "map"], ({map, lastSavedMap}) => {
+    withPropsOnChange(["map"], ({map, lastSavedMap}) => {
         return {pendingChanges: !isEqual(lastSavedMap, map)};
     })
 );

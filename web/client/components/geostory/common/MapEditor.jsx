@@ -45,7 +45,10 @@ const EditorTitle = compose(
 
 const Editor = nodeEditor(NodeEditor);
 
-
+/**
+ * This component shows a simplified TOC, connected with a geostory map.
+ * It enables group visibility, layer visibility and layer's advanced setting customization.
+ */
 const MapEditor = ({
     mode = Modes.VIEW,
     isFocused = false,
