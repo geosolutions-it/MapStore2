@@ -54,6 +54,7 @@ const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
 const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
+const { TOGGLE_CONTROL } = require('../../actions/controls');
 
 const {
     toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
@@ -91,7 +92,8 @@ const {
     featureGridChangePage,
     featureGridSort,
     replayOnTimeDimensionChange,
-    hideFeatureGridOnDrawerOpenMobile
+    hideFeatureGridOnDrawerOpenMobile,
+    hideDrawerOnFeatureGridOpenMobile
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1828,6 +1830,46 @@ describe('featuregrid Epics', () => {
             };
 
             testEpic(addTimeoutEpic(hideFeatureGridOnDrawerOpenMobile, 10), 1, toggleControl('drawer', null), epicResult, TEST_STATE_NOT_MOBILE);
+        });
+        it('toggle drawer when featureGrid is opened - MOBILE ONLY', done => {
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TOGGLE_CONTROL);
+                done();
+            };
+
+            testEpic(hideDrawerOnFeatureGridOpenMobile, 1, featureInfoClick(), epicResult, TEST_STATE_BASE);
+        });
+        it('open featureGrid shouldn\'t toggle closed drawer - MOBILE ONLY', done => {
+            const TEST_STATE_CLOSED_DRAWER = set('controls.drawer.enabled', false, TEST_STATE_BASE);
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(hideDrawerOnFeatureGridOpenMobile, 10), 1, featureInfoClick(), epicResult, TEST_STATE_CLOSED_DRAWER);
+        });
+        it('open featureGrid shouldn\'t toggle opened drawer- DESKTOP ONLY', done => {
+            const TEST_STATE_CLOSED_DRAWER = set('controls.drawer.enabled', false, TEST_STATE_BASE);
+            const TEST_STATE_NOT_MOBILE = set('browser.mobile', false, TEST_STATE_CLOSED_DRAWER);
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(hideDrawerOnFeatureGridOpenMobile, 10), 1, featureInfoClick(), epicResult, TEST_STATE_NOT_MOBILE);
+        });
+        it('open featureGrid shouldn\'t toggle closed drawer - DESKTOP ONLY', done => {
+            const TEST_STATE_NOT_MOBILE = set('browser.mobile', false, TEST_STATE_BASE);
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(hideDrawerOnFeatureGridOpenMobile, 10), 1, featureInfoClick(), epicResult, TEST_STATE_NOT_MOBILE);
         });
     });
 });
