@@ -12,12 +12,13 @@ export default {
     /**
     * function needed in openlayer for adding new projection
     */
-    addProjections: function(code, extent, worldExtent, axisOrientation) {
+    addProjections: function(code, extent, worldExtent, axisOrientation, units) {
         addProjection(new Projection({
             code,
             extent,
             worldExtent,
-            axisOrientation
+            axisOrientation,
+            units
         })
         );
     }

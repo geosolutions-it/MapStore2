@@ -137,7 +137,10 @@ export default class OpenlayersLayer extends React.Component {
                 const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
                 const layerExtent = options && options.bbox && options.bbox.bounds;
                 const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
-                let layerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
+                let layerBboxPolygon = layerExtent && CoordinatesUtils.reprojectBbox(
+                    CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent,
+                    'EPSG:4326'
+                );
                 if (layerBboxPolygon && layerBboxPolygon.length === 2 && isArray(layerBboxPolygon[1])) {
                     layerBboxPolygon = layerBboxPolygon[1];
                 }

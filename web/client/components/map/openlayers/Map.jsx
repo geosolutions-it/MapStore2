@@ -88,7 +88,8 @@ export default class OpenlayersMap extends React.Component {
 
     componentDidMount() {
         this.props.projectionDefs.forEach(p => {
-            projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || proj4.defs(p.code).axis || 'enu');
+            const projDef = proj4.defs(p.code);
+            projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
         });
         // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
         // normally it happens ad application level.
