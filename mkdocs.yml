@@ -65,6 +65,7 @@ pages:
       - Basemap Switcher: 'user-guide/basemap.md'
       - Timeline: 'user-guide/timeline.md'
       - Footer: 'user-guide/footer.md'
+      - Editing Map details: 'user-guide/edit-map-details.md'
     - Exploring Dashboards: 'user-guide/exploring-dashboards.md'
   - Developer Guide:
     - Dev Setup and Run: 'developer-guide/index.md'
