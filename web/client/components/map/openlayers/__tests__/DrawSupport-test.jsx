@@ -14,7 +14,7 @@ import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
 
 import {Map, View, Feature} from 'ol';
-import {Point, Circle, Polygon, LineString, MultiLineString} from 'ol/geom';
+import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
 
 const viewOptions = {
@@ -1963,6 +1963,41 @@ describe('Test DrawSupport', () => {
         done();
     });
 
+    it('test drawend callbacks with MultiPolygon, exported as geomColl', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "MultiPolygon",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new MultiPolygon([[[[1300, 4300], [1300, 5300], [1380, 4380], [1300, 4300]]]])
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[0].geometry.type).toBe("GeometryCollection");
+        expect(ArgsEndDrawing[0].geometry.geometries.length).toBe(2);
+
+        done();
+    });
+
     it('test drawend callbacks with MultiPoint, exported as geomColl', (done) => {
         const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
         const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
@@ -1980,7 +2015,7 @@ describe('Test DrawSupport', () => {
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: new Feature({
-                geometry: new Point([1300, 4300])
+                geometry: new MultiPoint([[1300, 4300]])
             })
         });
         expect(spyOnGeometryChanged).toHaveBeenCalled();
