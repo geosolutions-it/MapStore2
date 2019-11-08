@@ -1,6 +1,7 @@
 const React = require('react');
 const {compose, branch, withState} = require('recompose');
 const isArray = require('lodash/isArray');
+const flatten = require('lodash/flatten');
 
 const changeNode = (nodes, id, objToMerge) => {
     const targetIndex = nodes.findIndex(node => node.id === id);
@@ -37,8 +38,8 @@ const updateNodes = (nodes, dndState) => {
 
 const insertDummies = (node, dndState) => {
     const {node: draggedNode, newParentNodeId, parentNodeId} = dndState;
-
-    return {...node, nodes: node.nodes.map((curNode, ix) => {
+    // use flatten instead of .flat() because it's not supported on edge
+    return {...node, nodes: flatten(node.nodes.map((curNode, ix) => {
         if (curNode.nodes && !curNode.placeholder && !curNode.hide && !(draggedNode && curNode.id === draggedNode.id)) {
             const newCurNode = insertDummies(curNode, dndState);
             return [newCurNode].concat(node.nodes[ix + 1] &&
@@ -48,7 +49,7 @@ const insertDummies = (node, dndState) => {
                 [{id: curNode.id + '__dummy', dummy: true}]);
         }
         return [curNode];
-    }).flat()};
+    }))};
 };
 
 /**

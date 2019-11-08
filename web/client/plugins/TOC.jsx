@@ -217,7 +217,9 @@ class LayerTree extends React.Component {
         activateLayerFilterTool: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func,
-        hideOpacityTooltip: PropTypes.bool
+        hideOpacityTooltip: PropTypes.bool,
+        layerNodeComponent: PropTypes.func,
+        groupNodeComponent: PropTypes.func
     };
 
     static contextTypes = {
@@ -303,8 +305,9 @@ class LayerTree extends React.Component {
     };
 
     getDefaultGroup = () => {
+        const GroupNode = this.props.groupNodeComponent || DefaultGroup;
         return (
-            <DefaultGroup
+            <GroupNode
                 onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null}
                 {...this.props.groupOptions}
                 titleTooltip={this.props.activateTitleTooltip}
@@ -319,8 +322,9 @@ class LayerTree extends React.Component {
     }
 
     getDefaultLayer = () => {
+        const LayerNode = this.props.layerNodeComponent || DefaultLayer;
         return (
-            <DefaultLayer
+            <LayerNode
                 {...this.props.layerOptions}
                 titleTooltip={this.props.activateTitleTooltip}
                 showFullTitleOnExpand={this.props.showFullTitleOnExpand}
@@ -521,6 +525,8 @@ const securityEnhancer = (Component) => (props) => {
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
+ * @prop {element} cfg.groupNodeComponent render a custom component for group node
+ * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * example :
  * ```
  * {
