@@ -7,14 +7,21 @@
 */
 const React = require('react');
 const {connect} = require('../../utils/PluginsUtils');
-const {login, loginFail, logoutWithReload, changePassword, resetError} = require('../../actions/security');
+const {login, loginFail, logoutWithReload, changePassword, resetError, LOGOUT} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
+const {checkMapChanges} = require('../../actions/map');
 const {Glyphicon} = require('react-bootstrap');
 
 const closeLogin = () => {
     return (dispatch) => {
         dispatch(setControlProperty('LoginForm', 'enabled', false));
         dispatch(resetError());
+    };
+};
+
+const checkUnsavedMapChanges = () => {
+    return dispatch => {
+        dispatch(checkMapChanges(LOGOUT));
     };
 };
 
@@ -61,11 +68,14 @@ const LoginNav = connect((state) => ({
     renderButtonText: false,
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
     bsStyle: "primary",
-    className: "square-button"
+    className: "square-button",
+    displayUnsavedDialog: state.controls && state.controls.unsavedMap && state.controls.unsavedMap.enabled,
+    confirmUnsavedDialogAction: state.controls && state.controls.unsavedMap && state.controls.unsavedMap.action
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
+    onCheckMapChanges: checkUnsavedMapChanges,
     onLogout: logoutWithReload
 })(require('../../components/security/UserMenu'));
 

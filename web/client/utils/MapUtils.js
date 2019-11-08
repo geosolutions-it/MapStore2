@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isString, trim, isNumber} = require('lodash');
+const {isString, trim, isNumber, isEqual, pick} = require('lodash');
 
 const DEFAULT_SCREEN_DPI = 96;
 
@@ -414,6 +414,23 @@ const parseLayoutValue = (value, size = 0) => {
     return isNumber(value) ? value : 0;
 };
 
+const compareMapChanges = (originalState = {}, newState = {}) => {
+    const pickedFields = [
+        'map.layers',
+        'map.groups',
+        'map.backgrounds',
+        'map.text_search_config',
+        'catalogServices',
+        'widgetsConfig',
+        'mapInfoConfiguration'
+    ];
+
+    return isEqual(
+        pick(originalState, pickedFields),
+        pick(newState, pickedFields)
+    );
+};
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -445,5 +462,6 @@ module.exports = {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    parseLayoutValue
+    parseLayoutValue,
+    compareMapChanges
 };

@@ -10,6 +10,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {DropdownButton, MenuItem, NavDropdown, Glyphicon} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
+const ConfirmModal = require('../../components/misc/ResizableModal');
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 /**
  * A DropDown menu for user details:
@@ -38,6 +40,7 @@ class UserMenu extends React.Component {
         onShowChangePassword: PropTypes.func,
         onShowLogin: PropTypes.func,
         onLogout: PropTypes.func,
+        onCheckMapChanges: PropTypes.func,
         className: PropTypes.string
     };
 
@@ -48,6 +51,7 @@ class UserMenu extends React.Component {
         showPasswordChange: true,
         showLogout: true,
         onLogout: () => {},
+        onCheckMapChanges: () => {},
         onPasswordChange: () => {},
         displayName: "name",
         bsStyle: "primary",
@@ -76,6 +80,14 @@ class UserMenu extends React.Component {
         }]
     };
 
+    checkUnsavedChanges = () => {
+        if (ConfigUtils.getConfigProp('unsavedMapChangesDialog')) {
+            this.props.onCheckMapChanges();
+        } else {
+            this.props.onLogout();
+        }
+    }
+
     renderGuestTools = () => {
         let DropDown = this.props.nav ? NavDropdown : DropdownButton;
         return (<DropDown id="loginButton" className={this.props.className} pullRight bsStyle={this.props.bsStyle} title={this.renderButtonText()} id="dropdown-basic-primary" {...this.props.menuProps}>
@@ -96,13 +108,35 @@ class UserMenu extends React.Component {
             if (itemArray.length > 0) {
                 itemArray.push(<MenuItem key="divider" divider />);
             }
-            itemArray.push(<MenuItem key="logout" onClick={() => this.props.onLogout()}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
+            itemArray.push(<MenuItem key="logout" onClick={this.checkUnsavedChanges}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
         }
         return (
-            <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >
-                <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
-                {itemArray}
-            </DropDown>);
+            <React.Fragment>
+                <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >
+                    <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
+                    {itemArray}
+                </DropDown>
+                <ConfirmModal
+                    ref="deleteMapModal"
+                    show={this.props.displayUnsavedDialog || false}
+                    onClose={this.closeUnsavedDialog}
+                    title={<Message msgId="resources.deleteConfirmTitle" />}
+                    buttons={[{
+                        bsStyle: "primary",
+                        text: <Message msgId="yes" />,
+                        onClick: this.props.onLogout
+                    }, {
+                        text: <Message msgId="no" />,
+                        onClick: this.closeUnsavedDialog
+                    }]}
+                    fitContent
+                >
+                    <div className="ms-detail-body">
+                        <Message msgId="resources.deleteConfirmMessage" />
+                    </div>
+                </ConfirmModal>
+            </React.Fragment>
+        );
     };
 
     renderButtonText = () => {

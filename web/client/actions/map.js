@@ -24,6 +24,7 @@ const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
 const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
 const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
+const CHECK_MAP_CHANGES = "CHECK_MAP_CHANGES";
 
 
 function errorLoadingFont(err = {family: ""}) {
@@ -180,6 +181,11 @@ function setMapResolutions(resolutions) {
     };
 }
 
+const checkMapChanges = (action) => ({
+    type: CHECK_MAP_CHANGES,
+    action
+});
+
 /**
  * Actions for map
  * @name actions.map
@@ -202,6 +208,7 @@ module.exports = {
     RESIZE_MAP,
     CHANGE_MAP_LIMITS,
     SET_MAP_RESOLUTIONS,
+    CHECK_MAP_CHANGES,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -218,5 +225,6 @@ module.exports = {
     initMap,
     resizeMap,
     changeMapLimits,
-    setMapResolutions
+    setMapResolutions,
+    checkMapChanges
 };

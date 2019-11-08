@@ -14,6 +14,7 @@ const {
     INIT_MAP,
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
+    CHECK_MAP_CHANGES,
     changeMapView,
     changeMapLimits
 } = require('../actions/map');
@@ -40,6 +41,13 @@ const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
 
 const ConfigUtils = require('../utils/ConfigUtils');
+const axios = require('axios');
+
+const {layersSelector, groupsSelector} = require('../selectors/layers');
+const {backgroundListSelector} = require('../selectors/backgroundselector');
+const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
+
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -214,11 +222,41 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
             return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, mapId);
         });
 
+const compareMapChanges = (action$, { getState = () => {} }) =>
+    action$
+        .ofType(CHECK_MAP_CHANGES)
+        .switchMap(({ action }) => {
+            const mapId = getState().map && getState().map.present.mapId;
+
+            if (!mapId) return Rx.Observable.of({ type: action });
+
+            const url = ConfigUtils.getConfigUrl({ mapId }).configUrl;
+            return Rx.Observable.defer(() => axios.get(url))
+                .switchMap(({ data: originalMap }) => {
+                    const updatedMap = MapUtils.saveMapConfiguration(
+                        mapSelector(getState()),
+                        layersSelector(getState()),
+                        groupsSelector(getState()),
+                        backgroundListSelector(getState()),
+                        textSearchConfigSelector(getState()),
+                        mapOptionsToSaveSelector(getState())
+                    );
+                    if (!MapUtils.compareMapChanges(originalMap, updatedMap)) {
+                        return Rx.Observable.of(
+                            setControlProperty('unsavedMap', 'enabled', true),
+                            setControlProperty('unsavedMap', 'action', action)
+                        );
+                    }
+                    return Rx.Observable.of({ type: action });
+                });
+        });
+
 module.exports = {
     checkMapPermissions,
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
     resetLimitsOnInit,
-    zoomToExtentEpic
+    zoomToExtentEpic,
+    compareMapChanges
 };

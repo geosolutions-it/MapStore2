@@ -8,7 +8,9 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS } = require('../actions/map');
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT,
+    RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS,
+    TOGGLE_UNSAVED_MAP_CHANGES_DIALOG} = require('../actions/map');
 
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
@@ -107,6 +109,9 @@ function mapConfig(state = null, action) {
     }
     case UPDATE_VERSION: {
         return assign({}, state, {version: action.version});
+    }
+    case TOGGLE_UNSAVED_MAP_CHANGES_DIALOG: {
+        return assign({}, state, { showUnsavedMapChangesDialog: !(state && state.showUnsavedMapChangesDialog) });
     }
     default:
         return state;
