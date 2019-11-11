@@ -11,7 +11,7 @@ const expect = require('expect');
 const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions} = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
-const { MAP_INFO_LOAD_START, configureMap} = require('../../actions/config');
+const { LOAD_MAP_INFO, configureMap} = require('../../actions/config');
 
 const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 const MapUtils = require('../../utils/MapUtils');
@@ -184,16 +184,12 @@ describe('map epics', () => {
         }, STATE_NORMAL);
     });
     it('checkMapPermissions after login', (done) => {
-        const dispatch = (a) => {
+        const checkActions = ([a]) => {
             expect(a).toExist();
-            expect(a.type).toBe(MAP_INFO_LOAD_START);
+            expect(a.type).toBe(LOAD_MAP_INFO);
             done();
         };
-        testEpic(checkMapPermissions, 1, {type: LOGIN_SUCCESS}, ([a0]) => {
-            expect(a0).toExist();
-            expect(a0).toBeA('function');
-            a0(dispatch);
-        }, STATE_NORMAL);
+        testEpic(checkMapPermissions, 1, {type: LOGIN_SUCCESS}, checkActions, STATE_NORMAL);
     });
     it('checkMapPermissions after login with no mapId', (done) => {
         testEpic(addTimeoutEpic(checkMapPermissions, 0), 1, {type: LOGIN_SUCCESS}, ([a]) => {

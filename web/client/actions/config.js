@@ -6,14 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var axios = require('../libs/ajax');
 
 const LOAD_MAP_CONFIG = "MAP_LOAD_MAP_CONFIG";
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
+const LOAD_MAP_INFO = 'MAP_LOAD_INFO';
 const MAP_INFO_LOAD_START = 'MAP_INFO_LOAD_START';
 const MAP_INFO_LOADED = 'MAP_INFO_LOADED';
 const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
+const MAP_SAVE_ERROR = 'MAP:MAP_SAVE_ERROR';
+const MAP_SAVED = 'MAP:MAP_SAVED';
 
 function configureMap(conf, mapId) {
     return {
@@ -59,40 +61,57 @@ function mapInfoLoadStart(mapId) {
         mapId
     };
 }
-function loadMapInfo(url, mapId) {
-    return (dispatch) => {
-        dispatch(mapInfoLoadStart(mapId));
-        return axios.get(url).then((response) => {
-            if (typeof response.data === 'object') {
-                if (response.data.ShortResource) {
-                    dispatch(mapInfoLoaded(response.data.ShortResource, mapId));
-                } else {
-                    dispatch(mapInfoLoaded(response.data, mapId));
-                }
-
-            } else {
-                try {
-                    JSON.parse(response.data);
-                } catch (e) {
-                    dispatch(mapInfoLoadError( mapId, e));
-                }
-            }
-        }).catch((e) => {
-            dispatch(mapInfoLoadError(mapId, e));
-        });
+function loadMapInfo(mapId) {
+    return {
+        type: LOAD_MAP_INFO,
+        mapId
     };
-
 }
+
+const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
+
+const mapSaved = () => ({type: MAP_SAVED});
+// function loadMapInfo(mapId) {
+//     return (dispatch) => {
+//         dispatch(mapInfoLoadStart(mapId));
+//         return axios.get(url).then((response) => {
+//             if (typeof response.data === 'object') {
+//                 if (response.data.ShortResource) {
+//                     dispatch(mapInfoLoaded(response.data.ShortResource, mapId));
+//                 } else {
+//                     dispatch(mapInfoLoaded(response.data, mapId));
+//                 }
+
+//             } else {
+//                 try {
+//                     JSON.parse(response.data);
+//                 } catch (e) {
+//                     dispatch(mapInfoLoadError( mapId, e));
+//                 }
+//             }
+//         }).catch((e) => {
+//             dispatch(mapInfoLoadError(mapId, e));
+//         });
+//     };
+// }
+
 module.exports = {
     LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
     MAP_CONFIG_LOAD_ERROR,
+    LOAD_MAP_INFO,
     MAP_INFO_LOAD_START,
     MAP_INFO_LOADED,
     MAP_INFO_LOAD_ERROR,
+    MAP_SAVE_ERROR,
+    MAP_SAVED,
     loadMapConfig,
     loadMapInfo,
     configureMap,
     configureError,
-    mapInfoLoaded
+    mapInfoLoaded,
+    mapInfoLoadError,
+    mapInfoLoadStart,
+    mapSaveError,
+    mapSaved
 };

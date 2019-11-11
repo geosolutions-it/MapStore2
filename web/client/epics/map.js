@@ -39,8 +39,6 @@ const {clearLayers} = require('../actions/layers');
 const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
 
-const ConfigUtils = require('../utils/ConfigUtils');
-
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
@@ -211,7 +209,7 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
         })
         .map(() => {
             const mapId = mapIdSelector(getState());
-            return loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + mapId, mapId);
+            return loadMapInfo(mapId);
         });
 
 module.exports = {
