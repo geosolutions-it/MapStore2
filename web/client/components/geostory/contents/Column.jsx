@@ -39,7 +39,6 @@ export default ({
         mode={mode}
         add={add}
         editMedia={editMedia}
-        updateCurrentColumn={updateCurrentColumn}
         update={update}
         remove={remove}
         viewWidth={viewWidth}
