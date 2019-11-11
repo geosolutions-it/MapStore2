@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { getResource } from '../api/persistence';
+import { getResource, getResourceByName } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 import { isLoggedIn } from '../selectors/security';
 
@@ -31,9 +31,9 @@ function ContextError(error) {
     this.originalError = error;
     this.name = "context";
 }
-const createContextFlow = (id, action$, getState) =>
+const createContextFlow = (id, name, action$, getState) =>
     (id !== "default"
-        ? getResource(id)
+        ? (id ? getResource(id) : getResourceByName('CONTEXT', name))
             // TODO: setContext should put in ConfigUtils some variables
             // TODO: solve the problem of initial state used to configure plugins partially
             .switchMap((resource) => Observable.of(setResource(resource), setContext(resource.data)))
@@ -82,9 +82,9 @@ const errorToMessageId = (name, e, getState = () => {}) => {
  * @param {object} store
  */
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
-    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextId }) =>
+    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextId, contextName }) =>
         Observable.merge(
-            createContextFlow(contextId, action$, getState).catch(e => {throw new ContextError(e); }),
+            createContextFlow(contextId, contextName, action$, getState).catch(e => {throw new ContextError(e); }),
             createMapFlow(mapId, action$, getState).catch(e => { throw new MapError(e); })
         )
             // if everything went right, trigger loadFinished

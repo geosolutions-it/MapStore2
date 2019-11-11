@@ -25,11 +25,19 @@ module.exports = {
         component: require('./pages/MapViewer')
     }, {
         name: 'context',
-        path: "/context/:contextId",
+        path: "/context/id/:contextId",
         component: require('./pages/Context').default
     }, {
         name: 'context',
-        path: "/context/:contextId/:mapId",
+        path: "/context/id/:contextId/:mapId",
+        component: require('./pages/Context').default
+    }, {
+        name: 'context',
+        path: "/context/name/:contextName",
+        component: require('./pages/Context').default
+    }, {
+        name: 'context',
+        path: "/context/name/:contextName/:mapId",
         component: require('./pages/Context').default
     }, {
         name: 'context-creator',

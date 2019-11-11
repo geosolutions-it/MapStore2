@@ -26,7 +26,7 @@ export default ({contextName = "", windowTitle = "", onChange = () => {}, contex
                     type="text"
                     value={contextName}
                     placeholder={LocaleUtils.getMessageById(context.messages, "contextCreator.generalSettings.namePlaceholder")}
-                    onChange={e => onChange('name', e.target.value)}/>
+                    onChange={e => onChange('name', e.target.value && e.target.value.replace(/[^a-zA-Z0-9\-_]/, ''))}/>
             </FormGroup>
             <FormGroup>
                 <ControlLabel>
