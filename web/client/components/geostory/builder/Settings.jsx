@@ -38,7 +38,7 @@ export default updateTitle(({
     return (<Form className="ms-geostory-settings">
         <div className="text-center"><h4>Story Settings</h4></div>
         <FormGroup>
-            <ControlLabel><Message msgId="Title"/></ControlLabel>
+            <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
             <SwitchButton
                 onChange={() => onToggleSettings("isTitleEnabled")}
                 className="ms-geostory-settings-switch"
@@ -53,7 +53,7 @@ export default updateTitle(({
             />
         </FormGroup>
         <FormGroup>
-            <ControlLabel><Message msgId="Logo"/></ControlLabel>
+            <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
             <SwitchButton
                 onChange={() => onToggleSettings("isLogoEnabled")}
                 className="ms-geostory-settings-switch"
@@ -74,15 +74,13 @@ export default updateTitle(({
             }
         </FormGroup>
         <FormGroup>
-            <ControlLabel><Message msgId="Navbar"/></ControlLabel>
+            <ControlLabel><Message msgId="geostory.builder.settings.navbar"/></ControlLabel>
             <SwitchButton
                 onChange={() => onToggleSettings("isNavbarEnabled")}
                 className="ms-geostory-settings-switch"
                 checked={settings.isNavbarEnabled}
             />
-        </FormGroup>
-        <FormGroup>
-            <CheckboxTree
+            {   settings.isNavbarEnabled && (<CheckboxTree
                 showNodeIcon={false}
                 nativeCheckboxes
                 nodes={items}
@@ -90,7 +88,7 @@ export default updateTitle(({
                 expanded={expanded}
                 onCheck={checkedVal => onUpdateSettings("checked", checkedVal)}
                 onExpand={expandVal => setExpanded(expandVal)}
-            />
+            />)}
         </FormGroup>
     </Form>);
 }
