@@ -1924,7 +1924,7 @@
                 "remove": "Supprimer",
                 "removeConfirmTitle": "Êtes-vous sûr?",
                 "removeConfirmContent": "Voulez-vous supprimer ce contenu de l'histoire?",
-                "editMap": "Modifier l'étendue initiale de la carte"
+                "editMap": "Modifier l'étendue initiale de la carte",
                 "resetMap": "Réinitialiser la carte à sa configuration d'origine",
                 "resetMapConfirm": "Réinitialiser la configuration de la carte",
                 "resetConfirmContent": "Restaurer la configuration de la carte à celle d'origine?",
