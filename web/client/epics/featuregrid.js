@@ -26,7 +26,7 @@ const {zoomToExtent} = require('../actions/map');
 
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
-const { closeIdentify } = require('../actions/mapInfo');
+const { closeIdentify, hideMapinfoMarker } = require('../actions/mapInfo');
 
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -37,8 +37,8 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
     STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC } = require('../actions/featuregrid');
 
-const {TOGGLE_CONTROL, resetControls, setControlProperty} = require('../actions/controls');
-const {queryPanelSelector, showCoordinateEditorSelector} = require('../selectors/controls');
+const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
+const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSelector} = require('../selectors/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
@@ -756,5 +756,24 @@ module.exports = {
                 Rx.Observable.of(
                     createQuery(action.searchUrl, action.filterObj)
                 )
+            ),
+    hideFeatureGridOnDrawerOpenMobile: (action$, { getState } = {}) =>
+        action$
+            .ofType(TOGGLE_CONTROL)
+            .filter(({ control } = {}) =>
+                control === 'drawer'
+                && getState().browser
+                && getState().browser.mobile
+                && drawerEnabledControlSelector(getState())
             )
+            .switchMap(() => Rx.Observable.of(hideMapinfoMarker(), openFeatureGrid())),
+    hideDrawerOnFeatureGridOpenMobile: (action$, { getState } = {}) =>
+        action$
+            .ofType(FEATURE_INFO_CLICK)
+            .filter(() =>
+                getState().browser
+                && getState().browser.mobile
+                && drawerEnabledControlSelector(getState())
+            )
+            .mapTo(toggleControl('drawer', 'enabled'))
 };
