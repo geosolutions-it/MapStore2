@@ -260,7 +260,9 @@ export default (state = INITIAL_STATE, action) => {
         return set(`currentStory.settings.${action.prop}`, action.value, state);
     }
     case UPDATE_CURRENT_PAGE: {
-        /** if column update state only if the column for the current immersive section has changed */
+        /* if the page update updates a column, update state only if the column for the current immersive section has changed.
+        * This to avoid to select a column that doesn't belong to the current section (it could happen due to scroll events, in case of multiple immersive sections in the same viewport).
+        */
         if (action.columnId) {
             const section = find(state.currentStory.sections, s => find(s.contents, {id: action.columnId}));
             if (section && find(section.contents, {id: action.columnId})) {
