@@ -22,6 +22,7 @@ class Thumbnail extends React.Component {
         style: PropTypes.object,
         loading: PropTypes.bool,
         resource: PropTypes.object,
+        thumbnail: PropTypes.string,
         onError: PropTypes.func,
         onUpdate: PropTypes.func,
         onRemove: PropTypes.func,

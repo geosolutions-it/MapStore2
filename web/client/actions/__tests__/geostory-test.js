@@ -19,16 +19,18 @@ import {
     LOADING_GEOSTORY, loadingGeostory,
     LOAD_GEOSTORY_ERROR, loadGeostoryError,
     editResource, EDIT_RESOURCE,
+    move, MOVE,
     remove, REMOVE,
     selectCard, SELECT_CARD,
-    toggleCardPreview, TOGGLE_CARD_PREVIEW,
     SAVE, saveStory,
-    move, MOVE,
     setFocusOnContent,
-    TOGGLE_CONTENT_FOCUS
+    TOGGLE_CONTENT_FOCUS,
+    toggleSettingsPanel, TOGGLE_SETTINGS_PANEL,
+    toggleSettings, TOGGLE_SETTINGS,
+    toggleCardPreview, TOGGLE_CARD_PREVIEW,
+    updateSettings, UPDATE_SETTINGS
 } from '../geostory';
 
-// eslint-disable-next-line no-only-tests/no-only-tests
 describe('test geostory action creators', () => {
     it('setEditing', () => {
         const action = setEditing(true);
@@ -148,5 +150,28 @@ describe('test geostory action creators', () => {
         expect(retVal.selector).toBe("selector");
         expect(retVal.hideContent).toBe(true);
         expect(retVal.path).toBe("path");
+    });
+    it('toggleSettings', () => {
+        const option = "isLogoEnabled";
+        const retVal = toggleSettings(option);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(TOGGLE_SETTINGS);
+        expect(retVal.option).toBe(option);
+    });
+    it('toggleSettingsPanel', () => {
+        const withSave = true;
+        const retVal = toggleSettingsPanel(withSave );
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(TOGGLE_SETTINGS_PANEL);
+        expect(retVal.withSave).toBe(withSave);
+    });
+    it('updateSettings', () => {
+        const prop = "isLogoEnabled";
+        const value = true;
+        const retVal = updateSettings(prop, value);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(UPDATE_SETTINGS);
+        expect(retVal.prop).toBe(prop);
+        expect(retVal.value).toBe(value);
     });
 });

@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
-import { navigableItemsSelector } from '../../../../selectors/geostory';
+import { navigableItemsSelectorCreator } from '../../../../selectors/geostory';
 
 import ScrollMenu from '../ScrollMenu';
 
@@ -25,7 +25,7 @@ describe('ScrollMenu component', () => {
         setTimeout(done);
     });
     it('Rendering with defaults', () => {
-        ReactDOM.render(<ScrollMenu items={navigableItemsSelector({geostory: {currentStory: STORY}})} />, document.getElementById("container"));
+        ReactDOM.render(<ScrollMenu items={navigableItemsSelectorCreator()({geostory: {currentStory: STORY}})} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-horizontal-menu');
         expect(el).toExist();

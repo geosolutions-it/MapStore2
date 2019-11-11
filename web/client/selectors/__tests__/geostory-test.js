@@ -24,8 +24,11 @@ import {
     errorsSelector,
     loadingSelector,
     currentPositionSelector,
-    navigableItemsSelector,
-    totalItemsSelector
+    navigableItemsSelectorCreator,
+    settingsChangedSelector,
+    settingsItemsSelector,
+    totalItemsSelector,
+    visibleItemsSelector
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -63,12 +66,43 @@ describe('geostory selectors', () => { // TODO: check default
     });
     it('loadingSelector', () => expect(loadingSelector({ geostory: { loading: true } })).toBe(true));
     it('errorsSelector', () => expect(errorsSelector({ geostory: { errors: ["some", "error"] } })).toBeTruthy());
-    it('navigableItemsSelector', () => expect(navigableItemsSelector({
-        geostory: {
-            currentStory: TEST_STORY
-        }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title' ]));
+    describe('navigableItemsSelectorCreator', () => {
+        it('with all sections except immersive, and columns', () => {
+            expect(navigableItemsSelectorCreator()({
+                geostory: {
+                    currentStory: TEST_STORY
+                }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title' ]);
+        });
+        it('with all sections and columns', () => {
+            expect(navigableItemsSelectorCreator({withImmersiveSection: true})({
+                geostory: {
+                    currentStory: TEST_STORY
+                }}).map(item => item.id)).toEqual([ 'SomeID', 'SomeID2', 'col1', 'col2', 'SomeID_title']);
+        });
+        it('with all sections except immersive, and columns, with some items disabled', () => {
+            expect(navigableItemsSelectorCreator({includeAlways: false})({
+                geostory: {
+                    currentStory: {...TEST_STORY, settings: {checked: ["col2", "col1"] }}
+                }}).map(item => item.id)).toEqual([ 'col1', 'col2' ]);
+        });
+        it('with all sections and columns, with some items disabled', () => {
+            expect(navigableItemsSelectorCreator({withImmersiveSection: true, includeAlways: false})({
+                geostory: {
+                    currentStory: {...TEST_STORY, settings: {checked: ["col2", "col1"] }}
+                }}).map(item => item.id)).toEqual([ 'SomeID2', 'col1', 'col2' ]);
+        });
+    });
+    it('settingsItemsSelector ', () => expect(settingsItemsSelector({ geostory: { currentStory: TEST_STORY } })).toEqual(
+        [
+            { label: 'Abstract', value: 'SomeID' },
+            { label: 'Abstract', value: 'SomeID2', children: [ { label: "", value: 'col1' }, { label: "", value: 'col2' } ] },
+            { label: 'Abstract', value: 'SomeID_title' }
+        ])
+    );
     it('currentPositionSelector ', () => expect(currentPositionSelector({ geostory: { currentStory: TEST_STORY, currentPage: {
         sectionId: "SomeID"
     } } })).toBe(0));
     it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(4));
+    it('visibleItemsSelector ', () => expect(visibleItemsSelector({ geostory: { currentStory: {settings: {checked: ["id"]}} } })).toEqual({"id": true}));
+    it('settingsChangedSelector ', () => expect(settingsChangedSelector({ geostory: { currentStory: {settings: {checked: ["id"]}}, oldSettings: {checked: ["id", "otherid"]} } })).toBe(true));
 });

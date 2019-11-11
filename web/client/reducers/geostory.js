@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
-import { set, unset, arrayUpdate } from '../utils/ImmutableUtils';
-import { getEffectivePath } from '../utils/GeoStoryUtils';
+import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray, uniq } from "lodash";
+import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
+import { getEffectivePath, SectionTypes, findSectionIdFromColumnId } from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -15,27 +15,24 @@ import {
     CHANGE_MODE,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
-    SET_CURRENT_STORY,
-    TOGGLE_CARD_PREVIEW,
-    UPDATE,
-    UPDATE_CURRENT_PAGE,
     REMOVE,
+    SAVED,
+    SAVE_ERROR,
+    SET_CURRENT_STORY,
     SELECT_CARD,
     SET_CONTROL,
     SET_RESOURCE,
-    SAVED,
-    SAVE_ERROR,
-    TOGGLE_CONTENT_FOCUS
+    TOGGLE_CARD_PREVIEW,
+    TOGGLE_CONTENT_FOCUS,
+    TOGGLE_SETTINGS,
+    TOGGLE_SETTINGS_PANEL,
+    UPDATE,
+    UPDATE_CURRENT_PAGE,
+    UPDATE_SETTINGS
 } from '../actions/geostory';
 
-import { selectedCardSelector } from "../selectors/geostory";
+import { selectedCardSelector, settingsSelector, sectionsSelector, settingsCheckedSelector } from "../selectors/geostory";
 
-let INITIAL_STATE = {
-    mode: 'edit', // TODO: change in to Modes.VIEW
-    isCollapsed: false,
-    focusedContent: {},
-    currentPage: {}
-};
 
 /**
  * Return the index of the where to place an item.
@@ -78,6 +75,11 @@ const getIndexToInsert = (array, position) => {
  * @example
  * {
  *     "mode": "edit", // 'edit' or 'view',
+ *     "defaultSettings": {
+ *       "isLogoEnabled": false,
+ *       "isTitleEnabled": false,
+ *       "isNavbarEnabled": false
+ *     },
  *     "currentStory": {
  *      "resources": [] // resources (media) of the story
  *     // sections
@@ -125,6 +127,15 @@ const getIndexToInsert = (array, position) => {
  * }
  *
  */
+let INITIAL_STATE = {
+    mode: 'view', // TODO: change in to Modes.VIEW
+    isCollapsed: false,
+    focusedContent: {},
+    currentPage: {},
+    settings: {},
+    oldSettings: {}
+};
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
     case ADD: {
@@ -182,7 +193,9 @@ export default (state = INITIAL_STATE, action) => {
         return unset(path, state);
     }
     case SET_CURRENT_STORY: {
-        return set('currentStory', action.story, state);
+        let defaultSettings = state.defaultSettings || {};
+        let settings = action.story.settings || defaultSettings;
+        return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
         return set(`selectedCard`, selectedCardSelector({geostory: state}) === action.card ? "" : action.card, state);
@@ -197,7 +210,12 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SET_RESOURCE: {
         const { resource } = action;
-        return set(`resource`, resource, state);
+        const settings = settingsSelector({geostory: state});
+        return compose(
+            set(`resource`, resource),
+            set('currentStory.settings.storyTitle', settings.storyTitle || resource.name) // TODO check that resource has name prop
+
+        )(state);
     }
     case SAVED: {
         return unset(`errors.save`, state);
@@ -207,6 +225,26 @@ export default (state = INITIAL_STATE, action) => {
     }
     case TOGGLE_CARD_PREVIEW: {
         return set('isCollapsed', !state.isCollapsed, state);
+    }
+    case TOGGLE_SETTINGS: {
+        const visibility = get(state, `currentStory.settings.${action.option}`);
+        return set(`currentStory.settings.${action.option}`, !visibility, state);
+    }
+    case TOGGLE_SETTINGS_PANEL: {
+
+        // when opening, the expanded items will be calculated based on checked ones
+        const newStatus = !state.isSettingsEnabled;
+        const immSections = sectionsSelector({geostory: state}).filter(({type}) => type === SectionTypes.IMMERSIVE);
+        const settings = settingsSelector({geostory: state});
+        const checked = settingsCheckedSelector({geostory: state});
+        const expanded = uniq(checked.map(chId => findSectionIdFromColumnId(immSections, chId)).filter(i => i));
+
+        return compose(
+            set('isSettingsEnabled', newStatus),
+            set('oldSettings', newStatus ? settings : {}),
+            // when closing (newStatus=false) check if it is because of the save, in that case keep changes otherwise restore previous settings
+            set('currentStory.settings', newStatus ? {...settings, expanded} : (action.withSave ? settings : state.oldSettings))
+        )(state);
     }
     case UPDATE: {
         const { path: rawPath, mode } = action;
@@ -218,7 +256,11 @@ export default (state = INITIAL_STATE, action) => {
         }
         return set(path, newElement, state);
     }
+    case UPDATE_SETTINGS: {
+        return set(`currentStory.settings.${action.prop}`, action.value, state);
+    }
     case UPDATE_CURRENT_PAGE: {
+        /** if column update state only if the column for the current immersive section has changed */
         if (action.columnId) {
             const section = find(state.currentStory.sections, s => find(s.contents, {id: action.columnId}));
             if (section && find(section.contents, {id: action.columnId})) {
@@ -232,6 +274,7 @@ export default (state = INITIAL_STATE, action) => {
             }
             return state;
         }
+        // always update state if section changes
         return set('currentPage', { ...state.currentPage, sectionId: action.sectionId }, state);
     }
     case TOGGLE_CONTENT_FOCUS: {

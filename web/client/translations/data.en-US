@@ -1960,17 +1960,21 @@
                 "settings": {
                     "tooltip": "Settings",
                     "back": "Back to builder",
+                    "backConfirmTitle": "Settings Changed",
+                    "backConfirmBody": "You are closing the settings panel without saving your changes",
+                    "backConfirmNo": "Cancel",
+                    "backConfirmYes": "Close",
                     "save": "Save settings",
                     "headerTitle" : "Story Settings",
                     "title" : "Title",
                     "titlePlaceholder" : "Enter Title",
                     "logo" : "Logo",
-                    "logoPlaceholder" : "Enter logo src (image format)",
+                    "logoPlaceholder": "Logo must not go beyond 48 px of height and is suggested a width of 96 px. max 500kb",
                     "autoplay" : "Autoplay",
                     "enableAutoplay" : "Enable autoplay",
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
-                    "navbar" : "Navbar",
+                    "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar"
                 }
             },

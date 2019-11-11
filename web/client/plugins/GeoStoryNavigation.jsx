@@ -13,11 +13,13 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { setEditing } from '../actions/geostory';
 import {
-    navigableItemsSelector,
+    isEditAllowedSelector,
     currentPageSelector,
     currentPositionSelector,
-    totalItemsSelector,
-    modeSelector
+    modeSelector,
+    navigableItemsSelectorCreator,
+    settingsSelector,
+    totalItemsSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import Navigation from '../components/geostory/navigation/Navigation';
@@ -26,7 +28,9 @@ const GeoStoryNavigation = ({
     mode = Modes.VIEW,
     currentPage,
     currentPosition,
+    isEditAllowed,
     totalItems,
+    settings,
     setEditingMode = () => { },
     navigableItems = []
 }) => (mode === Modes.VIEW ? <div
@@ -34,8 +38,10 @@ const GeoStoryNavigation = ({
     className="ms-geostory-navigation"
     style={{width: "100%", position: 'relative' }}>
     <Navigation
+        settings={settings}
         currentPage={currentPage}
         currentPosition={currentPosition}
+        isEditAllowed={isEditAllowed}
         totalItems={totalItems}
         scrollTo={(id, options = { behavior: "smooth" }) => {
             scrollToContent(id, options);
@@ -52,10 +58,12 @@ export default createPlugin('GeoStoryNavigation', {
     component: connect(
         createStructuredSelector({
             mode: modeSelector,
+            settings: settingsSelector,
             currentPage: currentPageSelector,
             currentPosition: currentPositionSelector,
+            isEditAllowed: isEditAllowedSelector,
             totalItems: totalItemsSelector,
-            navigableItems: navigableItemsSelector
+            navigableItems: navigableItemsSelectorCreator({includeAlways: false})
         }), {
             setEditingMode: setEditing
         }
