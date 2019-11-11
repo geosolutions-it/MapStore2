@@ -29,10 +29,10 @@ export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
-export const TOGGLE_SETTINGS = "GEOSTORY:TOGGLE_SETTINGS";
+export const TOGGLE_SETTING = "GEOSTORY:TOGGLE_SETTING";
 export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
 export const UPDATE = "GEOSTORY:UPDATE";
-export const UPDATE_SETTINGS = "GEOSTORY:UPDATE_SETTINGS";
+export const UPDATE_SETTING = "GEOSTORY:UPDATE_SETTING";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 
 /**
@@ -140,7 +140,7 @@ export const toggleCardPreview = () => ({ type: TOGGLE_CARD_PREVIEW});
 /**
  * Turn on/off settings options in panel, like logo etc.
 */
-export const toggleSettings = (option) => ({ type: TOGGLE_SETTINGS, option});
+export const toggleSetting = (option) => ({ type: TOGGLE_SETTING, option});
 /**
  * Turn on/off settings panel.
 */
@@ -208,4 +208,4 @@ export const setFocusOnContent = (status, target, selector, hideContent, path) =
  * @param {string} prop prop name to update in the state
  * @param {*} value value used to update the prop
  */
-export const updateSettings = (prop, value) => ({type: UPDATE_SETTINGS, prop, value});
+export const updateSetting = (prop, value) => ({type: UPDATE_SETTING, prop, value});

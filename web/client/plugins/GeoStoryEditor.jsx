@@ -25,14 +25,14 @@ import {
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
-    updateSettings,
+    updateSetting,
     move,
     remove,
     setEditing,
     selectCard,
     toggleCardPreview,
     toggleSettingsPanel,
-    toggleSettings,
+    toggleSetting,
     update
 } from '../actions/geostory';
 
@@ -113,10 +113,10 @@ export default createPlugin('GeoStoryEditor', {
             isFocused: isFocusOnContentSelector
         }), {
             setEditingMode: setEditing,
-            onUpdateSettings: updateSettings,
+            onUpdateSettings: updateSetting,
             onToggleCardPreview: toggleCardPreview,
             onToggleSettingsPanel: toggleSettingsPanel,
-            onToggleSettings: toggleSettings,
+            onToggleSettings: toggleSetting,
             onRemove: remove,
             onSelect: selectCard,
             onSort: move,

@@ -26,9 +26,9 @@ import {
     setFocusOnContent,
     TOGGLE_CONTENT_FOCUS,
     toggleSettingsPanel, TOGGLE_SETTINGS_PANEL,
-    toggleSettings, TOGGLE_SETTINGS,
+    toggleSetting, TOGGLE_SETTING,
     toggleCardPreview, TOGGLE_CARD_PREVIEW,
-    updateSettings, UPDATE_SETTINGS
+    updateSetting, UPDATE_SETTING
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -151,11 +151,11 @@ describe('test geostory action creators', () => {
         expect(retVal.hideContent).toBe(true);
         expect(retVal.path).toBe("path");
     });
-    it('toggleSettings', () => {
+    it('toggleSetting', () => {
         const option = "isLogoEnabled";
-        const retVal = toggleSettings(option);
+        const retVal = toggleSetting(option);
         expect(retVal).toExist();
-        expect(retVal.type).toBe(TOGGLE_SETTINGS);
+        expect(retVal.type).toBe(TOGGLE_SETTING);
         expect(retVal.option).toBe(option);
     });
     it('toggleSettingsPanel', () => {
@@ -165,12 +165,12 @@ describe('test geostory action creators', () => {
         expect(retVal.type).toBe(TOGGLE_SETTINGS_PANEL);
         expect(retVal.withSave).toBe(withSave);
     });
-    it('updateSettings', () => {
+    it('updateSetting', () => {
         const prop = "isLogoEnabled";
         const value = true;
-        const retVal = updateSettings(prop, value);
+        const retVal = updateSetting(prop, value);
         expect(retVal).toExist();
-        expect(retVal.type).toBe(UPDATE_SETTINGS);
+        expect(retVal.type).toBe(UPDATE_SETTING);
         expect(retVal.prop).toBe(prop);
         expect(retVal.value).toBe(value);
     });

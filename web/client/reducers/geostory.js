@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray, uniq } from "lodash";
+import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
 import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
-import { getEffectivePath, SectionTypes, findSectionIdFromColumnId } from '../utils/GeoStoryUtils';
+import { getEffectivePath } from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -24,15 +24,12 @@ import {
     SET_RESOURCE,
     TOGGLE_CARD_PREVIEW,
     TOGGLE_CONTENT_FOCUS,
-    TOGGLE_SETTINGS,
+    TOGGLE_SETTING,
     TOGGLE_SETTINGS_PANEL,
     UPDATE,
     UPDATE_CURRENT_PAGE,
-    UPDATE_SETTINGS
+    UPDATE_SETTING
 } from '../actions/geostory';
-
-import { selectedCardSelector, settingsSelector, sectionsSelector, settingsCheckedSelector } from "../selectors/geostory";
-
 
 /**
  * Return the index of the where to place an item.
@@ -61,6 +58,15 @@ const getIndexToInsert = (array, position) => {
         index = Math.min(position, array.length);
     }
     return index;
+};
+
+let INITIAL_STATE = {
+    mode: 'view', // TODO: change in to Modes.VIEW
+    isCollapsed: false,
+    focusedContent: {},
+    currentPage: {},
+    settings: {},
+    oldSettings: {}
 };
 
 /**
@@ -127,15 +133,6 @@ const getIndexToInsert = (array, position) => {
  * }
  *
  */
-let INITIAL_STATE = {
-    mode: 'view', // TODO: change in to Modes.VIEW
-    isCollapsed: false,
-    focusedContent: {},
-    currentPage: {},
-    settings: {},
-    oldSettings: {}
-};
-
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
     case ADD: {
@@ -198,7 +195,7 @@ export default (state = INITIAL_STATE, action) => {
         return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
-        return set(`selectedCard`, selectedCardSelector({geostory: state}) === action.card ? "" : action.card, state);
+        return set(`selectedCard`, state.selectedCard === action.card ? "" : action.card, state);
     }
     case SET_CONTROL: {
         const { control, value } = action;
@@ -210,7 +207,7 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SET_RESOURCE: {
         const { resource } = action;
-        const settings = settingsSelector({geostory: state});
+        const settings = state.currentStory && state.currentStory.settings || {};
         return compose(
             set(`resource`, resource),
             set('currentStory.settings.storyTitle', settings.storyTitle || resource.name) // TODO check that resource has name prop
@@ -226,24 +223,19 @@ export default (state = INITIAL_STATE, action) => {
     case TOGGLE_CARD_PREVIEW: {
         return set('isCollapsed', !state.isCollapsed, state);
     }
-    case TOGGLE_SETTINGS: {
+    case TOGGLE_SETTING: {
         const visibility = get(state, `currentStory.settings.${action.option}`);
         return set(`currentStory.settings.${action.option}`, !visibility, state);
     }
     case TOGGLE_SETTINGS_PANEL: {
 
-        // when opening, the expanded items will be calculated based on checked ones
         const newStatus = !state.isSettingsEnabled;
-        const immSections = sectionsSelector({geostory: state}).filter(({type}) => type === SectionTypes.IMMERSIVE);
-        const settings = settingsSelector({geostory: state});
-        const checked = settingsCheckedSelector({geostory: state});
-        const expanded = uniq(checked.map(chId => findSectionIdFromColumnId(immSections, chId)).filter(i => i));
-
+        const settings = state.currentStory && state.currentStory.settings || {};
         return compose(
             set('isSettingsEnabled', newStatus),
             set('oldSettings', newStatus ? settings : {}),
             // when closing (newStatus=false) check if it is because of the save, in that case keep changes otherwise restore previous settings
-            set('currentStory.settings', newStatus ? {...settings, expanded} : (action.withSave ? settings : state.oldSettings))
+            set('currentStory.settings', newStatus ? {...settings} : (action.withSave ? settings : state.oldSettings))
         )(state);
     }
     case UPDATE: {
@@ -256,7 +248,7 @@ export default (state = INITIAL_STATE, action) => {
         }
         return set(path, newElement, state);
     }
-    case UPDATE_SETTINGS: {
+    case UPDATE_SETTING: {
         return set(`currentStory.settings.${action.prop}`, action.value, state);
     }
     case UPDATE_CURRENT_PAGE: {

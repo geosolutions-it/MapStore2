@@ -45,14 +45,14 @@ describe('GeoStory Navigation component', () => {
             scrollTo: () => { }
         };
         const spyScrollTo = expect.spyOn(actions, 'scrollTo');
-        ReactDOM.render(<Navigation currentPage={{ sectionId: SELECTED_ID}}  navigableItems={STORY.sections} scrollTo={actions.scrollTo} />, document.getElementById("container"));
+        ReactDOM.render(<Navigation settings={{isNavbarEnabled: true}} currentPage={{ sectionId: SELECTED_ID}}  navigableItems={STORY.sections} scrollTo={actions.scrollTo} />, document.getElementById("container"));
         expect(document.querySelectorAll('.btn-tray').length).toBe(2);
         ReactTestUtils.Simulate.click(document.querySelector('.btn-tray')); // <-- trigger
         expect(spyScrollTo).toHaveBeenCalled();
         expect(spyScrollTo.calls[0].arguments[0]).toBe(STORY.sections[1].id);
     });
     it('current section page is highlighted', () => {
-        ReactDOM.render(<Navigation currentPage={{ sectionId: SELECTED_ID}} navigableItems={STORY.sections} />, document.getElementById("container"));
+        ReactDOM.render(<Navigation settings={{isNavbarEnabled: true}} currentPage={{ sectionId: SELECTED_ID}} navigableItems={STORY.sections} />, document.getElementById("container"));
         const selectedElement = document.querySelector("button.active");
         expect(selectedElement).toExist();
         expect(selectedElement.innerText).toBe("Abstract");

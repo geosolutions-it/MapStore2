@@ -60,7 +60,7 @@ export default ({
                         ]} />
                 </div>
                 <div className="ms-geostory-navigation-elements">
-                    {navigableItems && navigableItems.length ?
+                    {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
                         (<div className="ms-geostory-navigation-navigableItems">
                             <ScrollMenu
                                 items={navigableItems}

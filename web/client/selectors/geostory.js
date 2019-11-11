@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, find, findIndex, isEqual} from 'lodash';
+import {get, find, findIndex, isEqual, uniq} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
-import { SectionTypes } from './../utils/GeoStoryUtils';
+import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
 
 /**
@@ -96,7 +96,14 @@ export const isSettingsEnabledSelector = state => get(state, "geostory.isSetting
 /**
  * @returns the settings of the story
  */
-export const settingsSelector = state => get(currentStorySelector(state), "settings", {});
+export const settingsSelector = state => {
+    // the expanded items are calculated based on checked ones
+    const settings = get(currentStorySelector(state), "settings", {});
+    const immSections = sectionsSelector(state).filter(({type}) => type === SectionTypes.IMMERSIVE);
+    const checked = settings.checked || [];
+    const expanded = uniq(checked.map(chId => findSectionIdFromColumnId(immSections, chId)).filter(i => i));
+    return {...settings, expanded};
+};
 /**
  * @returns the checked items in settings of the story
  */

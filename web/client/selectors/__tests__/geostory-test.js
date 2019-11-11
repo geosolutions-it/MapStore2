@@ -14,6 +14,7 @@ import {
     currentStorySelector,
     sectionsSelector,
     sectionSelectorCreator,
+    settingsSelector,
     sectionAtIndexSelectorCreator,
     resourceSelector,
     canEditSelector,
@@ -103,6 +104,9 @@ describe('geostory selectors', () => { // TODO: check default
         sectionId: "SomeID"
     } } })).toBe(0));
     it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(4));
+    it('settingsSelector ', () => expect(settingsSelector({ geostory: { currentStory: {...TEST_STORY, settings: {
+        checked: ["col2"]
+    }} } })).toEqual({checked: [ 'col2' ], expanded: [ 'SomeID2' ] }));
     it('visibleItemsSelector ', () => expect(visibleItemsSelector({ geostory: { currentStory: {settings: {checked: ["id"]}} } })).toEqual({"id": true}));
     it('settingsChangedSelector ', () => expect(settingsChangedSelector({ geostory: { currentStory: {settings: {checked: ["id"]}}, oldSettings: {checked: ["id", "otherid"]} } })).toBe(true));
 });

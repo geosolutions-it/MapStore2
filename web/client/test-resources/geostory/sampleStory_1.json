@@ -37,9 +37,11 @@
           "background": {},
           "contents": [
             {
+              "id": "imm1_col1_content1",
               "type": "text"
             },
             {
+              "id": "imm1_col1_content2",
               "type": "media"
             }
           ]
@@ -50,9 +52,11 @@
           "background": {},
           "contents": [
             {
+              "id": "imm1_col2_content1",
               "type": "text"
             },
             {
+              "id": "imm1_col2_content2",
               "type": "media"
             }
           ]

@@ -45,7 +45,6 @@ export default ({
     ContentComponent = Content,
     mode,
     sectionType,
-    updateCurrentColumn = () => {},
     editMedia = () => {},
     add = () => {},
     update = () => {},

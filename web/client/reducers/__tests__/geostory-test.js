@@ -22,10 +22,10 @@ import {
     saveGeoStoryError,
     storySaved,
     setFocusOnContent,
-    toggleSettings,
+    toggleSetting,
     toggleSettingsPanel,
     updateCurrentPage,
-    updateSettings
+    updateSetting
 } from '../../actions/geostory';
 import {
     isCollapsedSelector,
@@ -211,22 +211,22 @@ describe('geostory reducer', () => {
         expect( resourceSelector({ geostory: state }) ).toBe(SAMPLE_RESOURCE);
         expect( settingsSelector({ geostory: state }).storyTitle ).toBe(SAMPLE_RESOURCE.name);
     });
-    it('toggleSettings', () => {
+    it('toggleSetting', () => {
         let state = geostory({currentStory: {
             settings: {
                 isLogoEnabled: true
-            }}}, toggleSettings("isLogoEnabled"));
+            }}}, toggleSetting("isLogoEnabled"));
         expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(false);
 
-        state = geostory(undefined, toggleSettings("isLogoEnabled"));
+        state = geostory(undefined, toggleSetting("isLogoEnabled"));
         expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(true);
     });
-    it('updateSettings', () => {
+    it('updateSetting', () => {
         const checked = ["id"];
         let state = geostory({currentStory: {
             settings: {
                 checked: []
-            }}}, updateSettings("checked", checked));
+            }}}, updateSetting("checked", checked));
         expect( settingsSelector({ geostory: state }).checked ).toBe(checked);
     });
     describe('toggleSettingsPanel tests', () => {
