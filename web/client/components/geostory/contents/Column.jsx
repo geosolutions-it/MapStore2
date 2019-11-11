@@ -27,7 +27,6 @@ export default ({
     viewHeight,
     contents = [],
     mode,
-    updateCurrentColumn = () => {},
     add = () => {},
     editMedia = () => {},
     update = () => {},
