@@ -19,7 +19,8 @@ const getFullScreenEvent = () => {
         ['mozCancelFullScreen', 'mozfullscreenchange'],
         ['msExitFullscreen', 'MSFullscreenChange']
     ];
-    return candidates.filter((c) => document[c[0]]).reduce( eventMapping => eventMapping && eventMapping[1] );
+    const event = candidates.find(c => document[c[0]]);
+    return event && event[1];
 };
 /**
  * Gets every `TOGGLE_FULLSCREEN` event.
