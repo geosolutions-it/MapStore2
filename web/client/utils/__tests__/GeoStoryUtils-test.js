@@ -168,6 +168,8 @@ describe("GeoStory Utils", () => {
             expect(data.id).toExist();
             expect(data.type).toBe(wrongType);
             expect(data.title).toBe("geostory.builder.defaults.titleUnknown");
+            expect(data.size).toBe("full");
+            expect(data.align).toBe("center");
         });
         it("SectionTypes.TITLE", () => {
             const data = getDefaultSectionTemplate(SectionTypes.TITLE);

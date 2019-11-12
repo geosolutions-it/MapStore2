@@ -260,14 +260,18 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
         return {
             id: uuid(),
             type,
-            title: localize("geostory.builder.defaults.titleMedia")
+            title: localize("geostory.builder.defaults.titleMedia"),
+            size: 'full',
+            align: 'center'
         };
     }
     default:
         return {
             id: uuid(),
             type,
-            title: localize("geostory.builder.defaults.titleUnknown")
+            title: localize("geostory.builder.defaults.titleUnknown"),
+            size: 'full',
+            align: 'center'
         };
     }
 };
@@ -297,4 +301,33 @@ export const getEffectivePath = (rawPath, state) => {
         }
         return [...path, current];
     }, []);
+};
+
+
+/**
+ * transforms the path with  predicates into a path with id
+ * @private
+ * @param {string|string[]} rawPath path to transform in real path
+ * @param {object} state the state to check to inspect the tree and get the real path
+ */
+export const getFlatPath = (rawPath, state) => {
+    const rawPathArray = toPath(rawPath); // converts `a.b['section'].c[{"a":"b"}]` into `["a","b","section","c","{\"a\":\"b\"}"]`
+    // use curly brackets elements as predicates of findIndex to get the correct index.
+    return rawPathArray.reduce( ({path, flatPath}, current) => {
+        if (current && current.indexOf('{') === 0) {
+            const predicate = JSON.parse(current);
+            const currentArray = get(state, path);
+            const index = findIndex(
+                currentArray,
+                predicate
+            );
+            if (index >= 0) {
+                const {id, type} = currentArray[index];
+                return {path: [...path, index], flatPath: [...flatPath, {id, type: path[path.length - 1],  contentType: type}]};
+            }
+            // if the predicate is not found, it will ignore the unknown part
+            return {path, flatPath};
+        }
+        return {path: [...path, current], flatPath};
+    }, {path: [], flatPath: []});
 };

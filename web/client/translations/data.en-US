@@ -1914,8 +1914,8 @@
             "emptyDescription": "Start creating an awesome geostory by adding new content",
             "contentToolbar": {
                 "contentSize": "Change size",
-                "contentHeightAuto": "Height Auto",
-                "contentHeightView": "Height View",
+                "contentHeightAuto": "Make this section to adapt to the content height",
+                "contentHeightView": "Make this section to fit the view vertically",
                 "smallSizeLabel": "Small",
                 "mediumSizeLabel": "Medium",
                 "largeSizeLabel": "Large",
@@ -1929,13 +1929,20 @@
                 "brightTextThemeLabel": "Bright text",
                 "darkThemeLabel": "Dark",
                 "darkTextThemeLabel": "Dark text",
-                "cover": "Cover the container space",
-                "fit": "Fit the container space",
+                "cover": "Make the background cover the whole container space",
+                "fit": "Make the whole background visible inside the container",
                 "editMedia": "Change media source",
                 "remove": "Remove",
                 "removeConfirmTitle": "Are you sure?",
                 "removeConfirmContent": "Do you want to remove this content from the story?",
-                "editMap": "Edit initial map extent"
+                "editMap": "Edit map configuration",
+                "resetMap": "Reset the map to its original configuration",
+                "resetMapConfirm": "Reset Map Configuration",
+                "resetConfirmContent": "Restore the map configuration to the original one?",
+                "saveChanges": "Save changes",
+                "closeMapEditing": "Close",
+                "confirmCloseMapEditing": "Close Map Editing",
+                "pendingChangesDiscardConfirm": "Discard current map changes?"
             },
             "navigation": {
                 "edit": "Edit story"
@@ -1986,6 +1993,9 @@
                     "geostoryNotAccessible": "You don't have permission to access this story. Please contact the resource owner",
                     "geostoryDoesNotExist": "This story does not exist"
                 }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Configure map"
             }
         },
         "saveDialog": {

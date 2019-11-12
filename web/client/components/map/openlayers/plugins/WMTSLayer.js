@@ -38,19 +38,26 @@ const OL_VECTOR_FORMATS = {
     'application/json;type=topojson': TopoJSON
 };
 
-function getWMSURLs(urls) {
-    return urls.map((url) => url.split("\?")[0]);
+function getWMSURLs(urls, requestEncoding) {
+    return urls.map((url) => requestEncoding === 'REST' ? url : url.split("\?")[0]);
 }
+
+const getTileMatrix = (options, srs) => {
+    const tileMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
+    const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName));
+    return {tileMatrixSetName, tileMatrixSet};
+};
 
 const createLayer = options => {
     // options.urls is an alternative name of URL.
-    const urls = getWMSURLs(castArray(options.url));
+    // WMTS Capabilities has "RESTful"/"KVP", OpenLayers uses "REST"/"KVP";
+    let requestEncoding = options.requestEncoding === "RESTful" ? "REST" : options.requestEncoding;
+    const urls = getWMSURLs(castArray(options.url), requestEncoding);
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const projection = get(srs);
     const metersPerUnit = projection.getMetersPerUnit();
-    const tilMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
-    const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tilMatrixSetName));
-    const scales = tileMatrixSet && tileMatrixSet.TileMatrix.map(t => t.ScaleDenominator);
+    const { tileMatrixSetName, tileMatrixSet } = getTileMatrix(options, srs);
+    const scales = tileMatrixSet && tileMatrixSet.TileMatrix.map(t => Number(t.ScaleDenominator));
     const mapResolutions = MapUtils.getResolutions();
     /*
      * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
@@ -61,7 +68,7 @@ const createLayer = options => {
     const matrixResolutions = options.resolutions || scales && scales.map(scaleToResolution);
     const resolutions = matrixResolutions || mapResolutions;
 
-    const matrixIds = WMTSUtils.limitMatrix(options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tilMatrixSetName || srs) || WMTSUtils.getDefaultMatrixId(options), resolutions.length);
+    const matrixIds = WMTSUtils.limitMatrix(options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tileMatrixSetName || srs) || WMTSUtils.getDefaultMatrixId(options), resolutions.length);
 
     /* - enu - the default easting, north-ing, elevation
     * - neu - north-ing, easting, up - useful for "lat/long" geographic coordinates, or south orientated transverse mercator
@@ -89,8 +96,6 @@ const createLayer = options => {
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
-    // WMTS Capabilities has "RESTful"/"KVP", OpenLayers uses "REST"/"KVP";
-    let requestEncoding = options.requestEncoding === "RESTful" ? "REST" : options.requestEncoding;
     // TODO: support tileSizes from  matrix
     const TILE_SIZE = 256;
 
@@ -106,7 +111,7 @@ const createLayer = options => {
         urls: urls.map(u => u + queryParametersString),
         layer: options.name,
         version: options.version || "1.0.0",
-        matrixSet: tilMatrixSetName,
+        matrixSet: tileMatrixSetName,
         format,
         style: options.style,
         tileGrid: new WMTSTileGrid({
@@ -154,8 +159,17 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     }
     return null;
 };
-const compatibleLayer = options =>
-    head(CoordinatesUtils.getEquivalentSRS(options.srs).filter(proj => options.matrixIds && options.matrixIds.hasOwnProperty(proj))) ? true : false;
+
+const hasSRS = (srs, layer) => {
+    const { tileMatrixSetName, tileMatrixSet } = getTileMatrix(layer, srs);
+    if (tileMatrixSet) {
+        return CoordinatesUtils.getEPSGCode(tileMatrixSet["ows:SupportedCRS"]) === srs;
+    }
+    return tileMatrixSetName === srs;
+};
+
+const compatibleLayer = layer =>
+    head(CoordinatesUtils.getEquivalentSRS(layer.srs || 'EPSG:3857').filter(srs => hasSRS(srs, layer))) ? true : false;
 
 
 Layers.registerType('wmts', { create: createLayer, update: updateLayer, isCompatible: compatibleLayer });

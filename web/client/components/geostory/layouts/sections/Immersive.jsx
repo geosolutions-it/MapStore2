@@ -13,6 +13,7 @@ import Background from './Background';
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
+import {get} from 'lodash';
 
 /**
  * Immersive Section Type
@@ -33,9 +34,13 @@ const Immersive = ({
     sectionType,
     inViewRef,
     viewWidth,
-    viewHeight
-}) => (
-    <section
+    viewHeight,
+    focusedContent,
+    contentId
+}) => {
+    const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
+    const visibility = hideContent ? 'hidden' : 'visible';
+    return (<section
         className="ms-section ms-section-immersive"
         id={id}
         ref={inViewRef}
@@ -83,10 +88,11 @@ const Immersive = ({
             viewHeight={viewHeight}
             contentProps={{
                 onVisibilityChange,
-                contentWrapperStyle: { minHeight: viewHeight }
+                contentWrapperStyle: { minHeight: viewHeight, visibility }
             }}
+            focusedContent={focusedContent}
         />
-        {mode === Modes.EDIT && <AddBar
+        {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
             buttons={[{
@@ -117,7 +123,7 @@ const Immersive = ({
                     add(`sections`, id, SectionTemplates.MEDIA);
                 }
             }]}/>}
-    </section>
-);
+    </section>);
+};
 
 export default immersiveBackgroundManager(Immersive);

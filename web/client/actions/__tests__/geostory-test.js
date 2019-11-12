@@ -23,9 +23,12 @@ import {
     selectCard, SELECT_CARD,
     toggleCardPreview, TOGGLE_CARD_PREVIEW,
     SAVE, saveStory,
-    move, MOVE
+    move, MOVE,
+    setFocusOnContent,
+    TOGGLE_CONTENT_FOCUS
 } from '../geostory';
 
+// eslint-disable-next-line no-only-tests/no-only-tests
 describe('test geostory action creators', () => {
     it('setEditing', () => {
         const action = setEditing(true);
@@ -81,7 +84,7 @@ describe('test geostory action creators', () => {
         expect(action2.name).toBe("saving");
     });
     it('loadGeostoryError', () => {
-        const error = {message: "this stoyry does not exist"};
+        const error = {message: "this story does not exist"};
         const action = loadGeostoryError(error);
         expect(action.type).toBe(LOAD_GEOSTORY_ERROR);
         expect(action.error).toEqual(error);
@@ -135,5 +138,15 @@ describe('test geostory action creators', () => {
         expect(retVal.source).toBe(source);
         expect(retVal.target).toBe(target);
         expect(retVal.position).toBe(position);
+    });
+    it('set focus on a content', () => {
+        const retVal = setFocusOnContent(false, "target", "selector", true, "path");
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(TOGGLE_CONTENT_FOCUS);
+        expect(retVal.status).toBe(false);
+        expect(retVal.target).toBe("target");
+        expect(retVal.selector).toBe("selector");
+        expect(retVal.hideContent).toBe(true);
+        expect(retVal.path).toBe("path");
     });
 });

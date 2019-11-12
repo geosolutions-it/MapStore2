@@ -9,6 +9,7 @@
 
 import { Observable } from 'rxjs';
 import head from 'lodash/head';
+
 import isNaN from 'lodash/isNaN';
 import isString from 'lodash/isString';
 import isNil from 'lodash/isNil';
@@ -43,7 +44,9 @@ import {
     setResource,
     setEditing,
     storySaved,
-    update
+    update,
+    setFocusOnContent,
+    UPDATE
 } from '../actions/geostory';
 
 import {
@@ -63,7 +66,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -315,3 +318,18 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
             add(target, position, current)
         );
     });
+/**
+ * trigger actions for focus a map on map editing
+ * @param {Observable} action$ stream of redux actions
+ * @returns {Observable} a stream that emits actions setting focus on content
+ */
+export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
+         action$.ofType(UPDATE).filter(({path = ""}) => path.endsWith("editMap"))
+     .map(({path: rowPath, element: status}) => {
+                const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
+                const target = flatPath.pop();
+                const section = flatPath.shift();
+                const hideContent = path[path.length - 2] === "background";
+                const selector = hideContent && `#${section.id} .ms-section-background-container` || `#${target.id}`;
+            return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
+     });

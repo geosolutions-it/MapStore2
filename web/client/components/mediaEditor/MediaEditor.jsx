@@ -55,18 +55,21 @@ export default ({
                     text: <Message msgId= "mediaEditor.images"/>,
                     active: mediaType === "image",
                     bsStyle: mediaType === "image" ? "primary" : "default",
-                    onClick: () => {setMediaType("image"); }
+                    onClick: () => {setMediaType("image"); },
+                    disabled: saveState && saveState.addingMedia
                 }, {
                     visible: false, // TODO RESTORE THIS when video is implemented
                     text: <Message msgId= "mediaEditor.videos"/>,
                     active: mediaType === "video",
                     bsStyle: mediaType === "video" ? "primary" : "default",
-                    onClick: () => {setMediaType("video"); }
+                    onClick: () => {setMediaType("video"); },
+                    disabled: saveState && saveState.addingMedia
                 }, {
                     text: <Message msgId= "mediaEditor.maps"/>,
                     active: mediaType === "map",
                     bsStyle: mediaType === "map" ? "primary" : "default",
-                    onClick: () => {setMediaType("map"); }
+                    onClick: () => {setMediaType("map"); },
+                    disabled: saveState && saveState.addingMedia
                 }]} />
             <div className="ms-mediaEditor-services">
                 <div className="ms-mediaEditor-label">

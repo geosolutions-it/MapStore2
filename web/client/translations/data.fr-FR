@@ -1913,8 +1913,8 @@
             "emptyDescription": "Commencez à créer une géostory géniale en ajoutant du nouveau contenu",
             "contentToolbar": {
                 "contentSize": "Changer la taille",
-                "contentHeightAuto": "Hauteur automatique",
-                "contentHeightView": "Hauteur de la vue",
+                "contentHeightAuto": "Faire cette section pour s'adapter à la hauteur du contenu",
+                "contentHeightView": "Faire cette section pour adapter la vue verticalement",
                 "smallSizeLabel": "Petit",
                 "mediumSizeLabel": "Moyen",
                 "largeSizeLabel": "Large",
@@ -1928,13 +1928,20 @@
                 "brightTextThemeLabel": "Texte clair",
                 "darkThemeLabel": "Sombre",
                 "darkTextThemeLabel": "Texte sombre",
-                "cover": "Couvrir l'espace conteneur",
-                "fit": "Adapter l'espace conteneur",
+                "cover": "Faire en sorte que l'arrière-plan couvre tout l'espace du conteneur",
+                "fit": "Rendre tout le fond visible à l'intérieur du conteneur",
                 "editMedia": "Changer de source média",
                 "remove": "Supprimer",
                 "removeConfirmTitle": "Bist du sicher?",
                 "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
-                "editMap": "Edit initial map extent"
+                "editMap": "Configurer la carte",
+                "resetMap": "Réinitialiser la carte à sa configuration d'origine",
+                "resetMapConfirm": "Réinitialiser la configuration de la carte",
+                "resetConfirmContent": "Restaurer la configuration de la carte à celle d'origine?",
+                "saveChanges": "Sauvegarder les modifications",
+                "closeMapEditing": "Proche",
+                "confirmCloseMapEditing": "Fermer l'édition de la carte",
+                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?"
             },
             "navigation": {
                 "edit": "Modifier l'histoire"
@@ -1985,6 +1992,9 @@
                     "geostoryNotAccessible": "Vous n'avez pas la permission d'accéder à cette histoire. Veuillez contacter le propriétaire de la ressource",
                     "geostoryDoesNotExist": "Cette histoire n'existe pas"
                 }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Configure map"
             }
         },
         "saveDialog": {

@@ -1503,4 +1503,69 @@ describe('FilterUtils', () => {
         expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
         expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
     });
+    it('check CQL filter when logic is NOR', () => {
+        const filterObject = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "NOR",
+                    "index": 0
+                },
+                {
+                    "id": 1573134118982,
+                    "logic": "NOR",
+                    "groupId": 1,
+                    "index": 1
+                }
+            ],
+            "filterFields": [
+                {
+                    "rowId": 1573131371566,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "like",
+                    "value": "Ar",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 6,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                },
+                {
+                    "rowId": 1573131515197,
+                    "groupId": 1,
+                    "attribute": "PERSONS",
+                    "operator": "<",
+                    "value": 1000000,
+                    "type": "number",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null
+                },
+                {
+                    "rowId": 1573134121577,
+                    "groupId": 1573134118982,
+                    "attribute": "LAND_KM",
+                    "operator": "<",
+                    "value": 5000,
+                    "type": "number",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null
+                }
+            ]
+        };
+        const filter = FilterUtils.toCQLFilter(filterObject);
+        expect(filter).toBe(`(NOT ("STATE_NAME" LIKE '%Ar%') AND NOT ("PERSONS" < '1000000') AND NOT (NOT ("LAND_KM" < '5000')))`);
+    });
 });

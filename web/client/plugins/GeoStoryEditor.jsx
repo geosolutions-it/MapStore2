@@ -16,7 +16,8 @@ import {
     isToolbarEnabledSelector,
     modeSelector,
     selectedCardSelector,
-    currentPageSelector
+    currentPageSelector,
+    isFocusOnContentSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import { setEditing, toggleCardPreview, move, selectCard, remove, update } from '../actions/geostory';
@@ -33,13 +34,14 @@ const GeoStoryEditor = ({
     currentPage,
     selected,
     isToolbarEnabled,
+    isFocused = false,
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
     onSort = () => {}
-}) => (mode === Modes.EDIT ? <div
+}) => (mode === Modes.EDIT && !isFocused ? <div
     key="left-column"
     className="ms-geostory-editor"
     style={{ order: -1, width: 400, position: 'relative' }}>
@@ -75,7 +77,8 @@ export default createPlugin('GeoStoryEditor', {
             story: currentStorySelector,
             currentPage: currentPageSelector,
             isToolbarEnabled: isToolbarEnabledSelector,
-            selected: selectedCardSelector
+            selected: selectedCardSelector,
+            isFocused: isFocusOnContentSelector
         }), {
             setEditingMode: setEditing,
             onToggleCardPreview: toggleCardPreview,

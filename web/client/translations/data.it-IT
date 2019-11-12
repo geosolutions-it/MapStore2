@@ -1913,8 +1913,8 @@
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
                 "contentSize": "Cambia larghezza",
-                "contentHeightAuto": "Altezza automatica",
-                "contentHeightView": "Altezza piena",
+                "contentHeightAuto": "Adatta la sezione all'altezza del contenuto",
+                "contentHeightView": "Adatta la sezione sezione per riempire la vista verticalmente",
                 "smallSizeLabel": "Piccola",
                 "mediumSizeLabel": "Media",
                 "largeSizeLabel": "Grande",
@@ -1928,13 +1928,20 @@
                 "brightTextThemeLabel": "Testo chiaro",
                 "darkThemeLabel": "Scuro",
                 "darkTextThemeLabel": "Testo scuro",
-                "cover": "Copri lo spazio del contenitore",
-                "fit": "Riempi lo spazio del contenitore",
+                "cover": "Fai in modo che lo sfondo copra l'intero spazio del contenitore",
+                "fit": "Rendi visibile tutto lo sfondo all'interno del contenitore",
                 "editMedia": "Cambia la sorgente del media",
                 "remove": "Elimina",
                 "removeConfirmTitle": "Sei sicuro?",
                 "removeConfirmContent": "Vuoi rimuovere questi contenuti dalla storia?",
-                "editMap": "Modifica l'estensione iniziale della mappa"
+                "editMap": "Modifica mappa",
+                "resetMap": "Ripristina mappa originale",
+                "resetMapConfirm": "Ripristina Configurazione",
+                "resetConfirmContent": "Ripristinare la configurazione di mappa originale?",
+                "saveChanges": "Salva le modifiche",
+                "closeMapEditing": "Chiudi editing",
+                "confirmCloseMapEditing": "Chiudi editing mappa",
+                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?"
             },
             "navigation": {
                 "edit": "Modifica storia"
@@ -1985,6 +1992,9 @@
                     "geostoryNotAccessible": "Non sei autorizzato ad accedere a questa storia. Si prega di contattare il proprietario della risorsa",
                     "geostoryDoesNotExist": "Questa storia non esiste"
                 }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Configurazione mappa"
             }
         },
          "saveDialog": {

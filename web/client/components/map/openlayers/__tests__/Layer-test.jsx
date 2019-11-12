@@ -11,7 +11,7 @@ import expect from 'expect';
 import OpenlayersLayer from '../Layer';
 
 import assign from 'object-assign';
-import '../../../../utils/openlayers/Layers';
+import Layers from '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
@@ -30,6 +30,7 @@ import { defaults as defaultControls } from 'ol/control';
 
 import axios from "../../../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
+import {get} from 'ol/proj';
 
 let mockAxios;
 
@@ -1747,6 +1748,152 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-$$$$-####-###########"]);
 
 
+    });
+
+    it('test wmts REST allows querystring in url', () => {
+        const options = {
+            type: 'wmts',
+            visibility: false,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            requestEncoding: "RESTful",
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts?x={TileCol}'
+        };
+
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        expect(decodeURIComponent(layer.layer.getSource().getUrls()[0])).toContain(["?x={TileCol}"]);
+    });
+    it('test wmts custom resolutions', () => {
+        const tileMatrix = [{
+            "ows:Identifier": "0",
+            "ScaleDenominator": "17471320.75089746",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "1",
+            "MatrixHeight": "1"
+        },
+        {
+            "ows:Identifier": "1",
+            "ScaleDenominator": "8735660.37544873",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "2",
+            "MatrixHeight": "2"
+        },
+        {
+            "ows:Identifier": "2",
+            "ScaleDenominator": "4367830.187724365",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "4",
+            "MatrixHeight": "4"
+        },
+        {
+            "ows:Identifier": "3",
+            "ScaleDenominator": "2183915.0938621825",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "8",
+            "MatrixHeight": "8"
+        }];
+        const options = {
+            type: 'wmts',
+            visibility: false,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            requestEncoding: "RESTful",
+            tileMatrixSet: [
+                {
+                    'ows:Identifier': 'EPSG:3857',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857',
+                    TileMatrix: tileMatrix
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        const wmtsLayer = map.getLayers().item(0);
+        const metersPerUnit = get("EPSG:3857").getMetersPerUnit();
+
+        const expectedResolutions = tileMatrix.map(matrix => Number(matrix.ScaleDenominator) * 0.28E-3 / metersPerUnit);
+        wmtsLayer.getSource().getTileGrid().getResolutions().map((v, i) => expect(v).toBe(expectedResolutions[i]));
+    });
+    it('test wmts custom crs', () => {
+        const tileMatrix = [{
+            "ows:Identifier": "0",
+            "ScaleDenominator": "17471320.75089746",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "1",
+            "MatrixHeight": "1"
+        },
+        {
+            "ows:Identifier": "1",
+            "ScaleDenominator": "8735660.37544873",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "2",
+            "MatrixHeight": "2"
+        },
+        {
+            "ows:Identifier": "2",
+            "ScaleDenominator": "4367830.187724365",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "4",
+            "MatrixHeight": "4"
+        },
+        {
+            "ows:Identifier": "3",
+            "ScaleDenominator": "2183915.0938621825",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "8",
+            "MatrixHeight": "8"
+        }];
+        const options = {
+            type: 'wmts',
+            visibility: false,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            requestEncoding: "RESTful",
+            srs: "EPSG:25832",
+            tileMatrixSet: [
+                {
+                    'ows:Identifier': 'EPSG:25832',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::25832',
+                    TileMatrix: tileMatrix
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        expect(Layers.isCompatible("wmts", options)).toBe(true);
     });
     it('test cql_filter param to be passed to the layer object', () => {
         const options = {

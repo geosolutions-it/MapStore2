@@ -117,4 +117,72 @@ describe('TOCPlugin Plugin', () => {
         ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
         expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
     });
+    it('TOCPlugin use custom group node', () => {
+        const { Plugin } = getPluginForTest(TOCPlugin, {
+            layers: {
+                groups: [{
+                    expanded: true,
+                    id: 'Default',
+                    name: 'Default',
+                    nodes: [ 'layer_01', 'layer_02' ],
+                    title: 'Default'
+                }],
+                flat: [{
+                    id: 'layer_01',
+                    title: 'title_01'
+                }, {
+                    id: 'layer_02',
+                    title: 'title_02'
+                }]
+            },
+            maptype: {
+                mapType: 'openlayers'
+            }
+        });
+        const GroupNode = ({ node }) => {
+            return <div className="custom-group-node">{node.title}</div>;
+        };
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin
+            groupNodeComponent={GroupNode}/>, document.getElementById("container"));
+        const groupNodes = document.querySelectorAll('.custom-group-node');
+        expect(groupNodes.length).toBe(1);
+        const [ groupNode ] = groupNodes;
+        expect(groupNode.innerHTML).toBe('Default');
+    });
+    it('TOCPlugin use custom layer node', () => {
+        const { Plugin } = getPluginForTest(TOCPlugin, {
+            layers: {
+                groups: [{
+                    expanded: true,
+                    id: 'Default',
+                    name: 'Default',
+                    nodes: [ 'layer_01', 'layer_02' ],
+                    title: 'Default'
+                }],
+                flat: [{
+                    id: 'layer_01',
+                    title: 'title_01'
+                }, {
+                    id: 'layer_02',
+                    title: 'title_02'
+                }]
+            },
+            maptype: {
+                mapType: 'openlayers'
+            }
+        });
+        const LayerNode = ({ node }) => {
+            return <div className="custom-layer-node">{node.dummy ? 'dummy' : node.title}</div>;
+        };
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin
+            layerNodeComponent={LayerNode}/>, document.getElementById("container"));
+        const groupNodes = document.querySelectorAll('.custom-layer-node');
+        expect(groupNodes.length).toBe(3);
+        const [ layerNode01, layerNode02, layerNodeDummy ] = groupNodes;
+        expect(layerNode01.innerHTML).toBe('title_01');
+        expect(layerNode02.innerHTML).toBe('title_02');
+        expect(layerNodeDummy.innerHTML).toBe('dummy');
+    });
 });
