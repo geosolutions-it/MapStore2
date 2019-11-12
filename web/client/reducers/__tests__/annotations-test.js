@@ -1377,6 +1377,41 @@ describe('Test the annotations reducer', () => {
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(1);
     });
+    it('changeSelected, changing coords of a Circle Feature', () => {
+        const selected = {
+            properties: {
+                canEdit: true,
+                center: [-6.576492309570317, 41.6007838467891],
+                id: "259d79d0-053e-11ea-b0b3-379d853a3ff4",
+                isCircle: true,
+                isValidFeature: true,
+                radius: 3567
+            },
+            geometry: {
+                type: "Circle",
+                coordinates: [-6.576492309570317, 41.6007838467891]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const coordinates = [[1, 1]];
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, 3567));
+        expect(state.selected.geometry.type).toBe("Circle");
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(1);
+    });
     it('UPDATE_SYMBOLS', () => {
         let annotationsState = annotations({}, updateSymbols());
         expect(annotationsState.symbolList.length).toBe(0);
