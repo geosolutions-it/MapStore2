@@ -12,6 +12,7 @@ const {setControlProperty} = require('../../actions/controls');
 const {checkMapChanges} = require('../../actions/map');
 const {Glyphicon} = require('react-bootstrap');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../../selectors/controls');
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 const closeLogin = () => {
     return (dispatch) => {
@@ -70,6 +71,7 @@ const LoginNav = connect((state) => ({
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
     bsStyle: "primary",
     className: "square-button",
+    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state) && unsavedMapSourceSelector(state) === 'logout'
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),

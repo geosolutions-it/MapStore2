@@ -12,14 +12,14 @@ const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const Message = require('../../components/I18N/Message');
 const ConfirmModal = require('../../components/misc/ResizableModal');
-const ConfigUtils = require('../../utils/ConfigUtils');
 
 class Home extends React.Component {
     static propTypes = {
         icon: PropTypes.node,
         onCheckMapChanges: PropTypes.func,
         onCloseUnsavedDialog: PropTypes.func,
-        displayUnsavedDialog: PropTypes.bool
+        displayUnsavedDialog: PropTypes.bool,
+        renderUnsavedMapChangesDialog: PropTypes.bool
     };
 
     static contextTypes = {
@@ -30,7 +30,8 @@ class Home extends React.Component {
     static defaultProps = {
         icon: <Glyphicon glyph="home"/>,
         onCheckMapChanges: () => {},
-        onCloseUnsavedDialog: () => {}
+        onCloseUnsavedDialog: () => {},
+        renderUnsavedMapChangesDialog: true
     };
 
     render() {
@@ -71,7 +72,7 @@ class Home extends React.Component {
     }
 
     checkUnsavedChanges = () => {
-        if (ConfigUtils.getConfigProp('unsavedMapChangesDialog')) {
+        if (this.props.renderUnsavedMapChangesDialog) {
             this.props.onCheckMapChanges(this.goHome);
         } else {
             this.props.onCloseUnsavedDialog();

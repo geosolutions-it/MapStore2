@@ -11,7 +11,6 @@ const React = require('react');
 const {DropdownButton, MenuItem, NavDropdown, Glyphicon} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
 const ConfirmModal = require('../../components/misc/ResizableModal');
-const ConfigUtils = require('../../utils/ConfigUtils');
 
 /**
  * A DropDown menu for user details:
@@ -41,7 +40,8 @@ class UserMenu extends React.Component {
         onShowLogin: PropTypes.func,
         onLogout: PropTypes.func,
         onCheckMapChanges: PropTypes.func,
-        className: PropTypes.string
+        className: PropTypes.string,
+        renderUnsavedMapChangesDialog: PropTypes.bool
     };
 
     static defaultProps = {
@@ -77,11 +77,12 @@ class UserMenu extends React.Component {
             includeCloseButton: false,
             useModal: false,
             closeGlyph: "1-close"
-        }]
+        }],
+        renderUnsavedMapChangesDialog: true
     };
 
     checkUnsavedChanges = () => {
-        if (ConfigUtils.getConfigProp('unsavedMapChangesDialog')) {
+        if (this.props.renderUnsavedMapChangesDialog) {
             this.props.onCheckMapChanges(this.props.onLogout);
         } else {
             this.logout();

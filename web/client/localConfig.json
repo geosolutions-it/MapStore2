@@ -681,6 +681,5 @@
           }
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
-    },
-    "unsavedMapChangesDialog": true
+    }
 }

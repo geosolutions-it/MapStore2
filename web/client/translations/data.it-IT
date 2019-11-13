@@ -312,9 +312,9 @@
                 "noMapAvailable": "Nessuna mappa disponibile",
                 "createNewOne": "Creane una nuova",
                 "unsavedMapConfirmTitle": "Sei sicuro",
-                "unsavedMapConfirmMessage": "Sei sicuro di voler lasciare modifiche non salvate?",
-                "unsavedMapConfirmButtonText": "Partire",
-                "unsavedMapCancelButtonText": "Chiudi"
+                "unsavedMapConfirmMessage": "Sei sicuro di voler uscire senza salvare le modifiche?",
+                "unsavedMapConfirmButtonText": "Si",
+                "unsavedMapCancelButtonText": "No"
             },
             "geostories": {
                 "newGeostory": "Nuova Storia",

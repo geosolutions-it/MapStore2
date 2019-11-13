@@ -2128,6 +2128,6 @@ describe('Test the MapUtils', () => {
             "widgetsConfig": {},
             "mapInfoConfiguration": {}
         };
-        expect(compareMapChanges(map1, map2)).toBeFalsy();
+        expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
 });

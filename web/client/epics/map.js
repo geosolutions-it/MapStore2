@@ -226,36 +226,43 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
     action$
         .ofType(CHECK_MAP_CHANGES)
         .switchMap(({ action, source }) => {
-
+            const allowedRoles = ['ADMIN', 'USER'];
             const mapId = getState().map && getState().map.present.mapId;
-            const { view } = getState().feedbackMask;
+            const { currentPage } = getState().feedbackMask;
+            const { user } = getState().security;
 
-            if (!mapId && view !== 'viewer') {
-                action && action();
-                return Rx.Observable.empty();
+            if ((currentPage) !== 'viewer' || allowedRoles.indexOf(user.role) === -1) {
+                return action ? Rx.Observable.of(action) : Rx.Observable.empty();
             }
 
-            const url = ConfigUtils.getConfigUrl({ mapId }).configUrl;
-            return Rx.Observable.defer(() => axios.get(url))
-                .switchMap(({ data: originalMap }) => {
-                    const updatedMap = MapUtils.saveMapConfiguration(
-                        mapSelector(getState()),
-                        layersSelector(getState()),
-                        groupsSelector(getState()),
-                        backgroundListSelector(getState()),
-                        textSearchConfigSelector(getState()),
-                        mapOptionsToSaveSelector(getState())
-                    );
-                    const isEqual = MapUtils.compareMapChanges(originalMap, updatedMap);
-                    if (!isEqual) {
-                        return Rx.Observable.of(
-                            setControlProperty('unsavedMap', 'enabled', true, false),
-                            setControlProperty('unsavedMap', 'source', source, false)
+            if (mapId) {
+                const url = ConfigUtils.getConfigUrl({ mapId }).configUrl;
+                return Rx.Observable.defer(() => axios.get(url))
+                    .switchMap(({ data: originalMap }) => {
+                        const state = getState();
+                        const updatedMap = MapUtils.saveMapConfiguration(
+                            mapSelector(state),
+                            layersSelector(state),
+                            groupsSelector(state),
+                            backgroundListSelector(state),
+                            textSearchConfigSelector(state),
+                            mapOptionsToSaveSelector(state)
                         );
-                    }
-                    action && action();
-                    return Rx.Observable.empty();
-                });
+                        const isEqual = MapUtils.compareMapChanges(originalMap, updatedMap);
+                        if (!isEqual) {
+                            return Rx.Observable.of(
+                                setControlProperty('unsavedMap', 'enabled', true, false),
+                                setControlProperty('unsavedMap', 'source', source, false)
+                            );
+                        }
+                        return action ? Rx.Observable.of(action) : Rx.Observable.empty();
+                    });
+            }
+
+            return Rx.Observable.of(
+                setControlProperty('unsavedMap', 'enabled', true, false),
+                setControlProperty('unsavedMap', 'source', source, false)
+            );
         });
 
 module.exports = {

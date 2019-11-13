@@ -45,6 +45,8 @@ This is the main structure:
   }],
   // flag for postponing mapstore 2 load time after theme
   "loadAfterTheme": false,
+  // flag for abandon map edit confirm popup, by default is enabled
+  "unsavedMapChangesDialog": false,
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)

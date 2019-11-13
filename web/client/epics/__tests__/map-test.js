@@ -255,13 +255,16 @@ describe('map epics', () => {
     describe('compareMapChanges', () => {
         it('shouldn\'t do anything if mapId missing or current view is different than map', (done) => {
             const state = {
+                security: {
+                    user: null
+                },
                 map: {
                     present: {
                         mapId: ''
                     }
                 },
                 feedbackMask: {
-                    view: ''
+                    currentPage: ''
                 }
             };
 
@@ -275,6 +278,11 @@ describe('map epics', () => {
         });
         it('shouldn\'t do anything if map is same', (done) => {
             const state = {
+                security: {
+                    user: {
+                        role: 'USER'
+                    }
+                },
                 map: {
                     present: {
                         mapId: '1'
@@ -363,9 +371,9 @@ describe('map epics', () => {
             mockAxios.onGet().reply(200, mapFromApi);
 
             const epicResponse = (actions) => {
+                mockAxios.restore();
                 expect(actions.length).toBe(1);
                 expect(actions[0].type).toBe(TEST_TIMEOUT);
-                mockAxios.restore();
                 done();
             };
 
@@ -373,6 +381,11 @@ describe('map epics', () => {
         });
         it('should show confirm prompt if anything changed', (done) => {
             const state = {
+                security: {
+                    user: {
+                        role: 'USER'
+                    }
+                },
                 map: {
                     present: {
                         mapId: '1',
@@ -380,6 +393,7 @@ describe('map epics', () => {
                     }
                 },
                 feedbackMask: {
+                    currentPage: 'viewer'
                 },
                 layers: [
                     {
