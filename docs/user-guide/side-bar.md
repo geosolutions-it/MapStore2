@@ -46,36 +46,36 @@ The Identify tool  <img src="../img/button/identify.jpg" style="max-width:22px;"
 * **Add** a layer to the map (e.g. USA Population).
 * **Click** on a feature of the layer added previously. A pop-up page will open on the right showing the requested information and the coordinates of the point.
 
-    <img src="../img/side-bar/get_feature_info.png" />
+    <img src="../img/side-bar/get_feature_info.jpg" />
 
 The returned information are viewed in Text plain format by default. In order to change it:
 
 * **Navigate** into *Settings* from the main menu bar.
 
-    <img src="../img/side-bar/settings.png" />
+    <img src="../img/side-bar/settings.jpg" />
 
 * **Select** from the list menu *Identify response format* another format (e.g. HTML) then **Click** on a feature.
 
-    <img src="../img/side-bar/info_formats.png" style="max-width:400px;"/>
+    <img src="../img/side-bar/info_formats.jpg" style="max-width:400px;"/>
 
 * The informations will be returned as HTML accordingly.
 
-    <img src="../img/side-bar/html_info.png" />
+    <img src="../img/side-bar/html_info.jpg" />
 
 !!! warning
     This global settings could be overwritten by a layer-specific configuration (see [Feature Info Form](layer-settings.md#feature-info-form)).
 
 Below the point coordinates there are three icons:
 
-* **More Info** <img src="../img/button/more_info_icon.png" style="max-width:25px;"/> shows a popup window displaying the point address.
+* **More Info** <img src="../img/button/more_info_icon.jpg" style="max-width:25px;"/> shows a popup window displaying the point address.
 
-    <img src="../img/side-bar/more_info.png" />
+    <img src="../img/side-bar/more_info.jpg" />
 
-* **Coordinates Editor** <img src="../img/button/coordinates_editor_icon.png" style="max-width:25px;"/> makes available a tool to perform queries using decimal or aeronautical coordinates (we will explain more in depth this tool in the next paragraph).
+* **Coordinates Editor** <img src="../img/button/coordinates_editor_icon.jpg" style="max-width:25px;"/> makes available a tool to perform queries using decimal or aeronautical coordinates (we will explain more in depth this tool in the next paragraph).
 
-* **Highlight Features** <img src="../img/button/highlight_features_icon.png" style="max-width:25px;"/> highlights the resulting features.
+* **Highlight Features** <img src="../img/button/highlight_features_icon.jpg" style="max-width:25px;"/> highlights the resulting features.
 
-    <img src="../img/side-bar/highlight_features.png" />
+    <img src="../img/side-bar/highlight_features.jpg" />
 
     Using the <img src="../img/button/zoom-layer.jpg" style="max-width:25px;"/> button it is possible to zoom the highlighted feature.
 
