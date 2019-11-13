@@ -37,7 +37,8 @@ export default class ContextCreator extends React.Component {
         return (
             <Stepper
                 currentStepId={this.props.curStepId}
-                onSetStep={(stepId) => this.context.router.history.push(`/context-creator/${stepId}/`)}
+                onSetStep={(stepId) => this.context.router.history.push(
+                    `/context-creator/${this.props.source ? this.props.source + '/' : ''}${stepId}/`)}
                 onSave={() => this.props.onSave(this.props.source === 'context-manager' ? '/context-manager' : undefined)}
                 steps={[{
                     id: 'general-settings',

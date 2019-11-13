@@ -40,7 +40,7 @@ export const saveContextResource = (action$, store) => action$
         return (resource ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.of(
                 contextSaved(rid),
-                push(`/context/${context.name}`),
+                push(destLocation || `/context/${context.name}`),
                 show({
                     title: "saveDialog.saveSuccessTitle",
                     message: "saveDialog.saveSuccessMessage"

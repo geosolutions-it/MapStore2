@@ -120,7 +120,7 @@ class ContextManager extends React.Component {
                 resources={this.props.resources}
                 fluid={this.props.fluid}
                 colProps={this.props.colProps}
-                viewerUrl={(context) => this.context.router.history.push(`context/id/${context.id}`)}
+                viewerUrl={(context) => this.context.router.history.push(`context/${context.name}`)}
                 editDataEnabled={this.props.editDataEnabled}
                 onEditData={this.props.onEditData}
                 bottom={<PaginationToolbar/>} />

@@ -130,7 +130,7 @@ module.exports = {
         enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
         enableImporter: isPageConfigured(IMPORTER_ID)(state),
         controls: state.controls,
-        role: 'ADMIN'
+        role: state.security && state.security.user && state.security.user.role
     }), {
         itemSelected
     })(ManagerMenu), {
