@@ -83,7 +83,7 @@ class Contexts extends React.Component {
             fluid={this.props.fluid}
             title={this.props.title}
             colProps={this.props.colProps}
-            viewerUrl={(context) => {this.context.router.history.push(`context/id/${context.id}`);}}
+            viewerUrl={(context) => {this.context.router.history.push(`context/${context.name}`);}}
             bottom={<PaginationToolbar />}
         />);
     }

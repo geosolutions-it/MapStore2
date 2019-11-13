@@ -103,10 +103,10 @@ const Api = {
             "resources/resource/" + resourceId,
             this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
-    getResourceByName: function(category, name, options) {
+    getResourceIdByName: function(category, name, options) {
         return axios.get(
             "misc/category/name/" + category + "/resource/name/" + name,
-            this.addBaseUrl(parseOptions(options))).then(response => response.data);
+            this.addBaseUrl(parseOptions(options))).then(response => get(response, 'data.Resource.id'));
     },
     getShortResource: function(resourceId, options) {
         return axios.get(
