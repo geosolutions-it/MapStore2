@@ -9,82 +9,18 @@
 
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
-import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
-import ToolbarButton from '../../misc/toolbar/ToolbarButton';
-import Message from '../../I18N/Message';
-import withConfirm from "../../misc/toolbar/withConfirm";
-const DeleteButton = withConfirm(ToolbarButton);
+import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
+
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
-    size: ({editMap: disabled = false, align, sectionType, size, update = () => {} }) => ({
-        Element: () => <ToolbarDropdownButton
-            value={size}
-            disabled={disabled}
-            glyph="resize-horizontal"
-            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
-            tooltipId="geostory.contentToolbar.contentSize"
-            options={[{
-                value: 'small',
-                glyph: 'size-small',
-                label: <Message msgId="geostory.contentToolbar.smallSizeLabel"/>
-            }, {
-                value: 'medium',
-                glyph: 'size-medium',
-                label: <Message msgId="geostory.contentToolbar.mediumSizeLabel"/>
-            }, {
-                value: 'large',
-                glyph: 'size-large',
-                label: <Message msgId="geostory.contentToolbar.largeSizeLabel"/>
-            }, {
-                value: 'full',
-                glyph: 'size-extra-large',
-                label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
-            }]}
-            onSelect={(selected) => update('size', selected)}/>
+    size: (props) => ({
+        renderButton: <SizeButtonToolbar {...props}/>
     }),
-    align: ({ editMap: disabled = false, size, align, sectionType, update = () => {} }) => ({
-        Element: () => <ToolbarDropdownButton
-            value={align}
-            disabled={size === 'full' || disabled}
-            glyph="align-center"
-            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
-            tooltipId="geostory.contentToolbar.contentAlign"
-            options={[{
-                value: 'left',
-                label: <Message msgId="geostory.contentToolbar.leftAlignLabel"/>,
-                glyph: 'align-left'
-            }, {
-                value: 'center',
-                label: <Message msgId="geostory.contentToolbar.centerAlignLabel"/>,
-                glyph: 'align-center'
-            }, {
-                value: 'right',
-                label: <Message msgId="geostory.contentToolbar.rightAlignLabel"/>,
-                glyph: 'align-right'
-            }]}
-            onSelect={(selected) => update('align', selected)}/>
+    align: (props) => ({
+        renderButton: <AlignButtonToolbar {...props}/>
     }),
-    theme: ({ editMap: disabled = false, theme, align, sectionType, update = () => {}, fit, themeOptions, size }) => ({
-        Element: () => <ToolbarDropdownButton
-            value={theme}
-            pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
-            glyph="dropper"
-            tooltipId="geostory.contentToolbar.contentTheme"
-            disabled={fit === 'cover' && size === 'full' || disabled}
-            options={themeOptions || [{
-                value: 'bright',
-                label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
-            }, {
-                value: 'bright-text',
-                label: <Message msgId="geostory.contentToolbar.brightTextThemeLabel"/>
-            }, {
-                value: 'dark',
-                label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
-            }, {
-                value: 'dark-text',
-                label: <Message msgId="geostory.contentToolbar.darkTextThemeLabel"/>
-            }]}
-            onSelect={(selected) => update('theme', selected)}/>
+    theme: (props) => ({
+        renderButton: <ThemeButtonToolbar {...props}/>
     }),
     fit: ({editMap: disabled = false, fit, update = () => {} }) => ({
         // using normal ToolbarButton because this is a toggle button without options
@@ -115,18 +51,8 @@ const toolButtons = {
         }
     }),
     // remove content
-    remove: ({ editMap: disabled = false, path, remove = () => { } }) => ({
-        Element: () => (<DeleteButton
-            glyph={"trash"}
-            visible
-            disabled={disabled}
-            className={BUTTON_CLASSES}
-            tooltipId={"geostory.contentToolbar.remove"}
-            confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
-            confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
-            onClick={ () => {
-                remove(path);
-            }} />)
+    remove: (props) => ({
+        renderButton: <DeleteButtonToolbar {...props}/>
 
     }),
     editMap: ({editMap = false, update = () => {}}) => ({
