@@ -48,7 +48,7 @@ const Persistence = {
     * @return an observable that emits the requested resource
     */
     getResource: (...args) => Persistence.getApi().getResource(...args),
-    getResourceByName: (...args) => Persistence.getApi().getResourceByName(...args),
+    getResourceIdByName: (...args) => Persistence.getApi().getResourceIdByName(...args),
     /**
      * Returns an observable for saving a "Resource" and it's linked resources.
      * Linked resources are geostore resources like thumbnail or details. The main resource contains a link

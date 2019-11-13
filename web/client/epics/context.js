@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { getResource, getResourceByName } from '../api/persistence';
+import { getResource, getResourceIdByName } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 import { isLoggedIn } from '../selectors/security';
 
@@ -31,9 +31,9 @@ function ContextError(error) {
     this.originalError = error;
     this.name = "context";
 }
-const createContextFlow = (id, name, action$, getState) =>
+const createContextFlow = (id, action$, getState) =>
     (id !== "default"
-        ? (id ? getResource(id) : getResourceByName('CONTEXT', name))
+        ? getResource(id)
             // TODO: setContext should put in ConfigUtils some variables
             // TODO: solve the problem of initial state used to configure plugins partially
             .switchMap((resource) => Observable.of(setResource(resource), setContext(resource.data)))
@@ -51,9 +51,9 @@ const createContextFlow = (id, name, action$, getState) =>
  * @param {string|number} id id of the map
  * @param {*} action$ stream of actions
  */
-const createMapFlow = (mapId = '0', action$) => {
+const createMapFlow = (mapId = 'new', action$) => {
     const { configUrl } = ConfigUtils.getConfigUrl({ mapId });
-    return Observable.of(loadMapConfig(configUrl, mapId)).merge(
+    return Observable.of(loadMapConfig(configUrl, mapId === 'new' ? null : mapId)).merge(
         action$.ofType(MAP_CONFIG_LOAD_ERROR)
             .switchMap(({ type, error }) => {
                 if (type === MAP_CONFIG_LOAD_ERROR) {
@@ -82,9 +82,10 @@ const errorToMessageId = (name, e, getState = () => {}) => {
  * @param {object} store
  */
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
-    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextId, contextName }) =>
+    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) =>
         Observable.merge(
-            createContextFlow(contextId, contextName, action$, getState).catch(e => {throw new ContextError(e); }),
+            getResourceIdByName('CONTEXT', contextName)
+                .switchMap(id => createContextFlow(id, action$, getState)).catch(e => {throw new ContextError(e); }),
             createMapFlow(mapId, action$, getState).catch(e => { throw new MapError(e); })
         )
             // if everything went right, trigger loadFinished

@@ -30,6 +30,7 @@ import {
 } from '../../actions/security';
 
 import CONTEXT_SHORT_RESOURCE from '../../test-resources/geostore/resources/resource/context_1.json';
+import CONTEXT_RESOURCE from '../../test-resources/geostore/resources/resource/context_2.json';
 import CONTEXT_DATA from '../../test-resources/geostore/data/context_1.json';
 import CONTEXT_ATTRIBUTES from '../../test-resources/geostore/resources/resource/context_1_attributes.json';
 
@@ -42,6 +43,7 @@ let mockAxios;
 describe('context epics', () => {
     const mapId = 1;
     const contextId = 2;
+    const contextName = 'contextName';
     describe('loadContextAndMap', () => {
         beforeEach(done => {
             mockAxios = new MockAdapter(ajax);
@@ -63,12 +65,15 @@ describe('context epics', () => {
             mockAxios.onGet(`/mapstore/rest/geostore/resources/resource/${contextId}/attributes`).reply(() => {
                 return [status, CONTEXT_ATTRIBUTES];
             });
+            mockAxios.onGet(`/mapstore/rest/geostore/misc/category/name/CONTEXT/resource/name/${contextName}`).reply(() => {
+                return [status, CONTEXT_RESOURCE];
+            });
         };
 
         it('successful context and map load flow', done => {
             createContextResponse();
             const act = [
-                loadContext({ mapId, contextId }),
+                loadContext({ mapId, contextName }),
                 configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
             ];
             testEpic(loadContextAndMap, 6, act, ([loadingAction, loadMapAction, setResourceAction, setContextAction, loadFinishedAction, loadEndAction]) => {
@@ -115,7 +120,7 @@ describe('context epics', () => {
             it('403 forbidden, not logged in', done => {
                 createContextResponse();
                 const actions = [
-                    loadContext({ mapId, contextId }),
+                    loadContext({ mapId, contextName }),
                     configureError({status: 403}) // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
                 checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.map.pleaseLogin', done);
@@ -124,7 +129,7 @@ describe('context epics', () => {
             it('403 forbidden, logged in', done => {
                 createContextResponse();
                 const actions = [
-                    loadContext({ mapId, contextId }),
+                    loadContext({ mapId, contextName }),
                     configureError({ status: 403 }) // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
                 checkLoadErrors(actions, LOGGED_STATE, 'context.errors.map.notAccessible', done);
@@ -135,7 +140,7 @@ describe('context epics', () => {
             it('403 forbidden, not logged in', done => {
                 createContextResponse(403);
                 const actions = [
-                    loadContext({ mapId, contextId }),
+                    loadContext({ mapId, contextName }),
                     configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
                 checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.context.pleaseLogin', done);
@@ -144,7 +149,7 @@ describe('context epics', () => {
             it('403 forbidden, logged in', done => {
                 createContextResponse(403);
                 const actions = [
-                    loadContext({ mapId, contextId }),
+                    loadContext({ mapId, contextName }),
                     configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
                 checkLoadErrors(actions, LOGGED_STATE, 'context.errors.context.notAccessible', done);
@@ -153,20 +158,20 @@ describe('context epics', () => {
     });
     describe('handleLoginLogoutContextReload', () => {
         it('reload when forbidden, then the user login', done => {
-            const actions = [loadContext({ mapId, contextId }), contextLoadError({ error: { status: 403 } }), loginSuccess()];
+            const actions = [loadContext({ mapId, contextName }), contextLoadError({ error: { status: 403 } }), loginSuccess()];
             testEpic(handleLoginLogoutContextReload, 1, actions, ([reloadAction]) => {
                 expect(reloadAction.type).toBe(LOAD_CONTEXT);
                 expect(reloadAction.mapId).toBe(mapId);
-                expect(reloadAction.contextId).toBe(contextId);
+                expect(reloadAction.contextName).toBe(contextName);
                 done();
             });
         });
         it('reload when loaded, then the user logout', done => {
-            const actions = [loadContext({ mapId, contextId }), loadFinished(), logout()];
+            const actions = [loadContext({ mapId, contextName }), loadFinished(), logout()];
             testEpic(handleLoginLogoutContextReload, 1, actions, ([reloadAction]) => {
                 expect(reloadAction.type).toBe(LOAD_CONTEXT);
                 expect(reloadAction.mapId).toBe(mapId);
-                expect(reloadAction.contextId).toBe(contextId);
+                expect(reloadAction.contextName).toBe(contextName);
                 done();
             });
         });

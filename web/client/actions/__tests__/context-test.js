@@ -10,12 +10,12 @@ import {
 describe('context actions', () => {
     it('loadContext', () => {
         const mapId = "test";
-        const contextId = "contextId";
-        const retVal = loadContext({ mapId, contextId });
+        const contextName = "contextName";
+        const retVal = loadContext({ mapId, contextName });
         expect(retVal).toExist();
         expect(retVal.type).toBe(LOAD_CONTEXT);
         expect(retVal.mapId).toBe(mapId);
-        expect(retVal.contextId).toBe(contextId);
+        expect(retVal.contextName).toBe(contextName);
     });
     it('setContext', () => {
         const context = {};

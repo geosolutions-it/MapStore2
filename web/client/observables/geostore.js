@@ -178,8 +178,8 @@ export const getResource = (id, { includeAttributes = true, withData = true, wit
         permissions
     }));
 
-export const getResourceByName = (category, name, API = GeoStoreDAO) =>
-    Observable.defer(() => API.getResourceByName(category, name));
+export const getResourceIdByName = (category, name, API = GeoStoreDAO) =>
+    Observable.defer(() => API.getResourceIdByName(category, name));
 
 /**
  * Retrieves an array of resources with all information about user's permission on that resource, attributes and data.
