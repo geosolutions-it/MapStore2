@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isString, trim, isNumber, isEqual, pick} = require('lodash');
+const {isString, trim, isNumber, pick} = require('lodash');
 
 const DEFAULT_SCREEN_DPI = 96;
 
@@ -425,10 +425,7 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
         'widgetsConfig'
     ];
 
-    return isEqual(
-        pick(originalState, pickedFields),
-        pick(newState, pickedFields)
-    );
+    return JSON.stringify(pick(originalState, pickedFields)) === JSON.stringify(pick(newState, pickedFields));
 };
 
 module.exports = {

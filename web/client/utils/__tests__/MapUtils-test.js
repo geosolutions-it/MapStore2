@@ -29,7 +29,8 @@ var {
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
-    parseLayoutValue
+    parseLayoutValue,
+    compareMapChanges
 } = require('../MapUtils');
 
 const POINT = "Point";
@@ -1931,4 +1932,202 @@ describe('Test the MapUtils', () => {
         expect(getSimpleGeomType("Other")).toBe("Other");
     });
 
+    it('test compareMapChanges returns false (maps aren\'t equal)', () => {
+        const map1 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer001",
+                        "thumbURL": "THUMB_URL",
+                        "search": {
+
+                        },
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {
+
+                        },
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {
+
+                        },
+                        "dimensions": [
+
+                        ],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {
+
+                        }
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        const map2 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer002",
+                        "thumbURL": "THUMB_URL",
+                        "search": {
+
+                        },
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {
+
+                        },
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {
+
+                        },
+                        "dimensions": [
+
+                        ],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {
+
+                        }
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        expect(compareMapChanges(map1, map2)).toBeFalsy();
+    });
+    it('test compareMapChanges returns true (maps are equal)', () => {
+        const map1 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer001",
+                        "thumbURL": "THUMB_URL",
+                        "search": {
+
+                        },
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {
+
+                        },
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {
+
+                        },
+                        "dimensions": [
+
+                        ],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {
+
+                        }
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        const map2 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer001",
+                        "thumbURL": "THUMB_URL",
+                        "search": {
+
+                        },
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {
+
+                        },
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {
+
+                        },
+                        "dimensions": [
+
+                        ],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {
+
+                        }
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        expect(compareMapChanges(map1, map2)).toBeFalsy();
+    });
 });
