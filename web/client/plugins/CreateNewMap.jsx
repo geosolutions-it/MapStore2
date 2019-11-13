@@ -67,7 +67,7 @@ class CreateNewMap extends React.Component {
                         </Button>
                         : null}
                     {this.props.showNewContext ?
-                        <Button tooltipId="resources.contexts.newContext" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/context-creator/general-settings/"); }}>
+                        <Button tooltipId="resources.contexts.newContext" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/context-creator/mainpage/new/general-settings/"); }}>
                             <Glyphicon glyph="wrench" />
                         </Button>
                         : null}

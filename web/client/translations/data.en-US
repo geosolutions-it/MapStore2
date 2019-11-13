@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Delete",
                 "editResource": "Edit properties",
+                "editResourceData": "Edit resource data",
                 "addToFeatured": "Add to featured",
                 "removeFromFeatured": "Remove from featured",
                 "showDetails": "Show details"
@@ -2080,6 +2081,12 @@
                 "title": "Context saving failed",
                 "defaultMessage": "Unknown error"
             }
+        },
+        "contextManager": {
+            "title": "Manage Contexts",
+            "gridTitle": "Contexts",
+            "searchPlaceholder": "search contexts...",
+            "newContext": "New Context"
         },
         "tutorial": {
             "title": "Tutorial",

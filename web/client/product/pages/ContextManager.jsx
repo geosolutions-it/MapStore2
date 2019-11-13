@@ -1,21 +1,20 @@
-const PropTypes = require('prop-types');
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const Page = require('../../containers/Page');
 
-const {resetControls} = require('../../actions/controls');
+import React from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import Page from '../../containers/Page';
+import {resetControls} from '../../actions/controls';
 
+import '../assets/css/manager.css';
 
-require('../assets/css/manager.css');
-
-class Manager extends React.Component {
+class ContextManager extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
@@ -38,7 +37,7 @@ class Manager extends React.Component {
 
     render() {
         return (<Page
-            id="manager"
+            id="context-manager"
             className="manager"
             plugins={this.props.plugins}
             params={this.props.match.params}
@@ -46,11 +45,8 @@ class Manager extends React.Component {
     }
 }
 
-module.exports = connect((state) => {
-    return {
-        mode: 'desktop',
-        messages: state.locale && state.locale.messages || {}
-    };
-}, {
+export default connect(() => ({
+    mode: 'desktop'
+}), {
     reset: resetControls
-})(Manager);
+})(ContextManager);

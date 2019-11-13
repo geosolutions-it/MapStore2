@@ -713,6 +713,7 @@
             }
           }
         ],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
+        "context-manager": ["Header", "Home", "ContextManager", "Footer"]
     }
 }

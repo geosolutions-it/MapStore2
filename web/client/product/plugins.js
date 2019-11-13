@@ -35,6 +35,7 @@ module.exports = {
         ContextPlugin: require('../plugins/Context').default,
         ContextsPlugin: require('../plugins/Contexts').default,
         ContextCreatorPlugin: require('../plugins/ContextCreator').default,
+        ContextManagerPlugin: require('../plugins/contextmanager/ContextManager').default,
         CookiePlugin: require('../plugins/Cookie'),
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         Dashboard: require('../plugins/Dashboard'),

@@ -56,6 +56,11 @@ class ManagerMenu extends React.Component {
             "path": "/manager/usermanager"
         },
         {
+            "msgId": "contextManager.title",
+            "glyph": "wrench",
+            "path": "/context-manager"
+        },
+        {
             "msgId": "rulesmanager.menutitle",
             "glyph": "admin-geofence",
             "path": "/rules-manager"
@@ -125,7 +130,7 @@ module.exports = {
         enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
         enableImporter: isPageConfigured(IMPORTER_ID)(state),
         controls: state.controls,
-        role: state.security && state.security.user && state.security.user.role
+        role: 'ADMIN'
     }), {
         itemSelected
     })(ManagerMenu), {

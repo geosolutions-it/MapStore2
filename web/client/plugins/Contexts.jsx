@@ -12,9 +12,9 @@ import {connect} from 'react-redux';
 import Message from "../components/I18N/Message";
 import emptyState from '../components/misc/enhancers/emptyState';
 
-import {setContextsAvailable} from '../actions/contexts';
+import {setContextsAvailable, deleteContext, reloadContexts} from '../actions/contexts';
 import {mapTypeSelector} from '../selectors/maptype';
-import {userRoleSelector} from '../selectors/security';
+import {userSelector, userRoleSelector} from '../selectors/security';
 import {isFeaturedMapsEnabled} from '../selectors/featuredmaps';
 import {totalCountSelector} from '../selectors/contexts';
 import * as epics from '../epics/contexts';
@@ -22,7 +22,8 @@ import contextsReducer from '../reducers/contexts';
 import {createSelector} from 'reselect';
 import {compose} from 'recompose';
 
-import ContextGrid from './contexts/ContextGrid';
+import {updateAttribute, setFeaturedMapsLatestResource} from '../actions/maps';
+import ContextGridComponent from './contexts/ContextGrid';
 import PaginationToolbar from './contexts/PaginationToolbar';
 import EmptyContextsView from './contexts/EmptyContextsView';
 
@@ -31,6 +32,12 @@ const contextsCountSelector = createSelector(
     count => ({ count })
 );
 
+const ContextGrid =  connect(createSelector(userSelector, user => ({ user })), {
+    onDelete: deleteContext,
+    reloadContexts,
+    setFeaturedMapsLatestResource,
+    onUpdateAttribute: updateAttribute
+})(ContextGridComponent);
 
 class Contexts extends React.Component {
     static propTypes = {

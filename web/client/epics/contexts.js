@@ -80,7 +80,7 @@ export const deleteContext = action$ => action$
 export const reloadOnContexts = (action$, { getState = () => {} }) =>
     action$.ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED)
         .delay(1000) // delay as a workaround for geostore issue #178
-        .switchMap( () => Rx.Observable.of(searchContexts(
+        .switchMap(() => Rx.Observable.of(searchContexts(
             searchTextSelector(getState()),
             calculateNewParams(getState())
         )));

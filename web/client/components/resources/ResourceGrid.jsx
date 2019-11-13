@@ -39,7 +39,9 @@ module.exports = ({
     viewerUrl,
     edit,
     user,
+    editDataEnabled,
     onEdit = () => {},
+    onEditData = () => {},
     setEdit = () => {},
     onSaveSuccess = () => {},
     onDelete = () => {},
@@ -57,7 +59,9 @@ module.exports = ({
                         <ResourceCard
                             viewerUrl={viewerUrl}
                             resource={res}
+                            editDataEnabled={editDataEnabled}
                             onEdit={onEdit}
+                            onEditData={onEditData}
                             onDelete={onDelete}
                             onUpdateAttribute={onUpdateAttribute} />
                     </Col>))
