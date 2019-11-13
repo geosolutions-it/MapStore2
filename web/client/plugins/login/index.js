@@ -7,10 +7,11 @@
 */
 const React = require('react');
 const {connect} = require('../../utils/PluginsUtils');
-const {login, loginFail, logoutWithReload, changePassword, resetError, LOGOUT} = require('../../actions/security');
+const {login, loginFail, logoutWithReload, changePassword, resetError} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 const {checkMapChanges} = require('../../actions/map');
 const {Glyphicon} = require('react-bootstrap');
+const {unsavedMapSelector, unsavedMapSourceSelector} = require('../../selectors/controls');
 
 const closeLogin = () => {
     return (dispatch) => {
@@ -19,9 +20,9 @@ const closeLogin = () => {
     };
 };
 
-const checkUnsavedMapChanges = () => {
+const checkUnsavedMapChanges = (action) => {
     return dispatch => {
-        dispatch(checkMapChanges(LOGOUT));
+        dispatch(checkMapChanges(action, 'logout'));
     };
 };
 
@@ -69,14 +70,14 @@ const LoginNav = connect((state) => ({
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
     bsStyle: "primary",
     className: "square-button",
-    displayUnsavedDialog: state.controls && state.controls.unsavedMap && state.controls.unsavedMap.enabled,
-    confirmUnsavedDialogAction: state.controls && state.controls.unsavedMap && state.controls.unsavedMap.action
+    displayUnsavedDialog: unsavedMapSelector(state) && unsavedMapSourceSelector(state) === 'logout'
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
     onCheckMapChanges: checkUnsavedMapChanges,
-    onLogout: logoutWithReload
+    onLogout: logoutWithReload,
+    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false)
 })(require('../../components/security/UserMenu'));
 
 module.exports = {

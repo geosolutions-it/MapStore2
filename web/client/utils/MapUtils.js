@@ -420,9 +420,9 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
         'map.groups',
         'map.backgrounds',
         'map.text_search_config',
+        'map.zoom',
         'catalogServices',
-        'widgetsConfig',
-        'mapInfoConfiguration'
+        'widgetsConfig'
     ];
 
     return isEqual(

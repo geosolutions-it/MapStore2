@@ -309,7 +309,11 @@
             "maps": {
                 "title": "Maps ({count})",
                 "noMapAvailable": "Geen kaart beschikbaar",
-                "createNewOne": "Maak een nieuwe"
+                "createNewOne": "Maak een nieuwe",
+                "unsavedMapConfirmTitle": "Weet je zeker dat",
+                "unsavedMapConfirmMessage": "Weet u zeker dat u niet-opgeslagen wijzigingen wilt achterlaten?",
+                "unsavedMapConfirmButtonText": "Vertrekken",
+                "unsavedMapCancelButtonText": "Afsluiten"
             }
         },
         "map": {

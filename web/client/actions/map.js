@@ -181,9 +181,10 @@ function setMapResolutions(resolutions) {
     };
 }
 
-const checkMapChanges = (action) => ({
+const checkMapChanges = (action, source) => ({
     type: CHECK_MAP_CHANGES,
-    action
+    action,
+    source
 });
 
 /**

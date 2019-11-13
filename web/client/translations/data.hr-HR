@@ -310,7 +310,11 @@
             "maps": {
                 "title": "Karte ({count})",
                 "noMapAvailable": "Karta nije dostupna",
-                "createNewOne": "Izradite novi"
+                "createNewOne": "Izradite novi",
+                "unsavedMapConfirmTitle": "Jeste li sigurni",
+                "unsavedMapConfirmMessage": "Jeste li sigurni da želite ostaviti nespremljene promjene?",
+                "unsavedMapConfirmButtonText": "Napustiti",
+                "unsavedMapCancelButtonText": "Zatvori"
             }
         },
         "map": {

@@ -17,9 +17,26 @@ const Message = require('./locale/Message');
 const {Glyphicon} = require('react-bootstrap');
 
 const Home = require('../components/home/Home');
+const {connect} = require('react-redux');
+const {checkMapChanges} = require('../actions/map');
+const {setControlProperty} = require('../actions/controls');
+const {unsavedMapSelector, unsavedMapSourceSelector} = require('../selectors/controls');
+
+const checkUnsavedMapChanges = (action) => {
+    return dispatch => {
+        dispatch(checkMapChanges(action, 'gohome'));
+    };
+};
+
+const HomeConnected = connect((state) => ({
+    displayUnsavedDialog: unsavedMapSelector(state) && unsavedMapSourceSelector(state) === 'gohome'
+}), {
+    onCheckMapChanges: checkUnsavedMapChanges,
+    onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false, false)
+})(Home);
 
 module.exports = {
-    HomePlugin: assign(Home, {
+    HomePlugin: assign(HomeConnected, {
         Toolbar: {
             name: 'home',
             position: 1,

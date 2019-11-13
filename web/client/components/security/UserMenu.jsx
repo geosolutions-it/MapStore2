@@ -82,10 +82,15 @@ class UserMenu extends React.Component {
 
     checkUnsavedChanges = () => {
         if (ConfigUtils.getConfigProp('unsavedMapChangesDialog')) {
-            this.props.onCheckMapChanges();
+            this.props.onCheckMapChanges(this.props.onLogout);
         } else {
-            this.props.onLogout();
+            this.logout();
         }
+    }
+
+    logout = () => {
+        this.props.onCloseUnsavedDialog();
+        this.props.onLogout();
     }
 
     renderGuestTools = () => {
@@ -117,22 +122,22 @@ class UserMenu extends React.Component {
                     {itemArray}
                 </DropDown>
                 <ConfirmModal
-                    ref="deleteMapModal"
+                    ref="unsavedMapModal"
                     show={this.props.displayUnsavedDialog || false}
-                    onClose={this.closeUnsavedDialog}
-                    title={<Message msgId="resources.deleteConfirmTitle" />}
+                    onClose={this.props.onCloseUnsavedDialog}
+                    title={<Message msgId="resources.maps.unsavedMapConfirmTitle" />}
                     buttons={[{
                         bsStyle: "primary",
-                        text: <Message msgId="yes" />,
-                        onClick: this.props.onLogout
+                        text: <Message msgId="resources.maps.unsavedMapConfirmButtonText" />,
+                        onClick: this.logout
                     }, {
-                        text: <Message msgId="no" />,
-                        onClick: this.closeUnsavedDialog
+                        text: <Message msgId="resources.maps.unsavedMapCancelButtonText" />,
+                        onClick: this.props.onCloseUnsavedDialog
                     }]}
                     fitContent
                 >
                     <div className="ms-detail-body">
-                        <Message msgId="resources.deleteConfirmMessage" />
+                        <Message msgId="resources.maps.unsavedMapConfirmMessage" />
                     </div>
                 </ConfirmModal>
             </React.Fragment>
@@ -140,7 +145,6 @@ class UserMenu extends React.Component {
     };
 
     renderButtonText = () => {
-
         return this.props.renderButtonContent ?
             this.props.renderButtonContent() :
             [<Glyphicon glyph="user" />, this.props.renderButtonText ? this.props.user && this.props.user[this.props.displayName] || "Guest" : null];

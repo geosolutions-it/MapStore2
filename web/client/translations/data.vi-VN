@@ -1118,7 +1118,11 @@
             "deleteConfirmMessage": "Bạn có chắc muốn xóa tài nguyên này?",
             "deleteConfirmTitle": "Bạn có chắc không",
             "maps": {
-                "title": "Bản đồ ({count})"
+                "title": "Bản đồ ({count})",
+                "unsavedMapConfirmTitle": "Are you sure",
+                "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
+                "unsavedMapConfirmButtonText": "Leave",
+                "unsavedMapCancelButtonText": "Close"
             },
             "resource": {
                 "addToFeatured": "Chỉnh sửa tính năng",

@@ -225,10 +225,15 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
 const compareMapChanges = (action$, { getState = () => {} }) =>
     action$
         .ofType(CHECK_MAP_CHANGES)
-        .switchMap(({ action }) => {
-            const mapId = getState().map && getState().map.present.mapId;
+        .switchMap(({ action, source }) => {
 
-            if (!mapId) return Rx.Observable.of({ type: action });
+            const mapId = getState().map && getState().map.present.mapId;
+            const { view } = getState().feedbackMask;
+
+            if (!mapId && view !== 'viewer') {
+                action && action();
+                return Rx.Observable.empty();
+            }
 
             const url = ConfigUtils.getConfigUrl({ mapId }).configUrl;
             return Rx.Observable.defer(() => axios.get(url))
@@ -241,13 +246,15 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
                         textSearchConfigSelector(getState()),
                         mapOptionsToSaveSelector(getState())
                     );
-                    if (!MapUtils.compareMapChanges(originalMap, updatedMap)) {
+                    const isEqual = MapUtils.compareMapChanges(originalMap, updatedMap);
+                    if (!isEqual) {
                         return Rx.Observable.of(
-                            setControlProperty('unsavedMap', 'enabled', true),
-                            setControlProperty('unsavedMap', 'action', action)
+                            setControlProperty('unsavedMap', 'enabled', true, false),
+                            setControlProperty('unsavedMap', 'source', source, false)
                         );
                     }
-                    return Rx.Observable.of({ type: action });
+                    action && action();
+                    return Rx.Observable.empty();
                 });
         });
 
