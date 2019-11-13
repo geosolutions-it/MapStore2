@@ -34,8 +34,8 @@ module.exports = ({
         transitionLeaveTimeout: 300
     }} = {}) => {
     const renderButtons = () => buttons.map(
-        ({ visible = true, Element, ...props }, index) => visible
-            ? (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
+        ({ visible = true, Element, renderButton, ...props }, index) => visible
+            ? (renderButton ? renderButton : (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />))
             : null
     );
     return (<ButtonGroup {...btnGroupProps}>

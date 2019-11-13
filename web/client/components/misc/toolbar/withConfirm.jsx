@@ -10,6 +10,8 @@ import React from 'react';
 import Confirm from '../ConfirmDialog';
 import Portal from '../Portal';
 import Message from '../../I18N/Message';
+import { compose, withHandlers, withState, withProps, nest} from 'recompose';
+
 const ConfirmModal = ({
     confirmYes = <Message msgId="yes" />,
     confirmNo = <Message msgId="no"/>,
@@ -35,9 +37,6 @@ const ConfirmModal = ({
         {confirmContent}
     </Confirm>
 </Portal>);
-
-
-import { compose, withHandlers, withState, withProps, nest} from 'recompose';
 
 const withChildren = (...children) => mainComponent => nest(mainComponent, ...children);
 /**
