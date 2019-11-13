@@ -41,11 +41,11 @@ markdown_extensions:
 pages:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
+    - Cards Properties: 'user-guide/cards-properties.md'
     - Managing Users and Groups:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
-      - Managing User Rights on Maps: 'user-guide/managing-user-rights.md'
     - Exploring Maps:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
