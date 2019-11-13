@@ -5,25 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+import {capitalize, find, get} from "lodash";
 import React from 'react';
-import capitalize from "lodash/capitalize";
-import get from 'lodash/get';
-import find from 'lodash/find';
 import {Glyphicon} from 'react-bootstrap';
-import compose from 'recompose/compose';
-import withProps from 'recompose/withProps';
 import { connect } from "react-redux";
+import {compose, withProps} from 'recompose';
 import { createSelector } from 'reselect';
 import uuid from "uuid";
 
-import TitleEditable from './TitleEditable';
-
 import { resourcesSelector } from '../../../selectors/geostory';
-import Toolbar from '../../misc/toolbar/Toolbar';
-import SideGrid from '../../misc/cardgrids/SideGrid';
 import SideCard from '../../misc/cardgrids/SideCard';
-import draggableContainer from '../../misc/enhancers/draggableContainer';
+import SideGrid from '../../misc/cardgrids/SideGrid';
 import draggableComponent from '../../misc/enhancers/draggableComponent';
+import draggableContainer from '../../misc/enhancers/draggableContainer';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import TitleEditable from './TitleEditable';
 
 const DraggableSideGrid = draggableContainer(SideGrid);
 const DraggableSideCard = draggableComponent((props) => <SideCard {...props} dragSymbol={<Glyphicon glyph="menu-hamburger"/>} />);

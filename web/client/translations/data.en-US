@@ -1606,6 +1606,9 @@
             "errors":{
                 "loading": {
                     "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
                     "unknownError": "There was an error loading the dashboard. Please contact the administrator",
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
@@ -1960,17 +1963,21 @@
                 "settings": {
                     "tooltip": "Settings",
                     "back": "Back to builder",
+                    "backConfirmTitle": "Settings Changed",
+                    "backConfirmBody": "Are you sure to close the settings panel without saving your changes",
+                    "backConfirmNo": "No",
+                    "backConfirmYes": "Yes",
                     "save": "Save settings",
                     "headerTitle" : "Story Settings",
                     "title" : "Title",
                     "titlePlaceholder" : "Enter Title",
                     "logo" : "Logo",
-                    "logoPlaceholder" : "Enter logo src (image format)",
+                    "logoPlaceholder": "Logo must not go beyond 48 px of height and is suggested a width of 96 px. max 500kb",
                     "autoplay" : "Autoplay",
                     "enableAutoplay" : "Enable autoplay",
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
-                    "navbar" : "Navbar",
+                    "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar"
                 }
             },

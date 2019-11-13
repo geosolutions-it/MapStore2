@@ -13,6 +13,10 @@ const Dropzone = require('react-dropzone');
 const Spinner = require('react-spinkit');
 const Message = require('../../../components/I18N/Message');
 
+const errorMessages = {
+    "FORMAT": <Message msgId="map.errorFormat" />,
+    "SIZE": <Message msgId="map.errorSize" />
+};
 /**
  * A Dropzone area for a thumbnail.
  */
@@ -21,7 +25,9 @@ class Thumbnail extends React.Component {
     static propTypes = {
         glyphiconRemove: PropTypes.string,
         style: PropTypes.object,
+        thumbnailErrors: PropTypes.array,
         loading: PropTypes.bool,
+        withLabel: PropTypes.bool,
         map: PropTypes.object,
         // CALLBACKS
         onDrop: PropTypes.func,
@@ -42,6 +48,7 @@ class Thumbnail extends React.Component {
 
     static defaultProps = {
         loading: false,
+        withLabel: true,
         glyphiconRemove: "remove-circle",
         // CALLBACKS
         onDrop: () => {},
@@ -54,7 +61,8 @@ class Thumbnail extends React.Component {
         // I18N
         message: <Message msgId="map.message"/>,
         suggestion: <Message msgId="map.suggestion"/>,
-        map: {}
+        map: {},
+        thumbnailErrors: []
     };
 
     state = {};
@@ -188,16 +196,33 @@ class Thumbnail extends React.Component {
             }
         }
     };
+    renderThumbnailErrors() {
 
+        return this.props.thumbnailErrors && this.props.thumbnailErrors.length > 0 ? (
+            <div className="dropzone-errorBox alert-danger">
+                <p><Message msgId="map.error"/></p>
+                {(this.props.thumbnailErrors.map(err =>
+                    <div id={"error" + err} key={"error" + err} className={"error" + err}>
+                        {errorMessages[err]}
+                    </div>
+                ))}
+            </div>
+        ) : null;
+    }
     render() {
-        const withoutThumbnail = <div className="dropzone-content-image">{this.props.message}<br/>{this.props.suggestion}</div>;
+        const withoutThumbnail = (<div className="dropzone-content-image">
+            {this.props.message}<br/>{this.props.suggestion}
+            <div className="dropzone-errors">
+                {this.renderThumbnailErrors()}
+            </div>
+        </div>);
         return (
             this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
 
                 <div className="dropzone-thumbnail-container" style={{
                     pointerEvents: this.props.map.saving ? "none" : "auto"
                 }}>
-                    <label className="control-label"><Message msgId="map.thumbnail"/></label>
+                    {this.props.withLabel && <label className="control-label"><Message msgId="map.thumbnail"/></label>}
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
                         { this.getThumbnailUrl() ?
                             <div>
