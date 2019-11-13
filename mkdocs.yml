@@ -66,6 +66,12 @@ pages:
       - Timeline: 'user-guide/timeline.md'
       - Footer: 'user-guide/footer.md'
     - Exploring Dashboards: 'user-guide/exploring-dashboards.md'
+    - Exploring Stories: 
+      - Overview: 'user-guide/exploring-stories.md'
+      - Title Section: 'user-guide/title-section.md'
+      - Paragraph Section: 'user-guide/paragraph-section.md'
+      - Immersive Section: 'user-guide/immersive-section.md'
+      - Media Section: 'user-guide/media-section.md'
   - Developer Guide:
     - Dev Setup and Run: 'developer-guide/index.md'
     - Database Setup: 'developer-guide/database-setup.md'
