@@ -119,7 +119,7 @@ export const oldSettingsSelector = state => get(state, "geostory.oldSettings", {
 /**
  * @returns the status if settings has changed
  */
-export const settingsChangedSelector = state => !isEqual(settingsSelector(state), oldSettingsSelector(state));
+export const settingsChangedSelector = state => !isEqual(get(currentStorySelector(state), "settings", {}), oldSettingsSelector(state));
 /**
  * @returns the selectedCard
  */
