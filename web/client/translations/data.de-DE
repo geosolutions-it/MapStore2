@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Löschen",
                 "editResource": "Eigenschaften bearbeiten",
+                "editResourceData": "Ressourcendaten bearbeiten",
                 "addToFeatured": "Zum Featured hinzufügen",
                 "removeFromFeatured": "Remove from featured",
                 "showDetails": "Details anzeigen"
@@ -2079,6 +2080,12 @@
                 "title": "Das Speichern des Kontexts ist fehlgeschlagen",
                 "defaultMessage": "Unbekannter Fehler"
             }
+        },
+        "contextManager": {
+            "title": "Kontexte verwalten",
+            "gridTitle": "Kontexte",
+            "searchPlaceholder": "suchkontexte...",
+            "newContext": "Neuer Kontext"
         },
         "tutorial": {
             "title": "Anleitung",

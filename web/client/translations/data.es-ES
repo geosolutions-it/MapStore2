@@ -290,6 +290,7 @@
             "resource": {
                     "deleteResource": "Eliminar",
                     "editResource": "Editar propiedades",
+                    "editResourceData": "Editar datos de recursos",
                     "addToFeatured": "Agregar a destacados",
                     "removeFromFeatured": "Eliminar de destacados",
                     "showDetails": "Mostrar detalles"
@@ -2079,6 +2080,12 @@
                 "title": "Error al guardar el contextod",
                 "defaultMessage": "Error desconocido"
             }
+        },
+        "contextManager": {
+            "title": "Administrar contextos",
+            "gridTitle": "Contextos",
+            "searchPlaceholder": "contextos de búsqueda...",
+            "newContext": "Nuevo contexto"
         },
         "tutorial": {
             "title": "Tutorial",

@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Elimina",
                 "editResource": "Modifica proprietà",
+                "editResourceData": "Modifica i dati delle risorse",
                 "addToFeatured": "Metti in evidenza",
                 "removeFromFeatured": "Rimuovi da 'in evidenza'",
                 "showDetails": "mostra dettagli"
@@ -2079,6 +2080,12 @@
                 "title": "Salvataggio del contesto non riuscito",
                 "defaultMessage": "Errore sconosciuto"
             }
+        },
+        "contextManager": {
+            "title": "Gestisci contesti",
+            "gridTitle": "Contesti",
+            "searchPlaceholder": "contesti di ricerca...",
+            "newContext": "Nuovo contesto"
         },
         "tutorial": {
             "title": "Tutorial",

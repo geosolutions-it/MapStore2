@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Supprimer",
                 "editResource": "Modifier les propriétés",
+                "editResourceData": "Modifier les données de la ressource",
                 "addToFeatured": "Ajouter à la présentation",
                 "removeFromFeatured": "Supprimer de la présentation",
                 "showDetails": "Afficher les détails"
@@ -2079,6 +2080,12 @@
                 "title": "L'enregistrement de contexte a échoué",
                 "defaultMessage": "Erreur inconnue"
             }
+        },
+        "contextManager": {
+            "title": "Gérer les contextes",
+            "gridTitle": "Contextes",
+            "searchPlaceholder": "contextes de recherche...",
+            "newContext": "Nouveau contexte"
         },
         "tutorial": {
             "title": "Tutoriel",
