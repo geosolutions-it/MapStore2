@@ -2,15 +2,26 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
-
 ---
 
-## Description
-<!-- A few sentences describing the overall goals of the issue. -->
+## How to reproduce
+<!-- Add here a few sentences describing the bug. -->
 
-- [ ] Not browser related
+
+<!-- A list of steps to reproduce the bug -->
+-  
+- 
+
+*Expected Result*
+<!-- Describe here the expected result  -->
+
+*Current Result*
+<!-- Describe here the current behavior -->
+
+
+- [x] Not browser related
 
 <details><summary> <b>Browser info</b> </summary>
 <!-- If browser related, please compile the following table -->
@@ -26,18 +37,5 @@ assignees: ''
 |Safari| |
 </details>
 
-<details><summary> <b>How to reproduce</b> </summary>
-
-<!-- A list of steps to reproduce the bug -->
--  
-- 
-
-*Expected Result*
-<!-- Describe here the expected result  -->
-
-*Current Result*
-<!-- Describe here the current behavior -->
-
-</details>
-
 ## Other useful information (optional):
+<!-- error stack trace, screenshot, videos, or link to repository code is welcome -->
