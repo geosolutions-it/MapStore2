@@ -12,6 +12,7 @@ const {setControlProperty} = require('../../actions/controls');
 const {checkMapChanges} = require('../../actions/map');
 const {Glyphicon} = require('react-bootstrap');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../../selectors/controls');
+const {feedbackMaskSelector} = require('../../selectors/feedbackmask');
 const ConfigUtils = require('../../utils/ConfigUtils');
 
 const closeLogin = () => {
@@ -72,7 +73,9 @@ const LoginNav = connect((state) => ({
     bsStyle: "primary",
     className: "square-button",
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
-    displayUnsavedDialog: unsavedMapSelector(state) && unsavedMapSourceSelector(state) === 'logout'
+    displayUnsavedDialog: unsavedMapSelector(state)
+        && unsavedMapSourceSelector(state) === 'logout'
+        && feedbackMaskSelector(state).currentPage === 'viewer'
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),

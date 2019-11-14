@@ -21,6 +21,7 @@ const {connect} = require('react-redux');
 const {checkMapChanges} = require('../actions/map');
 const {setControlProperty} = require('../actions/controls');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../selectors/controls');
+const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const checkUnsavedMapChanges = (action) => {
@@ -31,10 +32,12 @@ const checkUnsavedMapChanges = (action) => {
 
 const HomeConnected = connect((state) => ({
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
-    displayUnsavedDialog: unsavedMapSelector(state) && unsavedMapSourceSelector(state) === 'gohome'
+    displayUnsavedDialog: unsavedMapSelector(state)
+        && unsavedMapSourceSelector(state) === 'gohome'
+        && feedbackMaskSelector(state).currentPage === 'viewer'
 }), {
     onCheckMapChanges: checkUnsavedMapChanges,
-    onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false, false)
+    onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false)
 })(Home);
 
 module.exports = {
