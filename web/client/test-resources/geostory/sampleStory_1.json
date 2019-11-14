@@ -38,7 +38,9 @@
           "contents": [
             {
               "id": "imm1_col1_content1",
-              "type": "text"
+              "type": "text",
+              "html": "<p>this is some html content</p>"
+
             },
             {
               "id": "imm1_col1_content2",
@@ -53,7 +55,8 @@
           "contents": [
             {
               "id": "imm1_col2_content1",
-              "type": "text"
+              "type": "text",
+              "html": "<p>this is some html content</p>"
             },
             {
               "id": "imm1_col2_content2",
