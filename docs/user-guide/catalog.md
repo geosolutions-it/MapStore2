@@ -17,21 +17,21 @@ Starting from a new map or an already existing map:
 
 The Catalog page will open showing a list of services, a search box to search the layers by name and a list of the retrieved layers ready to be added to the map.
 
-<p style="text-align:center;"><img src="../img/catalog/catalog_panel.png" style="max-width:500px;" /></p>
+<p style="text-align:center;"><img src="../img/catalog/catalog_panel.jpg" style="max-width:500px;" /></p>
 
 An example:
 
 * **Select** *GeoSolutions GeoServer WMS* from the list.
 
-<p style="text-align:center;"><img src="../img/catalog/service_list.png" style="max-width:500px;" /></p>
+<p style="text-align:center;"><img src="../img/catalog/service_list.jpg" style="max-width:500px;" /></p>
 
 * **Type** a text in the search box, e.g. "us", then click on the search button (or press `ENTER`).
 
-<p style="text-align:center;"><img src="../img/catalog/catalog_search.png" style="max-width:500px;" /></p>
+<p style="text-align:center;"><img src="../img/catalog/catalog_search.jpg" style="max-width:500px;" /></p>
 
-* **Add** the layer to the map clicking on <img src="../img/button/add_to_map_button.png" style="max-width:30px;" />.
+* **Add** the layer to the map clicking on <img src="../img/button/add_to_map_button.jpg" style="max-width:30px;" />.
 
-<p style="text-align:center;"><img src="../img/catalog/added_layer.png" /></p>
+<p style="text-align:center;"><img src="../img/catalog/added_layer.jpg" /></p>
 
 Adding and Editing a Service
 ----------------------------
@@ -40,7 +40,7 @@ As mentioned before, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) a
 
 * **Click** on the <img src="../img/button/+.jpg" style="max-width:80px;" /> button to add a new service.
 
-<p style="text-align:center;"><img src="../img/catalog/new_service.png" style="max-width:500px;" /></p>
+<p style="text-align:center;"><img src="../img/catalog/new_service.jpg" style="max-width:500px;" /></p>
 
 The Service manager window opens, where the user can start to insert the informations related to the new service:
 
@@ -68,10 +68,10 @@ In addition to basic information, the user can customize the Service with other 
 
 A list of layers will be loaded from the portal ready to be added to your map.
 
-<p style="text-align:center;"><img src="../img/catalog/catalog_firenze.png" style="max-width:500px;" /></p>
+<p style="text-align:center;"><img src="../img/catalog/catalog_firenze.jpg" style="max-width:500px;" /></p>
 
 !!! note
-    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. It is possible to expand the card using the <img src="../img/button/expand_card_icon.png" style="max-width:30px;" /> button:
+    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. It is possible to expand the card using the <img src="../img/button/expand_card_icon.jpg" style="max-width:30px;" /> button:
 
     <p style="text-align:center;"><img src="../img/catalog/expand_card.gif" style="max-width:350px;" /></p>
 

@@ -28,17 +28,17 @@ To experience this, follow these steps:
 
 * click on the **Burger Icon** of the *Search Bar* to open the *Options Panel*
 
-    <img src="../img/menu-bar/search_by_coordinates_option.png" style="max-width:400px;"/>
+    <img src="../img/menu-bar/search_by_coordinates_option.jpg" style="max-width:400px;"/>
 
 * click on **Search By Coordinates** to activate the coordinates input fields (*Decimal* format by default)
 
-    <img src="../img/menu-bar/decimal_coordinates_editor.png" style="max-width:500px;"/>
+    <img src="../img/menu-bar/decimal_coordinates_editor.jpg" style="max-width:500px;"/>
 
-* type **Latitude** and **Longitude** and click on the magnifying glass icon <img src="../img/button/magnifying_glass_icon.png" style="max-width:30px;"/> to perform the search
+* type **Latitude** and **Longitude** and click on the magnifying glass icon <img src="../img/button/magnifying_glass_icon.jpg" style="max-width:30px;"/> to perform the search
 
     <img src="../img/menu-bar/search_by_decimal_coordinates.gif" />
 
-By default [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/button/gear_icon.png" style="max-width:30px;"> of the coordinates editor, select *Aeronautical* and click on it to switch to this coordinate format.
+By default [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/button/gear_icon.jpg" style="max-width:30px;"> of the coordinates editor, select *Aeronautical* and click on it to switch to this coordinate format.
 
 <img src="../img/menu-bar/search_by_aeronautical_coordinates.gif" />
 
@@ -55,7 +55,7 @@ The following example shows the steps required to set up a custom service:
 
 * Click on the **Burger Icon** of the *Search Bar*, the options panel will open
 
-    <img src="../img/menu-bar/search_tool.png" style="max-width:400px;" />
+    <img src="../img/menu-bar/search_tool.jpg" style="max-width:400px;" />
 
 * Click on the **Configure search services** button to open the **Create/edit search service** panel
 

@@ -3,18 +3,18 @@
 
 Located at the bottom of the Data Frame, the Footer can be expanded by clicking on the mouse icon <img src="../img/button/mouse-icon.jpg" style="max-width:30px;" /> and it contains a scale bar, a map scale switcher, the coordinates of the mouse pointer and a coordinate reference system switcher.
 
-<img src="../img/footer/footer.png" />
+<img src="../img/footer/footer.jpg" />
 
 CRS Selector
 ------------
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides a *CRS Selector* through which you are able to switch the *Coordinate Reference System* of your map. In the bottom-right corner of the screen you should see this icon <img src="../img/button/crs_selector_icon.png" style="max-width:30px;" />.
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides a *CRS Selector* through which you are able to switch the *Coordinate Reference System* of your map. In the bottom-right corner of the screen you should see this icon <img src="../img/button/crs_selector_icon.jpg" style="max-width:30px;" />.
 
-<img src="../img/footer/crs_selector.png" style="max-width:500px;" />
+<img src="../img/footer/crs_selector.jpg" style="max-width:500px;" />
 
 Switching *CRS* is very simple:
 
-* **Click** on the *CRS Selector* icon <img src="../img/button/crs_selector_icon.png" style="max-width:30px;" />.
+* **Click** on the *CRS Selector* icon <img src="../img/button/crs_selector_icon.jpg" style="max-width:30px;" />.
 
 * **Select** the *CRS* and **click** on it.
 
