@@ -421,7 +421,7 @@ export default class DrawSupport extends React.Component {
                     // TODO verify center is projected in 4326 and is an array
                     center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
                     const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || id;
-                    newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y], id: originalId});
+                    newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y], id: originalId, crs: this.getMapCrs()});
                 } else if (drawMethod === "Polygon") {
                     newDrawMethod = this.props.drawMethod;
                     let coordinates = drawnGeom.getCoordinates();
