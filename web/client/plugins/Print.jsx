@@ -52,6 +52,7 @@ require('./print/print.css');
  * printed maps, but the preview is not accurate
  * @prop {string} cfg.overrideOptions.outputFilename name of output file
  * @prop {object} cfg.mapPreviewOptions options for the map preview tool
+ * @prop {string[]} cfg.ignoreLayers list of layer types to ignore in preview and when printing, default ["google", "bing"]
  * @prop {boolean} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
  * this is particularly useful if useFixedScales is also true, to show the real printing scales
  * @prop {boolean} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
@@ -72,6 +73,7 @@ require('./print/print.css');
  * {
  *   "name": "Print",
  *   "cfg": {
+ *       "ignoreLayers": ["google", "bing"],
  *       "useFixedScales": true,
  *       "mapPreviewOptions": {
  *          "enableScalebox": true
