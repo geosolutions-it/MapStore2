@@ -311,7 +311,7 @@
                 "title": "Cartes ({count})",
                 "noMapAvailable": "Aucune carte disponible",
                 "createNewOne": "Créer un nouveau",
-                "unsavedMapConfirmTitle": "Etes-vous sûr",
+                "unsavedMapConfirmTitle": "Modifications non enregistrées",
                 "unsavedMapConfirmMessage": "Êtes-vous sûr de vouloir laisser des modifications non enregistrées?",
                 "unsavedMapConfirmButtonText": "Laisser",
                 "unsavedMapCancelButtonText": "Fermer"

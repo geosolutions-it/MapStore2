@@ -311,7 +311,7 @@
                 "title": "Maps ({count})",
                 "noMapAvailable": "没有可用的地图",
                 "createNewOne": "创建一个新的",
-                "unsavedMapConfirmTitle": "Are you sure",
+                "unsavedMapConfirmTitle": "Unsaved changes",
                 "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
                 "unsavedMapConfirmButtonText": "Leave",
                 "unsavedMapCancelButtonText": "Close"
