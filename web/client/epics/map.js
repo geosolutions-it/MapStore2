@@ -45,6 +45,8 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const {userRoleSelector} = require('../selectors/security');
+const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 
@@ -227,11 +229,11 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
         .switchMap(({ action, source }) => {
             const allowedRoles = ['ADMIN', 'USER'];
             const state = getState();
-            const mapId = state.map && state.map.present.mapId;
-            const { currentPage } = state.feedbackMask;
-            const { user } = state.security;
+            const mapId = state.map && state.map.present && state.map.present.mapId;
+            const { currentPage } = feedbackMaskSelector(state);
+            const userRole = userRoleSelector(state);
 
-            if ((currentPage) !== 'viewer' || allowedRoles.indexOf(user.role) === -1) {
+            if ((currentPage) !== 'viewer' || allowedRoles.indexOf(userRole) === -1) {
                 return action ? Rx.Observable.of(action) : Rx.Observable.empty();
             }
 
