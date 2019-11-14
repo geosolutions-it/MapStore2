@@ -3,7 +3,7 @@
 
 The **Change media source** button allows to access the Media Editor Window:
 
-<p style="text-align:center;"><img src="../img/media-editor-window/media-editor-window.jpg" style="max-width:700px;"/></p>
+<img src="../img/media-editor-window/media-editor-window.jpg" class="ms-docimage"/>
 
 Through this window, you can add or edit three different types of media:
 
@@ -15,9 +15,9 @@ Through this window, you can add or edit three different types of media:
 
 ## Images
 
-In order to add an image, the user can click on the **Images** button <img src="../img/button/images.jpg" style="max-height:30px" valign="middle"/> for switch to the images section. In this section of the media editor window, with a click on the **Add** button <img src="../img/button/+++.jpg" style="max-height:30px" valign="middle"/>, it is possible to define the image settings.
+In order to add an image, the user can click on the **Images** button <img src="../img/button/images.jpg" class="ms-docbutton"/> for switch to the images section. In this section of the media editor window, with a click on the **Add** button <img src="../img/button/+++.jpg" class="ms-docbutton"/>, it is possible to define the image settings.
 
-<p style="text-align:center;"><img src="../img/media-editor-window/img-settings.jpg" style="max-width:700px;"/></p>
+<img src="../img/media-editor-window/img-settings.jpg" class="ms-docimage"/>
 
 In particular, it is possible to insert the following parameters:
 
@@ -34,11 +34,11 @@ In particular, it is possible to insert the following parameters:
 !!! warning
     **Source** and **Title** are mandatory fields.
 
-With a click on **Save** <img src="../img/button/save-icon.jpg" style="max-height:30px" valign="middle"/>, the image is insert in images list and immediately available on preview.
+With a click on **Save** <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>, the image is insert in images list and immediately available on preview.
 
-<p style="text-align:center;"><img src="../img/media-editor-window/img-preview.jpg" style="max-width:700px;"/></p>
+<img src="../img/media-editor-window/img-preview.jpg" class="ms-docimage"/>
 
 !!! note
-    It's always possible to change an image's settings through the **Edit** button <img src="../img/button/editing-button.jpg" style="max-height:30px" valign="middle"/>.
+    It's always possible to change an image's settings through the **Edit** button <img src="../img/button/editing-button.jpg" class="ms-docbutton"/>.
 
-Finally, the image is inserted into the story by clicking on the **Apply** button <img src="../img/button/apply-button.jpg" style="max-height:30px" valign="middle"/>.
+Finally, the image is inserted into the story by clicking on the **Apply** button <img src="../img/button/apply-button.jpg" class="ms-docbutton"/>.
