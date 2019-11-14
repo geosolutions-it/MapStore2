@@ -9,23 +9,15 @@
 import expect from 'expect';
 
 const {
-    setContextsAvailable, SET_CONTEXTS_AVAILABLE,
     searchContexts, SEARCH_CONTEXTS,
     contextsLoading, LOADING,
     contextsListLoaded, CONTEXTS_LIST_LOADED,
     deleteContext, DELETE_CONTEXT,
     contextDeleted, CONTEXT_DELETED,
     reloadContexts, RELOAD_CONTEXTS
-} = require('../contexts');
+} = require('../contextmanager');
 
-describe('contexts actions', () => {
-    it('setContextsAvailable', () => {
-        const retval = setContextsAvailable(true);
-        expect(retval).toExist();
-        expect(retval.type).toBe(SET_CONTEXTS_AVAILABLE);
-        expect(retval.available).toBe(true);
-
-    });
+describe('contextmanager actions', () => {
     it('searchContexts', () => {
         const retval = searchContexts();
         expect(retval).toExist();
@@ -43,17 +35,14 @@ describe('contexts actions', () => {
             results: [{id: 1}],
             success: true,
             totalCount: 1
-        }, {
-            searchText: "test",
-            options: "someOptions"
-        });
+        }, "test", "someOptions");
         expect(retval).toExist();
         expect(retval.type).toBe(CONTEXTS_LIST_LOADED);
         expect(retval.results[0].id).toBe(1);
         expect(retval.totalCount).toBe(1);
         expect(retval.success).toBe(true);
         expect(retval.searchText).toBe("test");
-        expect(retval.options).toBe("someOptions");
+        expect(retval.searchOptions).toBe("someOptions");
     });
     it('deleteContext', () => {
         const retval = deleteContext(1);

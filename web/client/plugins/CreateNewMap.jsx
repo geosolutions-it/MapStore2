@@ -20,7 +20,6 @@ class CreateNewMap extends React.Component {
         mapType: PropTypes.string,
         showNewDashboard: PropTypes.bool,
         showNewGeostory: PropTypes.bool,
-        showNewContext: PropTypes.bool,
         colProps: PropTypes.object,
         isLoggedIn: PropTypes.bool,
         allowedRoles: PropTypes.array,
@@ -36,7 +35,6 @@ class CreateNewMap extends React.Component {
         mapType: "leaflet",
         showNewDashboard: true,
         showNewGeostory: true,
-        showNewContext: true,
         isLoggedIn: false,
         allowedRoles: ["ADMIN", "USER"],
         colProps: {
@@ -64,11 +62,6 @@ class CreateNewMap extends React.Component {
                     {this.props.showNewGeostory ?
                         <Button tooltipId="resources.geostories.newGeostory" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/geostory/newgeostory/"); }}>
                             <Glyphicon glyph="geostory" />
-                        </Button>
-                        : null}
-                    {this.props.showNewContext ?
-                        <Button tooltipId="resources.contexts.newContext" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/context-creator/mainpage/new/general-settings/"); }}>
-                            <Glyphicon glyph="wrench" />
                         </Button>
                         : null}
                 </ButtonToolbar>

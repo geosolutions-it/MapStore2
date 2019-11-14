@@ -322,16 +322,6 @@
                 "createANewOne": "Erstelle ein neues",
                 "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von stories ist ein Fehler aufgetreten"
-            },
-            "contexts": {
-                "newContext": "Neuer Ansichtskontext",
-                "title": "Kontexte ({count})",
-                "titleNoCount": "Kontexte",
-                "create": "Kontext erstellen",
-                "noContextAvailable": "Kein Kontext verfügbar",
-                "errorLoadingContexts": "Beim Laden der Kontexte ist ein Fehler aufgetreten",
-                "createANewOne": "Erstelle ein neues",
-                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten"
             }
         },
         "map": {

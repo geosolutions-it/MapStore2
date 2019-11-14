@@ -11,10 +11,9 @@ import { testEpic } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 
 import {
-    searchContextsOnMapSearch,
     searchContextsEpic,
     reloadOnContexts
-} from '../contexts';
+} from '../contextmanager';
 
 import { contextSaved } from '../../actions/contextcreator';
 
@@ -23,43 +22,20 @@ import {
     searchContexts,
     LOADING,
     CONTEXTS_LIST_LOADED
-} from '../../actions/contexts';
+} from '../../actions/contextmanager';
 
 import {
     SHOW_NOTIFICATION
 } from '../../actions/notifications';
 
-import {
-    mapsLoading
-} from '../../actions/maps';
-
 let getDefaults = ConfigUtils.getDefaults;
 
-describe('contexts epics', () => {
+describe('contextmanager epics', () => {
     beforeEach( () => {
         getDefaults = ConfigUtils.getDefaults;
     });
     afterEach(() => {
         ConfigUtils.getDefaults = getDefaults;
-    });
-    it('searchContextsOnMapSearch', (done) => {
-        const startActions = [mapsLoading("Search Text")];
-        testEpic(searchContextsOnMapSearch, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case LOADING:
-                    break;
-                case SEARCH_CONTEXTS:
-                    expect(action.searchText).toBe("Search Text");
-                    done();
-                    break;
-                default:
-                    done(new Error("Action not recognized"));
-                }
-            });
-            done();
-        }, {});
     });
     it('searchContexts', (done) => {
         const baseUrl = "base/web/client/test-resources/geostore/extjs/search/search_1.json#";
@@ -85,14 +61,16 @@ describe('contexts epics', () => {
         const startActions = [contextSaved("Search Text")];
         testEpic(reloadOnContexts, 1, startActions, ([a]) => {
             expect(a.type).toBe(SEARCH_CONTEXTS);
-            expect(a.params.start).toBe(0);
-            expect(a.params.limit).toBe(12);
-            expect(a.searchText).toBe("test");
+            expect(a.options).toExist();
+            expect(a.options.params).toExist();
+            expect(a.options.params.start).toBe(0);
+            expect(a.options.params.limit).toBe(12);
+            expect(a.text).toBe("test");
             done();
         }, {
-            contexts: {
+            contextmanager: {
                 searchText: "test",
-                options: {
+                searchOptions: {
                     params: {
                         start: 0,
                         limit: 12

@@ -322,16 +322,6 @@
                 "createANewOne": "Crea uno nuevo",
                 "deleteError": "Hubo un error al eliminar el recurso",
                 "errorLoadingGeostories": "Hubo un error al cargar los stories"
-            },
-            "contexts": {
-                "newContext": "Nuevo contexto de vista",
-                "title": "Contextos ({count})",
-                "titleNoCount": "Contextos",
-                "create": "Crear contexto",
-                "noContextAvailable": "No hay contexto disponible",
-                "errorLoadingContexts": "Se produjo un error al cargar los contextos",
-                "createANewOne": "Crea uno nuevo",
-                "deleteError": "Hubo un error al eliminar el recurso"
             }
         },
         "map": {

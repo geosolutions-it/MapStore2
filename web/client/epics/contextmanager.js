@@ -15,9 +15,8 @@ import {deleteResource} from '../api/persistence';
 import {searchTextSelector, searchOptionsSelector, totalCountSelector} from '../selectors/contextmanager';
 import {ATTRIBUTE_UPDATED} from '../actions/maps';
 import {CONTEXT_SAVED, clearContextCreator} from '../actions/contextcreator';
-import {SEARCH_CONTEXTS, DELETE_CONTEXT, EDIT_CONTEXT, SEARCH_RESET,
-    contextsListLoaded, contextsLoading, searchContexts} from '../actions/contextmanager';
-import {CONTEXT_DELETED, RELOAD_CONTEXTS, contextDeleted} from '../actions/contexts';
+import {SEARCH_CONTEXTS, DELETE_CONTEXT, EDIT_CONTEXT, SEARCH_RESET, CONTEXT_DELETED, RELOAD_CONTEXTS,
+    contextDeleted, contextsListLoaded, contextsLoading, searchContexts} from '../actions/contextmanager';
 
 const calculateNewParams = state => {
     const totalCount = totalCountSelector(state);
@@ -39,7 +38,7 @@ const calculateNewParams = state => {
     };
 };
 
-export const searchContextsForManagerEpic = action$ => action$
+export const searchContextsEpic = action$ => action$
     .ofType(SEARCH_CONTEXTS)
     .map(({text, options}) => ({
         text,
@@ -70,7 +69,7 @@ export const editContext = action$ => action$
         Rx.Observable.empty()
     );
 
-export const deleteContextFromManager = action$ => action$
+export const deleteContextEpic = action$ => action$
     .ofType(DELETE_CONTEXT)
     .switchMap(id => deleteResource(id).map(() => contextDeleted(id)))
     .let(wrapStartStop(
@@ -84,11 +83,11 @@ export const deleteContextFromManager = action$ => action$
         }))
     ));
 
-export const resetSearchContextManager = action$ => action$
+export const resetSearch = action$ => action$
     .ofType(SEARCH_RESET)
     .switchMap(() => Rx.Observable.of(searchContexts('', {params: {start: 0, limit: 12}})));
 
-export const reloadOnContextsInManager = (action$, store) => action$
+export const reloadOnContexts = (action$, store) => action$
     .ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED)
     .delay(1000)
     .switchMap(() => Rx.Observable.of(searchContexts(

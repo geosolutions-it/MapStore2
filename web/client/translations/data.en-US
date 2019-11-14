@@ -322,16 +322,6 @@
                 "createANewOne": "Create a new one",
                 "deleteError": "There was an error deleting the resource",
                 "errorLoadingGeostories": "There was an error loading stories"
-            },
-            "contexts": {
-                "newContext": "New View Context",
-                "title": "Contexts ({count})",
-                "titleNoCount": "Contexts",
-                "create": "Create Context",
-                "noContextAvailable": "No context available",
-                "deleteError": "There was an error deleting the resource",
-                "errorLoadingContexts": "There was an error loading contexts",
-                "createANewOne": "Create a new one"
             }
         },
         "map": {

@@ -322,16 +322,6 @@
                 "createANewOne": "Créer un nouveau",
                 "deleteError": "Une erreur s'est produite lors de la suppression de la ressource",
                 "errorLoadingGeostories": "Une erreur s'est produite lors du chargement des stories"
-            },
-            "contexts": {
-                "newContext": "Nouveau contexte de vue",
-                "title": "Contextes ({count})",
-                "titleNoCount": "Contextes",
-                "create": "Créer un contexte",
-                "noContextAvailable": "Pas de contexte disponible",
-                "errorLoadingContexts": "Une erreur s'est produite lors du chargement des contextes",
-                "createANewOne": "Créer un nouveau",
-                "deleteError": "Une erreur s'est produite lors de la suppression de la ressource"
             }
         },
         "map": {

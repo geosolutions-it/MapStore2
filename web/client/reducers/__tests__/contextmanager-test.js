@@ -7,41 +7,39 @@
  */
 import expect from 'expect';
 
-import contexts from '../contexts';
+import contextmanager from '../contextmanager';
 import {
-    setContextsAvailable,
+    searchTextChanged,
     contextsListLoaded,
     contextsLoading
-} from '../../actions/contexts';
+} from '../../actions/contextmanager';
 
 
-describe('contexts reducer', () => {
-    it('setContextsAvailable', () => {
-        const action = setContextsAvailable(true);
-        const state = contexts(undefined, action);
+describe('contextmanager reducer', () => {
+    it('searchTextChanged', () => {
+        const action = searchTextChanged('searchtext');
+        const state = contextmanager(undefined, action);
         expect(state).toExist();
-        expect(state.available).toBe(true);
+        expect(state.searchText).toBe('searchtext');
     });
     it('contextsListLoaded', () => {
         const action = contextsListLoaded({
             results: ""
-        }, {
-            searchText: "TEST"
-        });
-        const state = contexts(undefined, action);
+        }, "TEST");
+        const state = contextmanager(undefined, action);
         expect(state).toExist();
         expect(state.results.length).toBe(0);
         expect(state.searchText).toBe("TEST");
     });
     it('contextsLoading', () => {
         const action = contextsLoading(true);
-        const state = contexts(undefined, action);
+        const state = contextmanager(undefined, action);
         expect(state).toExist();
         expect(state.loading).toBe(true);
     });
     it('contextsLoading save', () => {
         const action = contextsLoading(true, "saving");
-        const state = contexts(undefined, action);
+        const state = contextmanager(undefined, action);
         expect(state).toExist();
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);

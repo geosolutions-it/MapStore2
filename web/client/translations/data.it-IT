@@ -322,16 +322,6 @@
                 "createANewOne": "Creane una",
                 "deleteError": "C'è stato un errore eliminando la risorsa",
                 "errorLoadingGeostories": "C'è stato un errore caricando le storie"
-            },
-            "contexts": {
-                "newContext": "Nuovo contesto di visualizzazione",
-                "title": "Contesti ({count})",
-                "titleNoCount": "Contesti",
-                "create": "Crea contesto",
-                "noContextAvailable": "Nessun contesto disponibile",
-                "deleteError": "C'è stato un errore eliminando la risorsa",
-                "errorLoadingContexts": "Si è verificato un errore durante il caricamento dei contesti",
-                "createANewOne": "Creane una"
             }
         },
         "map": {
