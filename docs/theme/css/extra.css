@@ -67,7 +67,8 @@ li.md-tabs__item:hover{
 .rst-other-versions dl:nth-child(3), .rst-other-versions dl:nth-child(4) {
     display: none;
 }
-.ms-docimage {
+.ms-docimage, .md-typeset .ms-docimage{
+    max-width: 700px;
     display: block; 
     margin-left: auto; 
     margin-right: auto; 
