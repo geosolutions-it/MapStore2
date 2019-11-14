@@ -236,7 +236,7 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
             }
 
             if (mapId) {
-                const { mapInitialConfig } = state;
+                const { mapConfigRawData } = state;
                 const updatedMap = MapUtils.saveMapConfiguration(
                     mapSelector(state),
                     layersSelector(state),
@@ -245,7 +245,7 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
                     textSearchConfigSelector(state),
                     mapOptionsToSaveSelector(state)
                 );
-                const isEqual = MapUtils.compareMapChanges(mapInitialConfig, updatedMap);
+                const isEqual = MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
                 if (!isEqual) {
                     return Rx.Observable.of(
                         setControlProperty('unsavedMap', 'enabled', true, false),
