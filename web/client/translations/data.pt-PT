@@ -312,7 +312,7 @@
                 "title": "Mapas ({count})",
                 "noMapAvailable": "Nenhum mapa disponível",
                 "createNewOne": "Crie um novo",
-                "unsavedMapConfirmTitle": "Unsaved changes,
+                "unsavedMapConfirmTitle": "Unsaved changes",
                 "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
                 "unsavedMapConfirmButtonText": "Leave",
                 "unsavedMapCancelButtonText": "Close"
