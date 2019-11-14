@@ -314,7 +314,7 @@ describe('map epics', () => {
                         {id: 'layer006', thumbnail: null}
                     ]
                 },
-                mapInitialConfig: {
+                mapConfigRawData: {
                     "version": 2,
                     "map": {
                         "mapOptions": {},
@@ -414,7 +414,7 @@ describe('map epics', () => {
                         {id: 'layer006', thumbnail: null}
                     ]
                 },
-                mapInitialConfig: {
+                mapConfigRawData: {
                     "version": 2,
                     "map": {
                         "mapOptions": {},
