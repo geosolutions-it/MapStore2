@@ -25,8 +25,6 @@ const {
 
 const {LOGIN_SUCCESS} = require('../../actions/security');
 const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const MockAdapter = require('axios-mock-adapter');
-const axios = require('axios');
 
 const LAYOUT_STATE = {
     layout: {
@@ -315,63 +313,59 @@ describe('map epics', () => {
                         {id: 'layer005', thumbnail: 'data'},
                         {id: 'layer006', thumbnail: null}
                     ]
+                },
+                mapInitialConfig: {
+                    "version": 2,
+                    "map": {
+                        "mapOptions": {},
+                        "layers": [
+                            {
+                                "id": "layer001",
+                                "thumbURL": "THUMB_URL",
+                                "search": {
+
+                                },
+                                "name": "layer001",
+                                "title": "layer001",
+                                "type": "wms",
+                                "url": "",
+                                "bbox": {
+
+                                },
+                                "visibility": true,
+                                "singleTile": false,
+                                "allowedSRS": {
+
+                                },
+                                "dimensions": [
+
+                                ],
+                                "hideLoading": false,
+                                "handleClickOnLayer": false,
+                                "catalogURL": "url",
+                                "useForElevation": false,
+                                "hidden": false,
+                                "params": {
+
+                                }
+                            }
+                        ],
+                        "groups": [],
+                        "backgrounds": [
+                            {
+                                "id": "layer005",
+                                "thumbnail": "data"
+                            }
+                        ]
+                    },
+                    "catalogServices": {},
+                    "widgetsConfig": {},
+                    "mapInfoConfiguration": {}
                 }
             };
 
-            const mapFromApi = {
-                "version": 2,
-                "map": {
-                    "mapOptions": {},
-                    "layers": [
-                        {
-                            "id": "layer001",
-                            "thumbURL": "THUMB_URL",
-                            "search": {
-
-                            },
-                            "name": "layer001",
-                            "title": "layer001",
-                            "type": "wms",
-                            "url": "",
-                            "bbox": {
-
-                            },
-                            "visibility": true,
-                            "singleTile": false,
-                            "allowedSRS": {
-
-                            },
-                            "dimensions": [
-
-                            ],
-                            "hideLoading": false,
-                            "handleClickOnLayer": false,
-                            "catalogURL": "url",
-                            "useForElevation": false,
-                            "hidden": false,
-                            "params": {
-
-                            }
-                        }
-                    ],
-                    "groups": [],
-                    "backgrounds": [
-                        {
-                            "id": "layer005",
-                            "thumbnail": "data"
-                        }
-                    ]
-                },
-                "catalogServices": {},
-                "widgetsConfig": {},
-                "mapInfoConfiguration": {}
-            };
-
-            const mockAxios = new MockAdapter(axios);
-            mockAxios.onGet().reply(200, mapFromApi);
 
             const epicResponse = (actions) => {
-                mockAxios.restore();
                 expect(actions.length).toBe(1);
                 expect(actions[0].type).toBe(TEST_TIMEOUT);
                 done();
@@ -419,63 +413,58 @@ describe('map epics', () => {
                         {id: 'layer005', thumbnail: 'data'},
                         {id: 'layer006', thumbnail: null}
                     ]
+                },
+                mapInitialConfig: {
+                    "version": 2,
+                    "map": {
+                        "mapOptions": {},
+                        "layers": [
+                            {
+                                "id": "layer001",
+                                "thumbURL": "THUMB_URL",
+                                "search": {
+
+                                },
+                                "name": "layer001",
+                                "title": "layer001",
+                                "type": "wms",
+                                "url": "",
+                                "bbox": {
+
+                                },
+                                "visibility": true,
+                                "singleTile": false,
+                                "allowedSRS": {
+
+                                },
+                                "dimensions": [
+
+                                ],
+                                "hideLoading": false,
+                                "handleClickOnLayer": false,
+                                "catalogURL": "url",
+                                "useForElevation": false,
+                                "hidden": false,
+                                "params": {
+
+                                }
+                            }
+                        ],
+                        "groups": [],
+                        "backgrounds": [
+                            {
+                                "id": "layer005",
+                                "thumbnail": "data"
+                            }
+                        ]
+                    },
+                    "catalogServices": {},
+                    "widgetsConfig": {},
+                    "mapInfoConfiguration": {}
                 }
             };
 
-            const mapFromApi = {
-                "version": 2,
-                "map": {
-                    "mapOptions": {},
-                    "layers": [
-                        {
-                            "id": "layer001",
-                            "thumbURL": "THUMB_URL",
-                            "search": {
-
-                            },
-                            "name": "layer001",
-                            "title": "layer001",
-                            "type": "wms",
-                            "url": "",
-                            "bbox": {
-
-                            },
-                            "visibility": true,
-                            "singleTile": false,
-                            "allowedSRS": {
-
-                            },
-                            "dimensions": [
-
-                            ],
-                            "hideLoading": false,
-                            "handleClickOnLayer": false,
-                            "catalogURL": "url",
-                            "useForElevation": false,
-                            "hidden": false,
-                            "params": {
-
-                            }
-                        }
-                    ],
-                    "groups": [],
-                    "backgrounds": [
-                        {
-                            "id": "layer005",
-                            "thumbnail": "data"
-                        }
-                    ]
-                },
-                "catalogServices": {},
-                "widgetsConfig": {},
-                "mapInfoConfiguration": {}
-            };
-
-            const mockAxios = new MockAdapter(axios);
-            mockAxios.onGet().reply(200, mapFromApi);
-
             const epicResponse = (actions) => {
-                mockAxios.restore();
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
                 expect(actions[0].property).toBe('enabled');

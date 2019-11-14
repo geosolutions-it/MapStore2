@@ -41,7 +41,6 @@ const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
 
 const ConfigUtils = require('../utils/ConfigUtils');
-const axios = require('axios');
 
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
@@ -227,36 +226,33 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
         .ofType(CHECK_MAP_CHANGES)
         .switchMap(({ action, source }) => {
             const allowedRoles = ['ADMIN', 'USER'];
-            const mapId = getState().map && getState().map.present.mapId;
-            const { currentPage } = getState().feedbackMask;
-            const { user } = getState().security;
+            const state = getState();
+            const mapId = state.map && state.map.present.mapId;
+            const { currentPage } = state.feedbackMask;
+            const { user } = state.security;
 
             if ((currentPage) !== 'viewer' || allowedRoles.indexOf(user.role) === -1) {
                 return action ? Rx.Observable.of(action) : Rx.Observable.empty();
             }
 
             if (mapId) {
-                const url = ConfigUtils.getConfigUrl({ mapId }).configUrl;
-                return Rx.Observable.defer(() => axios.get(url))
-                    .switchMap(({ data: originalMap }) => {
-                        const state = getState();
-                        const updatedMap = MapUtils.saveMapConfiguration(
-                            mapSelector(state),
-                            layersSelector(state),
-                            groupsSelector(state),
-                            backgroundListSelector(state),
-                            textSearchConfigSelector(state),
-                            mapOptionsToSaveSelector(state)
-                        );
-                        const isEqual = MapUtils.compareMapChanges(originalMap, updatedMap);
-                        if (!isEqual) {
-                            return Rx.Observable.of(
-                                setControlProperty('unsavedMap', 'enabled', true, false),
-                                setControlProperty('unsavedMap', 'source', source, false)
-                            );
-                        }
-                        return action ? Rx.Observable.of(action) : Rx.Observable.empty();
-                    });
+                const { mapInitialConfig } = state;
+                const updatedMap = MapUtils.saveMapConfiguration(
+                    mapSelector(state),
+                    layersSelector(state),
+                    groupsSelector(state),
+                    backgroundListSelector(state),
+                    textSearchConfigSelector(state),
+                    mapOptionsToSaveSelector(state)
+                );
+                const isEqual = MapUtils.compareMapChanges(mapInitialConfig, updatedMap);
+                if (!isEqual) {
+                    return Rx.Observable.of(
+                        setControlProperty('unsavedMap', 'enabled', true, false),
+                        setControlProperty('unsavedMap', 'source', source, false)
+                    );
+                }
+                return action ? Rx.Observable.of(action) : Rx.Observable.empty();
             }
 
             return Rx.Observable.of(
