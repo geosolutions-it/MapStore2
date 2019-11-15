@@ -4,7 +4,7 @@ import expect from 'expect';
 import WebPage from '../WebPage';
 // import ReactTestUtils from 'react-dom/test-utils';
 
-describe.only('WebPage component', () => {
+describe('WebPage component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
