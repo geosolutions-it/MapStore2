@@ -29,7 +29,7 @@ const popover = require('../enhancers/popover');
  */
 
 module.exports = compose(tooltip, popover)(({ glyph, loading, text = "", textId, glyphClassName = "", loaderProps = {}, children, ...props} = {}) =>
-    <Button {...omit(props, ["pullRight"])}>
+    <Button {...omit(props, ["pullRight", "confirmNo", "confirmYes"])}>
         {glyph && !loading ? <Glyphicon glyph={glyph} className={glyphClassName}/> : null}
         {textId ? <Message msgId={textId} /> : text}
         {loading ? <Loader className={`ms-loader${props.bsStyle && ' ms-loader-' + props.bsStyle || ''}${props.bsSize && ' ms-loader-' + props.bsSize || ''}`} {...loaderProps}/> : null}

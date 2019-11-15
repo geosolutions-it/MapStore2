@@ -121,7 +121,6 @@ export default backgroundPropWithHandler(({
                     glyph: 'story-immersive-section',
                     tooltipId: 'geostory.addImmersiveSection',
                     onClick: () => {
-                    // TODO: add
                         add('sections', id, SectionTypes.IMMERSIVE);
                     }
                 },

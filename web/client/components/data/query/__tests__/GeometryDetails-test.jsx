@@ -73,11 +73,7 @@ describe('GeometryDetails', () => {
     it('Test GeometryDetails endDrawing with 900913 and 900913', (done) => {
 
         let geometry = {
-            center: {
-                srs: "EPSG:900913",
-                x: -1761074.34,
-                y: 5852757.63
-            },
+            center: [-1761074.34, 5852757.63],
             projection: "EPSG:900913",
             radius: 836584,
             type: "Polygon"
@@ -110,11 +106,7 @@ describe('GeometryDetails', () => {
     it('Test GeometryDetails endDrawing with 4326 and 4326', (done) => {
 
         let geometry = {
-            center: {
-                srs: "EPSG:4326",
-                x: 0,
-                y: 0
-            },
+            center: [0, 0],
             projection: "EPSG:4326",
             radius: 1,
             type: "Polygon"

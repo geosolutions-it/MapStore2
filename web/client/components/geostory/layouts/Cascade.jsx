@@ -79,8 +79,9 @@ const Cascade = ({
     editMedia = () => {},
     update = () => {},
     remove = () => {},
-    focusedContent
-}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${focusedContent ? 'no-overflow' : ''}`}>
+    focusedContent,
+    isContentFocused = false
+}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${isContentFocused ? 'no-overflow' : ''}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>

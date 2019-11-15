@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 import expect from 'expect';
 import withConfirm from '../withConfirm';
-import ToolbarButton from '../ToolbarButton';
+import ToolbarButton from '../toolbar/ToolbarButton';
 import ReactTestUtils from 'react-dom/test-utils';
 
 describe('withConfirm enhancer', () => {

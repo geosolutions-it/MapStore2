@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import {ButtonToolbar} from 'react-bootstrap';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
@@ -23,11 +22,13 @@ import ScrollMenu from './ScrollMenu';
  * @prop {number} totalItems totalItems is the total number of sections present in the story
  */
 export default ({
+    settings,
     scrollTo = () => {},
     setEditing = () => {},
     navigableItems = [],
     currentPage, // current page progress (current page + 1/totPages),
     totalItems = 1,
+    isEditAllowed = true,
     currentPosition = 0
 }) => {
     return (
@@ -38,33 +39,47 @@ export default ({
                     style={{
                         width: `${(currentPosition + 1) / totalItems * 100}%`
                     }}
-                >
-                </div>
+                />
             </div>
-            <div className="ms-geostory-navigation-initial-toolbar">
-                <Toolbar
-                    btnDefaultProps={{
-                        className: 'square-button-md no-border',
-                        bsStyle: 'default',
-                        tooltipPosition: 'bottom'
-                    }}
-                    buttons={[
-                        {
-                            glyph: 'pencil',
-                            tooltip: 'navigation.edit',
-                            onClick: () => setEditing(true)
-                        }
-                    ]} />
+            <div className="ms-geostory-navigation-tools">
 
-                <div style={{ flex: 1, display: 'flex' }}>
-                    <ButtonToolbar
-                        style={{ marginRight: 0, marginLeft: 'auto' }}>
-                        <ScrollMenu
-                            items={navigableItems}
-                            currentPage={currentPage}
-                            scrollTo={scrollTo}
-                        />
-                    </ButtonToolbar>
+                <div className="ms-geostory-navigation-toolbar">
+                    <Toolbar
+                        btnDefaultProps={{
+                            className: 'square-button-md no-border',
+                            bsStyle: 'default',
+                            tooltipPosition: 'bottom'
+                        }}
+                        buttons={[
+                            {
+                                glyph: 'pencil',
+                                visible: isEditAllowed,
+                                tooltipId: 'geostory.navigation.edit',
+                                onClick: () => setEditing(true)
+                            }
+                        ]} />
+                </div>
+                <div className="ms-geostory-navigation-elements">
+                    {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
+                        (<div className="ms-geostory-navigation-navigableItems">
+                            <ScrollMenu
+                                items={navigableItems}
+                                currentPage={currentPage}
+                                scrollTo={scrollTo}
+                            />
+                        </div>) : null}
+                    <div className="ms-geostory-navigation-metadata">
+                        {settings && settings.isLogoEnabled &&
+                            <div className="ms-geostory-navigation-logo">
+                                <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
+                            </div>
+                        }
+                        {settings && settings.isTitleEnabled &&
+                            <div className="ms-geostory-navigation-title">
+                                {settings.storyTitle}
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
