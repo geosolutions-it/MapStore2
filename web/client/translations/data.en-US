@@ -2057,7 +2057,6 @@
         "defaultMapBackgroundsServiceTitle": "Default Backgrounds",
         "backgroundSelector": {
             "addTooltip": "Add new background",
-            "editTooltip": "Edit current background",
             "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
         },
         "tutorial": {

@@ -15,7 +15,7 @@ const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
 const {createSelector} = require('reselect');
 const {backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, mapInfoSelector} = require('../selectors/map');
 const {modalParamsSelector, isDeletedIdSelector, backgroundListSelector,
     backgroundLayersSelector, confirmDeleteBackgroundModalSelector, allowBackgroundsDeletionSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -32,6 +32,7 @@ const backgroundSelector = createSelector([
     isDeletedIdSelector,
     allBackgroundLayerSelector,
     mapSelector,
+    mapInfoSelector,
     backgroundLayersSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
@@ -40,12 +41,13 @@ const backgroundSelector = createSelector([
     state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, layers, controls, currentLayer, tempLayer, style, enabledCatalog, confirmDeleteBackgroundModalObj, allowDeletion) => ({
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapInfo, layers, controls, currentLayer, tempLayer, style, enabledCatalog, confirmDeleteBackgroundModalObj, allowDeletion) => ({
     modalParams,
     backgroundList,
     deletedId,
     backgrounds,
     size: map && map.size || {width: 0, height: 0},
+    mapIsEditable: mapInfo && mapInfo.canEdit || false,
     layers,
     tempLayer,
     currentLayer,

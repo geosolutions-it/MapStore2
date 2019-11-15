@@ -2053,7 +2053,6 @@
         "defaultMapBackgroundsServiceTitle": "Arrière-plans par défaut",
         "backgroundSelector": {
             "addTooltip": "Ajouter un nouveau fond",
-            "editTooltip": "Modifier le fond actuel",
             "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
         },
         "tutorial": {
