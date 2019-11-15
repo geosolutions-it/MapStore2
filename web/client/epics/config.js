@@ -5,26 +5,46 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Rx from 'rxjs';
+import {Observable} from 'rxjs';
 import axios from '../libs/ajax';
-import {LOAD_MAP_CONFIG, configureMap, configureError} from '../actions/config';
+import {
+    LOAD_MAP_CONFIG,
+    LOAD_MAP_INFO,
+    configureMap,
+    configureError,
+    mapInfoLoadStart,
+    mapInfoLoaded,
+    mapInfoLoadError,
+    loadMapInfo
+} from '../actions/config';
+import Persistence from '../api/persistence';
 
 export const loadMapConfigAndConfigureMap = action$ =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap( ({configName, mapId}) =>
-            Rx.Observable.defer( () => axios.get(configName) )
-                .map(response => {
+            Observable.defer(() => axios.get(configName))
+                .switchMap(response => {
                     if (typeof response.data === 'object') {
-                        return configureMap(response.data, mapId);
+                        return mapId ? Observable.of(configureMap(response.data, mapId), loadMapInfo(mapId)) :
+                            Observable.of(configureMap(response.data, mapId));
                     }
                     try {
                         const data = JSON.parse(response.data);
-                        return configureMap(data, mapId);
+                        return mapId ? Observable.of(configureMap(data, mapId), loadMapInfo(mapId)) :
+                            Observable.of(configureMap(data, mapId));
                     } catch (e) {
-                        return configureError('Configuration file broken (' + configName + '): ' + e.message, mapId);
+                        return Observable.of(configureError('Configuration file broken (' + configName + '): ' + e.message, mapId));
                     }
-
                 })
-                .catch((e) => Rx.Observable.of(configureError(e, mapId)))
+                .catch((e) => Observable.of(configureError(e, mapId)))
         );
 
+export const loadMapInfoEpic = action$ =>
+    action$.ofType(LOAD_MAP_INFO)
+        .switchMap(({mapId}) =>
+            Observable
+                .defer(() => Persistence.getResource(mapId))
+                .map(resource => mapInfoLoaded(resource, mapId))
+                .catch((e) => Observable.of(mapInfoLoadError(mapId, e)))
+                .startWith(mapInfoLoadStart(mapId))
+        );

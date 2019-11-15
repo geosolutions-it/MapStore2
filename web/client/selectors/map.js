@@ -30,6 +30,8 @@ const projectionSelector = createSelector([mapSelector], (map) => map && map.pro
 const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseInt(get(mapSelector(state), "mapId"), 10) || null;
 const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
 const mapInfoSelector = state => get(mapSelector(state), "info");
+const mapInfoLoadingSelector = state => get(mapSelector(state), "loadingInfo", false);
+const mapSaveErrorsSelector = state => get(mapSelector(state), "mapSaveErrors");
 const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
 
 // TODO: move these in selectors/localConfig.js or selectors/config.js
@@ -96,5 +98,7 @@ module.exports = {
     configuredMinZoomSelector,
     configuredExtentCrsSelector,
     configuredRestrictedExtentSelector,
-    mapInfoSelector
+    mapInfoSelector,
+    mapInfoLoadingSelector,
+    mapSaveErrorsSelector
 };

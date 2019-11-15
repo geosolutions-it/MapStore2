@@ -15,9 +15,9 @@ const {
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
-    saveMapResource, MAP_CREATED, DISPLAY_METADATA_EDIT, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP
+    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP
 } = require('../../actions/maps');
-const { mapInfoLoaded } = require('../../actions/config');
+const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
@@ -586,23 +586,25 @@ const api = {
     createResource: () => Rx.Observable.of(10),
     updateResource: () => Rx.Observable.of(10)
 };
-Persistence.addApi("test", api);
+
 describe('Create and update flow using persistence api', () => {
+    Persistence.addApi("testMaps", api);
     beforeEach(() => {
-        Persistence.setApi("test");
+        Persistence.setApi("testMaps");
     });
     afterEach(() => {
         Persistence.setApi("geostore");
     });
     it('test create flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 4, saveMapResource( {}), actions => {
-            expect(actions.length).toBe(4);
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource( {}), actions => {
+            expect(actions.length).toBe(5);
             actions.map((action) => {
                 switch (action.type) {
                 case SAVING_MAP:
-                case MAP_CREATED:
-                case DISPLAY_METADATA_EDIT:
+                case TOGGLE_CONTROL:
+                case MAP_SAVED:
                 case SHOW_NOTIFICATION:
+                case MAP_CREATED:
                     break;
                 default:
                     expect(true).toBe(false);
@@ -612,12 +614,15 @@ describe('Create and update flow using persistence api', () => {
         });
     });
     it('test update flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 2, saveMapResource( {id: 10}), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource( {id: 10}), actions => {
+            expect(actions.length).toBe(5);
             actions.map((action) => {
                 switch (action.type) {
                 case MAP_UPDATING:
+                case TOGGLE_CONTROL:
+                case MAP_SAVED:
                 case SHOW_NOTIFICATION:
+                case LOAD_MAP_INFO:
                     break;
                 default:
                     expect(true).toBe(false);

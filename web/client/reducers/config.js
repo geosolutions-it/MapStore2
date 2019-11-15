@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_SAVE_ERROR, MAP_SAVED} = require('../actions/config');
 const {MAP_CREATED, DETAILS_LOADED} = require('../actions/maps');
 
 const assign = require('object-assign');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {set} = require('../utils/ImmutableUtils');
+const {set, unset} = require('../utils/ImmutableUtils');
 const {transformLineToArcs} = require('../utils/CoordinatesUtils');
-const {findIndex} = require('lodash');
+const {findIndex, castArray} = require('lodash');
 
 function mapConfig(state = null, action) {
     let map;
@@ -68,14 +68,14 @@ function mapConfig(state = null, action) {
     case MAP_INFO_LOAD_START:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && map.mapId === action.mapId) {
-            map = assign({}, map, {info: {loading: true}});
+            map = assign({}, map, {loadingInfo: true});
             return assign({}, state, {map: map});
         }
         return state;
     case MAP_INFO_LOAD_ERROR: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && map.mapId === action.mapId) {
-            map = assign({}, map, {info: {error: action.error}});
+            map = assign({}, map, {loadingInfoError: action.error, loadingInfo: false});
             return assign({}, state, {map: map});
         }
         return state;
@@ -83,7 +83,7 @@ function mapConfig(state = null, action) {
     case MAP_INFO_LOADED:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && `${map.mapId}` === `${action.mapId}`) {
-            map = assign({}, map, {info: action.info});
+            map = assign({}, map, {info: action.info, loadingInfo: false});
             return assign({}, state, {map: map});
         }
         return state;
@@ -109,6 +109,14 @@ function mapConfig(state = null, action) {
         }
         return state;
     }
+    case MAP_SAVE_ERROR:
+        map = state && state.map && state.map.present ? state.map.present : state && state.map;
+        map = set('mapSaveErrors', castArray(action.error), map);
+        return assign({}, state, {map: map});
+    case MAP_SAVED:
+        map = state && state.map && state.map.present ? state.map.present : state && state.map;
+        map = unset('mapSaveErrors', map);
+        return assign({}, state, {map: map});
     default:
         return state;
     }
