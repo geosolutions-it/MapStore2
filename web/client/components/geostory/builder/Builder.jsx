@@ -12,7 +12,7 @@ import BorderLayout from '../../layout/BorderLayout';
 import SectionsPreview from './SectionsPreview';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import { lists, Modes } from '../../../utils/GeoStoryUtils';
-import withConfirm from '../../misc/toolbar/withConfirm';
+import withConfirm from '../../misc/withConfirm';
 import Message from '../../I18N/Message';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 const DeleteButton = withConfirm(ToolbarButton);

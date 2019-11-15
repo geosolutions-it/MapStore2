@@ -18,7 +18,7 @@ import {resourcesSelector, getCurrentFocusedContentEl} from '../../../../selecto
 import Message from '../../../I18N/Message';
 import withNodeSelection from '../../../widgets/builder/wizard/map/enhancers/handleNodeSelection';
 
-import withConfirm from '../../../misc/toolbar/withConfirm';
+import withConfirm from '../../../misc/withConfirm';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 const ConfirmButton = withConfirm(ToolbarButton);
 

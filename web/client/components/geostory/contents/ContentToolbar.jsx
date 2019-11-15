@@ -12,7 +12,7 @@ import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import Message from '../../I18N/Message';
-import withConfirm from "../../misc/toolbar/withConfirm";
+import withConfirm from "../../misc/withConfirm";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
