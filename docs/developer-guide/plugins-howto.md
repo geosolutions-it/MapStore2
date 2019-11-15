@@ -5,7 +5,8 @@ Creating a plugin is like assembling and connecting several pieces together into
 
 ## Introduction
 During this tutorial, you will learn how to create and configure plugins in a MapStore project.
-If you don't know how to work with MapStore projects, please read the [Projects Guide](../mapstore-projects).
+If you don't know how to work with MapStore projects, please read the [Projects Guide](../mapstore-projects). 
+For this tutorial, a "standard project" is used. 
 
 ## A plugin example
 
