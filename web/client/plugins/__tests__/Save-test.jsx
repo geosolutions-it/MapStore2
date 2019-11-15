@@ -9,7 +9,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {MapSave, MapSaveAs} from '../MapSave';
+import MapSave from '../Save';
 import { getPluginForTest } from './pluginsTestUtils';
 import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 
@@ -55,32 +55,5 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
             expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
         });
     });
-    describe('MapSaveAs', () => {
-        const DUMMY_ACTION = { type: "DUMMY_ACTION" };
-        it('hidden by default, visibility of the button', () => {
-            const { Plugin, containers } = getPluginForTest(MapSaveAs, stateMocker(DUMMY_ACTION), {
-                BurgerMenuPlugin: {}
-            });
-            // check container for burger menu
-            expect(Object.keys(containers)).toContain('BurgerMenu');
-            ReactDOM.render(<Plugin />, document.getElementById("container"));
-            expect(document.getElementsByClassName('modal-fixed').length).toBe(0);
-            // check log-in logout properties selector for button in burger menu
-            // hide when not logged in
-            expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
-            // show when logged In
-            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toNotExist();
-            // show if resource is available for clone
-            expect(containers.BurgerMenu.selector({
-                security: { user: {} },
-                map: { info: { id: 1234, canEdit: false } }
-            }).style.display).toNotExist();
-        });
-        it('show when control is set to "saveAs"', () => {
-            const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSaveAs', 'enabled'));
-            const { Plugin } = getPluginForTest(MapSaveAs, storeState);
-            ReactDOM.render(<Plugin />, document.getElementById("container"));
-            expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
-        });
-    });
+
 });
