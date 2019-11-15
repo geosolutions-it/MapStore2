@@ -8,15 +8,15 @@ The map will immediately update when a filter is created and all other tools wil
 Creating a new Layer Filter
 ---------------------------
 
-As we said  in [this](toc.md#managing-layers) section, is it possible to set up a *Layer Filter* from the <img src="../img/button/filter-layer.jpg" style="max-width:30px;"/> button of the TOC toolbar. Select a vector layer and click on it to see the toolbar.
+As we said  in [this](toc.md#managing-layers) section, is it possible to set up a *Layer Filter* from the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button of the TOC toolbar. Select a vector layer and click on it to see the toolbar.
 
-<img src="../img/filtering-layers/filter_layer_button.jpg" />
+<img src="../img/filtering-layers/filter_layer_button.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 The following steps show you how to filter that layer:
 
-* **Click** on the <img src="../img/button/filter-layer.jpg" style="max-width:30px;"/> button to open the *Query Builder*.
+* **Click** on the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button to open the *Query Builder*.
 
-    <img src="../img/filtering-layers/query_builder.jpg" />
+    <img src="../img/filtering-layers/query_builder.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 * **Set up** a filter. In this example we will draw a region of interest on the map to perform a spatial query:
 
@@ -33,23 +33,23 @@ The following steps show you how to filter that layer:
         * *Is contained*
         * *Contains*
 
-        <img src="../img/filtering-layers/filter_set_up.jpg" />
+        <img src="../img/filtering-layers/filter_set_up.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
         A message suggest you to *draw the region of interest on the map*, so do it to complete the filter creation.
 
     * **Draw** a rectangle on the map
 
-        <img src="../img/filtering-layers/rectangle_filter.jpg" />
+    <img src="../img/filtering-layers/rectangle_filter.jpg" class="ms-docimage"/>
 
-* **Click** the *Apply* <img src="../img/button/apply_button.jpg" style="max-width:30px;"/> button of the Query Builder toolbar, the map updates immediately.
+* **Click** the *Apply* <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> button of the Query Builder toolbar, the map updates immediately.
 
-    <img src="../img/filtering-layers/applied_filter.jpg" />
+    <img src="../img/filtering-layers/applied_filter.jpg" class="ms-docimage"/>
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" style="max-width:30px;"/> button to make it persistent. It means the filter will take effect whenever using the layer even if the *Query Builder* is closed.
+* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> button to make it persistent. It means the filter will take effect whenever using the layer even if the *Query Builder* is closed.
 
-A filter icon <img src="../img/button/filter-layer.jpg" style="max-width:30px;"/> is shown in the [TOC](toc.md) right next to the layer title to notify that the layer is filtered. The *Filter Icon* is toggleable to temporarily disable the filter anytime.
+A filter icon <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> is shown in the [TOC](toc.md) right next to the layer title to notify that the layer is filtered. The *Filter Icon* is toggleable to temporarily disable the filter anytime.
 
-<img src="../img/filtering-layers/enable_layer_filter.gif" />
+<img src="../img/filtering-layers/enable_layer_filter.gif" class="ms-docimage" style="max-width:700px;"/>
 
 ### Layer Filter Persistence
 
@@ -57,48 +57,48 @@ Once the filter has been saved the filter becomes **persistent** along with the 
 
 If you try to retrieve the features information through a click on the map, the filter you have created is applied to the content you get:
 
-<img src="../img/filtering-layers/get_filtered_features_info.gif" />
+<img src="../img/filtering-layers/get_filtered_features_info.gif" class="ms-docimage" style="max-width:700px;"/>
 
 The layer [Attributes Table](attributes-table.md) also takes the filter into account:
 
-<img src="../img/filtering-layers/filtered_features_grid.jpg" />
+<img src="../img/filtering-layers/filtered_features_grid.jpg" class="ms-docimage"/>
 
 Any additional filter you define using the [Advanced Filtering](attributes-table.md#advanced-filtering) tool or the *Quick Filter* will overlap the layer filter.
 *Layer Filter* will go in *`AND`* with *Advanced Filtering*:
 
-<img src="../img/filtering-layers/filtered_advanced_filtering.gif" />
+<img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage" style="max-width:700px;"/>
 
 *Layer Filter* will go in *`AND`* with *Quick Filter*:
 
-<img src="../img/filtering-layers/filtered_quick_filter.gif" />
+<img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"  style="max-width:700px;"/>
 
 When saving a map the *Layer Filter* is saved along with it, so if you reload the map the filter will still be active.
 
 Modifying a Layer Filter
 ------------------------
 
-If you want to change the *Layer Filter* configuration you have to click the *Filter Layer* button <img src="../img/button/filter-layer.jpg" style="max-width:30px;"/> in the [TOC](toc.md) toolbar so that the *Query Builder* opens.
+If you want to change the *Layer Filter* configuration you have to click the *Filter Layer* button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in the [TOC](toc.md) toolbar so that the *Query Builder* opens.
 
 * **Modify** the existing filter (adding new conditions for example)
 
-* **Click** on *Apply* <img src="../img/button/apply_button.jpg" style="max-width:30px;"/> so that the map updates
+* **Click** on *Apply* <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> so that the map updates
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" style="max-width:30px;"/> to make the filter persistent
+* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> to make the filter persistent
 
-<img src="../img/filtering-layers/modify_layer_filter.gif" />
+<img src="../img/filtering-layers/modify_layer_filter.gif" class="ms-docimage"  style="max-width:700px;"/>
 
-The *Query Builder* toolbar makes also available the *Undo* button <img src="../img/button/undo_button.jpg" style="max-width:30px;"/> to discard applied changes to the filter since the last save (so it is disabled if no changes are made after the last save).
+The *Query Builder* toolbar makes also available the *Undo* button <img src="../img/button/undo_button.jpg" class="ms-docbutton"/> to discard applied changes to the filter since the last save (so it is disabled if no changes are made after the last save).
 
 Removing a Layer Filter
 -----------------------
 
 When opening the *Query Builder* of a filtered layer, the filter is already configured.
-The *Reset* button <img src="../img/button/reset_button.jpg" style="max-width:30px;"/> is the only one enabled and it allows you to clear the filter (it restores an empty filter):
+The *Reset* button <img src="../img/button/reset_button.jpg" class="ms-docbutton"/> is the only one enabled and it allows you to clear the filter (it restores an empty filter):
 
-* **Click** on *Reset* <img src="../img/button/reset_button.jpg" style="max-width:30px;"/>, an empty filter will be configured and the map updates immediately.
+* **Click** on *Reset* <img src="../img/button/reset_button.jpg" class="ms-docbutton"/>, an empty filter will be configured and the map updates immediately.
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" style="max-width:30px;"/> to make the state persistent or **Click** *Undo* <img src="../img/button/undo_button.jpg" style="max-width:30px;"/> to restore the previous saved filter.
+* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> to make the state persistent or **Click** *Undo* <img src="../img/button/undo_button.jpg" class="ms-docbutton"/> to restore the previous saved filter.
 
 An example in the following gif:
 
-<img src="../img/filtering-layers/remove_layer_filter.gif" />
+<img src="../img/filtering-layers/remove_layer_filter.gif" class="ms-docimage"  style="max-width:700px;"/>
