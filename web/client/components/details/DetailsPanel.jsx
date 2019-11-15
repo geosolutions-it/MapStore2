@@ -76,7 +76,7 @@ class DetailsPanel extends React.Component {
         return (
             <ResizeDetector handleWidth>
                 { ({ width }) =>
-                    <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} fluid size={this.props.width / width > 1 ? 1 : this.props.width / width}>
+                    <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} fluid size={this.props.width / width > 1 ? 1 : this.props.width / width} noResize>
                         <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
                             <BorderLayout>
                                 <div className="ms-details-preview-container">
