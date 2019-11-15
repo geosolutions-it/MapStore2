@@ -53,6 +53,10 @@ class GroupDialog extends React.Component {
         inputStyle: PropTypes.object
     };
 
+    static contextTypes = {
+        intl: PropTypes.object
+    };
+
     static defaultProps = {
         group: {},
         availableUsers: [],
@@ -186,6 +190,7 @@ class GroupDialog extends React.Component {
             loadPrevPage: this.loadPrevPageMembers,
             paginated: true
         };
+        const placeholder = this.context.intl ? this.context.intl.formatMessage({id: 'usergroups.selectMemberPlaceholder'}) : '';
         return (<div style={{ marginTop: "10px" }}>
             <label key="member-label" className="control-label"><Message msgId="usergroups.groupMembers" /></label>
             <div key="member-list" style={
@@ -203,9 +208,10 @@ class GroupDialog extends React.Component {
                     open={this.state.openSelectMember}
                     onToggle={this.handleToggleSelectMember}
                     onChange={this.handleSelectMemberOnChange}
-                    placeholder={<Message msgId="usergroups.selectMemberPlaceholder" />}
+                    placeholder={placeholder}
                     pagination={pagination}
                     selectedValue={this.state.selectedMember}
+                    stopPropagation
                 />
             </div>
         </div>);
@@ -245,12 +251,10 @@ class GroupDialog extends React.Component {
         </Dialog>);
     }
 
-    handleToggleSelectMember = (stato) => {
-        if (stato) {
-            this.setState(prevState => ({
-                openSelectMember: !prevState.openSelectMember
-            }));
-        }
+    handleToggleSelectMember = () => {
+        this.setState(prevState => ({
+            openSelectMember: !prevState.openSelectMember
+        }));
     }
 
     handleSelectMemberOnChange = (selected) => {
@@ -293,9 +297,10 @@ class GroupDialog extends React.Component {
         this.searchUsers();
     }
 
-    searchUsers = (q = '*') => {
+    searchUsers = (q) => {
         const start = this.selectMemberPage;
-        this.props.searchUsers(q, start, PAGINATION_LIMIT);
+        const text = q || typeof this.state.selectedMember === 'string' ? this.state.selectedMember : q;
+        this.props.searchUsers(text, start, PAGINATION_LIMIT);
     }
 
     checkNameLenght = () => {
