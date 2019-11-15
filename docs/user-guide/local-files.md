@@ -5,12 +5,12 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) you can add local v
 
 Starting from a new map or an already existing map:
 
-* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" style="max-width:25px;" /> from the main menu bar.
-* **Click** on the *ADD LOCAL VECTOR FILES* option from the list <img src="../img/local-files/local-files.jpg" style="max-width:170px;" />.
+* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/> from the main menu bar.
+* **Click** on the *ADD LOCAL VECTOR FILES* option from the list <img src="../img/local-files/local-files.jpg" class="ms-docbutton" style="max-height:20px;"/>.
 
 A pop-up page will open where you can drop the vector files or to browse them from local folders by clicking on the container.
 
-<p align = "center" ><img src="../img/local-files/add-files.jpg" style="max-width:300px;"  /> </p>
+<img src="../img/local-files/add-files.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 
 !!! note
@@ -20,11 +20,11 @@ A pop-up page will open where you can drop the vector files or to browse them fr
 
 * **Drop** a zipped shapefile for example. Another pop-up page will open allowing you to set the style of the layer.
 
-     <p align = "center" ><img src="../img/local-files/style-shapefile.jpg" style="max-width:300px;"  /> </p>
+<img src="../img/local-files/style-shapefile.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 * **Click** on *Add*. The shapefile will be added to the map.
 
-     <img src="../img/local-files/map-localfile.jpg" style="max-width:600px;"  />
+<img src="../img/local-files/map-localfile.jpg" class="ms-docimage"/>
 
 
 !!! note

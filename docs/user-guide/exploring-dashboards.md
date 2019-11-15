@@ -11,19 +11,19 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a
 
 From the *Home Page*:
 
-* **Click** on the *New Dashboard* icon <img src="../img/button/dash-icon.jpg" style="max-width:20px;"/> to create a new dashboard.
+* **Click** on the *New Dashboard* icon <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> to create a new dashboard.
 
 You will be redirected to the dashboard workspace.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-1.jpg" style="max-width:600px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 Now the new dashboard is empty and ready to host new items that, in turn, can contain layers.
 
-* **Click** on the *Add* icon <img src="../img/button/+++.jpg" style="max-width:20px;"/> to add new widgets.
+* **Click** on the *Add* icon <img src="../img/button/+++.jpg" class="ms-docbutton"/> to add new widgets.
 
 The *Widget* page will open on the left showing a list of items that can be created and added to the dashboard.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-2.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-2.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 The process of creating widgets in the dashboard workspace is almost the same as in the map workspace. The only difference is that here you must start by choosing the widget type, then decide on which layer to apply it.
 
@@ -33,59 +33,59 @@ You will note that there exists a *Map Widget* type in the list. It allows you t
 
 * **Select** to add an *Empty Map*.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-3.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-3.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* **Click** on the next icon to use the empty map <img src="../img/button/next.jpg" style="max-width:20px;"/>.
+* **Click** on the next icon to use the empty map <img src="../img/button/next.jpg" class="ms-docbutton"/>.
 
 At this point you can configure your map and add layers to it.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-4.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-4.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* **Click** on <img src="../img/button/+++.jpg" style="max-width:20px;"/> to add a layer.
+* **Click** on <img src="../img/button/+++.jpg" class="ms-docbutton"/> to add a layer.
 
 * **Search** in the text box *USA Population* for example.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-5.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-5.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* **Select** the layer then click on the <img src="../img/button/+++.jpg" style="max-width:20px;"/> icon to use the layer.
+* **Select** the layer then click on the <img src="../img/button/+++.jpg" class="ms-docbutton"/> icon to use the layer.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-6.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-6.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 From here you can select the layer and change the [layer settings](layer-settings.md), delete it or add another layer to the map.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-7.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-7.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* **Click** on the next icon <img src="../img/button/next.jpg" style="max-width:20px;"/> when you are done.
+* **Click** on the next icon <img src="../img/button/next.jpg" class="ms-docbutton"/> when you are done.
 
 * **Enter** a *Title* and a *Description* then save.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-8.jpg" style="max-width:400px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-8.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 The map with the configured layers will be added to the workspace.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-9.jpg" style="max-width:600px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-9.jpg" class="ms-docimage"/>
 
 Now let us add a *Legend* widget types. As before:
 
-* **Click** on the *Add* icon <img src="../img/button/+++.jpg" style="max-width:20px;"/> to add another widget.
+* **Click** on the *Add* icon <img src="../img/button/+++.jpg" class="ms-docbutton"/> to add another widget.
 
 * **Select** *Legend* widget type.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-12.jpg" style="max-width:600px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-12.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 You will be addressed to the configuration page.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-13.jpg" style="max-width:600px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-13.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-The highlighted icon in green <img src="../img/button/connection-icon.jpg" style="max-width:20px;"/> means that the widget will be connected to the map.
+The highlighted icon in green <img src="../img/button/connection-icon.jpg" class="ms-docbutton"/> means that the widget will be connected to the map.
 
-* **Click** on the next icon <img src="../img/button/next.jpg" style="max-width:20px;"/>.
+* **Click** on the next icon <img src="../img/button/next.jpg" class="ms-docbutton"/>.
 * **Enter** a *Title* and a *Description* then save.
 
 The legend will be added to the dashboard. A new icon will be highlighted in green
 indicating the active connection between the two widgets. It can be switched off to hide the connections.
 
-<p align = "center" ><img src="../img/exploring-dashboards/dashboard-14.jpg" style="max-width:600px;"/></p>
+<img src="../img/exploring-dashboards/dashboard-14.jpg" class="ms-docimage"/>
 
 !!! note
     Adding and configuring other widget types is identical to the process seen in
