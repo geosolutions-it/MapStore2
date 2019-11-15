@@ -83,7 +83,7 @@ export const deleteContextEpic = action$ => action$
         }))
     ));
 
-export const resetSearch = action$ => action$
+export const resetContextSearch = action$ => action$
     .ofType(SEARCH_RESET)
     .switchMap(() => Rx.Observable.of(searchContexts('', {params: {start: 0, limit: 12}})));
 
