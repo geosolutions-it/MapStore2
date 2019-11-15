@@ -219,6 +219,7 @@
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
+                "web/client/plugins/manager/ManagerMenu.jsx",
                 "web/client/plugins/Map.jsx",
                 "web/client/plugins/MapSearch.jsx",
                 "web/client/plugins/Measure.jsx",

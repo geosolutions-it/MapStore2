@@ -2069,13 +2069,15 @@
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
                 "defaultMessage": "Errore sconosciuto"
-            }
+            },
+            "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"
         },
         "contextManager": {
             "title": "Gestisci contesti",
             "gridTitle": "Contesti",
             "searchPlaceholder": "contesti di ricerca...",
-            "newContext": "Nuovo contesto"
+            "newContext": "Nuovo contesto",
+            "editContextTooltip": "Modifica contesto"
         },
         "tutorial": {
             "title": "Tutorial",

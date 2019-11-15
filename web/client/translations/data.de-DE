@@ -2069,13 +2069,15 @@
             "saveErrorNotification": {
                 "title": "Das Speichern des Kontexts ist fehlgeschlagen",
                 "defaultMessage": "Unbekannter Fehler"
-            }
+            },
+            "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"
         },
         "contextManager": {
             "title": "Kontexte verwalten",
             "gridTitle": "Kontexte",
             "searchPlaceholder": "suchkontexte...",
-            "newContext": "Neuer Kontext"
+            "newContext": "Neuer Kontext",
+            "editContextTooltip": "Kontext bearbeiten"
         },
         "tutorial": {
             "title": "Anleitung",

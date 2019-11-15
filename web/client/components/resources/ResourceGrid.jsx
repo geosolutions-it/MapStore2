@@ -40,6 +40,7 @@ module.exports = ({
     edit,
     user,
     editDataEnabled,
+    cardTooltips,
     onEdit = () => {},
     onEditData = () => {},
     setEdit = () => {},
@@ -63,6 +64,7 @@ module.exports = ({
                             onEdit={onEdit}
                             onEditData={onEditData}
                             onDelete={onDelete}
+                            tooltips={cardTooltips}
                             onUpdateAttribute={onUpdateAttribute} />
                     </Col>))
             }

@@ -563,7 +563,12 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
+        }, {
+            "name": "ManagerMenu",
+            "cfg": {
+                "enableContextManager": true
+            }
+        }, "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
         "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps", "ContentTabs",
 
           {
@@ -699,11 +704,16 @@
             }
           },
           "Login",
-          "BurgerMenu",
           "Language",
           "NavMenu",
           "Attribution",
-          "Home",
+          {
+            "name": "BackToPage",
+            "cfg": {
+              "destRoute": "/context-manager",
+              "confirmMessage": "contextCreator.undo"
+            }
+          },
           "ContextCreator",
           "Notifications",
           {

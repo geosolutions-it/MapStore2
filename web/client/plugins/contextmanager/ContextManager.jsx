@@ -122,6 +122,14 @@ class ContextManager extends React.Component {
                 viewerUrl={(context) => this.context.router.history.push(`context/${context.name}`)}
                 editDataEnabled={this.props.editDataEnabled}
                 onEditData={this.props.onEditData}
+                cardTooltips={{
+                    deleteResource: "resources.resource.deleteResource",
+                    editResource: "resources.resource.editResource",
+                    editResourceData: "contextManager.editContextTooltip",
+                    addToFeatured: "resources.resource.addToFeatured",
+                    showDetails: "resources.resource.showDetails",
+                    removeFromFeatured: "resources.resource.removeFromFeatured"
+                }}
                 bottom={<PaginationToolbar/>} />
         </>);
     }

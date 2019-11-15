@@ -2069,13 +2069,15 @@
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
                 "defaultMessage": "Error desconocido"
-            }
+            },
+            "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
         },
         "contextManager": {
             "title": "Administrar contextos",
             "gridTitle": "Contextos",
             "searchPlaceholder": "contextos de búsqueda...",
-            "newContext": "Nuevo contexto"
+            "newContext": "Nuevo contexto",
+            "editContextTooltip": "Editar contexto"
         },
         "tutorial": {
             "title": "Tutorial",

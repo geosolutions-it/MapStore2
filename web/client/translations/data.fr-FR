@@ -2069,13 +2069,15 @@
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
                 "defaultMessage": "Erreur inconnue"
-            }
+            },
+            "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
         },
         "contextManager": {
             "title": "Gérer les contextes",
             "gridTitle": "Contextes",
             "searchPlaceholder": "contextes de recherche...",
-            "newContext": "Nouveau contexte"
+            "newContext": "Nouveau contexte",
+            "editContextTooltip": "Modifier le contexte"
         },
         "tutorial": {
             "title": "Tutoriel",

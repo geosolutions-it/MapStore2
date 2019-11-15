@@ -2070,13 +2070,15 @@
             "saveErrorNotification": {
                 "title": "Context saving failed",
                 "defaultMessage": "Unknown error"
-            }
+            },
+            "undo": "Are you sure you want to abandon the context editing session?"
         },
         "contextManager": {
             "title": "Manage Contexts",
             "gridTitle": "Contexts",
             "searchPlaceholder": "search contexts...",
-            "newContext": "New Context"
+            "newContext": "New Context",
+            "editContextTooltip": "Edit context"
         },
         "tutorial": {
             "title": "Tutorial",
