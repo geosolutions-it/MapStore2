@@ -168,4 +168,72 @@ describe("test the BackgroundSelector", () => {
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
     });
+
+    it('test BackgroundSelector tool buttons', () => {
+        const size = {width: 1000, height: 500};
+        const layers = [
+            {
+                id: 'layer_0',
+                title: 'title_0',
+                visibility: true,
+                group: 'background'
+            },
+            {
+                id: 'layer_1',
+                title: 'title_1',
+                group: 'background'
+            },
+            {
+                id: 'layer_2',
+                title: 'title_2',
+                type: 'wms',
+                group: 'background'
+            }
+        ];
+
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector enabled size={size} layers={layers} mapIsEditable/>, document.getElementById("container"));
+        expect(backgroundSelector).toExist();
+        const node = ReactDOM.findDOMNode(backgroundSelector);
+        expect(node).toExist();
+
+        const editButtons = node.getElementsByClassName('edit-button');
+        const deleteButtons = node.getElementsByClassName('delete-button');
+        const addButton = node.querySelectorAll('.background-preview-button .square-button-md .glyphicon-plus');
+        expect(editButtons.length).toBe(1);
+        expect(deleteButtons.length).toBe(3);
+        expect(addButton.length).toBe(1);
+    });
+
+    it('test BackgroundSelector tool buttons when mapIsEditable is false', () => {
+        const size = {width: 1000, height: 500};
+        const layers = [
+            {
+                id: 'layer_0',
+                title: 'title_0',
+                visibility: true,
+                group: 'background'
+            },
+            {
+                id: 'layer_1',
+                title: 'title_1',
+                group: 'background'
+            },
+            {
+                id: 'layer_2',
+                title: 'title_2',
+                type: 'wms',
+                group: 'background'
+            }
+        ];
+
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector enabled size={size} layers={layers} mapIsEditable={false}/>, document.getElementById("container"));
+        expect(backgroundSelector).toExist();
+        const node = ReactDOM.findDOMNode(backgroundSelector);
+        expect(node).toExist();
+        const toolButtons = node.getElementsByClassName('background-tool-button');
+        const addButton = node.querySelectorAll('.square-button-md glyphicon-plus');
+        expect(toolButtons.length).toBe(0);
+        expect(addButton.length).toBe(0);
+    });
+
 });

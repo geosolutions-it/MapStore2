@@ -2055,7 +2055,6 @@
         "defaultMapBackgroundsServiceTitle": "Sfondi predefiniti",
         "backgroundSelector": {
             "addTooltip": "Aggiungi nuovo sfondo",
-            "editTooltip": "Modifica sfondo corrente",
             "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?"
         },
         "stepper": {
