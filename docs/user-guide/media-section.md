@@ -17,7 +17,7 @@ Every time a text content is added to the section, the user can write his text a
 
 ## Media
 
-Once a media content is added to the section, the user can customize its setting through the following:
+Once a media content is added to the section, the user can customize its setting through different tools:
 
 * For images the [Content Image Toolbar](content-image-toolbar.md) appears. An example of a *Small* size image, aligned to the *Left*, can be the following: 
 

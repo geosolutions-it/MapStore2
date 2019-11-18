@@ -9,7 +9,7 @@ The Paragraph Section allow the user to edit the content, inserting textual elem
 
 * Choosing **Add Media Content** <img src="../img/button/add-media-content.jpg" class="ms-docbutton"/>, the Media Editor Window opens, allowing the user to add a new media
 
-## Text Content
+## Text
 
 By default, as soon as you add a Paragraph Section, an empty text content is already inside it:
 
@@ -21,7 +21,7 @@ With a click on the text window, it is possible to write the text and customize 
 
 The user can delete the text content with the Remove button  <img src="../img/button/remove2.jpg" class="ms-docbutton"/>.
 
-## Media Content
+## Media
 
 Adding a media content, the [Media Editor Window](media-editor-window.md) opens, allowing the user to add an Image, a Video or a Map. 
 
