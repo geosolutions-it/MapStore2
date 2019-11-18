@@ -1989,7 +1989,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurar mapa"
+                "configureMapOptions": "Configurar mapa",
+                "settings": "Configuraciones",
+                "settingsSubTitle": "Gestionar interacciones de usuario",
+                "toc": "Capas",
+                "pan": "interacción pan",
+                "zoom": "Acercar/alejar interacciones",
+                "topLeft": "Arriba a la izquierda",
+                "topRight": "Parte superior derecha",
+                "bottomLeft": "Abajo a la izquierda",
+                "bottomRight": "Abajo a la derecha"
             }
         },
         "saveDialog": {

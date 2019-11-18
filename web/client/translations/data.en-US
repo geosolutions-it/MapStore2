@@ -1993,7 +1993,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configure map",
+                "settings": "Settings",
+                "settingsSubTitle": "Manage user interactions",
+                "toc": "Layers",
+                "pan": "Pan interaction",
+                "zoom": "Zoom In/Out interactions",
+                "topLeft": "Top Left",
+                "topRight": "Top Right",
+                "bottomLeft": "Bottom Left",
+                "bottomRight": "Bottom Right"
             }
         },
         "saveDialog": {

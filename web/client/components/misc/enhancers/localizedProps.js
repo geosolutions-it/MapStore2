@@ -9,16 +9,25 @@
 
 const {getMessageById} = require('../../../utils/LocaleUtils');
 const PropTypes = require('prop-types');
-const {castArray, isNil} = require('lodash');
+const {castArray, isArray, isNil, isString} = require('lodash');
 const {getContext, mapProps, compose} = require('recompose');
 
-const getMessage = (messages, path) => {
+/**
+ * @returns {string|object[]} the translated message or array of message in the form of [{label: "path1"}, {label: "path2"}]
+ */
+const getMessage = (messages, path, defaultProp = "label") => {
+    if (isArray(path)) {
+        return path.map((item) => {
+            const msg = getMessageById(messages, item[defaultProp] || isString(item) && item || "");
+            return {...item, label: !isNil(msg) ? msg : path};
+        });
+    }
     const msg = getMessageById(messages, path);
     return !isNil(msg) ? msg : path;
 };
-const accumulate = (props, messages) => (acc = {}, propName) => ({
+const accumulate = (props, messages, labelName) => (acc = {}, propName) => ({
     ...acc,
-    [propName]: props[propName] && getMessage(messages, props[propName])
+    [propName]: props[propName] && getMessage(messages, props[propName], labelName)
 });
 /**
  * Converts the msgId provided for the props indicated as arguments into localized
@@ -33,12 +42,12 @@ const accumulate = (props, messages) => (acc = {}, propName) => ({
  * //...
  * <Input placeholder="path.to.placeholder.message" />
  */
-module.exports = (propNames) => compose(
+module.exports = (propNames, labelName) => compose(
     getContext({
         messages: PropTypes.object
     }),
     mapProps(({messages, ...props}) => ({
         ...props,
-        ...(castArray(propNames).reduce(accumulate(props, messages), {}))
+        ...(castArray(propNames).reduce(accumulate(props, messages, labelName), {}))
     })
     ));

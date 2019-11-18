@@ -12,7 +12,7 @@ import {createSelector} from 'reselect';
 import { find, isEqual} from 'lodash';
 
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
-import {resourcesSelector, getCurrentFocusedContentEl} from '../../../../selectors/geostory';
+import {resourcesSelector, getCurrentFocusedContentEl, isFocusOnContentSelector} from '../../../../selectors/geostory';
 
 
 import Message from '../../../I18N/Message';
@@ -27,7 +27,14 @@ const ConfirmButton = withConfirm(ToolbarButton);
  * resourceId a and map should be present in props
  */
 export default compose(
-    connect(createSelector(resourcesSelector, (resources) => ({ resources }))),
+    connect(
+        createSelector(
+            resourcesSelector,
+            isFocusOnContentSelector,
+            (resources, isContentFocused) => ({
+                resources,
+                isContentFocused
+            }))),
     withProps(
         ({ resources, resourceId, map = {}}) => {
             const cleanedMap = {...map, layers: (map.layers || []).map(l => l ? l : undefined)};
@@ -50,6 +57,10 @@ export const withFocusedContentMap = compose(
  * It Adjusts the path to update content map config obj
  */
 export const handleMapUpdate = withHandlers({
+    onChangeMap: ({update, focusedContent = {}}) =>
+        (path, value) => {
+            update(`${focusedContent.path}.map.${path}`, value, "merge");
+        },
     onChange: ({update, focusedContent = {}}) =>
         (path, value) => {
             update(focusedContent.path + `.${path}`, value, "merge");
