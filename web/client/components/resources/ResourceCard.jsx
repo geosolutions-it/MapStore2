@@ -20,18 +20,19 @@ class ResourceCard extends React.Component {
         backgroundOpacityStart: PropTypes.number,
         backgroundOpacityEnd: PropTypes.number,
         resource: PropTypes.object,
+        editDataEnabled: PropTypes.bool,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         onEdit: PropTypes.func,
+        onEditData: PropTypes.func,
         onDelete: PropTypes.func,
         onUpdateAttribute: PropTypes.func,
         tooltips: PropTypes.object
-
-
     };
 
     static defaultProps = {
         resource: {},
+        editDataEnabled: false,
         style: {
             backgroundImage: 'url(' + thumbUrl + ')',
             backgroundSize: "cover",
@@ -43,6 +44,7 @@ class ResourceCard extends React.Component {
         tooltips: {
             deleteResource: "resources.resource.deleteResource",
             editResource: "resources.resource.editResource",
+            editResourceData: "resources.resource.editResourceData",
             addToFeatured: "resources.resource.addToFeatured",
             showDetails: "resources.resource.showDetails",
             removeFromFeatured: "resources.resource.removeFromFeatured"
@@ -50,6 +52,7 @@ class ResourceCard extends React.Component {
         // CALLBACKS
         onDelete: () => { },
         onEdit: () => { },
+        onEditData: () => { },
         onUpdateAttribute: () => { }
 
     };
@@ -82,7 +85,6 @@ class ResourceCard extends React.Component {
     };
 
     render() {
-
         const isFeatured = this.props.resource && (this.props.resource.featured === 'true' || this.props.resource.featured === 'added');
         const availableAction = [
             {
@@ -94,6 +96,17 @@ class ResourceCard extends React.Component {
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.displayDeleteDialog();
+                }
+            },
+            {
+                visible: this.props.resource.canEdit === true && this.props.editDataEnabled === true,
+                glyph: 'pencil',
+                disabled: this.props.resource.updating,
+                loading: this.props.resource.updating,
+                tooltipId: this.props.tooltips.editResourceData,
+                onClick: evt => {
+                    this.stopPropagate(evt);
+                    this.props.onEditData(this.props.resource);
                 }
             },
             {

@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Elimina",
                 "editResource": "Modifica proprietà",
+                "editResourceData": "Modifica i dati delle risorse",
                 "addToFeatured": "Metti in evidenza",
                 "removeFromFeatured": "Rimuovi da 'in evidenza'",
                 "showDetails": "mostra dettagli"
@@ -2056,6 +2057,32 @@
             "addTooltip": "Aggiungi nuovo sfondo",
             "editTooltip": "Modifica sfondo corrente",
             "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?"
+        },
+        "stepper": {
+            "back": "Indietro",
+            "next": "Avanti"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Impostazioni Generali",
+                "title": "Crea un nuovo contesto per l'app",
+                "name": "Nome",
+                "namePlaceholder": "Inserisci il nome del contesto dell'app...",
+                "windowTitle": "Titolo della finestra",
+                "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
+            },
+            "saveErrorNotification": {
+                "title": "Salvataggio del contesto non riuscito",
+                "defaultMessage": "Errore sconosciuto"
+            },
+            "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"
+        },
+        "contextManager": {
+            "title": "Gestisci contesti",
+            "gridTitle": "Contesti",
+            "searchPlaceholder": "contesti di ricerca...",
+            "newContext": "Nuovo contesto",
+            "editContextTooltip": "Modifica contesto"
         },
         "tutorial": {
             "title": "Tutorial",

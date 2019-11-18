@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Supprimer",
                 "editResource": "Modifier les propriétés",
+                "editResourceData": "Modifier les données de la ressource",
                 "addToFeatured": "Ajouter à la présentation",
                 "removeFromFeatured": "Supprimer de la présentation",
                 "showDetails": "Afficher les détails"
@@ -2055,6 +2056,32 @@
             "addTooltip": "Ajouter un nouveau fond",
             "editTooltip": "Modifier le fond actuel",
             "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
+        },
+        "stepper": {
+            "back": "Retour",
+            "next": "Suivant"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Réglages Généraux",
+                "title": "Créer un nouveau contexte d'application",
+                "name": "Nom",
+                "namePlaceholder": "Entrez le nom du contexte de l'application...",
+                "windowTitle": "Titre de la fenêtre",
+                "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
+            },
+            "saveErrorNotification": {
+                "title": "L'enregistrement de contexte a échoué",
+                "defaultMessage": "Erreur inconnue"
+            },
+            "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
+        },
+        "contextManager": {
+            "title": "Gérer les contextes",
+            "gridTitle": "Contextes",
+            "searchPlaceholder": "contextes de recherche...",
+            "newContext": "Nouveau contexte",
+            "editContextTooltip": "Modifier le contexte"
         },
         "tutorial": {
             "title": "Tutoriel",

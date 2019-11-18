@@ -279,4 +279,17 @@ describe('Test correctness of the GeoStore APIs', () => {
             expect(data[0]).toEqual({id: 1, groupName: "everyone"});
         });
     });
+    it('test getResourceIdByName', () => {
+        const sampleResponse = {
+            Resource: {
+                id: 1,
+                name: 'name'
+            }
+        };
+
+        mockAxios.onGet().reply(200, sampleResponse);
+        API.getResourceIdByName('CONTEXT', 'name').then(data => {
+            expect(data).toBe(1);
+        });
+    });
 });

@@ -1,0 +1,11 @@
+{
+  "Resource": {
+    "canDelete": true,
+    "canEdit": true,
+    "creation": "2019-10-21T16:00:29.888+02:00",
+    "description": "test context",
+    "id": 2,
+    "lastUpdate": "2019-10-22T15:55:41.123+02:00",
+    "name": "test context"
+  }
+}

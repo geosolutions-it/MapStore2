@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Löschen",
                 "editResource": "Eigenschaften bearbeiten",
+                "editResourceData": "Ressourcendaten bearbeiten",
                 "addToFeatured": "Zum Featured hinzufügen",
                 "removeFromFeatured": "Remove from featured",
                 "showDetails": "Details anzeigen"
@@ -2055,6 +2056,32 @@
             "addTooltip": "Neuen Hintergrund hinzufügen",
             "editTooltip": "Aktuellen Hintergrund bearbeiten",
             "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?"
+        },
+        "stepper": {
+            "back": "Zurück",
+            "next": "Nächste"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Allgemeine Einstellungen",
+                "title": "Erstellen Sie einen neuen App-Kontext",
+                "name": "Name",
+                "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
+                "windowTitle": "Fenstertitel",
+                "windowTitlePlaceholder": "Fenstertitel eingeben..."
+            },
+            "saveErrorNotification": {
+                "title": "Das Speichern des Kontexts ist fehlgeschlagen",
+                "defaultMessage": "Unbekannter Fehler"
+            },
+            "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"
+        },
+        "contextManager": {
+            "title": "Kontexte verwalten",
+            "gridTitle": "Kontexte",
+            "searchPlaceholder": "suchkontexte...",
+            "newContext": "Neuer Kontext",
+            "editContextTooltip": "Kontext bearbeiten"
         },
         "tutorial": {
             "title": "Anleitung",

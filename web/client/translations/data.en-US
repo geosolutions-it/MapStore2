@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Delete",
                 "editResource": "Edit properties",
+                "editResourceData": "Edit resource data",
                 "addToFeatured": "Add to featured",
                 "removeFromFeatured": "Remove from featured",
                 "showDetails": "Show details"
@@ -2059,6 +2060,32 @@
             "addTooltip": "Add new background",
             "editTooltip": "Edit current background",
             "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
+        },
+        "stepper": {
+            "back": "Back",
+            "next": "Next"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "General Settings",
+                "title": "Create new app context",
+                "name": "Name",
+                "namePlaceholder": "Enter app context name...",
+                "windowTitle": "Window title",
+                "windowTitlePlaceholder": "Enter window title..."
+            },
+            "saveErrorNotification": {
+                "title": "Context saving failed",
+                "defaultMessage": "Unknown error"
+            },
+            "undo": "Are you sure you want to abandon the context editing session?"
+        },
+        "contextManager": {
+            "title": "Manage Contexts",
+            "gridTitle": "Contexts",
+            "searchPlaceholder": "search contexts...",
+            "newContext": "New Context",
+            "editContextTooltip": "Edit context"
         },
         "tutorial": {
             "title": "Tutorial",

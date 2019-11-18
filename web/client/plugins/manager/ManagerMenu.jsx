@@ -40,7 +40,8 @@ class ManagerMenu extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         enableRulesManager: PropTypes.bool,
-        enableImporter: PropTypes.bool
+        enableImporter: PropTypes.bool,
+        enableContextManager: PropTypes.bool
     };
 
     static contextTypes = {
@@ -54,6 +55,11 @@ class ManagerMenu extends React.Component {
             "msgId": "users.title",
             "glyph": "1-group-mod",
             "path": "/manager/usermanager"
+        },
+        {
+            "msgId": "contextManager.title",
+            "glyph": "wrench",
+            "path": "/context-manager"
         },
         {
             "msgId": "rulesmanager.menutitle",
@@ -78,7 +84,8 @@ class ManagerMenu extends React.Component {
             position: "absolute",
             overflow: "auto"
         },
-        panelClassName: "toolbar-panel"
+        panelClassName: "toolbar-panel",
+        enableContextManager: false
     };
 
     getTools = () => {
@@ -87,6 +94,7 @@ class ManagerMenu extends React.Component {
         ...this.props.entries
             .filter(e => this.props.enableRulesManager || e.path !== "/rules-manager")
             .filter(e => this.props.enableImporter || e.path !== "/importer")
+            .filter(e => this.props.enableContextManager || e.path !== "/context-manager")
             .sort((a, b) => a.position - b.position).map((entry) => {
                 return {
                     action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
@@ -120,6 +128,13 @@ class ManagerMenu extends React.Component {
 const IMPORTER_ID = 'importer';
 const RULE_MANAGER_ID = 'rulesmanager';
 
+/**
+ * This plugin provides a special Manager dropdown menu, that contains various administration tools
+ * @memberof plugins
+ * @name ManagerMenu
+ * @class
+ * @prop {boolean} cfg.enableContextManager: enable context manager menu entry, default `true`
+ */
 module.exports = {
     ManagerMenuPlugin: assign(connect((state) => ({
         enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
