@@ -15,7 +15,6 @@ export const START_RESOURCE_LOAD = 'CONTEXTCREATOR:START_RESOURCE_LOAD';
 export const LOAD_FINISHED = 'CONTEXTCREATOR:LOAD_FINISHED';
 export const CONTEXT_LOAD_ERROR = 'CONTEXTCREATOR:CONTEXT_LOAD_ERROR';
 export const LOADING = 'CONTEXTCREATOR:LOADING';
-export const SET_SOURCE = 'CONTEXTCREATOR:SET_SOURCE';
 export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 
@@ -58,11 +57,6 @@ export const loading = (value, name = "loading") => ({
     type: LOADING,
     name,
     value
-});
-
-export const setSource = (source) => ({
-    type: SET_SOURCE,
-    source
 });
 
 export const clearContextCreator = () => ({

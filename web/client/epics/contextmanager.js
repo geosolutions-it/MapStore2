@@ -64,7 +64,7 @@ export const editContext = action$ => action$
     .switchMap(({resource}) => resource ?
         Rx.Observable.of(
             clearContextCreator(),
-            push(`context-creator/context-manager/${resource.id}/general-settings`)
+            push(`context-creator/${resource.id}/general-settings`)
         ) :
         Rx.Observable.empty()
     );

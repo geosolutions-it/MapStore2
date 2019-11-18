@@ -111,7 +111,7 @@ class ContextManager extends React.Component {
                 <Button
                     style={{marginRight: "10px"}}
                     bsStyle="success"
-                    onClick={() => this.context.router.history.push(`context-creator/context-manager/new/general-settings`)}>
+                    onClick={() => this.context.router.history.push(`context-creator/new/general-settings`)}>
                         &nbsp;<span><Message msgId="contextManager.newContext"/></span>
                 </Button>
             </Grid>

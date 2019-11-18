@@ -12,7 +12,7 @@ import {get} from 'lodash';
 import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
-import {setCreationStep, clearContextCreator, loadContext, setSource} from '../../actions/contextcreator';
+import {setCreationStep, clearContextCreator, loadContext} from '../../actions/contextcreator';
 import Page from '../../containers/Page';
 import BorderLayout from '../../components/layout/BorderLayout';
 
@@ -40,19 +40,15 @@ class ContextCreator extends React.Component {
     UNSAFE_componentWillMount() {
         const stepId = get(this.props, "match.params.stepId");
         const contextId = get(this.props, "match.params.contextId");
-        const source = get(this.props, "match.params.source");
         this.props.reset();
         this.props.loadContext(contextId);
         this.props.setCreationStep(stepId);
-        this.props.setSource(source);
     }
     componentDidUpdate(oldProps) {
         const stepId = get(this.props, "match.params.stepId");
         const contextId = get(this.props, "match.params.contextId");
-        const source = get(this.props, "match.params.source");
         const oldStepId = get(oldProps, "match.params.stepId");
         const oldContextId = get(oldProps, "match.params.contextId");
-        const oldSource = get(oldProps, "match.params.source");
         if (contextId !== oldContextId) {
             this.props.reset();
             this.props.loadContext(contextId);
@@ -60,9 +56,6 @@ class ContextCreator extends React.Component {
         }
         if (oldStepId !== stepId) {
             this.props.setCreationStep(stepId);
-        }
-        if (oldSource !== source) {
-            this.props.setSource(source);
         }
     }
     componentWillUnmount() {
@@ -85,6 +78,5 @@ export default connect((state) => ({
 {
     setCreationStep,
     loadContext,
-    setSource,
     reset: clearContextCreator
 })(ContextCreator);
