@@ -1,7 +1,7 @@
 # Text Editor Toolbar
 **********************
 
-With the text editor toolbar it is possible to customize the text by modifying the following aspects:
+With the *text editor toolbar* it is possible to customize the text by modifying the following aspects:
 
 <img src="../img/text-editor-toolbar/text-editor-toolbar.jpg" class="ms-docimage"/>
 
@@ -17,18 +17,18 @@ With the text editor toolbar it is possible to customize the text by modifying t
 
 <img src="../img/text-editor-toolbar/typo-emphasis.jpg" class="ms-docimage"/>
 
-* **Alignment** (*Left*, *Center*, *Right* or *Justify*)
+* **Alignment** inside the text window (*Left*, *Center*, *Right* or *Justify*)
 
 <img src="../img/text-editor-toolbar/alignment.jpg" class="ms-docimage"/>
 
-* **Color Picker** (with this tool it is possible to change the text color to customize the highlighting)
+* **Color Picker** to change the text color and customize the highlighting
 
 <img src="../img/text-editor-toolbar/color-picker.jpg" class="ms-docimage" style="width:200px"/>
 
-* **Link/Unlink** (this tool allows the user to add or remove an hyperlink to the text)
+* **Link/Unlink** to add or remove an hyperlink to the text
 
 <img src="../img/text-editor-toolbar/link.jpg" class="ms-docimage"style="width:250px"/>
 
-* **Remove** (this tool is useful to remove text changes)
+* **Remove** to remove text changes
 
 <img src="../img/text-editor-toolbar/remove.jpg" class="ms-docimage"/>
