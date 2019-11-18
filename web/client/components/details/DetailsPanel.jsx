@@ -76,23 +76,25 @@ class DetailsPanel extends React.Component {
         return (
             <ResizeDetector handleWidth>
                 { ({ width }) =>
-                    <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} fluid size={this.props.width / width > 1 ? 1 : this.props.width / width} noResize>
-                        <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
-                            <BorderLayout>
-                                <div className="ms-details-preview-container">
-                                    {!this.props.detailsText ?
+                    <div className="react-dock-no-resize">
+                        <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} fluid size={this.props.width / width > 1 ? 1 : this.props.width / width}>
+                            <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
+                                <BorderLayout>
+                                    <div className="ms-details-preview-container">
+                                        {!this.props.detailsText ?
 
-                                        <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
-                                        <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html:
-                                                    this.props.detailsText === NO_DETAILS_AVAILABLE
-                                                        ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable")
-                                                        : this.props.detailsText
+                                            <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
+                                            <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html:
+                                                this.props.detailsText === NO_DETAILS_AVAILABLE
+                                                    ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable")
+                                                    : this.props.detailsText
 
-                                        }} />}
-                                </div>
-                            </BorderLayout>
-                        </Panel>
-                    </Dock>
+                                            }} />}
+                                    </div>
+                                </BorderLayout>
+                            </Panel>
+                        </Dock>
+                    </div>
                 }
             </ResizeDetector>
         );
