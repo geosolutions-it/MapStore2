@@ -17,7 +17,6 @@ export default class ContextCreator extends React.Component {
     static propTypes = {
         curStepId: PropTypes.string,
         newContext: PropTypes.object,
-        source: PropTypes.string,
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func
     };
@@ -38,8 +37,8 @@ export default class ContextCreator extends React.Component {
             <Stepper
                 currentStepId={this.props.curStepId}
                 onSetStep={(stepId) => this.context.router.history.push(
-                    `/context-creator/${this.props.source ? this.props.source + '/' : ''}${stepId}/`)}
-                onSave={() => this.props.onSave(this.props.source === 'context-manager' ? '/context-manager' : undefined)}
+                    `/context-creator/${stepId}/`)}
+                onSave={() => this.props.onSave('/context-manager')}
                 steps={[{
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',

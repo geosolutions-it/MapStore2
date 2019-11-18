@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {SET_CREATION_STEP, SET_RESOURCE, SET_SOURCE, CLEAR_CONTEXT_CREATOR, CHANGE_ATTRIBUTE} from "../actions/contextcreator";
+import {SET_CREATION_STEP, SET_RESOURCE, CLEAR_CONTEXT_CREATOR, CHANGE_ATTRIBUTE} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 export default (state = {}, action) => {
@@ -15,9 +15,6 @@ export default (state = {}, action) => {
     }
     case SET_RESOURCE: {
         return set('newContext', action.resource && action.resource.data || {}, set('resource', action.resource, state));
-    }
-    case SET_SOURCE: {
-        return set('source', action.source, state);
     }
     case CLEAR_CONTEXT_CREATOR: {
         return {};
