@@ -47,7 +47,7 @@ const backgroundSelector = createSelector([
     deletedId,
     backgrounds,
     size: map && map.size || {width: 0, height: 0},
-    mapIsEditable: mapInfo && mapInfo.canEdit || false,
+    mapIsEditable: mapInfo && mapInfo.canEdit,
     layers,
     tempLayer,
     currentLayer,

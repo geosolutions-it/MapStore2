@@ -73,6 +73,7 @@ class BackgroundSelector extends React.Component {
         thumbs: {
             unknown: require('./img/default.jpg')
         },
+        mapIsEditable: true,
         onRemoveBackground: () => {},
         onPropertiesChange: () => {},
         onToggle: () => {},
