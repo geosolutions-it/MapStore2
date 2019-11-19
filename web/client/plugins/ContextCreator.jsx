@@ -21,7 +21,7 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
  * @memberof plugins
  * @name ContextCreator
  * @class
- * @prop {string} cfg.onSaveDestLocation router path when the application is redirected when a context is saved
+ * @prop {string} cfg.saveDestLocation router path when the application is redirected when a context is saved
  *
  */
 export default createPlugin('ContextCreator', {

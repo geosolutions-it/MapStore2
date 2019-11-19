@@ -36,7 +36,7 @@ describe('ContextCreator component', () => {
             const spyonSave = expect.spyOn(actions, 'onSave');
             ReactDOM.render(<ContextCreator onSave={actions.onSave} />, document.getElementById("container"));
             // save button
-            const button = document.querySelectorAll('.footer-button-toolbar-div button')[1];
+            const saveBtn = document.querySelectorAll('.footer-button-toolbar-div button')[1];
             ReactTestUtils.Simulate.click(button); // <-- trigger event callback
             // check customization of destination path
             expect(spyonSave).toHaveBeenCalledWith("/context-manager");
@@ -46,7 +46,7 @@ describe('ContextCreator component', () => {
                 onSave: () => { }
             };
             const spyonSave = expect.spyOn(actions, 'onSave');
-            ReactDOM.render(<ContextCreator onSaveDestLocation="MY_DESTINATION" onSave={actions.onSave} />, document.getElementById("container"));
+            ReactDOM.render(<ContextCreator saveDestLocation="MY_DESTINATION" onSave={actions.onSave} />, document.getElementById("container"));
             // save button
             const button = document.querySelectorAll('.footer-button-toolbar-div button')[1];
             ReactTestUtils.Simulate.click(button); // <-- trigger event callback
