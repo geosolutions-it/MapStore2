@@ -16,6 +16,14 @@ import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
 
+/**
+ * Plugin for creation of Contexts.
+ * @memberof plugins
+ * @name ContextCreator
+ * @class
+ * @prop {string} cfg.onSaveDestLocation router path when the application is redirected when a context is saved
+ *
+ */
 export default createPlugin('ContextCreator', {
     component: connect(createStructuredSelector({
         curStepId: creationStepSelector,
