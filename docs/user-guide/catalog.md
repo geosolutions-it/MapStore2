@@ -13,6 +13,7 @@ CSW, WMS and WMTS Demo Services are available by default allowing you to import 
 Starting from a new map or an already existing map:
 
 * **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton" /> from the main menu bar.
+
 * **Click** on the *Catalog* option from the list <img src="../img/catalog/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;" />.
 
 The Catalog page will open showing a list of services, a search box to search the layers by name and a list of the retrieved layers ready to be added to the map.

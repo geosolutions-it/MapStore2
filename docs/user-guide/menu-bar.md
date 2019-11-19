@@ -3,7 +3,7 @@
 
 In this section you will learn how to use the *Menu Bar*. As mentioned before, it includes connections to the <span style="color:red">*Home Page*</span> and the <span style="color:blue">*Account*</span>.
 
-   <img src="../img/menu-bar/menu-bar.jpg" class="ms-docimage"/>
+<img src="../img/menu-bar/menu-bar.jpg" class="ms-docimage"/>
 
 It contains also a *Search bar* and a *Burger menu* that will be treated in details here below.
 
@@ -55,54 +55,55 @@ The following example shows the steps required to set up a custom service:
 
 * Click on the **Burger Icon** of the *Search Bar*, the options panel will open
 
-    <img src="../img/menu-bar/search_tool.jpg" class="ms-docimage"  style="max-width:500px;" />
+<img src="../img/menu-bar/search_tool.jpg" class="ms-docimage"  style="max-width:500px;" />
 
 * Click on the **Configure search services** button to open the **Create/edit search service** panel
 
-    <img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage"  style="max-width:500px;" />
+<img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-    The custom search services are listed in the *Available services* section.
+The custom search services are listed in the *Available services* section.
 
 * Click on the **Add** button to open the *WFS service props* form and fill out it
 
-    <img src="../img/menu-bar/wfs-service-props-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/menu-bar/wfs-service-props-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-    - **Name** can be whatever you prefer, it is a good practice to refer it to some other properties as the *Layer* and/or the *Attributes*
+**Name** can be whatever you prefer, it is a good practice to refer it to some other properties as the *Layer* and/or the *Attributes*
 
-    - **Service url** is the WFS you want to call, in this example we used a WFS service available on the GeoSolutions Demo Server
+**Service url** is the WFS you want to call, in this example we used a WFS service available on the GeoSolutions Demo Server
 
-    - **Layer** is the layer from which you want to retrieve information, for example the TIGER layer *Manhattan (NY) roads*
+**Layer** is the layer from which you want to retrieve information, for example the TIGER layer *Manhattan (NY) roads*
 
-    - **Attributes** identifies which field should be considered by the search query, in this case we are interested in roads' name so we choose the NAME field
+**Attributes** identifies which field should be considered by the search query, in this case we are interested in roads' name so we choose the NAME field<br>
 
 * Click on the **Next** button to open the *Result display properties* form
 
-    <img src="../img/menu-bar/result-display-properties-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/menu-bar/result-display-properties-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-    - **Title** is displayed on the top of each results row. You might want to show here the content of the fields of interest, in this example we choose to display the NAME field values so we type `${properties.NAME}`
+**Title** is displayed on the top of each results row. You might want to show here the content of the fields of interest, in this example we choose to display the NAME field values so we type `${properties.NAME}`
 
-    - **Description** is displayed to the bottom of each results row. We use *Manhattan Roads* to point out the source layer name but feel free to change it. You can use the same property placeholder syntax here.
+**Description** is displayed to the bottom of each results row. We use *Manhattan Roads* to point out the source layer name but feel free to change it. You can use the same property placeholder syntax here.
 
-    - **Priority** is a weight assigned to the custom results. It is used to sort all the search results so lower values determine higher positions in the results list (top). The default [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, so to see our custom results in the first positions we should set a value lower than 5 for this field. We use 3.
+**Priority** is a weight assigned to the custom results. It is used to sort all the search results so lower values determine higher positions in the results list (top). The default [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, so to see our custom results in the first positions we should set a value lower than 5 for this field. We use 3.
 
-    - **Launch Info Panel** is a flag that can be used to trigger GetFeatureInfo requests when selecting a record after a search.
-    It has three values as shown here:
-    <img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:500px;"/>
-     - "No info" means that no GFI request will be triggered and it is the default value.
+**Launch Info Panel** is a flag that can be used to trigger GetFeatureInfo requests when selecting a record after a search. It has three values as shown here:
 
-     Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
+<img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-     - "Search Layer" means that the GFI will filter results to the record selected and to its layer. It will also force the info_format to "application/json" (PROPERTIES) for allowing filtering on the features by using the id of the selected record.
-     - "All Layers" means that there will be no filtering as it happens when you click on map.
+"No info" means that no GFI request will be triggered and it is the default value.
 
+Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
+
+"Search Layer" means that the GFI will filter results to the record selected and to its layer. It will also force the info_format to "application/json" (PROPERTIES) for allowing filtering on the features by using the id of the selected record.
+
+"All Layers" means that there will be no filtering as it happens when you click on map.
 
 * Click on the **Next** button to open the *Optional props* form
 
-    <img src="../img/menu-bar/optional-props-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/menu-bar/optional-props-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-    - **Sort by** lets you decide on which field to sort the results, we choose NAME again
+**Sort by** lets you decide on which field to sort the results, we choose NAME again
 
-    - **Max features** is the maximum number of rows displayed in your custom search results, in this example we consider that 5 is enough
+**Max features** is the maximum number of rows displayed in your custom search results, in this example we consider that 5 is enough
 
 * Click on the **Save/Update** <img src="../img/button/save-update-button.jpg" class="ms-docbutton"  style="max-height:20px;"/> button to save your settings
 
@@ -124,12 +125,13 @@ Since the option is enabled no results from the default service are shown:
 
 <img src="../img/menu-bar/override-default-service-results.jpg" class="ms-docimage"/>
 
-
 Testing Launch Info panel options
 -----------
+
 You can follow the previous procedure and use "Search Layer" as launch info panel value.
 
 You can see that when you click on the first result
+
 <img src="../img/menu-bar/custom-search-results-click-records.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 The result will be something like:
@@ -144,15 +146,18 @@ Since other layers are on the map then the navigation arrows is visible in the t
 
 Burger Menu
 -----------
-The *Burger Menu* is the core of the *Menu Bar* and it will be later addressed in details. It contains several options to add data from different sources to the map, to perform measurments and to save, print and share the created map.
 
-<br>
-
+The *Burger Menu* is the core of the *Menu Bar* and it will be later addressed in details. It contains several options to add data from different sources to the map, to perform measurments and to save, print and share the created map.<br>
 Click on the following links to learn more about the main options:
 
-* [PRINT](print.md): allows you to print a created map;
-* [ADD LOCAL VECTOR FILES](local-files.md): allows to import from your machine vector files to be added to  the map;
-* [CATALOG](catalog.md): allows you to import data from several remote services;
-* [MEASURE](measure.md): tools to perform measurments on the map;
-* [ANNOTATIONS](annotations.md): allows you to create customized annotations and add them to the map;
-* [SHARE](share.md): allows you to share your map.
+* [PRINT](print.md): allows you to print a created map
+
+* [ADD LOCAL VECTOR FILES](local-files.md): allows to import from your machine vector files to be added to  the map
+
+* [CATALOG](catalog.md): allows you to import data from several remote services
+
+* [MEASURE](measure.md): tools to perform measurments on the map
+
+* [ANNOTATIONS](annotations.md): allows you to create customized annotations and add them to the map
+
+* [SHARE](share.md): allows you to share your map

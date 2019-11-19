@@ -1,5 +1,6 @@
-# Managing User Rights on Maps
+# Resource Properties
 ------------------------------
+
 What a user can do, both on maps and dashboards, depends on its role.
 <br>
 **Admin** users can manage accounts and can *view* and *edit* all the maps and dashboards, whoever created them.

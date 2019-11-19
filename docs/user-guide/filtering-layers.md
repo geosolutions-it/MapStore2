@@ -16,34 +16,39 @@ The following steps show you how to filter that layer:
 
 * **Click** on the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button to open the *Query Builder*.
 
-    <img src="../img/filtering-layers/query_builder.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/filtering-layers/query_builder.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 * **Set up** a filter. In this example we will draw a region of interest on the map to perform a spatial query:
 
     * **Select** a *Filter Type* (a `Rectangle` for example), you can choose between these spatial objects:
 
         * *Viewport*
+
         * *Rectangle*
+
         * *Circle*
+
         * *Polygon*
 
     * **Select** a *Geometric Operation* (`Intersect` could be fine), you can choose between these operations:
 
         * *Intersect*
+
         * *Is contained*
+
         * *Contains*
 
-        <img src="../img/filtering-layers/filter_set_up.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/filtering-layers/filter_set_up.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-        A message suggest you to *draw the region of interest on the map*, so do it to complete the filter creation.
+A message suggest you to *draw the region of interest on the map*, so do it to complete the filter creation.
 
-    * **Draw** a rectangle on the map
+ * **Draw** a rectangle on the map
 
-    <img src="../img/filtering-layers/rectangle_filter.jpg" class="ms-docimage"/>
+<img src="../img/filtering-layers/rectangle_filter.jpg" class="ms-docimage"/>
 
 * **Click** the *Apply* <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> button of the Query Builder toolbar, the map updates immediately.
 
-    <img src="../img/filtering-layers/applied_filter.jpg" class="ms-docimage"/>
+<img src="../img/filtering-layers/applied_filter.jpg" class="ms-docimage"/>
 
 * **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> button to make it persistent. It means the filter will take effect whenever using the layer even if the *Query Builder* is closed.
 

@@ -1,9 +1,11 @@
 # Table of Contents (TOC)
 ************************
+
 The Table of Contents, briefly TOC from now on, is a place where all layers on the map are kept. It shows what the features in each layer represent and it allows you to manage the order and the visibility of the added layers. Moreover, it contains several tools in order to make edits and analysis on the layers.
 
 Adding Layers
 -------------
+
 * **Click** on the *Show Layers* icon <img src="../img/button/show-layers.jpg" class="ms-docbutton" /> on the top-left corner of the map viewer. The TOC will open.
 
 <img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:300px;" />
@@ -26,14 +28,19 @@ Adding Layers
 
 Managing Layer Groups
 ---------------------
+
 From the TOC, **Click** on the <span style="color:blue">*Default* </span> Layer Group. The layer group card will be highlighted and a <span style="color:red">set of options </span> will be shown.
 
 <img src="../img/toc/layer_group.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
  * <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> allows the user to add layers to the selected group.
+
  * <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> allows the user to create groups and subgroups.
+
  * <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> allows the user to zoom on the existing layers in the group.
+
  * <img src="../img/button/properties.jpg" class="ms-docbutton"/> allows the user to manage the properties of the layer group.
+
  * <img src="../img/button/delete.jpg" class="ms-docbutton"/> allows the user to delete the layer group and its content.
 
 **Click** on <img src="../img/button/properties.jpg" class="ms-docbutton"/>, you will be addressed to a new page.
@@ -127,6 +134,9 @@ After adding a layer, several options can be accessed from the TOC allowing you 
 The remaining tools will be faced in detail in separate sections:
 
 *  <img src="../img/button/properties.jpg" class="ms-docbutton"/> [Layer Settings](layer-settings.md): allows you to manage the layers in groups, to set the display mode and the style of the layers, and to set the format of the feature info.
+
 *  <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> [Filter Layer](filtering-layers.md): acts directly on a layer and filter its content upfront (this works only on layers with WFS available).
+
 *  <img src="../img/button/attributes-table.jpg" class="ms-docbutton" /> [Attribute Table](attributes-table.md): allows you to visualize, query, edit and analyze tabular data related to the layer.
+
 * <img src="../img/button/widgets.jpg" class="ms-docbutton"/> [Widgets](widgets.md): allows you to create charts, texts, tables widgets and add them to the map.

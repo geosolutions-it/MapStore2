@@ -34,21 +34,15 @@ In order to add a new annotation:
 
 <img src="../img/annotations/polygon_annotation_drawing.gif" class="ms-docimage" style="max-width:700px;"/>
 
-
 You can also insert new vertices, or edit existing ones, through the coordinates editor using `Decimal` or `Aeronautical` formats.
-
 
 <img src="../img/annotations/coordinates_format_switcher.jpg" class="ms-docimage" style="max-width:500px;" />
 
-
 New vertices can be also added using the <img src="../img/button/++.jpg" class="ms-docbutton" /> button and typing the `latitude` and `longitude` values (see the picture below).
-
 
 <img src="../img/annotations/add_vertex_button.jpg" class="ms-docimage" style="max-width:500px;" />
 
-
 Invalid vertices are notified with a red exclamation point icon.
-
 
 <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
 
@@ -132,7 +126,7 @@ You can manage anytime your annotations through the *Annotation Toolbar*. Click 
 
 * To delete the annotation use the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button.
 
-* Annotations can be also download in `json` format and reused in other maps. Using <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" />               button you will be able to export your annotation in the `Annotation.json` file and download it.
+* Annotations can be also download in `json` format and reused in other maps. Using <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" /> button you will be able to export your annotation in the `Annotation.json` file and download it.
 
 <img src="../img/annotations/download_annotation.jpg" class="ms-docimage"/>
 

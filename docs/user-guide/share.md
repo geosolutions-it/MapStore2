@@ -10,6 +10,7 @@ From the home page:
 From the main menu bar:
 
 * **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/>.
+
 * **Click** on the *Share* option from the list <img src="../img/share/share.jpg" class="ms-docbutton"  style="max-height:20px;" />.
 
 A pop-up page will open showing the share page. From the *Link* tab you can use the direct link or the QR code.

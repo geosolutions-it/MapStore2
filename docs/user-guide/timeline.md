@@ -26,7 +26,6 @@ Once a layer is loaded, a new row is added in the list and its relative histogra
 <br>
 The histogram shows the layers' data for each time in which they are defined. You can zoom on the histogram, scroll the time axis and drag the current time cursor along it.
 
-
 Handling the time
 -----------------
 
@@ -54,8 +53,7 @@ Sometimes you may be interested to show on the timeline only the times actually 
 Animations
 ----------
 
-Animations are based on ordered sequences of steps, by default each step represents a configuration of the selected layer (***guide layer***).
-<br>
+Animations are based on ordered sequences of steps, by default each step represents a configuration of the selected layer (***guide layer***).<br>
 The right side of the main panel contains the buttons responsible for managing the animations.
 
 <img src="../img/timeline/timeline-animation-buttons.jpg" class="ms-docimage"  style="max-width:500px;"/>
@@ -63,9 +61,13 @@ The right side of the main panel contains the buttons responsible for managing t
 The following list describes the functions performed by each button.
 
 * **Step backward** <img src="../img/button/timeline-step-backward-button.jpg" class="ms-docbutton"/> : return to the previous step
+
 * **Play** <img src="../img/button/timeline-play-button.jpg" class="ms-docbutton"/> : play the animation
+
 * **Stop** <img src="../img/button/timeline-stop-button.jpg" class="ms-docbutton"/> : stop the animation
+
 * **Step forward** <img src="../img/button/timeline-step-forward-button.jpg" class="ms-docbutton"/> : go ahead to the next step
+
 * **Settings** <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> : open the [Animation Settings](#animation-settings) panel
 
 Clicking the **Play** button, by default, the current time cursor reach the initial time of the ***guide layer*** and the animation starts. You will see the layers' configurations changes on the map and the time progress on the histogram. Following the step sequence, the cursor will shift each time to the next step in a certain time interval, the *frame duration*.
@@ -82,7 +84,6 @@ You can also specify a *time range*. During the animation, the whole range will 
 
 <img src="../img/timeline/timeline-animation-range.gif" class="ms-docimage"  style="max-width:700px;"/>
 
-
 ### Animation Settings
 
 The animation behavior can be customized through the **Settings**. If you click on the button <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> a panel with two different sections appears.
@@ -96,13 +97,18 @@ The animation behavior can be customized through the **Settings**. If you click 
 ***Playback Settings***
 
 * **Frame Duration**: it indicates how fast the time cursor switch to the next step in the steps sequence
+
 * **Animation Step**: it defines the step width and so all the steps positions along the time axis. By default this option is disabled and the step sequence is defined by the ***guide layer***'s data. If activated, a fixed time unit (in terms of seconds, minutes, hours, days, months or years) can be defined as the step width and the whole steps sequence will be reconfigured.
+
 * **Animation Range**: if activated, it basically bounds the animation execution to a fixed time interval, the *green range*. The *green range* can be defined both dragging the *play/stop cursors* directly on the histogram or filling the *date/time control cells* of the extra panel displayed.
     <br>Other settings:
+
     * **Zoom to the current playback range** <img src="../img/button/timeline-zoom-playback-range.jpg" class="ms-docbutton"/> : zoom the histogram until it fits the animation's *green range* time extension.
+
     * **Set to current view range** <img src="../img/button/timeline-zoom-current-view-range.jpg" class="ms-docbutton"/> : extend the animation's *green range* until it fits the current view range of the histogram.
+
     * **Fit to selected layer's range** <img src="../img/button/timeline-fit-layer-range.jpg" class="ms-docbutton"/> : extend the animation's *green range* until it fits the ***guide layer*** time extension
 
-    <br><img src="../img/timeline/timeline-animation-green-range.gif" class="ms-docimage"  style="max-width:700px;"/>
+<img src="../img/timeline/timeline-animation-green-range.gif" class="ms-docimage"  style="max-width:700px;"/>
 
 * **Follow the animation**: if activated the histogram is always centered on the time cursor during the animation.

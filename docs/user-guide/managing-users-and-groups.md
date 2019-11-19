@@ -1,3 +1,6 @@
+# Managing Users and Groups
+------------------------------
+
 From the *Home Page*:
 
 * **Click** on the *Account* icon then **Log in** as administrator.

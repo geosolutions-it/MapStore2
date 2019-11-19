@@ -18,8 +18,9 @@ Switching *CRS* is very simple:
 
 * **Select** the *CRS* and **click** on it.
 
-    <img src="../img/footer/CRS_selector.gif" class="ms-docimage"/>
+<img src="../img/footer/CRS_selector.gif" class="ms-docimage"/>
 
 In order to identify the desired CRS, you can also filter the CRS list by typing in a search input field located in the bottom part of the selector. This selection will be saved along with the map.
 
-note: the list of CRSs is customizable by MapStore's configuiration.
+!!! note
+    The list of CRSs is customizable by MapStore's configuiration.

@@ -14,6 +14,7 @@ From the home page:
 A pop-up page will open.
 
 * **Enter** a *Name* and a *Description* for your map.
+
 * **Upload** an image as a thumbnail.
 
 <img src="../img/save/save-as-1.jpg" class="ms-docimage"  style="max-width:500px;"/>

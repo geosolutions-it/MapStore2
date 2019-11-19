@@ -4,11 +4,12 @@
 In this section, you will learn how to manage the layers, to set the display mode and the style of the layers, and to set the format of the feature info.
 
 * **Add** a layer and **Select** it.
-* **Click** on <img src="../img/button/properties.jpg" class="ms-docbutton"/> to access the settings.
 
+* **Click** on <img src="../img/button/properties.jpg" class="ms-docbutton"/> to access the settings.
 
 General Settings Form
 ---------------------
+
 On the first page of the form, you can change the Title of the layer,
 translate it in several languages, add a description and assign it to a new Layer Group as seen in the [TOC](toc.md).
 
@@ -34,10 +35,10 @@ On the second page, you can set the rendering options of the layer such as the i
 
 Style Form
 ----------
+
 On the third page, you can choose a style from the list and apply it to the layer.
 
 <img src="../img/layer-settings/style.jpg" class="ms-docimage"/>
-
 
 Style Editor
 ------------
@@ -56,9 +57,10 @@ Once done these requirements' checks you can edit an existing style or create a 
 
 * **Click** on the **Edit selected style** button <img src="../img/button/style_editor_edit_button.jpg" class="ms-docbutton"/> if you want to edit an existing style.
 
-    <img src="../img/layer-settings/style_editor_edit_style.gif" class="ms-docimage"  style="max-width:700px;"/>
+<img src="../img/layer-settings/style_editor_edit_style.gif" class="ms-docimage"  style="max-width:700px;"/>
 
 * **Click** on the **Save current style** button <img src="../img/button/style_editor_save_current_style.jpg" class="ms-docbutton"/> to save your changes
+
 * **Click** on the **Back to style list** button <img src="../img/button/style_editor_back_button.jpg" class="ms-docbutton"/> to go back without saving the changes.
 
 ***Create new styles***
@@ -69,7 +71,7 @@ Once done these requirements' checks you can edit an existing style or create a 
 
     * ***SLD - Styled Layer Descriptor*** (an XML schema specified by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/) for describing the appearance of map layers)
 
-    <img src="../img/layer-settings/style_editor_add_style_template.jpg" class="ms-docimage"  style="max-width:500px;">
+<img src="../img/layer-settings/style_editor_add_style_template.jpg" class="ms-docimage"  style="max-width:500px;">
 
 * **Select** a style template
 
@@ -99,7 +101,6 @@ Another useful tool is the ***color picker*** that allow you to choose colors, d
 <img src="../img/layer-settings/style_editor_color_picker.jpg" class="ms-docimage"  style="max-width:500px;">
 
 Click on the square filled icon (<img src="../img/button/style_editor_color_picker_icon.jpg" class="ms-docbutton" style="max-height:15px;"/>) near the color code to activate this function.
-
 
 Feature Info Form
 -----------------
