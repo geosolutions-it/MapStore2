@@ -40,7 +40,7 @@ export default class ContextCreator extends React.Component {
                 currentStepId={this.props.curStepId}
                 onSetStep={(stepId) => this.context.router.history.push(
                     `/context-creator/${stepId}/`)}
-                onSave={() => this.props.onSave(this.props.onSaveDestLocation)}
+                onSave={() => this.props.onSave(this.props.saveDestLocation)}
                 steps={[{
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
