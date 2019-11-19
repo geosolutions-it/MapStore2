@@ -38,6 +38,7 @@ class GroupDialog extends React.Component {
         group: PropTypes.object,
         users: PropTypes.array,
         availableUsers: PropTypes.array,
+        availableUsersCount: PropTypes.number,
         searchUsers: PropTypes.func,
         availableUsersLoading: PropTypes.bool,
         show: PropTypes.bool,
@@ -185,7 +186,7 @@ class GroupDialog extends React.Component {
         let availableUsers = this.props.availableUsers.filter((user) => findIndex(this.getCurrentGroupMembers(), member => member.id === user.id) < 0).map(u => ({ value: u.id, label: u.name }));
         const pagination = {
             firstPage: this.selectMemberPage === 0,
-            lastPage: false,
+            lastPage: (this.selectMemberPage + PAGINATION_LIMIT) >= this.props.availableUsersCount,
             loadNextPage: this.loadNextPageMembers,
             loadPrevPage: this.loadPrevPageMembers,
             paginated: true
@@ -211,6 +212,7 @@ class GroupDialog extends React.Component {
                     placeholder={placeholder}
                     pagination={pagination}
                     selectedValue={this.state.selectedMember}
+                    onSelect={this.handleSelect}
                     stopPropagation
                 />
             </div>
@@ -251,6 +253,11 @@ class GroupDialog extends React.Component {
         </Dialog>);
     }
 
+    // called before onChange
+    handleSelect = () => {
+        this.selected = true;
+    };
+
     handleToggleSelectMember = () => {
         this.setState(prevState => ({
             openSelectMember: !prevState.openSelectMember
@@ -262,9 +269,11 @@ class GroupDialog extends React.Component {
             this.selectMemberPage = 0;
             this.setState({selectedMember: selected});
             this.searchUsers(selected);
+            return;
         }
 
-        if (selected.value) {
+        if (this.selected) {
+            this.selected = false;
             let value = selected.value;
             let newMemberIndex = findIndex(this.props.availableUsers, u => u.id === value);
             if (newMemberIndex >= 0) {
@@ -272,10 +281,13 @@ class GroupDialog extends React.Component {
                 let newUsers = this.getCurrentGroupMembers();
                 newUsers = [...newUsers, newMember];
                 this.props.onChange("newUsers", newUsers);
-                this.handleToggleSelectMember(true);
-                this.setState({selectedMember: ''});
+                this.setState({selectedMember: '', openSelectMember: false});
+                this.searchUsers('*');
             }
-            // this.setState({selectedMember: selected.name});
+            return;
+        }
+        if (selected.value) {
+            this.setState({selectedMember: selected.label});
             this.selectMemberPage = 0;
         }
     }
@@ -299,7 +311,7 @@ class GroupDialog extends React.Component {
 
     searchUsers = (q) => {
         const start = this.selectMemberPage;
-        const text = q || typeof this.state.selectedMember === 'string' ? this.state.selectedMember : q;
+        const text = q || (typeof this.state.selectedMember === 'string' && this.state.selectedMember ? this.state.selectedMember : q);
         this.props.searchUsers(text, start, PAGINATION_LIMIT);
     }
 

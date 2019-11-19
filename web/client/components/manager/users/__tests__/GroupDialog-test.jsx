@@ -138,6 +138,7 @@ describe("Test GroupDialog Component", () => {
         const comp = ReactDOM.render(
             <GroupDialog group={group1} onChange={actions.onChange} availableUsers={availableUsers} />,
             document.getElementById("container"));
+        comp.handleSelect();
         comp.handleSelectMemberOnChange(selected);
         expect(spyOnChange).toHaveBeenCalled();
     });
