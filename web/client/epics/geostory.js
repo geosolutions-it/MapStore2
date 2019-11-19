@@ -326,10 +326,12 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
 export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
          action$.ofType(UPDATE).filter(({path = ""}) => path.endsWith("editMap"))
      .map(({path: rowPath, element: status}) => {
-                const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
-                const target = flatPath.pop();
-                const section = flatPath.shift();
-                const hideContent = path[path.length - 2] === "background";
-                const selector = hideContent && `#${section.id} .ms-section-background-container` || `#${target.id}`;
+            const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
+            const target = flatPath.pop();
+            const section = flatPath.shift();
+            const hideContent = path[path.length - 2] === "background";
+            const selector = hideContent && `#${section.id} .ms-section-background-container` || `#${target.id}`;
+            scrollToContent(target.id);
+
             return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
      });
