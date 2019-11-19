@@ -37,8 +37,8 @@ describe('ContextCreator component', () => {
             ReactDOM.render(<ContextCreator onSave={actions.onSave} />, document.getElementById("container"));
             // save button
             const saveBtn = document.querySelectorAll('.footer-button-toolbar-div button')[1];
-            ReactTestUtils.Simulate.click(button); // <-- trigger event callback
-            // check customization of destination path
+            ReactTestUtils.Simulate.click(saveBtn); // <-- trigger event callback
+            // check destination path
             expect(spyonSave).toHaveBeenCalledWith("/context-manager");
         });
         it('custom destination', () => {
