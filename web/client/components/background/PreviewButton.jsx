@@ -14,6 +14,7 @@ require('./css/previewbutton.css');
 
 class PreviewButton extends React.Component {
     static propTypes = {
+        mode: PropTypes.string,
         src: PropTypes.string,
         side: PropTypes.number,
         frame: PropTypes.number,
@@ -30,6 +31,7 @@ class PreviewButton extends React.Component {
     };
 
     static defaultProps = {
+        mode: 'desktop',
         src: './images/mapthumbs/none.jpg',
         side: 50,
         frame: 4,
@@ -58,7 +60,7 @@ class PreviewButton extends React.Component {
                         className: 'square-button-md',
                         bsStyle: 'primary'
                     }}
-                    buttons={this.props.mapIsEditable ? [
+                    buttons={this.props.mode !== 'mobile' && this.props.mapIsEditable ? [
                         {
                             glyph: 'plus',
                             tooltipId: "backgroundSelector.addTooltip",
