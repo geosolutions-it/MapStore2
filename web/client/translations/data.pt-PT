@@ -1006,6 +1006,7 @@
           "creatingGroup": "Creating...",
           "groupMembers": "Members:",
           "addMember": "Add Member:",
+          "selectMemberPlaceholder": "Selecionar membro ...",
           "noUsers": "No users for this group",
           "errorSaving": "There was an error saving this group",
           "errorDelete": "There was an error deleting this group",

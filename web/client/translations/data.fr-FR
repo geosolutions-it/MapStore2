@@ -1044,6 +1044,7 @@
           "creatingGroup": "Création...",
           "groupMembers": "Membres:",
           "addMember": "Ajouter un membre:",
+          "selectMemberPlaceholder": "Sélectionnez un membre ...",
           "noUsers": "Aucun utilisateur pour ce groupe",
           "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
           "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",

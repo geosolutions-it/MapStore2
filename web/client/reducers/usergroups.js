@@ -104,7 +104,8 @@ function usergroups(state = {
             return assign({}, state, {
                 availableUsersError: null,
                 availableUsersLoading: false,
-                availableUsers: action.users
+                availableUsers: action.users,
+                availableUsersCount: action.count
             });
         }
         case "error": {
