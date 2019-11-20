@@ -167,6 +167,13 @@ describe('Test the maps reducer', () => {
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule.length).toBe(1);
 
     });
-
+    it('on map info loaded', () => {
+        const prevState = {
+            results: [{id: 1, name: 'Map'}]
+        };
+        const state = maps(prevState, {type: "MAP_INFO_LOADED", mapId: 1, info: {canEdit: true, canDelete: true, name: 'Map 1'}});
+        const found = state.results.find(item => item.id === 1);
+        expect(found.name).toEqual('Map 1');
+    });
 
 });
