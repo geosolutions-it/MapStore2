@@ -56,3 +56,9 @@ export const LOAD_FINISHED = "CONTEXT:CONTEXT_LOAD_FINISHED";
  * Notifies the context load has been finished.
  */
 export const loadFinished = () => ({ type: LOAD_FINISHED });
+
+export const CLEAR_CONTEXT = 'CONTEXT:CLEAR_CONTEXT';
+/**
+ * Clears current context state
+ */
+export const clearContext = () => ({ type: CLEAR_CONTEXT });

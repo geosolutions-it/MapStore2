@@ -15,6 +15,7 @@ const {loadMaps, updateMapMetadata, deleteMap, createThumbnail,
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../../actions/currentMap');
 const {mapTypeSelector} = require('../../selectors/maptype');
 const {showMapDetailsSelector} = require('../../selectors/maps.js');
+const shareTool = require('../../components/resources/enhancers/shareTool').default;
 
 const MapsGrid = connect((state) => {
     return {
@@ -56,4 +57,4 @@ const MapsGrid = connect((state) => {
     };
 })(require('../../components/maps/MapGrid'));
 
-module.exports = MapsGrid;
+module.exports = shareTool(MapsGrid);

@@ -21,11 +21,13 @@ class ResourceCard extends React.Component {
         backgroundOpacityEnd: PropTypes.number,
         resource: PropTypes.object,
         editDataEnabled: PropTypes.bool,
+        shareToolEnabled: PropTypes.bool,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         onEdit: PropTypes.func,
         onEditData: PropTypes.func,
         onDelete: PropTypes.func,
+        onShare: PropTypes.func,
         onUpdateAttribute: PropTypes.func,
         tooltips: PropTypes.object
     };
@@ -33,6 +35,7 @@ class ResourceCard extends React.Component {
     static defaultProps = {
         resource: {},
         editDataEnabled: false,
+        shareToolEnabled: true,
         style: {
             backgroundImage: 'url(' + thumbUrl + ')',
             backgroundSize: "cover",
@@ -47,12 +50,14 @@ class ResourceCard extends React.Component {
             editResourceData: "resources.resource.editResourceData",
             addToFeatured: "resources.resource.addToFeatured",
             showDetails: "resources.resource.showDetails",
+            shareResource: "share.title",
             removeFromFeatured: "resources.resource.removeFromFeatured"
         },
         // CALLBACKS
         onDelete: () => { },
         onEdit: () => { },
         onEditData: () => { },
+        onShare: () => { },
         onUpdateAttribute: () => { }
 
     };
@@ -118,6 +123,17 @@ class ResourceCard extends React.Component {
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.resource, true);
+                }
+            },
+            {
+                visible: this.props.shareToolEnabled === true,
+                glyph: 'share-alt',
+                disabled: this.props.resource.updating,
+                loading: this.props.resource.updating,
+                tooltipId: this.props.tooltips.shareResource,
+                onClick: evt => {
+                    this.stopPropagate(evt);
+                    this.props.onShare(this.props.resource);
                 }
             },
             {

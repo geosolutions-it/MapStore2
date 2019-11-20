@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 import PropTypes from 'prop-types';
-import {compose, withProps, withHandlers, getContext, lifecycle} from 'recompose';
+import {compose, withProps, withHandlers, getContext} from 'recompose';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {saveMapResource} from '../../actions/maps';
@@ -17,6 +17,7 @@ import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
 import handleSaveModal from '../../components/resources/modals/enhancers/handleSaveModal';
 import { userSelector } from '../../selectors/security';
 import {mapTypeSelector} from '../../selectors/maptype';
+import {currentContextSelector} from '../../selectors/context';
 import MapUtils from '../../utils/MapUtils';
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
@@ -31,8 +32,9 @@ const saveSelector = createSelector(
     textSearchConfigSelector,
     mapSelector,
     mapTypeSelector,
-    (user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, map, mapType) =>
-        ({ user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, map, mapType })
+    currentContextSelector,
+    (user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, map, mapType, context) =>
+        ({ user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, map, mapType, context })
 );
 const SaveBaseDialog = compose(
     connect(saveSelector, {
@@ -43,13 +45,6 @@ const SaveBaseDialog = compose(
     }),
     getContext({
         router: PropTypes.object
-    }),
-    lifecycle({
-        componentDidUpdate(prevProps) {
-            if (this.props.isMapSaveAs && this.props.map && this.props.map.mapId && prevProps.map && this.props.map.mapId !== prevProps.map.mapId) {
-                this.props.router.history.push("/viewer/" + this.props.mapType + "/" + this.props.map.mapId);
-            }
-        }
     }),
     withHandlers({
         onSave: ({map, layers, groups, backgrounds, textSearchConfig, additionalOptions, saveMap, isMapSaveAs, user}) => resource => {

@@ -75,6 +75,7 @@ class Geostories extends React.Component {
             title={this.props.title}
             colProps={this.props.colProps}
             viewerUrl={(geostory) => {this.context.router.history.push(`geostory/${geostory.id}`); }}
+            shareUrl={(geostory) => `geostory/${geostory.id}`}
             bottom={<PaginationToolbar />}
         />);
     }

@@ -19,6 +19,7 @@ import * as shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
+import { currentContextSelector } from '../selectors/context';
 import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
@@ -67,14 +68,16 @@ const Share = connect(createSelector([
     state => state.controls && state.controls.share && state.controls.share.enabled,
     versionSelector,
     mapSelector,
+    currentContextSelector,
     state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, settings) => ({
+], (isVisible, version, map, context, settings) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
     shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
+    showAPI: !context,
     settings
 })), {
     onClose: toggleControl.bind(null, 'share', null),

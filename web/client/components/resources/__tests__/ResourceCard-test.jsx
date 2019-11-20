@@ -52,30 +52,34 @@ describe('This test for ResourceCard', () => {
         expect(headings[0].innerHTML).toBe(testName);
     });
 
-    it('test edit/delete', () => {
+    it('test edit/delete/share', () => {
         const testName = "test";
         const testDescription = "testDescription";
 
         const handlers = {
             viewerUrl: () => { },
             onEdit: () => { },
-            onDelete: () => { }
+            onDelete: () => { },
+            onShare: () => { }
         };
 
 
         let spyonEdit = expect.spyOn(handlers, "onEdit");
         let spyonDelete = expect.spyOn(handlers, "onDelete");
+        let spyonShare = expect.spyOn(handlers, "onShare");
         const component = ReactDOM.render(<ResourceCard
             viewerUrl={handlers.viewerUrl}
             onDelete={handlers.onDelete}
             onEdit={handlers.onEdit}
+            onShare={handlers.onShare}
             resource={{ canEdit: true, id: 1, name: testName, description: testDescription }} />, document.getElementById("container"));
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(
             component, 'button'
         );
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(3);
         buttons.forEach(b => TestUtils.Simulate.click(b));
         expect(spyonEdit.calls.length).toEqual(1);
+        expect(spyonShare.calls.length).toEqual(1);
         // wait for confirm
         expect(spyonDelete.calls.length).toEqual(0);
         expect(document.querySelector('.modal-dialog')).toExist();

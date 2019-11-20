@@ -13,6 +13,7 @@ const { userSelector } = require('../../selectors/security');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
+const shareTool = require('../../components/resources/enhancers/shareTool').default;
 const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
         onDelete: deleteGeostory,
@@ -33,7 +34,8 @@ const Grid = compose(
     defaultProps({
         category: "GEOSTORY"
     }),
-    resourceGrid
+    resourceGrid,
+    shareTool
 )(require('../../components/resources/ResourceGrid'));
 
 module.exports = Grid;
