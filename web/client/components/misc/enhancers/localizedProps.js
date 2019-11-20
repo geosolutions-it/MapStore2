@@ -35,19 +35,25 @@ const accumulate = (props, messages, labelName) => (acc = {}, propName) => ({
  * @name localizedProps
  * @memberof components.misc.enhancers
  * @param  {string|[string]} propNames Name of the prop(s) to replace. can be an array or a single prop
+ * @param  {string} localizedKey Name of the prop used to localize properties in arrays, default "label"
  * @return {HOC}         An HOC that replaces the prop string with localized string.
  * @example
- * const Input = localizeProps('placeholder')(BootstrapInput);
+ * const Input = localizedProps('placeholder')(BootstrapInput);
+ * const CustomSelect = localizedProps('options', 'customLabel')(ReactSelect);
+ * const Select = localizedProps('options')(ReactSelect);
  * // render
  * //...
  * <Input placeholder="path.to.placeholder.message" />
+ * or
+ * <CustomSelect options={[{customLabel: "path1", value: v}, {customLabel: "path2", value: v}]} />
+ * <Select options={[{label: "path1", value: v}, {label: "path2", value: v}]} />
  */
-module.exports = (propNames, labelName) => compose(
+module.exports = (propNames, localizedKey = "label") => compose(
     getContext({
         messages: PropTypes.object
     }),
     mapProps(({messages, ...props}) => ({
         ...props,
-        ...(castArray(propNames).reduce(accumulate(props, messages, labelName), {}))
+        ...(castArray(propNames).reduce(accumulate(props, messages, localizedKey), {}))
     })
     ));

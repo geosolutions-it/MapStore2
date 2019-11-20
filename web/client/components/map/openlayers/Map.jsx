@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { defaults, DragPan, KeyboardPan, MouseWheelZoom, PinchZoom, DoubleClickZoom, DragZoom, KeyboardZoom } from 'ol/interaction';
+import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
 import { defaults as defaultControls } from 'ol/control';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -26,47 +26,15 @@ import CoordinatesUtils from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
+import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
-import isEqual from 'lodash/isEqual';
-import throttle from 'lodash/throttle';
-import isArray from 'lodash/isArray';
-import isNil from 'lodash/isNil';
+import {isEqual, find, throttle, isArray, isNil} from 'lodash';
 
 import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
 
-const interactionsDefaults =  {
-    "dragPan": {
-        options: { kinetic: false },
-        Instance: DragPan
-    },
-    "keyboardPan": {
-        options: { kinetic: false },
-        Instance: KeyboardPan
-    },
-    "mouseWheelZoom": {
-        options: { duration: 0 },
-        Instance: MouseWheelZoom
-    },
-    "doubleClickZoom": {
-        options: { duration: 0 },
-        Instance: DoubleClickZoom
-    },
-    "shiftDragZoom": {
-        options: { duration: 0 },
-        Instance: DragZoom
-    },
-    "keyboardZoom": {
-        options: {  },
-        Instance: KeyboardZoom
-    },
-    "pinchZoom": {
-        options: { duration: 0 },
-        Instance: PinchZoom
-    }
-};
 
 export default class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -126,16 +94,22 @@ export default class OpenlayersMap extends React.Component {
         // normally it happens ad application level.
         let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         register(proj4);
-        let interactionsOptions = assign(this.props.interactive ? {} : {
-            doubleClickZoom: false,
-            dragPan: false,
-            altShiftDragRotate: false,
-            keyboard: false,
-            mouseWheelZoom: false,
-            shiftDragZoom: false,
-            pinchRotate: false,
-            pinchZoom: false
-        }, this.props.mapOptions.interactions);
+        // interactive flag is used only for initializations,
+        // TODO manage it also when it changes status (ComponentWillReceiveProps)
+        let interactionsOptions = assign(
+            this.props.interactive ?
+                {} :
+                {
+                    doubleClickZoom: false,
+                    dragPan: false,
+                    altShiftDragRotate: false,
+                    keyboard: false,
+                    mouseWheelZoom: false,
+                    shiftDragZoom: false,
+                    pinchRotate: false,
+                    pinchZoom: false
+                },
+            this.props.mapOptions.interactions);
 
         let interactions = defaults(assign({
             dragPan: false,
@@ -274,22 +248,22 @@ export default class OpenlayersMap extends React.Component {
          */
         if (this.map && (this.props.mapOptions && this.props.mapOptions.interactions) !== (newProps.mapOptions && newProps.mapOptions.interactions)) {
             const newInteractions = newProps.mapOptions.interactions || {};
+            const mapInteractions = this.map.getInteractions().getArray();
             Object.keys(newInteractions).forEach(newInteraction => {
-                this.map.getInteractions().getArray().forEach((mapInteraction) => {
-                    if (interactionsDefaults[newInteraction] && mapInteraction instanceof interactionsDefaults[newInteraction].Instance) {
-                        this[`${newInteraction}Interaction`] = mapInteraction;
-                    }
-                });
-                if (!this[`${newInteraction}Interaction`]) {
-                    // if the requested interaction does not exist in the map then add it
-                    this[`${newInteraction}Interaction`] = new interactionsDefaults[newInteraction].Instance(interactionsDefaults[newInteraction].options);
-                    this.map.addInteraction(this[`${newInteraction}Interaction`]);
+                const {Instance, options} = DEFAULT_INTERACTION_OPTIONS[newInteraction] || {};
+                let interaction = find(mapInteractions, inter => DEFAULT_INTERACTION_OPTIONS[newInteraction] && inter instanceof Instance);
+                if (!interaction) {
+                    /* if the interaction
+                     *   does not exist in the map && now is enabled
+                     * then
+                     *   add it
+                    */
+                    newInteractions[newInteraction] && Instance && this.map.addInteraction(new Instance(options));
                 } else {
                     // otherwise use existing interaction and enable or disable it based on newProps values
-                    this[`${newInteraction}Interaction`].setActive(newInteractions[newInteraction]);
+                    interaction.setActive(newInteractions[newInteraction]);
                 }
             });
-
         }
 
         if (this.map && this.props.id !== newProps.mapStateSource) {

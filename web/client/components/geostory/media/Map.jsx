@@ -46,7 +46,7 @@ export default compose(
     id,
     map = {layers: [defaultLayerMapPreview]},
     fit,
-    isContentFocused,
+    editMap = false,
     onMapViewChanges
 }) => {
     const { layers = [], mapOptions = {}, ...m} = (map.data ? map.data : map);
@@ -65,7 +65,7 @@ export default compose(
             layers={layers}
             options={
                 // mouseWheelZoom is enabled only if inlineEditing is active and zoomControl too
-                applyDefaults(!isContentFocused ? {mapOptions} : {
+                applyDefaults(!editMap ? {mapOptions} : {
                     mapOptions: {
                         ...mapOptions,
                         interactions: {
