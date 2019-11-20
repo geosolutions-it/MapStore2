@@ -31,8 +31,14 @@ class Metadata extends React.Component {
         nameFieldText: PropTypes.node,
         descriptionFieldText: PropTypes.node,
         namePlaceholderText: PropTypes.string,
-        descriptionPlaceholderText: PropTypes.string
+        descriptionPlaceholderText: PropTypes.string,
+        createdAtFieldText: PropTypes.string,
+        modifiedAtFieldText: PropTypes.string
     };
+
+    static contextTypes = {
+        intl: PropTypes.object
+    }
 
     static defaultProps = {
         // CALLBACKS
@@ -44,6 +50,10 @@ class Metadata extends React.Component {
         namePlaceholderText: "Map Name",
         descriptionPlaceholderText: "Map Description"
     };
+
+    renderDate = (date) => {
+        return date && this.context.intl && `${this.context.intl.formatDate(date)} ${this.context.intl.formatTime(date)}` || '';
+    }
 
     render() {
         return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
@@ -69,6 +79,24 @@ class Metadata extends React.Component {
                     defaultValue={this.props.resource ? this.props.resource.description : ""}
                     value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.description || ""}/>
             </FormGroup>
+            <FormGroup>
+                <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
+                <FormControl
+                    key="mapCreatedAt"
+                    type="text"
+                    readOnly
+                    disabled
+                    value={this.props.resource && this.renderDate(this.props.resource.createdAt) || ""}/>
+            </FormGroup>
+            {this.props.resource && this.props.resource.modifiedAt && <FormGroup>
+                <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
+                <FormControl
+                    key="mapModifiedAt"
+                    type="text"
+                    readOnly
+                    disabled
+                    value={this.props.resource && this.renderDate(this.props.resource.modifiedAt) || ""}/>
+            </FormGroup>}
         </form>);
     }
 

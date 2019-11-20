@@ -1592,6 +1592,8 @@
                 "title": "Izmijeni svojstva kontrolne ploče",
                 "name": "Naziv",
                 "description": "Opis",
+                "createdAt": "Stvorio",
+                "modifiedAt": "Promijenjen",
                 "namePlaceholder": "Unesi ime...",
                 "descriptionPlaceholder": "Unesi opis...",
                 "confirmCloseText": "U tijeku su izmjene, jeste li sigurni da želite zatvoriti bez spremanja?",

@@ -1996,6 +1996,8 @@
             "title": "Editar propiedades",
             "name": "Nombre",
             "description": "Descripción",
+            "createdAt": "Creado",
+            "modifiedAt": "Modificado",
             "namePlaceholder": "Escriba un nombre ...",
             "descriptionPlaceholder": "Escriba una descripción ...",
             "confirmCloseText": "Hay cambios pendientes, ¿está seguro que quiere cerrar sin guardar?",

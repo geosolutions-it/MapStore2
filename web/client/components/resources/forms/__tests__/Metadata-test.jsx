@@ -25,10 +25,11 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
-        expect(el.length).toBe(2);
+        expect(el.length).toBe(3);
     });
     it('Metadata rendering with meta-data', () => {
         const resource = {
+            modifiedAt: new Date(),
             metadata: {
                 name: "NAME",
                 description: "DESCRIPTION"
@@ -37,7 +38,7 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
-        expect(el.length).toBe(2);
+        expect(el.length).toBe(4);
         expect(el[0].value).toBe("NAME");
         expect(el[1].value).toBe("DESCRIPTION");
     });

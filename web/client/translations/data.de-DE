@@ -1996,6 +1996,8 @@
             "title": "Eigenschaften bearbeiten",
             "name": "Name",
             "description": "Beschreibung",
+            "createdAt": "Erstellt",
+            "modifiedAt": "Geändert",
             "namePlaceholder": "Geben Sie einen Namen ein ...",
             "descriptionPlaceholder": "Geben Sie eine Beschreibung ein ...",
             "confirmCloseText": "Es gibt ausstehende Änderungen, sind Sie sicher, dass Sie schließen möchten, ohne zu speichern?",

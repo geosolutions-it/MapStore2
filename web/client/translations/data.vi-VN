@@ -228,6 +228,8 @@
                 "description": "Mô tả",
                 "descriptionPlaceholder": "Nhập mô tả ...",
                 "name": "Tên",
+                "createdAt": "Tạo",
+                "modifiedAt": "Sửa đổi",
                 "namePlaceholder": "Nhập tên ...",
                 "saveSuccessMessage": "Bảng điều khiển được lưu thành công",
                 "saveSuccessTitle": "Thành công",
