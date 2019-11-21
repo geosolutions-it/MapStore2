@@ -104,7 +104,7 @@ class Maps extends React.Component {
             title={this.props.title}
             colProps={this.props.colProps}
             viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);}}
-            shareUrl={(map) => `viewer/${this.props.mapType}/${map.id}`}
+            getShareUrl={(map) => `viewer/${this.props.mapType}/${map.id}`}
             shareApi
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}

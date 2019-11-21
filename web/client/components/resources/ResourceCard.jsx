@@ -128,8 +128,8 @@ class ResourceCard extends React.Component {
             {
                 visible: this.props.shareToolEnabled === true,
                 glyph: 'share-alt',
-                disabled: this.props.resource.updating,
-                loading: this.props.resource.updating,
+                disabled: this.props.resource && this.props.resource.updating,
+                loading: this.props.resource && this.props.resource.updating,
                 tooltipId: this.props.tooltips.shareResource,
                 onClick: evt => {
                     this.stopPropagate(evt);

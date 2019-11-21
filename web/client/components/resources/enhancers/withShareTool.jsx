@@ -13,20 +13,28 @@ import SharePanel from '../../share/SharePanel';
 import ShareUtils from '../../../utils/ShareUtils';
 import {isString} from 'lodash';
 
+/**
+* Adds sharing functionality to a resource grid.
+* @memberof components.resources.enhancers
+* @name withShareTool
+* @type {function}
+* @prop {function} getShareUrl: takes a resource and returns an appropriate sharing url, or url along with shareApi value to override the one in shareApi prop
+* @prop {boolean} shareApi: controls, whether Share Dialog should include an option if embedding with APIs
+*/
 export default compose(
     withState('showShareModal', 'onShowShareModal', false),
     withState('shareModalSettings', 'setShareModalSettings'),
     withState('editedResource', 'setEditedResource'),
     Component => props => {
         const {showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, ...other} = props;
-        const {shareUrl = () => {}, shareApi = false} = other;
+        const {getShareUrl = () => {}, shareApi = false} = other;
 
-        const shareUrlResult = editedResource ? shareUrl(editedResource) : '';
+        const shareUrlResult = editedResource ? getShareUrl(editedResource) : '';
         const resourceUrl = isString(shareUrlResult) ? shareUrlResult : shareUrlResult.url;
         const showAPI = isString(shareUrlResult) ? shareApi : shareUrlResult.shareApi;
         const fullUrl = editedResource ? window.origin + '/#/' + resourceUrl : '';
 
-        return (<>
+        return (<div>
             <Component onShare={resource => {
                 setEditedResource(resource);
                 onShowShareModal(true);
@@ -43,6 +51,6 @@ export default compose(
                 shareConfigUrl={ShareUtils.getConfigUrl(fullUrl, ConfigUtils.getConfigProp('geoStoreUrl'))}
                 onClose={() => onShowShareModal(false)}
                 onUpdateSettings={setShareModalSettings}/>
-        </>);
+        </div>);
     }
 );

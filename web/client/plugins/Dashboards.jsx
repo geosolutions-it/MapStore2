@@ -75,7 +75,7 @@ class Dashboards extends React.Component {
             title={this.props.title}
             colProps={this.props.colProps}
             viewerUrl={(dashboard) => {this.context.router.history.push(`dashboard/${dashboard.id}`); }}
-            shareUrl={dashboard => `dashboard/${dashboard.id}`}
+            getShareUrl={dashboard => `dashboard/${dashboard.id}`}
             bottom={<PaginationToolbar />}
         />);
     }

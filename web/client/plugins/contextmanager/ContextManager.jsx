@@ -120,7 +120,7 @@ class ContextManager extends React.Component {
                 fluid={this.props.fluid}
                 colProps={this.props.colProps}
                 viewerUrl={(context) => this.context.router.history.push(`context/${context.name}`)}
-                shareUrl={(context) => `context/${context.name}`}
+                getShareUrl={(context) => `context/${context.name}`}
                 editDataEnabled={this.props.editDataEnabled}
                 onEditData={this.props.onEditData}
                 cardTooltips={{

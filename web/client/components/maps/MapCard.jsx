@@ -122,8 +122,8 @@ class MapCard extends React.Component {
             {
                 visible: this.props.shareToolEnabled === true,
                 glyph: 'share-alt',
-                disabled: this.props.map.updating,
-                loading: this.props.map.updating,
+                disabled: this.props.map && this.props.map.updating,
+                loading: this.props.map && this.props.map.updating,
                 tooltipId: this.props.tooltips.shareResource,
                 onClick: evt => {
                     this.stopPropagate(evt);

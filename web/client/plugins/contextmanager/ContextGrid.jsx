@@ -8,7 +8,7 @@
 
 const { compose, defaultProps, withHandlers } = require('recompose');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
-const shareTool = require('../../components/resources/enhancers/shareTool').default;
+const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
 const Grid = compose(
     withHandlers({
         onSaveSuccess: (props) => (resource) => {
@@ -24,7 +24,7 @@ const Grid = compose(
         category: "CONTEXT"
     }),
     resourceGrid,
-    shareTool
+    withShareTool
 )(require('../../components/resources/ResourceGrid'));
 
 module.exports = Grid;

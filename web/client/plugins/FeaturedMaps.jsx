@@ -67,7 +67,7 @@ class FeaturedMaps extends React.Component {
                 maps={items}
                 colProps={this.props.colProps}
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
-                shareUrl={this.makeShareUrl}
+                getShareUrl={this.makeShareUrl}
                 metadataModal={MetadataModal}
                 bottom={this.props.bottom}
                 style={items.length === 0 ? {display: 'none'} : {}}/>
