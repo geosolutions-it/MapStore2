@@ -388,6 +388,7 @@
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li> <li>La proyección del mapa no está configurada </li></ul> <p>",
+                    "projectionError": "La proyección {projection} del mapa no está configurada",
                     "title" : "El mapa no se puede ver"
                 }
             }
