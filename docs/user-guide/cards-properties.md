@@ -1,4 +1,4 @@
-# Cards Properties
+# Resource Properties
 ------------------------------
 
 What a user can do, both on maps and dashboards, depends on its role.
@@ -6,7 +6,7 @@ What a user can do, both on maps and dashboards, depends on its role.
 **Admin** users can manage accounts and can *view* and *edit* all the maps and dashboards, whoever created them.
 **Users** can view and edit only those maps and dashboards which they have created. If they are neither administrators nor owners, what they can do depends on the ***Rights*** assigned to the group they belong to.
 <br>
-The administrator can edit map properties through the **Edit Map Properties** panel, accessible by this button <img src="../img/edit-map-properties-icon.jpg" style="width:20px;height:20px" />:
+The administrator can edit resource properties through the **Edit Properties** panel, accessible by this button <img src="../img/edit-map-properties-icon.jpg" style="width:20px;height:20px" />:
 
 <img src="../img/edit-map-properties-map.jpg" style="max-width:350px;"/>
 
@@ -16,7 +16,7 @@ The panel looks like this:
 
 ## Managing User Rights
 
-Through the Edit Map Properties panel, it is possible to assign rights on maps to groups. In the **Add a rule...** section you can select a *Group* and assign a permission to it:
+Through the "Edit Properties" panel, it is possible to assign rights on maps to groups. In the **Add a rule...** section you can select a *Group* and assign a permission to it:
 
 <img src="../img/select-rule-for-groups.jpg" style="max-width:350px;"/>
 
