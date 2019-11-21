@@ -41,7 +41,7 @@ markdown_extensions:
 pages:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
-    - Cards Properties: 'user-guide/cards-properties.md'
+    - Resource Properties: 'user-guide/cards-properties.md'
     - Managing Users and Groups:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
