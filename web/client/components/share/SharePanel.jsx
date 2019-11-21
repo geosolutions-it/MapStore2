@@ -43,6 +43,8 @@ class SharePanel extends React.Component {
     static propTypes = {
         isVisible: PropTypes.bool,
         title: PropTypes.node,
+        modal: PropTypes.bool,
+        draggable: PropTypes.bool,
         sharedTitle: PropTypes.string,
         shareUrl: PropTypes.string,
         shareUrlRegex: PropTypes.string,
@@ -64,6 +66,8 @@ class SharePanel extends React.Component {
 
     static defaultProps = {
         title: <Message msgId="share.titlePanel"/>,
+        modal: false,
+        draggable: true,
         onClose: () => {},
         shareUrlRegex: "(h[^#]*)#\\/viewer\\/([^\\/]*)\\/([A-Za-z0-9]*)",
         shareUrlReplaceString: "$1embedded.html#/$3",
@@ -139,7 +143,12 @@ class SharePanel extends React.Component {
         </Tabs>);
 
         let sharePanel =
-            (<Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win" style={{zIndex: 1993}}>
+            (<Dialog
+                id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
+                className="modal-dialog modal-content share-win"
+                modal={this.props.modal}
+                draggable={this.props.draggable}
+                style={{zIndex: 1993}}>
                 <span role="header">
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>

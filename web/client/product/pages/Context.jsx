@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
-import { loadContext } from '../../actions/context';
+import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
@@ -63,6 +63,7 @@ class Context extends React.Component {
         windowTitle: PropTypes.string,
         monitoredState: PropTypes.array,
         loadContext: PropTypes.func,
+        reset: PropTypes.func,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
@@ -70,6 +71,7 @@ class Context extends React.Component {
     static defaultProps = {
         mode: 'desktop',
         loadContext: () => {},
+        reset: () => {},
         plugins: {},
         match: {
             params: {}
@@ -95,6 +97,7 @@ class Context extends React.Component {
     }
     componentWillUnmount() {
         document.title = this.oldTitle;
+        this.props.reset();
     }
     render() {
         return (<MapViewerCmp {...this.props} />);
@@ -110,6 +113,7 @@ export default compose(
             windowTitle: currentTitleSelector
         }),
         {
-            loadContext
+            loadContext,
+            reset: clearContext
         })
 )(Context);

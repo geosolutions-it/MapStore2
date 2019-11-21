@@ -38,6 +38,7 @@ class MapGrid extends React.Component {
         createThumbnail: PropTypes.func,
         deleteThumbnail: PropTypes.func,
         deleteMap: PropTypes.func,
+        onShare: PropTypes.func,
         resetCurrentMap: PropTypes.func,
         updatePermissions: PropTypes.func,
         metadataModal: PropTypes.func,
@@ -79,6 +80,7 @@ class MapGrid extends React.Component {
         onDisplayMetadataEdit: () => {},
         updateCurrentMap: () => {},
         deleteMap: () => {},
+        onShare: () => {},
         saveMap: () => {},
         removeThumbnail: () => {},
         editMap: () => {},
@@ -102,6 +104,7 @@ class MapGrid extends React.Component {
                         showMapDetails={this.props.showMapDetails}
                         detailsSheetActions={this.props.detailsSheetActions}
                         onMapDelete={this.props.deleteMap}
+                        onShare={this.props.onShare}
                         onUpdateAttribute={this.props.onUpdateAttribute}/>
                 </Col>;
         });
