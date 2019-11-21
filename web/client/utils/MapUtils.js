@@ -45,7 +45,7 @@ let CoordinatesUtils = require('./CoordinatesUtils');
 let {set} = require('./ImmutableUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isObject, head, isEmpty, findIndex} = require('lodash');
+const {isEmpty, findIndex} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -299,10 +299,7 @@ function transformExtent(projection, center, width, height) {
 }
 
 const groupSaveFormatted = (node) => {
-    if (isObject(node.title) && head(Object.keys(node.title).filter(t => node.title[t]))) {
-        return {id: node.id, title: node.title, expanded: node.expanded};
-    }
-    return {id: node.id, expanded: node.expanded};
+    return {id: node.id, title: node.title, expanded: node.expanded};
 };
 
 

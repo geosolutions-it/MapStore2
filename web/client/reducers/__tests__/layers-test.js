@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var layers = require('../layers');
-const { changeLayerParams, addLayer, ADD_GROUP } = require('../../actions/layers');
+const { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } = require('../../actions/layers');
 
 
 describe('Test the layers reducer', () => {
@@ -829,7 +829,7 @@ describe('Test the layers reducer', () => {
         const state = layers({groups: [{id: 'group1'}]}, action);
         expect(state).toExist();
         expect(state.groups.length).toBe(2);
-        expect(state.groups[1].id).toBe('newgroup');
+        expect(state.groups[1].title).toBe('newgroup');
     });
 
     it('add nested group', () => {
@@ -845,10 +845,87 @@ describe('Test the layers reducer', () => {
         expect(state.groups[0].nodes.length).toBe(1);
         expect(state.groups[0].nodes[0].nodes.length).toBe(2);
         const newgroup = state.groups[0].nodes[0].nodes[1];
-        expect(newgroup.id).toBe('group1.group2.newgroup');
-        expect(newgroup.name).toBe('newgroup');
+        expect(newgroup.id).toBe('group1.group2.' + newgroup.name);
         expect(newgroup.title).toBe('newgroup');
         expect(newgroup.nodes.length).toBe(0);
     });
 
+    it('check uniqueness of new group ids', () => {
+        const actions = [addGroup('newgroup', 'group1.group2'), addGroup('newgroup', 'group1.group2')];
+        const state = actions.reduce(layers,
+            {
+                groups: [{
+                    id: 'group1', nodes: [{
+                        id: 'group1.group2', nodes: [{
+                            id: 'group1.group2.group3', nodes: []
+                        }]
+                    }]
+                }]
+            }
+        );
+        expect(state).toExist();
+        expect(state.groups.length).toBe(1);
+        expect(state.groups[0].nodes.length).toBe(1);
+        expect(state.groups[0].nodes[0].nodes.length).toBe(3);
+        const newgroup1 = state.groups[0].nodes[0].nodes[1];
+        const newgroup2 = state.groups[0].nodes[0].nodes[2];
+        expect(newgroup1.title).toBe('newgroup');
+        expect(newgroup2.title).toBe('newgroup');
+        expect(newgroup1.name).toNotBe(newgroup2.name);
+        expect(newgroup1.id).toNotBe(newgroup2.id);
+    });
+
+    it('move groups when two are with the same title', () => {
+        const action = moveNode('groupid1.groupid2', 'Default', 0);
+        const state = layers({
+            flat: [],
+            groups: [{
+                id: 'Default',
+                name: 'Default',
+                title: 'Default',
+                nodes: []
+            }, {
+                id: 'groupid1',
+                name: 'groupid1',
+                title: 'Test Group',
+                nodes: [{
+                    id: 'groupid1.groupid2',
+                    name: 'groupid2',
+                    title: 'Group',
+                    nodes: []
+                }]
+            }, {
+                id: 'groupid3',
+                name: 'groupid3',
+                title: 'Group',
+                nodes: []
+            }]
+        }, action);
+        expect(state).toExist();
+        expect(state.groups).toEqual([
+            {
+                id: 'Default',
+                name: 'Default',
+                title: 'Default',
+                nodes: [{
+                    id: 'Default.groupid2',
+                    name: 'groupid2',
+                    title: 'Group',
+                    nodes: []
+                }]
+            },
+            {
+                id: 'groupid1',
+                name: 'groupid1',
+                title: 'Test Group',
+                nodes: []
+            },
+            {
+                id: 'groupid3',
+                name: 'groupid3',
+                title: 'Group',
+                nodes: []
+            }
+        ]);
+    });
 });

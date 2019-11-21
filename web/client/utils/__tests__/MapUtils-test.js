@@ -245,12 +245,15 @@ describe('Test the MapUtils', () => {
                 backgrounds: [],
                 groups: [{
                     id: 'Default',
+                    title: 'Default',
                     expanded: true
                 }, {
                     id: 'custom',
+                    title: 'custom',
                     expanded: false
                 }, {
                     id: 'custom.nested001',
+                    title: 'nested001',
                     expanded: true
                 }],
                 layers: [{
@@ -580,12 +583,15 @@ describe('Test the MapUtils', () => {
                 backgrounds: [{id: 'layer005', thumbnail: 'data'}],
                 groups: [{
                     id: 'Default',
+                    title: 'Default',
                     expanded: true
                 }, {
                     id: 'custom',
+                    title: 'custom',
                     expanded: false
                 }, {
                     id: 'custom.nested001',
+                    title: 'nested001',
                     expanded: true
                 }],
                 layers: [{
@@ -981,12 +987,15 @@ describe('Test the MapUtils', () => {
                 backgrounds: [],
                 groups: [{
                     id: 'Default',
+                    title: 'Default',
                     expanded: true
                 }, {
                     id: 'custom',
+                    title: 'custom',
                     expanded: false
                 }, {
                     id: 'custom.nested001',
+                    title: 'nested001',
                     expanded: true
                 }],
                 layers: [{
@@ -1260,12 +1269,15 @@ describe('Test the MapUtils', () => {
                 backgrounds: [],
                 groups: [{
                     id: 'Default',
+                    title: 'Default',
                     expanded: true
                 }, {
                     id: 'custom',
+                    title: 'custom',
                     expanded: false
                 }, {
                     id: 'custom.nested001',
+                    title: 'nested001',
                     expanded: true
                 }],
                 layers: [{
@@ -1588,11 +1600,11 @@ describe('Test the MapUtils', () => {
                     tooltipPlacement: undefined,
                     params: {} } ],
                 groups: [ {
-                    id: 'Default', expanded: true
+                    id: 'Default', title: 'Default', expanded: true
                 }, {
-                    id: 'custom', expanded: false
+                    id: 'custom', title: 'custom', expanded: false
                 }, {
-                    id: 'custom.nested001', expanded: true
+                    id: 'custom.nested001', title: 'nested001', expanded: true
                 } ],
                 text_serch_config: '' }
         });
@@ -1656,12 +1668,15 @@ describe('Test the MapUtils', () => {
                 backgrounds: [],
                 groups: [{
                     id: 'Default',
+                    title: 'Default',
                     expanded: true
                 }, {
                     id: 'custom',
+                    title: 'custom',
                     expanded: false
                 }, {
                     id: 'custom.nested001',
+                    title: 'nested001',
                     expanded: true
                 }],
                 layers: [{
@@ -1796,12 +1811,15 @@ describe('Test the MapUtils', () => {
                 backgrounds: [],
                 groups: [{
                     id: 'Default',
+                    title: 'Default',
                     expanded: true
                 }, {
                     id: 'custom',
+                    title: 'custom',
                     expanded: false
                 }, {
                     id: 'custom.nested001',
+                    title: 'nested001',
                     expanded: true
                 }],
                 layers: [{

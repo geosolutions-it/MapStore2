@@ -73,8 +73,6 @@ describe('AddGroup Plugin', () => {
         const btn = document.getElementsByTagName('button')[1];
         ReactTestUtils.Simulate.click(btn);
         expect(store.getState().layers.groups.length).toBe(2);
-        expect(store.getState().layers.groups[1].name).toBe('newgroup');
-        expect(store.getState().layers.groups[1].id).toBe('newgroup');
         expect(store.getState().layers.groups[1].title).toBe('newgroup');
         expect(store.getState().layers.groups[1].nodes.length).toBe(0);
     });
@@ -105,8 +103,6 @@ describe('AddGroup Plugin', () => {
         expect(store.getState().layers.groups[0].nodes.length).toBe(1);
         expect(store.getState().layers.groups[0].nodes[0].nodes.length).toBe(1);
         const newgroup = store.getState().layers.groups[0].nodes[0].nodes[0];
-        expect(newgroup.name).toBe('newgroup');
-        expect(newgroup.id).toBe('group1.group2.newgroup');
         expect(newgroup.title).toBe('newgroup');
         expect(newgroup.nodes.length).toBe(0);
     });
