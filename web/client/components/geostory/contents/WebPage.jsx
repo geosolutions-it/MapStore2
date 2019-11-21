@@ -6,12 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, branch, withProps } from 'recompose';
-import { connect } from "react-redux";
-import { createSelector } from 'reselect';
-import { resourcesSelector } from '../../../selectors/geostory';
+import { compose, branch } from 'recompose';
 import emptyState from '../../misc/enhancers/emptyState';
-import { find } from 'lodash';
 
 const WebPage = ({ src, width, height }) => (
     <div
@@ -25,11 +21,7 @@ const WebPage = ({ src, width, height }) => (
 
 export default compose(
     branch(
-        ({resourceId}) => resourceId,
-        compose(
-            connect(createSelector(resourcesSelector, (resources) => ({resources}))),
-            withProps(({resources, resourceId: id}) => (find(resources, { id }) || {}).data)
-        ),
+        ({ src }) => !src,
         emptyState(
             ({src = "", width, height} = {}) => (!src || !width || !height),
             () => ({ glyph: "code" })

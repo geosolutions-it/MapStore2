@@ -66,7 +66,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -114,6 +114,32 @@ export const openMediaEditorForNewMedia = (action$, store) =>
             const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
             return Observable.of(
                 showMediaEditor('geostory') // open mediaEditor
+            )
+                .merge(
+                    action$.let(updateMediaSection(store, path)),
+                    action$.ofType(HIDE)
+                        .switchMap(() => {
+                            return Observable.of(remove(
+                                path));
+                        })
+                ).takeUntil(action$.ofType(EDIT_MEDIA));
+        });
+
+// TODO: update according WebPage geostory component
+export const openWebPageContentEditor = (action$, store) =>
+    action$.ofType(ADD)
+        .filter(({ element = {} }) => {
+            const isWebPage = element.type === ContentTypes.WEBPAGE;
+            return isWebPage || isWebPageSection(element);
+        })
+        .switchMap(({ path: arrayPath, element }) => {
+            let mediaPath = '';
+            if (isWebPageSection(element) && arrayPath === "sections") {
+                mediaPath = ".contents[0].contents[0]";
+            }
+            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
+            return Observable.of(
+                showMediaEditor('geostory') // open webpageEditorModal
             )
                 .merge(
                     action$.let(updateMediaSection(store, path)),

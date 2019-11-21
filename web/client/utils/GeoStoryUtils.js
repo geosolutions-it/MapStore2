@@ -346,3 +346,11 @@ export const findSectionIdFromColumnId = (immSections, columnId) => {
         return p;
     }, null);
 };
+
+export const isWebPageSection = (element) => element.type === SectionTypes.PARAGRAPH &&
+    element &&
+    isArray(element.contents) &&
+    element.contents.length &&
+    isArray(element.contents[0].contents) &&
+    element.contents[0].contents.length &&
+    element.contents[0].contents[0].type === ContentTypes.WBPAGE;

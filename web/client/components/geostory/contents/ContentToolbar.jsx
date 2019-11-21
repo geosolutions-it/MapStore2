@@ -9,7 +9,7 @@
 
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
-import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
+import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar, EditURLButtonToolbar} from "./ToolbarButtons";
 
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
@@ -65,6 +65,9 @@ const toolButtons = {
         onClick: () => {
             update( 'editMap', !editMap);
         }
+    }),
+    editURL: (props) => ({
+        renderButton: <EditURLButtonToolbar {...props} />
     })
 };
 

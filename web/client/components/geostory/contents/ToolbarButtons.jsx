@@ -12,6 +12,7 @@ import Message from '../../I18N/Message';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
 import withConfirm from "../../misc/toolbar/withConfirm";
+import { ToolbarDropdownWithInputButton } from "../common/ToolbarDropdownWithInputButton";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 
@@ -106,3 +107,16 @@ export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = 
             remove(path);
         }} />
     );
+    // { align, sectionType, size, src, update = () => { } }
+export const EditURLButtonToolbar = (props) => {
+    console.log(props);
+    return (
+        <ToolbarDropdownWithInputButton
+            glyph="pencil"
+            pullRight={(props.align === "right" || props.size === "full" || props.size === "large") && !props.sectionType}
+            value={props.src}
+            onChange={({ target: { value }}) => props.update('src', value)}
+        />
+    );
+
+};
