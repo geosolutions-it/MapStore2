@@ -44,6 +44,8 @@ module.exports = class MainForm extends React.Component {
                     resource={resource}
                     nameFieldText={<Message msgId="saveDialog.name" />}
                     descriptionFieldText={<Message msgId="saveDialog.description" />}
+                    createdAtFieldText={<Message msgId="saveDialog.createdAt" />}
+                    modifiedAtFieldText={<Message msgId="saveDialog.modifiedAt" />}
                     namePlaceholderText={"saveDialog.namePlaceholder"}
                     descriptionPlaceholderText={"saveDialog.descriptionPlaceholder"}
                 />

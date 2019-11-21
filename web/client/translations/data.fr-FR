@@ -1997,6 +1997,8 @@
             "title": "Modifier les propriétés",
             "name": "Nom",
             "description": "Description",
+            "createdAt": "établi",
+            "modifiedAt": "modifié",
             "namePlaceholder": "Tapez un nom...",
             "descriptionPlaceholder": "Tapez une description...",
             "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
