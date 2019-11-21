@@ -119,7 +119,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile size={size} layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" size={size} layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
@@ -141,7 +141,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile size={size} enabled layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" size={size} enabled layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
@@ -163,7 +163,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile size={size} enabled layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" size={size} enabled layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
@@ -236,4 +236,35 @@ describe("test the BackgroundSelector", () => {
         expect(addButton.length).toBe(0);
     });
 
+    it('test BackgroundSelector tool buttons when on mobile', () => {
+        const size = {width: 1000, height: 500};
+        const layers = [
+            {
+                id: 'layer_0',
+                title: 'title_0',
+                visibility: true,
+                group: 'background'
+            },
+            {
+                id: 'layer_1',
+                title: 'title_1',
+                group: 'background'
+            },
+            {
+                id: 'layer_2',
+                title: 'title_2',
+                type: 'wms',
+                group: 'background'
+            }
+        ];
+
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" enabled size={size} layers={layers} mapIsEditable={false}/>, document.getElementById("container"));
+        expect(backgroundSelector).toExist();
+        const node = ReactDOM.findDOMNode(backgroundSelector);
+        expect(node).toExist();
+        const toolButtons = node.getElementsByClassName('background-tool-button');
+        const addButton = node.querySelectorAll('.square-button-md glyphicon-plus');
+        expect(toolButtons.length).toBe(0);
+        expect(addButton.length).toBe(0);
+    });
 });
