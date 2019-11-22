@@ -38,6 +38,7 @@ const {
     QUERY_FORM_SEARCH
 } = require('../actions/queryform');
 const {
+    CHECK_LOGGED_USER,
     LOGIN_SUCCESS,
     LOGOUT
 } = require('../actions/security');
@@ -53,6 +54,7 @@ const {
     getEditingWidgetLayer,
     getEditingWidgetFilter
 } = require('../selectors/widgets');
+const { pathnameSelector } = require('../selectors/router');
 
 const {
     createResource,
@@ -137,6 +139,12 @@ module.exports = {
                     )
                 )
         ),
+    filterAnonymousUsersForDashboard: (actions$, store) => actions$
+        .ofType(CHECK_LOGGED_USER, LOGOUT)
+        .filter(() => pathnameSelector(store.getState()) === "/dashboard/")
+        .switchMap( ({}) => {
+            return !isLoggedIn(store.getState()) ? Rx.Observable.of(dashboardLoadError({status: 403})) : Rx.Observable.empty();
+        }),
     // dashboard loading from resource ID.
     loadDashboardStream: (action$, {getState = () => {}}) => action$
         .ofType(LOAD_DASHBOARD)

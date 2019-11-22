@@ -238,7 +238,7 @@ describe('ConfigUtils', () => {
         });
         expect(retval).toExist();
         expect(retval.configUrl).toExist();
-        expect(retval.configUrl).toBe('/mapstore/rest/geostore/data/42');
+        expect(retval.configUrl).toBe('/rest/geostore/data/42');
 
         retval = ConfigUtils.getConfigurationOptions({
             mapId: 42

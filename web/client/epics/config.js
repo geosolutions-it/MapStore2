@@ -18,12 +18,16 @@ import {
     loadMapInfo
 } from '../actions/config';
 import Persistence from '../api/persistence';
+import { isLoggedIn } from '../selectors/security';
 
-export const loadMapConfigAndConfigureMap = action$ =>
+export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap( ({configName, mapId}) =>
             Observable.defer(() => axios.get(configName))
                 .switchMap(response => {
+                    if (configName === "new.json" && !isLoggedIn(store.getState())) {
+                        return Observable.of(configureError({status: 403}));
+                    }
                     if (typeof response.data === 'object') {
                         return mapId ? Observable.of(configureMap(response.data, mapId), loadMapInfo(mapId)) :
                             Observable.of(configureMap(response.data, mapId));

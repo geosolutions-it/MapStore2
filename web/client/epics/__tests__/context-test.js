@@ -56,16 +56,16 @@ describe('context epics', () => {
         });
         // setup mockAxios to reply with a context, with the status provided
         const createContextResponse = (status = 200) => {
-            mockAxios.onGet(`/mapstore/rest/geostore/extjs/resource/${contextId}`).reply(() => {
+            mockAxios.onGet(`/rest/geostore/extjs/resource/${contextId}`).reply(() => {
                 return [status, CONTEXT_SHORT_RESOURCE];
             });
-            mockAxios.onGet(`/mapstore/rest/geostore/data/${contextId}`).reply(() => {
+            mockAxios.onGet(`/rest/geostore/data/${contextId}`).reply(() => {
                 return [status, CONTEXT_DATA];
             });
-            mockAxios.onGet(`/mapstore/rest/geostore/resources/resource/${contextId}/attributes`).reply(() => {
+            mockAxios.onGet(`/rest/geostore/resources/resource/${contextId}/attributes`).reply(() => {
                 return [status, CONTEXT_ATTRIBUTES];
             });
-            mockAxios.onGet(`/mapstore/rest/geostore/misc/category/name/CONTEXT/resource/name/${contextName}`).reply(() => {
+            mockAxios.onGet(`/rest/geostore/misc/category/name/CONTEXT/resource/name/${contextName}`).reply(() => {
                 return [status, CONTEXT_RESOURCE];
             });
         };
