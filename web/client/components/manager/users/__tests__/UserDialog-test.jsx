@@ -266,4 +266,37 @@ describe("Test UserDialog Component", () => {
         expect(passwordField.value).toEqual('');
 
     });
+
+    describe('unsaved changes modal', () => {
+        it('showing unsaved changes modal and closing the modal', () => {
+            const actions = {
+                onClose: () => {}
+            };
+            const onCloseSpy = expect.spyOn(actions, 'onClose');
+
+            const userDlg = ReactDOM.render(
+                <UserDialog
+                    user={{...newUser, status: "modified"}}
+                    onClose={actions.onClose}
+                />, document.getElementById("container"));
+            expect(userDlg).toExist();
+            const unsavedChangesDialog = document.querySelector('.modal-dialog');
+            const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body div');
+            let buttons = document.querySelectorAll('button');
+            expect(unsavedChangesDialog).toExist();
+            expect(unsavedChangesDialogBody).toExist();
+            expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
+            expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
+            expect(buttons.length).toBe(6);
+            let closeBtn = buttons[4];
+            let cancelBtn = buttons[5];
+            expect(closeBtn.innerText).toBe("saveDialog.close");
+            expect(cancelBtn.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtn);
+
+            expect(onCloseSpy).toHaveBeenCalled();
+        });
+
+
+    });
 });
