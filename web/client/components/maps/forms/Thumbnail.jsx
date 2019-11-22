@@ -93,7 +93,7 @@ class Thumbnail extends React.Component {
         if (filesSelected && filesSelected.length > 0) {
             let fileToLoad = filesSelected[0];
             let fileReader = new FileReader();
-            fileReader.onload = (event) => callback(event.target.result);
+            fileReader.onload = (event) => callback(event.target.result, fileToLoad.size);
             return fileReader.readAsDataURL(fileToLoad);
         }
         return callback(null);
@@ -103,9 +103,8 @@ class Thumbnail extends React.Component {
         // check formats and sizes
         const isAnImage = this.isImage(images);
         let errors = [];
-
-        this.getDataUri(images, (data) => {
-            if (isAnImage && data && data.length < this.props.maxFileSize) {
+        this.getDataUri(images, (data, size) => {
+            if (isAnImage && data && size < this.props.maxFileSize) {
                 // without errors
                 this.props.onError([], this.props.map.id);
                 this.files = images;
@@ -115,7 +114,7 @@ class Thumbnail extends React.Component {
                 if (!isAnImage) {
                     errors.push("FORMAT");
                 }
-                if (data && data.length >= this.props.maxFileSize) {
+                if (data && size >= this.props.maxFileSize) {
                     errors.push("SIZE");
                 }
                 this.props.onError(errors, this.props.map.id);
