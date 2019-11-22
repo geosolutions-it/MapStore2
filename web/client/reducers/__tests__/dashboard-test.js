@@ -11,6 +11,7 @@ const {
     setEditing,
     triggerShowConnections,
     triggerSave,
+    triggerSaveAs,
     dashboardLoaded,
     dashboardSaved,
     dashboardSaveError,
@@ -40,6 +41,12 @@ describe('Test the dashboard reducer', () => {
         const state = dashboard( undefined, action);
         expect(state).toExist();
         expect(state.showSaveModal).toBe(true);
+    });
+    it('dashboard triggerSaveAs', () => {
+        const action = triggerSaveAs(true);
+        const state = dashboard( undefined, action);
+        expect(state).toExist();
+        expect(state.showSaveAsModal).toBe(true);
     });
     it('dashboard dashboardLoaded', () => {
         const action = dashboardLoaded("TEST");

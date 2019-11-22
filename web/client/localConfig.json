@@ -620,7 +620,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "Login", "Language", "NavMenu", "Attribution", "Home", {
+        }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {

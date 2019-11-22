@@ -2,6 +2,7 @@ const SET_EDITOR_AVAILABLE = "DASHBOARD:SET_AVAILABLE";
 const SET_EDITING = "DASHBOARD:SET_EDITING";
 const SHOW_CONNECTIONS = "DASHBOARD:SHOW_CONNECTIONS";
 const TRIGGER_SAVE_MODAL = "DASHBOARD:TRIGGER_SAVE_MODAL";
+const TRIGGER_SAVE_AS_MODAL = "DASHBOARD:TRIGGER_SAVE_AS_MODAL";
 
 const SAVE_DASHBOARD = "DASHBOARD:SAVE_DASHBOARD";
 const SAVE_ERROR = "DASHBOARD:SAVE_ERROR";
@@ -22,6 +23,8 @@ module.exports = {
     triggerShowConnections: show => ({ type: SHOW_CONNECTIONS, show}),
     TRIGGER_SAVE_MODAL,
     triggerSave: show => ({ type: TRIGGER_SAVE_MODAL, show}),
+    TRIGGER_SAVE_AS_MODAL,
+    triggerSaveAs: show => ({ type: TRIGGER_SAVE_AS_MODAL, show}),
     SAVE_DASHBOARD,
     saveDashboard: resource => ({ type: SAVE_DASHBOARD, resource}),
     SAVE_ERROR,
