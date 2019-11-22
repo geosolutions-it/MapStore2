@@ -2072,6 +2072,7 @@
             },
             "saveErrorNotification": {
                 "title": "Das Speichern des Kontexts ist fehlgeschlagen",
+                "conflict": "Ein Kontext mit demselben Namen ist bereits vorhanden. versuche '{data}'",
                 "defaultMessage": "Unbekannter Fehler"
             },
             "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"

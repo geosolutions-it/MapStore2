@@ -2072,6 +2072,7 @@
             },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
+                "conflict": "Ya existe un contexto con el mismo nombre. prueba '{data}'",
                 "defaultMessage": "Error desconocido"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
