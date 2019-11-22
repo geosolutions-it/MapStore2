@@ -288,7 +288,7 @@ class Annotations extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12}>
+                    <Col xs={12} style={{padding: "0 15px"}}>
                         <Filter
                             filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
                             filterText={this.props.filter}
