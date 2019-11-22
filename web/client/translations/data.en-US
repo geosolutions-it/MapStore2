@@ -2083,7 +2083,7 @@
         "contextManager": {
             "title": "Manage Contexts",
             "gridTitle": "Contexts",
-            "searchPlaceholder": "search contexts...",
+            "searchPlaceholder": "search...",
             "newContext": "New Context",
             "editContextTooltip": "Edit context"
         },

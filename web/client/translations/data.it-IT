@@ -2080,7 +2080,7 @@
         "contextManager": {
             "title": "Gestisci contesti",
             "gridTitle": "Contesti",
-            "searchPlaceholder": "contesti di ricerca...",
+            "searchPlaceholder": "cerca...",
             "newContext": "Nuovo contesto",
             "editContextTooltip": "Modifica contesto"
         },
