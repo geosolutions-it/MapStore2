@@ -1996,7 +1996,7 @@
                 "title": "Website",
                 "saveButton": "Speichern",
                 "url": {
-                    "label": "URL",
+                    "label": "URL"
                 }
             }
         },

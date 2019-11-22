@@ -1996,7 +1996,7 @@
                 "title": "Página web",
                 "saveButton": "Salvar",
                 "url": {
-                    "label": "URL",
+                    "label": "URL"
                 }
             }
         },

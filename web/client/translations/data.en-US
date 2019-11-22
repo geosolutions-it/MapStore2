@@ -1900,6 +1900,7 @@
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
             "addMediaSection": "Add Media Section",
+            "addWebPageSection": "Add Web Page Section",
             "addImmersiveContent": "Add Immersive Content",
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
@@ -2000,7 +2001,7 @@
                 "title": "Web page",
                 "saveButton": "Save",
                 "url": {
-                    "label": "URL",
+                    "label": "URL"
                 }
             }
         },

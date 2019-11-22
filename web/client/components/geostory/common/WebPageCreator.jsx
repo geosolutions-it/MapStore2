@@ -26,6 +26,11 @@ export const WebPageCreator = ({
             show={show}
             title={<Message msgId="geostory.webPageCreator.title" />}
             onClose={onClose}
+            footer={(
+                <Button bsSize="small" onClick={() => onChange(url)} >
+                    <Message msgId="geostory.webPageCreator.saveButton" />
+                </Button>
+            )}
         >
             <FormGroup controlId="WEBPAGE_URL">
                 <ControlLabel>
@@ -38,7 +43,6 @@ export const WebPageCreator = ({
                     onChange={({ target: {value} }) => setUrl(value) }
                 />
             </FormGroup>
-            <Button onClick={() => onChange(url)}><Message msgId="geostory.webPageCreator.saveButton" /></Button>
         </Dialog>
     );
 };

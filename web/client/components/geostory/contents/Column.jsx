@@ -61,7 +61,7 @@ export default ({
             template: ContentTypes.MEDIA
         }, {
             glyph: 'code',
-            tooltipId: 'geostory.addMediaContent',
+            tooltipId: 'geostory.addWebPageContent',
             template: ContentTypes.WEBPAGE
         }]}
     />
