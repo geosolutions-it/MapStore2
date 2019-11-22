@@ -16,6 +16,7 @@ const {
     dashboardLoaded,
     dashboardLoading,
     triggerSave,
+    triggerSaveAs,
     loadDashboard,
     dashboardSaveError,
     SAVE_DASHBOARD,
@@ -180,7 +181,7 @@ module.exports = {
             (!resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(rid => Rx.Observable.of(
                     dashboardSaved(rid),
-                    triggerSave(false),
+                    resource.id ? triggerSave(false) : triggerSaveAs(false),
                     !resource.id
                         ? push(`/dashboard/${rid}`)
                         : loadDashboard(rid),
