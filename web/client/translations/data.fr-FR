@@ -1932,7 +1932,8 @@
                 "saveChanges": "Sauvegarder les modifications",
                 "closeMapEditing": "Proche",
                 "confirmCloseMapEditing": "Fermer l'édition de la carte",
-                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?"
+                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?",
+                "editURL": "Modifier l'URL de la page Web"
             },
             "navigation": {
                 "edit": "Modifier l'histoire"
@@ -1990,6 +1991,13 @@
             },
             "mapEditor": {
                 "configureMapOptions": "Configure map"
+            },
+            "webPageCreator": {
+                "title": "Page Web",
+                "saveButton": "Enregistrer",
+                "url": {
+                    "label": "URL",
+                }
             }
         },
         "saveDialog": {

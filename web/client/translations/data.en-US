@@ -1936,7 +1936,8 @@
                 "saveChanges": "Save changes",
                 "closeMapEditing": "Close",
                 "confirmCloseMapEditing": "Close Map Editing",
-                "pendingChangesDiscardConfirm": "Discard current map changes?"
+                "pendingChangesDiscardConfirm": "Discard current map changes?",
+                "editURL": "Edit web page URL"
             },
             "navigation": {
                 "edit": "Edit story"
@@ -1994,6 +1995,13 @@
             },
             "mapEditor": {
                 "configureMapOptions": "Configure map"
+            },
+            "webPageCreator": {
+                "title": "Web page",
+                "saveButton": "Save",
+                "url": {
+                    "label": "URL",
+                }
             }
         },
         "saveDialog": {

@@ -34,7 +34,6 @@ export const WebPageCreator = ({
                 <FormControl
                     label="URL"
                     type="text"
-                    placeholder={<Message msgId="geostory.webPageCreator.url.placeholder" />}
                     value={url}
                     onChange={({ target: {value} }) => setUrl(value) }
                 />

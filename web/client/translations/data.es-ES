@@ -1932,7 +1932,8 @@
                 "saveChanges": "Guardar cambios",
                 "closeMapEditing": "Cerrar",
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
-                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?"
+                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
+                "editURL": "Editar URL de página web"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -1990,6 +1991,13 @@
             },
             "mapEditor": {
                 "configureMapOptions": "Configurar mapa"
+            },
+            "webPageCreator": {
+                "title": "Página web",
+                "saveButton": "Salvar",
+                "url": {
+                    "label": "URL",
+                }
             }
         },
         "saveDialog": {
