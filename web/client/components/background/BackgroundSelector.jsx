@@ -222,6 +222,7 @@ class BackgroundSelector extends React.Component {
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
                 <ConfirmDialog
+                    draggable={false}
                     modal
                     show={showConfirm}
                     onClose={() => this.props.onRemoveBackground(false)}
