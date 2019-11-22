@@ -19,6 +19,8 @@ import { getMonitoredState } from '../utils/PluginsUtils';
  */
 export const currentContextSelector = state => state.context && state.context.currentContext;
 
+export const currentTitleSelector = state => state.context && state.context.currentContext && state.context.currentContext.windowTitle;
+
 /**
  * Implementation of monitoredState using the state for localConfig, instead of ConfigUtils.getM
  * @param {object} state the state

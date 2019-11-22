@@ -5,6 +5,6 @@ export const testToolbarButtons = (buttons = [], container, selector = ".ms-sect
     expect(buttonsInToolbar).toExist();
     expect(buttonsInToolbar.length).toBe(buttons.length);
     buttonsInToolbar.forEach((b, i) => {
-        expect(b.className === `glyphicon glyphicon-${buttons[i]}`);
+        expect(b.className === `glyphicon glyphicon-${buttons[i]}`).toBe(true, `expect ${b.className} === glyphicon glyphicon-${buttons[i]}`);
     });
 };

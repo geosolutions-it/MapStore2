@@ -25,6 +25,7 @@ class SaveModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
         loading: PropTypes.bool,
+        canSave: PropTypes.bool, // check if resource can be saved
         errors: PropTypes.array,
         rules: PropTypes.array,
         onSave: PropTypes.func,
@@ -64,7 +65,8 @@ class SaveModal extends React.Component {
         onUpdateLinkedResource: () => {},
         onSave: ()=> {},
         availablePermissions: ["canRead", "canWrite"],
-        availableGroups: []
+        availableGroups: [],
+        canSave: true
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
@@ -92,7 +94,7 @@ class SaveModal extends React.Component {
                 }, {
                     text: <span><Message msgId="save"/></span>,
                     onClick: () => { this.onSave(); },
-                    disabled: !this.isValidForm() || this.props.loading
+                    disabled: !this.isValidForm() || this.props.loading || !this.props.canSave
                 }]}
                 showClose={!this.props.resource.loading}
                 onClose={this.onCloseMapPropertiesModal}>

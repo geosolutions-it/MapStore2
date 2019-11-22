@@ -14,7 +14,7 @@ export const LOAD_CONTEXT = "CONTEXT:LOAD";
  * @param {string|number} contextId id of the context to load
  * @param {string|number} mapId id of the map to load in the context
  */
-export const loadContext = ({ mapId, contextId }) => ({ type: LOAD_CONTEXT, mapId, contextId });
+export const loadContext = ({ mapId, contextName }) => ({ type: LOAD_CONTEXT, mapId, contextName });
 
 
 export const SET_CURRENT_CONTEXT = "CONTEXT:SET_CURRENT_CONTEXT";
@@ -56,3 +56,9 @@ export const LOAD_FINISHED = "CONTEXT:CONTEXT_LOAD_FINISHED";
  * Notifies the context load has been finished.
  */
 export const loadFinished = () => ({ type: LOAD_FINISHED });
+
+export const CLEAR_CONTEXT = 'CONTEXT:CLEAR_CONTEXT';
+/**
+ * Clears current context state
+ */
+export const clearContext = () => ({ type: CLEAR_CONTEXT });

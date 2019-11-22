@@ -290,6 +290,7 @@
             "resource": {
                 "deleteResource": "Delete",
                 "editResource": "Edit properties",
+                "editResourceData": "Edit resource data",
                 "addToFeatured": "Add to featured",
                 "removeFromFeatured": "Remove from featured",
                 "showDetails": "Show details"
@@ -822,7 +823,7 @@
                 "group_label_b": "of the following conditions:",
                 "combo_placeholder": "Attribute",
                 "text_placeholder": "Type text to search",
-                "attribute_filter_header": "Attribute Filter",
+                "attribute_filter_header": "Attribute filter",
                 "tooltipTextField": "use <b>*</b> for any number of any char</br>use <b>.</b> for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
                 "groupField": {
                     "any": "any",
@@ -843,8 +844,8 @@
                 }
             },
             "spatialfilter": {
-                "filterType": "Filter Type",
-                "geometric_operation": "Geometric Operation",
+                "filterType": "Filter type",
+                "geometric_operation": "Geometric operation",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region of interest",
                 "remove": "Remove",
@@ -1045,6 +1046,7 @@
           "creatingGroup": "Creating...",
           "groupMembers": "Members:",
           "addMember": "Add Member:",
+          "selectMemberPlaceholder": "Select Member...",
           "noUsers": "No users for this group",
           "errorSaving": "There was an error saving this group",
           "errorDelete": "There was an error deleting this group",
@@ -2072,8 +2074,33 @@
         "defaultMapBackgroundsServiceTitle": "Default Backgrounds",
         "backgroundSelector": {
             "addTooltip": "Add new background",
-            "editTooltip": "Edit current background",
             "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
+        },
+        "stepper": {
+            "back": "Back",
+            "next": "Next"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "General Settings",
+                "title": "Create new app context",
+                "name": "Name",
+                "namePlaceholder": "Enter app context name...",
+                "windowTitle": "Window title",
+                "windowTitlePlaceholder": "Enter window title..."
+            },
+            "saveErrorNotification": {
+                "title": "Context saving failed",
+                "defaultMessage": "Unknown error"
+            },
+            "undo": "Are you sure you want to abandon the context editing session?"
+        },
+        "contextManager": {
+            "title": "Manage Contexts",
+            "gridTitle": "Contexts",
+            "searchPlaceholder": "search...",
+            "newContext": "New Context",
+            "editContextTooltip": "Edit context"
         },
         "tutorial": {
             "title": "Tutorial",

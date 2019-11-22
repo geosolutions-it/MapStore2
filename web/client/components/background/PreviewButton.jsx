@@ -14,6 +14,7 @@ require('./css/previewbutton.css');
 
 class PreviewButton extends React.Component {
     static propTypes = {
+        mode: PropTypes.string,
         src: PropTypes.string,
         side: PropTypes.number,
         frame: PropTypes.number,
@@ -25,11 +26,12 @@ class PreviewButton extends React.Component {
         onAdd: PropTypes.func,
         currentLayer: PropTypes.object,
         enabledCatalog: PropTypes.bool,
-        onEdit: PropTypes.func,
-        layers: PropTypes.array
+        layers: PropTypes.array,
+        mapIsEditable: PropTypes.bool
     };
 
     static defaultProps = {
+        mode: 'desktop',
         src: './images/mapthumbs/none.jpg',
         side: 50,
         frame: 4,
@@ -39,7 +41,6 @@ class PreviewButton extends React.Component {
         showLabel: true,
         onToggle: () => {},
         onAdd: () => {},
-        onEdit: () => {},
         currentLayer: {},
         layers: []
     };
@@ -59,20 +60,14 @@ class PreviewButton extends React.Component {
                         className: 'square-button-md',
                         bsStyle: 'primary'
                     }}
-                    buttons={[
+                    buttons={this.props.mode !== 'mobile' && this.props.mapIsEditable ? [
                         {
                             glyph: 'plus',
                             tooltipId: "backgroundSelector.addTooltip",
                             onClick: () => this.props.onAdd(),
                             visible: !this.props.enabledCatalog
-                        },
-                        {
-                            glyph: 'wrench',
-                            tooltipId: "backgroundSelector.editTooltip",
-                            visible: !this.props.enabledCatalog && !!(this.props.currentLayer.type === 'wms' || this.props.currentLayer.type === 'wmts'),
-                            onClick: () => this.props.onEdit()
                         }
-                    ]}/> : null}
+                    ] : []}/> : null}
             </div>
         );
     }

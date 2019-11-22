@@ -1,4 +1,4 @@
-#page-manager .mapstore-header {
+.manager .mapstore-header {
     background-image: url('../img/manager-header.jpg');
     height: 200px;
     z-index: -100;
@@ -11,18 +11,18 @@
     top: -20px;
 }
 
-#page-manager .MapSearchBar.user-search {
+.manager .MapSearchBar.user-search {
     top: -100px;
     height: 0;
     overflow: visible;
 }
-#page-manager .MapSearchBar.user-search .input-group {
+.manager .MapSearchBar.user-search .input-group {
     box-shadow: -1px 1px 5px 1px rgba(94,94,94,1);
 }
-#page-manager .Manager-Container {
+.manager .Manager-Container {
     margin: 0;
 }
 
-#page-manager #home-button {
+.manager #home-button {
     float: right;
 }

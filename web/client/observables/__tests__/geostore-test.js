@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {createResource, deleteResource} = require('../geostore');
+const {createResource, deleteResource, getResourceIdByName} = require('../geostore');
 const testAndResolve = (test = () => {}, value) => (...args) => {
     test(...args);
-    return new Promise(resolve => resolve(value));
+    return Promise.resolve(value);
 };
 describe('geostore observables for resources management', () => {
     it('createResource', done => {
@@ -61,6 +61,25 @@ describe('geostore observables for resources management', () => {
             () => {
                 // check the connected resource is deleted too
                 expect(spy.calls.length).toBe(2);
+                done();
+            }
+        );
+    });
+    it('getResourceIdByName', done => {
+        const resourceName = 'name';
+        const spyFuncs = {
+            dummy: () => {}
+        };
+        const DummyAPI = {
+            getResourceIdByName: (category, name) => Promise.resolve([category, name, 1])
+        };
+        const spyResult = expect.spyOn(spyFuncs, 'dummy');
+        getResourceIdByName('CONTEXT', resourceName, DummyAPI).subscribe(
+            result => spyFuncs.dummy(result),
+            e => expect(true).toBe(false, e),
+            () => {
+                expect(spyResult.calls.length).toBe(1);
+                expect(spyResult.calls[0].arguments[0]).toEqual(['CONTEXT', resourceName, 1]);
                 done();
             }
         );

@@ -137,6 +137,7 @@
             "web/client/components/TOC/fragments/settings/FeatureInfoEditor.jsx",
             "web/client/components/TOC/fragments/settings/ThematicLayer.jsx",
             "web/client/components/errors/ResourceUnavailable.jsx",
+            "web/client/components/resources/enhancers/withShareTool.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",
@@ -219,6 +220,7 @@
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
+                "web/client/plugins/manager/ManagerMenu.jsx",
                 "web/client/plugins/Map.jsx",
                 "web/client/plugins/MapSearch.jsx",
                 "web/client/plugins/Measure.jsx",

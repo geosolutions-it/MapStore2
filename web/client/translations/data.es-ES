@@ -290,6 +290,7 @@
             "resource": {
                     "deleteResource": "Eliminar",
                     "editResource": "Editar propiedades",
+                    "editResourceData": "Editar datos de recursos",
                     "addToFeatured": "Agregar a destacados",
                     "removeFromFeatured": "Eliminar de destacados",
                     "showDetails": "Mostrar detalles"
@@ -1044,6 +1045,7 @@
           "creatingGroup": "Creando...",
           "groupMembers": "Miembros:",
           "addMember": "Añadir un miembro:",
+          "selectMemberPlaceholder": "Seleccionar miembro ...",
           "noUsers": "El grupo no tiene usuarios",
           "errorSaving": "Ha ocurrido un error al guardar el grupo",
           "errorDelete": "Ha ocurrido un error al borrar el grupo",
@@ -2068,8 +2070,33 @@
         "defaultMapBackgroundsServiceTitle": "Fondos predeterminados",
         "backgroundSelector": {
             "addTooltip": "Agregar nuevo fondo",
-            "editTooltip": "Editar fondo actual",
             "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
+        },
+        "stepper": {
+            "back": "Atrás",
+            "next": "Siguiente"
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Configuración general",
+                "title": "Crear nuevo contexto de aplicación",
+                "name": "Nombre",
+                "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
+                "windowTitle": "Título de la ventana",
+                "windowTitlePlaceholder": "Ingrese el título de la ventana..."
+            },
+            "saveErrorNotification": {
+                "title": "Error al guardar el contextod",
+                "defaultMessage": "Error desconocido"
+            },
+            "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
+        },
+        "contextManager": {
+            "title": "Administrar contextos",
+            "gridTitle": "Contextos",
+            "searchPlaceholder": "buscar...",
+            "newContext": "Nuevo contexto",
+            "editContextTooltip": "Editar contexto"
         },
         "tutorial": {
             "title": "Tutorial",

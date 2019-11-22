@@ -11,10 +11,10 @@ import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
-import { loadContext } from '../../actions/context';
+import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
-import { contextMonitoredStateSelector, pluginsSelector } from '../../selectors/context';
+import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
 
 /**
   * @name Context
@@ -33,13 +33,13 @@ import { contextMonitoredStateSelector, pluginsSelector } from '../../selectors/
   *    //...
   *    {
   *      name: "context",
-  *      path: "/context/{contextId}/{mapId}",
+  *      path: "/context/id/{contextId}/{mapId}",
   *      component: require('path_to_/pages/Context')
   *    }]
   * ```
   * - `localConfig.json` must include an 'Context' entry in the plugins
   *
-  * Then this page will be available, for example, at http://localhos:8081/#/context/1234/5678
+  * Then this page will be available, for example, at http://localhos:8081/#/context/id/1234/5678
   *
   * @example
   * // localConfig configuration example
@@ -60,8 +60,10 @@ class Context extends React.Component {
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
+        windowTitle: PropTypes.string,
         monitoredState: PropTypes.array,
         loadContext: PropTypes.func,
+        reset: PropTypes.func,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
@@ -69,6 +71,7 @@ class Context extends React.Component {
     static defaultProps = {
         mode: 'desktop',
         loadContext: () => {},
+        reset: () => {},
         plugins: {},
         match: {
             params: {}
@@ -77,6 +80,7 @@ class Context extends React.Component {
     };
     componentWillMount() {
         const params = this.props.match.params;
+        this.oldTitle = document.title;
         this.props.loadContext(params);
     }
     componentDidUpdate(oldProps) {
@@ -86,6 +90,14 @@ class Context extends React.Component {
         if (paramsChanged) {
             this.props.loadContext(newParams);
         }
+
+        if (this.props.windowTitle) {
+            document.title = this.props.windowTitle;
+        }
+    }
+    componentWillUnmount() {
+        document.title = this.oldTitle;
+        this.props.reset();
     }
     render() {
         return (<MapViewerCmp {...this.props} />);
@@ -97,9 +109,11 @@ export default compose(
         createStructuredSelector({
             pluginsConfig: pluginsSelector,
             mode: () => 'desktop',
-            monitoredState: contextMonitoredStateSelector
+            monitoredState: contextMonitoredStateSelector,
+            windowTitle: currentTitleSelector
         }),
         {
-            loadContext
+            loadContext,
+            reset: clearContext
         })
 )(Context);

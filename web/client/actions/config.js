@@ -71,29 +71,6 @@ function loadMapInfo(mapId) {
 const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 
 const mapSaved = () => ({type: MAP_SAVED});
-// function loadMapInfo(mapId) {
-//     return (dispatch) => {
-//         dispatch(mapInfoLoadStart(mapId));
-//         return axios.get(url).then((response) => {
-//             if (typeof response.data === 'object') {
-//                 if (response.data.ShortResource) {
-//                     dispatch(mapInfoLoaded(response.data.ShortResource, mapId));
-//                 } else {
-//                     dispatch(mapInfoLoaded(response.data, mapId));
-//                 }
-
-//             } else {
-//                 try {
-//                     JSON.parse(response.data);
-//                 } catch (e) {
-//                     dispatch(mapInfoLoadError( mapId, e));
-//                 }
-//             }
-//         }).catch((e) => {
-//             dispatch(mapInfoLoadError(mapId, e));
-//         });
-//     };
-// }
 
 module.exports = {
     LOAD_MAP_CONFIG,

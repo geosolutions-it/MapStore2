@@ -560,7 +560,12 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
+        }, {
+            "name": "ManagerMenu",
+            "cfg": {
+                "enableContextManager": true
+            }
+        }, "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
         "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps", "ContentTabs",
 
           {
@@ -591,6 +596,16 @@
               },
               "fluid": true
             }
+          },
+          {
+            "name": "Contexts",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              },
+              "fluid": true
+            }
           }
           , "MailingLists", "Footer", {
           "name": "Cookie",
@@ -605,7 +620,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "Login", "Language", "NavMenu", "Attribution", "Home", {
+        }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -678,6 +693,35 @@
             }
           }
         ],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
+        "context-creator": [
+          {
+            "name": "OmniBar",
+            "cfg": {
+              "containerPosition": "header",
+              "className": "navbar shadow navbar-home"
+            }
+          },
+          "Login",
+          "Language",
+          "NavMenu",
+          "Attribution",
+          {
+            "name": "BackToPage",
+            "cfg": {
+              "destRoute": "/context-manager",
+              "confirmMessage": "contextCreator.undo"
+            }
+          },
+          "ContextCreator",
+          "Notifications",
+          {
+            "name": "FeedbackMask",
+            "cfg": {
+              "containerPosition": "header"
+            }
+          }
+        ],
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
+        "context-manager": ["Header", "Home", "ContextManager", "Footer"]
     }
 }

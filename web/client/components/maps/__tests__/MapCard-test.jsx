@@ -55,13 +55,13 @@ describe('This test for MapCard', () => {
     it('test details tool', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        let component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription, details: null, canEdit: true}} mapType="leaflet"/>);
+        let component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription, details: null, canEdit: true}} shareToolEnabled={false}  mapType="leaflet"/>);
         const handlers = {
             onToggleDetailsSheet: () => {},
             onEdit: () => {}
         };
         let spy = expect.spyOn(handlers, "onToggleDetailsSheet");
-        component = TestUtils.renderIntoDocument(<MapCard id={1} detailsSheetActions={{...handlers}} map={{id: 1, name: testName, description: testDescription, detailsText: "here some details", details: "here some details"}} mapType="leaflet" />);
+        component = TestUtils.renderIntoDocument(<MapCard id={1} detailsSheetActions={{...handlers}} map={{id: 1, name: testName, description: testDescription, detailsText: "here some details", details: "here some details"}} shareToolEnabled={false} mapType="leaflet" />);
         const detailsTool = TestUtils.findRenderedDOMComponentWithTag(
             component, 'button'
         );
@@ -69,33 +69,38 @@ describe('This test for MapCard', () => {
         TestUtils.Simulate.click(detailsTool);
         expect(spy.calls.length).toEqual(1);
     });
-    it('test edit/delete', () => {
+    it('test edit/delete/share', () => {
         const testName = "test";
         const testDescription = "testDescription";
 
         const handlers = {
             viewerUrl: () => {},
             onEdit: () => {},
-            onMapDelete: () => {}
+            onMapDelete: () => {},
+            onShare: () => {}
         };
 
 
         let spyonEdit = expect.spyOn(handlers, "onEdit");
         let spyonMapDelete = expect.spyOn(handlers, "onMapDelete");
+        let spyonShare = expect.spyOn(handlers, "onShare");
         const component = ReactDOM.render(<MapCard id={1}
             viewerUrl={handlers.viewerUrl}
             onMapDelete={handlers.onMapDelete}
             onEdit={handlers.onEdit}
+            onShare={handlers.onShare}
+            enableShareTool={false}
             map={{canEdit: true, id: 1, name: testName, description: testDescription}} mapType="leaflet" />, document.getElementById("container"));
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(
             component, 'button'
         );
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(3);
         buttons.forEach(b => TestUtils.Simulate.click(b));
 
         expect(spyonEdit.calls.length).toEqual(1);
         // wait for confirm
         expect(spyonMapDelete.calls.length).toEqual(0);
+        expect(spyonShare.calls.length).toEqual(1);
     });
     it('test edit properties tool', () => {
         const testName = "test";

@@ -16,6 +16,8 @@ const { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } = require('.
 const {LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
 const { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } = require('../actions/geostory');
 const { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } = require('../actions/context');
+const {START_RESOURCE_LOAD: LOAD_CONTEXT_CONTEXTCREATOR, LOAD_FINISHED: LOAD_FINISHED_CONTEXTCREATOR,
+    CONTEXT_LOAD_ERROR: CONTEXT_LOAD_ERROR_CONTEXTCREATOR} = require('../actions/contextcreator');
 const {INIT_MAP} = require('../actions/map');
 const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR} = require('../actions/config');
 
@@ -114,10 +116,12 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
  * @return {Observable}
  */
 const updateContextFeedbackMaskVisibility = action$ =>
-    action$.ofType(LOAD_CONTEXT)
+    action$.ofType(LOAD_CONTEXT, LOAD_CONTEXT_CONTEXTCREATOR)
         .switchMap(() => {
-            const loadActions = [LOAD_FINISHED, CONTEXT_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
-            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR || type === MAP_INFO_LOAD_ERROR; // TODO: handle context config error
+            const loadActions = [LOAD_FINISHED, LOAD_FINISHED_CONTEXTCREATOR,
+                CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
+            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR || type === CONTEXT_LOAD_ERROR_CONTEXTCREATOR
+                || type === MAP_INFO_LOAD_ERROR; // TODO: handle context config error
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'context');
             return Rx.Observable.merge(
                 updateObservable,
@@ -154,7 +158,7 @@ const detectNewPage = (action$, store) =>
  * @param {stream} action$ the action stream
  */
 const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
-    action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR)
+    action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR)
         .filter((action) => action.error && action.error.status === 403)
         .filter(() => !isLoggedIn(store.getState()))
         .exhaustMap(

@@ -21,6 +21,7 @@ const PropTypes = require('prop-types');
 
 class BackgroundSelector extends React.Component {
     static propTypes = {
+        mode: PropTypes.string,
         backgroundList: PropTypes.array,
         backgrounds: PropTypes.array,
         start: PropTypes.number,
@@ -32,6 +33,7 @@ class BackgroundSelector extends React.Component {
         size: PropTypes.object,
         dimensions: PropTypes.object,
         thumbs: PropTypes.object,
+        mapIsEditable: PropTypes.bool,
         onPropertiesChange: PropTypes.func,
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
@@ -56,6 +58,7 @@ class BackgroundSelector extends React.Component {
     };
 
     static defaultProps = {
+        mode: 'desktop',
         addBackgroundProperties: () => {},
         onBackgroundEdit: () => {},
         setCurrentBackgroundLayer: () => {},
@@ -72,6 +75,7 @@ class BackgroundSelector extends React.Component {
         thumbs: {
             unknown: require('./img/default.jpg')
         },
+        mapIsEditable: true,
         onRemoveBackground: () => {},
         onPropertiesChange: () => {},
         onToggle: () => {},
@@ -103,14 +107,33 @@ class BackgroundSelector extends React.Component {
                     }}
                     className="background-preview-container"
                 >
-                    {this.props.allowDeletion && this.props.layers.length > 1 && <ToolbarButton
-                        glyph="trash"
-                        className="square-button-md background-remove-button"
-                        bsStyle="primary"
-                        onClick={() => {
-                            this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
-                        }}
-                    />}
+                    {this.props.mode !== 'mobile' &&
+                        <div
+                            style={{
+                                width: (vertical ? margin : 0) + side + frame
+                            }}
+                            className="background-tool-buttons">
+                            {this.props.mapIsEditable && this.props.allowDeletion && this.props.layers.length > 1 && <ToolbarButton
+                                glyph="trash"
+                                className="square-button-md background-tool-button delete-button"
+                                bsStyle="primary"
+                                onClick={() => {
+                                    this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
+                                }}
+                            />}
+                            {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts') &&
+                                <ToolbarButton
+                                    glyph="wrench"
+                                    className="square-button-md background-tool-button edit-button"
+                                    bsStyle="primary"
+                                    onClick={() => {
+                                        this.props.addBackgroundProperties({
+                                            layer,
+                                            editing: true
+                                        });
+                                    }}/>
+                            }
+                        </div>}
                     <PreviewIcon
                         projection={this.props.projection}
                         vertical={vertical}
@@ -182,7 +205,7 @@ class BackgroundSelector extends React.Component {
             height: buttonSize,
             width: buttonSize * visibleIconsLength
         };
-        const editedLayer = this.props.currentLayer;
+        const editedLayer = this.props.modalParams && this.props.modalParams.layer || {};
         const backgroundListEntry = (this.props.backgroundList || []).find(background => background.id === editedLayer.id);
         const backgroundDialogParams = {
             title: editedLayer.title,
@@ -199,6 +222,7 @@ class BackgroundSelector extends React.Component {
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
                 <ConfirmDialog
+                    draggable={false}
                     modal
                     show={showConfirm}
                     onClose={() => this.props.onRemoveBackground(false)}
@@ -224,12 +248,6 @@ class BackgroundSelector extends React.Component {
                 />}
                 <div className={'background-plugin-position'} style={this.props.style}>
                     <PreviewButton
-                        onEdit={() => {
-                            this.props.addBackgroundProperties({
-                                layer: editedLayer,
-                                editing: true
-                            });
-                        }}
                         layers={this.props.layers}
                         enabledCatalog={this.props.enabledCatalog}
                         currentLayer={this.props.currentLayer}
@@ -241,7 +259,9 @@ class BackgroundSelector extends React.Component {
                         margin={margin}
                         labelHeight={labelHeight}
                         label={layer.title}
-                        onToggle={this.props.onToggle}/>
+                        onToggle={this.props.onToggle}
+                        mode={this.props.mode}
+                        mapIsEditable={this.props.mapIsEditable}/>
                     <div className="background-list-container" style={listContainerStyle}>
                         <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
                     </div>

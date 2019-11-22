@@ -93,7 +93,6 @@ const backgroundEditedEpic = (action$, store) =>
             const state = store.getState();
             const editedLayer = getLayerFromId(state, layerId);
             return editedLayer ? Rx.Observable.of(
-                setCurrentBackgroundLayer(editedLayer.id),
                 clearModalParameters()
             ) : Rx.Observable.empty();
         });

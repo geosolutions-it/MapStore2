@@ -39,6 +39,7 @@ class Manager extends React.Component {
     render() {
         return (<Page
             id="manager"
+            className="manager"
             plugins={this.props.plugins}
             params={this.props.match.params}
         />);
