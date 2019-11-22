@@ -339,6 +339,7 @@
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
             "errorSize": "Tamaño máximo admitido: 500kb",
+            "errorCustomSize": "Tamaño máximo admitido: {maxFileSize}",
             "error": "La imagen proporcionada no es válida",
             "savedMapTitle": "Mapa guardado",
             "savedMapMessage": "El mapa se ha guardado correctamente",
@@ -2003,6 +2004,11 @@
             "saveSuccessTitle": "éxito",
             "saveSuccessMessage": "Guardado con éxito"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Cerrar el editor de mapas",
+            "confirmExitContent": "¿Descartar cambios pendientes?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Imágenes",
@@ -2010,6 +2016,8 @@
             "maps": "Mapas",
             "preview": "Avance",
             "apply": "Aplicar",
+            "confirmExitTitle": "Cerrar el Media Editor",
+            "confirmExitContent": "¿Descartar cambios pendientes?",
             "mediaPicker": {
                 "services": "Servicios: ",
                 "clean": "Resultados limpios",
@@ -2032,6 +2040,13 @@
                 "mapFilter": "Filtrar mapas",
                 "videoFilter": "Filtrar videos",
                 "imageFilter": "Filtrar imágenes"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Cerrar el Media From",
+                "confirmExitContent": "¿Descartar cambios pendientes?"
+            },
+            "mapFrom": {
+                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
             }
         },
         "backgroundDialog": {

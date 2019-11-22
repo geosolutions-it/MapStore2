@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import MediaEditor from '../MediaEditor';
+import {Provider} from 'react-redux';
 
 describe('MediaEditor component', () => {
     beforeEach((done) => {
@@ -22,7 +23,10 @@ describe('MediaEditor component', () => {
         setTimeout(done);
     });
     it('MediaEditor rendering with defaults', () => {
-        ReactDOM.render(<MediaEditor />, document.getElementById("container"));
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}}>
+                <MediaEditor />
+            </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-mediaEditor')).toExist();
     });

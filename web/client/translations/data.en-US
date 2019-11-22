@@ -338,7 +338,8 @@
             "message": "Drop or click to import an image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Supported formats: png/jpg",
-            "errorSize": "Max allowed size: 500kb",
+            "errorSize": "Max allowed size: maxFileSize",
+            "errorCustomSize": "Max allowed size: {maxFileSize}",
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
             "savedMapMessage": "Map has been saved correctly",
@@ -2007,6 +2008,11 @@
             "saveSuccessTitle": "Success",
             "saveSuccessMessage": "Saved successfully"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Close Map Editor",
+            "confirmExitContent": "Discard pending changes?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Images",
@@ -2014,6 +2020,8 @@
             "maps": "Maps",
             "preview": "Preview",
             "apply": "Apply",
+            "confirmExitTitle": "Close Media Editor",
+            "confirmExitContent": "Discard pending changes?",
             "mediaPicker": {
                 "services": "Services: ",
                 "clean": "Clean results",
@@ -2036,6 +2044,13 @@
                 "mapFilter": "Filter maps",
                 "videoFilter": "Filter videos",
                 "imageFilter": "Filter images"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Close Media From",
+                "confirmExitContent": "Discard pending changes?"
+            },
+            "mapFrom": {
+                "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb"
             }
         },
         "backgroundDialog": {

@@ -31,19 +31,17 @@ describe('withConfirm enhancer', () => {
         const spy = expect.spyOn(actions, 'callback');
         ReactDOM.render(<ConfirmButton onClick={actions.callback}/>, document.getElementById("container"));
         const buttonElement = document.querySelector('#container button');
-        const modalContainer = document.querySelector('.modal');
-        const modalElement = document.querySelector('#confirm-dialog');
-        const yesButton = document.querySelectorAll('.modal-footer button')[0];
-        const noButton = document.querySelectorAll('.modal-footer button')[1];
-        const isModalVisible = () => expect(modalElement.style.document).toNotBe('none');
-        const isModalHidden = () => expect(modalElement.style.display).toBe('none');
-        expect(modalElement).toExist();
+        const getModalContainer = () => document.querySelector('.modal');
+        const getYesButton = () => document.querySelectorAll('.modal-footer button')[0];
+        const getNoButton = () => document.querySelectorAll('.modal-footer button')[1];
+        const isModalVisible = () => expect(document.querySelector('#confirm-dialog')).toExist();
+        const isModalHidden = () => expect(document.querySelector('#confirm-dialog')).toNotExist();
         isModalHidden();
         expect(buttonElement).toExist();
         // open confirm
         ReactTestUtils.Simulate.click(buttonElement);
         isModalVisible();
-        ReactTestUtils.Simulate.click(modalContainer);
+        ReactTestUtils.Simulate.click(getModalContainer());
         // the modal closes on click out
         // this didn't happen because of Portal event bubbling caused a onClick event again on the button)
         isModalHidden();
@@ -59,14 +57,14 @@ describe('withConfirm enhancer', () => {
         ReactTestUtils.Simulate.click(buttonElement);
         isModalVisible();
         // close from no button
-        ReactTestUtils.Simulate.click(noButton);
+        ReactTestUtils.Simulate.click(getNoButton());
         isModalHidden();
 
         // open confirm again
         ReactTestUtils.Simulate.click(buttonElement);
         isModalVisible();
         // confirm
-        ReactTestUtils.Simulate.click(yesButton);
+        ReactTestUtils.Simulate.click(getYesButton());
         isModalHidden();
         expect(spy).toHaveBeenCalled();
 

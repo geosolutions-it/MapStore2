@@ -65,6 +65,7 @@ module.exports = {
         LoginPlugin: require('../plugins/Login'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         ManagerPlugin: require('../plugins/manager/Manager'),
+        MapEditorPlugin: require('../plugins/MapEditor').default,
         MapExportPlugin: require('../plugins/MapExport').default,
         MapFooterPlugin: require('../plugins/MapFooter'),
         MapImportPlugin: require('../plugins/MapImport'),

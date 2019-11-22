@@ -8,12 +8,10 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
 import expect from 'expect';
-import MediaSelector from '../MediaSelector';
+import {MapForm} from '../MapForm';
 
-
-describe('MediaSelector component', () => {
+describe('MapForm component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -23,11 +21,11 @@ describe('MediaSelector component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('MediaSelector rendering with defaults', () => {
-        ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({})}}>
-            <MediaSelector />
-        </Provider>, document.getElementById("container"));
+    it('MapForm rendering with defaults', () => {
+        ReactDOM.render(<MapForm/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-mediaList')).toExist();
+        expect(container.querySelector('.ms-mapForm')).toExist();
+        expect(container.querySelectorAll('input').length).toBe(3);
+        expect(container.querySelector(".dropzone-thumbnail-container")).toExist();
     });
 });

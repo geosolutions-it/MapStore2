@@ -29,6 +29,7 @@ class Thumbnail extends React.Component {
         loading: PropTypes.bool,
         withLabel: PropTypes.bool,
         map: PropTypes.object,
+        maxFileSize: PropTypes.number,
         // CALLBACKS
         onDrop: PropTypes.func,
         onError: PropTypes.func,
@@ -50,6 +51,7 @@ class Thumbnail extends React.Component {
         loading: false,
         withLabel: true,
         glyphiconRemove: "remove-circle",
+        maxFileSize: 500000,
         // CALLBACKS
         onDrop: () => {},
         onError: () => {},
@@ -103,7 +105,7 @@ class Thumbnail extends React.Component {
         let errors = [];
 
         this.getDataUri(images, (data) => {
-            if (isAnImage && data && data.length < 500000) {
+            if (isAnImage && data && data.length < this.props.maxFileSize) {
                 // without errors
                 this.props.onError([], this.props.map.id);
                 this.files = images;
@@ -113,7 +115,7 @@ class Thumbnail extends React.Component {
                 if (!isAnImage) {
                     errors.push("FORMAT");
                 }
-                if (data && data.length >= 500000) {
+                if (data && data.length >= this.props.maxFileSize) {
                     errors.push("SIZE");
                 }
                 this.props.onError(errors, this.props.map.id);

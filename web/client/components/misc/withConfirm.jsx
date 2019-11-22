@@ -57,11 +57,20 @@ export const addConfirmModal = (A) => ({ confirming, confirmYes, confirmNo, conf
             <A {...props}/>
         </React.Fragment>);
 };
-
+/**
+ * Given a component with an onClick handler in props, It adds a confirmation modal on onClick event.
+ * ConfirmPredicate prop, default to true,  enable or disable the confirmation request
+ */
 export default (Component) => compose(
     withState('confirming', 'setConfirming', false),
     withHandlers({
-        onClick: ({ setConfirming = () => { } }) => () => setConfirming(true),
+        onClick: ({ setConfirming = () => { }, onClick = () => {}, confirmPredicate = true}) => (...args) => {
+            if (confirmPredicate) {
+                setConfirming(true);
+            } else {
+                onClick(...args);
+            }
+        },
         onConfirm: ({ onClick = () => {}, setConfirming = () => {} }) => (...args) => {
             setConfirming(false);
             onClick(...args);
