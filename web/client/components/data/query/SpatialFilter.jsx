@@ -89,8 +89,8 @@ class SpatialFilter extends React.Component {
     renderSpatialHeader = () => {
         const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
         return (
-            <div className="container-fluid">
-                <Row className="logicHeader filter-field-row filter-field-fixed-row">
+            <div>
+                <Row className="logicHeader inline-form filter-field-row filter-field-fixed-row">
                     <Col xs={6}>
                         <div><I18N.Message msgId={"queryform.spatialfilter.filterType"}/></div>
                     </Col>
@@ -219,7 +219,7 @@ class SpatialFilter extends React.Component {
                     : null}
                 {this.props.spatialOperations.length > 1 ?
                     <Panel>
-                        <div className="container-fluid">
+                        <div>
                             {operationRow}
                         </div>
                         {selectedOperation && selectedOperation.id === "DWITHIN" ? this.renderDwithin() : null}
@@ -284,7 +284,7 @@ class SpatialFilter extends React.Component {
             <span/>
         ;
 
-        const operationRow = (<Row className="filter-field-row filter-field-fixed-row">
+        const operationRow = (<Row className="filter-field-row inline-form filter-field-fixed-row">
             <Col xs={6}>
                 <I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/>
             </Col>
