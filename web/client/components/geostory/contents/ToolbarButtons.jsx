@@ -15,6 +15,8 @@ import withConfirm from "../../misc/toolbar/withConfirm";
 import { ToolbarDropdownWithInputButton } from "../common/ToolbarDropdownWithInputButton";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
+import tooltip from '../../misc/enhancers/tooltip';
+const ToolbarDropdownInputButton = tooltip(ToolbarDropdownWithInputButton);
 
 /**
  * these components have been created because it was causing an excessive re-rendering
@@ -109,13 +111,13 @@ export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = 
     );
     // { align, sectionType, size, src, update = () => { } }
 export const EditURLButtonToolbar = (props) => {
-    console.log(props);
     return (
-        <ToolbarDropdownWithInputButton
+        <ToolbarDropdownInputButton
             glyph="pencil"
             pullRight={(props.align === "right" || props.size === "full" || props.size === "large") && !props.sectionType}
             value={props.src}
             onChange={({ target: { value }}) => props.update('src', value)}
+            tooltipId="geostory.contentToolbar.remove"
         />
     );
 

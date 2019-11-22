@@ -24,8 +24,8 @@ describe('WebPage component', () => {
     it('should render page when provided all neccesary data', () => {
         ReactDOM.render(<WebPage
             src="http://www.google.com"
-            height={100}
-            width={100}
+            size="large"
+            viewHeight={100}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toExist();
@@ -34,8 +34,8 @@ describe('WebPage component', () => {
     it('should render page when provided all neccesary data', () => {
         ReactDOM.render(<WebPage
             src="http://www.google.com"
-            height={100}
-            width={100}
+            size="large"
+            viewHeight={100}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toExist();
@@ -43,28 +43,28 @@ describe('WebPage component', () => {
 
     it('should\'t render page when src is not provided', () => {
         ReactDOM.render(<WebPage
-            height={100}
-            width={100}
+            size="large"
+            viewHeight={100}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);
         expect(container.querySelector(".empty-state-main-view")).toExist();
     });
 
-    it('should\'t render page when width is not provided', () => {
+    it('should\'t render page when viewHeight is not provided', () => {
         ReactDOM.render(<WebPage
             src="http://www.google.com"
-            height={100}
+            size="large"
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);
         expect(container.querySelector(".empty-state-main-view")).toExist();
     });
 
-    it('should\'t render page when height is not provided', () => {
+    it('should\'t render page when size is not provided', () => {
         ReactDOM.render(<WebPage
             src="http://www.google.com"
-            width={100}
+            viewHeight={100}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);

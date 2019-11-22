@@ -46,7 +46,9 @@ import {
     storySaved,
     update,
     setFocusOnContent,
-    UPDATE
+    UPDATE,
+    toggleWebPageCreator,
+    SET_WEBPAGE_URL
 } from '../actions/geostory';
 
 import {
@@ -125,8 +127,20 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
-// TODO: update according WebPage geostory component
-export const openWebPageContentEditor = (action$, store) =>
+const updateWebPageSection = path => action$ =>
+    action$.ofType(SET_WEBPAGE_URL)
+        .switchMap(({ src }) => {
+            return Observable.of(
+                update(`${path}`, { src }, 'merge'),
+                toggleWebPageCreator(false)
+            );
+        });
+
+/**
+ * Epic that handles opening webPageCreator and saves url of WebPage component
+ * @param {Observable} action$ stream of redux action
+ */
+export const openWebPageComponentCreator = (action$) =>
     action$.ofType(ADD)
         .filter(({ element = {} }) => {
             const isWebPage = element.type === ContentTypes.WEBPAGE;
@@ -139,18 +153,12 @@ export const openWebPageContentEditor = (action$, store) =>
             }
             const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
             return Observable.of(
-                showMediaEditor('geostory') // open webpageEditorModal
+                toggleWebPageCreator(true)
             )
                 .merge(
-                    action$.let(updateMediaSection(store, path)),
-                    action$.ofType(HIDE)
-                        .switchMap(() => {
-                            return Observable.of(remove(
-                                path));
-                        })
+                    action$.let(updateWebPageSection(path))
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
-
 
 /**
  * Epic that handles the save story workflow. It uses persistence

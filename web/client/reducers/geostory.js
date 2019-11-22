@@ -28,7 +28,8 @@ import {
     TOGGLE_SETTINGS_PANEL,
     UPDATE,
     UPDATE_CURRENT_PAGE,
-    UPDATE_SETTING
+    UPDATE_SETTING,
+    TOGGLE_WEBPAGE_CREATOR
 } from '../actions/geostory';
 
 /**
@@ -66,7 +67,8 @@ let INITIAL_STATE = {
     focusedContent: {},
     currentPage: {},
     settings: {},
-    oldSettings: {}
+    oldSettings: {},
+    showWebPageCreator: false
 };
 
 /**
@@ -238,6 +240,8 @@ export default (state = INITIAL_STATE, action) => {
             set('currentStory.settings', newStatus ? {...settings} : (action.withSave ? settings : state.oldSettings))
         )(state);
     }
+    case TOGGLE_WEBPAGE_CREATOR:
+        return set('showWebPageCreator', action.show, state);
     case UPDATE: {
         const { path: rawPath, mode } = action;
         let { element: newElement } = action;
