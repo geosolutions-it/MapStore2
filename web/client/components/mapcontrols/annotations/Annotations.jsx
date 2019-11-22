@@ -260,8 +260,8 @@ class Annotations extends React.Component {
                         </Button>
                     </Col>
                 </Row>
-                {this.props.mode === "list" && <span><Row>
-                    <Col xs={12} className="text-center">
+                {this.props.mode === "list" && <span><Row style={{margin: "auto"}}>
+                    <Col xs={12} style={{margin: "auto"}} className="text-center">
                         <Toolbar
                             btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                             buttons={[
