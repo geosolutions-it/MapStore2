@@ -2041,7 +2041,8 @@
                 "credits": "Créditos",
                 "mapFilter": "Filtrar mapas",
                 "videoFilter": "Filtrar videos",
-                "imageFilter": "Filtrar imágenes"
+                "imageFilter": "Filtrar imágenes",
+                "import": "Importar recurso a store locale"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media From",

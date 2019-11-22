@@ -43,7 +43,7 @@ export default withMapEditing(({
             onClick: () => setEditingMedia(true)
         },
         {
-            glyph: 'import',
+            glyph: 'upload',
             tooltipId: 'mediaEditor.mediaPicker.import',
             visible: selectedSource.type === SourceTypes.GEOSTORE && mediaType === MediaTypes.MAP && !isNil(selectedItem),
             onClick: () => importInLocal({resource: selectedItem, mediaType: localSource})

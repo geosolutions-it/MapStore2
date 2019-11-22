@@ -2045,7 +2045,8 @@
                 "credits": "Credits",
                 "mapFilter": "Filter maps",
                 "videoFilter": "Filter videos",
-                "imageFilter": "Filter images"
+                "imageFilter": "Filter images",
+                "import": "Import resource to local store"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media From",
