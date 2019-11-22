@@ -72,7 +72,7 @@ export const handleToolbar = withHandlers({
 /**
  * It adds toolbar button and handling of layer selection
  */
-const ResetButton = () => (<ConfirmButton
+const ResetButton = (props) => (<ConfirmButton
     glyph="repeat"
     visible
     bsStyle= "primary"
@@ -80,6 +80,7 @@ const ResetButton = () => (<ConfirmButton
     tooltipId="geostory.contentToolbar.resetMap"
     confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
     confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}
+    {...props}
 />);
 
 export const withToolbar = compose(
@@ -90,9 +91,9 @@ export const withToolbar = compose(
             disabled: !pendingChanges,
             tooltipId: "geostory.contentToolbar.saveChanges",
             onClick: toggleEditing
-        }, () => ({
+        }, {
             renderButton: <ResetButton disabled={disableReset} onClick={onReset}/>
-        })]
+        }]
     })),
     withNodeSelection,      // Node selection
     withStateHandlers(() => ({'editNode': undefined}), { // Node enable editing
