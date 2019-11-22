@@ -24,7 +24,7 @@ const saveContextErrorStatusToMessage = (status) => {
     default:
         return 'contextCreator.saveErrorNotification.defaultMessage';
     }
-}
+};
 
 export const saveContextResource = (action$, store) => action$
     .ofType(SAVE_CONTEXT)
