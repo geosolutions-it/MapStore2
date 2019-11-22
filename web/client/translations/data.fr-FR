@@ -2079,7 +2079,7 @@
         "contextManager": {
             "title": "Gérer les contextes",
             "gridTitle": "Contextes",
-            "searchPlaceholder": "contextes de recherche...",
+            "searchPlaceholder": "rechercher...",
             "newContext": "Nouveau contexte",
             "editContextTooltip": "Modifier le contexte"
         },
