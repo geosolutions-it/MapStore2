@@ -870,7 +870,15 @@ describe('Test the layers reducer', () => {
         const newgroup1 = state.groups[0].nodes[0].nodes[1];
         const newgroup2 = state.groups[0].nodes[0].nodes[2];
         expect(newgroup1.title).toBe('newgroup');
+        expect(newgroup1.name).toExist();
+        expect(newgroup1.name.length).toBe(36);
+        expect(newgroup1.id).toExist();
+        expect(newgroup1.id.length).toBe(6 + 6 + 36 + 2);
         expect(newgroup2.title).toBe('newgroup');
+        expect(newgroup2.name).toExist();
+        expect(newgroup2.name.length).toBe(36);
+        expect(newgroup2.id).toExist();
+        expect(newgroup2.id.length).toBe(6 + 6 + 36 + 2);
         expect(newgroup1.name).toNotBe(newgroup2.name);
         expect(newgroup1.id).toNotBe(newgroup2.id);
     });
