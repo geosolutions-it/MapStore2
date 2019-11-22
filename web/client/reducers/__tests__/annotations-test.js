@@ -39,7 +39,8 @@ const {
     highlightPoint, changeFormat,
     toggleStyle,
     setStyle,
-    updateSymbols
+    updateSymbols,
+    setEditingFeature
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -818,6 +819,31 @@ describe('Test the annotations reducer', () => {
         expect(state.selected).toBe(null);
         expect(state.unsavedGeometry).toBe(false);
         expect(state.drawing).toBe(false);
+    });
+
+    it('setEditingFeature', () => {
+        const {point1, lineString1} = testFeatures;
+        const feature = {
+            type: "FeatureCollection",
+            features: [point1, lineString1],
+            properties: { id: '1asdfads' },
+            style: {}
+        };
+        const state = annotations({
+            selected: {},
+            originalStyle: null
+        }, setEditingFeature(feature));
+
+        expect(state).toExist();
+        expect(state.editing).toExist();
+        expect(state.editing.features).toEqual(feature.features);
+        expect(state.editing.tempFeatures).toEqual(feature.features);
+        expect(state.editing.properties.canEdit).toBe(false);
+        expect(state.editing.newFeature).toBe(true);
+        expect(state.coordinateEditorEnabled).toBe(false);
+        expect(state.drawing).toBe(false);
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBe(null);
     });
 
     it('resetCoordEditor in creation mode of a Point ', () => {

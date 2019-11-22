@@ -146,7 +146,7 @@ const mergeGeometry = (features) => {
 const createNewFeature = (action) => {
     return {
         type: "FeatureCollection",
-        properties: assign({}, action.fields, {id: action.id}, action.properties ),
+        properties: assign({}, action.properties, action.fields, {id: action.id}),
         features: action.geometry,
         style: assign({}, action.style, {highlight: false})
     };

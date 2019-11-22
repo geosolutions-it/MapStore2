@@ -20,7 +20,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS,
     UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
-    ADD_NEW_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
+    ADD_NEW_FEATURE, SET_EDITING_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
     CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS
 } = require('../actions/annotations');
 
@@ -329,6 +329,19 @@ function annotations(state = { validationErrors: {} }, action) {
         }
         newState = set(`editing.tempFeatures`, newState.editing.features, newState);
 
+        return assign({}, newState, {
+            coordinateEditorEnabled: false,
+            drawing: false,
+            unsavedGeometry: false,
+            selected: null
+        });
+    }
+    case SET_EDITING_FEATURE: {
+        if (!action.feature || action.feature.type !== 'FeatureCollection') {
+            return state;
+        }
+        const feature = set('newFeature', true, set('properties.canEdit', false, set('tempFeatures', action.feature.features, action.feature)));
+        const newState = set('editing', feature, state);
         return assign({}, newState, {
             coordinateEditorEnabled: false,
             drawing: false,
