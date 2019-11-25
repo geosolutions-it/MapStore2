@@ -340,8 +340,9 @@ function annotations(state = { validationErrors: {} }, action) {
         if (!action.feature || action.feature.type !== 'FeatureCollection') {
             return state;
         }
-        const feature = set('newFeature', true, set('properties.canEdit', false, set('tempFeatures', action.feature.features, action.feature)));
-        const newState = set('editing', feature, state);
+        const feature = set('features', action.feature.features.map(x => set('properties.canEdit', false, x)), action.feature);
+        const newFeature = set('newFeature', true, set('properties.canEdit', false, set('tempFeatures', feature.features, feature)));
+        const newState = set('editing', newFeature, state);
         return assign({}, newState, {
             coordinateEditorEnabled: false,
             drawing: false,

@@ -10,6 +10,7 @@ const expect = require('expect');
 const annotations = require('../annotations');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../utils/AnnotationsUtils');
 const {isEmpty} = require('lodash');
+const {set} = require('../../utils/ImmutableUtils');
 
 const testFeatures = {
     point1: {
@@ -836,14 +837,19 @@ describe('Test the annotations reducer', () => {
 
         expect(state).toExist();
         expect(state.editing).toExist();
-        expect(state.editing.features).toEqual(feature.features);
-        expect(state.editing.tempFeatures).toEqual(feature.features);
-        expect(state.editing.properties.canEdit).toBe(false);
+        expect(state.editing.type).toBe('FeatureCollection');
+        expect(state.editing.properties).toEqual({ id: '1asdfads', canEdit: false });
         expect(state.editing.newFeature).toBe(true);
         expect(state.coordinateEditorEnabled).toBe(false);
         expect(state.drawing).toBe(false);
         expect(state.unsavedGeometry).toBe(false);
         expect(state.selected).toBe(null);
+        expect(state.editing.style).toEqual({});
+        expect(state.editing.features.length).toBe(2);
+        state.editing.features.map((x, i) => {
+            expect(x).toEqual(set('properties.canEdit', false, feature.features[i]));
+        });
+        expect(state.editing.tempFeatures).toEqual(state.editing.features);
     });
 
     it('resetCoordEditor in creation mode of a Point ', () => {
