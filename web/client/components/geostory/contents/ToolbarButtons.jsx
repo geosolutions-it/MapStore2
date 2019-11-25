@@ -109,12 +109,10 @@ export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = 
             remove(path);
         }} />
     );
-    // { align, sectionType, size, src, update = () => { } }
 export const EditURLButtonToolbar = (props) => {
     return (
         <ToolbarDropdownInputButton
             glyph="pencil"
-            pullRight={(props.align === "right" || props.size === "full" || props.size === "large") && !props.sectionType}
             value={props.src}
             onChange={({ target: { value }}) => props.update('src', value)}
             tooltipId="geostory.contentToolbar.remove"

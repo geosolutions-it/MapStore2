@@ -1996,7 +1996,7 @@
             },
             "webPageCreator": {
                 "title": "Pagina web",
-                "saveButton": "Salvare",
+                "saveButton": "Salva",
                 "url": {
                     "label": "URL"
                 }
