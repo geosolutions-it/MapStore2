@@ -22,6 +22,10 @@ export class WebPageCreator extends React.PureComponent {
         onChange: PropTypes.func
     }
 
+    state = {
+        url: ''
+    }
+
     render() {
         const { show, onClose, onChange } = this.props;
         const { url } = this.state;

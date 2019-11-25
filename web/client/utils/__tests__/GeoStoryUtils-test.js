@@ -314,7 +314,7 @@ describe("GeoStory Utils", () => {
         expect(filterResources(resources, "re").length).toBe(2);
         expect(filterResources(resources, "e").length).toBe(3);
     });
-    it.only('test isWebPageSection', () => {
+    it('test isWebPageSection', () => {
         const element = {
             type: SectionTypes.PARAGRAPH,
             contents: [
@@ -328,7 +328,7 @@ describe("GeoStory Utils", () => {
         expect(isWebPageSection(element)).toBe(true);
     });
 
-    it.only('test getWebPageComponentHeight', () => {
+    it('test getWebPageComponentHeight', () => {
         expect(getWebPageComponentHeight('small', 1000)).toBe(400);
         expect(getWebPageComponentHeight('medium', 1000)).toBe(600);
         expect(getWebPageComponentHeight('large', 1000)).toBe(800);

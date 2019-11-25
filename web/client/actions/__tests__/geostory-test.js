@@ -174,7 +174,7 @@ describe('test geostory action creators', () => {
         expect(retVal.prop).toBe(prop);
         expect(retVal.value).toBe(value);
     });
-    it.only('toggleWebPageCreator', () => {
+    it('toggleWebPageCreator', () => {
         const open = true;
         const retVal = toggleWebPageCreator(open);
         expect(retVal).toExist();
