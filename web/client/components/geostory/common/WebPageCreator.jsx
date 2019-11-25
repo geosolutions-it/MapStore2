@@ -12,6 +12,7 @@ import { FormControl, ControlLabel, FormGroup, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { toggleWebPageCreator, setWebPageUrl } from '../../../actions/geostory';
 import Message from '../../../components/I18N/Message';
+import get from 'lodash/get';
 
 export const WebPageCreator = ({
     show = false,
@@ -49,7 +50,7 @@ export const WebPageCreator = ({
 
 export default connect(
     (state) => ({
-        show: state.geostory.showWebPageCreator
+        show: get(state, 'geostory.showWebPageCreator')
     }),
     {
         onClose: toggleWebPageCreator.bind(null, false),

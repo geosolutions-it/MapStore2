@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Story from '../Story';
+import { Provider } from 'react-redux';
 
 describe('Story component', () => {
     beforeEach((done) => {
@@ -22,7 +23,7 @@ describe('Story component', () => {
         setTimeout(done);
     });
     it('Story rendering with defaults', () => {
-        ReactDOM.render(<Story />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={{ getState: () => {}, subscribe: () => {} }}><Story /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-cascade-story')).toExist();
     });

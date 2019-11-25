@@ -132,6 +132,7 @@ describe("GeoStory Utils", () => {
         expect(ContentTypes).toEqual({
             TEXT: "text",
             MEDIA: "media",
+            WEBPAGE: "webpage",
             COLUMN: "column"
         });
     });
