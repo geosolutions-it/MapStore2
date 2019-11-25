@@ -20,7 +20,9 @@ export default (state = {}, action) => {
         return {};
     }
     case CHANGE_ATTRIBUTE: {
-        return set(`newContext.${action.key}`, action.value, state);
+        return action.key === 'name' ?
+            set('resource.name', action.value, state) :
+            set(`newContext.${action.key}`, action.value, state);
     }
     default:
         return state;

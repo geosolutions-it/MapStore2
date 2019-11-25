@@ -32,21 +32,21 @@ export const saveContextResource = (action$, store) => action$
         const state = store.getState();
         const context = newContextSelector(state);
         const resource = resourceSelector(state);
-        const newResource = resource ? {
+        const newResource = resource && resource.id ? {
             ...omit(resource, 'name', 'description'),
             data: context,
             metadata: {
-                name: context && context.name || resource && resource.name,
+                name: resource && resource.name,
                 description: resource.description
             }
         } : {
             category: 'CONTEXT',
             data: context,
             metadata: {
-                name: context && context.name
+                name: resource && resource.name
             }
         };
-        return (resource ? updateResource : createResource)(newResource)
+        return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.of(
                 contextSaved(rid),
                 push(destLocation || `/context/${context.name}`),
