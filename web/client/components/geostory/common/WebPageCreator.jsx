@@ -50,7 +50,7 @@ export class WebPageCreator extends React.PureComponent {
                         label="URL"
                         type="text"
                         value={url}
-                        onChange={({ target: {value} }) => this.updateURL(value) }
+                        onChange={this.updateURL}
                     />
                 </FormGroup>
             </Dialog>
