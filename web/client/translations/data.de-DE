@@ -1900,6 +1900,7 @@
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
+            "addWebPageSection": "Webseitenabschnitt hinzufügen",
             "emptyTitle": "Diese Geschichte ist leer",
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {

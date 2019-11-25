@@ -1900,6 +1900,7 @@
             "addTextContent": "Aggiungi testo",
             "addMediaContent": "Aggiungi Media",
             "zoomToContent": "Zoom al contenuto",
+            "addWebPageSection": "Aggiungi sezione pagina Web",
             "emptyTitle": "Questa storia è vuota",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
