@@ -13,40 +13,50 @@ import { connect } from 'react-redux';
 import { toggleWebPageCreator, setWebPageUrl } from '../../../actions/geostory';
 import Message from '../../../components/I18N/Message';
 import get from 'lodash/get';
+import PropTypes from 'prop-types';
 
-export const WebPageCreator = ({
-    show = false,
-    onChange = () => {},
-    onClose = () => {}
-}) => {
-    const [url, setUrl] = React.useState('');
+export class WebPageCreator extends React.PureComponent {
+    static propTypes = {
+        show: PropTypes.bool,
+        onClose: PropTypes.func,
+        onChange: PropTypes.func
+    }
 
-    return (
-        <Dialog
-            modal
-            show={show}
-            title={<Message msgId="geostory.webPageCreator.title" />}
-            onClose={onClose}
-            footer={(
-                <Button bsSize="small" onClick={() => onChange(url)} >
-                    <Message msgId="geostory.webPageCreator.saveButton" />
-                </Button>
-            )}
-        >
-            <FormGroup controlId="WEBPAGE_URL">
-                <ControlLabel>
-                    <Message msgId="geostory.webPageCreator.url.label" />
-                </ControlLabel>
-                <FormControl
-                    label="URL"
-                    type="text"
-                    value={url}
-                    onChange={({ target: {value} }) => setUrl(value) }
-                />
-            </FormGroup>
-        </Dialog>
-    );
-};
+    render() {
+        const { show, onClose, onChange } = this.props;
+        const { url } = this.state;
+
+        return (
+            <Dialog
+                modal
+                show={show}
+                title={<Message msgId="geostory.webPageCreator.title" />}
+                onClose={onClose}
+                footer={(
+                    <Button bsSize="small" onClick={() => onChange(url)} >
+                        <Message msgId="geostory.webPageCreator.saveButton" />
+                    </Button>
+                )}
+            >
+                <FormGroup controlId="WEBPAGE_URL">
+                    <ControlLabel>
+                        <Message msgId="geostory.webPageCreator.url.label" />
+                    </ControlLabel>
+                    <FormControl
+                        label="URL"
+                        type="text"
+                        value={url}
+                        onChange={({ target: {value} }) => this.updateURL(value) }
+                    />
+                </FormGroup>
+            </Dialog>
+        );
+    }
+
+    updateURL = ({ target: { value: url }}) => {
+        this.setState({ url });
+    }
+}
 
 export default connect(
     (state) => ({
