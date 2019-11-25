@@ -186,7 +186,7 @@ class GroupDialog extends React.Component {
         let availableUsers = this.props.availableUsers.filter((user) => findIndex(this.getCurrentGroupMembers(), member => member.id === user.id) < 0).map(u => ({ value: u.id, label: u.name }));
         const pagination = {
             firstPage: this.selectMemberPage === 0,
-            lastPage: (this.selectMemberPage + PAGINATION_LIMIT) >= this.props.availableUsersCount,
+            lastPage: (this.selectMemberPage + PAGINATION_LIMIT) > this.props.availableUsersCount,
             loadNextPage: this.loadNextPageMembers,
             loadPrevPage: this.loadPrevPageMembers,
             paginated: true
