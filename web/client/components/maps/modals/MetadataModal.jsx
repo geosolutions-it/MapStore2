@@ -455,6 +455,8 @@ class MetadataModal extends React.Component {
                                     metadata={this.props.metadata}
                                     nameFieldText={<Message msgId="map.name" />}
                                     descriptionFieldText={<Message msgId="map.description" />}
+                                    createdAtFieldText={<Message msgId="saveDialog.createdAt" />}
+                                    modifiedAtFieldText={<Message msgId="saveDialog.modifiedAt" />}
                                     namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}
                                     descriptionPlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.descriptionPlaceholder") || "Map Description"}
                                 />

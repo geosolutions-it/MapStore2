@@ -15,7 +15,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const moment = require('moment');
 const {FormControl: BFormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const ConfigUtils = require('../../../utils/ConfigUtils');
 const FormControl = require('../../misc/enhancers/localizedProps')('placeholder')(BFormControl);
 
 /**
@@ -52,7 +54,14 @@ class Metadata extends React.Component {
     };
 
     renderDate = (date) => {
-        return date && this.context.intl && `${this.context.intl.formatDate(date)} ${this.context.intl.formatTime(date)}` || '';
+        if (!date) {
+            return '';
+        }
+        const dateFormat = ConfigUtils.getConfigProp('forceDateFormat');
+        const timeFormat = ConfigUtils.getConfigProp('forceTimeFormat');
+        const newDate = dateFormat ? moment(date).format(dateFormat) : this.context.intl ? this.context.intl.formatDate(date) : '';
+        const time = timeFormat ? moment(date).format(timeFormat) : this.context.intl ? this.context.intl.formatTime(date) : '';
+        return `${newDate} ${time}` || '';
     }
 
     render() {
@@ -83,10 +92,10 @@ class Metadata extends React.Component {
                 <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
                 <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.createdAt) || ""}</ControlLabel>
             </FormGroup>
-            {this.props.resource && this.props.resource.modifiedAt && <FormGroup>
+            <FormGroup>
                 <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
-                <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt) || ""}</ControlLabel>
-            </FormGroup>}
+                <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt || this.props.resource.createdAt) || ""}</ControlLabel>
+            </FormGroup>
         </form>);
     }
 
