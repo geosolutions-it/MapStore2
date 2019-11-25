@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {withProps, compose, withHandlers, withStateHandlers, branch, withPropsOnChange} from 'recompose';
+import {withProps, compose, withHandlers, withStateHandlers, branch, withPropsOnChange, mapPropsStream, createEventHandler} from 'recompose';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import { find, isEqual} from 'lodash';
+import uuid from "uuid";
+
 
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
 import {resourcesSelector, getCurrentFocusedContentEl} from '../../../../selectors/geostory';
@@ -147,3 +149,47 @@ export const withConfirmClose = compose(
         }))
     )
 );
+
+/**
+ * Add local map state management to map component
+ */
+export const withLocalMapState  = mapPropsStream(props$ => {
+    const { stream: onMapViewChanges$, handler: onMapViewLocalChanges} = createEventHandler();
+    return props$
+        .pluck('map')
+        .distinctUntilChanged((a, b ) => isEqual(a, b))
+        .switchMap((map) => {
+            return onMapViewChanges$.map((localMapState) => {
+                return { map: {...map, ...localMapState}};
+            }).startWith({map});
+        })
+        .combineLatest(props$, ({map} = {}, props = {}) => {
+            return {
+                ...props,
+                onMapViewLocalChanges,
+                map
+            };
+        });
+});
+// current implementation will update the map only if the movement
+// between 12 decimals in the reference system to avoid rounded value
+// changes due to float mathematic operations.
+const isNearlyEqual = function(a, b) {
+    if (a === undefined || b === undefined) {
+        return false;
+    }
+    return a.toFixed(12) - b.toFixed(12) === 0;
+};
+/**
+ * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
+ */
+export const withMapEditingAndLocalMapState = withHandlers( {
+    onMapViewChanges: ({update, editMap = false, onMapViewLocalChanges, map: {center: oCenter, zoom: oZoom} = {}} = {}) => ({center, zoom, mapStateSource}) => {
+        const equalCenter =  isNearlyEqual(oCenter.x, center.x) && isNearlyEqual(oCenter.y, center.y);
+        if (editMap && !(equalCenter && oZoom === zoom)) {
+            update("map", {center, zoom, mapStateSource: uuid()}, 'merge');
+        } else {
+            onMapViewLocalChanges({center, zoom, mapStateSource});
+        }
+    }
+});
