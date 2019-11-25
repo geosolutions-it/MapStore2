@@ -26,7 +26,7 @@ By this button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> ope
 
     <img src="../img/managing-user-rights/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-    Clicking on the button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> opens a panel where you can write the details of the map and the [Text Editor Toolbar](text-editor-toolbar.md) appears, allowing the user to edit his text:
+    Clicking on the button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> opens a panel where you can write the details of the map and the [Text Editor Toolbar](text-editor-details.md) appears, allowing the user to edit his text:
 
     <img src="../img/managing-user-rights/details_panel.jpg" class="ms-docimage"/>
 
