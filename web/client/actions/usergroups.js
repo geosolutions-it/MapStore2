@@ -289,11 +289,12 @@ function searchUsersSuccessLoading() {
         status: STATUS_LOADING
     };
 }
-function searchUsersSuccess(users) {
+function searchUsersSuccess(users, count = 0) {
     return {
         type: SEARCHUSERS,
         status: STATUS_SUCCESS,
-        users
+        users,
+        count: count
     };
 }
 function searchUsersError(error) {
@@ -308,14 +309,16 @@ function searchUsers(text = "*", start = 0, limit = 5, options = {}, jollyChar =
         dispatch(searchUsersSuccessLoading(text, start, limit));
         return API.getUsers(jollyChar + text + jollyChar, {...options, params: {start, limit}}).then((response) => {
             let users;
+            let userCount = 0;
             // this because _.get returns an array with an undefined element instead of null
             if (!response || !response.ExtUserList || !response.ExtUserList.User) {
                 users = [];
             } else {
                 users = get(response, "ExtUserList.User");
+                userCount = get(response, "ExtUserList.UserCount");
             }
             users = Array.isArray(users) ? users : [users];
-            dispatch(searchUsersSuccess(users));
+            dispatch(searchUsersSuccess(users, userCount));
         }).catch((error) => {
             dispatch(searchUsersError(error));
         });

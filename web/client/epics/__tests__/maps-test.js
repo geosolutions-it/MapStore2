@@ -10,6 +10,7 @@ var expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
+const {CALL_HISTORY_METHOD} = require('connected-react-router');
 const {
     saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED,
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
@@ -596,8 +597,8 @@ describe('Create and update flow using persistence api', () => {
         Persistence.setApi("geostore");
     });
     it('test create flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource( {}), actions => {
-            expect(actions.length).toBe(5);
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource( {}), actions => {
+            expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
                 case SAVING_MAP:
@@ -605,6 +606,7 @@ describe('Create and update flow using persistence api', () => {
                 case MAP_SAVED:
                 case SHOW_NOTIFICATION:
                 case MAP_CREATED:
+                case CALL_HISTORY_METHOD:
                     break;
                 default:
                     expect(true).toBe(false);

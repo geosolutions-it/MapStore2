@@ -23,12 +23,13 @@ const feedbackMaskPluginSelector = createSelector([
     feedbackMaskSelector,
     isLoggedIn,
     state => !get(state, 'security')
-], ({loading, enabled, status, mode, errorMessage}, login, alwaysVisible) => ({
+], ({loading, enabled, status, mode, errorMessage, errorMessageParams}, login, alwaysVisible) => ({
     loading,
     enabled,
     status,
     mode,
     errorMessage,
+    errorMessageParams,
     login,
     alwaysVisible,
     showHomeButton: !alwaysVisible

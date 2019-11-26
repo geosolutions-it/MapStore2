@@ -260,8 +260,8 @@ class Annotations extends React.Component {
                         </Button>
                     </Col>
                 </Row>
-                {this.props.mode === "list" && <span><Row>
-                    <Col xs={12} className="text-center">
+                {this.props.mode === "list" && <span><Row style={{margin: "auto"}}>
+                    <Col xs={12} style={{margin: "auto"}} className="text-center">
                         <Toolbar
                             btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                             buttons={[
@@ -288,7 +288,7 @@ class Annotations extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12}>
+                    <Col xs={12} style={{padding: "0 15px"}}>
                         <Filter
                             filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
                             filterText={this.props.filter}

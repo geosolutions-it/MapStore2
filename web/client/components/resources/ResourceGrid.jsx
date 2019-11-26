@@ -40,12 +40,14 @@ module.exports = ({
     edit,
     user,
     editDataEnabled,
+    shareToolEnabled,
     cardTooltips,
     onEdit = () => {},
     onEditData = () => {},
     setEdit = () => {},
     onSaveSuccess = () => {},
     onDelete = () => {},
+    onShare = () => {},
     onUpdateAttribute = () => {}
 }) => (
     <Grid id={id} fluid={fluid} className={'ms-grid-container ' + className} style={style}>
@@ -61,9 +63,11 @@ module.exports = ({
                             viewerUrl={viewerUrl}
                             resource={res}
                             editDataEnabled={editDataEnabled}
+                            shareToolEnabled={shareToolEnabled}
                             onEdit={onEdit}
                             onEditData={onEditData}
                             onDelete={onDelete}
+                            onShare={onShare}
                             tooltips={cardTooltips}
                             onUpdateAttribute={onUpdateAttribute} />
                     </Col>))

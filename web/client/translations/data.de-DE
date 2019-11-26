@@ -388,6 +388,7 @@
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
                     "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li> <li>Die Projektion der Karte ist nicht konfiguriert</li></ul> <p>",
+                    "projectionError": "Die Projektion {projection} der Karte ist nicht konfiguriert",
                     "title" : "Karte kann nicht angezeigt werden"
                 }
             }
@@ -1044,6 +1045,7 @@
           "creatingGroup": "Erstellen...",
           "groupMembers": "Mitglied:",
           "addMember": "Mitglied hinzufügen",
+          "selectMemberPlaceholder": "Mitglied auswählen ...",
           "noUsers": "Keine Benutzer für diese Gruppe gefunden",
           "errorSaving": "Es gab einen Fehler beim Speichern dieser Gruppe",
           "errorDelete": "Es gab einen Fehler beim Löschen dieser Gruppe",
@@ -2087,7 +2089,7 @@
         "contextManager": {
             "title": "Kontexte verwalten",
             "gridTitle": "Kontexte",
-            "searchPlaceholder": "suchkontexte...",
+            "searchPlaceholder": "suche...",
             "newContext": "Neuer Kontext",
             "editContextTooltip": "Kontext bearbeiten"
         },

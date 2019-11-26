@@ -388,6 +388,7 @@
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte non accessible",
                     "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "projectionError": "La projection {projection} de la carte n'est pas configurée",
                     "title" : "La carte ne peut pas être vue"
                 }
             }
@@ -1044,6 +1045,7 @@
           "creatingGroup": "Création...",
           "groupMembers": "Membres:",
           "addMember": "Ajouter un membre:",
+          "selectMemberPlaceholder": "Sélectionnez un membre ...",
           "noUsers": "Aucun utilisateur pour ce groupe",
           "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
           "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
@@ -2087,7 +2089,7 @@
         "contextManager": {
             "title": "Gérer les contextes",
             "gridTitle": "Contextes",
-            "searchPlaceholder": "contextes de recherche...",
+            "searchPlaceholder": "rechercher...",
             "newContext": "Nouveau contexte",
             "editContextTooltip": "Modifier le contexte"
         },

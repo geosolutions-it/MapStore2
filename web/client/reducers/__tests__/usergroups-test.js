@@ -168,10 +168,12 @@ describe('Test the usergroups reducer', () => {
         const state = usergroups({}, {
             type: SEARCHUSERS,
             users: [{name: "user1", id: 100}],
+            count: 1,
             status: STATUS_SUCCESS
         });
         expect(state.availableUsers).toExist();
         expect(state.availableUsers.length).toBe(1);
+        expect(state.availableUsersCount).toEqual(1);
         expect(state.availableUsersLoading).toBe(false);
         const stateError = usergroups({}, {
             type: SEARCHUSERS,

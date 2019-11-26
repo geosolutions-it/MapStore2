@@ -388,6 +388,7 @@
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
                     "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
+                    "projectionError": "La proiezione {projection} della mappa non è stata configurata",
                     "title" : "La mappa non può essere visualizzata"
                 }
             }
@@ -1044,6 +1045,7 @@
           "creatingGroup": "Creazione...",
           "groupMembers": "Membri:",
           "addMember": "Aggiungi Membro:",
+          "selectMemberPlaceholder": "Seleziona membro ...",
           "noUsers": "Nessun utente membro di questo gruppo",
           "errorSaving": "Si è verificato un errore salvando questo gruppo:",
           "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
@@ -2088,7 +2090,7 @@
         "contextManager": {
             "title": "Gestisci contesti",
             "gridTitle": "Contesti",
-            "searchPlaceholder": "contesti di ricerca...",
+            "searchPlaceholder": "cerca...",
             "newContext": "Nuovo contesto",
             "editContextTooltip": "Modifica contesto"
         },

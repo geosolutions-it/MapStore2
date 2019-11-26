@@ -24,9 +24,10 @@ const FitIcon = require('./FitIcon');
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)
  */
 module.exports = ({
-    style,
-    mainViewStyle,
-    contentStyle,
+    style = {},
+    mainViewStyle = {},
+    contentStyle = {},
+    imageStyle = {},
     glyph = "info-sign",
     iconFit,
     title,
@@ -38,7 +39,7 @@ module.exports = ({
     (<div className="empty-state-container" style={{height: iconFit ? "100%" : undefined, ...style}}>
         <div key="main-view" className="empty-state-main-view" style={{height: iconFit ? "100%" : undefined, ...mainViewStyle}} >
             {glyph
-                ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined}}>
+                ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined, ...imageStyle}}>
                     <FitIcon iconFit={iconFit} tooltip={tooltip} tooltipId={tooltipId} glyph={glyph} />
                 </div>
                 : null}

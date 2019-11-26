@@ -30,13 +30,13 @@ import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils
 
 import {isEqual, find, throttle, isArray, isNil} from 'lodash';
 
+
 import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
 
-
-export default class OpenlayersMap extends React.Component {
+class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         style: PropTypes.object,
@@ -596,3 +596,5 @@ export default class OpenlayersMap extends React.Component {
         });
     };
 }
+
+export default OpenlayersMap;

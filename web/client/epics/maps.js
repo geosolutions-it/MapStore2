@@ -9,6 +9,7 @@
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
+const {push} = require('connected-react-router');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED, mapSaveError, mapSaved, loadMapInfo } = require('../actions/config');
@@ -37,6 +38,7 @@ const {
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
 } = require('../selectors/map');
+const {mapTypeSelector} = require('../selectors/maptype');
 const {
     currentMapDetailsTextSelector, currentMapIdSelector,
     currentMapDetailsUriSelector, currentMapSelector,
@@ -312,14 +314,16 @@ const storeDetailsInfoEpic = (action$, store) =>
 /**
  * Create or update map resource with persistence api
  */
-const mapSaveMapResourceEpic = (action$) =>
+const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => (!resource.id ? createResource(resource) : updateResource(resource))
             .switchMap((rid) => Rx.Observable.from([
                 ...(resource.id ? [loadMapInfo(rid)] : []),
                 resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
                 mapSaved(),
-                ...(!resource.id ? [mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data)]
+                ...(!resource.id ? [
+                    mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                    push(`/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
                     : [])
             ])
                 .merge(

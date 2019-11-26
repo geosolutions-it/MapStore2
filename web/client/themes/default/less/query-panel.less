@@ -6,6 +6,7 @@
 	box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
 }
 
+
 .select-in-string {
     .rw-combobox {
         display: inline-block;
@@ -96,11 +97,11 @@
             .panel-title {
                 font-weight: bold;
             }
-
         }
 
         .mapstore-conditions-group {
             margin-bottom: @square-btn-small-size /2;
+            padding: 5px;
             .col-xs-2 {
                 padding: 0;
             }
@@ -129,7 +130,7 @@
         .filter-logig-header-text {
             height: 52px;
         }
-        & > div {
+        & > div, & > div.col-xs-2 {
             padding-left: 7px;
         }
         & > div:not(:last-child) {
@@ -143,6 +144,10 @@
     }
     .filter-field-fixed-row {
         height: 52px;
+    }
+    .inline-form {
+        display: flex;
+        align-items: center;
     }
 }
 
