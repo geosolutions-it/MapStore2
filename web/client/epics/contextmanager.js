@@ -13,7 +13,6 @@ import {error} from '../actions/notifications';
 import {deleteResource} from '../api/persistence';
 
 import {searchTextSelector, searchOptionsSelector, totalCountSelector} from '../selectors/contextmanager';
-import {LOGIN_SUCCESS, LOGOUT} from '../actions/security';
 import {ATTRIBUTE_UPDATED} from '../actions/maps';
 import {CONTEXT_SAVED, clearContextCreator} from '../actions/contextcreator';
 import {SEARCH_CONTEXTS, DELETE_CONTEXT, EDIT_CONTEXT, SEARCH_RESET, CONTEXT_DELETED, RELOAD_CONTEXTS,
@@ -89,7 +88,7 @@ export const resetContextSearch = action$ => action$
     .switchMap(() => Rx.Observable.of(searchContexts('', {params: {start: 0, limit: 12}})));
 
 export const reloadOnContexts = (action$, store) => action$
-    .ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED, LOGIN_SUCCESS, LOGOUT)
+    .ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED)
     .delay(1000)
     .switchMap(() => Rx.Observable.of(searchContexts(
         searchTextSelector(store.getState()),
