@@ -143,6 +143,11 @@ export default {
         "Expander",
         "Undo",
         "Redo",
-        "SearchServicesConfig",
+        {
+            "name": "SearchServicesConfig",
+            "cfg": {
+                "containerClassName": "map-editor-search-config"
+            }
+        },
         "FeedbackMask"]
 };

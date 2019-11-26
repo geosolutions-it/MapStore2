@@ -2045,10 +2045,10 @@
                 "import": "Importar recurso a store locale"
             },
             "mediaform": {
-                "confirmExitTitle": "Cerrar el Media From",
+                "confirmExitTitle": "Cerrar el Media Form",
                 "confirmExitContent": "¿Descartar cambios pendientes?"
             },
-            "mapFrom": {
+            "mapForm": {
                 "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
             }
         },

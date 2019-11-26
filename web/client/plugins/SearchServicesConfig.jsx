@@ -35,6 +35,7 @@ const PropTypes = require('prop-types');
  * @prop {string} cfg.id identifier of the Plugin
  * @prop {object} cfg.panelStyle inline style for the panel
  * @prop {string} cfg.panelClassName className for the panel
+ * @prop {string} cfg.containerClassName className for the container
  */
 class SearchServicesConfigPanel extends React.Component {
     static propTypes = {
@@ -42,6 +43,7 @@ class SearchServicesConfigPanel extends React.Component {
         enabled: PropTypes.bool,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
+        containerClassName: PropTypes.string,
         closeGlyph: PropTypes.string,
         titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         toggleControl: PropTypes.func,
@@ -74,6 +76,7 @@ class SearchServicesConfigPanel extends React.Component {
             backgroundColor: "white"
         },
         panelClassName: "toolbar-panel",
+        containerClassName: '',
         closeGlyph: "1-close",
         titleText: <Message msgId="search.configpaneltitle" />,
         closePanel: () => {},
@@ -143,11 +146,11 @@ class SearchServicesConfigPanel extends React.Component {
     };
 
     render() {
-        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}} = this.props;
+        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}, containerClassName} = this.props;
         const Section = pages && pages[page] || null;
         return enabled ? (
             <Portal>
-                <Dialog id={id} style={{...panelStyle, display: enabled ? 'block' : 'none'}} className={panelClassName} draggable={false} modal>
+                <Dialog id={id} style={{...panelStyle, display: enabled ? 'block' : 'none'}} containerClassName={containerClassName}className={panelClassName} draggable={false} modal>
                     <span role="header">
                         <span>{titleText}</span>
                         { this.isDirty() ? (

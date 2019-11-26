@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
@@ -28,7 +27,7 @@ import Message from '../../components/I18N/Message';
  * @param {object} props.map current edited map
  * @param {string} props.owner current owner of map editor
  */
-const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}, save = () => {}, map, owner} = {}, {plugins}) => {
+const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}, save = () => {}} = {}, {plugins}) => {
     return (
         <Portal>
             <ResizableModal

@@ -2045,10 +2045,10 @@
                 "import": "Importer une ressource dans un magasin local"
             },
             "mediaform": {
-                "confirmExitTitle": "Fermer Media From",
+                "confirmExitTitle": "Fermer Media Form",
                 "confirmExitContent": "Supprimer les modifications en attente?"
             },
-            "mapFrom": {
+            "mapForm": {
                 "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko."
             }
         },

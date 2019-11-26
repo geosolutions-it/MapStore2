@@ -143,8 +143,9 @@ export const MapForm = ({
                 ) : null}
             <Thumbnail
                 onUpdate={updateThumb}
+                withLabel={false}
                 onError={setErrors}
-                message={<Message msgId="mediaEditor.mapFrom.thumbnailMessage"/>}
+                message={<Message msgId="mediaEditor.mapForm.thumbnailMessage"/>}
                 thumbnail={properties.thumbnail}
                 suggestion=""
                 maxFileSize={50000}

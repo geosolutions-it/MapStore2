@@ -24,7 +24,6 @@ describe('MapEditorModal component', () => {
     });
 
     it('MapEditorModal rendering with defaults config', () => {
-        debugger;
         ReactDOM.render(
             <Provider store={{subscribe: () => {}, getState: () => ({mapEditor: {open: true}})}}>
                 <MapEditorModal open/>

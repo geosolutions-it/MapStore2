@@ -2049,10 +2049,10 @@
                 "import": "Import resource to local store"
             },
             "mediaform": {
-                "confirmExitTitle": "Close Media From",
+                "confirmExitTitle": "Close Media Form",
                 "confirmExitContent": "Discard pending changes?"
             },
-            "mapFrom": {
+            "mapForm": {
                 "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb"
             }
         },

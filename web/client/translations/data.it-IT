@@ -2008,8 +2008,8 @@
             "saveSuccessMessage": "Salvata con successo"
         },
         "mapEditor": {
-            "modalTitle": "Map Editor",
-            "confirmExitTitle": "Chiudi Map Editor",
+            "modalTitle": "Editor di Mappa",
+            "confirmExitTitle": "Chiudi Editor di Mappa",
             "confirmExitContent": "Annullare le modifiche ed uscire?"
         },
         "mediaEditor": {
@@ -2020,7 +2020,7 @@
             "preview": "Anteprima",
             "apply": "Applica",
             "confirmExitTitle": "Chiudi Media Editor",
-            "confirmExitContent": "Annuallare le modifiche ed uscire?",
+            "confirmExitContent": "Annullare le modifiche ed uscire?",
             "mediaPicker": {
                 "services": "Servizi: ",
                 "clean": "Pulisci",
@@ -2043,13 +2043,13 @@
                 "mapFilter": "Filtra mappe",
                 "videoFilter": "Filtra video",
                 "imageFilter": "Filtra immagini",
-                "import": "Importa la risorsa nel local store"
+                "import": "Importa la risorsa localmente"
             },
             "mediaform": {
                 "confirmExitTitle": "Chiudi Media From",
                 "confirmExitContent": "Annuallare le modifiche ed uscire?"
             },
-            "mapFrom": {
+            "mapForm": {
                 "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB"
             }
         },

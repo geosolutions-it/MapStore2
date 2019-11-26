@@ -2045,10 +2045,10 @@
                 "import": "Ressource in lokalen Speicher importieren"
             },
             "mediaform": {
-                "confirmExitTitle": "Schließen Media From",
+                "confirmExitTitle": "Schließen Media Form",
                 "confirmExitContent": "Ausstehende Änderungen verwerfen?"
             },
-            "mapFrom": {
+            "mapForm": {
                 "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB"
             }
         },
