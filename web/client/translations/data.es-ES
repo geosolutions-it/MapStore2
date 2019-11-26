@@ -283,6 +283,7 @@
             "search": "buscar..."
         },
         "resources": {
+            "successSaved": "Este recurso se ha guardado correctamente",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
