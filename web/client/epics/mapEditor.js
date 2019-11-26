@@ -17,7 +17,7 @@ import { getConfigUrl } from '../utils/ConfigUtils';
 
 /**
  * On plugins show, handles the configuration of the map in the app state.
- * If map is an object this is considered to be a valid map configuration and is added to the app state
+ * If map is an object shape {map, id} this is considered to be a valid map configuration and is added to the app state
  * If map is a number It's considered to be an id and loaded from the store.
  * If map is undefined the new map is loaded from the store
  */
@@ -26,7 +26,7 @@ export const mapEditorConfigureMapState = (action$) =>
         .switchMap(({ map}) => {
             let loadAction;
             if (isObject(map)) {
-                const clonedMap = JSON.parse(JSON.stringify(map));
+                const clonedMap = JSON.parse(JSON.stringify(map.data));
                 // If not cloned gives an invariant violation because of ConfigUtils layer configuration modification
                 loadAction = configureMap({map: clonedMap, version: 2}, map.id);
             } else {

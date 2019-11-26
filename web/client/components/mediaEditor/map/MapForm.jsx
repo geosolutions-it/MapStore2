@@ -53,6 +53,10 @@ const enhance = compose(
     }),
     withState("initialResource", null, ({properties, selectedItem: {data = {}} = {}}) => ({...data, ...properties})),
     withHandlers({
+        openMapEditor: ({selectedItem, openMapEditor}) => () => {
+            const {id, ...data} = selectedItem.data;
+            openMapEditor('mediaEditor', {data, id});
+        },
         onSave: ({onSave, selectedItem: {data = {}} = {}, properties}) =>
             () => onSave( {...data, ...properties}),
         updateThumb: ({setProperties, properties}) =>
@@ -82,7 +86,6 @@ export const MapForm = ({
     onSave = () => {},
     updateThumb = () => {},
     messages,
-    selectedItem,
     openMapEditor,
     setErrors,
     thumbnailErrors = [],
@@ -122,8 +125,7 @@ export const MapForm = ({
                     {
                         glyph: 'pencil',
                         tooltipId: 'mediaEditor.mediaPicker.edit',
-                        visible: true,
-                        onClick: () => openMapEditor("mediaEditor", selectedItem.data)
+                        onClick: openMapEditor
                     }
                     ]} />
             </div>

@@ -11,13 +11,15 @@ import PropTypes from 'prop-types';
 
 import DefaultConfig  from './DefaultConfiguration';
 
-import enhancer from './enhancers/editor';
+import enhancer, {withResizeMap} from './enhancers/editor';
 
 import ResizableModal from '../../components/misc/ResizableModal';
 
 import Portal from '../../components/misc/Portal';
 
 import Message from '../../components/I18N/Message';
+
+const MapViewer = withResizeMap(MapViewerContainer);
 
 /**
  * Media Editor Modal. Contains the media picker
@@ -52,7 +54,7 @@ const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}
                         onClick: save
                     }
                 ]}>
-                <MapViewerContainer pluginsConfig={pluginsConfig} plugins={plugins}/>
+                <MapViewer pluginsConfig={pluginsConfig} plugins={plugins}/>
             </ResizableModal>
         </Portal>
     );

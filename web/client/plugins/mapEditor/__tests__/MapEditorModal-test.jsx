@@ -25,7 +25,7 @@ describe('MapEditorModal component', () => {
 
     it('MapEditorModal rendering with defaults config', () => {
         ReactDOM.render(
-            <Provider store={{subscribe: () => {}, getState: () => ({mapEditor: {open: true}})}}>
+            <Provider store={{subscribe: () => {}, dispatch: () => {}, getState: () => ({mapEditor: {open: true}})}}>
                 <MapEditorModal open/>
             </Provider>, document.getElementById("container"));
         expect(document.querySelector('.modal-fixed')).toExist();

@@ -48,7 +48,7 @@ describe('MapEditor Epics', () => {
     });
     it('mapEditorConfigureMapState show editor to configure passed map', (done) => {
         const NUM_ACTIONS = 4;
-        const map = {id: 10};
+        const map = {data: {}, id: 10};
         testEpic(mapEditorConfigureMapState, NUM_ACTIONS, show('mediaEditor', map), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
@@ -58,7 +58,7 @@ describe('MapEditor Epics', () => {
                 case CLEAR_LAYERS:
                     break;
                 case MAP_CONFIG_LOADED:
-                    expect(a.config).toEqual({map, version: 2});
+                    expect(a.config).toEqual({map: map.data, version: 2});
                     expect(a.mapId).toBe(10);
                     expect(a.legacy).toBe(true);
                     break;
