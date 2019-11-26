@@ -7,7 +7,7 @@
 */
 
 const { compose, defaultProps, withHandlers } = require('recompose');
-const { deleteGeostory, reloadGeostories } = require('../../actions/geostories');
+const { deleteGeostory, reloadGeostories, showSuccessNotification } = require('../../actions/geostories');
 const { updateAttribute, setFeaturedMapsLatestResource } = require('../../actions/maps'); // TODO: externalize
 const { userSelector } = require('../../selectors/security');
 const { createSelector } = require('reselect');
@@ -18,6 +18,7 @@ const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
         onDelete: deleteGeostory,
         reloadGeostories,
+        onShowSuccessNotification: showSuccessNotification,
         setFeaturedMapsLatestResource,
         onUpdateAttribute: updateAttribute
     }),
@@ -28,6 +29,9 @@ const Grid = compose(
             }
             if (props.setFeaturedMapsLatestResource) {
                 props.setFeaturedMapsLatestResource(resource);
+            }
+            if (props.onShowSuccessNotification) {
+                props.onShowSuccessNotification();
             }
         }
     }),

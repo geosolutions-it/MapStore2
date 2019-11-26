@@ -7,7 +7,7 @@
  */
 
 const {
-    MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING,
+    MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_ERROR, MAP_UPDATING,
     MAP_METADATA_UPDATED, MAP_DELETING, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING,
     MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED, SHOW_DETAILS} = require('../actions/maps');
@@ -187,17 +187,7 @@ function maps(state = {
         }
         return assign({}, state, {results: newMaps});
     }
-    case THUMBNAIL_ERROR: {
-        let newMaps = state.results === "" ? [] : [...state.results];
-
-        for (let i = 0; i < newMaps.length; i++) {
-            if (newMaps[i].id && newMaps[i].id === action.resourceId ) {
-                newMaps[i] = assign({}, newMaps[i], {updating: false});
-            }
-        }
-        return assign({}, state, {results: newMaps});
-    }
-    case RESET_UPDATING: {
+    case THUMBNAIL_ERROR: case MAP_ERROR: case RESET_UPDATING: {
         let newMaps = state.results === "" ? [] : [...state.results];
 
         for (let i = 0; i < newMaps.length; i++) {

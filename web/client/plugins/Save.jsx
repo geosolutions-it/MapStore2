@@ -15,6 +15,7 @@ import {mapInfoSelector} from '../selectors/map';
 import { isLoggedIn } from '../selectors/security';
 import { createPlugin } from '../utils/PluginsUtils';
 import {toggleControl} from '../actions/controls';
+import {mapSaved} from '../actions/config';
 import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveSelector = state => state.controls && state.controls.mapSave && state.controls.mapSave.enabled;
@@ -26,7 +27,8 @@ export default createPlugin('Save', {
             mapInfoSelector,
             (show, resource) => ({show, resource})),
         {
-            onClose: toggleControl.bind(null, 'mapSave', false)
+            onClose: toggleControl.bind(null, 'mapSave', false),
+            onMapSaveError: mapSaved
         }))(SaveBaseDialog),
     containers: {
         BurgerMenu: {

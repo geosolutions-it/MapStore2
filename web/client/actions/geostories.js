@@ -13,8 +13,10 @@ const DELETE_GEOSTORY = "GEOSTORIES:DELETE_GEOSTORY";
 const GEOSTORY_DELETED = "GEOSTORIES:GEOSTORY_DELETED";
 const RELOAD = "GEOSTORIES:RELOAD_GEOSTORIES";
 const LOADING = "GEOSTORIES:LOADING";
+const { success: successNotification } = require('./notifications');
 
 module.exports = {
+    showSuccessNotification: () => successNotification({ title: "success", message: "resources.successSaved" }),
     SET_GEOSTORIES_AVAILABLE,
     setGeostoriesAvailable: (available) => ({ type: SET_GEOSTORIES_AVAILABLE, available }),
     SEARCH_GEOSTORIES,

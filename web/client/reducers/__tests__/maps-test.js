@@ -10,7 +10,7 @@ const expect = require('expect');
 const maps = require('../maps');
 const {
     mapsLoaded, mapsLoading, loadError, mapCreated, mapUpdating,
-    mapMetadataUpdated, mapDeleting, attributeUpdated, thumbnailError, permissionsLoading,
+    mapMetadataUpdated, mapDeleting, attributeUpdated, thumbnailError, mapError, permissionsLoading,
     permissionsLoaded, saveMap, permissionsUpdated, resetUpdating,
     mapsSearchTextChanged, setShowMapDetails} = require('../../actions/maps');
 
@@ -95,7 +95,7 @@ describe('Test the maps reducer', () => {
         let state = maps(null, loadError("ERROR"));
         expect(state.loadingError).toBe("ERROR");
     });
-    it('on mapUpdating, mapMetadataUpdated, attributeUpdated, permissionsUpdated and resetUpdating, thumbnailError', () => {
+    it('on mapUpdating, mapMetadataUpdated, attributeUpdated, permissionsUpdated and resetUpdating, thumbnailError, mapError', () => {
         let state = maps(null, mapsLoaded(mapsSampleResult, "TEST", {
             start: 0,
             limit: 10
@@ -117,6 +117,8 @@ describe('Test the maps reducer', () => {
         state = maps(state, mapUpdating(sampleMap.id));
         expect(state.results[0].updating).toBe(true);
         state = maps(state, thumbnailError(sampleMap.id));
+        expect(state.results[0].updating).toBe(false);
+        state = maps(state, mapError(sampleMap.id));
         expect(state.results[0].updating).toBe(false);
     });
     it('on mapCreated, mapDeleting and mapDeleted', () => {

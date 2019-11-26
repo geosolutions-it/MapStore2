@@ -62,6 +62,9 @@ const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
 const FEATURED_MAPS_SET_LATEST_RESOURCE = "FEATURED_MAPS:SET_LATEST_RESOURCE";
 
+const { success: successNotification } = require('./notifications');
+
+const showSuccessNotification = () => successNotification({ title: "success", message: "resources.successSaved" });
 
 /**
  * saves details section in the resurce map on geostore
@@ -352,13 +355,15 @@ function thumbnailError(resourceId, error) {
 /**
  * When an error occurred on map creation
  * @memberof actions.maps
+ * @param  {number} resourceId the id of the resource
  * @param  {object} error the error occurred
  * @return {action}      type `MAP_ERROR`, with the arguments as they are named
  */
-function mapError(error) {
+function mapError(resourceId, error) {
     return {
         type: MAP_ERROR,
-        error
+        error,
+        resourceId
     };
 }
 
@@ -495,13 +500,14 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
     return (dispatch) => {
         GeoStoreApi.putResourceMetadata(resourceId, newName, newDescription, options).then(() => {
             dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
+            dispatch(showSuccessNotification());
             if (onReset) {
                 dispatch(onReset);
                 dispatch(onDisplayMetadataEdit(false));
                 dispatch(resetCurrentMap());
             }
         }).catch((e) => {
-            dispatch(thumbnailError(resourceId, e));
+            dispatch(mapError(resourceId, e));
         });
     };
 }
