@@ -31,14 +31,14 @@ const HTML = require('../I18N/HTML');
 
 const ResourceUnavailable = emptyState(
     ({enabled, login, status, alwaysVisible}) => enabled && alwaysVisible || enabled && login || enabled && status !== 403,
-    ({status, mode = 'map', glyphs = {map: '1-map', dashboard: 'dashboard'}, errorMessage, showHomeButton, homeButton}) => ({
+    ({status, mode = 'map', glyphs = {map: '1-map', dashboard: 'dashboard'}, errorMessage, errorMessageParams, showHomeButton, homeButton}) => ({
         glyph: glyphs[mode] || '1-map',
         title: status === 403 && <Message msgId={`${mode}.errors.loading.notAccessible`} />
         || status === 404 && <Message msgId={`${mode}.errors.loading.notFound`} />
         || <Message msgId={`${mode}.errors.loading.title`} />,
         description: (
             <div className="text-center">
-                {errorMessage && <Message msgId={errorMessage} />
+                {errorMessage && <Message msgId={errorMessage} msgParams={errorMessageParams} />
                 || <HTML msgId={`${mode}.errors.loading.unknownError`} />}
             </div>
         ),

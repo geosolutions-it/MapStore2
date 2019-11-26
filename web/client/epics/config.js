@@ -7,6 +7,7 @@
  */
 import {Observable} from 'rxjs';
 import axios from '../libs/ajax';
+import {get} from 'lodash';
 import {
     LOAD_MAP_CONFIG,
     LOAD_MAP_INFO,
@@ -18,13 +19,19 @@ import {
     loadMapInfo
 } from '../actions/config';
 import Persistence from '../api/persistence';
+import {projectionDefsSelector} from '../selectors/map';
 
-export const loadMapConfigAndConfigureMap = action$ =>
+export const loadMapConfigAndConfigureMap = (action$, {getState = () => {}} = {}) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap( ({configName, mapId}) =>
             Observable.defer(() => axios.get(configName))
                 .switchMap(response => {
                     if (typeof response.data === 'object') {
+                        const projectionDefs = projectionDefsSelector(getState());
+                        const projection = get(response, "data.map.projection", "EPSG:3857");
+                        if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
+                            return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
+                        }
                         return mapId ? Observable.of(configureMap(response.data, mapId), loadMapInfo(mapId)) :
                             Observable.of(configureMap(response.data, mapId));
                     }
