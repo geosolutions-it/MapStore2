@@ -155,7 +155,7 @@ class MetadataExplorerComponent extends React.Component {
             />
         );
         return (
-            <div id="catalog-root" style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+            <div id="catalog-root" className={this.props.active ? 'catalog-active' : ''} style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
                 <ContainerDimensions>
                     {({ width }) => (<DockPanel
                         open={this.props.active}

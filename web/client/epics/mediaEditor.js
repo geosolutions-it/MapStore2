@@ -6,6 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {Observable} from 'rxjs';
+import uuid from 'uuid';
+import {findKey} from 'lodash';
+
 import {
     loadMedia,
     loadMediaSuccess,
@@ -13,12 +16,21 @@ import {
     setAddingMedia,
     setEditingMedia,
     selectItem,
+    updateItem,
+    setMediaService,
     LOAD_MEDIA,
     SAVE_MEDIA,
-    SHOW
+    SHOW,
+    ADDING_MEDIA,
+    EDITING_MEDIA,
+    IMPORT_IN_LOCAL
 } from '../actions/mediaEditor';
 
-import { editingSelector, sourceIdSelector } from '../selectors/mediaEditor';
+import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
+
+import { editingSelector, sourceIdSelector, currentMediaTypeSelector, currentResourcesSelector, selectedItemSelector, sourcesSelector} from '../selectors/mediaEditor';
+import {MediaTypes } from '../utils/GeoStoryUtils';
+import {SourceTypes} from '../utils/MediaEditorUtils';
 
 import mediaAPI from '../api/media';
 
@@ -66,7 +78,93 @@ export const editorSaveUpdateMediaEpic = (action$, store) =>
                     return Observable.of(
                         saveMediaSuccess({mediaType, source, data, id}),
                         feedbackAction,
-                        loadMedia(undefined, mediaType, source),
+                        selectItem(id)
+                    );
+                });
+        });
+/**
+ * Handles new map creation
+ * On map save:
+ * Store created map in geostory
+ * select it
+ * hide mapEditor
+ * On cancel:
+ * Stops adding media
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const mediaEditorNewMap = (action$, {getState} ) =>
+    action$.ofType(MAP_EDITOR_SHOW)
+        .filter(({owner, map}) => owner === 'mediaEditor' && !map)
+        .switchMap(() => {
+            const switchToEditStream = action$.ofType(SAVE).switchMap(({map}) => {
+                const currentResources = currentResourcesSelector(getState()) || [];
+                const resId = uuid();
+                return Observable.from([loadMediaSuccess({
+                    mediaType: MediaTypes.MAP,
+                    sourceId: SourceTypes.GEOSTORY,
+                    params: {mediaType: MediaTypes.MAP},
+                    resultData: {resources: [{ id: resId, type: 'map', data: {type: 'map', id: resId, ...map}}, ...currentResources], totalCount: currentResources.length + 1}}),
+                selectItem(resId),
+                hideMapEditor()]);
+            }).takeUntil(action$.ofType(HIDE));
+            const cancelStream = action$.ofType(HIDE).map(() => setAddingMedia(false)).takeUntil(action$.ofType(SAVE));
+            return Observable.merge(cancelStream, switchToEditStream);
+        });
+/**
+* Handles map editing
+* On map save:
+* update current selected item
+* hide mapEditor
+* On cancel:
+* Stops adding media
+* @memberof epics.mediaEditor
+* @param {Observable} action$ stream of actions
+* @param {object} store redux store
+*/
+export const mediaEditorEditMap = (action$, {getState}) =>
+    action$.ofType(MAP_EDITOR_SHOW)
+        .filter(({owner, map}) => owner === 'mediaEditor' && !!map)
+        .switchMap(() => action$.ofType(SAVE)
+            .switchMap(({map: editedMap}) => {
+                const selectedItems = selectedItemSelector(getState());
+                return Observable.from([updateItem({...selectedItems, data: {...editedMap}}), hideMapEditor()]);
+            })
+            .takeUntil(action$.ofType(HIDE))
+        );
+
+/**
+ * Reload local geostory media on close editing or adding media
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const reloadMediaResources = (action$, {getState}) =>
+    action$.ofType(EDITING_MEDIA, ADDING_MEDIA)
+        .filter(({editing = true, adding = true}) => editing === false || adding === false)
+        .map(() => loadMedia(undefined, currentMediaTypeSelector(getState()), SourceTypes.GEOSTORY));
+
+/**
+ * Handle the import of a resource from en external source to local source
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+
+export const importInLocalSource = (action$, store) =>
+    action$.ofType(IMPORT_IN_LOCAL)
+        .switchMap(({resource, sourceType}) => {
+            const sources = sourcesSelector(store.getState());
+            const sourceId = findKey(sources, ({type}) => sourceType === type);
+            const handler = mediaAPI(sourceId).save(resource.type, sources[sourceId], resource, store);
+            return handler // store is required both for some custom auth, or to dispatch actions in case of local
+                // TODO: saving state (for loading spinners), errors
+                .switchMap(({id}) => {
+                    return Observable.of(
+                        setMediaService(sourceId),
+                        saveMediaSuccess({mediaType: resource.type, source: sources[sourceId], data: resource, id}),
+                        loadMedia(undefined, resource.type, sources[sourceId]),
                         selectItem(id)
                     );
                 });

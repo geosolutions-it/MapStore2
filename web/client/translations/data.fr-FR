@@ -339,7 +339,8 @@
             "message": "Déposez ou cliquez sur pour importer une image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Formats supportés: png/jpg",
-            "errorSize": "taille maximum autorisée: 500kb",
+            "errorSize": "Taille maximum autorisée: 500kb",
+            "errorCustomSize": "taille maximum autorisée: {maxFileSize}",
             "error": "L'image fournie n'est pas valide",
             "savedMapTitle": "Carte sauvegardée",
             "savedMapMessage": "La carte a été enregistrée correctement",
@@ -2006,6 +2007,11 @@
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Fermer l'éditeur de carte",
+            "confirmExitContent": "Supprimer les modifications en attente?"
+        },
         "mediaEditor": {
             "modalTitle": "Médias",
             "images": "Images",
@@ -2013,6 +2019,8 @@
             "maps": "Plans",
             "preview": "Aperçu",
             "apply": "Appliquer",
+            "confirmExitTitle": "Fermer Media Editor",
+            "confirmExitContent": "Supprimer les modifications en attente?",
             "mediaPicker": {
                 "services": "Services: ",
                 "clean": "Résultats nets",
@@ -2034,7 +2042,15 @@
                 "credits": "Crédits",
                 "mapFilter": "Filtrer les cartes",
                 "videoFilter": "Filtrer les vidéos",
-                "imageFilter": "Filtrer les images"
+                "imageFilter": "Filtrer les images",
+                "import": "Importer une ressource dans un magasin local"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Fermer Media Form",
+                "confirmExitContent": "Supprimer les modifications en attente?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko."
             }
         },
         "backgroundDialog": {

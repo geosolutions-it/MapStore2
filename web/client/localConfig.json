@@ -671,6 +671,7 @@
           "GeoStory",
           "GeoStorySave",
           "GeoStorySaveAs",
+          "MapEditor",
           "MediaEditor",
           {
             "name": "GeoStoryEditor",

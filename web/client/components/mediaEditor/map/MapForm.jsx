@@ -7,91 +7,93 @@
  */
 
 import React from 'react';
-import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import { compose, getContext, defaultProps, withHandlers, withStateHandlers} from 'recompose';
+import { ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
+import { compose, getContext, withState, withHandlers, defaultProps, withPropsOnChange} from 'recompose';
+import {connect} from 'react-redux';
+import {isEqual} from 'lodash';
 
-
+import {show} from '../../../actions/mapEditor';
 import LocaleUtils from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
+import Thumbnail from '../../maps/forms/Thumbnail';
 import withConfirm from '../../misc/withConfirm';
 
 const form = [
     {
-        placeholder: "mediaEditor.mediaPicker.sourcePlaceholder",
-        type: "text",
-        id: "src",
-        label: <Message msgId = "mediaEditor.mediaPicker.source"/>,
-        validation: ({ src }) => src !== undefined && src === "" ?
-            "error"
-            : src
-                ? "success"
-                : undefined
-    },
-    {
         placeholder: "mediaEditor.mediaPicker.titlePlaceholder",
         type: "text",
-        id: "title",
+        id: "name",
         label: <Message msgId = "mediaEditor.mediaPicker.title"/>,
-        validation: ({ title }) => title !== undefined && title === "" ?
+        validation: ({ name }) => name !== undefined && name === "" ?
             "error"
-            : title
+            : name
                 ? "success"
                 : undefined
-    },
-    {
-        placeholder: "mediaEditor.mediaPicker.altTextPlaceholder",
-        type: "text",
-        id: "alt",
-        label: <Message msgId = "mediaEditor.mediaPicker.altText"/>
     },
     {
         placeholder: "mediaEditor.mediaPicker.descriptionPlaceholder",
         type: "text",
         id: "description",
         label: <Message msgId = "mediaEditor.mediaPicker.description"/>
-    },
-    {
-        placeholder: "mediaEditor.mediaPicker.creditsPlaceholder",
-        type: "text",
-        id: "credits",
-        label: <Message msgId = "mediaEditor.mediaPicker.credits"/>
     }
 ];
 
 const enhance = compose(
+    connect(null, {
+        openMapEditor: show
+    }),
     defaultProps({
         confirmTitle: <Message msgId = "mediaEditor.mediaform.confirmExitTitle"/>,
         confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>
     }),
-    withStateHandlers(
-        ({selectedItem = {}, editing}) => ({
-            properties: editing ? {...selectedItem.data} : {},
-            confirmPredicate: false
-        }),
-        {
-            setProperties: () => (properties) => ({properties, confirmPredicate: true})
-        }),
+    withState("properties", "setProperties", ({selectedItem: {data: {name, thumbnail, description} = {}} = {}}) => {
+        return ({name, thumbnail, description});
+    }),
+    withState("initialResource", null, ({properties, selectedItem: {data = {}} = {}}) => ({...data, ...properties})),
     withHandlers({
+        openMapEditor: ({selectedItem, openMapEditor}) => () => {
+            const {id, ...data} = selectedItem.data;
+            openMapEditor('mediaEditor', {data, id});
+        },
+        onSave: ({onSave, selectedItem: {data = {}} = {}, properties}) =>
+            () => onSave( {...data, ...properties}),
+        updateThumb: ({setProperties, properties}) =>
+            (dataURI) => setProperties({...properties, thumbnail: dataURI}),
         onClick: ({setAddingMedia, setEditingMedia, editing}) => () => {
             editing && setEditingMedia(false) || setAddingMedia(false);
         }
     }),
+    withPropsOnChange(["selectedItem", "initialResource", "properties"], ({initialResource, selectedItem: {data = {}} = {}, properties}) => {
+        return {confirmPredicate: !isEqual(initialResource, {...data, ...properties})};
+    }),
     withConfirm,
+    defaultProps({
+        errorMessages: {
+            "FORMAT": <Message msgId="map.errorFormat" />,
+            "SIZE": <Message msgId="map.errorCustomSize" msgParams={{maxFileSize: '50kb'}}/>
+        }
+    }),
+    withState("thumbnailErrors", "setErrors", () => ([])),
     getContext({messages: {}})
 );
 
 
-export default enhance(({
+export const MapForm = ({
     properties = {},
-    onClick = () => {},
     setProperties = () => {},
     onSave = () => {},
-    messages
+    updateThumb = () => {},
+    messages,
+    openMapEditor,
+    setErrors,
+    thumbnailErrors = [],
+    errorMessages,
+    onClick = () => {}
 }) => (
     <BorderLayout
-        className="ms-imageForm"
+        className="ms-mapForm"
         header={
             <div
                 className="text-center"
@@ -117,14 +119,42 @@ export default enhance(({
                     }, {
                         glyph: "floppy-disk",
                         tooltipId: "mediaEditor.mediaPicker.save",
-                        disabled: !properties.src || !properties.title,
-                        onClick: () => {
-                            onSave(properties);
-                        }
-                    }]} />
+                        disabled: !properties.name,
+                        onClick: onSave
+                    },
+                    {
+                        glyph: 'pencil',
+                        tooltipId: 'mediaEditor.mediaPicker.edit',
+                        onClick: openMapEditor
+                    }
+                    ]} />
             </div>
         }>
+
         <Form style={{ padding: 8 }}>
+            {
+                thumbnailErrors.length > 0 ? (
+                    <div className="dropzone-errorBox alert-danger">
+                        <p><Message msgId="map.error"/></p>
+                        {(thumbnailErrors.map(err =>
+                            <div id={"error" + err} key={"error" + err} className={"error" + err}>
+                                {errorMessages[err]}
+                            </div>
+                        ))}
+                    </div>
+                ) : null}
+            <Thumbnail
+                onUpdate={updateThumb}
+                withLabel={false}
+                onError={setErrors}
+                message={<Message msgId="mediaEditor.mapForm.thumbnailMessage"/>}
+                thumbnail={properties.thumbnail}
+                suggestion=""
+                maxFileSize={50000}
+                map={{
+                    newThumbnail: properties.thumbnail || "NODATA"
+                }}
+            />
             {form.map((field) => (
                 <FormGroup
                     key={field.id}
@@ -146,4 +176,6 @@ export default enhance(({
             ))}
         </Form>
     </BorderLayout>
-));
+);
+
+export default enhance(MapForm);

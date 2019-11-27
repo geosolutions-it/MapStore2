@@ -340,6 +340,7 @@
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Formati supportati: png/jpg",
             "errorSize": "Dimensione massima consentita: 500kb",
+            "errorCustomSize": "Dimensione massima consentita: {maxFileSize}",
             "error": "L'immagine fornita non è valida",
             "savedMapTitle": "Mappa Salvata",
             "savedMapMessage": "La mappa è stata salvata correttamente",
@@ -2007,6 +2008,11 @@
             "saveSuccessTitle": "Successo",
             "saveSuccessMessage": "Salvata con successo"
         },
+        "mapEditor": {
+            "modalTitle": "Editor di Mappa",
+            "confirmExitTitle": "Chiudi Editor di Mappa",
+            "confirmExitContent": "Annullare le modifiche ed uscire?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Immagini",
@@ -2014,6 +2020,8 @@
             "maps": "Mappe",
             "preview": "Anteprima",
             "apply": "Applica",
+            "confirmExitTitle": "Chiudi Media Editor",
+            "confirmExitContent": "Annullare le modifiche ed uscire?",
             "mediaPicker": {
                 "services": "Servizi: ",
                 "clean": "Pulisci",
@@ -2035,7 +2043,15 @@
                 "credits": "Crediti",
                 "mapFilter": "Filtra mappe",
                 "videoFilter": "Filtra video",
-                "imageFilter": "Filtra immagini"
+                "imageFilter": "Filtra immagini",
+                "import": "Importa la risorsa localmente"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Chiudi Media From",
+                "confirmExitContent": "Annuallare le modifiche ed uscire?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB"
             }
         },
         "backgroundDialog": {

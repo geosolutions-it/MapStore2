@@ -340,6 +340,7 @@
             "suggestion": "(möglichst 300px X 180px, max 500kb)",
             "errorFormat": "Unterstützte Formate: png/jpg",
             "errorSize": "Maximal zulässige Größe: 500kb",
+            "errorCustomSize": "Maximal zulässige Größe: {maxFileSize}",
             "error": "Das bereitgestellte Bild ist ungültig",
             "savedMapTitle": "Gespeicherte Karte",
             "savedMapMessage": "Karte wurde korrekt gespeichert",
@@ -2006,6 +2007,11 @@
             "saveSuccessTitle": "Erfolg",
             "saveSuccessMessage": "Erfolgreich gespeichert"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Schließen Sie den Karteneditor",
+            "confirmExitContent": "Ausstehende Änderungen verwerfen?"
+        },
         "mediaEditor": {
             "modalTitle": "Medien",
             "images": "Bilder",
@@ -2013,6 +2019,8 @@
             "maps": "Karten",
             "preview": "Vorschau",
             "apply": "Sich bewerben",
+            "confirmExitTitle": "Schließen Media Editor",
+            "confirmExitContent": "Ausstehende Änderungen verwerfen?",
             "mediaPicker": {
                 "services": "Dienstleistungen: ",
                 "clean": "Saubere Ergebnisse",
@@ -2034,7 +2042,15 @@
                 "credits": "Credits",
                 "mapFilter": "Karten filtern",
                 "videoFilter": "Filtern Sie Videos",
-                "imageFilter": "Filtern Sie Bilder"
+                "imageFilter": "Filtern Sie Bilder",
+                "import": "Ressource in lokalen Speicher importieren"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Schließen Media Form",
+                "confirmExitContent": "Ausstehende Änderungen verwerfen?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB"
             }
         },
         "backgroundDialog": {

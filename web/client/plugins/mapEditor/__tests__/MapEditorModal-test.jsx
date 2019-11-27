@@ -8,12 +8,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
 import expect from 'expect';
-import MediaSelector from '../MediaSelector';
-
-
-describe('MediaSelector component', () => {
+import {Provider} from 'react-redux';
+import MapEditorModal from '../MapEditorModal';
+// TODO: it fails on travis and not locally
+describe('MapEditorModal component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -23,11 +22,12 @@ describe('MediaSelector component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('MediaSelector rendering with defaults', () => {
-        ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({})}}>
-            <MediaSelector />
-        </Provider>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        expect(container.querySelector('.ms-mediaList')).toExist();
+
+    it('MapEditorModal rendering with defaults config', () => {
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, dispatch: () => {}, getState: () => ({mapEditor: {open: true}})}}>
+                <MapEditorModal open/>
+            </Provider>, document.getElementById("container"));
+        expect(document.querySelector('.modal-fixed')).toExist();
     });
 });
