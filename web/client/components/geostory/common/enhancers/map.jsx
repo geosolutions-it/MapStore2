@@ -14,13 +14,13 @@ import uuid from "uuid";
 
 
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
-import {resourcesSelector, getCurrentFocusedContentEl} from '../../../../selectors/geostory';
+import {resourcesSelector, getCurrentFocusedContentEl, isFocusOnContentSelector} from '../../../../selectors/geostory';
 
 
 import Message from '../../../I18N/Message';
 import withNodeSelection from '../../../widgets/builder/wizard/map/enhancers/handleNodeSelection';
 
-import withConfirm from '../../../misc/toolbar/withConfirm';
+import withConfirm from '../../../misc/withConfirm';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 const ConfirmButton = withConfirm(ToolbarButton);
 
@@ -29,7 +29,14 @@ const ConfirmButton = withConfirm(ToolbarButton);
  * resourceId a and map should be present in props
  */
 export default compose(
-    connect(createSelector(resourcesSelector, (resources) => ({ resources }))),
+    connect(
+        createSelector(
+            resourcesSelector,
+            isFocusOnContentSelector,
+            (resources, isContentFocused) => ({
+                resources,
+                isContentFocused
+            }))),
     withProps(
         ({ resources, resourceId, map = {}}) => {
             const cleanedMap = {...map, layers: (map.layers || []).map(l => l ? l : undefined)};
@@ -52,6 +59,10 @@ export const withFocusedContentMap = compose(
  * It Adjusts the path to update content map config obj
  */
 export const handleMapUpdate = withHandlers({
+    onChangeMap: ({update, focusedContent = {}}) =>
+        (path, value) => {
+            update(`${focusedContent.path}.map.${path}`, value, "merge");
+        },
     onChange: ({update, focusedContent = {}}) =>
         (path, value) => {
             update(focusedContent.path + `.${path}`, value, "merge");
@@ -74,6 +85,17 @@ export const handleToolbar = withHandlers({
 /**
  * It adds toolbar button and handling of layer selection
  */
+const ResetButton = (props) => (<ConfirmButton
+    glyph="repeat"
+    visible
+    bsStyle= "primary"
+    className="square-button-md no-border"
+    tooltipId="geostory.contentToolbar.resetMap"
+    confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
+    confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}
+    {...props}
+/>);
+
 export const withToolbar = compose(
     withProps(({pendingChanges, toggleEditing, disableReset, onReset}) => ({
         buttons: [{
@@ -83,16 +105,7 @@ export const withToolbar = compose(
             tooltipId: "geostory.contentToolbar.saveChanges",
             onClick: toggleEditing
         }, {
-            Element: () => (<ConfirmButton
-                glyph="repeat"
-                visible
-                bsStyle= "primary"
-                className="square-button-md no-border"
-                tooltipId="geostory.contentToolbar.resetMap"
-                confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
-                disabled= {disableReset}
-                confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}
-                onClick={onReset} />)
+            renderButton: <ResetButton disabled={disableReset} onClick={onReset}/>
         }]
     })),
     withNodeSelection,      // Node selection

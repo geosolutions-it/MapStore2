@@ -229,7 +229,7 @@ class UserDialog extends React.Component {
 
             <span role="header">
                 <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
-                <button onClick={this.props.onClose} className="login-panel-close close">
+                <button onClick={this.close} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>
             </span>

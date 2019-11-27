@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, creationStepSelector} from '../selectors/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector} from '../selectors/contextcreator';
 import {setCreationStep, changeAttribute, saveNewContext} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
@@ -27,7 +27,8 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
 export default createPlugin('ContextCreator', {
     component: connect(createStructuredSelector({
         curStepId: creationStepSelector,
-        newContext: newContextSelector
+        newContext: newContextSelector,
+        resource: resourceSelector
     }), {
         onSetStep: setCreationStep,
         onChangeAttribute: changeAttribute,

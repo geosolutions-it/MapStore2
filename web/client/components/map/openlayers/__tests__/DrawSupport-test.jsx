@@ -32,6 +32,7 @@ const testHandlers = {
     onStatusChange: () => {},
     onSelectFeatures: () => {},
     onGeometryChanged: () => {},
+    onChangeDrawingStatus: () => {},
     onEndDrawing: () => {},
     onDrawingFeatures: () => {}
 };
@@ -2196,6 +2197,70 @@ describe('Test DrawSupport', () => {
         expect(drawProps.maxPoints).toBe(100);
         const olGeom = drawProps.geometryFunction([[[1, 3], [1, 3]]], null);
         expect(olGeom).toExist();
+        done();
+    });
+
+    it('test drawend callbacks with Point', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnChangeDrawingStatus = expect.spyOn(testHandlers, "onChangeDrawingStatus");
+        const spyOnEndDrawing = expect.spyOn(testHandlers, "onEndDrawing");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Point",
+            drawStatus: "drawOrEdit",
+            owner: 'featureGrid',
+            features: [{
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [
+                        -50.05371093750001,
+                        36.686041276581925
+                    ]
+                },
+                properties: {
+                    id: '4b79a3a0-0c63-11ea-a9c6-03246c187986'
+                },
+                id: '48f4a670-0c63-11ea-a9c6-03246c187986',
+                _new: true
+            }],
+            options: {
+                featureProjection: 'EPSG:4326',
+                stopAfterDrawing: true,
+                editEnabled: false,
+                drawEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new Point(center)
+            })
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnGeometryChanged.calls.length).toBe(1);
+        const ArgsGeometryChanged = spyOnGeometryChanged.calls[0].arguments;
+        expect(ArgsGeometryChanged.length).toBe(5);
+
+        expect(spyOnEndDrawing).toHaveBeenCalled();
+        expect(spyOnEndDrawing.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnEndDrawing.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(2);
+        expect(ArgsEndDrawing[1]).toBe(null);
+        expect(ArgsEndDrawing[0].type).toBe("Point");
+
+        expect(spyOnChangeDrawingStatus).toHaveBeenCalled();
+        expect(spyOnChangeDrawingStatus.calls.length).toBe(1);
+        const ArgsChangeDrawingStatus = spyOnChangeDrawingStatus.calls[0].arguments;
+        expect(ArgsChangeDrawingStatus.length).toBe(4);
+        const features = ArgsChangeDrawingStatus[3];
+        expect(features.length).toBe(2);
+        features.forEach(({type}) => {
+            expect(type).toBe("Feature");
+        });
+
         done();
     });
 });

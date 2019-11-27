@@ -8,12 +8,14 @@
 
 import React from 'react';
 import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import { compose, getContext, withState } from 'recompose';
+import { compose, getContext, defaultProps, withHandlers, withStateHandlers} from 'recompose';
+
 
 import LocaleUtils from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
+import withConfirm from '../../misc/withConfirm';
 
 const form = [
     {
@@ -59,19 +61,34 @@ const form = [
 ];
 
 const enhance = compose(
-    withState("properties", "setProperties", ({selectedItem = {}, editing}) => ( editing ? {...selectedItem.data} : {})),
+    defaultProps({
+        confirmTitle: <Message msgId = "mediaEditor.mediaform.confirmExitTitle"/>,
+        confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>
+    }),
+    withStateHandlers(
+        ({selectedItem = {}, editing}) => ({
+            properties: editing ? {...selectedItem.data} : {},
+            confirmPredicate: false
+        }),
+        {
+            setProperties: () => (properties) => ({properties, confirmPredicate: true})
+        }),
+    withHandlers({
+        onClick: ({setAddingMedia, setEditingMedia, editing}) => () => {
+            editing && setEditingMedia(false) || setAddingMedia(false);
+        }
+    }),
+    withConfirm,
     getContext({messages: {}})
 );
 
 
 export default enhance(({
     properties = {},
-    setAddingMedia = () => {},
-    setEditingMedia = () => {},
+    onClick = () => {},
     setProperties = () => {},
     onSave = () => {},
-    messages,
-    editing
+    messages
 }) => (
     <BorderLayout
         className="ms-imageForm"
@@ -96,7 +113,7 @@ export default enhance(({
                     buttons={[{
                         glyph: "arrow-left",
                         tooltipId: "mediaEditor.mediaPicker.back",
-                        onClick: () => editing ? setEditingMedia(false) : setAddingMedia(false)
+                        onClick
                     }, {
                         glyph: "floppy-disk",
                         tooltipId: "mediaEditor.mediaPicker.save",

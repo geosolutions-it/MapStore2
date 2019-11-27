@@ -7,7 +7,8 @@
  */
 
 import expect from 'expect';
-import projUtils from '../projUtils';
+import { addProjections, fallbackToSupportedProjection } from '../projUtils';
+
 import {get} from 'ol/proj';
 
 const SAMPLE_PROJECTION = {
@@ -29,15 +30,21 @@ const SAMPLE_PROJECTION = {
 
 describe('projUtils', () => {
     it('axis orientation', () => {
-        projUtils.addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "neu", "m");
+        addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "neu", "m");
         const prj = get(SAMPLE_PROJECTION.code);
         expect(prj).toExist();
         expect(prj.getAxisOrientation()).toBe("neu");
     });
     it('units', () => {
-        projUtils.addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "enu", "m");
+        addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "enu", "m");
         const prj = get(SAMPLE_PROJECTION.code);
         expect(prj).toExist();
         expect(prj.getUnits()).toBe("m");
+    });
+    it('test fallbackToSupportedProjection with unsupported custom crs', () => {
+        expect(fallbackToSupportedProjection([], "EPSG:31468")).toEqual("EPSG:3857");
+    });
+    it('test fallbackToSupportedProjection with supported custom crs', () => {
+        expect(fallbackToSupportedProjection([{code: "EPSG:31468"}], "EPSG:31468")).toEqual("EPSG:31468");
     });
 });

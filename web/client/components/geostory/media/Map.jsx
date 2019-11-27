@@ -25,13 +25,14 @@ export default compose(
 )(({
     id,
     map = {layers: [defaultLayerMapPreview]},
-    options = {},
     fit,
+    editMap = false,
     onMapViewChanges
 }) => {
-    const { layers = [], mapOptions, ...m} = (map.data ? map.data : map); // remove mapOptions to not override options
+    const { layers = [], mapOptions = {}, ...m} = (map.data ? map.data : map);
     return (<div
-        className="ms-media ms-media-map" style={{
+        className={`ms-media ms-media-map ${mapOptions.zoomPosition || ""}`}
+        style={{
             objectFit: fit
         }}>
         {/* BaseMap component overrides the MapView id with map's id */}
@@ -42,7 +43,18 @@ export default compose(
                 id: `media-${id}`
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
-            options={applyDefaults(options)}
+            options={
+                // mouseWheelZoom is enabled only if inlineEditing is active and zoomControl too
+                applyDefaults(!editMap ? {mapOptions} : {
+                    mapOptions: {
+                        ...mapOptions,
+                        interactions: {
+                            ...mapOptions.interactions,
+                            mouseWheelZoom: m.zoomControl
+                        }
+
+                    }
+                })}
         />
     </div>);
 });

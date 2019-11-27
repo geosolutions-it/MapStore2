@@ -8,8 +8,10 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
 import expect from 'expect';
 import MediaSelector from '../MediaSelector';
+
 
 describe('MediaSelector component', () => {
     beforeEach((done) => {
@@ -22,7 +24,9 @@ describe('MediaSelector component', () => {
         setTimeout(done);
     });
     it('MediaSelector rendering with defaults', () => {
-        ReactDOM.render(<MediaSelector />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({})}}>
+            <MediaSelector />
+        </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-mediaList')).toExist();
     });
