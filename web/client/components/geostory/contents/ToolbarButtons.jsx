@@ -11,9 +11,12 @@ import React from "react";
 import Message from '../../I18N/Message';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
-import withConfirm from "../../misc/withConfirm";
+import withConfirm from "../../misc/toolbar/withConfirm";
+import { ToolbarDropdownWithInputButton } from "../common/ToolbarDropdownWithInputButton";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
+import tooltip from '../../misc/enhancers/tooltip';
+const ToolbarDropdownInputButton = tooltip(ToolbarDropdownWithInputButton);
 
 /**
  * these components have been created because it was causing an excessive re-rendering
@@ -106,3 +109,14 @@ export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = 
             remove(path);
         }} />
     );
+export const EditURLButtonToolbar = (props) => {
+    return (
+        <ToolbarDropdownInputButton
+            glyph="pencil"
+            value={props.src}
+            onChange={({ target: { value }}) => props.update('src', value)}
+            tooltipId="geostory.contentToolbar.remove"
+        />
+    );
+
+};

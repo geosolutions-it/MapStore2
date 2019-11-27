@@ -8,7 +8,8 @@
 import React from 'react';
 import Text from './Text';
 import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
-import {Media} from '../media';
+import { Media } from '../media';
+import WebPage from './WebPage';
 const DummyComponent = ({ type }) => <div className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
 
 /**
@@ -23,6 +24,8 @@ const getComponent = type => {
     case MediaTypes.IMAGE:
     case MediaTypes.MAP:
         return Media;
+    case ContentTypes.WEBPAGE:
+        return WebPage;
     default:
         return DummyComponent;
     }

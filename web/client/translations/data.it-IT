@@ -1903,6 +1903,7 @@
             "addTextContent": "Aggiungi testo",
             "addMediaContent": "Aggiungi Media",
             "zoomToContent": "Zoom al contenuto",
+            "addWebPageSection": "Aggiungi sezione pagina Web",
             "emptyTitle": "Questa storia è vuota",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
@@ -1935,7 +1936,8 @@
                 "saveChanges": "Salva le modifiche",
                 "closeMapEditing": "Chiudi editing",
                 "confirmCloseMapEditing": "Chiudi editing mappa",
-                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?"
+                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?",
+                "editURL": "Modifica l'URL della pagina web"
             },
             "navigation": {
                 "edit": "Modifica storia"
@@ -1994,6 +1996,13 @@
             },
             "mapEditor": {
                 "configureMapOptions": "Configurazione mappa"
+            },
+            "webPageCreator": {
+                "title": "Pagina web",
+                "saveButton": "Salva",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
          "saveDialog": {

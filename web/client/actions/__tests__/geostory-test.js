@@ -28,7 +28,7 @@ import {
     toggleSettingsPanel, TOGGLE_SETTINGS_PANEL,
     toggleSetting, TOGGLE_SETTING,
     toggleCardPreview, TOGGLE_CARD_PREVIEW,
-    updateSetting, UPDATE_SETTING
+    updateSetting, UPDATE_SETTING, toggleWebPageCreator, TOGGLE_WEBPAGE_CREATOR
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -173,5 +173,12 @@ describe('test geostory action creators', () => {
         expect(retVal.type).toBe(UPDATE_SETTING);
         expect(retVal.prop).toBe(prop);
         expect(retVal.value).toBe(value);
+    });
+    it('toggleWebPageCreator', () => {
+        const open = true;
+        const retVal = toggleWebPageCreator(open);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(TOGGLE_WEBPAGE_CREATOR);
+        expect(retVal.show).toBe(true);
     });
 });

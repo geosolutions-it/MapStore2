@@ -27,10 +27,12 @@ export const SELECT_CARD = "GEOSTORY:SELECT_CARD";
 export const SET_CONTROL = "GEOSTORY:SET_CONTROL";
 export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
+export const SET_WEBPAGE_URL = "GEOSTORY:SET_WEBPAGE_URL";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
 export const TOGGLE_SETTING = "GEOSTORY:TOGGLE_SETTING";
 export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
+export const TOGGLE_WEBPAGE_CREATOR = "GEOSTORY:TOGGLE_WEBPAGE_CREATOR";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_SETTING = "GEOSTORY:UPDATE_SETTING";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
@@ -209,3 +211,7 @@ export const setFocusOnContent = (status, target, selector, hideContent, path) =
  * @param {*} value value used to update the prop
  */
 export const updateSetting = (prop, value) => ({type: UPDATE_SETTING, prop, value});
+
+export const toggleWebPageCreator = (show) => ({ type: TOGGLE_WEBPAGE_CREATOR, show });
+
+export const setWebPageUrl = (src) => ({ type: SET_WEBPAGE_URL, src });
