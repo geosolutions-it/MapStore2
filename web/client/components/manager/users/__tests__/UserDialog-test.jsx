@@ -290,23 +290,23 @@ describe("Test UserDialog Component", () => {
                     onClose={actions.onClose}
                 />, document.getElementById("container"));
             expect(userDlg).toExist();
-            const unsavedChangesDialog = document.querySelector('.modal-dialog');
-            const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body div');
             let buttons = document.querySelectorAll('button');
-            expect(unsavedChangesDialog).toExist();
-            expect(unsavedChangesDialogBody).toExist();
-            expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
-            expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
-            expect(buttons.length).toBe(6);
-            let closeBtn = buttons[4];
-            let cancelBtn = buttons[5];
+            expect(buttons.length).toBe(3);
+            let saveBtn = buttons[1];
+            let closeBtn = buttons[2];
+            expect(saveBtn.innerText).toBe("users.createUser");
             expect(closeBtn.innerText).toBe("saveDialog.close");
-            expect(cancelBtn.innerText).toBe("saveDialog.cancel");
             ReactTestUtils.Simulate.click(closeBtn);
+            buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(6);
+
+            let closeBtnModal = buttons[4];
+            let cancelBtnModal = buttons[5];
+            expect(closeBtnModal.innerText).toBe("saveDialog.close");
+            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtnModal);
 
             expect(onCloseSpy).toHaveBeenCalled();
         });
-
-
     });
 });

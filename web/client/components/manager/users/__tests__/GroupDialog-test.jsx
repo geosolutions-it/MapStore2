@@ -175,25 +175,28 @@ describe("Test GroupDialog Component", () => {
             };
             const onCloseSpy = expect.spyOn(actions, 'onClose');
 
-            const userDlg = ReactDOM.render(
+            const groupDlg = ReactDOM.render(
                 <GroupDialog
                     group={{...group1, status: "modified"}}
                     onClose={actions.onClose}
                 />, document.getElementById("container"));
-            expect(userDlg).toExist();
-            const unsavedChangesDialog = document.querySelector('.modal-dialog');
-            const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body div');
+            expect(groupDlg).toExist();
             let buttons = document.querySelectorAll('button');
-            expect(unsavedChangesDialog).toExist();
-            expect(unsavedChangesDialogBody).toExist();
-            expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
-            expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
-            expect(buttons.length).toBe(9);
-            let closeBtn = buttons[7];
-            let cancelBtn = buttons[8];
+            expect(buttons.length).toBe(6);
+            let saveBtn = buttons[4];
+            let closeBtn = buttons[5];
+            expect(saveBtn.innerText).toBe("usergroups.saveGroup");
             expect(closeBtn.innerText).toBe("saveDialog.close");
-            expect(cancelBtn.innerText).toBe("saveDialog.cancel");
-            ReactTestUtils.Simulate.click(closeBtn);
+            ReactTestUtils.Simulate.click(closeBtn); // click on enhanced close button
+
+            buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(9);
+
+            let closeBtnModal = buttons[7];
+            let cancelBtnModal = buttons[8];
+            expect(closeBtnModal.innerText).toBe("saveDialog.close");
+            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtnModal);  // click on close button of the confirm modal
 
             expect(onCloseSpy).toHaveBeenCalled();
         });

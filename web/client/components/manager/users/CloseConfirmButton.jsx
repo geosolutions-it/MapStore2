@@ -10,12 +10,12 @@ import React from 'react';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import withConfirm from '../../misc/withConfirm';
 import Message from '../../I18N/Message';
-import {Button} from 'react-bootstrap';
 
 const WithConfirmButton = withConfirm(ToolbarButton);
 
-export const CloseConfirmButton = ({onClick = () => {}, status = "success"}) => status === "modified" ? <WithConfirmButton
+export const CloseConfirmButton = ({onClick = () => {}, status = "success"}) => <WithConfirmButton
     bsStyle="primary"
+    confirmPredicate={status === "modified"}
     confirmTitle={<Message msgId="warning" />}
     confirmYes={<Message msgId="saveDialog.close" />}
     textId={"saveDialog.close"}
@@ -31,9 +31,6 @@ export const CloseConfirmButton = ({onClick = () => {}, status = "success"}) => 
     </>
     }
     onClick={onClick}
-/> :
-    <Button key="close" bsSize="small" onClick={onClick }>
-        <Message msgId="close"/>
-    </Button>;
+/>;
 
 export default CloseConfirmButton;
