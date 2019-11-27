@@ -2098,6 +2098,7 @@
             },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
+                "conflict": "Un contexte portant le même nom existe déjà. essayez '{data}'",
                 "defaultMessage": "Erreur inconnue"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
