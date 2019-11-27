@@ -245,6 +245,9 @@ class OpenlayersMap extends React.Component {
         /*
          * Manage interactions programmatically.
          * map interactions may change, i.e. becoming enabled or disabled
+         * TODO: with re-generation of mapOptions the application could do this operation
+         * on every render. We should prevent it with something like isEqual if this becomes
+         * a performance problem
          */
         if (this.map && (this.props.mapOptions && this.props.mapOptions.interactions) !== (newProps.mapOptions && newProps.mapOptions.interactions)) {
             const newInteractions = newProps.mapOptions.interactions || {};
