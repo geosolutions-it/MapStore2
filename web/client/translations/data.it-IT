@@ -1993,7 +1993,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurazione mappa"
+                "configureMapOptions": "Configurazione mappa",
+                "settings": "Impostazioni",
+                "settingsSubTitle": "Gestisci le interazioni dell'utente",
+                "toc": "Toc",
+                "pan": "Interazione di scorrimento",
+                "zoom": "Interazione di zoom",
+                "topLeft": "Angolo in alto a sinistra",
+                "topRight": "Angolo in alto a destra",
+                "bottomLeft": "Angolo in basso a sinistra",
+                "bottomRight": "Angolo in basse a destra"
             }
         },
          "saveDialog": {

@@ -113,7 +113,8 @@ export const DEFAULT_MAP_OPTIONS = {
     style: {width: "100%", height: "100%"},
     mapOptions: {
         interactions: {
-            mouseWheelZoom: false
+            mouseWheelZoom: false,
+            dragPan: true
         }
     }
 };
@@ -123,7 +124,7 @@ export const DEFAULT_MAP_OPTIONS = {
  * @param {object} options to merge with defaults
  * @return {object} options merged with defaults
  */
-export const applyDefaults = (options = {}) => merge({}, options, DEFAULT_MAP_OPTIONS);
+export const applyDefaults = (options = {}) => merge({}, DEFAULT_MAP_OPTIONS, options);
 /**
  * create map object
  * @param {object} baseMap initial map object

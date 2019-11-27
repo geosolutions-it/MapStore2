@@ -1992,7 +1992,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Karte konfigurieren"
+                "configureMapOptions": "Karte konfigurieren",
+                "settings": "Einstellungen",
+                "settingsSubTitle": "Benutzerinteraktionen verwalten",
+                "toc": "Schichten",
+                "pan": "Pan-Interaktion",
+                "zoom": "Vergrößern / Verkleinern von Interaktionen",
+                "topLeft": "Oben links",
+                "topRight": "Oben rechts",
+                "bottomLeft": "Unten links",
+                "bottomRight": "Unten rechts"
             }
         },
         "saveDialog": {

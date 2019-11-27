@@ -1992,7 +1992,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configurer la carte",
+                "settings": "Paramètres",
+                "settingsSubTitle": "Gérer les interactions utilisateur",
+                "toc": "Couches",
+                "pan": "Interaction pan",
+                "zoom": "Interactions zoom avant / arrière",
+                "topLeft": "En haut à gauche",
+                "topRight": "En haut à droite",
+                "bottomLeft": "En bas à gauche",
+                "bottomRight": "En bas à droite"
             }
         },
         "saveDialog": {

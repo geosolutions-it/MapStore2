@@ -288,7 +288,8 @@ describe("GeoStory Utils", () => {
             mapOptions: {
                 interactions: {
                     mouseWheelZoom: false,
-                    mouseClick: false
+                    mouseClick: false,
+                    dragPan: true
                 }
             }
         };
