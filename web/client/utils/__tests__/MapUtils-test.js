@@ -441,7 +441,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             },
@@ -868,7 +868,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             },
@@ -1157,7 +1157,7 @@ describe('Test the MapUtils', () => {
                 },
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             },
@@ -1410,7 +1410,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1595,7 +1595,7 @@ describe('Test the MapUtils', () => {
                 }, {
                     id: 'custom.nested001', expanded: true
                 } ],
-                text_serch_config: '' }
+                text_search_config: '' }
         });
     });
 
@@ -1714,7 +1714,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1854,7 +1854,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10,
                 sources: {

@@ -367,7 +367,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_serch_config: textSearchConfig},
+        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -424,7 +424,6 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
         'catalogServices',
         'widgetsConfig'
     ];
-
     return isEqual(JSON.stringify(pick(originalState, pickedFields)), JSON.stringify(pick(newState, pickedFields)));
 };
 
