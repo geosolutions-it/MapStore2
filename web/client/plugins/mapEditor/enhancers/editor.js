@@ -13,6 +13,7 @@ import {resizeMap} from '../../../actions/map';
 
 import WithConfirm from '../../../components/misc/withConfirm';
 import Message from '../../../components/I18N/Message';
+import withResizeSpy from '../../../components/misc/enhancers/withResizeSpy';
 
 import {createSelector} from 'reselect';
 import {mapSelector} from '../../../selectors/map';
@@ -57,10 +58,11 @@ export default compose(
 );
 
 export const withResizeMap = compose(
-    connect(null, {resizeMap}),
+    connect(null, {onResize: resizeMap}),
     lifecycle({
         componentDidMount() {
-            this.props.resizeMap();
+            this.props.onResize();
         }
-    })
+    }),
+    withResizeSpy({debounceTime: 150})
 );
