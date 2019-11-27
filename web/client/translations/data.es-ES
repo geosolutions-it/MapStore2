@@ -1935,7 +1935,8 @@
                 "saveChanges": "Guardar cambios",
                 "closeMapEditing": "Cerrar",
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
-                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?"
+                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
+                "advancedMapEditor": "Abrir editor de mapas avanzado"
             },
             "navigation": {
                 "edit": "Editar historia"

@@ -1935,7 +1935,8 @@
                 "saveChanges": "Salva le modifiche",
                 "closeMapEditing": "Chiudi editing",
                 "confirmCloseMapEditing": "Chiudi editing mappa",
-                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?"
+                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?",
+                "advancedMapEditor": "Apri editor di mappe avanzato"
             },
             "navigation": {
                 "edit": "Modifica storia"

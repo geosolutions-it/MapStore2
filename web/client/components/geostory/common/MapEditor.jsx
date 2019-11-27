@@ -18,7 +18,8 @@ import connectMap, {withFocusedContentMap,
     handleToolbar,
     withToolbar,
     withSaveChanges,
-    withConfirmClose} from './enhancers/map';
+    withConfirmClose,
+    handleAdvancedMapEditor} from './enhancers/map';
 
 import localizeStringMap from '../../misc/enhancers/localizeStringMap';
 
@@ -107,6 +108,7 @@ export default branch(
         withSaveChanges,
         handleMapUpdate,
         handleToolbar,
+        handleAdvancedMapEditor,
         withToolbar,
         withConfirmClose
     )

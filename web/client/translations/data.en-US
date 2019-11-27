@@ -1939,7 +1939,8 @@
                 "saveChanges": "Save changes",
                 "closeMapEditing": "Close",
                 "confirmCloseMapEditing": "Close Map Editing",
-                "pendingChangesDiscardConfirm": "Discard current map changes?"
+                "pendingChangesDiscardConfirm": "Discard current map changes?",
+                "advancedMapEditor": "Open advanced map editor"
             },
             "navigation": {
                 "edit": "Edit story"
