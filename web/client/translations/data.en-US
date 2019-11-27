@@ -311,7 +311,11 @@
             "maps": {
                 "title": "Maps ({count})",
                 "noMapAvailable": "No map available",
-                "createNewOne": "Create a new one"
+                "createNewOne": "Create a new one",
+                "unsavedMapConfirmTitle": "Unsaved changes",
+                "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
+                "unsavedMapConfirmButtonText": "Leave",
+                "unsavedMapCancelButtonText": "Close"
             },
             "geostories": {
                 "newGeostory": "New Story",

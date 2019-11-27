@@ -14,7 +14,7 @@ describe('Test the searchconfig reducer', () => {
     it('Map config loaded with textSearchConfig', () => {
 
         const action = {type: 'MAP_CONFIG_LOADED',
-            config: { version: 2, map: {layers: [], text_serch_config: {override: true}}}};
+            config: { version: 2, map: {layers: [], text_search_config: {override: true}}}};
 
         const state = searchconfig({}, action);
         expect(state.textSearchConfig).toExist();

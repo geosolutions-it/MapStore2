@@ -14,6 +14,7 @@ const {
     INIT_MAP,
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
+    CHECK_MAP_CHANGES,
     changeMapView,
     changeMapLimits
 } = require('../actions/map');
@@ -38,6 +39,14 @@ const {resetControls} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
 const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
+
+const {layersSelector, groupsSelector} = require('../selectors/layers');
+const {backgroundListSelector} = require('../selectors/backgroundselector');
+const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const {userRoleSelector} = require('../selectors/security');
+const {feedbackMaskSelector} = require('../selectors/feedbackmask');
+const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
+
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -212,11 +221,52 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
             return loadMapInfo(mapId);
         });
 
+const compareMapChanges = (action$, { getState = () => {} }) =>
+    action$
+        .ofType(CHECK_MAP_CHANGES)
+        .switchMap(({ action, source }) => {
+            const allowedRoles = ['ADMIN', 'USER'];
+            const state = getState();
+            const mapId = state.map && state.map.present && state.map.present.mapId;
+            const { currentPage } = feedbackMaskSelector(state);
+            const userRole = userRoleSelector(state);
+
+            if ((currentPage) !== 'viewer' || allowedRoles.indexOf(userRole) === -1) {
+                return action ? Rx.Observable.of(action) : Rx.Observable.empty();
+            }
+
+            if (mapId) {
+                const { mapConfigRawData } = state;
+                const updatedMap = MapUtils.saveMapConfiguration(
+                    mapSelector(state),
+                    layersSelector(state),
+                    groupsSelector(state),
+                    backgroundListSelector(state),
+                    textSearchConfigSelector(state),
+                    mapOptionsToSaveSelector(state)
+                );
+                const isEqual = MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
+                if (!isEqual) {
+                    return Rx.Observable.of(
+                        setControlProperty('unsavedMap', 'enabled', true, false),
+                        setControlProperty('unsavedMap', 'source', source, false)
+                    );
+                }
+                return action ? Rx.Observable.of(action) : Rx.Observable.empty();
+            }
+
+            return Rx.Observable.of(
+                setControlProperty('unsavedMap', 'enabled', true, false),
+                setControlProperty('unsavedMap', 'source', source, false)
+            );
+        });
+
 module.exports = {
     checkMapPermissions,
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
     resetLimitsOnInit,
-    zoomToExtentEpic
+    zoomToExtentEpic,
+    compareMapChanges
 };
