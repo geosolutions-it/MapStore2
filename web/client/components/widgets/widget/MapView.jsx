@@ -8,13 +8,17 @@
 const autoMapType = require('../../map/enhancers/autoMapType');
 const mapType = require('../../map/enhancers/mapType');
 const autoResize = require('../../map/enhancers/autoResize');
+const getProjectionDefs = require('../../map/enhancers/getProjectionDefs').default;
 const onMapViewChanges = require('../../map/enhancers/onMapViewChanges');
 const {compose} = require('recompose');
+const { handlingUnsupportedProjection } = require('../../map/enhancers/handlingUnsupportedProjection');
+
 module.exports = compose(
     onMapViewChanges,
     autoResize(0),
     autoMapType,
-    mapType
-
+    mapType,
+    getProjectionDefs,
+    handlingUnsupportedProjection
 )(require('../../map/BaseMap'));
 

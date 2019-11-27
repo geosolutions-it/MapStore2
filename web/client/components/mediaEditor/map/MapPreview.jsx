@@ -11,7 +11,7 @@ import { applyDefaults, MediaTypes } from '../../../utils/GeoStoryUtils';
 import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
 
 import emptyState from '../../misc/enhancers/emptyState';
-import PreviewMap from '../../widgets/builder/wizard/map/PreviewMap';
+import MapView from '../../widgets/builder/wizard/map/PreviewMap';
 import { isEmpty } from 'lodash';
 
 const Preview = ({
@@ -19,7 +19,7 @@ const Preview = ({
 }) => {
     const { layers = [], mapOptions, ...m} = selectedItem.data ? selectedItem.data : selectedItem; // remove mapOptions to not override options
     return (
-        <PreviewMap
+        <MapView
             styleMap={{height: "100%"}}
             map={{...m, id: "map" + m.id}}
             id={"preview" + selectedItem.id}

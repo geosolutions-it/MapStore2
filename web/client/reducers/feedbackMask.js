@@ -19,7 +19,8 @@ function feedbackMask(state = {}, action) {
             ...state,
             enabled: action.enabled,
             status: action.error && action.error.status,
-            errorMessage: action.error && action.error.messageId
+            errorMessage: action.error && action.error.messageId,
+            errorMessageParams: action.error && action.error.errorMessageParams
         };
     case DETECTED_NEW_PAGE:
         return {

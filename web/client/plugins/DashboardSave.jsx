@@ -12,7 +12,7 @@ import { createSelector } from 'reselect';
 import {Glyphicon} from 'react-bootstrap';
 import Message from '../components/I18N/Message';
 import { isLoggedIn, userSelector } from '../selectors/security';
-import { widgetsConfig, dashboardHasWidgets} from '../selectors/widgets';
+import { widgetsConfig } from '../selectors/widgets';
 import { isShowSaveOpen, isShowSaveAsOpen, dashboardResource, isDashboardLoading, getDashboardSaveErrors } from '../selectors/dashboard';
 import { saveDashboard, triggerSave, triggerSaveAs } from '../actions/dashboard';
 import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
@@ -28,9 +28,8 @@ const SaveBaseDialog = compose(
         widgetsConfig,
         userSelector,
         isDashboardLoading,
-        dashboardHasWidgets,
         getDashboardSaveErrors,
-        (data, user, loading, hasWidgets, errors ) => ({ data, user, loading, canSave: hasWidgets, errors })
+        (data, user, loading, errors ) => ({ data, user, loading, errors })
     ), {
         onSave: saveDashboard
     }),

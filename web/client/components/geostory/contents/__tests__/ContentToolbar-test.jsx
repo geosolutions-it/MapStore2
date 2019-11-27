@@ -156,11 +156,10 @@ describe('ContentToolbar component', () => {
                     done();
                 }}
             />, document.getElementById("container"));
-            const confirmDialog = document.querySelector('.modal-dialog');
-            expect(confirmDialog.style.display).toBe("none");
             const removeButton = document.querySelector('.ms-content-toolbar button');
             expect(removeButton).toExist();
             ReactTestUtils.Simulate.click(removeButton);
+            const confirmDialog = document.querySelector('.modal-dialog');
             expect(confirmDialog.style.display).toNotBe("none"); // check confirmation dialog to be shown
             const confirmButton = confirmDialog.querySelector('.btn-group .btn');
             ReactTestUtils.Simulate.click(confirmButton); // confirm

@@ -17,6 +17,7 @@ export default class ContextCreator extends React.Component {
     static propTypes = {
         curStepId: PropTypes.string,
         newContext: PropTypes.object,
+        resource: PropTypes.object,
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
         saveDestLocation: PropTypes.string
@@ -29,6 +30,7 @@ export default class ContextCreator extends React.Component {
 
     static defaultProps = {
         newContext: {},
+        resource: {},
         curStepId: 'general-settings',
         saveDestLocation: '/context-manager',
         onChangeAttribute: () => {}
@@ -46,7 +48,7 @@ export default class ContextCreator extends React.Component {
                     label: 'contextCreator.generalSettings.label',
                     component:
                         <GeneralSettings
-                            contextName={this.props.newContext.name}
+                            contextName={this.props.resource.name}
                             windowTitle={this.props.newContext.windowTitle}
                             context={this.context}
                             onChange={this.props.onChangeAttribute}/>

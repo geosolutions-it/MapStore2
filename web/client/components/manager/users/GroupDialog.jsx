@@ -176,11 +176,12 @@ class GroupDialog extends React.Component {
         }}/>);
     };
 
+
     renderMembersTab = () => {
         let availableUsers = this.props.availableUsers.filter((user) => findIndex(this.getCurrentGroupMembers(), member => member.id === user.id) < 0).map(u => ({ value: u.id, label: u.name }));
         const pagination = {
             firstPage: this.selectMemberPage === 0,
-            lastPage: (this.selectMemberPage + PAGINATION_LIMIT) >= this.props.availableUsersCount,
+            lastPage: this.isLastPage(),
             loadNextPage: this.loadNextPageMembers,
             loadPrevPage: this.loadPrevPageMembers,
             paginated: true
@@ -245,6 +246,11 @@ class GroupDialog extends React.Component {
                 {this.renderButtons()}
             </div>
         </Dialog>);
+    }
+
+    // check if pagination last page
+    isLastPage = () => {
+        return (this.selectMemberPage + PAGINATION_LIMIT) > this.props.availableUsersCount;
     }
 
     // called before onChange

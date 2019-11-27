@@ -160,6 +160,14 @@ describe("Test GroupDialog Component", () => {
         comp.loadPrevPageMembers();
         expect(comp.selectMemberPage).toBe(6);
     });
+    it('should go to last member page', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} availableUsersCount={15} />,
+            document.getElementById("container"));
+        comp.selectMemberPage = 11;
+        comp.loadNextPageMembers();
+        expect(comp.isLastPage()).toBe(true);
+    });
     describe('unsaved changes modal', () => {
         it('showing unsaved changes modal and closing the modal', () => {
             const actions = {

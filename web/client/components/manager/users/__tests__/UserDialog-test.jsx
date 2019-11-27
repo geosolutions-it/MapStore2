@@ -255,7 +255,7 @@ describe("Test UserDialog Component", () => {
         expect(retypePassword.children[1].innerHTML).toBe('*');
     });
 
-    it('Test on close dialog, reset password field', () => {
+    it('Test on close dialog using form close btn, reset password field', () => {
         let comp = ReactDOM.render(
             <UserDialog user={newUser} />, document.getElementById("container"));
         expect(comp).toExist();
@@ -264,7 +264,17 @@ describe("Test UserDialog Component", () => {
         passwordField.value = 'password';
         ReactTestUtils.Simulate.click(closeBtn);
         expect(passwordField.value).toEqual('');
+    });
 
+    it('Test on close dialog using dialog header close btn, reset password field', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={newUser} />, document.getElementById("container"));
+        expect(comp).toExist();
+        const passwordField = document.querySelector("input[name='newPassword']");
+        const closeBtn = document.querySelector(".login-panel-close");
+        passwordField.value = 'password';
+        ReactTestUtils.Simulate.click(closeBtn);
+        expect(passwordField.value).toEqual('');
     });
 
     describe('unsaved changes modal', () => {

@@ -13,7 +13,6 @@ const MapView = withHandlers({
     onMapViewChanges: ({ updateProperty = () => { } }) => map => updateProperty('map', map)
 })(require('./MapView'));
 
-
 module.exports = ({
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
@@ -30,5 +29,12 @@ module.exports = ({
         icons={icons}
         topRightItems={topRightItems}
     >
-        <MapView updateProperty={updateProperty} id={id} map={omit(map, 'mapStateSource')} mapStateSource={mapStateSource} layers={map && map.layers} options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}/>
+        <MapView
+            updateProperty={updateProperty}
+            id={id}
+            map={omit(map, 'mapStateSource')}
+            mapStateSource={mapStateSource}
+            layers={map && map.layers}
+            options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
+        />
     </WidgetContainer>);
