@@ -276,4 +276,37 @@ describe("Test UserDialog Component", () => {
         ReactTestUtils.Simulate.click(closeBtn);
         expect(passwordField.value).toEqual('');
     });
+
+    describe('unsaved changes modal', () => {
+        it('showing unsaved changes modal and closing the modal', () => {
+            const actions = {
+                onClose: () => {}
+            };
+            const onCloseSpy = expect.spyOn(actions, 'onClose');
+
+            const userDlg = ReactDOM.render(
+                <UserDialog
+                    user={{...newUser, status: "modified"}}
+                    onClose={actions.onClose}
+                />, document.getElementById("container"));
+            expect(userDlg).toExist();
+            let buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(3);
+            let saveBtn = buttons[1];
+            let closeBtn = buttons[2];
+            expect(saveBtn.innerText).toBe("users.createUser");
+            expect(closeBtn.innerText).toBe("saveDialog.close");
+            ReactTestUtils.Simulate.click(closeBtn);
+            buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(6);
+
+            let closeBtnModal = buttons[4];
+            let cancelBtnModal = buttons[5];
+            expect(closeBtnModal.innerText).toBe("saveDialog.close");
+            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtnModal);
+
+            expect(onCloseSpy).toHaveBeenCalled();
+        });
+    });
 });
