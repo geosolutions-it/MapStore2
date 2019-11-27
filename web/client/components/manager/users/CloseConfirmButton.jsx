@@ -8,7 +8,7 @@
 
 import React from 'react';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
-import withConfirm from '../../misc/toolbar/withConfirm';
+import withConfirm from '../../misc/withConfirm';
 import Message from '../../I18N/Message';
 import {Button} from 'react-bootstrap';
 
