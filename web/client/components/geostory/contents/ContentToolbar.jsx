@@ -9,7 +9,7 @@
 
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
-import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar, EditURLButtonToolbar} from "./ToolbarButtons";
+import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
 
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
@@ -66,8 +66,15 @@ const toolButtons = {
             update( 'editMap', !editMap);
         }
     }),
-    editURL: (props) => ({
-        renderButton: <EditURLButtonToolbar {...props} />
+    editURL: ({ editURL = false, update = () => {}}) => ({
+        glyph: "pencil",
+        visible: true,
+        disabled: editURL,
+        bsStyle: editURL ? "success" : "default",
+        tooltipId: "geostory.contentToolbar.editURL",
+        onClick: () => {
+            update( 'editURL', !editURL, 'merge');
+        }
     })
 };
 

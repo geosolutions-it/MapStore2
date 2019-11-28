@@ -9,9 +9,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import expect from 'expect';
-import { WebPageCreator } from '../WebPageCreator';
+import { WebPageWrapper } from '../WebPageWrapper';
 
-describe('WebPageCreator', () => {
+describe('WebPageWrapper', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -23,14 +23,14 @@ describe('WebPageCreator', () => {
     });
 
     it('render with defaults', () => {
-        ReactDOM.render(<WebPageCreator />, document.getElementById("container"));
+        ReactDOM.render(<WebPageWrapper />, document.getElementById("container"));
         const el = document.querySelector('.modal-dialog');
         expect(el).toBe(null);
     });
 
-    it('should render when show is true', () => {
-        const props = { show: true };
-        ReactDOM.render(<WebPageCreator {...props} />, document.getElementById("container"));
+    it('should render when editURL is true', () => {
+        const props = { editURL: true };
+        ReactDOM.render(<WebPageWrapper {...props} />, document.getElementById("container"));
         const el = document.querySelector('.modal-dialog');
         expect(el).toExist();
     });

@@ -25,8 +25,7 @@ import {
     toggleSetting,
     toggleSettingsPanel,
     updateCurrentPage,
-    updateSetting,
-    toggleWebPageCreator
+    updateSetting
 } from '../../actions/geostory';
 import {
     isCollapsedSelector,
@@ -221,10 +220,6 @@ describe('geostory reducer', () => {
 
         state = geostory(undefined, toggleSetting("isLogoEnabled"));
         expect( settingsSelector({ geostory: state }).isLogoEnabled ).toBe(true);
-    });
-    it('toggleWebPageCreator', () => {
-        let state = geostory({ showWebPageCreator: false }, toggleWebPageCreator(true));
-        expect( state.showWebPageCreator ).toBe(true);
     });
     it('updateSetting', () => {
         const checked = ["id"];

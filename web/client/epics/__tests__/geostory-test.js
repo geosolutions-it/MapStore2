@@ -48,7 +48,6 @@ import {
     move,
     CHANGE_MODE,
     TOGGLE_CONTENT_FOCUS,
-    TOGGLE_WEBPAGE_CREATOR,
     SET_WEBPAGE_URL
 } from '../../actions/geostory';
 import {
@@ -1081,8 +1080,10 @@ describe('Geostory Epics', () => {
             const action = { type: ADD, element: { type: ContentTypes.WEBPAGE } };
             const callback = (actions) => {
                 expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(TOGGLE_WEBPAGE_CREATOR);
-                expect(actions[0].show).toBe(true);
+                expect(actions[0].type).toBe(UPDATE);
+                expect(actions[0].element).toExist();
+                expect(actions[0].element.editURL).toBe(true);
+                expect(actions[0].mode).toBe('merge');
                 done();
             };
 

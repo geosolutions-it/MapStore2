@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, branch } from 'recompose';
-import emptyState from '../../misc/enhancers/emptyState';
+import { compose } from 'recompose';
 import { getWebPageComponentHeight } from '../../../utils/GeoStoryUtils';
+import { webPagePlaceholderEnhancer } from './enhancers/editURL';
 
-const WebPage = ({ src, size, viewHeight }) => (
+export const WebPage = ({ src, size, viewHeight }) => (
     <div className="ms-webpage-wrapper" >
         <iframe
             src={src}
@@ -20,11 +20,5 @@ const WebPage = ({ src, size, viewHeight }) => (
 );
 
 export default compose(
-    branch(
-        ({ src = "", viewHeight, size } = {}) => (!src || !viewHeight || !size),
-        emptyState(
-            () => true,
-            () => ({ glyph: "code" })
-        )
-    )
+    webPagePlaceholderEnhancer,
 )(WebPage);

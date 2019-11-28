@@ -19,7 +19,6 @@ import Message from '../../I18N/Message';
 import {Modes, SectionTypes, SectionTemplates} from '../../../utils/GeoStoryUtils';
 
 import withFocusMask from './sections/enhancers/withFocusMask';
-import WebPageCreator from '../common/WebPageCreator';
 
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
@@ -115,7 +114,6 @@ const Cascade = ({
                 }
             </div>}
     </ContainerDimensions>
-    <WebPageCreator />
 </BorderLayout>);
 
 export default compose(

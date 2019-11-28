@@ -47,7 +47,6 @@ import {
     update,
     setFocusOnContent,
     UPDATE,
-    toggleWebPageCreator,
     SET_WEBPAGE_URL
 } from '../actions/geostory';
 
@@ -131,8 +130,7 @@ const updateWebPageSection = path => action$ =>
     action$.ofType(SET_WEBPAGE_URL)
         .switchMap(({ src }) => {
             return Observable.of(
-                update(`${path}`, { src }, 'merge'),
-                toggleWebPageCreator(false)
+                update(`${path}`, { src, editURL: false }, 'merge'),
             );
         });
 
@@ -153,7 +151,7 @@ export const openWebPageComponentCreator = (action$) =>
             }
             const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
             return Observable.of(
-                toggleWebPageCreator(true)
+                update(path, { editURL: true }, 'merge')
             )
                 .merge(
                     action$.let(updateWebPageSection(path))
@@ -227,7 +225,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
                 showMediaEditor(owner),
                 selectItem(selectedResource)
             )
-                          .merge(
+                .merge(
                     action$.let(updateMediaSection(store, path))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
@@ -358,8 +356,8 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
  * @returns {Observable} a stream that emits actions setting focus on content
  */
 export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
-         action$.ofType(UPDATE).filter(({path = ""}) => path.endsWith("editMap"))
-     .map(({path: rowPath, element: status}) => {
+    action$.ofType(UPDATE).filter(({path = ""}) => path.endsWith("editMap"))
+        .map(({path: rowPath, element: status}) => {
             const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
             const target = flatPath.pop();
             const section = flatPath.shift();
@@ -368,4 +366,4 @@ export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
             scrollToContent(target.id);
 
             return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
-     });
+        });
