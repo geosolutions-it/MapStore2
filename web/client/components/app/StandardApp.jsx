@@ -10,7 +10,7 @@ const {Provider} = require('react-redux');
 const PropTypes = require('prop-types');
 const dragDropContext = require('react-dnd').DragDropContext;
 const html5Backend = require('react-dnd-html5-backend');
-const proj4 = require('proj4').default;
+const proj4 = require('@geosolutions/proj4').default;
 
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');

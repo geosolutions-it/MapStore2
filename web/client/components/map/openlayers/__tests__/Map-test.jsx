@@ -15,7 +15,7 @@ import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUt
 
 import assign from 'object-assign';
 
-import proj from 'proj4';
+import proj from '@geosolutions/proj4';
 import MapUtils from '../../../../utils/MapUtils';
 
 import '../../../../utils/openlayers/Layers';

@@ -14,7 +14,7 @@ const CoordinatesUtils = require("../utils/CoordinatesUtils");
 const urlUtil = require('url');
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {head} = require('lodash');
-const Proj4js = require('proj4').default;
+const Proj4js = require('@geosolutions/proj4').default;
 const proj4 = Proj4js;
 
 const toDescribeLayerURL = ({name, search = {}, url} = {}) => {

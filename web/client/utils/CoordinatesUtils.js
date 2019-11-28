@@ -7,7 +7,7 @@
 */
 
 const geo = require('node-geo-distance');
-const Proj4js = require('proj4').default;
+const Proj4js = require('@geosolutions/proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');

@@ -14,7 +14,7 @@ const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
-const Proj4js = require('proj4').default;
+const Proj4js = require('@geosolutions/proj4').default;
 const Message = require('../I18N/Message');
 
 class Toolbar extends React.Component {

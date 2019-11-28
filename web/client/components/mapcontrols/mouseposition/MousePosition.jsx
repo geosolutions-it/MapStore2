@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const proj4js = require('proj4').default;
+const proj4js = require('@geosolutions/proj4').default;
 const {Glyphicon, Button, Label} = require('react-bootstrap');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
