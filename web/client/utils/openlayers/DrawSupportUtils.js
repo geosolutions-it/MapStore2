@@ -41,7 +41,8 @@ export const transformPolygonToCircle = (feature, mapCrs, coordinateCrs = mapCrs
         } else {
             center = getCenter(extent);
         }
-        const radius = calculateRadius(center, feature.getGeometry().getCoordinates(), mapCrs, coordinateCrs);
+        // check if projection equal to the one used when drawing the circle
+        const radius = feature.getProperties().crs === mapCrs ? feature.getProperties().radius : calculateRadius(center, feature.getGeometry().getCoordinates(), mapCrs, coordinateCrs);
         feature.setGeometry(new Circle(center, radius));
         return feature;
     }

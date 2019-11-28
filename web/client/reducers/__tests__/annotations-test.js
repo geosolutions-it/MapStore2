@@ -10,6 +10,7 @@ const expect = require('expect');
 const annotations = require('../annotations');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../utils/AnnotationsUtils');
 const {isEmpty} = require('lodash');
+const {set} = require('../../utils/ImmutableUtils');
 
 const testFeatures = {
     point1: {
@@ -39,7 +40,8 @@ const {
     highlightPoint, changeFormat,
     toggleStyle,
     setStyle,
-    updateSymbols
+    updateSymbols,
+    setEditingFeature
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -820,6 +822,36 @@ describe('Test the annotations reducer', () => {
         expect(state.drawing).toBe(false);
     });
 
+    it('setEditingFeature', () => {
+        const {point1, lineString1} = testFeatures;
+        const feature = {
+            type: "FeatureCollection",
+            features: [point1, lineString1],
+            properties: { id: '1asdfads' },
+            style: {}
+        };
+        const state = annotations({
+            selected: {},
+            originalStyle: null
+        }, setEditingFeature(feature));
+
+        expect(state).toExist();
+        expect(state.editing).toExist();
+        expect(state.editing.type).toBe('FeatureCollection');
+        expect(state.editing.properties).toEqual({ id: '1asdfads', canEdit: false });
+        expect(state.editing.newFeature).toBe(true);
+        expect(state.coordinateEditorEnabled).toBe(false);
+        expect(state.drawing).toBe(false);
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBe(null);
+        expect(state.editing.style).toEqual({});
+        expect(state.editing.features.length).toBe(2);
+        state.editing.features.map((x, i) => {
+            expect(x).toEqual(set('properties.canEdit', false, feature.features[i]));
+        });
+        expect(state.editing.tempFeatures).toEqual(state.editing.features);
+    });
+
     it('resetCoordEditor in creation mode of a Point ', () => {
         const {point1, lineString1} = testFeatures;
         const featureColl = {
@@ -1374,6 +1406,41 @@ describe('Test the annotations reducer', () => {
         }, changeSelected(coordinates, null, "text"));
         expect(state.selected.geometry.type).toBe("Point");
         expect(state.featureType).toBe("Text");
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(1);
+    });
+    it('changeSelected, changing coords of a Circle Feature', () => {
+        const selected = {
+            properties: {
+                canEdit: true,
+                center: [-6.576492309570317, 41.6007838467891],
+                id: "259d79d0-053e-11ea-b0b3-379d853a3ff4",
+                isCircle: true,
+                isValidFeature: true,
+                radius: 3567
+            },
+            geometry: {
+                type: "Circle",
+                coordinates: [-6.576492309570317, 41.6007838467891]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const coordinates = [[1, 1]];
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, 3567));
+        expect(state.selected.geometry.type).toBe("Circle");
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(1);
     });

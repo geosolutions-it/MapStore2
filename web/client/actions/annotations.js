@@ -45,6 +45,7 @@ const RESET_COORD_EDITOR = 'ANNOTATIONS:RESET_COORD_EDITOR';
 const CHANGE_RADIUS = 'ANNOTATIONS:CHANGE_RADIUS';
 const CHANGE_TEXT = 'ANNOTATIONS:CHANGE_TEXT';
 const ADD_NEW_FEATURE = 'ANNOTATIONS:ADD_NEW_FEATURE';
+const SET_EDITING_FEATURE = 'ANNOTATIONS:SET_EDITING_FEATURE';
 const HIGHLIGHT_POINT = 'ANNOTATIONS:HIGHLIGHT_POINT';
 const TOGGLE_DELETE_FT_MODAL = 'ANNOTATIONS:TOGGLE_DELETE_FT_MODAL';
 const CONFIRM_DELETE_FEATURE = 'ANNOTATIONS:CONFIRM_DELETE_FEATURE';
@@ -285,6 +286,12 @@ function addNewFeature() {
         type: ADD_NEW_FEATURE
     };
 }
+function setEditingFeature(feature) {
+    return {
+        type: SET_EDITING_FEATURE,
+        feature
+    };
+}
 function cancelCloseAnnotations() {
     return {
         type: CANCEL_CLOSE_ANNOTATIONS
@@ -388,6 +395,7 @@ module.exports = {
     TOGGLE_DELETE_FT_MODAL, toggleDeleteFtModal,
     HIGHLIGHT_POINT, highlightPoint,
     ADD_NEW_FEATURE, addNewFeature,
+    SET_EDITING_FEATURE, setEditingFeature,
     LOAD_ANNOTATIONS, loadAnnotations,
     RESET_COORD_EDITOR, resetCoordEditor,
     CHANGE_TEXT, changeText,

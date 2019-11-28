@@ -21,7 +21,8 @@ describe('DrawSupportUtils openlayers', () => {
             isCircle: true,
             id: uuid.v1(),
             radius,
-            center: makePoint(reproject(center, crs, "EPSG:4326"))
+            center: makePoint(reproject(center, crs, "EPSG:4326")),
+            crs
         });
     };
 
@@ -85,5 +86,16 @@ describe('DrawSupportUtils openlayers', () => {
         const feature = new Feature({geometry: new Polygon([[1.0, 2.0], [-1.0, -1.0]])});
         const newFeature = transformPolygonToCircle(feature);
         expect(newFeature).toEqual(feature);
+    });
+
+    it('test transformPolygonToCircle when feature crs differ with mapCrs', () => {
+        const mapCrs = "EPSG:4326";
+        const coordinateCrs = "EPSG:3857";
+        const testFeature = makeTestFeature("EPSG:3857");
+        const newFeature = transformPolygonToCircle(testFeature, mapCrs, coordinateCrs);
+        expect(newFeature).toExist();
+        const geometry = newFeature.getGeometry();
+        expect(geometry).toBeA(Circle);
+        expect(numberToPrecision(geometry.getRadius())).toNotEqual(numberToPrecision(radius));
     });
 });

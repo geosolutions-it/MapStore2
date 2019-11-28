@@ -12,19 +12,31 @@ import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
 
 import {
     loadMediaEditorDataEpic,
-    editorSaveUpdateMediaEpic
+    editorSaveUpdateMediaEpic,
+    mediaEditorNewMap,
+    mediaEditorEditMap,
+    reloadMediaResources,
+    importInLocalSource
 } from '../mediaEditor';
-
+import {
+    show as showMapEditor,
+    save,
+    HIDE
+} from '../../actions/mapEditor';
 import {
     loadMedia,
     saveMedia,
     show,
+    setEditingMedia,
+    importInLocal,
     ADDING_MEDIA,
     EDITING_MEDIA,
-    LOAD_MEDIA,
     LOAD_MEDIA_SUCCESS,
     SAVE_MEDIA_SUCCESS,
-    SELECT_ITEM
+    SELECT_ITEM,
+    UPDATE_ITEM,
+    LOAD_MEDIA,
+    SET_MEDIA_SERVICE
 } from '../../actions/mediaEditor';
 
 describe('MediaEditor Epics', () => {
@@ -96,7 +108,7 @@ describe('MediaEditor Epics', () => {
         });
     });
     it('editorSaveUpdateMediaEpic add new media', (done) => {
-        const NUM_ACTIONS = 4;
+        const NUM_ACTIONS = 3;
         const source = "geostory";
         const type = "image";
         const data = {};
@@ -115,10 +127,6 @@ describe('MediaEditor Epics', () => {
                     break;
                 case SELECT_ITEM:
                     expect(a.id.length).toEqual(36);
-                    break;
-                case LOAD_MEDIA:
-                    expect(a.mediaType).toEqual(type);
-                    expect(a.sourceId).toEqual(source);
                     break;
                 default: expect(true).toEqual(false);
                     break;
@@ -140,7 +148,7 @@ describe('MediaEditor Epics', () => {
     });
 
     it('editorSaveUpdateMediaEpic update media', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 2;
         const source = "geostory";
         const type = "image";
         const data = {src: "http", title: "title"};
@@ -156,10 +164,6 @@ describe('MediaEditor Epics', () => {
                     break;
                 case EDITING_MEDIA:
                     expect(a.editing).toEqual(false);
-                    break;
-                case LOAD_MEDIA:
-                    expect(a.mediaType).toEqual(type);
-                    expect(a.sourceId).toEqual(source);
                     break;
                 default: expect(true).toEqual(false);
                     break;
@@ -184,6 +188,153 @@ describe('MediaEditor Epics', () => {
                 selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
                 settings: {
                     sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('mediaEditorNewMap epic handle new map creation save stream', (done) => {
+        const NUM_ACTIONS = 3;
+        const type = "map";
+        testEpic(mediaEditorNewMap, NUM_ACTIONS, [showMapEditor("mediaEditor"), save({}, "mediaEditor")], (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.mediaType).toEqual(type);
+                    expect(a.sourceId).toEqual('geostory');
+                    expect(a.resultData).toExist();
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toExist();
+                    break;
+                case HIDE:
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                resources: [{
+                    id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                    data: {
+                        src: "ht",
+                        title: "ti"
+                    }
+                }]
+            },
+            mediaEditor: {
+                saveState: {
+                    editing: false,
+                    adding: true
+                },
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                settings: {
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('mediaEditorEditMap epic handle edit map save stream', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(mediaEditorEditMap, NUM_ACTIONS, [showMapEditor("mediaEditor", {}), save({}, "mediaEditor")], (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case UPDATE_ITEM:
+                    expect(a.item).toExist();
+                    break;
+                case HIDE:
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                resources: [{
+                    id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                    data: {
+                        src: "ht",
+                        title: "ti"
+                    }
+                }]
+            },
+            mediaEditor: {
+                saveState: {
+                    editing: false,
+                    adding: true
+                },
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                settings: {
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('reloadMediaResources epic load resources when editing form close', (done) => {
+        const NUM_ACTIONS = 1;
+        testEpic(reloadMediaResources, NUM_ACTIONS, setEditingMedia(false), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case LOAD_MEDIA:
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {});
+    });
+    it('importInLocalSource epic handle new map creation save stream', (done) => {
+        const NUM_ACTIONS = 4;
+        testEpic(importInLocalSource, NUM_ACTIONS, importInLocal({resource: {id: 'testId', type: 'map'}}), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case SET_MEDIA_SERVICE:
+                    expect(a.id).toEqual('geostory');
+                    break;
+                case SAVE_MEDIA_SUCCESS:
+                    expect(a.data.id).toEqual('testId');
+                    break;
+                case LOAD_MEDIA:
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toExist();
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                resources: [{
+                    id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                    data: {
+                        src: "ht",
+                        title: "ti"
+                    }
+                }]
+            },
+            mediaEditor: {
+                saveState: {
+                    editing: false,
+                    adding: true
+                },
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                settings: {
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            name: "Current story",
+                            type: "geostory"
+                        }
+                    }
                 }
             }
         });

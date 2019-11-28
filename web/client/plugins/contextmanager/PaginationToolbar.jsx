@@ -43,7 +43,7 @@ export default compose(
         onSelect: ({ loadPage = () => { }, searchText, pageSize }) => (pageNumber) => {
             let start = pageSize * pageNumber;
             let limit = pageSize;
-            loadPage(searchText, { start, limit });
+            loadPage(searchText, {params: { start, limit }});
         }
     })
 )(require('../../components/misc/PaginationToolbar'));

@@ -61,7 +61,14 @@
         }
     }
 }
-
+.ms-geostory-map-controls {
+    padding-top: 8px;
+}
+.ms-geostory-settings-switch, .ms-geostory-map-controls-switch {
+    float: right;
+    position: relative;
+    top: unset;
+}
 .ms-geostory-builder {
     .ms-geostory-settings {
         padding: 8px;
@@ -69,11 +76,7 @@
             position: relative;
             display: block;
         }
-        .ms-geostory-settings-switch {
-            float: right;
-            position: relative;
-            top: unset;
-        }
+
         .ms-geostory-settings-immersive-section {
             padding-left: 20px;
         }
@@ -213,6 +216,7 @@
             margin-top: 5px;
         }
     }
+    padding: 8px;
 }
 .ms-cascade-story {
 
@@ -771,7 +775,7 @@
             &.ms-section-paragraph {
                 .ms-section-contents{
                     padding-bottom: 120px;
-                }                
+                }
             }
         }
     }
@@ -784,4 +788,23 @@
     .public-DraftStyleDefault-ltr {
         text-align: inherit;
     }
+}
+
+.ms-media-map.topRight .ol-zoom.ol-unselectable.ol-control {
+    right: 10px;
+    left: unset;
+}
+
+.ms-media-map.bottomRight .ol-zoom.ol-unselectable.ol-control {
+    top: unset;
+    right: 10px;
+    bottom: 10px;
+    left: unset;
+}
+
+.ms-media-map.bottomLeft .ol-zoom.ol-unselectable.ol-control {
+    top: unset;
+    right: unset;
+    bottom: 10px;
+    left: 10px;
 }
