@@ -104,4 +104,101 @@ describe("Test GroupDialog Component", () => {
         expect(description.children.length).toBe(1);
         expect(description.children[0].innerHTML).toBe('usergroups.groupDescription');
     });
+
+    it('should toggle select member field popup', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} />,
+            document.getElementById("container"));
+        expect(comp.state.openSelectMember).toBe(false);
+        comp.handleToggleSelectMember(true);
+        expect(comp.state.openSelectMember).toBe(true);
+    });
+
+    it('should handle select member change on text change', () => {
+        const actions = {
+            searchUsers: () => { }
+        };
+        const spySearchUsers = expect.spyOn(actions, 'searchUsers');
+        const comp = ReactDOM.render(
+            <GroupDialog group={group1} searchUsers={actions.searchUsers} />,
+            document.getElementById("container"));
+        const text = 'test';
+        comp.handleSelectMemberOnChange(text);
+        expect(comp.state.selectedMember).toEqual(text);
+        expect(spySearchUsers).toHaveBeenCalled();
+    });
+
+    it('should handle select member change on value select', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const selected = { id: 1, name: 'test', value: 1 };
+        const availableUsers = [selected];
+        const spyOnChange = expect.spyOn(actions, 'onChange');
+        const comp = ReactDOM.render(
+            <GroupDialog group={group1} onChange={actions.onChange} availableUsers={availableUsers} />,
+            document.getElementById("container"));
+        comp.handleSelect();
+        comp.handleSelectMemberOnChange(selected);
+        expect(spyOnChange).toHaveBeenCalled();
+    });
+
+    it('should go to next member page', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} />,
+            document.getElementById("container"));
+        expect(comp.selectMemberPage).toEqual(0);
+        comp.loadNextPageMembers();
+        expect(comp.selectMemberPage).toBe(6);
+    });
+
+    it('should go to prev member page', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} />,
+            document.getElementById("container"));
+        comp.selectMemberPage = 11;
+        comp.loadPrevPageMembers();
+        expect(comp.selectMemberPage).toBe(6);
+    });
+    it('should go to last member page', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} availableUsersCount={15} />,
+            document.getElementById("container"));
+        comp.selectMemberPage = 11;
+        comp.loadNextPageMembers();
+        expect(comp.isLastPage()).toBe(true);
+    });
+    describe('unsaved changes modal', () => {
+        it('showing unsaved changes modal and closing the modal', () => {
+            const actions = {
+                onClose: () => {}
+            };
+            const onCloseSpy = expect.spyOn(actions, 'onClose');
+
+            const groupDlg = ReactDOM.render(
+                <GroupDialog
+                    group={{...group1, status: "modified"}}
+                    onClose={actions.onClose}
+                />, document.getElementById("container"));
+            expect(groupDlg).toExist();
+            let buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(6);
+            let saveBtn = buttons[4];
+            let closeBtn = buttons[5];
+            expect(saveBtn.innerText).toBe("usergroups.saveGroup");
+            expect(closeBtn.innerText).toBe("saveDialog.close");
+            ReactTestUtils.Simulate.click(closeBtn); // click on enhanced close button
+
+            buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(9);
+
+            let closeBtnModal = buttons[7];
+            let cancelBtnModal = buttons[8];
+            expect(closeBtnModal.innerText).toBe("saveDialog.close");
+            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtnModal);  // click on close button of the confirm modal
+
+            expect(onCloseSpy).toHaveBeenCalled();
+        });
+    });
 });

@@ -15,6 +15,7 @@ const mapStateToProps = (state) => {
     return {
         modal: true,
         availableUsers: usergroups && usergroups.availableUsers,
+        availableUsersCount: usergroups && usergroups.availableUsersCount,
         availableUsersLoading: usergroups && usergroups.availableUsersLoading,
         show: usergroups && !!usergroups.currentGroup,
         group: usergroups && usergroups.currentGroup

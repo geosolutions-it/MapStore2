@@ -1,6 +1,14 @@
 @ms-story-bg: @ms2-color-background;
-
+.media-editor-modal {
+    z-index: 2900 !important;
+}
 .ms-mediaEditor {
+    .empty-state-container {
+        position: relative;
+        .empty-state-main-view .empty-state-description {
+            text-align: center;
+        }
+    }
     /* render the scrollbar on the list */
     .ms-mediaList {
         display: flex;
@@ -77,6 +85,24 @@
                 flex: 1;
                 padding-right: 4px;
             }
+        }
+    }
+    .ms-mapForm {
+        .dropzone:hover .dropzone-content-image-added {
+            visibility: visible;
+            z-index: 2;
+            transition: none;
+            background: rgba(0,0,0,.7);
+        }
+
+        .dropzone .dropzone-content-image {
+            padding-top: 40px;
+            font-size: unset;
+            transition: none;
+            text-align: center;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
         }
     }
 }

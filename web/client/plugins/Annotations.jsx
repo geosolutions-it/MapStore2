@@ -161,7 +161,7 @@ class AnnotationsPanel extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
                 { ({ width }) =>
-                    <span className="ms-annotations-panel react-dock-no-resize">
+                    <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
                         <Dock
                             dockStyle={this.props.dockStyle} {...this.props.dockProps}
                             isVisible={this.props.active}

@@ -340,6 +340,7 @@
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Formati supportati: png/jpg",
             "errorSize": "Dimensione massima consentita: 500kb",
+            "errorCustomSize": "Dimensione massima consentita: {maxFileSize}",
             "error": "L'immagine fornita non è valida",
             "savedMapTitle": "Mappa Salvata",
             "savedMapMessage": "La mappa è stata salvata correttamente",
@@ -388,6 +389,7 @@
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
                     "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
+                    "projectionError": "La proiezione {projection} della mappa non è stata configurata",
                     "title" : "La mappa non può essere visualizzata"
                 }
             }
@@ -1044,6 +1046,7 @@
           "creatingGroup": "Creazione...",
           "groupMembers": "Membri:",
           "addMember": "Aggiungi Membro:",
+          "selectMemberPlaceholder": "Seleziona membro ...",
           "noUsers": "Nessun utente membro di questo gruppo",
           "errorSaving": "Si è verificato un errore salvando questo gruppo:",
           "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
@@ -1990,7 +1993,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurazione mappa"
+                "configureMapOptions": "Configurazione mappa",
+                "settings": "Impostazioni",
+                "settingsSubTitle": "Gestisci le interazioni dell'utente",
+                "toc": "Toc",
+                "pan": "Interazione di scorrimento",
+                "zoom": "Interazione di zoom",
+                "topLeft": "Angolo in alto a sinistra",
+                "topRight": "Angolo in alto a destra",
+                "bottomLeft": "Angolo in basso a sinistra",
+                "bottomRight": "Angolo in basse a destra"
             }
         },
          "saveDialog": {
@@ -2005,6 +2017,11 @@
             "saveSuccessTitle": "Successo",
             "saveSuccessMessage": "Salvata con successo"
         },
+        "mapEditor": {
+            "modalTitle": "Editor di Mappa",
+            "confirmExitTitle": "Chiudi Editor di Mappa",
+            "confirmExitContent": "Annullare le modifiche ed uscire?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Immagini",
@@ -2012,6 +2029,8 @@
             "maps": "Mappe",
             "preview": "Anteprima",
             "apply": "Applica",
+            "confirmExitTitle": "Chiudi Media Editor",
+            "confirmExitContent": "Annullare le modifiche ed uscire?",
             "mediaPicker": {
                 "services": "Servizi: ",
                 "clean": "Pulisci",
@@ -2033,7 +2052,15 @@
                 "credits": "Crediti",
                 "mapFilter": "Filtra mappe",
                 "videoFilter": "Filtra video",
-                "imageFilter": "Filtra immagini"
+                "imageFilter": "Filtra immagini",
+                "import": "Importa la risorsa localmente"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Chiudi Media From",
+                "confirmExitContent": "Annuallare le modifiche ed uscire?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB"
             }
         },
         "backgroundDialog": {
@@ -2072,6 +2099,7 @@
             },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
+                "conflict": "Un contesto con lo stesso nome esiste già. prova '{data}'",
                 "defaultMessage": "Errore sconosciuto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"
@@ -2079,7 +2107,7 @@
         "contextManager": {
             "title": "Gestisci contesti",
             "gridTitle": "Contesti",
-            "searchPlaceholder": "contesti di ricerca...",
+            "searchPlaceholder": "cerca...",
             "newContext": "Nuovo contesto",
             "editContextTooltip": "Modifica contesto"
         },

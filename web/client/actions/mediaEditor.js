@@ -20,7 +20,9 @@ export const SET_MEDIA_SERVICE = "MEDIA_EDITOR:SET_MEDIA_SERVICE";
 export const SELECT_ITEM = "MEDIA_EDITOR:SELECT_ITEM";
 export const SHOW = "MEDIA_EDITOR:SHOW";
 export const UPDATE_ITEM = "MEDIA_EDITOR:UPDATE_ITEM";
+export const IMPORT_IN_LOCAL = "MEDIA_EDITOR:IMPORT_IN_LOCAL";
 
+import {SourceTypes} from '../utils/MediaEditorUtils';
 // RESOURCE FORMAT :
 /*
 {
@@ -118,5 +120,18 @@ export const show = (owner) => ({type: SHOW, owner});
 export const editMedia = ({path, owner = "geostory"}) => ({
     type: EDIT_MEDIA,
     path,
+    owner
+});
+
+/**
+ * @prop {object} options
+ * @prop {object} options.resource the resource to be imported
+ * @prop {string} options.sourceType the source type used too select local source
+ * @prop {string} options.owner of the media editor
+ */
+export const importInLocal = ({resource, sourceType = SourceTypes.GEOSTORY, owner = "geostory"}) => ({
+    type: IMPORT_IN_LOCAL,
+    resource,
+    sourceType,
     owner
 });

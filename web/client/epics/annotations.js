@@ -24,7 +24,7 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
-    ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
+    ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
@@ -146,7 +146,7 @@ const mergeGeometry = (features) => {
 const createNewFeature = (action) => {
     return {
         type: "FeatureCollection",
-        properties: assign({}, action.fields, {id: action.id}, action.properties ),
+        properties: assign({}, action.properties, action.fields, {id: action.id}),
         features: action.geometry,
         style: assign({}, action.style, {highlight: false})
     };
@@ -223,6 +223,12 @@ module.exports = (viewer) => ({
                 hideMapinfoMarker()
             ]);
         }),
+    setEditingFeatureEpic: (action$, store) => action$.ofType(SET_EDITING_FEATURE)
+        .switchMap(() => Rx.Observable.of(
+            changeLayerProperties('annotations', {visibility: false}),
+            getSelectDrawStatus(store.getState()),
+            hideMapinfoMarker()
+        )),
     disableInteractionsEpic: (action$, store) => action$.ofType(TOGGLE_STYLE)
         .switchMap(() => {
             const isStylingActive = store.getState() && store.getState().annotations && store.getState().annotations.styling;

@@ -339,7 +339,8 @@
             "message": "Déposez ou cliquez sur pour importer une image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Formats supportés: png/jpg",
-            "errorSize": "taille maximum autorisée: 500kb",
+            "errorSize": "Taille maximum autorisée: 500kb",
+            "errorCustomSize": "taille maximum autorisée: {maxFileSize}",
             "error": "L'image fournie n'est pas valide",
             "savedMapTitle": "Carte sauvegardée",
             "savedMapMessage": "La carte a été enregistrée correctement",
@@ -388,6 +389,7 @@
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte non accessible",
                     "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "projectionError": "La projection {projection} de la carte n'est pas configurée",
                     "title" : "La carte ne peut pas être vue"
                 }
             }
@@ -1044,6 +1046,7 @@
           "creatingGroup": "Création...",
           "groupMembers": "Membres:",
           "addMember": "Ajouter un membre:",
+          "selectMemberPlaceholder": "Sélectionnez un membre ...",
           "noUsers": "Aucun utilisateur pour ce groupe",
           "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
           "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
@@ -1989,7 +1992,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configurer la carte",
+                "settings": "Paramètres",
+                "settingsSubTitle": "Gérer les interactions utilisateur",
+                "toc": "Couches",
+                "pan": "Interaction pan",
+                "zoom": "Interactions zoom avant / arrière",
+                "topLeft": "En haut à gauche",
+                "topRight": "En haut à droite",
+                "bottomLeft": "En bas à gauche",
+                "bottomRight": "En bas à droite"
             }
         },
         "saveDialog": {
@@ -2004,6 +2016,11 @@
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Fermer l'éditeur de carte",
+            "confirmExitContent": "Supprimer les modifications en attente?"
+        },
         "mediaEditor": {
             "modalTitle": "Médias",
             "images": "Images",
@@ -2011,6 +2028,8 @@
             "maps": "Plans",
             "preview": "Aperçu",
             "apply": "Appliquer",
+            "confirmExitTitle": "Fermer Media Editor",
+            "confirmExitContent": "Supprimer les modifications en attente?",
             "mediaPicker": {
                 "services": "Services: ",
                 "clean": "Résultats nets",
@@ -2032,7 +2051,15 @@
                 "credits": "Crédits",
                 "mapFilter": "Filtrer les cartes",
                 "videoFilter": "Filtrer les vidéos",
-                "imageFilter": "Filtrer les images"
+                "imageFilter": "Filtrer les images",
+                "import": "Importer une ressource dans un magasin local"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Fermer Media Form",
+                "confirmExitContent": "Supprimer les modifications en attente?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko."
             }
         },
         "backgroundDialog": {
@@ -2071,6 +2098,7 @@
             },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
+                "conflict": "Un contexte portant le même nom existe déjà. essayez '{data}'",
                 "defaultMessage": "Erreur inconnue"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
@@ -2078,7 +2106,7 @@
         "contextManager": {
             "title": "Gérer les contextes",
             "gridTitle": "Contextes",
-            "searchPlaceholder": "contextes de recherche...",
+            "searchPlaceholder": "rechercher...",
             "newContext": "Nouveau contexte",
             "editContextTooltip": "Modifier le contexte"
         },

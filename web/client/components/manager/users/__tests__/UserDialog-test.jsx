@@ -255,7 +255,7 @@ describe("Test UserDialog Component", () => {
         expect(retypePassword.children[1].innerHTML).toBe('*');
     });
 
-    it('Test on close dialog, reset password field', () => {
+    it('Test on close dialog using form close btn, reset password field', () => {
         let comp = ReactDOM.render(
             <UserDialog user={newUser} />, document.getElementById("container"));
         expect(comp).toExist();
@@ -264,6 +264,49 @@ describe("Test UserDialog Component", () => {
         passwordField.value = 'password';
         ReactTestUtils.Simulate.click(closeBtn);
         expect(passwordField.value).toEqual('');
+    });
 
+    it('Test on close dialog using dialog header close btn, reset password field', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={newUser} />, document.getElementById("container"));
+        expect(comp).toExist();
+        const passwordField = document.querySelector("input[name='newPassword']");
+        const closeBtn = document.querySelector(".login-panel-close");
+        passwordField.value = 'password';
+        ReactTestUtils.Simulate.click(closeBtn);
+        expect(passwordField.value).toEqual('');
+    });
+
+    describe('unsaved changes modal', () => {
+        it('showing unsaved changes modal and closing the modal', () => {
+            const actions = {
+                onClose: () => {}
+            };
+            const onCloseSpy = expect.spyOn(actions, 'onClose');
+
+            const userDlg = ReactDOM.render(
+                <UserDialog
+                    user={{...newUser, status: "modified"}}
+                    onClose={actions.onClose}
+                />, document.getElementById("container"));
+            expect(userDlg).toExist();
+            let buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(3);
+            let saveBtn = buttons[1];
+            let closeBtn = buttons[2];
+            expect(saveBtn.innerText).toBe("users.createUser");
+            expect(closeBtn.innerText).toBe("saveDialog.close");
+            ReactTestUtils.Simulate.click(closeBtn);
+            buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(6);
+
+            let closeBtnModal = buttons[4];
+            let cancelBtnModal = buttons[5];
+            expect(closeBtnModal.innerText).toBe("saveDialog.close");
+            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtnModal);
+
+            expect(onCloseSpy).toHaveBeenCalled();
+        });
     });
 });

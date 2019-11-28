@@ -8,8 +8,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import {find} from 'lodash';
 import OpenlayersLayer from '../Layer';
 import OpenlayersMap from '../Map';
+import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUtils';
 
 import assign from 'object-assign';
 
@@ -1106,5 +1108,113 @@ describe('OpenlayersMap', () => {
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
     });
+    describe('map interactions', () => {
 
+        it('test map without interactions, interactive=false', () => {
+            const {map} = ReactDOM.render(
+                <OpenlayersMap
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    interactive={false}
+                />, document.getElementById("map"));
+            expect(map).toExist();
+            expect(document.getElementsByClassName('ol-zoom-in').length).toBe(1);
+            expect(map.getInteractions).toExist();
+            expect(map.getInteractions().getArray().length).toBe(0);
+        });
+        it('test map with default interactions, interactive=true', () => {
+            const {map} = ReactDOM.render(
+                <OpenlayersMap
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    interactive
+                />, document.getElementById("map"));
+            expect(map).toExist();
+            expect(document.getElementsByClassName('ol-zoom-in').length).toBe(1);
+            expect(map.getInteractions).toExist();
+            const mapInteractions = map.getInteractions().getArray();
+            expect(mapInteractions.length).toBe(9);
+
+            // checking all 9 basic interaction
+            mapInteractions.forEach(interaction => {
+                let present = Object.keys(DEFAULT_INTERACTION_OPTIONS).reduce((p, c) => {
+                    return p || interaction instanceof DEFAULT_INTERACTION_OPTIONS[c].Instance;
+                }, false);
+                expect(present).toBe(true);
+            });
+        });
+        it('test map with mouseWheelZoom interaction being disabled ', () => {
+            let Comp = ReactDOM.render(
+                <OpenlayersMap
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    mapOptions= {{
+                        interactions: {
+                            mouseWheelZoom: true
+                        }
+                    }}
+                    interactive
+                />, document.getElementById("map"));
+            let map = Comp.map;
+            expect(map).toExist();
+            const mapInteractions = map.getInteractions().getArray();
+            expect(map.getInteractions).toExist();
+            expect(mapInteractions.length).toBe(9);
+            let mouseWheelPresent = find(mapInteractions, interaction => interaction instanceof DEFAULT_INTERACTION_OPTIONS.mouseWheelZoom.Instance);
+            expect(mouseWheelPresent).toExist();
+            expect(mouseWheelPresent.getActive()).toBe(true);
+            Comp = ReactDOM.render(
+                <OpenlayersMap
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    mapOptions= {{
+                        interactions: {
+                            mouseWheelZoom: false
+                        }
+                    }}
+                    interactive
+                />, document.getElementById("map"));
+            map = Comp.map;
+            expect(map).toExist();
+            expect(map.getInteractions).toExist();
+            expect(mapInteractions.length).toBe(9);
+            mouseWheelPresent = find(mapInteractions, interaction => interaction instanceof DEFAULT_INTERACTION_OPTIONS.mouseWheelZoom.Instance);
+            expect(mouseWheelPresent).toExist();
+            expect(mouseWheelPresent.getActive()).toBe(false);
+        });
+        it('test map with no interaction and then with some interactions being enabled ', () => {
+            const MouseWheelInstance = DEFAULT_INTERACTION_OPTIONS.mouseWheelZoom.Instance;
+            let Comp = ReactDOM.render(
+                <OpenlayersMap
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    interactive={false}
+                />, document.getElementById("map"));
+            let map = Comp.map;
+            expect(map).toExist();
+            const mapInteractions = map.getInteractions().getArray();
+            expect(map.getInteractions).toExist();
+            expect(mapInteractions.length).toBe(0);
+            let mouseWheelPresent = find(mapInteractions, interaction => interaction instanceof MouseWheelInstance);
+            expect(mouseWheelPresent).toNotExist();
+            Comp = ReactDOM.render(
+                <OpenlayersMap
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    mapOptions= {{
+                        interactions: {
+                            mouseWheelZoom: true,
+                            dragPan: true
+                        }
+                    }}
+                />, document.getElementById("map"));
+            map = Comp.map;
+            expect(map).toExist();
+            expect(map.getInteractions).toExist();
+            expect(mapInteractions.length).toBe(2);
+            mouseWheelPresent = find(mapInteractions, interaction => interaction instanceof MouseWheelInstance);
+            expect(mouseWheelPresent).toExist();
+            expect(mouseWheelPresent.getActive()).toBe(true);
+        });
+    });
 });

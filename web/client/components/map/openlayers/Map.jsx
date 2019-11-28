@@ -26,18 +26,17 @@ import CoordinatesUtils from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
+import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
-import isEqual from 'lodash/isEqual';
-import throttle from 'lodash/throttle';
-import isArray from 'lodash/isArray';
-import isNil from 'lodash/isNil';
+import {isEqual, find, throttle, isArray, isNil} from 'lodash';
+
 
 import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
 
-export default class OpenlayersMap extends React.Component {
+class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         style: PropTypes.object,
@@ -95,29 +94,37 @@ export default class OpenlayersMap extends React.Component {
         // normally it happens ad application level.
         let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         register(proj4);
-        let interactionsOptions = assign(this.props.interactive ? {} : {
-            doubleClickZoom: false,
-            dragPan: false,
-            altShiftDragRotate: false,
-            keyboard: false,
-            mouseWheelZoom: false,
-            shiftDragZoom: false,
-            pinchRotate: false,
-            pinchZoom: false
-        }, this.props.mapOptions.interactions);
+        // interactive flag is used only for initializations,
+        // TODO manage it also when it changes status (ComponentWillReceiveProps)
+        let interactionsOptions = assign(
+            this.props.interactive ?
+                {} :
+                {
+                    doubleClickZoom: false,
+                    dragPan: false,
+                    altShiftDragRotate: false,
+                    keyboard: false,
+                    mouseWheelZoom: false,
+                    shiftDragZoom: false,
+                    pinchRotate: false,
+                    pinchZoom: false
+                },
+            this.props.mapOptions.interactions);
 
         let interactions = defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
         }, interactionsOptions, {}));
-        if (interactionsOptions === undefined || interactionsOptions.dragPan === undefined || interactionsOptions.dragPan) {
+        if (interactionsOptions === undefined || interactionsOptions.dragPan === undefined) {
+            this.dragPanInteraction = new DragPan({ kinetic: false });
             interactions.extend([
-                new DragPan({ kinetic: false })
+                this.dragPanInteraction
             ]);
         }
-        if (interactionsOptions === undefined || interactionsOptions.mouseWheelZoom === undefined || interactionsOptions.mouseWheelZoom) {
+        if (interactionsOptions === undefined || interactionsOptions.mouseWheelZoom === undefined) {
+            this.mouseWheelInteraction = new MouseWheelZoom({ duration: 0 });
             interactions.extend([
-                new MouseWheelZoom({ duration: 0 })
+                this.mouseWheelInteraction
             ]);
         }
         let controls = defaultControls(assign({
@@ -228,13 +235,38 @@ export default class OpenlayersMap extends React.Component {
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
-
         if (newProps.zoomControl !== this.props.zoomControl) {
             if (newProps.zoomControl) {
                 this.map.addControl(new Zoom());
             } else {
                 this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof Zoom)[0]);
             }
+        }
+        /*
+         * Manage interactions programmatically.
+         * map interactions may change, i.e. becoming enabled or disabled
+         * TODO: with re-generation of mapOptions the application could do this operation
+         * on every render. We should prevent it with something like isEqual if this becomes
+         * a performance problem
+         */
+        if (this.map && (this.props.mapOptions && this.props.mapOptions.interactions) !== (newProps.mapOptions && newProps.mapOptions.interactions)) {
+            const newInteractions = newProps.mapOptions.interactions || {};
+            const mapInteractions = this.map.getInteractions().getArray();
+            Object.keys(newInteractions).forEach(newInteraction => {
+                const {Instance, options} = DEFAULT_INTERACTION_OPTIONS[newInteraction] || {};
+                let interaction = find(mapInteractions, inter => DEFAULT_INTERACTION_OPTIONS[newInteraction] && inter instanceof Instance);
+                if (!interaction) {
+                    /* if the interaction
+                     *   does not exist in the map && now is enabled
+                     * then
+                     *   add it
+                    */
+                    newInteractions[newInteraction] && Instance && this.map.addInteraction(new Instance(options));
+                } else {
+                    // otherwise use existing interaction and enable or disable it based on newProps values
+                    interaction.setActive(newInteractions[newInteraction]);
+                }
+            });
         }
 
         if (this.map && this.props.id !== newProps.mapStateSource) {
@@ -567,3 +599,5 @@ export default class OpenlayersMap extends React.Component {
         });
     };
 }
+
+export default OpenlayersMap;

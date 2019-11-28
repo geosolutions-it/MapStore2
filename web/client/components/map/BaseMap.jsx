@@ -37,6 +37,7 @@ class BaseMap extends React.Component {
         eventHandlers: PropTypes.object,
         styleMap: PropTypes.object,
         layers: PropTypes.array,
+        projectionDefs: PropTypes.array,
         plugins: PropTypes.any,
         tools: PropTypes.array,
         getLayerProps: PropTypes.func
@@ -48,6 +49,7 @@ class BaseMap extends React.Component {
         map: {},
         styleMap: {},
         tools: [],
+        projectionDefs: [],
         eventHandlers: {
             onMapViewChanges: () => {},
             onClick: () => {},
@@ -73,7 +75,7 @@ class BaseMap extends React.Component {
     };
 
     renderLayers = () => {
-        const projection = this.props.map.projection || 'EPSG:3857';
+        const projection = this.props.map && this.props.map.projection || "EPSG:3857";
         const { plugins } = this.props;
         const { Layer } = plugins;
         return this.props.layers.map((layer, index) => {
@@ -125,9 +127,11 @@ class BaseMap extends React.Component {
     render() {
         const {plugins} = this.props;
         const {Map} = plugins;
+        const projection = this.props.map && this.props.map.projection || "EPSG:3857";
         if (this.props.map) {
             return (
                 <Map
+                    projectionDefs={this.props.projectionDefs}
                     style={this.props.styleMap}
                     id={this.props.id}
                     zoomControl={false}
@@ -136,6 +140,7 @@ class BaseMap extends React.Component {
                     mapStateSource={this.props.mapStateSource || this.props.id}
                     {...this.props.options}
                     {...this.props.map}
+                    projection={projection}
                     {...this.props.eventHandlers}
                 >
                     {this.renderLayers()}
@@ -146,4 +151,6 @@ class BaseMap extends React.Component {
         return null;
     }
 }
+
+
 module.exports = BaseMap;

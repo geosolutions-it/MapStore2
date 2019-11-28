@@ -39,9 +39,11 @@ const backgroundSelector = createSelector([
     tempBackgroundSelector,
     state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
     state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
+    state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapInfo, layers, controls, currentLayer, tempLayer, style, enabledCatalog, confirmDeleteBackgroundModalObj, allowDeletion) => ({
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapInfo, layers, controls, currentLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion) => ({
+    mode,
     modalParams,
     backgroundList,
     deletedId,

@@ -13,13 +13,12 @@ const { connect } = require('react-redux');
 const PropTypes = require('prop-types');
 
 const { isDashboardEditing } = require('../selectors/dashboard');
-const { isLoggedIn } = require('../selectors/security');
 const { dashboardHasWidgets, getWidgetsDependenciesGroups } = require('../selectors/widgets');
-const { showConnectionsSelector, dashboardResource, isDashboardLoading, buttonCanEdit } = require('../selectors/dashboard');
+const { showConnectionsSelector, isDashboardLoading, buttonCanEdit } = require('../selectors/dashboard');
 const { dashboardSelector } = require('./widgetbuilder/commons');
 
 const { createWidget, toggleConnection } = require('../actions/widgets');
-const { triggerShowConnections, triggerSave } = require('../actions/dashboard');
+const { triggerShowConnections } = require('../actions/dashboard');
 
 const withDashboardExitButton = require('./widgetbuilder/enhancers/withDashboardExitButton');
 const LoadingSpinner = require('../components/misc/LoadingSpinner');
@@ -37,30 +36,24 @@ const Toolbar = compose(
     connect(
         createSelector(
             showConnectionsSelector,
-            isLoggedIn,
-            dashboardResource,
             dashboardHasWidgets,
             buttonCanEdit,
             getWidgetsDependenciesGroups,
-            (showConnections, logged, resource, hasWidgets, edit, groups = []) => ({
+            (showConnections, hasWidgets, edit, groups = []) => ({
                 showConnections,
                 hasConnections: groups.length > 0,
                 hasWidgets,
-                canEdit: edit,
-                canSave: logged && hasWidgets && (resource ? resource.canEdit : true)
+                canEdit: edit
             })
         ),
         {
             onShowConnections: triggerShowConnections,
-            onToggleSave: triggerSave,
             onAddWidget: createWidget
         }
     ),
     withProps(({
         onAddWidget = () => { },
-        onToggleSave = () => { },
         hasWidgets,
-        canSave,
         canEdit,
         hasConnections,
         showConnections,
@@ -73,14 +66,8 @@ const Toolbar = compose(
             visible: canEdit,
             id: 'ms-add-card-dashboard',
             onClick: () => onAddWidget()
-        }, {
-            glyph: 'floppy-disk',
-            tooltipId: 'dashboard.editor.save',
-            bsStyle: 'primary',
-            tooltipPosition: 'right',
-            visible: !!canSave,
-            onClick: () => onToggleSave(true)
-        }, {
+        },
+        {
             glyph: showConnections ? 'bulb-on' : 'bulb-off',
             tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
             bsStyle: showConnections ? 'success' : 'primary',
@@ -89,8 +76,6 @@ const Toolbar = compose(
         }]
     }))
 )(require('../components/misc/toolbar/Toolbar'));
-
-const SaveDialog = require('./dashboard/SaveDialog');
 
 const { setEditing, setEditorAvailable } = require('../actions/dashboard');
 
@@ -137,7 +122,6 @@ class DashboardEditorComponent extends React.Component {
         return this.props.editing
             ? <div className="dashboard-editor de-builder"><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
             : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
-                <SaveDialog />
                 <Toolbar transitionProps={false} btnGroupProps={{ vertical: true }} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary' }} />
                 {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}
             </div>);

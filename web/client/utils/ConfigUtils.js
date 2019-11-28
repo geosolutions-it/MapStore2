@@ -32,6 +32,7 @@ let defaultConfig = {
     geoStoreUrl: "/rest/geostore/",
     printUrl: "/mapstore/print/info.json",
     translationsPath: "translations",
+    projectionDefs: [],
     themePrefix: "ms2",
     bingApiKey: null,
     mapquestApiKey: null

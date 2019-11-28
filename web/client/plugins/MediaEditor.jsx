@@ -17,7 +17,8 @@ import {
     currentMediaTypeSelector,
     openSelector,
     editingSelector,
-    selectedItemSelector
+    selectedItemSelector,
+    addingSelector
 } from '../selectors/mediaEditor';
 
 import MediaModal from './mediaEditor/MediaModal';
@@ -32,6 +33,7 @@ export default createPlugin('MediaEditor', {
         createStructuredSelector({
             mediaType: currentMediaTypeSelector,
             editing: editingSelector,
+            adding: addingSelector,
             open: openSelector,
             selectedItem: selectedItemSelector
         }), {

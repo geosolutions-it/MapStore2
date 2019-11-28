@@ -1,19 +1,12 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-/**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
+*/
 
+const PropTypes = require('prop-types');
 const React = require('react');
 const {Alert, Tabs, Tab, Button, Glyphicon, Checkbox, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 const tooltip = require('../../../components/misc/enhancers/tooltip');
@@ -24,6 +17,7 @@ const assign = require('object-assign');
 const Message = require('../../../components/I18N/Message');
 const Spinner = require('react-spinkit');
 const {findIndex} = require('lodash');
+const CloseConfirmButton = require('./CloseConfirmButton').default;
 
 require('./style/userdialog.css');
 
@@ -201,13 +195,14 @@ class UserDialog extends React.Component {
     };
 
     renderButtons = () => {
+        let CloseBtn = <CloseConfirmButton status={this.props.user && this.props.user.status} onClick={this.close}/>;
         return [
             <Button key="save" bsSize={this.props.buttonSize} bsSize="small"
                 bsStyle={this.isSaved() ? "success" : "primary" }
                 onClick={() => this.props.onSave(this.props.user)}
                 disabled={!this.isValid() || this.isSaving()}>
                 {this.renderSaveButtonContent()}</Button>,
-            <Button key="close" bsSize={this.props.buttonSize} bsSize="small" onClick={this.close}><Message msgId="close"/></Button>
+            CloseBtn
         ];
     };
 
@@ -229,7 +224,7 @@ class UserDialog extends React.Component {
 
             <span role="header">
                 <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
-                <button onClick={this.props.onClose} className="login-panel-close close">
+                <button onClick={this.close} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>
             </span>
@@ -288,6 +283,7 @@ class UserDialog extends React.Component {
 
     handleChange = (event) => {
         this.props.onChange(event.target.name, event.target.value);
+        // this.setState(() => ({[event.target.name]: event.target.value}));
     };
 }
 

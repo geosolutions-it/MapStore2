@@ -17,27 +17,36 @@ import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
 import {createResource, updateResource, getResource} from '../api/persistence';
 
+const saveContextErrorStatusToMessage = (status) => {
+    switch (status) {
+    case 409:
+        return 'contextCreator.saveErrorNotification.conflict';
+    default:
+        return 'contextCreator.saveErrorNotification.defaultMessage';
+    }
+};
+
 export const saveContextResource = (action$, store) => action$
     .ofType(SAVE_CONTEXT)
     .exhaustMap(({destLocation}) => {
         const state = store.getState();
         const context = newContextSelector(state);
         const resource = resourceSelector(state);
-        const newResource = resource ? {
+        const newResource = resource && resource.id ? {
             ...omit(resource, 'name', 'description'),
             data: context,
             metadata: {
-                name: context && context.name || resource && resource.name,
+                name: resource && resource.name,
                 description: resource.description
             }
         } : {
             category: 'CONTEXT',
             data: context,
             metadata: {
-                name: context && context.name
+                name: resource && resource.name
             }
         };
-        return (resource ? updateResource : createResource)(newResource)
+        return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.of(
                 contextSaved(rid),
                 push(destLocation || `/context/${context.name}`),
@@ -46,11 +55,14 @@ export const saveContextResource = (action$, store) => action$
                     message: "saveDialog.saveSuccessMessage"
                 })
             ))
-            .catch(({message}) => Rx.Observable.of(error({
+            .catch(({status, data}) => Rx.Observable.of(error({
                 title: 'contextCreator.saveErrorNotification.title',
-                message: message || 'contextCreator.saveErrorNotification.defaultMessage',
+                message: saveContextErrorStatusToMessage(status),
                 position: "tc",
-                autoDismiss: 5
+                autoDismiss: 5,
+                values: {
+                    data
+                }
             })));
     });
 
