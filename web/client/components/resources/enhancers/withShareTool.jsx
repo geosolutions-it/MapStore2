@@ -14,7 +14,7 @@ import ShareUtils from '../../../utils/ShareUtils';
 import {isString} from 'lodash';
 
 export const addSharePanel = Component => props => {
-    const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, getLocationObject = () => window.location, ...other } = props;
+    const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions, getLocationObject = () => window.location, ...other } = props;
     const { getShareUrl = () => { }, shareApi = false } = other;
 
     const shareUrlResult = editedResource ? getShareUrl(editedResource) : '';
@@ -41,7 +41,8 @@ export const addSharePanel = Component => props => {
             shareApiUrl={shareApi ? ShareUtils.getApiUrl(fullUrl) : ''}
             shareConfigUrl={ShareUtils.getConfigUrl(fullUrl, ConfigUtils.getConfigProp('geoStoreUrl'))}
             onClose={() => onShowShareModal(false)}
-            onUpdateSettings={setShareModalSettings} />
+            onUpdateSettings={setShareModalSettings}
+            {...shareOptions} />
     </div>);
 };
 
@@ -52,6 +53,7 @@ export const addSharePanel = Component => props => {
 * @type {function}
 * @prop {function} getShareUrl: takes a resource and returns an appropriate sharing url, or url along with shareApi value to override the one in shareApi prop
 * @prop {boolean} shareApi: controls, whether Share Dialog should include an option if embedding with APIs
+* @prop {object} [shareOptions] options to pass to the SharePanel
 * @prop {function} [getLocationObject] method to retrieve window.location. If not passed, window.location will be used.  (Overridable by unit tests)
 */
 export default compose(
