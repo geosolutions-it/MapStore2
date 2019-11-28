@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const screenfull = require('screenfull');
+const {head, last} = require('lodash');
 const {setControlProperty} = require('../actions/controls');
 const {TOGGLE_FULLSCREEN} = require('../actions/fullscreen');
 const ConfigUtils = require('../utils/ConfigUtils');
@@ -19,8 +20,7 @@ const getFullScreenEvent = () => {
         ['mozCancelFullScreen', 'mozfullscreenchange'],
         ['msExitFullscreen', 'MSFullscreenChange']
     ];
-    const event = candidates.find(c => document[c[0]]);
-    return event && event[1];
+    return last(head(candidates.filter((c) => document[c[0]])));
 };
 /**
  * Gets every `TOGGLE_FULLSCREEN` event.
