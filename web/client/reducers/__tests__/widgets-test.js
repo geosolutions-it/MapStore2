@@ -72,6 +72,18 @@ describe('Test the widgets reducer', () => {
         const state = widgets(undefined, insertWidget({id: "1"}));
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
+    it('insertWidget should increment y value of datagrid', () => {
+        const prevState = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [{id: '1'}]
+                }
+            }
+        };
+        const state = widgets(prevState, insertWidget({id: "2"}));
+        expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(2);
+        expect(state.containers[DEFAULT_TARGET].widgets[1].dataGrid.y).toBe(1);
+    });
     it('updateWidgetLayers', () => {
         const targetLayer = {
             name: "layer2",

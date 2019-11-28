@@ -80,16 +80,18 @@ function widgetsReducer(state = emptyState, action) {
     case EDITOR_CHANGE: {
         return set(`builder.editor.${action.key}`, action.value, state);
     }
-    case INSERT:
+    case INSERT: {
+        const widgets = get(state, `containers.${action.target}.widgets`, []);
         let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...action.widget,
-            dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
+            dataGrid: action.id && {y: widgets.length, x: 0, w: 1, h: 1}
         }, {
             id: action.widget.id || action.id
         }, state);
 
         return tempState;
+    }
     case UPDATE_PROPERTY:
         return arrayUpsert(`containers[${action.target}].widgets`,
             // update the widget setting the value to the existing object
