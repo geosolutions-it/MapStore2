@@ -176,7 +176,7 @@ const LabeledNavItem = connect(featuredMapsPluginSelector)(({ isFeaturedEnabled 
         <Message msgId="manager.featuredMaps" />
     </NavItem>) : null);
 
-const IconNavItem = connect(featuriconedMapsPluginSelector)(({ isFeaturedEnabled }) =>
+const IconNavItem = connect(featuredMapsPluginSelector)(({ isFeaturedEnabled }) =>
     isFeaturedEnabled ? (<ToolTipedNavItem
         target="_blank"
         tooltip={<Message msgId="manager.featuredMaps" />}
