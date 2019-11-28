@@ -93,7 +93,8 @@ function annotations(state = { validationErrors: {} }, action) {
                 // polygonGeom setting
             if (validateCoordsArray(selected.properties.center)) {
                 center = selected.properties.center;
-                c = circle(center, radius * 1000, { steps: 100 }).geometry;
+                // turf/circle by default use km unit hence we divide by 1000 the radius(in meters)
+                c = circle(center, radius / 1000, { steps: 100 }).geometry;
             } else {
                 selected = set("properties.center", [], selected);
             }
@@ -233,7 +234,7 @@ function annotations(state = { validationErrors: {} }, action) {
 
         // need to change the polygon coords after radius changes
         // but this implementation is ugly. is using openlayers to do that and maybe we need to refactor this
-        let feature = circle(selected.properties.center, action.radius * 1000, { steps: 100 });
+        let feature = circle(selected.properties.center, action.radius / 1000, { steps: 100 });
         selected = set("properties.polygonGeom", feature.geometry, selected);
 
         let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
