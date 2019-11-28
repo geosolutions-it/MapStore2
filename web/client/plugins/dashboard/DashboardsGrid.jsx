@@ -7,18 +7,20 @@
 */
 
 const { compose, defaultProps, withHandlers } = require('recompose');
-const { deleteDashboard, reloadDashboards, showSuccessNotification } = require('../../actions/dashboards');
+const { deleteDashboard, reloadDashboards } = require('../../actions/dashboards');
 const { updateAttribute, setFeaturedMapsLatestResource } = require('../../actions/maps'); // TODO: externalize
 const { userSelector } = require('../../selectors/security');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
 const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
+const { success } = require('./notifications');
+
 const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
         onDelete: deleteDashboard,
         reloadDashboards,
-        onShowSuccessNotification: showSuccessNotification,
+        onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" }),
         setFeaturedMapsLatestResource,
         onUpdateAttribute: updateAttribute
     }),

@@ -16,7 +16,7 @@ import {mapInfoSelector} from '../selectors/map';
 import { isLoggedIn } from '../selectors/security';
 import { createPlugin } from '../utils/PluginsUtils';
 import {toggleControl} from '../actions/controls';
-import {mapSaved} from '../actions/config';
+import {mapSaved as resetMapSaveError} from '../actions/config';
 import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveAsSelector = state => state.controls && state.controls.mapSaveAs && state.controls.mapSaveAs.enabled;
@@ -32,7 +32,7 @@ export default createPlugin('SaveAs', {
             }),
         {
             onClose: toggleControl.bind(null, 'mapSaveAs', false),
-            onMapSaveError: mapSaved
+            onResetMapSaveError: resetMapSaveError
         }),
         withProps({
             isMapSaveAs: true

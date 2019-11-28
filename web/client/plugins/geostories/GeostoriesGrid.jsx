@@ -7,18 +7,20 @@
 */
 
 const { compose, defaultProps, withHandlers } = require('recompose');
-const { deleteGeostory, reloadGeostories, showSuccessNotification } = require('../../actions/geostories');
+const { deleteGeostory, reloadGeostories } = require('../../actions/geostories');
 const { updateAttribute, setFeaturedMapsLatestResource } = require('../../actions/maps'); // TODO: externalize
 const { userSelector } = require('../../selectors/security');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
 const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
+const { success } = require('./notifications');
+
 const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
         onDelete: deleteGeostory,
         reloadGeostories,
-        onShowSuccessNotification: showSuccessNotification,
+        onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" }),
         setFeaturedMapsLatestResource,
         onUpdateAttribute: updateAttribute
     }),

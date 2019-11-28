@@ -14,11 +14,8 @@ const DASHBOARD_DELETED = "DASHBOARDS:DASHBOARD_DELETED";
 const RELOAD = "DASHBOARDS:RELOAD_DASHBOARDS";
 const LOADING = "DASHBOARDS:LOADING";
 
-const { success: successNotification } = require('./notifications');
-
 
 module.exports = {
-    showSuccessNotification: () => successNotification({ title: "success", message: "resources.successSaved" }),
     SET_DASHBOARDS_AVAILABLE,
     setDashboardsAvailable: (available) => ({ type: SET_DASHBOARDS_AVAILABLE, available }),
     SEARCH_DASHBOARDS,
