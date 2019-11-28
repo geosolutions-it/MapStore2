@@ -1998,7 +1998,7 @@
             "title": "Modifica proprietà",
             "name": "Nome",
             "description": "Descrizione",
-            "createdAt": "Creato",
+            "createdAt": "Creata",
             "modifiedAt": "Modificata",
             "namePlaceholder": "Inserisci un nome..",
             "descriptionPlaceholder": "Inserisci una descrizione...",

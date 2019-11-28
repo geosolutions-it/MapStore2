@@ -16,6 +16,8 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const moment = require('moment');
+const ConfigUtils = require('../../../utils/ConfigUtils');
 
 /**
  * A DropDown menu for user details:
@@ -30,8 +32,14 @@ class Metadata extends React.Component {
         nameFieldText: PropTypes.node,
         descriptionFieldText: PropTypes.node,
         namePlaceholderText: PropTypes.string,
-        descriptionPlaceholderText: PropTypes.string
+        descriptionPlaceholderText: PropTypes.string,
+        createdAtFieldText: PropTypes.string,
+        modifiedAtFieldText: PropTypes.string
     };
+
+    static contextTypes = {
+        intl: PropTypes.object
+    }
 
     static defaultProps = {
         // CALLBACKS
@@ -43,6 +51,18 @@ class Metadata extends React.Component {
         namePlaceholderText: "Map Name",
         descriptionPlaceholderText: "Map Description"
     };
+
+
+    renderDate = (date) => {
+        if (!date) {
+            return '';
+        }
+        const dateFormat = ConfigUtils.getConfigProp('forceDateFormat');
+        const timeFormat = ConfigUtils.getConfigProp('forceTimeFormat');
+        const newDate = dateFormat ? moment(date).format(dateFormat) : this.context.intl ? this.context.intl.formatDate(date) : '';
+        const time = timeFormat ? moment(date).format(timeFormat) : this.context.intl ? this.context.intl.formatTime(date) : '';
+        return `${newDate} ${time}` || '';
+    }
 
     render() {
         return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
@@ -67,6 +87,14 @@ class Metadata extends React.Component {
                     placeholder={this.props.descriptionPlaceholderText}
                     defaultValue={this.props.map ? this.props.map.description : ""}
                     value={this.props.map && this.props.map.metadata && this.props.map.metadata.description || ""}/>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
+                <ControlLabel>{this.props.map && this.renderDate(this.props.map.creation) || ""}</ControlLabel>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
+                <ControlLabel>{this.props.map && this.renderDate(this.props.map.lastUpdate || this.props.map.creation) || ""}</ControlLabel>
             </FormGroup>
         </form>);
     }
