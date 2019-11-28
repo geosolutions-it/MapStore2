@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isString, trim, isNumber} = require('lodash');
+const {isString, trim, isNumber, pick, isEqual} = require('lodash');
+
 
 const DEFAULT_SCREEN_DPI = 96;
 
@@ -367,7 +368,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_serch_config: textSearchConfig},
+        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -414,6 +415,19 @@ const parseLayoutValue = (value, size = 0) => {
     return isNumber(value) ? value : 0;
 };
 
+const compareMapChanges = (originalState = {}, newState = {}) => {
+    const pickedFields = [
+        'map.layers',
+        'map.groups',
+        'map.backgrounds',
+        'map.text_search_config',
+        'map.zoom',
+        'catalogServices',
+        'widgetsConfig'
+    ];
+    return isEqual(JSON.stringify(pick(originalState, pickedFields)), JSON.stringify(pick(newState, pickedFields)));
+};
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -445,5 +459,6 @@ module.exports = {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    parseLayoutValue
+    parseLayoutValue,
+    compareMapChanges
 };
