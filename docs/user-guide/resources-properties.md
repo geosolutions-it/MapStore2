@@ -22,7 +22,7 @@ Through the **Edit properties** window the user can perform the following operat
 * Add a **Permission** rule
 
 !!! warning
-    The name of a resource is the only mandatory field. Note that is not allowed to choose a name that has already been attributed to another resource.
+    The name of a resource is the only mandatory field. Note that is not allowed to choose a name that has already been assigned to another resource.
 
 ## Thumbnail
 
@@ -35,13 +35,13 @@ It is possible to add an image as **thumbnail** dropping it or clicking inside t
 
 ## Permission rule
 
-In the **Add a rule...** section you can set one ore more permission rules in order to allow everyone and/or specific groups of users to access the resource. Moreover it is possible to choose between two different ways with witch the selected group can approach the resource:
+In the **Add a rule...** section you can set one ore more permission rules in order to allow everyone and/or specific groups of users to access the resource. Moreover it is possible to choose between two different ways with which the selected group can approach the resource:
 
 * **View** the map and save a copy
 
 * **Edit** the map and re-save it
 
-In order to add a rule, the user can select the group and the access modality in the *Add a rule...* section. Once the rule is set, with the  **Add** button <img src="../img/button/add-rule-icon.jpg" class="ms-docbutton"/> it is possible to add it to the **Permissions Groups** list. <br>
+In order to add a rule, the user can select the group and set permissions inside the *Add a rule...* section. Once the rule is set, with the  **Add** button <img src="../img/button/add-rule-icon.jpg" class="ms-docbutton"/> it is possible to add it to the **Permissions Groups** list. <br>
 For example, a resource that can be seen by everyone, should have a rule like the following:
 
 <img src="../img/resource-properties/rule_added.jpg" class="ms-docimage" />
@@ -59,7 +59,7 @@ With a click on the **Add new details** button <img src="../img/button/add_detai
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
-The text can be edit and some links and images can be added through the [Text Editor Toolbar](text-editor-details.md). Once the customization is done, the changes can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other three buttons appears:
+The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-details.md). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other three buttons appears:
 
 * Show the details preview <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/> 
 
@@ -67,7 +67,7 @@ The text can be edit and some links and images can be added through the [Text Ed
 
 * Delete the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
 
-Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears on the map card in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) (only for the users with the permission right)
+Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears on the map card in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
 
 <img src="../img/resource-properties/card-map-details-button.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -75,6 +75,6 @@ Through this button it is possible to take a look at the details:
     
 <img src="../img/resource-properties/details-sheet.jpg" class="ms-docimage"/>
 
-The details are also available from the Burger Menu <img src="../img/button/burger.jpg" class="ms-docbutton"/> inside the map viewer. Since details are added to a map, indeed, a new button called **About this map** <img src="../img/button/about-this-map.jpg" class="ms-docbutton"/> is listed between the Burger Menu options, allowing the user to access the details from a dedicated panel:
+The details are also available from the Burger Menu <img src="../img/button/burger.jpg" class="ms-docbutton"/> inside the map viewer. Since details are added to a map, indeed, a new button called **About this map** <img src="../img/button/about_this_map.jpg" class="ms-docbutton"/> is listed between the Burger Menu options, allowing the user to access the details from a dedicated panel:
 
 <img src="../img/resource-properties/about-this-map-in-map.jpg" class="ms-docimage"/>

@@ -9,7 +9,7 @@ With the *text editor toolbar* it is possible to customize the text by modifying
 
 <img src="../img/text-editor-details/block type-details.jpg" class="ms-docimage"/>
 
-* **Text style** to insert text in *Bold* (<img src="../img/button/bold-button.jpg" class="ms-docbutton"/>), *Italic* (<img src="../img/button/italic-button.jpg" class="ms-docbutton"/>) or *Underline* (<img src="../img/button/underline-button.jpg" class="ms-docbutton"/>) 
+* **Text style** to insert text in *Bold* (<img src="../img/button/bold-button.jpg" class="ms-docbutton"/>), *Italic* (<img src="../img/button/italic-button.jpg" class="ms-docbutton"/>) or *Underline* (<img src="../img/button/underline_button.jpg" class="ms-docbutton"/>) 
 
 * **Block Quotation** to insert a quote in the text (<img src="../img/button/quote-button.jpg" class="ms-docbutton"/>)
 
