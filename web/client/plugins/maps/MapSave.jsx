@@ -17,9 +17,9 @@ import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
 import handleSaveModal from '../../components/resources/modals/enhancers/handleSaveModal';
 import { userSelector } from '../../selectors/security';
 import {mapTypeSelector} from '../../selectors/maptype';
+import {textSearchConfigSelector} from '../../selectors/searchconfig';
 import {currentContextSelector} from '../../selectors/context';
 import MapUtils from '../../utils/MapUtils';
-const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const saveSelector = createSelector(
     userSelector,

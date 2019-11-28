@@ -127,7 +127,7 @@ class PluginsContainer extends React.Component {
             // renders only root plugins (children of other plugins are skipped)
             .filter(this.filterRoot)
             .map((Plugin) => <Plugin.impl key={Plugin.id} ref={Plugin.cfg.withGlobalRef ? PluginsUtils.setRefToWrappedComponent(Plugin.name) : null}
-                {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
+                {...this.props.params} {...Plugin.cfg} plugins={this.props.plugins} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
     };
 
     render() {

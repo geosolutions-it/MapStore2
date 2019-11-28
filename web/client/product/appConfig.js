@@ -33,7 +33,7 @@ module.exports = {
         component: require('./pages/Context').default
     }, {
         name: 'context-creator',
-        path: "/context-creator/:contextId/:stepId",
+        path: "/context-creator/:contextId",
         component: require('./pages/ContextCreator').default
     }, {
         name: "manager",

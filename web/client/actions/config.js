@@ -34,11 +34,12 @@ function configureError(e, mapId) {
     };
 }
 
-function loadMapConfig(configName, mapId) {
+function loadMapConfig(configName, mapId, config) {
     return {
         type: LOAD_MAP_CONFIG,
         configName,
-        mapId
+        mapId,
+        config
     };
 }
 function mapInfoLoaded(info, mapId) {
