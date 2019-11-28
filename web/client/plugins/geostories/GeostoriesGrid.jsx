@@ -14,7 +14,7 @@ const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
 const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
-const { success } = require('./notifications');
+const { success } = require('../../actions/notifications');
 
 const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
