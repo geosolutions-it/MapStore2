@@ -1089,7 +1089,7 @@ describe('Geostory Epics', () => {
             actions.forEach(({type, ...a}) => {
                 switch (type) {
                 case UPDATE:
-                    a.path.endsWith(".map") || a.path.endsWith(".editMap");
+                    expect(a.path.endsWith(".map") || a.path.endsWith(".editMap")).toBeTruthy();
                     break;
                 case HIDE_MAP_EDITOR:
                     break;
