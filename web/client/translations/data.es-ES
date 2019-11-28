@@ -1993,7 +1993,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurar mapa"
+                "configureMapOptions": "Configurar mapa",
+                "settings": "Configuraciones",
+                "settingsSubTitle": "Gestionar interacciones de usuario",
+                "toc": "Capas",
+                "pan": "interacción pan",
+                "zoom": "Acercar/alejar interacciones",
+                "topLeft": "Arriba a la izquierda",
+                "topRight": "Parte superior derecha",
+                "bottomLeft": "Abajo a la izquierda",
+                "bottomRight": "Abajo a la derecha"
             }
         },
         "saveDialog": {
@@ -2090,6 +2099,7 @@
             },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
+                "conflict": "Ya existe un contexto con el mismo nombre. prueba '{data}'",
                 "defaultMessage": "Error desconocido"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"

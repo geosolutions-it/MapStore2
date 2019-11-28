@@ -1994,7 +1994,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurazione mappa"
+                "configureMapOptions": "Configurazione mappa",
+                "settings": "Impostazioni",
+                "settingsSubTitle": "Gestisci le interazioni dell'utente",
+                "toc": "Toc",
+                "pan": "Interazione di scorrimento",
+                "zoom": "Interazione di zoom",
+                "topLeft": "Angolo in alto a sinistra",
+                "topRight": "Angolo in alto a destra",
+                "bottomLeft": "Angolo in basso a sinistra",
+                "bottomRight": "Angolo in basse a destra"
             }
         },
          "saveDialog": {
@@ -2091,6 +2100,7 @@
             },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
+                "conflict": "Un contesto con lo stesso nome esiste già. prova '{data}'",
                 "defaultMessage": "Errore sconosciuto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"

@@ -10,18 +10,15 @@ const Rx = require('rxjs');
 const {ADD_MEASURE_AS_ANNOTATION} = require('../actions/measurement');
 const {getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES, STYLE_TEXT} = require('../utils/AnnotationsUtils');
 const {convertUom, getFormattedBearingValue, validateFeatureCoordinates} = require('../utils/MeasureUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
-const {addLayer, updateNode} = require('../actions/layers');
 const {toggleControl, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {purgeMapInfoResults, hideMapinfoMarker} = require('../actions/mapInfo');
 const {transformLineToArcs} = require('../utils/CoordinatesUtils');
 const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
-const {head, last, round} = require('lodash');
-const {annotationsLayerSelector} = require('../selectors/annotations');
+const {last, round} = require('lodash');
 const {showCoordinateEditorSelector} = require('../selectors/controls');
-const {editAnnotation} = require('../actions/annotations');
+const {newAnnotation, setEditingFeature} = require('../actions/annotations');
 
 const formattedValue = (uom, value) => ({
     "length": round(convertUom(value, "m", uom) || 0, 2) + " " + uom,
@@ -33,7 +30,6 @@ const isLineString = (state) => {
 };
 
 const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, state) => {
-    const title = LocaleUtils.getMessageById(state.locale.messages, "measureComponent.newMeasure");
     return assign({}, {
         type: "FeatureCollection",
         features: [
@@ -80,14 +76,13 @@ const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, s
         ],
         properties: {
             id,
-            title,
             description: " " + formattedValue(uom, value)[measureTool]
         },
         style: {}
     });
 };
 
-module.exports = (viewer) => ({
+module.exports = {
     addAnnotationFromMeasureEpic: (action$, store) =>
         action$.ofType(ADD_MEASURE_AS_ANNOTATION)
             .switchMap((a) => {
@@ -97,27 +92,12 @@ module.exports = (viewer) => ({
                 const {feature, value, uom, measureTool} = a;
                 const id = uuidv1();
                 const newFeature = convertMeasureToGeoJSON(feature.geometry, value, uom, id, measureTool, state);
-                const annotationsLayer = head(state.layers.flat.filter(l => l.id === 'annotations'));
 
-                // if layers doesn not exist add it
-                // if layers exist add only the feature to existing features
-                return Rx.Observable.from((annotationsLayer ? [
-                    updateNode('annotations', 'layer', {
-                        features: annotationsLayerSelector(state).features.concat([newFeature])
-                    }), editAnnotation(id)] : [
-                    addLayer({
-                        type: 'vector',
-                        visibility: true,
-                        id: 'annotations',
-                        name: "Annotations",
-                        rowViewer: viewer,
-                        hideLoading: true,
-                        style: null,
-                        features: [newFeature],
-                        handleClickOnLayer: true
-                    }),
-                    editAnnotation(id)
-                ])).startWith(toggleControl("annotations"));
+                return Rx.Observable.of(
+                    toggleControl('annotations', null),
+                    newAnnotation(),
+                    setEditingFeature(newFeature)
+                );
             }),
     openMeasureEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY)
@@ -125,4 +105,4 @@ module.exports = (viewer) => ({
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             })
-});
+};

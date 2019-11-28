@@ -1993,7 +1993,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configurer la carte",
+                "settings": "Paramètres",
+                "settingsSubTitle": "Gérer les interactions utilisateur",
+                "toc": "Couches",
+                "pan": "Interaction pan",
+                "zoom": "Interactions zoom avant / arrière",
+                "topLeft": "En haut à gauche",
+                "topRight": "En haut à droite",
+                "bottomLeft": "En bas à gauche",
+                "bottomRight": "En bas à droite"
             }
         },
         "saveDialog": {
@@ -2090,6 +2099,7 @@
             },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
+                "conflict": "Un contexte portant le même nom existe déjà. essayez '{data}'",
                 "defaultMessage": "Erreur inconnue"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
