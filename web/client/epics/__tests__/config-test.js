@@ -24,6 +24,7 @@ import Persistence from '../../api/persistence';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 import configBroken from "raw-loader!../../test-resources/testConfig.broken.json.txt";
+import testConfigEPSG31468 from "raw-loader!../../test-resources/testConfigEPSG31468.json.txt";
 
 const api = {
     getResource: () => Promise.resolve({mapId: 1234})
@@ -56,6 +57,7 @@ describe('config epics', () => {
             );
         });
         it('load existing configuration file, with unsupported projection 31468', (done) => {
+            mockAxios.onGet("/base/web/client/test-resources/testConfigEPSG31468.json").reply(() => ([ 200, testConfigEPSG31468 ]));
             const checkActions = ([a]) => {
                 expect(a).toExist();
                 expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
@@ -69,6 +71,7 @@ describe('config epics', () => {
             );
         });
         it('load existing configuration file with mapId', (done) => {
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
             mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
             const checkActions = ([a, b]) => {
                 expect(a).toExist();
