@@ -93,6 +93,7 @@ function annotations(state = { validationErrors: {} }, action) {
                 // polygonGeom setting
             if (validateCoordsArray(selected.properties.center)) {
                 center = selected.properties.center;
+                // turf/circle by default use km unit hence we divide by 1000 the radius(in meters)
                 c = circle(center, radius / 1000, { steps: 100 }).geometry;
             } else {
                 selected = set("properties.center", [], selected);
