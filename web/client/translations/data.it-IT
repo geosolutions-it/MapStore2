@@ -2100,7 +2100,7 @@
             },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
-                "conflict": "Un contesto con lo stesso nome esiste già. prova '{data}'",
+                "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"

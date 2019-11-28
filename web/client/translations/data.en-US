@@ -2103,7 +2103,7 @@
             },
             "saveErrorNotification": {
                 "title": "Context saving failed",
-                "conflict": "A context with the same name already exists. try '{data}'",
+                "conflict": "A resource with this name already exists",
                 "defaultMessage": "Unknown error"
             },
             "undo": "Are you sure you want to abandon the context editing session?"
