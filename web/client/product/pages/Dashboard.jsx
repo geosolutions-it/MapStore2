@@ -17,6 +17,7 @@ const { loadDashboard, resetDashboard } = require('../../actions/dashboard');
 const Page = require('../../containers/Page');
 const BorderLayout = require('../../components/layout/BorderLayout');
 
+let oldLocation;
 class DashboardPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
@@ -35,8 +36,12 @@ class DashboardPage extends React.Component {
     UNSAFE_componentWillMount() {
         const id = get(this.props, "match.params.did");
         if (id) {
-            this.props.reset();
-            this.props.loadResource(id);
+            // this prevents for reloads due to re-mount (i.e. locale change)
+            if (oldLocation !== this.props.location) {
+                oldLocation = this.props.location;
+                this.props.reset();
+                this.props.loadResource(id);
+            }
         } else {
             this.props.reset();
         }
@@ -50,9 +55,6 @@ class DashboardPage extends React.Component {
                 this.props.loadResource(id);
             }
         }
-    }
-    componentWillUnmount() {
-        this.props.reset();
     }
     render() {
         return (<Page

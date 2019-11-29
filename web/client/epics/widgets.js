@@ -133,7 +133,7 @@ module.exports = {
                     const newLocationDifference = newLocation[newLocation.length - 1];
                     return newLocationDifference !== loctionDifference;
                 }).switchMap( ({payload = {}} = {}) => {
-                    if (payload && payload.location && payload.location.pathname) {
+                    if (payload && payload.location && payload.location.pathname && payload.location.pathname) {
                         return Rx.Observable.of(clearWidgets());
                     }
                     return Rx.Observable.empty();
