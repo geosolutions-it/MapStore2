@@ -46,6 +46,11 @@ pages:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
+<<<<<<< HEAD
+=======
+      - Managing User Rights on Maps: 'user-guide/managing-user-rights.md'
+      - Managing Contexts: 'user-guide/managing-contexts.md'
+>>>>>>> Fix 4564 create the Contexts section
     - Exploring Maps:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
