@@ -35,7 +35,8 @@ export default class ContextCreator extends React.Component {
     };
 
     static contextTypes = {
-        messages: PropTypes.object
+        messages: PropTypes.object,
+        plugins: PropTypes.array
     };
 
     static defaultProps = {
@@ -108,7 +109,7 @@ export default class ContextCreator extends React.Component {
                                     [mode]: this.props.pluginsConfig[mode]
                                         .filter(p => this.props.viewerPlugins.findIndex(x => x === (isObject(p) ? p.name : p)) > -1)
                                 }), {})}
-                            plugins={this.props.plugins}
+                            plugins={this.context.plugins}
                             mapType={this.props.mapType}
                             showConfirm={this.props.showReloadConfirm}
                             onReloadConfirm={this.props.onReloadConfirm}
