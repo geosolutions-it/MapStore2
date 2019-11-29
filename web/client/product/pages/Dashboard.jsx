@@ -24,7 +24,8 @@ class DashboardPage extends React.Component {
         match: PropTypes.object,
         loadResource: PropTypes.func,
         reset: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        location: PropTypes.object
     };
 
     static defaultProps = {
