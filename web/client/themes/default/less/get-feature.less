@@ -13,11 +13,15 @@
     .col-xs-5, .col-xs-1, .col-xs-2 {
         padding: 0;
         float: unset;
-        width: auto;
         margin: 0 4px;
+        @media screen and (min-width: 425px) {
+            width: auto;
+        }
     }
     .col-xs-5 {
-        display: grid;
+        @media screen and (min-width: 425px) {
+            display: grid;
+        }
         flex: 1;
     }
     &.coord-editor .col-xs-2 {
