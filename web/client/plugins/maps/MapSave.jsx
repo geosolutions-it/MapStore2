@@ -5,20 +5,23 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
+
 import PropTypes from 'prop-types';
-import {compose, withProps, withHandlers, getContext} from 'recompose';
 import {connect} from 'react-redux';
+import {compose, getContext, withHandlers, withProps} from 'recompose';
 import {createSelector} from 'reselect';
+
 import {saveMapResource} from '../../actions/maps';
-import {mapSelector, mapInfoLoadingSelector, mapSaveErrorsSelector} from '../../selectors/map';
-import {layersSelector, groupsSelector} from '../../selectors/layers';
-import {backgroundListSelector} from '../../selectors/backgroundselector';
-import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
 import handleSaveModal from '../../components/resources/modals/enhancers/handleSaveModal';
-import { userSelector } from '../../selectors/security';
-import {mapTypeSelector} from '../../selectors/maptype';
+import {backgroundListSelector} from '../../selectors/backgroundselector';
 import {currentContextSelector} from '../../selectors/context';
+import {groupsSelector, layersSelector} from '../../selectors/layers';
+import {mapInfoLoadingSelector, mapSaveErrorsSelector, mapSelector} from '../../selectors/map';
+import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
+import {mapTypeSelector} from '../../selectors/maptype';
+import { userSelector } from '../../selectors/security';
 import MapUtils from '../../utils/MapUtils';
+
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const saveSelector = createSelector(
@@ -47,9 +50,9 @@ const SaveBaseDialog = compose(
         router: PropTypes.object
     }),
     withHandlers({
-        onClose: ({onClose, onResetMapSaveError}) => () => {
+        onClose: ({onClose, clearErrors}) => () => {
             onClose();
-            onResetMapSaveError(); // reset errors when closing the modal
+            clearErrors(); // reset errors when closing the modal
         },
         onSave: ({map, layers, groups, backgrounds, textSearchConfig, additionalOptions, saveMap, isMapSaveAs, user}) => resource => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,

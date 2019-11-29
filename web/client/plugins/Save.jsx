@@ -5,17 +5,19 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
+
 import React from 'react';
-import {compose} from 'recompose';
-import {connect} from 'react-redux';
-import {createSelector} from 'reselect';
 import {Glyphicon} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {compose} from 'recompose';
+import {createSelector} from 'reselect';
+
+import {clearErrors} from '../actions/config';
+import {toggleControl} from '../actions/controls';
 import Message from '../components/I18N/Message';
 import {mapInfoSelector} from '../selectors/map';
 import { isLoggedIn } from '../selectors/security';
 import { createPlugin } from '../utils/PluginsUtils';
-import {toggleControl} from '../actions/controls';
-import {mapSaved as resetMapSaveError} from '../actions/config';
 import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveSelector = state => state.controls && state.controls.mapSave && state.controls.mapSave.enabled;
@@ -28,7 +30,7 @@ export default createPlugin('Save', {
             (show, resource) => ({show, resource})),
         {
             onClose: toggleControl.bind(null, 'mapSave', false),
-            onResetMapSaveError: resetMapSaveError
+            clearErrors
         }))(SaveBaseDialog),
     containers: {
         BurgerMenu: {

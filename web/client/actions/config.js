@@ -7,6 +7,7 @@
  */
 
 
+const CLEAR_ERRORS = 'MAP:CLEAR_ERRORS';
 const LOAD_MAP_CONFIG = "MAP_LOAD_MAP_CONFIG";
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
@@ -16,6 +17,12 @@ const MAP_INFO_LOADED = 'MAP_INFO_LOADED';
 const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
 const MAP_SAVE_ERROR = 'MAP:MAP_SAVE_ERROR';
 const MAP_SAVED = 'MAP:MAP_SAVED';
+
+function clearErrors() {
+    return {
+        type: CLEAR_ERRORS
+    };
+}
 
 function configureMap(conf, mapId) {
     return {
@@ -73,8 +80,9 @@ const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 const mapSaved = () => ({type: MAP_SAVED});
 
 module.exports = {
-    LOAD_MAP_CONFIG,
+    CLEAR_ERRORS,
     MAP_CONFIG_LOADED,
+    LOAD_MAP_CONFIG,
     MAP_CONFIG_LOAD_ERROR,
     LOAD_MAP_INFO,
     MAP_INFO_LOAD_START,
@@ -82,6 +90,7 @@ module.exports = {
     MAP_INFO_LOAD_ERROR,
     MAP_SAVE_ERROR,
     MAP_SAVED,
+    clearErrors,
     loadMapConfig,
     loadMapInfo,
     configureMap,

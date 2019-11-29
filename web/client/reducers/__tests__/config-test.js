@@ -8,10 +8,20 @@
 var expect = require('expect');
 
 var mapConfig = require('../config');
+const { clearErrors } = require('../../actions/config');
+
 const {DETAILS_LOADED, MAP_CREATED} = require('../../actions/maps');
 
 
 describe('Test the mapConfig reducer', () => {
+    it('clearing maps save errors', () => {
+        const mapSaveErrors = { status: 409};
+        var state = mapConfig({map: {present: {mapSaveErrors, id: 1}}}, clearErrors());
+        expect(state.map).toExist();
+        expect(state.map.present).toNotExist();
+        expect(state.map.mapSaveErrors).toNotExist();
+    });
+
     it('creates a configuration object from loaded config', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
         expect(state.map).toExist();

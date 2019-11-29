@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const { configureError, loadMapConfig, loadMapInfo, configureMap, MAP_CONFIG_LOAD_ERROR, LOAD_MAP_CONFIG, MAP_CONFIG_LOADED, LOAD_MAP_INFO} = require('../config');
+const { clearErrors, CLEAR_ERRORS, configureError, loadMapConfig, loadMapInfo, configureMap, MAP_CONFIG_LOAD_ERROR, LOAD_MAP_CONFIG, MAP_CONFIG_LOADED, LOAD_MAP_INFO} = require('../config');
 
 describe('Test configuration related actions', () => {
     it('loadMapConfig', () => {
@@ -32,7 +32,11 @@ describe('Test configuration related actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(MAP_CONFIG_LOAD_ERROR);
     });
-
+    it('clearErrors', () => {
+        const retVal = clearErrors();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(CLEAR_ERRORS);
+    });
     it('getResource access info', () => {
         const retVal = loadMapInfo(1);
         expect(retVal).toExist();

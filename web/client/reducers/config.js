@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_SAVE_ERROR, MAP_SAVED} = require('../actions/config');
+const {CLEAR_ERRORS, MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_SAVE_ERROR, MAP_SAVED} = require('../actions/config');
 const {MAP_CREATED, DETAILS_LOADED} = require('../actions/maps');
 
 const assign = require('object-assign');
@@ -113,7 +113,7 @@ function mapConfig(state = null, action) {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         map = set('mapSaveErrors', castArray(action.error), map);
         return assign({}, state, {map: map});
-    case MAP_SAVED:
+    case MAP_SAVED: case CLEAR_ERRORS:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         map = unset('mapSaveErrors', map);
         return assign({}, state, {map: map});
