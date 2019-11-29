@@ -860,7 +860,7 @@
                     "reset_bbox": "Recommencer",
                     "save_bbox": "Sauver les modifications",
                     "save_radius": "Sauver les modifications",
-                    "radius": "Rayon (m)"
+                    "radius": "Rayon ({projection})"
                 },
                 "methods": {
                     "zone": "Zone",

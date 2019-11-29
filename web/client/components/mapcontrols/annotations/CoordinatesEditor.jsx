@@ -32,6 +32,7 @@ const MeasureEditor = require('./MeasureEditor');
  * @prop {object} transitionProps properties of the transition for drag component
  * @prop {object} properties of the GeoJSON feature being edited
  * @prop {string} type of the feature (Polygon, LineString, Point, Circle, Text)
+ * @prop {string} mapProjection crs of the map
  * @prop {string} isDraggable tells if the coordinate row is draggable
  *
 */
@@ -50,6 +51,7 @@ class CoordinatesEditor extends React.Component {
         componentsValidation: PropTypes.object,
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
+        mapProjection: PropTypes.string,
         type: PropTypes.string,
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
@@ -109,6 +111,7 @@ class CoordinatesEditor extends React.Component {
                         placeholder="radius"
                         {...this.props.measureOptions}
                         value={this.props.properties.radius}
+                        projection={this.props.mapProjection}
                         name="radius"
                         onChange={radius => {
                             if (this.isValid(this.props.components, radius )) {

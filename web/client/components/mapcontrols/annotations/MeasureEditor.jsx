@@ -28,11 +28,12 @@ module.exports = compose(
         valueUom: 'm',
         displayUom: 'm',
         units: [
-            { value: "ft", label: "ft" },
-            { value: "m", label: "m" },
-            { value: "km", label: "km" },
-            { value: "mi", label: "mi" },
-            { value: "nm", label: "nm" }
+            { value: "deg", label: "deg", crs: "EPSG:4326" },
+            { value: "ft", label: "ft", crs: "EPSG:3857" },
+            { value: "m", label: "m", crs: "EPSG:3857" },
+            { value: "km", label: "km", crs: "EPSG:3857" },
+            { value: "mi", label: "mi", crs: "EPSG:3857" },
+            { value: "nm", label: "nm", crs: "EPSG:3857" }
         ]
     }),
     withStateHandlers(
@@ -71,6 +72,7 @@ module.exports = compose(
     value,
     units,
     uom,
+    projection = "EPSG:3857",
     style = {display: "inline-flex", width: "100%"},
     setUom = () => {},
     onChange = () => {}
@@ -88,6 +90,6 @@ module.exports = compose(
             value={uom}
             onChange={e => setUom(e.target.value)}
             style={{ width: 85 }}>
-            {units.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
+            {units.filter(u => u.crs === projection).map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
         </FormControl>
     </FormGroup>));

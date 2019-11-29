@@ -860,7 +860,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Guardar los cambios",
                     "save_radius": "Guardar los cambios",
-                    "radius": "Radio(m)"
+                    "radius": "Radio({projection})"
                 },
                 "methods": {
                     "zone": "Zona",

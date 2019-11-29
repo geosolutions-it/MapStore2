@@ -234,7 +234,9 @@ function annotations(state = { validationErrors: {} }, action) {
 
         // need to change the polygon coords after radius changes
         // but this implementation is ugly. is using openlayers to do that and maybe we need to refactor this
-        let feature = circle(selected.properties.center, action.radius / 1000, { steps: 100 });
+
+        // TODO manage uom of radius
+        let feature = circle(selected.properties.center, action.radius, { steps: 100, units: "degrees" });
         selected = set("properties.polygonGeom", feature.geometry, selected);
 
         let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
