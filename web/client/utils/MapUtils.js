@@ -416,6 +416,25 @@ const parseLayoutValue = (value, size = 0) => {
 };
 
 const compareMapChanges = (originalState = {}, newState = {}) => {
+    const cleanObjectFromUndefined = obj => {
+        Object.keys(obj).forEach(key => {
+            const value = obj[key];
+            const type = typeof value;
+            if (type === "object") {
+                cleanObjectFromUndefined(value);
+                if (!Object.keys(value).length) {
+                    delete obj[key];
+                }
+            /**
+             * ABOUT: in single layer stored in redux contains field "apiKey",
+             * which doesn't comes from API and it's not necessary to compare.
+             */
+            } else if (type === "undefined" || key === 'apiKey') {
+                delete obj[key];
+            }
+        });
+    };
+
     const pickedFields = [
         'map.layers',
         'map.groups',
@@ -425,7 +444,14 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
         'catalogServices',
         'widgetsConfig'
     ];
-    return isEqual(JSON.stringify(pick(originalState, pickedFields)), JSON.stringify(pick(newState, pickedFields)));
+
+    const filteredOriginalState = pick(originalState, pickedFields);
+    const filteredNewState = pick(newState, pickedFields);
+
+    cleanObjectFromUndefined(filteredOriginalState);
+    cleanObjectFromUndefined(filteredNewState);
+
+    return isEqual(filteredOriginalState, filteredNewState);
 };
 
 module.exports = {

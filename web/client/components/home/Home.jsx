@@ -44,7 +44,7 @@ class Home extends React.Component {
                         id="home-button"
                         className="square-button"
                         bsStyle="primary"
-                        onClick={this.goHome}
+                        onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
                     >{this.props.icon}</Button>
                 </OverlayTrigger>
