@@ -9,7 +9,7 @@
 const expect = require('expect');
 const annotations = require('../annotations');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../utils/AnnotationsUtils');
-const {isEmpty} = require('lodash');
+const {isEmpty, round} = require('lodash');
 const {set} = require('../../utils/ImmutableUtils');
 
 const testFeatures = {
@@ -1064,11 +1064,11 @@ describe('Test the annotations reducer', () => {
                 isCircle: true,
                 canEdit: true,
                 id: '1',
-                radius: 500
+                radius: 10000
             },
             geometry: {
                 type: "Point",
-                coordinates: [10, 1]
+                coordinates: [1, 1]
             }
         };
         const featureColl = {
@@ -1080,25 +1080,28 @@ describe('Test the annotations reducer', () => {
             },
             style: {}
         };
-        const radius = 500;
-        const components = [[1, 0]];
+        const radius = 10000;
+        const components = [[1, 1]];
         const state = annotations({
             editing: featureColl,
             selected: featureChanged,
             unsavedGeometry: true
-        }, changeRadius(radius, components));
+        }, changeRadius(radius, components, "EPSG:3857"));
         expect(state.editing.features[0].properties.radius).toBe(radius);
         expect(state.selected.properties.radius).toBe(radius);
         expect(state.selected.properties.isValidFeature).toBe(true);
         expect(state.selected.properties.canEdit).toBe(true);
         expect(state.selected.geometry.coordinates[0]).toBe(1);
-        expect(state.selected.geometry.coordinates[1]).toBe(0);
+        expect(state.selected.geometry.coordinates[1]).toBe(1);
         expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        const firstPoint = state.editing.features[0].geometry.coordinates[0][0];
+        expect(round(firstPoint[0], 10)).toBe(1);
+        expect(round(firstPoint[1], 10)).toBe(1.0899320364);
         expect(state.unsavedGeometry).toBe(true);
     });
 
-    it('changeText of a new feature of type Circle', () => {
-        const radius = 500;
+    it('changeText of a new feature of type Circle, in 4326', () => {
+        const radius = 5;
         const feature = {
             properties: {
                 canEdit: true,
@@ -1124,13 +1127,17 @@ describe('Test the annotations reducer', () => {
             editing: featureColl,
             selected: feature,
             unsavedGeometry: true
-        }, changeRadius(radius, components));
+        }, changeRadius(radius, components, "EPSG:4326"));
         expect(state.editing.features[0].properties.radius).toBe(radius);
         expect(state.selected.properties.radius).toBe(radius);
         expect(state.selected.properties.canEdit).toBe(true);
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(0);
         expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        const firstPoint = state.editing.features[0].geometry.coordinates[0][0];
+        expect(round(firstPoint[0], 10)).toBe(1);
+        expect(round(firstPoint[1], 10)).toBe(5.0058419746);
+
         expect(state.unsavedGeometry).toBe(true);
     });
     it('drawingFeatures of a new Point (marker)', () => {
@@ -1439,10 +1446,26 @@ describe('Test the annotations reducer', () => {
             selected,
             featureType: "Text",
             unsavedGeometry: true
-        }, changeSelected(coordinates, 3567));
+        }, changeSelected(coordinates, 3567, null, "EPSG:3857"));
         expect(state.selected.geometry.type).toBe("Circle");
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(1);
+        let firstPoint = state.selected.properties.polygonGeom.coordinates[0][0];
+        expect(round(firstPoint[0], 10)).toBe(1);
+        expect(round(firstPoint[1], 10)).toBe(1.0320787574);
+
+        // testing also with radius in deg
+        const state2 = annotations({
+            editing: featureColl,
+            selected: {...selected, properties: {...selected.properties, radius: 3}},
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, 3567, null, "EPSG:4326"));
+        expect(state2.selected.geometry.coordinates[0]).toBe(1);
+        expect(state2.selected.geometry.coordinates[1]).toBe(1);
+        firstPoint = state2.selected.properties.polygonGeom.coordinates[0][0];
+        expect(round(firstPoint[0], 10)).toBe(1);
+        expect(round(firstPoint[1], 10)).toBe(-27.8323353334);
     });
     it('UPDATE_SYMBOLS', () => {
         let annotationsState = annotations({}, updateSymbols());

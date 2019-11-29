@@ -267,7 +267,7 @@ class GeometryDetails extends React.Component {
                                 <span className="details-circle-attribute-name">
                                     <I18N.Message
                                         msgId="queryform.spatialfilter.details.radius"
-                                        msgParams={{projection: this.props.projection === "EPSG:4326" ? "°" : "m" }}/>{':'}
+                                        msgParams={{projection: this.isWGS84() ? "°" : "m" }}/>{':'}
                                 </span>
                             </Col>
                             <Col xs={4}>
