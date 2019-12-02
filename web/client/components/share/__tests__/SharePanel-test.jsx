@@ -60,6 +60,13 @@ describe("The SharePanel component", () => {
         codeEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code");
         expect(codeEmbed.length).toBe(2);
     });
+    it('test hide embedPanel option remove the panel', () => {
+        ReactDOM.render(<SharePanel showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        expect(document.getElementById('sharePanel-tabs-tab-3')).toExist();
+        ReactDOM.render(<SharePanel embedPanel={false} showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        expect(document.getElementById('sharePanel-tabs-tab-3')).toNotExist();
+
+    });
 
 
 });
