@@ -2096,6 +2096,11 @@
                 "windowTitle": "Titre de la fenêtre",
                 "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
             },
+            "configureMap": {
+                "label": "Configurer la carte",
+                "reload": "Recharger la carte",
+                "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder?"
+            },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
                 "conflict": "Un contexte portant le même nom existe déjà. essayez '{data}'",

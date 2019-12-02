@@ -23,8 +23,8 @@ import {projectionDefsSelector} from '../selectors/map';
 
 export const loadMapConfigAndConfigureMap = (action$, {getState = () => {}} = {}) =>
     action$.ofType(LOAD_MAP_CONFIG)
-        .switchMap( ({configName, mapId}) =>
-            Observable.defer(() => axios.get(configName))
+        .switchMap(({configName, mapId, config}) =>
+            (config ? Observable.of({data: config}) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
                     if (typeof response.data === 'object') {
                         const projectionDefs = projectionDefsSelector(getState());

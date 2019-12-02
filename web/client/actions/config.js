@@ -34,11 +34,18 @@ function configureError(e, mapId) {
     };
 }
 
-function loadMapConfig(configName, mapId) {
+/**
+ * Loads map configuration
+ * @param {string} configName map config url
+ * @param {*} mapId resource id of the map on a server
+ * @param {*} config full config, overrides configName if not null or undefined
+ */
+function loadMapConfig(configName, mapId, config) {
     return {
         type: LOAD_MAP_CONFIG,
         configName,
-        mapId
+        mapId,
+        config
     };
 }
 function mapInfoLoaded(info, mapId) {

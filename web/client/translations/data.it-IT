@@ -2097,6 +2097,11 @@
                 "windowTitle": "Titolo della finestra",
                 "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
             },
+            "configureMap": {
+                "label": "Configura mappa",
+                "reload": "Ricarica la mappa",
+                "confirm": "Questo annullerà tutte le attuali modifiche della mappa. Procedere?"
+            },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
                 "conflict": "Un contesto con lo stesso nome esiste già. prova '{data}'",

@@ -2100,6 +2100,11 @@
                 "windowTitle": "Window title",
                 "windowTitlePlaceholder": "Enter window title..."
             },
+            "configureMap": {
+                "label": "Configure Map",
+                "reload": "Reload Map",
+                "confirm": "This is going to discard all current map changes. Proceed?"
+            },
             "saveErrorNotification": {
                 "title": "Context saving failed",
                 "conflict": "A context with the same name already exists. try '{data}'",

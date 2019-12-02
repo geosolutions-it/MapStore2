@@ -2096,6 +2096,11 @@
                 "windowTitle": "Fenstertitel",
                 "windowTitlePlaceholder": "Fenstertitel eingeben..."
             },
+            "configureMap": {
+                "label": "Karte konfigurieren",
+                "reload": "Karte neu laden",
+                "confirm": "Dadurch werden alle aktuellen Kartenänderungen verworfen. Vorgehen?"
+            },
             "saveErrorNotification": {
                 "title": "Das Speichern des Kontexts ist fehlgeschlagen",
                 "conflict": "Ein Kontext mit demselben Namen ist bereits vorhanden. versuche '{data}'",
