@@ -123,6 +123,7 @@ class ContextManager extends React.Component {
                 getShareUrl={(context) => `context/${context.name}`}
                 editDataEnabled={this.props.editDataEnabled}
                 onEditData={this.props.onEditData}
+                nameFieldFilter={name => name.replace(/[^a-zA-Z0-9\-_]/, '')}
                 cardTooltips={{
                     deleteResource: "resources.resource.deleteResource",
                     editResource: "resources.resource.editResource",

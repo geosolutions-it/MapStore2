@@ -30,6 +30,7 @@ class SaveModal extends React.Component {
         rules: PropTypes.array,
         onSave: PropTypes.func,
         onUpdateRules: PropTypes.func,
+        nameFieldFilter: PropTypes.func,
         resource: PropTypes.object,
         linkedResources: PropTypes.object,
         style: PropTypes.object,
@@ -54,6 +55,7 @@ class SaveModal extends React.Component {
         resource: {},
         linkedResources: {},
         onUpdateRules: ()=> {},
+        nameFieldFilter: () => {},
         metadataChanged: ()=> {},
         metadata: {name: "", description: ""},
         options: {},
@@ -107,6 +109,7 @@ class SaveModal extends React.Component {
                             linkedResources={this.props.linkedResources}
                             onMetadataChanged={this.props.metadataChanged}
                             onError={this.props.onError}
+                            nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
                         <PermissionEditor
                             rules={this.props.rules}

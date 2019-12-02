@@ -20,6 +20,7 @@ module.exports = class MainForm extends React.Component {
             linkedResources = {},
             onError = () => { },
             onUpdate = () => { },
+            nameFieldFilter = () => { },
             onUpdateLinkedResource = () => { }
         } = this.props;
         return (<Row>
@@ -44,6 +45,7 @@ module.exports = class MainForm extends React.Component {
                     resource={resource}
                     nameFieldText={<Message msgId="saveDialog.name" />}
                     descriptionFieldText={<Message msgId="saveDialog.description" />}
+                    nameFieldFilter={nameFieldFilter}
                     namePlaceholderText={"saveDialog.namePlaceholder"}
                     descriptionPlaceholderText={"saveDialog.descriptionPlaceholder"}
                 />

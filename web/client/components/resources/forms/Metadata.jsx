@@ -30,6 +30,7 @@ class Metadata extends React.Component {
         // I18N
         nameFieldText: PropTypes.node,
         descriptionFieldText: PropTypes.node,
+        nameFieldFilter: PropTypes.func,
         namePlaceholderText: PropTypes.string,
         descriptionPlaceholderText: PropTypes.string
     };
@@ -41,6 +42,7 @@ class Metadata extends React.Component {
         // I18N
         nameFieldText: "Name",
         descriptionFieldText: "Description",
+        nameFieldFilter: () => {},
         namePlaceholderText: "Map Name",
         descriptionPlaceholderText: "Map Description"
     };
@@ -73,7 +75,7 @@ class Metadata extends React.Component {
     }
 
     changeName = (e) => {
-        this.props.onChange('metadata.name', e.target.value);
+        this.props.onChange('metadata.name', this.props.nameFieldFilter(e.target.value) || e.target.value);
     };
 
     changeDescription = (e) => {
