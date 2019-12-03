@@ -44,7 +44,7 @@ module.exports = (env) => {
             }),
             new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "leaflet")),
             new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "cesium")),
-            new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "@geosolutions/proj4")),
+            new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "proj4")),
             new NoEmitOnErrorsPlugin(),
             extractThemesPlugin
         ].concat(isProduction ? [new ParallelUglifyPlugin({
