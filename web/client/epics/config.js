@@ -24,7 +24,11 @@ import {projectionDefsSelector} from '../selectors/map';
 export const loadMapConfigAndConfigureMap = (action$, {getState = () => {}} = {}) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap(({configName, mapId, config}) =>
-            (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName))) // delay is needed to ensure all epics function properly and all actions are triggered
+            // delay here is to postpone map load to ensure that
+            // certain epics always function correctly
+            // i.e. FeedbackMask disables correctly after load
+            // TODO: investigate the root causes of the problem and come up with a better solution, if possible
+            (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
                     if (typeof response.data === 'object') {
                         const projectionDefs = projectionDefsSelector(getState());
