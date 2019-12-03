@@ -24,7 +24,7 @@ import {projectionDefsSelector} from '../selectors/map';
 export const loadMapConfigAndConfigureMap = (action$, {getState = () => {}} = {}) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap(({configName, mapId, config}) =>
-            (config ? Observable.of({data: config}) : Observable.defer(() => axios.get(configName)))
+            (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName))) // delay is needed to ensure all epics function properly and all actions are triggered
                 .switchMap(response => {
                     if (typeof response.data === 'object') {
                         const projectionDefs = projectionDefsSelector(getState());

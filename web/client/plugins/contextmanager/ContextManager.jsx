@@ -111,7 +111,7 @@ class ContextManager extends React.Component {
                 <Button
                     style={{marginRight: "10px"}}
                     bsStyle="success"
-                    onClick={() => this.context.router.history.push(`context-creator/new`)}>
+                    onClick={() => this.context.router.history.push(`/context-creator/new`)}>
                         &nbsp;<span><Message msgId="contextManager.newContext"/></span>
                 </Button>
             </Grid>
@@ -119,8 +119,8 @@ class ContextManager extends React.Component {
                 resources={this.props.resources}
                 fluid={this.props.fluid}
                 colProps={this.props.colProps}
-                viewerUrl={(context) => this.context.router.history.push(`context/${context.name}`)}
-                getShareUrl={(context) => `context/${context.name}`}
+                viewerUrl={(context) => this.context.router.history.push(`/context/${context.name}`)}
+                getShareUrl={(context) => `/context/${context.name}`}
                 editDataEnabled={this.props.editDataEnabled}
                 onEditData={this.props.onEditData}
                 cardTooltips={{
