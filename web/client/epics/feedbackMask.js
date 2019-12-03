@@ -84,7 +84,7 @@ const updateDashboardVisibility = action$ =>
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'dashboard');
             return Rx.Observable.merge(
                 updateObservable,
-                action$.ofType(LOGIN_SUCCESS, LOGOUT)
+                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
@@ -103,7 +103,7 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'geostory');
             return Rx.Observable.merge(
                 updateObservable,
-                action$.ofType(LOGIN_SUCCESS, LOGOUT)
+                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );

@@ -15,15 +15,14 @@ const urlQuery = url.parse(window.location.href, true).query;
 import Page from '../../containers/Page';
 import {loadGeostory} from '../../actions/geostory';
 import BorderLayout from '../../components/layout/BorderLayout';
-let oldLocation;
+
 class GeoStoryPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
         loadResource: PropTypes.func,
         reset: PropTypes.func,
-        plugins: PropTypes.object,
-        location: PropTypes.object
+        plugins: PropTypes.object
     };
 
     static defaultProps = {
@@ -35,11 +34,7 @@ class GeoStoryPage extends React.Component {
     componentWillMount() {
         const id = get(this.props, "match.params.gid");
         this.props.reset();
-        // this prevents for reloads due to re-mount (i.e. locale change)
-        if (oldLocation !== this.props.location) {
-            oldLocation = this.props.location;
-            this.props.loadResource(id);
-        }
+        this.props.loadResource(id);
     }
     componentDidUpdate(oldProps) {
         const id = get(this.props, "match.params.gid");
