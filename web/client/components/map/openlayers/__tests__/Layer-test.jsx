@@ -21,6 +21,7 @@ import '../plugins/MapQuest';
 import '../plugins/VectorLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/OverlayLayer';
+import '../plugins/WFS3Layer';
 
 import SecurityUtils from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1918,6 +1919,56 @@ describe('Openlayers layer', () => {
         expect(layer).toExist();
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("prop = 'value'");
     });
+    it('test crossOrigin is applied to tiled wms', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            singleTile: false,
+            crossOrigin: "Anonymous",
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer.getSource().crossOrigin).toBe("Anonymous");
+    });
+    it('test crossOrigin is applied to single tile wms', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            singleTile: true,
+            crossOrigin: "Anonymous",
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer.getSource().crossOrigin_).toBe("Anonymous");
+    });
     it('test filterObj param to be transformed in cql_filter', () => {
         const options = {
             type: "wms",
@@ -2165,7 +2216,6 @@ describe('Openlayers layer', () => {
                 'EPSG:3857': true
             }
         };
-
         let layer = ReactDOM.render(<OpenlayersLayer
             type="wfs3"
             options={options}
