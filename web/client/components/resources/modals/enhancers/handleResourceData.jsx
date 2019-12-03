@@ -29,7 +29,9 @@ module.exports = compose(
                 metadata: {
                     name: resource.name,
                     description: resource.description
-                }
+                },
+                createdAt: resource.creation,
+                modifiedAt: resource.lastUpdate
             }
 
         }),

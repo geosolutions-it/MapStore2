@@ -2009,6 +2009,8 @@
             "title": "Modifica proprietà",
             "name": "Nome",
             "description": "Descrizione",
+            "createdAt": "Creata",
+            "modifiedAt": "Modificata",
             "namePlaceholder": "Inserisci un nome..",
             "descriptionPlaceholder": "Inserisci una descrizione...",
             "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",

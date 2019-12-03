@@ -1533,6 +1533,8 @@
                 "title": "Edit dashboard properties",
                 "name": "Name",
                 "description": "Description",
+                "createdAt": "被创造",
+                "modifiedAt": "改性",
                 "namePlaceholder": "Type a name...",
                 "descriptionPlaceholder": "Type a description...",
                 "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
