@@ -7,12 +7,12 @@
  */
 const PropTypes = require('prop-types');
 const React = require('react');
-const Joyride = require('react-joyride').default;
+const Joyride = require('@geosolutions/react-joyride').default;
 const I18N = require('../I18N/I18N');
 const assign = require('object-assign');
 const {head} = require('lodash');
 
-require('react-joyride/lib/react-joyride-compiled.css');
+require('@geosolutions/react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
 
 const defaultIntroStyle = {
