@@ -49,6 +49,7 @@ The following options define the map options (projection, position, layers):
 - `units: {string}` uom of the coordinates
 - `center: [object]` center of the map with starting point in the bottom-left corner
 - `zoom: {number}` level of zoom
+- `resolutions: {number[]}` resolutions for each level of zoom
 - `maxExtent: {number[]}` max bbox of the map expressed [minx, miny, maxx, maxy]
 - `layers: {object[]}` list of layers to be loaded on the map
 
@@ -61,6 +62,33 @@ i.e.
     "units": "m",
     "center": {"x": 1000000.000000, "y": 5528000.000000, "crs": "EPSG:900913"},
     "zoom": 15,
+    "mapOptions": {
+      "view": {
+        "resolutions": [
+          84666.66666666688,
+          42333.33333333344,
+          21166.66666666672,
+          10583.33333333336,
+          5291.66666666668,
+          2645.83333333334,
+          1322.91666666667,
+          661.458333333335000,
+          529.166666666668000,
+          396.875000000001000,
+          264.583333333334000,
+          132.291666666667000,
+          66.145833333333500,
+          39.687500000000100,
+          26.458333333333400,
+          13.229166666666700,
+          6.614583333333350,
+          3.968750000000010,
+          2.645833333333340,
+          1.322916666666670,
+          0.661458333333335
+        ]
+      }
+    },
     "maxExtent": [
         -20037508.34, -20037508.34,
         20037508.34, 20037508.34
@@ -68,6 +96,9 @@ i.e.
     "layers": [{...},{...}]
 }
 ```
+
+!!! warning
+    Actually the custom resolution values are valid for one single CRS. It's therefore suggested to avoid to add this parameter when multiple CRSs in the same map configuration are needed.
 
 ## Layers options
 

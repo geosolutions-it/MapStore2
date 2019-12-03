@@ -2009,6 +2009,8 @@
             "title": "Modifica proprietà",
             "name": "Nome",
             "description": "Descrizione",
+            "createdAt": "Creata",
+            "modifiedAt": "Modificata",
             "namePlaceholder": "Inserisci un nome..",
             "descriptionPlaceholder": "Inserisci una descrizione...",
             "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
@@ -2096,6 +2098,11 @@
                 "namePlaceholder": "Inserisci il nome del contesto dell'app...",
                 "windowTitle": "Titolo della finestra",
                 "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
+            },
+            "configureMap": {
+                "label": "Configura mappa",
+                "reload": "Ricarica la mappa",
+                "confirm": "Questo annullerà tutte le attuali modifiche della mappa. Procedere?"
             },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",

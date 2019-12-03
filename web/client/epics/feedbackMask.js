@@ -55,11 +55,11 @@ const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
  */
 const updateMapVisibility = (action$, store) =>
     action$.ofType(INIT_MAP)
-        .switchMap(() => {
+        .switchMap(({disableFeedbackMask}) => {
             const loadActions = [MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR];
             const isEnabled = ({type}) => type === MAP_CONFIG_LOAD_ERROR;
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'map');
-            return Rx.Observable.merge(
+            return disableFeedbackMask ? Rx.Observable.empty() : Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT)
                     .switchMap((action) =>
@@ -84,7 +84,7 @@ const updateDashboardVisibility = action$ =>
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'dashboard');
             return Rx.Observable.merge(
                 updateObservable,
-                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                action$.ofType(LOGIN_SUCCESS, LOGOUT)
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
@@ -103,7 +103,7 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'geostory');
             return Rx.Observable.merge(
                 updateObservable,
-                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                action$.ofType(LOGIN_SUCCESS, LOGOUT)
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
@@ -111,21 +111,40 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
 
 /**
  * Enabled/disabled mask based on context load feedback, in case of error enable feedbackMask.
- * @param {Observable} action$ stream of actions. Manages `LOAD_GEOSTORY, `GEOSTORY_LOADED`, `GEOSTORY_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
+ * @param {Observable} action$ stream of actions. Manages `LOAD_CONTEXT, `LOAD_FINISHED`, `CONTEXT_LOAD_ERROR`, `MAP_CONFIG_LOAD_ERROR`, `MAP_INFO_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
 const updateContextFeedbackMaskVisibility = action$ =>
-    action$.ofType(LOAD_CONTEXT, LOAD_CONTEXT_CONTEXTCREATOR)
+    action$.ofType(LOAD_CONTEXT)
         .switchMap(() => {
-            const loadActions = [LOAD_FINISHED, LOAD_FINISHED_CONTEXTCREATOR,
-                CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
-            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR || type === CONTEXT_LOAD_ERROR_CONTEXTCREATOR
+            const loadActions = [LOAD_FINISHED, CONTEXT_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
+            const isEnabled = ({ type }) => type === MAP_CONFIG_LOAD_ERROR || type === CONTEXT_LOAD_ERROR
                 || type === MAP_INFO_LOAD_ERROR; // TODO: handle context config error
             const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'context');
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .switchMap(() => updateObservable)
+                    .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
+            );
+        });
+
+/**
+ * Enabled/disabled mask based on context load feedback in context creator, in case of error enable feedbackMask.
+ * @param {Observable} action$ stream of actions. Manages `LOAD_CONTEXT, `LOAD_FINISHED`, `CONTEXT_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
+ * @memberof epics.feedbackMask
+ * @return {Observable}
+ */
+const updateContextCreatorFeedbackMaskVisibility = action$ =>
+    action$.ofType(LOAD_CONTEXT_CONTEXTCREATOR)
+        .switchMap(() => {
+            const loadActions = [LOAD_FINISHED_CONTEXTCREATOR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR];
+            const isEnabled = ({ type }) => type === CONTEXT_LOAD_ERROR_CONTEXTCREATOR;
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'context');
+            return Rx.Observable.merge(
+                updateObservable,
+                action$.ofType(LOGIN_SUCCESS, LOGOUT)
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
@@ -180,6 +199,7 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
 module.exports = {
     updateMapVisibility,
     updateContextFeedbackMaskVisibility,
+    updateContextCreatorFeedbackMaskVisibility,
     updateDashboardVisibility,
     updateGeoStoryFeedbackMaskVisibility,
     detectNewPage,

@@ -11,25 +11,39 @@ import {Button, ButtonToolbar, Label} from 'react-bootstrap';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 
-export default ({steps = [], hideNamesExceptCurrent = false, currentStepId, onSetStep = () => {}, onSave = () => {}}) => {
+export default ({
+    steps = [],
+    hideNamesExceptCurrent = false,
+    currentStepId,
+    onSetStep = () => {},
+    onSave = () => {}
+}) => {
     const curStepIndex = steps.findIndex(step => step.id === currentStepId);
 
     const footer = (
         <div className="ms2-stepper">
             <div className="footer-button-toolbar-div">
+                <ButtonToolbar className="footer-button-toolbar-extra">
+                    {(steps[curStepIndex].extraToolbarButtons || []).map(({onClick = () => {}, label, id}, idx) =>
+                        <Button key={id || label || idx} bsStyle="primary" bsSize="sm" onClick={onClick}>
+                            <Message msgId={label}/>
+                        </Button>
+                    )}
+                </ButtonToolbar>
                 <ButtonToolbar className="footer-button-toolbar">
+                    <Button
+                        bsStyle="primary"
+                        bsSize="sm"
+                        disabled={steps[curStepIndex].disableNext}
+                        onClick={() => curStepIndex < steps.length - 1 ? onSetStep(steps[curStepIndex + 1].id) : onSave()}>
+                        <Message msgId={curStepIndex < steps.length - 1 ? "stepper.next" : "save"}/>
+                    </Button>
                     <Button
                         bsSize="sm"
                         className="no-border"
                         disabled={curStepIndex === 0}
                         onClick={() => onSetStep(steps[curStepIndex - 1].id)}>
                         <Message msgId="stepper.back"/>
-                    </Button>
-                    <Button
-                        bsStyle="primary"
-                        bsSize="sm"
-                        onClick={() => curStepIndex < steps.length - 1 ? onSetStep(steps[curStepIndex + 1].id) : onSave()}>
-                        <Message msgId={curStepIndex < steps.length - 1 ? "stepper.next" : "save"}/>
                     </Button>
                 </ButtonToolbar>
             </div>

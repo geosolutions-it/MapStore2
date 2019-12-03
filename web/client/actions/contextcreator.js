@@ -7,6 +7,10 @@
  */
 
 export const SET_CREATION_STEP = 'CONTEXTCREATOR:SET_CREATION_STEP';
+export const MAP_VIEWER_LOAD = 'CONTEXTCREATOR:MAP_VIEWER_LOAD';
+export const MAP_VIEWER_LOADED = 'CONTEXTCREATOR:MAP_VIEWER_LOADED';
+export const MAP_VIEWER_RELOAD = 'CONTEXTCREATOR:MAP_VIEWER_RELOAD';
+export const SHOW_MAP_VIEWER_RELOAD_CONFIRM = 'CONTEXTCREATOR:SHOW_MAP_VIEWER_RELOAD_CONFIRM';
 export const CLEAR_CONTEXT_CREATOR = 'CONTEXTCREATOR:CLEAR_CONTEXT_CREATOR';
 export const CHANGE_ATTRIBUTE = 'CONTEXTCREATOR:CHANGE_ATTRIBUTE';
 export const SET_RESOURCE = 'CONTEXTCREATOR:SET_RESOURCE';
@@ -21,6 +25,24 @@ export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 export const setCreationStep = (stepId) => ({
     type: SET_CREATION_STEP,
     stepId
+});
+
+export const mapViewerLoad = () => ({
+    type: MAP_VIEWER_LOAD
+});
+
+export const mapViewerLoaded = (status) => ({
+    type: MAP_VIEWER_LOADED,
+    status
+});
+
+export const mapViewerReload = () => ({
+    type: MAP_VIEWER_RELOAD
+});
+
+export const showMapViewerReloadConfirm = (show) => ({
+    type: SHOW_MAP_VIEWER_RELOAD_CONFIRM,
+    show
 });
 
 export const changeAttribute = (key, value) => ({

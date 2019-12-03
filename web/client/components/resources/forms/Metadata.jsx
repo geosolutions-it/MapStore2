@@ -15,7 +15,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const moment = require('moment');
 const {FormControl: BFormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const ConfigUtils = require('../../../utils/ConfigUtils');
 const FormControl = require('../../misc/enhancers/localizedProps')('placeholder')(BFormControl);
 
 /**
@@ -32,8 +34,14 @@ class Metadata extends React.Component {
         descriptionFieldText: PropTypes.node,
         nameFieldFilter: PropTypes.func,
         namePlaceholderText: PropTypes.string,
-        descriptionPlaceholderText: PropTypes.string
+        descriptionPlaceholderText: PropTypes.string,
+        createdAtFieldText: PropTypes.string,
+        modifiedAtFieldText: PropTypes.string
     };
+
+    static contextTypes = {
+        intl: PropTypes.object
+    }
 
     static defaultProps = {
         // CALLBACKS
@@ -46,6 +54,17 @@ class Metadata extends React.Component {
         namePlaceholderText: "Map Name",
         descriptionPlaceholderText: "Map Description"
     };
+
+    renderDate = (date) => {
+        if (!date) {
+            return '';
+        }
+        const dateFormat = ConfigUtils.getConfigProp('forceDateFormat');
+        const timeFormat = ConfigUtils.getConfigProp('forceTimeFormat');
+        const newDate = dateFormat ? moment(date).format(dateFormat) : this.context.intl ? this.context.intl.formatDate(date) : '';
+        const time = timeFormat ? moment(date).format(timeFormat) : this.context.intl ? this.context.intl.formatTime(date) : '';
+        return `${newDate} ${time}` || '';
+    }
 
     render() {
         return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
@@ -70,6 +89,14 @@ class Metadata extends React.Component {
                     placeholder={this.props.descriptionPlaceholderText}
                     defaultValue={this.props.resource ? this.props.resource.description : ""}
                     value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.description || ""}/>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
+                <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.createdAt) || ""}</ControlLabel>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
+                <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt || this.props.resource.createdAt) || ""}</ControlLabel>
             </FormGroup>
         </form>);
     }

@@ -22,7 +22,7 @@ import backtopage from '../reducers/backtopage';
 class BackToPage extends React.Component {
     static propTypes = {
         destRoute: PropTypes.string,
-        confirmMessage: PropTypes.object,
+        confirmMessage: PropTypes.string,
         showConfirmation: PropTypes.bool,
         onShowConfirmation: PropTypes.func
     };
