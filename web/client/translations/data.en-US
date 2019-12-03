@@ -2013,6 +2013,8 @@
             "title": "Edit properties",
             "name": "Name",
             "description": "Description",
+            "createdAt": "Created",
+            "modifiedAt": "Modified",
             "namePlaceholder": "Type a name...",
             "descriptionPlaceholder": "Type a description...",
             "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
@@ -2100,6 +2102,11 @@
                 "namePlaceholder": "Enter app context name...",
                 "windowTitle": "Window title",
                 "windowTitlePlaceholder": "Enter window title..."
+            },
+            "configureMap": {
+                "label": "Configure Map",
+                "reload": "Reload Map",
+                "confirm": "This is going to discard all current map changes. Proceed?"
             },
             "saveErrorNotification": {
                 "title": "Context saving failed",

@@ -41,7 +41,12 @@ const Grid = compose(
         category: "DASHBOARD"
     }),
     resourceGrid,
-    withShareTool
+    // add and configure share tool panel
+    compose(
+        defaultProps({ shareOptions: { embedPanel: false } }),
+        withShareTool
+    )
+
 )(require('../../components/resources/ResourceGrid'));
 
 module.exports = Grid;

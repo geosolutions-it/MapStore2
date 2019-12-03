@@ -29,6 +29,7 @@ describe('Metadata component', () => {
     });
     it('Metadata rendering with meta-data', () => {
         const resource = {
+            modifiedAt: new Date(),
             metadata: {
                 name: "NAME",
                 description: "DESCRIPTION"

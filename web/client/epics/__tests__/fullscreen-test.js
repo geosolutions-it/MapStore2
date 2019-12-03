@@ -15,7 +15,7 @@ const {toggleFullscreen} = require('../../actions/fullscreen');
 const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const screenfull = require('screenfull');
 
-const {toggleFullscreenEpic } = require('../fullscreen');
+const {toggleFullscreenEpic} = require('../fullscreen');
 const rootEpic = combineEpics(toggleFullscreenEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);

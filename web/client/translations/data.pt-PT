@@ -1559,6 +1559,8 @@
                 "title": "Edit dashboard properties",
                 "name": "Name",
                 "description": "Description",
+                "createdAt": "Criado",
+                "modifiedAt": "Modificado",
                 "namePlaceholder": "Type a name...",
                 "descriptionPlaceholder": "Type a description...",
                 "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",

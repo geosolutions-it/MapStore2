@@ -24,7 +24,11 @@ const Grid = compose(
         category: "CONTEXT"
     }),
     resourceGrid,
-    withShareTool
+    // add and configure share tool panel
+    compose(
+        defaultProps({ shareOptions: {embedOptions: { showTOCToggle: false } }}),
+        withShareTool
+    )
 )(require('../../components/resources/ResourceGrid'));
 
 module.exports = Grid;

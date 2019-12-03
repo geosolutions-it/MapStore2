@@ -108,6 +108,11 @@ const Api = {
             "misc/category/name/" + category + "/resource/name/" + name,
             this.addBaseUrl(parseOptions(options))).then(response => get(response, 'data.Resource.id'));
     },
+    getResourceDataByName: function(category, name, options) {
+        return axios.get(
+            "misc/category/name/" + category + "/resource/name/" + name + "/data",
+            this.addBaseUrl(parseOptions(options))).then(response => get(response, 'data'));
+    },
     getShortResource: function(resourceId, options) {
         return axios.get(
             "extjs/resource/" + resourceId,

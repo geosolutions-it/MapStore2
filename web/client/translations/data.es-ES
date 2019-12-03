@@ -2009,6 +2009,8 @@
             "title": "Editar propiedades",
             "name": "Nombre",
             "description": "Descripción",
+            "createdAt": "Creado",
+            "modifiedAt": "Modificado",
             "namePlaceholder": "Escriba un nombre ...",
             "descriptionPlaceholder": "Escriba una descripción ...",
             "confirmCloseText": "Hay cambios pendientes, ¿está seguro que quiere cerrar sin guardar?",
@@ -2096,6 +2098,11 @@
                 "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
                 "windowTitle": "Título de la ventana",
                 "windowTitlePlaceholder": "Ingrese el título de la ventana..."
+            },
+            "configureMap": {
+                "label": "Configurar mapa",
+                "reload": "Actualizar mapa",
+                "confirm": "Esto va a descartar todos los cambios actuales del mapa. ¿Proceder?"
             },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",

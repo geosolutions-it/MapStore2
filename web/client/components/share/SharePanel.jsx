@@ -34,6 +34,8 @@ import SwitchPanel from '../misc/switch/SwitchPanel';
  * @prop {string} [shareUrl] the url to use for share. by default location.href
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
+ * @prop {boolean} [embedPanel=true] if false, hide the embed tab.
+ * @prop {object} [embedOptions] options to pass to the embed tab.(`showTOCToggle` - if false hides the 'show TOC' checkbox (used only by map))
  * @prop {string} [shareApiUrl] url for share API part
  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
  * @prop {function} [onClose] function to call on close window event.
@@ -51,6 +53,7 @@ class SharePanel extends React.Component {
         shareUrlReplaceString: PropTypes.string,
         shareApiUrl: PropTypes.string,
         shareConfigUrl: PropTypes.string,
+        embedPanel: PropTypes.bool,
         embedOptions: PropTypes.object,
         showAPI: PropTypes.bool,
         onClose: PropTypes.func,
@@ -71,6 +74,7 @@ class SharePanel extends React.Component {
         onClose: () => {},
         shareUrlRegex: "(h[^#]*)#\\/viewer\\/([^\\/]*)\\/([A-Za-z0-9]*)",
         shareUrlReplaceString: "$1embedded.html#/$3",
+        embedPanel: true,
         embedOptions: {},
         showAPI: true,
         closeGlyph: "1-close",
@@ -121,7 +125,7 @@ class SharePanel extends React.Component {
     };
 
     render() {
-        // ************************ CHANGE URL PARAMATER FOR EMBED CODE ****************************
+        // ************************ CHANGE URL PARAMETER FOR EMBED CODE ****************************
         /* if the property shareUrl is not defined it takes the url from location.href */
         const cleanShareUrl = this.getShareUrl();
         const shareUrl = cleanShareUrl || location.href;
@@ -139,7 +143,7 @@ class SharePanel extends React.Component {
         const tabs = (<Tabs defaultActiveKey={this.state.eventKey} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
             <Tab eventKey={1} title={<Message msgId="share.direct" />}>{this.state.eventKey === 1 && direct}</Tab>
             <Tab eventKey={2} title={<Message msgId="share.social" />}>{this.state.eventKey === 2 && social}</Tab>
-            <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab>
+            {this.props.embedPanel ? <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab> : null}
         </Tabs>);
 
         let sharePanel =

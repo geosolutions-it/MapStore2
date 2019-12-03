@@ -153,9 +153,10 @@ function updateVersion(version) {
     };
 }
 
-function initMap() {
+function initMap(disableFeedbackMask) {
     return {
-        type: INIT_MAP
+        type: INIT_MAP,
+        disableFeedbackMask
     };
 }
 

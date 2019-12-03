@@ -27,20 +27,34 @@ describe('ContextCreator component', () => {
         setTimeout(done);
     });
     it('default', () => {
-        const { Plugin, actions } = getPluginForTest(ContextCreator, {});
+        const { Plugin, actions } = getPluginForTest(ContextCreator, {
+            contextcreator: {
+                stepId: 'configure-map'
+            },
+            map: {}
+        });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         // save button
-        const button = document.querySelectorAll('.footer-button-toolbar-div button')[1];
+        const button = document.querySelectorAll('.footer-button-toolbar button')[0];
+        expect(button).toExist();
+        expect(button.childNodes[0].innerHTML).toBe('save');
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check destination path
         expect(actions.length).toBe(1);
         expect(actions[0].destLocation).toBe("/context-manager");
     });
     it('custom destination', () => {
-        const { Plugin, actions } = getPluginForTest(ContextCreator, {});
+        const { Plugin, actions } = getPluginForTest(ContextCreator, {
+            contextcreator: {
+                stepId: 'configure-map'
+            },
+            map: {}
+        });
         ReactDOM.render(<Plugin saveDestLocation="MY_DESTINATION" />, document.getElementById("container"));
         // save button
-        const button = document.querySelectorAll('.footer-button-toolbar-div button')[1];
+        const button = document.querySelectorAll('.footer-button-toolbar button')[0];
+        expect(button).toExist();
+        expect(button.childNodes[0].innerHTML).toBe('save');
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check customization of destination path
         expect(actions.length).toBe(1);
