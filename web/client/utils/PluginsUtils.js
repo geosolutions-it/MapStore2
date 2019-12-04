@@ -14,6 +14,7 @@ const {connect} = require('react-redux');
 const url = require('url');
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
+const axios = require('../libs/ajax');
 
 /**
  * Gives a reduced version of the status to check.
@@ -121,7 +122,9 @@ const showIn = (state, requires, cfg = {}, name, id, isDefault) => {
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
     if (loadedPlugins[name]) {
-        return assign(loadedPlugins[name], plugin, {loadPlugin: undefined});
+        const loaded = loadedPlugins[name];
+        const impl = loaded.component || loaded;
+        return assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
     }
     return plugin;
 };
@@ -180,7 +183,7 @@ const getPluginItems = (state, plugins, pluginsConfig, containerName, containerI
     // extract basic info for each plugins (name, implementation and config)
         .map(pluginName => ({
             name: pluginName,
-            impl: plugins[pluginName],
+            impl: includeLoaded(getPluginSimpleName(pluginName), loadedPlugins, plugins[pluginName]),
             config: getPluginConfiguration(pluginsConfig, pluginName)
         }))
     // include only plugins that are configured for the current mode
@@ -250,6 +253,32 @@ const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.p
 
 const getPluginImplementation = (impl, stateSelector) => {
     return isMapStorePlugin(impl) ? impl : impl(stateSelector);
+};
+
+const importPlugin = (source, callback) => {
+    /* eslint-disable */
+    // save a reference to webpack require functionality (usable to load compiled bundles)
+    const r = __webpack_require__;
+    // evaluate compiled bundle(s) (this will append a new bundle definition in webpackJsonp)
+    eval(source);
+    // extract bundle(s) definiton
+    const lastLoaded = window.webpackJsonp[window.webpackJsonp.length - 1][1];
+
+    // for every bundle, we call the related definition code
+    Object.keys(lastLoaded).forEach(source => {
+        // exported will contain the bundle exported code
+        const exported = {};
+        lastLoaded[source](null, exported, r);
+        const pluginDef = exported.default || exported;
+        // return the plugin as a lazy loaded one
+        const plugin = {
+            loadPlugin: (loaded) => loaded(pluginDef)
+        }
+        callback(pluginDef.name, plugin);
+    });
+    // remove loaded bundle from the webpack list
+    window.webpackJsonp.pop();
+    /* eslint-enable */
 };
 
 /**
@@ -448,7 +477,8 @@ const PluginsUtils = {
         const pluginImpl = lazy ? {
             loadPlugin: (resolve) => {
                 loader().then(loadedImpl => {
-                    resolve(assign(loadedImpl, { isMapStorePlugin: true }));
+                    const impl = loadedImpl.default || loadedImpl;
+                    resolve(assign(impl, { isMapStorePlugin: true }));
                 });
             },
             enabler
@@ -458,6 +488,54 @@ const PluginsUtils = {
             reducers,
             epics
         };
+    },
+    /**
+     * Imports a plugin from the compiled source code.
+     *
+     * Compiled plugin bundles can be created using the dynamic import syntax with the webChunkName comment.
+     *
+     * @example named bundle plugin
+     * import(&#47;* webpackChunkName: "extensions/dummy-extension" *&#47; './plugins/Extension')
+     *
+     * @example use a compiled plugin
+     * importPlugin("... compiled code ...", lazy => {
+     *      lazy.loadPlugin((plugin) => {
+     *          const Comp = plugin.component;
+     *          ReactDOM.render(Comp, document.getElementById('container'));
+     *      });
+     * });
+     *
+     * @param {string} source plugin source code
+     * @param {function} callback function called with the plugin implementation
+     */
+    importPlugin,
+    /**
+     * Loads a plugin compiled bundle from the given url.
+     *
+     * Compiled plugin bundles can be created using the dynamic import syntax with the webChunkName comment.
+     *
+     * @example named bundle plugin
+     * import(&#47;* webpackChunkName: "extensions/dummy-extension" *&#47; './plugins/Extension')
+     *
+     * @example load and use an external plugin
+     * loadPlugin("dist/plugins/myplugin").then(lazy => {
+     *      lazy.loadPlugin((plugin) => {
+     *          const Comp = plugin.component;
+     *          ReactDOM.render(Comp, document.getElementById('container'));
+     *      });
+     * });
+     *
+     * @param {string} pluginUrl url (relative or absolute) of a plugin compiled bundle to load
+     * @returns {Promise} a Promise that resolves to a lazy plugin object.
+     */
+    loadPlugin: (pluginUrl) => {
+        return new Promise((resolve, reject = () => {}) => {
+            axios.get(pluginUrl).then(response => {
+                importPlugin(response.data, (name, plugin) => resolve(plugin));
+            }).catch(e => {
+                reject(e);
+            });
+        });
     },
     handleExpression,
     getMorePrioritizedContainer,

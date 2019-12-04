@@ -12,7 +12,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 
-const {get, isEqual} = require('lodash');
+const { get, isEqual, isObject, isArray } = require('lodash');
 const {componentFromProp} = require('recompose');
 const Component = componentFromProp('component');
 
@@ -35,14 +35,15 @@ class PluginsContainer extends React.Component {
         mode: PropTypes.string,
         params: PropTypes.object,
         plugins: PropTypes.object,
-        pluginsConfig: PropTypes.object,
+        pluginsConfig: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
         id: PropTypes.string,
         className: PropTypes.string,
         component: PropTypes.any,
         style: PropTypes.object,
         pluginsState: PropTypes.object,
         monitoredState: PropTypes.object,
-        defaultMode: PropTypes.string
+        defaultMode: PropTypes.string,
+        onPluginLoaded: PropTypes.func
     };
 
     static contextTypes = {
@@ -68,7 +69,8 @@ class PluginsContainer extends React.Component {
         className: "plugins-container",
         style: {},
         pluginsState: {},
-        monitoredState: {}
+        monitoredState: {},
+        onPluginLoaded: () => {}
     };
 
     state = {
@@ -78,13 +80,13 @@ class PluginsContainer extends React.Component {
     getChildContext() {
         return {
             plugins: this.props.plugins,
-            pluginsConfig: this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode],
+            pluginsConfig: this.props.pluginsConfig && this.getPluginsConfig(this.props),
             loadedPlugins: this.state.loadedPlugins
         };
     }
 
     UNSAFE_componentWillMount() {
-        this.loadPlugins(this.props.pluginsState);
+        this.loadPlugins(this.props.pluginsState, this.props);
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -111,7 +113,19 @@ class PluginsContainer extends React.Component {
 
     getPluginDescriptor = (plugin) => {
         return PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
-            this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins);
+            this.getPluginsConfig(this.props), plugin, this.state.loadedPlugins);
+    };
+
+    getPluginsConfig = (props) => {
+        if (props.pluginsConfig) {
+            if (isArray(props.pluginsConfig)) {
+                return props.pluginsConfig;
+            }
+            if (isObject(props.pluginsConfig)) {
+                return props.pluginsConfig[this.props.mode] || props.pluginsConfig[props.defaultMode] || [];
+            }
+        }
+        return [];
     };
 
     renderPlugins = (plugins) => {
@@ -131,8 +145,8 @@ class PluginsContainer extends React.Component {
     };
 
     render() {
-        const pluginsConfig = this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] ? this.props.pluginsConfig[this.props.mode] : this.props.pluginsConfig[this.props.defaultMode];
-        if (pluginsConfig) {
+        const pluginsConfig = this.getPluginsConfig(this.props);
+        if (pluginsConfig && pluginsConfig.length > 0) {
             const {bodyPlugins, ...containerPlugins} = PluginsUtils.mapPluginsPosition(pluginsConfig);
             const containerProps = Object.keys(containerPlugins).reduce( (o, k) => ({
                 ...o,
@@ -161,8 +175,8 @@ class PluginsContainer extends React.Component {
     filterRoot = (plugin) => {
         const container = PluginsUtils.getMorePrioritizedContainer(
             plugin.impl,
-            PluginsUtils.getPluginConfiguration(this.props.pluginsConfig[this.props.mode], plugin.name).override,
-            this.props.pluginsConfig[this.props.mode],
+            PluginsUtils.getPluginConfiguration(this.getPluginsConfig(this.props), plugin.name).override,
+            this.getPluginsConfig(this.props),
             0
         );
         // render on root if container is root (plugin === null || plugin.impl === null) or plugin explicitly wants to render on root (doNotHide = true)
@@ -172,9 +186,9 @@ class PluginsContainer extends React.Component {
 
     loadPlugins = (state, newProps) => {
         const getState = (path) => this.getState(path, newProps);
-        (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
-            .map((plugin) => PluginsUtils.getPluginDescriptor(getState, this.props.plugins,
-                this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
+        (newProps.pluginsConfig && this.getPluginsConfig(newProps) || [])
+            .map((plugin) => PluginsUtils.getPluginDescriptor(getState, newProps.plugins,
+                this.getPluginsConfig(newProps), plugin, this.state.loadedPlugins))
             .filter(plugin => PluginsUtils.filterDisabledPlugins({ plugin: plugin && plugin.impl || plugin, cfg: plugin && plugin.cfg || {}}, getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {
@@ -189,6 +203,7 @@ class PluginsContainer extends React.Component {
         this.setState({
             loadedPlugins: assign({}, this.state.loadedPlugins, {[plugin.name]: impl})
         });
+        this.props.onPluginLoaded(plugin.name, impl);
     };
 }
 

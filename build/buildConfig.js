@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const AssetsPlugin = require('assets-webpack-plugin');
 
 /**
  * Webpack configuration builder.
@@ -38,7 +39,9 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     }, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: false
+        minimize: false,
+        moduleIds: "named",
+        chunkIds: "named"
     },
     output: {
         path: paths.dist,
@@ -76,6 +79,9 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
             sourceMap: false,
             mangle: true
         }
+    }),
+    new AssetsPlugin({
+        path: paths.dist
     })] : []),
     resolve: {
         extensions: [".js", ".jsx"],
