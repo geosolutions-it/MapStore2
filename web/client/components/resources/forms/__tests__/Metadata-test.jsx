@@ -54,4 +54,17 @@ describe('Metadata component', () => {
         ReactTestUtils.Simulate.change(input); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
     });
+    it('Test Metadata nameFieldFilter', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<Metadata onChange={actions.onChange} nameFieldFilter={name => name.replace(/\./g, ',')}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const input = container.querySelector('input');
+        input.value = "test.text.stuff";
+        ReactTestUtils.Simulate.change(input); // <-- trigger event callback
+        expect(spyonChange).toHaveBeenCalled();
+        expect(spyonChange.calls[0].arguments[1]).toBe('test,text,stuff');
+    });
 });

@@ -15,7 +15,7 @@ const renderLoading = () => {
     return <div style={{ width: "100px", overflow: "visible", margin: "auto" }}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /></div>;
 };
 
-const renderMetadataModal = ({ Component, edit, resource, setEdit, errors, setErrors, onSaveSuccess, user }) => {
+const renderMetadataModal = ({ Component, edit, resource, setEdit, errors, setErrors, onSaveSuccess, user, nameFieldFilter }) => {
     if (Component) {
         let MetadataModal = Component;
         return (<MetadataModal
@@ -26,6 +26,7 @@ const renderMetadataModal = ({ Component, edit, resource, setEdit, errors, setEr
             setErrors={setErrors}
             errors={errors}
             onSaveSuccess={onSaveSuccess}
+            nameFieldFilter={nameFieldFilter}
             resource={resource} />);
     }
     return null;
@@ -57,7 +58,8 @@ module.exports = ({
     onSaveSuccess = () => {},
     onDelete = () => {},
     onShare = () => {},
-    onUpdateAttribute = () => {}
+    onUpdateAttribute = () => {},
+    nameFieldFilter = () => {}
 }) => (
     <Grid id={id} fluid={fluid} className={'ms-grid-container ' + className} style={style}>
         {title && <Row>
@@ -91,7 +93,8 @@ module.exports = ({
             setErrors,
             errors,
             setEdit,
-            edit
+            edit,
+            nameFieldFilter
             // resource
         })}
     </Grid>
