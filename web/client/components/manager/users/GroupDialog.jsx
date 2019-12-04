@@ -268,7 +268,7 @@ class GroupDialog extends React.Component {
         if (typeof selected === 'string') {
             this.selectMemberPage = 0;
             this.setState({selectedMember: selected});
-            this.searchUsers(selected);
+            this.searchUsers(selected, true);
             return;
         }
 
@@ -282,7 +282,7 @@ class GroupDialog extends React.Component {
                 newUsers = [...newUsers, newMember];
                 this.props.onChange("newUsers", newUsers);
                 this.setState({selectedMember: '', openSelectMember: false});
-                this.searchUsers('*');
+                this.searchUsers('*', true);
             }
             return;
         }
@@ -309,9 +309,9 @@ class GroupDialog extends React.Component {
         this.searchUsers();
     }
 
-    searchUsers = (q) => {
+    searchUsers = (q, textChanged) => {
         const start = this.selectMemberPage;
-        const text = q || (typeof this.state.selectedMember === 'string' && this.state.selectedMember ? this.state.selectedMember : q);
+        const text = textChanged ? q : (typeof this.state.selectedMember === 'string' && this.state.selectedMember ? this.state.selectedMember : q);
         this.props.searchUsers(text, start, PAGINATION_LIMIT);
     }
 

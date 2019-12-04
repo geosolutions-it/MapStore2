@@ -201,4 +201,19 @@ describe("Test GroupDialog Component", () => {
             expect(onCloseSpy).toHaveBeenCalled();
         });
     });
+
+    it('search user result from text change must be called with text changed', () => {
+        const actions = {
+            searchUsers: () => { }
+        };
+        const spySearchUsers = expect.spyOn(actions, 'searchUsers');
+        ReactDOM.render(
+            <GroupDialog group={group1} searchUsers={actions.searchUsers} />,
+            document.getElementById("container"));
+        const input = document.querySelector('.rw-input');
+        input.value = 'test';
+        ReactTestUtils.Simulate.change(input);
+        expect(spySearchUsers).toHaveBeenCalledWith('test', 0, 5);
+        spySearchUsers.restore();
+    });
 });
