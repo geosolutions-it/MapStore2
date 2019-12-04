@@ -83,7 +83,7 @@ describe("Test the MapViewerCmp component", () => {
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
-                expect(cfgUrl).toBe("/mapstore/rest/geostore/data/1");
+                expect(cfgUrl).toBe("/rest/geostore/data/1");
                 expect(mapId).toBe(1);
             }};
         const component = renderMapViewerComp(mapViewerPros);
@@ -97,7 +97,7 @@ describe("Test the MapViewerCmp component", () => {
             match, location, onInit: () => { },
             wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
-                expect(cfgUrl).toBe(`/mapstore/rest/geostore/data/${count}`);
+                expect(cfgUrl).toBe(`/rest/geostore/data/${count}`);
                 expect(mapId).toBe(count);
                 count++;
                 if (count === 3) {

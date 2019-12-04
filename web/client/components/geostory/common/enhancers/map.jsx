@@ -13,6 +13,8 @@ import { find, isEqual} from 'lodash';
 import uuid from "uuid";
 
 
+import {show} from '../../../../actions/mapEditor';
+
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
 import {resourcesSelector, getCurrentFocusedContentEl, isFocusOnContentSelector} from '../../../../selectors/geostory';
 
@@ -68,7 +70,19 @@ export const handleMapUpdate = withHandlers({
             update(focusedContent.path + `.${path}`, value, "merge");
         }});
 /**
- * Handle edit map toggle and map rest.
+ * Connect and toggle advanced Editor
+ */
+export const handleAdvancedMapEditor = compose(
+    connect(null, {toggleAdvancedEditing: show}),
+    withHandlers({
+        toggleAdvancedEditing: ({toggleAdvancedEditing = () => {}, map = {}}) => () => {
+            const {id, ...data} = map;
+            toggleAdvancedEditing('inlineEditor', {data, id});
+        }
+    })
+);
+/**
+ * Handle edit map toggle, map rest and open AdvancedMapEditor.
  * Map reset restores the original resource map configuration by removing all content map configs
  */
 export const handleToolbar = withHandlers({
@@ -87,7 +101,6 @@ export const handleToolbar = withHandlers({
  */
 const ResetButton = (props) => (<ConfirmButton
     glyph="repeat"
-    visible
     bsStyle= "primary"
     className="square-button-md no-border"
     tooltipId="geostory.contentToolbar.resetMap"
@@ -97,15 +110,19 @@ const ResetButton = (props) => (<ConfirmButton
 />);
 
 export const withToolbar = compose(
-    withProps(({pendingChanges, toggleEditing, disableReset, onReset}) => ({
+    withProps(({pendingChanges, toggleEditing, disableReset, onReset, toggleAdvancedEditing = () => {}}) => ({
         buttons: [{
             glyph: "floppy-disk",
-            visible: true,
             disabled: !pendingChanges,
             tooltipId: "geostory.contentToolbar.saveChanges",
             onClick: toggleEditing
         }, {
             renderButton: <ResetButton disabled={disableReset} onClick={onReset}/>
+        },
+        {
+            glyph: "pencil",
+            tooltipId: "geostory.contentToolbar.advancedMapEditor",
+            onClick: toggleAdvancedEditing
         }]
     })),
     withNodeSelection,      // Node selection

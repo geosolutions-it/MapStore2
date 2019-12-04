@@ -283,6 +283,7 @@
             "search": "buscar..."
         },
         "resources": {
+            "successSaved": "Este recurso se ha guardado correctamente",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
@@ -354,7 +355,7 @@
                 "errorTitle": "No se puede guardar el mapa actual",
                 "error403": "Error al modificar el mapa",
                 "error404": "Error al crear el mapa",
-                "error409": "Nombre del mapa repetido",
+                "error409": "Ya existe un recurso con este nombre",
                 "error500": "Error de servidor interno. Verificar si el tamaño del archivo de configuración del mapa excede el límite fijado",
                 "errorDefault": "Error de red"
             },
@@ -1616,7 +1617,7 @@
                     "notFound": "Panel de control no encontrado",
                     "notAccessible": "Panel de control no accesible"
                 },
-                "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre"
             },
             "editor": {
                 "save": "Guardar el panel de control",
@@ -1626,7 +1627,7 @@
             },
             "emptyTitle": "El panel de control está vacío"
         },
-                "context": {
+        "context": {
             "loadingSpinner": "Cargando Contexto",
             "errors": {
                 "loading": {
@@ -1648,7 +1649,7 @@
                     "unknownError": "Hubo un error al cargar el mapa. Por favor, póngase en contacto con el administrador",
                     "notFound": "El mapa que está intentando acceder no existe"
                 },
-                "resourceAlreadyExists": "Un recurso con este nombre ya existe. Try '{datos}'"
+                "resourceAlreadyExists": "Ya existe un recurso con este nombre"
             }
         },
         "wizard": {
@@ -1937,7 +1938,8 @@
                 "closeMapEditing": "Cerrar",
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
                 "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
-                "editURL": "Editar URL de página web"
+                "editURL": "Editar URL de página web",
+                "advancedMapEditor": "Abrir editor de mapas avanzado"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -2114,7 +2116,7 @@
             },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
-                "conflict": "Ya existe un contexto con el mismo nombre. prueba '{data}'",
+                "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
