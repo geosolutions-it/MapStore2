@@ -14,8 +14,12 @@ const {closeIdentify, purgeMapInfoResults, noQueryableLayers} = require('../../a
 
 const {updateMapLayoutEpic} = require('../maplayout');
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 describe('map layout epics', () => {
+    beforeEach(() => {
+        ConfigUtils.setConfigProp('mapLayout', null);
+    });
     it('tests layout', (done) => {
         const epicResult = actions => {
             try {
@@ -34,6 +38,34 @@ describe('map layout epics', () => {
             done();
         };
         const state = {controls: { metadataexplorer: {enabled: true}, queryPanel: {enabled: true}}};
+        testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
+    });
+
+    it('tests layout with prop', (done) => {
+        ConfigUtils.setConfigProp('mapLayout', {
+            left: { sm: 300, md: 500, lg: 600 },
+            right: { md: 658 },
+            bottom: { sm: 120 }
+        });
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        left: 600, right: 658, bottom: 120, transform: 'none', height: 'calc(100% - 120px)', boundingMapRect: {
+                            left: 600,
+                            right: 658,
+                            bottom: 120
+                        }
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = { controls: { metadataexplorer: { enabled: true }, queryPanel: { enabled: true } } };
         testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
     });
 

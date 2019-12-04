@@ -14,6 +14,7 @@ const {CLOSE_IDENTIFY, ERROR_FEATURE_INFO, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_IN
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {isMapInfoOpen} = require('../selectors/mapInfo');
 const {showCoordinateEditorSelector} = require('../selectors/controls');
+const ConfigUtils = require('../utils/ConfigUtils');
 
 /**
  * Epìcs for feature grid
@@ -49,7 +50,7 @@ const updateMapLayoutEpic = (action$, store) =>
                 }));
             }
 
-            const mapLayout = {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
+            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
 
             if (get(state, "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
