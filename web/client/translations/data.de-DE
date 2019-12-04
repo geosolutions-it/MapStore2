@@ -1936,7 +1936,8 @@
                 "saveChanges": "Änderungen speichern",
                 "closeMapEditing": "Schließen",
                 "confirmCloseMapEditing": "Schließen Sie die Kartenbearbeitung",
-                "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?"
+                "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?",
+                "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
