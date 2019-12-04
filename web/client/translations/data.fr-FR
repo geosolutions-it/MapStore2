@@ -283,6 +283,7 @@
             "search": "rechercher ..."
         },
         "resources": {
+            "successSaved": "Cette ressource a été enregistrée correctement",
             "deleteConfirmTitle": "Etes-vous sûr",
             "deleteConfirmMessage": "Etes-vous sûr de vouloir supprimer cette ressource?",
             "deleteConfirmButtonText": "Supprimer",
@@ -354,7 +355,7 @@
                 "errorTitle": "Impossible d'enregistrer la carte actuelle",
                 "error403": "Une erreur est survenue lors de la suppression de la carte",
                 "error404": "Une erreur est survenue lors de la création de la carte",
-                "error409": "Nom de la carte déjà choisi",
+                "error409": "Une ressource portant ce nom existe déjà",
                 "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la carte dépasse la limite fixée",
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
@@ -1616,7 +1617,7 @@
                     "notFound": "Tableau de bord introuvable",
                     "notAccessible": "Tableau de bord non accessible"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. Essai '{data}'"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             },
             "editor": {
                 "save": "Sauvegarder le tableau de bord",
@@ -1648,7 +1649,7 @@
                     "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
                     "notFound": "La carte que vous essayez d'accéder n'existe pas"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. essayer « {data} »"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             }
         },
         "wizard": {
@@ -2105,7 +2106,7 @@
             },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
-                "conflict": "Un contexte portant le même nom existe déjà. essayez '{data}'",
+                "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"

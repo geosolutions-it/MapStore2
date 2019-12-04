@@ -47,6 +47,10 @@ const SaveBaseDialog = compose(
         router: PropTypes.object
     }),
     withHandlers({
+        onClose: ({onClose, onResetMapSaveError}) => () => {
+            onClose();
+            onResetMapSaveError(); // reset errors when closing the modal
+        },
         onSave: ({map, layers, groups, backgrounds, textSearchConfig, additionalOptions, saveMap, isMapSaveAs, user}) => resource => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
                 backgrounds, textSearchConfig, additionalOptions);

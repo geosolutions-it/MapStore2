@@ -283,6 +283,7 @@
 			"search": "Cerca..."
 		},
         "resources": {
+            "successSaved": "Questa risorsa è stata salvata correttamente",
             "deleteConfirmTitle": "Sei sicuro",
             "deleteConfirmMessage": "Sei sicuro di voler eliminare questa risorsa?",
             "deleteConfirmButtonText": "Elimina",
@@ -354,7 +355,7 @@
                 "errorTitle": "Non è stato possibile salvare la mappa",
                 "error403": "Non disponi dei permessi per aggiornare la mappa",
                 "error404": "Non è stato possibile creare la mappa sul server",
-                "error409": "Una mappa con questo nome esiste già",
+                "error409": "Una risorsa con questo nome esiste già",
                 "error500": "Errore interno del server. Verificare se la dimensione della configurazione di mappa supera il limite fissato",
                 "errorDefault": "Errore di rete"
             },
@@ -1616,7 +1617,7 @@
                     "notFound": "Dashboard non trovata",
                     "notAccessible": "Dashboard non accessibile"
                 },
-                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
             },
             "editor": {
                 "save": "Salva la dashboard",
@@ -1648,7 +1649,7 @@
                     "unknownError": "Si è verificato un errore durante il caricamento della mappa. Si prega di contattare l'amministratore",
                     "notFound": "La mappa si sta tentando di accedere non esiste"
                 },
-                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. provare '{data}'"
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
             }
         },
         "wizard": {
@@ -2106,7 +2107,7 @@
             },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
-                "conflict": "Un contesto con lo stesso nome esiste già. prova '{data}'",
+                "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"

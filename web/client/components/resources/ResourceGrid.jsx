@@ -15,11 +15,19 @@ const renderLoading = () => {
     return <div style={{ width: "100px", overflow: "visible", margin: "auto" }}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /></div>;
 };
 
-const renderMetadataModal = ({ Component, edit, resource, setEdit, onSaveSuccess, user, nameFieldFilter }) => {
+const renderMetadataModal = ({ Component, edit, resource, setEdit, errors, setErrors, onSaveSuccess, user, nameFieldFilter }) => {
     if (Component) {
         let MetadataModal = Component;
-        return (<MetadataModal user={user} setEdit={setEdit} key="metadataModal" show={edit} onSaveSuccess={onSaveSuccess}
-            nameFieldFilter={nameFieldFilter} resource={resource} />);
+        return (<MetadataModal
+            key="metadataModal"
+            user={user}
+            setEdit={setEdit}
+            show={edit}
+            setErrors={setErrors}
+            errors={errors}
+            onSaveSuccess={onSaveSuccess}
+            nameFieldFilter={nameFieldFilter}
+            resource={resource} />);
     }
     return null;
 };
@@ -38,6 +46,7 @@ module.exports = ({
     metadataModal,
     viewerUrl,
     edit,
+    errors,
     user,
     editDataEnabled,
     shareToolEnabled,
@@ -45,6 +54,7 @@ module.exports = ({
     onEdit = () => {},
     onEditData = () => {},
     setEdit = () => {},
+    setErrors = () => {},
     onSaveSuccess = () => {},
     onDelete = () => {},
     onShare = () => {},
@@ -80,6 +90,8 @@ module.exports = ({
             user,
             onSaveSuccess,
             resource,
+            setErrors,
+            errors,
             setEdit,
             edit,
             nameFieldFilter
