@@ -111,7 +111,7 @@ describe("test the CoordinatesEditor Panel", () => {
             {lat: 6, lon: 6 },
             {lat: 6, lon: 6 },
             { lat: 15, lon: 10 }
-        ], undefined, undefined);
+        ], undefined, undefined, undefined);
 
         input.value = "";
         TestUtils.Simulate.change(input);
@@ -124,7 +124,7 @@ describe("test the CoordinatesEditor Panel", () => {
             { lat: 6, lon: 6 },
             { lat: 6, lon: 6 },
             { lat: "", lon: 10 }
-        ], undefined, undefined);
+        ], undefined, undefined, undefined);
     });
 
     it('CoordinatesEditor as LineString editor, valid input coordinate, changing coords', () => {
@@ -161,7 +161,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: 15, lon: 10 },
             {lat: 6, lon: 6 }
-        ], undefined, undefined);
+        ], undefined, undefined, undefined);
 
         input.value = "";
         TestUtils.Simulate.change(input);
@@ -172,7 +172,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: "", lon: 10 },
             {lat: 6, lon: 6 }
-        ], undefined, undefined);
+        ], undefined, undefined, undefined);
     });
 
     it('CoordinatesEditor as Circle editor, valid input coordinate, changing coords, isMouseLeaveEnabled=true', () => {
@@ -180,11 +180,13 @@ describe("test the CoordinatesEditor Panel", () => {
             lat: 10,
             lon: 10
         }];
+        const mapProjection = "EPSG:3857";
         const spyOnChange = expect.spyOn(testHandlers, "onChange");
         const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
         const editor = ReactDOM.render(
             <CoordinatesEditor
+                mapProjection={mapProjection}
                 {...testHandlers}
                 isMouseEnterEnabled
                 isMouseLeaveEnabled
@@ -208,7 +210,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChange).toHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: 15, lon: 10 }
-        ], 1000, undefined);
+        ], 1000, undefined, mapProjection);
 
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
@@ -219,7 +221,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChange).toHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: "", lon: 10 }
-        ], 1000, undefined);
+        ], 1000, undefined, mapProjection);
     });
 
     it('CoordinatesEditor as Circle editor, valid input coordinate, changing coords, isMouseLeaveEnabled=false', () => {
@@ -227,11 +229,13 @@ describe("test the CoordinatesEditor Panel", () => {
             lat: 10,
             lon: 10
         }];
+        const mapProjection = "EPSG:3857";
         const spyOnChange = expect.spyOn(testHandlers, "onChange");
         const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
         const editor = ReactDOM.render(
             <CoordinatesEditor
+                mapProjection={mapProjection}
                 {...testHandlers}
                 isMouseEnterEnabled
                 type="Circle"
@@ -254,7 +258,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ]]);
         expect(spyOnChange).toHaveBeenCalled();
-        expect(spyOnChange).toHaveBeenCalledWith([{ lat: "", lon: 10 }], 1000, undefined);
+        expect(spyOnChange).toHaveBeenCalledWith([{ lat: "", lon: 10 }], 1000, undefined, mapProjection);
     });
 
     it('CoordinatesEditor as Circle editor, valid input coordinate, changing radius with valid value', () => {
@@ -263,9 +267,11 @@ describe("test the CoordinatesEditor Panel", () => {
             lon: 10
         }];
         const spyOnChangeRadius = expect.spyOn(testHandlers, "onChangeRadius");
+        const mapProjection = "EPSG:3857";
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
         const editor = ReactDOM.render(
             <CoordinatesEditor
+                mapProjection={mapProjection}
                 {...testHandlers}
                 isMouseEnterEnabled isMouseLeaveEnabled
                 type="Circle"
@@ -282,7 +288,7 @@ describe("test the CoordinatesEditor Panel", () => {
         inputRadius.value = 10000;
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
-        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [[10, 10]]);
+        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [[10, 10]], mapProjection);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
     });
 
@@ -294,8 +300,10 @@ describe("test the CoordinatesEditor Panel", () => {
         }];
         const spyOnChangeRadius = expect.spyOn(testHandlers, "onChangeRadius");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
+        const mapProjection = "EPSG:3857";
         const editor = ReactDOM.render(
             <CoordinatesEditor
+                mapProjection={mapProjection}
                 {...testHandlers}
                 isMouseEnterEnabled isMouseLeaveEnabled
                 type="Circle"
@@ -312,7 +320,7 @@ describe("test the CoordinatesEditor Panel", () => {
         inputRadius.value = 10000;
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
-        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, []);
+        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [], mapProjection);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
     });
 
@@ -324,8 +332,10 @@ describe("test the CoordinatesEditor Panel", () => {
         }];
         const spyOnChangeRadius = expect.spyOn(testHandlers, "onChangeRadius");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
+        const mapProjection = "EPSG:3857";
         const editor = ReactDOM.render(
             <CoordinatesEditor
+                mapProjection={mapProjection}
                 {...testHandlers}
                 isMouseEnterEnabled isMouseLeaveEnabled
                 type="Circle"
@@ -344,7 +354,7 @@ describe("test the CoordinatesEditor Panel", () => {
         inputRadius.value = "";
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
-        expect(spyOnChangeRadius).toHaveBeenCalledWith(null, [["", ""]]);
+        expect(spyOnChangeRadius).toHaveBeenCalledWith(null, [["", ""]], mapProjection);
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("radius", [["", ""]]);
     });
@@ -384,7 +394,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChangeText).toNotHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: 15, lon: 10 }
-        ], undefined, "myTextAnnotation");
+        ], undefined, "myTextAnnotation", undefined);
 
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
@@ -396,7 +406,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChangeText).toNotHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: "", lon: 10 }
-        ], undefined, "myTextAnnotation");
+        ], undefined, "myTextAnnotation", undefined);
     });
 
     it('CoordinatesEditor as Text editor, valid input coordinate, changing text, isMouseLeaveEnabled=true', () => {

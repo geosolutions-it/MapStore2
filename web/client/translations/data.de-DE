@@ -861,7 +861,7 @@
                     "reset_bbox": "Zurücksetzen",
                     "save_bbox": "BBOX Änderungen speichern",
                     "save_radius": "Radius/Kreiszentrum Änderungen speichern",
-                    "radius": "Radius(m)"
+                    "radius": "Radius({unit})"
                 },
                 "methods": {
                     "zone": "Zone",

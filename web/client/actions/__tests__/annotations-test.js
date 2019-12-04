@@ -132,10 +132,12 @@ describe('Test correctness of the annotations actions', () => {
         const coordinates = [1, 2];
         const radius = 0;
         const text = "text";
-        const result = changeSelected(coordinates, radius, text);
+        const crs = "EPS:3857";
+        const result = changeSelected(coordinates, radius, text, crs);
         expect(result.type).toEqual(CHANGED_SELECTED);
         expect(result.coordinates).toEqual(coordinates);
         expect(result.radius).toEqual(radius);
+        expect(result.crs).toEqual(crs);
         expect(result.text).toEqual(text);
     });
     it('setInvalidSelected', () => {
@@ -298,9 +300,11 @@ describe('Test correctness of the annotations actions', () => {
     it('changeRadius', () => {
         const radius = "";
         const components = "";
-        const result = changeRadius(radius, components);
+        const crs = "ESPG:4326";
+        const result = changeRadius(radius, components, crs);
         expect(result.components).toEqual(components);
         expect(result.radius).toEqual(radius);
+        expect(result.crs).toEqual(crs);
         expect(result.type).toEqual(CHANGE_RADIUS);
     });
     it('changeText', () => {

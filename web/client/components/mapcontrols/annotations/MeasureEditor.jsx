@@ -9,6 +9,7 @@ const React = require('react');
 const { FormControl, FormGroup } = require('react-bootstrap');
 const { isNumber } = require('lodash');
 const { convertUom } = require('../../../utils/MeasureUtils');
+const { getUnits } = require('../../../utils/CoordinatesUtils');
 
 // convert to valueUom if it is a valid number
 const toValue = (value, uom, valueUom) => (isNumber(parseFloat(value)) && !isNaN(parseFloat(value)))
@@ -22,17 +23,17 @@ const toLocalValue = (value, uom, valueUom) =>
 
 const { compose, withHandlers, withPropsOnChange, withState, withStateHandlers, defaultProps} = require('recompose');
 
-
 module.exports = compose(
     defaultProps({
         valueUom: 'm',
         displayUom: 'm',
         units: [
-            { value: "ft", label: "ft" },
-            { value: "m", label: "m" },
-            { value: "km", label: "km" },
-            { value: "mi", label: "mi" },
-            { value: "nm", label: "nm" }
+            { value: "degrees", label: "deg", originUom: "degrees" },
+            { value: "ft", label: "ft", originUom: "m"  },
+            { value: "m", label: "m", originUom: "m" },
+            { value: "km", label: "km", originUom: "m" },
+            { value: "mi", label: "mi", originUom: "m" },
+            { value: "nm", label: "nm", originUom: "m" }
         ]
     }),
     withStateHandlers(
@@ -58,10 +59,10 @@ module.exports = compose(
                 : toLocalValue(value, uom, valueUom)
         })),
     withHandlers({
-        onChange: ({ uom, valueUom, onChange = () => { }, setLocalValue = () => {} }) => (value) => {
+        onChange: ({ uom, projection, valueUom, onChange = () => { }, setLocalValue = () => {} }) => (value) => {
             setLocalValue(value);
             onChange(
-                toValue(value, uom, valueUom)
+                toValue(value, uom, valueUom), projection
             );
         }
 
@@ -69,18 +70,20 @@ module.exports = compose(
 
 )(({
     value,
-    units,
+    units = [],
     uom,
+    projection = "EPSG:3857",
     style = {display: "inline-flex", width: "100%"},
     setUom = () => {},
     onChange = () => {}
-}) => (
-    <FormGroup style={style}>
+}) => {
+    const unitsFromCrs = getUnits(projection);
+    return (<FormGroup style={style}>
         <FormControl
             value={value}
             placeholder="radius"
             name="radius"
-            onChange={e => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value, uom)}
             step={1}
             type="number" />
         <FormControl
@@ -88,6 +91,7 @@ module.exports = compose(
             value={uom}
             onChange={e => setUom(e.target.value)}
             style={{ width: 85 }}>
-            {units.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
+            {units.filter(({originUom}) => unitsFromCrs === originUom).map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
         </FormControl>
-    </FormGroup>));
+    </FormGroup>);
+});

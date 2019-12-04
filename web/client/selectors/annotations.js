@@ -8,6 +8,7 @@
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
+const {projectionSelector} = require('./map');
 const {isOpenlayers} = require('./maptype');
 const {isMapInfoOpen} = require('./mapInfo');
 const {head, get} = require('lodash');
@@ -64,6 +65,7 @@ const annotationsInfoSelector = (state) => (assign({}, {
     selected: selectedSelector(state),
     featureType: featureTypeSelector(state),
     removing: removingSelector(state),
+    mapProjection: projectionSelector(state),
     showUnsavedChangesModal: showUnsavedChangesModalSelector(state),
     showDeleteFeatureModal: showDeleteFeatureModalSelector(state),
     showUnsavedGeometryModal: showUnsavedGeometryModalSelector(state),
