@@ -340,6 +340,7 @@
             "suggestion": "(möglichst 300px X 180px, max 500kb)",
             "errorFormat": "Unterstützte Formate: png/jpg",
             "errorSize": "Maximal zulässige Größe: 500kb",
+            "errorCustomSize": "Maximal zulässige Größe: {maxFileSize}",
             "error": "Das bereitgestellte Bild ist ungültig",
             "savedMapTitle": "Gespeicherte Karte",
             "savedMapMessage": "Karte wurde korrekt gespeichert",
@@ -388,6 +389,7 @@
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
                     "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li> <li>Die Projektion der Karte ist nicht konfiguriert</li></ul> <p>",
+                    "projectionError": "Die Projektion {projection} der Karte ist nicht konfiguriert",
                     "title" : "Karte kann nicht angezeigt werden"
                 }
             }
@@ -1990,7 +1992,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Karte konfigurieren"
+                "configureMapOptions": "Karte konfigurieren",
+                "settings": "Einstellungen",
+                "settingsSubTitle": "Benutzerinteraktionen verwalten",
+                "toc": "Schichten",
+                "pan": "Pan-Interaktion",
+                "zoom": "Vergrößern / Verkleinern von Interaktionen",
+                "topLeft": "Oben links",
+                "topRight": "Oben rechts",
+                "bottomLeft": "Unten links",
+                "bottomRight": "Unten rechts"
             }
         },
         "saveDialog": {
@@ -2005,6 +2016,11 @@
             "saveSuccessTitle": "Erfolg",
             "saveSuccessMessage": "Erfolgreich gespeichert"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Schließen Sie den Karteneditor",
+            "confirmExitContent": "Ausstehende Änderungen verwerfen?"
+        },
         "mediaEditor": {
             "modalTitle": "Medien",
             "images": "Bilder",
@@ -2012,6 +2028,8 @@
             "maps": "Karten",
             "preview": "Vorschau",
             "apply": "Sich bewerben",
+            "confirmExitTitle": "Schließen Media Editor",
+            "confirmExitContent": "Ausstehende Änderungen verwerfen?",
             "mediaPicker": {
                 "services": "Dienstleistungen: ",
                 "clean": "Saubere Ergebnisse",
@@ -2033,7 +2051,15 @@
                 "credits": "Credits",
                 "mapFilter": "Karten filtern",
                 "videoFilter": "Filtern Sie Videos",
-                "imageFilter": "Filtern Sie Bilder"
+                "imageFilter": "Filtern Sie Bilder",
+                "import": "Ressource in lokalen Speicher importieren"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Schließen Media Form",
+                "confirmExitContent": "Ausstehende Änderungen verwerfen?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB"
             }
         },
         "backgroundDialog": {
@@ -2072,6 +2098,7 @@
             },
             "saveErrorNotification": {
                 "title": "Das Speichern des Kontexts ist fehlgeschlagen",
+                "conflict": "Ein Kontext mit demselben Namen ist bereits vorhanden. versuche '{data}'",
                 "defaultMessage": "Unbekannter Fehler"
             },
             "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"

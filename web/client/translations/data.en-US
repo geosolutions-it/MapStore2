@@ -339,7 +339,8 @@
             "message": "Drop or click to import an image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Supported formats: png/jpg",
-            "errorSize": "Max allowed size: 500kb",
+            "errorSize": "Max allowed size: maxFileSize",
+            "errorCustomSize": "Max allowed size: {maxFileSize}",
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
             "savedMapMessage": "Map has been saved correctly",
@@ -388,6 +389,7 @@
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
                     "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "projectionError": "The projection {projection} of the map is not configured",
                     "title" : "Map cannot be viewed"
                 }
             }
@@ -1994,7 +1996,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configure map",
+                "settings": "Settings",
+                "settingsSubTitle": "Manage user interactions",
+                "toc": "Layers",
+                "pan": "Pan interaction",
+                "zoom": "Zoom In/Out interactions",
+                "topLeft": "Top Left",
+                "topRight": "Top Right",
+                "bottomLeft": "Bottom Left",
+                "bottomRight": "Bottom Right"
             }
         },
         "saveDialog": {
@@ -2009,6 +2020,11 @@
             "saveSuccessTitle": "Success",
             "saveSuccessMessage": "Saved successfully"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Close Map Editor",
+            "confirmExitContent": "Discard pending changes?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Images",
@@ -2016,6 +2032,8 @@
             "maps": "Maps",
             "preview": "Preview",
             "apply": "Apply",
+            "confirmExitTitle": "Close Media Editor",
+            "confirmExitContent": "Discard pending changes?",
             "mediaPicker": {
                 "services": "Services: ",
                 "clean": "Clean results",
@@ -2037,7 +2055,15 @@
                 "credits": "Credits",
                 "mapFilter": "Filter maps",
                 "videoFilter": "Filter videos",
-                "imageFilter": "Filter images"
+                "imageFilter": "Filter images",
+                "import": "Import resource to local store"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Close Media Form",
+                "confirmExitContent": "Discard pending changes?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb"
             }
         },
         "backgroundDialog": {
@@ -2076,6 +2102,7 @@
             },
             "saveErrorNotification": {
                 "title": "Context saving failed",
+                "conflict": "A context with the same name already exists. try '{data}'",
                 "defaultMessage": "Unknown error"
             },
             "undo": "Are you sure you want to abandon the context editing session?"

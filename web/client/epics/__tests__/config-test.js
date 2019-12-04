@@ -40,6 +40,19 @@ describe('config epics', () => {
                 checkActions
             );
         });
+        it('load existing configuration file, with unsupported projection 31468', (done) => {
+            const checkActions = ([a]) => {
+                expect(a).toExist();
+                expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
+                expect(a.error).toEqual({errorMessageParams: {projection: "EPSG:31468"}, messageId: "map.errors.loading.projectionError"});
+                done();
+            };
+            testEpic(loadMapConfigAndConfigureMap,
+                1,
+                [loadMapConfig('base/web/client/test-resources/testConfigEPSG31468.json')],
+                checkActions
+            );
+        });
         it('load existing configuration file with mapId', (done) => {
             const checkActions = ([a, b]) => {
                 expect(a).toExist();

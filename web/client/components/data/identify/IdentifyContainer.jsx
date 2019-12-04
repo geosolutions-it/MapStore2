@@ -80,7 +80,7 @@ module.exports = props => {
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
-        <div>
+        <div id="identify-container" className={enabled && requests.length !== 0 ? "identify-active" : ""}>
             <DockablePanel
                 bsStyle="primary"
                 glyph="map-marker"

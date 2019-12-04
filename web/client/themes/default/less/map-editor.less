@@ -1,0 +1,21 @@
+.map-editor-modal {
+    z-index: 2995;
+    .ms-resizable-modal .modal-content {
+        .modal-footer {
+            border-top: 1px solid #d8ddde;
+        }
+    } 
+}
+.map-editor-modal-body {
+    #catalog-root.catalog-active, #identify-container.identify-active {
+        & > div > div > div {
+            left:unset !important;
+            right: 0px;
+        }
+    }
+
+}
+
+.with-confirm-modal .modal, .map-editor-search-config {
+        z-index: 3000;
+    }

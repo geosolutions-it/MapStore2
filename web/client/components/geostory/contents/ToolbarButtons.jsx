@@ -11,7 +11,7 @@ import React from "react";
 import Message from '../../I18N/Message';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
-import withConfirm from "../../misc/toolbar/withConfirm";
+import withConfirm from "../../misc/withConfirm";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 

@@ -13,7 +13,6 @@ const {
     MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED, SHOW_DETAILS} = require('../actions/maps');
 const {
     EDIT_MAP, RESET_CURRENT_MAP} = require('../actions/currentMap');
-const {MAP_INFO_LOADED} = require('../actions/config');
 const assign = require('object-assign');
 const {isArray, isNil} = require('lodash');
 /**
@@ -251,17 +250,6 @@ function maps(state = {
         }
         );
         return newState;
-    }
-    case MAP_INFO_LOADED: {
-        let newMaps = state.results === "" ? [] : [...state.results];
-
-        for (let i = 0; i < newMaps.length; i++) {
-            if (newMaps[i].id && newMaps[i].id === action.mapId ) {
-                const {data, permissions, attributes, ...others} = action.info;
-                newMaps[i] = assign({}, newMaps[i], {...others, thumbnail: attributes && attributes.thumbnail});
-            }
-        }
-        return assign({}, state, {results: newMaps});
     }
     default:
         return state;

@@ -14,7 +14,7 @@ import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
-import withConfirm from '../../misc/toolbar/withConfirm';
+import withConfirm from '../../misc/withConfirm';
 import SectionsPreview from './SectionsPreview';
 import Settings from './Settings';
 

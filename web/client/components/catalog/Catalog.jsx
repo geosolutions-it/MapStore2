@@ -284,7 +284,6 @@ class Catalog extends React.Component {
                 modalParams= {this.props.modalParams}
                 onAddBackgroundProperties={this.props.onAddBackgroundProperties}
                 source={this.props.source}
-                records={this.props.records}
                 authkeyParamNames={this.props.authkeyParamNames}
                 catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
                 catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}

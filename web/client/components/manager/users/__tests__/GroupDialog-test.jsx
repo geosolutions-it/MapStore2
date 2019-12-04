@@ -160,4 +160,45 @@ describe("Test GroupDialog Component", () => {
         comp.loadPrevPageMembers();
         expect(comp.selectMemberPage).toBe(6);
     });
+    it('should go to last member page', () => {
+        let comp = ReactDOM.render(
+            <GroupDialog group={group1} availableUsersCount={15} />,
+            document.getElementById("container"));
+        comp.selectMemberPage = 11;
+        comp.loadNextPageMembers();
+        expect(comp.isLastPage()).toBe(true);
+    });
+    describe('unsaved changes modal', () => {
+        it('showing unsaved changes modal and closing the modal', () => {
+            const actions = {
+                onClose: () => {}
+            };
+            const onCloseSpy = expect.spyOn(actions, 'onClose');
+
+            const groupDlg = ReactDOM.render(
+                <GroupDialog
+                    group={{...group1, status: "modified"}}
+                    onClose={actions.onClose}
+                />, document.getElementById("container"));
+            expect(groupDlg).toExist();
+            let buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(6);
+            let saveBtn = buttons[4];
+            let closeBtn = buttons[5];
+            expect(saveBtn.innerText).toBe("usergroups.saveGroup");
+            expect(closeBtn.innerText).toBe("saveDialog.close");
+            ReactTestUtils.Simulate.click(closeBtn); // click on enhanced close button
+
+            buttons = document.querySelectorAll('button');
+            expect(buttons.length).toBe(9);
+
+            let closeBtnModal = buttons[7];
+            let cancelBtnModal = buttons[8];
+            expect(closeBtnModal.innerText).toBe("saveDialog.close");
+            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
+            ReactTestUtils.Simulate.click(closeBtnModal);  // click on close button of the confirm modal
+
+            expect(onCloseSpy).toHaveBeenCalled();
+        });
+    });
 });

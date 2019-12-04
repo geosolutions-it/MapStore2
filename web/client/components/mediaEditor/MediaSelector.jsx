@@ -1,7 +1,7 @@
 
 
 import MediaList from './MediaList';
-import ImageForm from './image/ImageForm';
+import MediaFrom from './MediaForm';
 
 import {
     branch,
@@ -10,6 +10,7 @@ import {
     withHandlers
 } from 'recompose';
 
+
 /**
  * Tool to select a media or add it.
  * TODO: support other types (now only image)
@@ -17,10 +18,11 @@ import {
 export default compose(
     withHandlers({
         // add source and type to the onSave handler
-        onSave: ({ type, source, saveMedia = () => { } }) => (data) => saveMedia({ type, source, data })
+        onSave: ({mediaType, source, saveMedia = () => { } }) =>
+            (data) => saveMedia({ type: mediaType, source, data })
     }),
     branch(
         ({addingMedia}) => addingMedia,
-        renderComponent(ImageForm)
+        renderComponent(MediaFrom)
     )
 )(MediaList);

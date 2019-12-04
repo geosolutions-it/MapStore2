@@ -340,6 +340,7 @@
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
             "errorSize": "Tamaño máximo admitido: 500kb",
+            "errorCustomSize": "Tamaño máximo admitido: {maxFileSize}",
             "error": "La imagen proporcionada no es válida",
             "savedMapTitle": "Mapa guardado",
             "savedMapMessage": "El mapa se ha guardado correctamente",
@@ -388,6 +389,7 @@
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li> <li>La proyección del mapa no está configurada </li></ul> <p>",
+                    "projectionError": "La proyección {projection} del mapa no está configurada",
                     "title" : "El mapa no se puede ver"
                 }
             }
@@ -1990,7 +1992,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurar mapa"
+                "configureMapOptions": "Configurar mapa",
+                "settings": "Configuraciones",
+                "settingsSubTitle": "Gestionar interacciones de usuario",
+                "toc": "Capas",
+                "pan": "interacción pan",
+                "zoom": "Acercar/alejar interacciones",
+                "topLeft": "Arriba a la izquierda",
+                "topRight": "Parte superior derecha",
+                "bottomLeft": "Abajo a la izquierda",
+                "bottomRight": "Abajo a la derecha"
             }
         },
         "saveDialog": {
@@ -2005,6 +2016,11 @@
             "saveSuccessTitle": "éxito",
             "saveSuccessMessage": "Guardado con éxito"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Cerrar el editor de mapas",
+            "confirmExitContent": "¿Descartar cambios pendientes?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Imágenes",
@@ -2012,6 +2028,8 @@
             "maps": "Mapas",
             "preview": "Avance",
             "apply": "Aplicar",
+            "confirmExitTitle": "Cerrar el Media Editor",
+            "confirmExitContent": "¿Descartar cambios pendientes?",
             "mediaPicker": {
                 "services": "Servicios: ",
                 "clean": "Resultados limpios",
@@ -2033,7 +2051,15 @@
                 "credits": "Créditos",
                 "mapFilter": "Filtrar mapas",
                 "videoFilter": "Filtrar videos",
-                "imageFilter": "Filtrar imágenes"
+                "imageFilter": "Filtrar imágenes",
+                "import": "Importar recurso a store locale"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Cerrar el Media Form",
+                "confirmExitContent": "¿Descartar cambios pendientes?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
             }
         },
         "backgroundDialog": {
@@ -2072,6 +2098,7 @@
             },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
+                "conflict": "Ya existe un contexto con el mismo nombre. prueba '{data}'",
                 "defaultMessage": "Error desconocido"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
