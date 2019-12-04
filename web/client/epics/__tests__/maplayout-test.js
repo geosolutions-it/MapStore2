@@ -17,7 +17,7 @@ const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 const ConfigUtils = require('../../utils/ConfigUtils');
 
 describe('map layout epics', () => {
-    beforeEach(() => {
+    afterEach(() => {
         ConfigUtils.setConfigProp('mapLayout', null);
     });
     it('tests layout', (done) => {
