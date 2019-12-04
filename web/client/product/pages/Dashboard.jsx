@@ -13,6 +13,7 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const { loadDashboard, resetDashboard } = require('../../actions/dashboard');
+const { checkLoggedUser } = require('../../actions/security');
 
 const Page = require('../../containers/Page');
 const BorderLayout = require('../../components/layout/BorderLayout');
@@ -22,6 +23,7 @@ class DashboardPage extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         loadResource: PropTypes.func,
+        checkLoggedUser: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object
     };
@@ -29,7 +31,8 @@ class DashboardPage extends React.Component {
     static defaultProps = {
         name: "dashboard",
         mode: 'desktop',
-        reset: () => {}
+        reset: () => {},
+        checkLoggedUser: () => {}
     };
 
     UNSAFE_componentWillMount() {
@@ -39,6 +42,7 @@ class DashboardPage extends React.Component {
             this.props.loadResource(id);
         } else {
             this.props.reset();
+            this.props.checkLoggedUser();
         }
     }
     componentDidUpdate(oldProps) {
@@ -69,6 +73,7 @@ module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {
+    checkLoggedUser,
     loadResource: loadDashboard,
     reset: resetDashboard
 })(DashboardPage);

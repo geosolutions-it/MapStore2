@@ -48,13 +48,18 @@ const reloadMapConfig = (action$, store) =>
     Rx.Observable.merge(
         action$.ofType(LOGIN_SUCCESS, LOGOUT)
             .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1)
-            .filter((data) => data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState()) : pathnameSelector(store.getState()).indexOf("new") === -1)
+            .filter((data) => data.type !== "LOGOUT" ?
+                hasMapAccessLoadingError(store.getState()) :
+                pathnameSelector(store.getState()).indexOf("new") === -1)
             .map(() => mapIdSelector(store.getState())),
         action$.ofType(LOGOUT)
             .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1 && pathnameSelector(store.getState()).indexOf("new") !== -1)
             .map(() => 'new')
     )
         .switchMap((mapId) => {
+            if (mapId === "new" && !isLoggedIn(store.getState())) {
+                return Rx.Observable.of(configureError({status: 403}));
+            }
             const urlQuery = url.parse(window.location.href, true).query;
             let config = urlQuery && urlQuery.config || null;
             const { configUrl } = ConfigUtils.getConfigUrl({ mapId, config });

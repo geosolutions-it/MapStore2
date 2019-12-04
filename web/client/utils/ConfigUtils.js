@@ -29,7 +29,7 @@ let localConfigFile = 'localConfig.json';
 
 let defaultConfig = {
     proxyUrl: "/mapstore/proxy/?url=",
-    geoStoreUrl: "/mapstore/rest/geostore/",
+    geoStoreUrl: "/rest/geostore/",
     printUrl: "/mapstore/print/info.json",
     translationsPath: "translations",
     projectionDefs: [],
