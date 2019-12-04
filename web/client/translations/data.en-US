@@ -1906,6 +1906,7 @@
             "addImmersiveContent": "Add Immersive Content",
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
+            "addWebPageContent": "Add Web Page Content",
             "zoomToContent": "Zoom to content",
             "emptyTitle": "This story is empty",
             "emptyDescription": "Start creating an awesome geostory by adding new content",
@@ -1939,7 +1940,8 @@
                 "saveChanges": "Save changes",
                 "closeMapEditing": "Close",
                 "confirmCloseMapEditing": "Close Map Editing",
-                "pendingChangesDiscardConfirm": "Discard current map changes?"
+                "pendingChangesDiscardConfirm": "Discard current map changes?",
+                "editURL": "Edit web page URL"
             },
             "navigation": {
                 "edit": "Edit story"
@@ -2006,6 +2008,13 @@
                 "topRight": "Top Right",
                 "bottomLeft": "Bottom Left",
                 "bottomRight": "Bottom Right"
+            },
+            "webPageCreator": {
+                "title": "Web page",
+                "saveButton": "Save",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {

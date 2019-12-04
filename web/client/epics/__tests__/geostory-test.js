@@ -26,7 +26,8 @@ import {
     saveGeoStoryResource,
     reloadGeoStoryOnLoginLogout,
     sortContentEpic,
-    setFocusOnMapEditing
+    setFocusOnMapEditing,
+    openWebPageComponentCreator
 } from '../geostory';
 import {
     ADD,
@@ -46,7 +47,8 @@ import {
     ADD_RESOURCE,
     move,
     CHANGE_MODE,
-    TOGGLE_CONTENT_FOCUS
+    TOGGLE_CONTENT_FOCUS,
+    SET_WEBPAGE_URL
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -1070,6 +1072,35 @@ describe('Geostory Epics', () => {
                 ]
             }
         }
+        });
+    });
+
+    describe('openWebPageComponentCreator epic', () => {
+        it('should show webPageCreator when user tries to add new component', (done) => {
+            const action = { type: ADD, element: { type: ContentTypes.WEBPAGE } };
+            const callback = (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE);
+                expect(actions[0].element).toExist();
+                expect(actions[0].element.editURL).toBe(true);
+                expect(actions[0].mode).toBe('merge');
+                done();
+            };
+
+            testEpic(openWebPageComponentCreator, 1, [action], callback);
+        });
+        it('should updated src to web page when user provides it', (done) => {
+            const webPageURL = 'some-url';
+            const showAction = { type: ADD, path: 'test', element: { type: ContentTypes.WEBPAGE, id: '123' } };
+            const updateAction = { type: SET_WEBPAGE_URL, src: webPageURL };
+            const callback = (actions) => {
+                expect(actions.length).toBe(2);
+                expect(actions[1].type).toBe(UPDATE);
+                expect(actions[1].element.src).toBe(webPageURL);
+                done();
+            };
+
+            testEpic(openWebPageComponentCreator, 2, [showAction, updateAction], callback);
         });
     });
 });

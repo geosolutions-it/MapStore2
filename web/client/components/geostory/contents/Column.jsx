@@ -47,7 +47,8 @@ export default ({
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', 'size', 'align', 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'remove'] // TODO change this list for video
+            [MediaTypes.VIDEO]: ['editMedia', 'remove'], // TODO change this list for video
+            [ContentTypes.WEBPAGE]: ['editURL', 'size', 'align', 'remove']
         }}
         addButtons={[{
             glyph: 'sheet',
@@ -58,6 +59,10 @@ export default ({
             glyph: 'picture',
             tooltipId: 'geostory.addMediaContent',
             template: ContentTypes.MEDIA
+        }, {
+            glyph: 'code',
+            tooltipId: 'geostory.addWebPageContent',
+            template: ContentTypes.WEBPAGE
         }]}
     />
 );

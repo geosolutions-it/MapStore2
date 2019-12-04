@@ -1903,6 +1903,7 @@
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
+            "addWebPageContent": "Webseitenabschnitt hinzufügen",
             "emptyTitle": "Diese Geschichte ist leer",
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {
@@ -1935,7 +1936,8 @@
                 "saveChanges": "Änderungen speichern",
                 "closeMapEditing": "Schließen",
                 "confirmCloseMapEditing": "Schließen Sie die Kartenbearbeitung",
-                "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?"
+                "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?",
+                "editURL": "Webseiten-URL bearbeiten"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
@@ -2002,6 +2004,13 @@
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
                 "bottomRight": "Unten rechts"
+            },
+            "webPageCreator": {
+                "title": "Website",
+                "saveButton": "Speichern",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {

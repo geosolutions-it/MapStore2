@@ -37,6 +37,7 @@ export const SectionTypes = {
 export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
+    WEBPAGE: 'webpage',
     COLUMN: 'column' // can have contents of type 'text' or 'media'
 };
 
@@ -345,4 +346,40 @@ export const findSectionIdFromColumnId = (immSections, columnId) => {
         }
         return p;
     }, null);
+};
+
+/**
+ * tells if an element is a paragraph and it contains a WebPage component
+ * @param {object} element
+ * @return {boolean}
+ */
+export const isWebPageSection = (element) =>
+    element.type === SectionTypes.PARAGRAPH &&
+    element &&
+    isArray(element.contents) &&
+    element.contents.length &&
+    isArray(element.contents[0].contents) &&
+    element.contents[0].contents.length &&
+    element.contents[0].contents[0].type === ContentTypes.WEBPAGE;
+
+/**
+* computes container height based on object size
+* @param {string} size - size of element
+* @param {number} viewHeight - height of viewport
+*/
+export const getWebPageComponentHeight = (size, viewHeight) => {
+    if (viewHeight) {
+        switch (size) {
+        case 'small':
+            return viewHeight * 0.4;
+        case 'medium':
+            return viewHeight * 0.6;
+        case 'large':
+            return viewHeight * 0.8;
+        default:
+            return viewHeight;
+        }
+    }
+
+    return 0;
 };
