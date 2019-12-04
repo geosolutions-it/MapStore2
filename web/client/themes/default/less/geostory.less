@@ -298,11 +298,6 @@
                 &.ms-dark {
                     background-color: contrast(@ms-story-bg);
                 }
-                &.ms-align-right .ms-media.ms-media-map .ol-zoom {
-                    top: 50px;
-                    right: 10px;
-                    left: auto;
-                }
             }
         }
         /*
@@ -790,21 +785,29 @@
     }
 }
 
+.ms-media-map.topLeft .ol-zoom.ol-unselectable.ol-control {
+    top: 50px;
+    right: unset;
+    bottom: unset;
+    left: 10px;
+}
 .ms-media-map.topRight .ol-zoom.ol-unselectable.ol-control {
+    top: 50px;
     right: 10px;
+    bottom: unset;
     left: unset;
 }
 
 .ms-media-map.bottomRight .ol-zoom.ol-unselectable.ol-control {
     top: unset;
     right: 10px;
-    bottom: 10px;
+    bottom: 50px;
     left: unset;
 }
 
 .ms-media-map.bottomLeft .ol-zoom.ol-unselectable.ol-control {
     top: unset;
     right: unset;
-    bottom: 10px;
+    bottom: 50px;
     left: 10px;
 }
