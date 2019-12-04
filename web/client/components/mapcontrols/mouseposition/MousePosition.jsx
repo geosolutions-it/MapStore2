@@ -94,7 +94,7 @@ class MousePosition extends React.Component {
     };
 
     getTemplateComponent = () => {
-        return this.getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
+        return CoordinatesUtils.getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
     };
 
     render() {
