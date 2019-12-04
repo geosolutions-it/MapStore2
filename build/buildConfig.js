@@ -80,7 +80,10 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     resolve: {
         extensions: [".js", ".jsx"],
         alias: assign({}, {
-            jsonix: '@boundlessgeo/jsonix'
+            jsonix: '@boundlessgeo/jsonix',
+            // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
+            proj4: '@geosolutions/proj4',
+            "react-joyride": '@geosolutions/react-joyride'
         }, alias)
     },
     module: {
