@@ -227,7 +227,7 @@ class GeometryDetails extends React.Component {
             ;
         } else if (this.props.type === "Circle") {
             const circle = this.getCircleDimensions(geometry);
-
+            const uom = CoordinatesUtils.getUnits(this.props.projection);
             detailsContent =
                 (<div>
                     <div className="container-fluid">
@@ -267,7 +267,7 @@ class GeometryDetails extends React.Component {
                                 <span className="details-circle-attribute-name">
                                     <I18N.Message
                                         msgId="queryform.spatialfilter.details.radius"
-                                        msgParams={{projection: this.isWGS84() ? "°" : "m" }}/>{':'}
+                                        msgParams={{projection: uom === "degrees" ? "°" : uom }}/>{':'}
                                 </span>
                             </Col>
                             <Col xs={4}>

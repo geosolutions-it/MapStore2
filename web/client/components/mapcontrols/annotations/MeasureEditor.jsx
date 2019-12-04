@@ -9,7 +9,7 @@ const React = require('react');
 const { FormControl, FormGroup } = require('react-bootstrap');
 const { isNumber } = require('lodash');
 const { convertUom } = require('../../../utils/MeasureUtils');
-const proj4 = require('proj4').default;
+const { getUnits } = require('../../../utils/CoordinatesUtils');
 
 // convert to valueUom if it is a valid number
 const toValue = (value, uom, valueUom) => (isNumber(parseFloat(value)) && !isNaN(parseFloat(value)))
@@ -22,9 +22,6 @@ const toLocalValue = (value, uom, valueUom) =>
         : value;
 
 const { compose, withHandlers, withPropsOnChange, withState, withStateHandlers, defaultProps} = require('recompose');
-const getUnits = (crs = "EPSG:3857") => {
-    return proj4.defs(crs).units;
-};
 
 module.exports = compose(
     defaultProps({
@@ -80,9 +77,7 @@ module.exports = compose(
     setUom = () => {},
     onChange = () => {}
 }) => {
-
     const unitsFromCrs = getUnits(projection);
-
     return (<FormGroup style={style}>
         <FormControl
             value={value}

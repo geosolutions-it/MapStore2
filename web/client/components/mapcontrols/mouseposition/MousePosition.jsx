@@ -78,10 +78,6 @@ class MousePosition extends React.Component {
         showElevation: false
     };
 
-    getUnits = (crs) => {
-        return proj4js.defs(crs).units;
-    };
-
     getPosition = () => {
         let {x, y, z} = this.props.mousePosition ? this.props.mousePosition : [null, null];
         if (!x && !y) {
@@ -90,7 +86,7 @@ class MousePosition extends React.Component {
         } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
             ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.props.crs));
         }
-        let units = this.getUnits(this.props.crs);
+        let units = CoordinatesUtils.getUnits(this.props.crs);
         if (units === "degrees") {
             return {lat: y, lng: x, z};
         }

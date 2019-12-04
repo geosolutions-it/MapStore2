@@ -206,7 +206,6 @@ class CoordinatesEditor extends React.Component {
                     if (this.props.type === "Polygon") {
                         tempComps = this.addCoordPolygon(tempComps);
                     }
-                    // todo verify this callback
                     this.props.onChange(tempComps, this.props.properties.radius, this.props.properties.valueText, this.props.mapProjection);
                 }
             }

@@ -860,7 +860,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
-                    "radius": "Raggio({projection})"
+                    "radius": "Raggio({unit})"
                 },
                 "methods": {
                     "zone": "Zona",
