@@ -12,6 +12,7 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
+export const CLEAR_SAVE_ERROR = "GEOSTORY:CLEAR_SAVE_ERROR";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
@@ -35,6 +36,7 @@ export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_SETTING = "GEOSTORY:UPDATE_SETTING";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 
+
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
  *
@@ -54,6 +56,10 @@ export const add = (path, position, element, localize = v => v) => ({
  * Adds a resource to the current story
  */
 export const addResource = ( id, mediaType, data ) => ({type: ADD_RESOURCE, id, mediaType, data});
+/**
+ * ClearSaveError
+*/
+export const clearSaveError = () => ({ type: CLEAR_SAVE_ERROR});
 /**
  * Turn on/off editing mode.
  * @param {boolean} editing editing mode. true to activate, false to deactivate.
