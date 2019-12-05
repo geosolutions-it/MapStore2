@@ -8,12 +8,69 @@
 
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import {keys, isObject} from 'lodash';
+import { keys, isObject, find } from 'lodash';
 
 import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
 import ConfigureMap from './ConfigureMapStep';
 
+/**
+ * Filters plugins and applies overrides.
+ * The resulting array will filter the pluginsConfig returning only the ones present in viewerPlugins.
+ * If some viewerPlugin is an object, it can contain a special entry "overrides". If so, the configuration here
+ * will override the ones in the original plugin config.
+ * Actually overrides are supported only for "cfg" values.
+ * For example:
+ * ```
+ * pluginsConfigs:
+ *         "SomePlugin",
+ *         "MetadataExplorer",
+ *           {
+ *               "name": "TOC",
+ *               "cfg": { activateQueryTool: true, otherOptions: true }
+ *           },
+ * viewerPlugins:
+ *         "MetadataExplorer",
+ *           {
+ *               "name": "TOC",
+ *               "overrides": {
+ *                   "cfg": { activateQueryTool: false }
+ *               }
+ *           },
+ * result:
+ *         "MetadataExplorer",
+ *           {
+ *               "name": "TOC",
+ *               "cfg": { activateQueryTool: false, otherOptions: true }
+ *           },
+ *   ```
+ * @param {array} pluginsConfigs array of plugins (Strings or objects) to override
+ * @param {array} viewerPlugins list of plugins to use
+ */
+export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
+    return pluginsConfigs.map(p => {
+        const pName = isObject(p) ? p.name : p;
+        // find out
+        const viewerPlugin = find(viewerPlugins, vp => {
+            return pName === (isObject(vp) ? vp.name : vp);
+        });
+        if (viewerPlugin) {
+            if (isObject(viewerPlugin) && viewerPlugin.overrides) {
+                const newP = isObject(p) ? p : { name: p };
+                const cfg = {
+                    ...(p.cfg || {}),
+                    ...(viewerPlugin.overrides && viewerPlugin.overrides.cfg || {})
+                };
+                return {
+                    ...newP,
+                    cfg
+                };
+            }
+            return p;
+        }
+        return null;
+    }).filter(p => p); // remove plugins not found
+};
 
 export default class ContextCreator extends React.Component {
     static propTypes = {
@@ -46,7 +103,13 @@ export default class ContextCreator extends React.Component {
             "Map",
             "BackgroundSelector",
             "MetadataExplorer",
-            "TOC",
+            {
+                "name": "TOC",
+                "overrides": {
+                    "cfg": { activateQueryTool: false }
+
+                }
+            },
             "TOCItemsSettings",
             "DrawerMenu",
             "OmniBar",
@@ -54,7 +117,6 @@ export default class ContextCreator extends React.Component {
             "AddGroup",
             "Notifications",
             "QueryPanel",
-            "FeatureEditor",
             "MapFooter",
             "CRSSelector",
             "MousePosition",
@@ -65,14 +127,16 @@ export default class ContextCreator extends React.Component {
             "Locate",
             "ZoomIn",
             "ZoomOut",
-            "ZoomAll"
+            "ZoomAll",
+            "Annotations",
+            "MapImport"
         ],
         ignoreViewerPlugins: false,
         curStepId: 'general-settings',
         saveDestLocation: '/context-manager',
-        onSetStep: () => {},
-        onChangeAttribute: () => {},
-        onReloadConfirm: () => {}
+        onSetStep: () => { },
+        onChangeAttribute: () => { },
+        onReloadConfirm: () => { }
     };
 
     render() {
@@ -91,7 +155,7 @@ export default class ContextCreator extends React.Component {
                             contextName={this.props.resource.name}
                             windowTitle={this.props.newContext.windowTitle}
                             context={this.context}
-                            onChange={this.props.onChangeAttribute}/>
+                            onChange={this.props.onChangeAttribute} />
                 }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',
@@ -106,15 +170,14 @@ export default class ContextCreator extends React.Component {
                                 this.props.pluginsConfig :
                                 keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
                                     ...curConfig,
-                                    [mode]: this.props.pluginsConfig[mode]
-                                        .filter(p => this.props.viewerPlugins.findIndex(x => x === (isObject(p) ? p.name : p)) > -1)
+                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
                                 }), {})}
                             plugins={this.context.plugins}
                             mapType={this.props.mapType}
                             showConfirm={this.props.showReloadConfirm}
                             onReloadConfirm={this.props.onReloadConfirm}
-                            onMapViewerReload={this.props.onMapViewerReload}/>
-                }]}/>
+                            onMapViewerReload={this.props.onMapViewerReload} />
+                }]} />
         );
     }
 }

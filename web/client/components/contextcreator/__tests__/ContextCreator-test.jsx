@@ -13,7 +13,7 @@ import {Provider} from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
 import expect from 'expect';
-import ContextCreator from '../ContextCreator';
+import ContextCreator, { pluginsFilterOverride } from '../ContextCreator';
 
 const mockStore = configureMockStore();
 
@@ -69,5 +69,33 @@ describe('ContextCreator component', () => {
             // check customization of destination path
             expect(spyonSave).toHaveBeenCalledWith("MY_DESTINATION");
         });
+    });
+    describe('viewerPlugins filtering', () => {
+        it('filter plugins accordingly', () => {
+            expect(pluginsFilterOverride(["P1", "P2"], ["P1"])).toEqual(["P1"]);
+        });
+        it('apply plugins overrides', () => {
+            // add cfg where missing
+            expect(pluginsFilterOverride(["P1", "P2"], [{
+                "name": "P1",
+                "overrides": {
+                    "cfg": { test: "newValue" }
+                }
+            }])).toEqual([{
+                "name": "P1",
+                "cfg": { test: "newValue" }
+            }]);
+            // not modifies the existing cfg
+            expect(pluginsFilterOverride(["P1", { name: "P2", "cfg": { test: "value1", test2: "value2"}}], [{
+                "name": "P2",
+                "overrides": {
+                    "cfg": { test: "newValue" }
+                }
+            }])).toEqual([{
+                "name": "P2",
+                "cfg": { test: "newValue", test2: "value2" }
+            }]);
+        });
+
     });
 });
