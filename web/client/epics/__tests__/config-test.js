@@ -121,6 +121,17 @@ describe('config epics', () => {
                 done();
             });
         });
+        it('load a context with new map as anonymous user', (done) => {
+            mockAxios.onGet("/new.json").reply(() => ([ 200, {} ]));
+            const NUM_ACTIONS = 1;
+            testEpic(loadMapConfigAndConfigureMap, NUM_ACTIONS, loadMapConfig('new.json', null, { version: 2}), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [a] = actions;
+                expect(a).toExist();
+                expect(a.type).toBe(MAP_CONFIG_LOADED);
+                done();
+            });
+        });
         it('load new map as ADMIN', (done) => {
             const NUM_ACTIONS = 1;
             mockAxios.onGet("/new.json").reply(() => ([ 200, {} ]));

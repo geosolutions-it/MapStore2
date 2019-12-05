@@ -31,7 +31,8 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
             // TODO: investigate the root causes of the problem and come up with a better solution, if possible
             (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
-                    if (configName === "new.json" && !isLoggedIn(store.getState())) {
+                    // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
+                    if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
                         return Observable.of(configureError({status: 403}));
                     }
                     if (typeof response.data === 'object') {
