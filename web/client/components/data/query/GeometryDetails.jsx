@@ -267,7 +267,7 @@ class GeometryDetails extends React.Component {
                                 <span className="details-circle-attribute-name">
                                     <I18N.Message
                                         msgId="queryform.spatialfilter.details.radius"
-                                        msgParams={{projection: uom === "degrees" ? "°" : uom }}/>{':'}
+                                        msgParams={{unit: uom === "degrees" ? "°" : uom }}/>{':'}
                                 </span>
                             </Col>
                             <Col xs={4}>
