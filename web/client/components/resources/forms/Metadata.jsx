@@ -77,7 +77,7 @@ class Metadata extends React.Component {
                     disabled={this.props.resource.saving}
                     placeholder={this.props.namePlaceholderText}
                     defaultValue={this.props.resource ? this.props.resource.name : ""}
-                    value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.name || ""}/>
+                    value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.name || ""} />
             </FormGroup>
             <FormGroup>
                 <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
@@ -88,16 +88,21 @@ class Metadata extends React.Component {
                     disabled={this.props.resource.saving}
                     placeholder={this.props.descriptionPlaceholderText}
                     defaultValue={this.props.resource ? this.props.resource.description : ""}
-                    value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.description || ""}/>
+                    value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.description || ""} />
             </FormGroup>
-            <FormGroup>
-                <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
-                <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.createdAt) || ""}</ControlLabel>
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
-                <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt || this.props.resource.createdAt) || ""}</ControlLabel>
-            </FormGroup>
+            {
+                this.props.resource && this.props.resource.createdAt && <FormGroup>
+                    <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
+                    <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.createdAt) || ""}</ControlLabel>
+                </FormGroup>
+            }
+            {
+                this.props.resource && this.props.resource.createdAt && <FormGroup>
+                    <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
+                    <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt || this.props.resource.createdAt) || ""}</ControlLabel>
+                </FormGroup>
+            }
+
         </form>);
     }
 
