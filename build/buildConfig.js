@@ -167,7 +167,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                     paths.code,
                     path.join(paths.base, "node_modules", "query-string"),
                     path.join(paths.base, "node_modules", "strict-uri-encode"),
-                    path.join(paths.base, "node_modules", "react-draft-wysiwyg"),
+                    path.join(paths.base, "node_modules", "react-draft-wysiwyg"), // added for issue #4602
                     path.join(paths.base, "node_modules", "split-on-first")
                 ]
             }
