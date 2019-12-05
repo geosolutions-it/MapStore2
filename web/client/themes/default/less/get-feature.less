@@ -1,36 +1,19 @@
 
 .coordinateRow {
-    margin: 8px 0px;
-    border: 1px solid #dddddd;
-    text-align: center;
     display: flex;
     align-items: center;
-    box-sizing: border-box;
-    input {
-        font-size: 12px;
-        font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+    .coordinates {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
-    .col-xs-5, .col-xs-1, .col-xs-2 {
-        padding: 0;
-        float: unset;
-        margin: 0 4px;
-        @media screen and (min-width: 425px) {
-            width: auto;
+    .coordinates > div {
+        width: 100%;
+        @media screen and (min-width: 625px) {
+            width: 49%;
         }
     }
-    .col-xs-5 {
-        @media screen and (min-width: 425px) {
-            display: grid;
-        }
-        flex: 1;
-    }
-    &.coord-editor .col-xs-2 {
-        min-width: unset !important;
-    }
-    .form-group {
-        margin: 4px 0;
-    }
-    &.coord-editor .pull-right.btn-group {
-        margin-top: 20px;
+    .coordinates .form-group {
+        width: 100%;
     }
 }
