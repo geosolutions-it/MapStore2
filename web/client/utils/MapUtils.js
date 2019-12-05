@@ -420,7 +420,7 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
         Object.keys(obj).forEach(key => {
             const value = obj[key];
             const type = typeof value;
-            if (type === "object") {
+            if (type === "object" && value !== null) {
                 cleanObjectFromUndefined(value);
                 if (!Object.keys(value).length) {
                     delete obj[key];
@@ -429,7 +429,7 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
              * ABOUT: in single layer stored in redux contains field "apiKey",
              * which doesn't comes from API and it's not necessary to compare.
              */
-            } else if (type === "undefined" || key === 'apiKey') {
+            } else if (type === "undefined" || value === null || key === 'apiKey') {
                 delete obj[key];
             }
         });
@@ -447,7 +447,6 @@ const compareMapChanges = (originalState = {}, newState = {}) => {
 
     const filteredOriginalState = pick(originalState, pickedFields);
     const filteredNewState = pick(newState, pickedFields);
-
     cleanObjectFromUndefined(filteredOriginalState);
     cleanObjectFromUndefined(filteredNewState);
 
