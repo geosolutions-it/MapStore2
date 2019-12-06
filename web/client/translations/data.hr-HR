@@ -1613,7 +1613,7 @@
                     "notFound": "Kontrolna ploča nije pronađena",
                     "notAccessible": "Kontrolna ploča nije dostupna"
                 },
-                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pokušajte '{data}'"
+                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji"
             },
             "editor": {
                 "save": "Spremi kontrolnu ploču",

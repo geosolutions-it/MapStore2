@@ -11,7 +11,8 @@ const {
     handleDashboardWidgetsFilterPanel,
     openDashboardWidgetEditor,
     initDashboardEditorOnNew,
-    closeDashboardWidgetEditorOnFinish
+    closeDashboardWidgetEditorOnFinish,
+    filterAnonymousUsersForDashboard
 } = require('../dashboard');
 const {
     createWidget, insertWidget,
@@ -20,8 +21,10 @@ const {
     EDITOR_CHANGE
 } = require('../../actions/widgets');
 const {
-    SET_EDITING
+    SET_EDITING,
+    DASHBOARD_LOAD_ERROR
 } = require('../../actions/dashboard');
+const {checkLoggedUser, logout} = require('../../actions/security');
 
 const { FEATURE_TYPE_SELECTED } = require('../../actions/wfsquery');
 const { LOAD_FILTER, search } = require('../../actions/queryform');
@@ -226,5 +229,35 @@ describe('openDashboardWidgetEditor epic', () => {
             });
             done();
         }, FILTER_BUILDER_STATE);
+    });
+    describe('filterAnonymousUsersForDashboard', () => {
+        const newDashboardState = {
+            router: {
+                location: {
+                    pathname: "/dashboard/"
+                }
+            }
+        };
+        const NUM_ACTIONS = 1;
+
+        it('testing if the user is logged when accessing new dashboard page', () => {
+            testEpic(filterAnonymousUsersForDashboard, NUM_ACTIONS, checkLoggedUser(), actions => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [a] = actions;
+                expect(a).toExist();
+                expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
+                expect(a.error.status).toBe(403);
+            },
+            newDashboardState);
+        });
+        it('triggering an 403 error that shows prompt login when logging out from new dashboard page', () => {
+            testEpic(filterAnonymousUsersForDashboard, NUM_ACTIONS, logout(), actions => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [a] = actions;
+                expect(a).toExist();
+                expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
+            },
+            newDashboardState);
+        });
     });
 });

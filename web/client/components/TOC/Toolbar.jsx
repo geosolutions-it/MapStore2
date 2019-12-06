@@ -315,6 +315,10 @@ class Toolbar extends React.Component {
                 </ReactCSSTransitionGroup>
                 <ConfirmModal
                     ref="removelayer"
+                    options={{
+                        animation: false,
+                        className: "modal-fixed"
+                    }}
                     show= {this.state.showDeleteDialog}
                     onHide={this.closeDeleteDialog}
                     onClose={this.closeDeleteDialog}

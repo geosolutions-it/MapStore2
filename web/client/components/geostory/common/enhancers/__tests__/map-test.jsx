@@ -6,12 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import ReactTestUtils from 'react-dom/test-utils';
 import ReactDOM from 'react-dom';
+
+import Toolbar from '../../../../misc/toolbar/Toolbar';
 
 import expect from 'expect';
 import {createSink} from  'recompose';
 
-import {withLocalMapState, withMapEditingAndLocalMapState} from '../map';
+import {withLocalMapState, withMapEditingAndLocalMapState, withToolbar} from '../map';
 
 
 describe("geostory media map component enhancers", () => {
@@ -73,6 +76,38 @@ describe("geostory media map component enhancers", () => {
         ReactDOM.render(<SinkLocalChanges map={map} update={actions.update} onMapViewLocalChanges={actions.onMapViewLocalChanges}/>, document.getElementById("container"));
 
 
+    });
+
+    it('withToolbar it correctly sets buttons', (done) => {
+
+        const actions = {
+            toggleEditing: () => {},
+            onReset: () => {},
+            toggleAdvancedEditing: () => {}
+        };
+
+        const SpyToggleEditing = expect.spyOn(actions, 'toggleEditing');
+        const SpyOnReset = expect.spyOn(actions, 'onReset');
+        const SpyToggleAdvancedEditing = expect.spyOn(actions, 'toggleAdvancedEditing');
+
+        const Component = withToolbar(Toolbar);
+
+        ReactDOM.render(<Component pendingChanges disableReset={false} {...actions}/>, document.getElementById("container"));
+
+        const buttons = document.querySelectorAll("button");
+        expect(buttons).toExist();
+        expect(buttons.length).toBe(3);
+        for (let btn of buttons) {
+            ReactTestUtils.Simulate.click(btn);
+        }
+        const confirmButtons = document.querySelectorAll(".with-confirm-modal button");
+        expect(confirmButtons).toExist();
+        expect(confirmButtons.length).toBe(3);
+        ReactTestUtils.Simulate.click(confirmButtons[1]);
+        expect(SpyToggleEditing).toHaveBeenCalled();
+        expect(SpyOnReset).toHaveBeenCalled();
+        expect(SpyToggleAdvancedEditing).toHaveBeenCalled();
+        done();
     });
 
 });
