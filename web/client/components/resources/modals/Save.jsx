@@ -42,7 +42,8 @@ class SaveModal extends React.Component {
         onClose: PropTypes.func,
         metadataChanged: PropTypes.func,
         availablePermissions: PropTypes.arrayOf(PropTypes.string),
-        availableGroups: PropTypes.arrayOf(PropTypes.object)
+        availableGroups: PropTypes.arrayOf(PropTypes.object),
+        user: PropTypes.object
     };
 
     static contextTypes = {
@@ -68,7 +69,8 @@ class SaveModal extends React.Component {
         onSave: ()=> {},
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: [],
-        canSave: true
+        canSave: true,
+        user: {}
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
@@ -82,6 +84,8 @@ class SaveModal extends React.Component {
      * @return the modal for unsaved changes
     */
     render() {
+        const canEditResourcePermission = this.props.user && this.props.user.role === 'ADMIN' ||
+        this.props.resource && this.props.resource.attributes && this.props.resource.attributes.owner === this.props.user.name;
         return (<Portal key="saveDialog">
             {<ResizableModal
                 loading={this.props.loading}
@@ -111,11 +115,13 @@ class SaveModal extends React.Component {
                             onError={this.props.onError}
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
-                        <PermissionEditor
-                            rules={this.props.rules}
-                            onUpdateRules={this.props.onUpdateRules}
-                            availableGroups={this.props.availableGroups}
-                        />
+                        {
+                            !!canEditResourcePermission &&  <PermissionEditor
+                                rules={this.props.rules}
+                                onUpdateRules={this.props.onUpdateRules}
+                                availableGroups={this.props.availableGroups}
+                            />
+                        }
                     </div>
                 </Grid>
             </ResizableModal>}

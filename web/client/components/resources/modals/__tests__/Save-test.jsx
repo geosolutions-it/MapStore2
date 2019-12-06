@@ -77,4 +77,51 @@ describe('This test for dashboard save form', () => {
         expect(errorSIZE).toExist();
     });
 
+    it('modal show permissions editor whe user is admin', () => {
+        const user = {role: 'ADMIN'};
+        const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} useModal id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+
+        const getModals = function() {
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+        };
+
+        expect(getModals().length).toBe(1);
+
+        const permissionSection = document.querySelector(".permissions-table");
+        expect(permissionSection).toExist();
+    });
+
+    it('modal show permissions editor with user is owner', () => {
+        const user = {role: 'USER', name: 'geo'};
+        const resource = {attributes: {owner: 'geo'}};
+        const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} resource={resource} useModal id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+
+        const getModals = function() {
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+        };
+
+        expect(getModals().length).toBe(1);
+
+        const permissionSection = document.querySelector(".permissions-table");
+        expect(permissionSection).toExist();
+    });
+
+    it('modal hide permissions editor when user is neither admin nor owner', () => {
+        const user = {role: 'USER', name: 'solution'};
+        const resource = {attributes: {owner: 'geo'}};
+        const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} resource={resource} useModal id="MetadataModal"/>, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+
+        const getModals = function() {
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+        };
+
+        expect(getModals().length).toBe(1);
+
+        const permissionSection = document.querySelector(".permissions-table");
+        expect(permissionSection).toBeNull;
+    });
+
 });
