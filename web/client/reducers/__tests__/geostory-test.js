@@ -10,46 +10,46 @@ import expect from 'expect';
 import {
     add,
     addResource,
+    clearSaveError,
     editResource,
-    setCurrentStory,
     loadingGeostory,
-    setEditing,
-    update,
     remove,
-    toggleCardPreview,
-    setControl,
-    setResource,
     saveGeoStoryError,
-    storySaved,
+    setControl,
+    setCurrentStory,
+    setEditing,
     setFocusOnContent,
+    setResource,
+    storySaved,
+    toggleCardPreview,
     toggleSetting,
     toggleSettingsPanel,
+    update,
     updateCurrentPage,
     updateSetting
 } from '../../actions/geostory';
+import geostory from '../../reducers/geostory';
 import {
-    isCollapsedSelector,
-    isSettingsEnabledSelector,
+    controlSelectorCreator,
+    currentPageSelector,
     currentStorySelector,
+    errorsSelector,
+    getCurrentFocusedContentEl,
+    getFocusedContentSelector,
+    isCollapsedSelector,
+    isFocusOnContentSelector,
+    isSettingsEnabledSelector,
+    loadingSelector,
     modeSelector,
-    sectionsSelector,
-    sectionAtIndexSelectorCreator,
     oldSettingsSelector,
     resourceSelector,
     resourcesSelector,
-    currentPageSelector,
-    loadingSelector,
-    controlSelectorCreator,
-    errorsSelector,
-    getCurrentFocusedContentEl,
-    isFocusOnContentSelector,
-    getFocusedContentSelector,
+    sectionAtIndexSelectorCreator,
+    sectionsSelector,
     settingsSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
-
-import geostory from '../../reducers/geostory';
-import { Modes, lists, getDefaultSectionTemplate, Controls } from '../../utils/GeoStoryUtils';
+import { Controls, Modes, getDefaultSectionTemplate, lists } from '../../utils/GeoStoryUtils';
 
 describe('geostory reducer', () => {
     it('setEditing sets mode', () => {
@@ -60,6 +60,9 @@ describe('geostory reducer', () => {
     });
     it('setCurrentStory sets story', () => {
         expect(currentStorySelector({ geostory: geostory(undefined, setCurrentStory(TEST_STORY)) })).toEqual({...TEST_STORY, settings: {}});
+    });
+    it('clearSaveError', () => {
+        expect(errorsSelector({ geostory: geostory({errors: {save: "error"}}, clearSaveError()) })).toEqual({});
     });
     describe('add Section', () => {
         const STATE_STORY_1 = geostory(undefined, setCurrentStory(TEST_STORY));

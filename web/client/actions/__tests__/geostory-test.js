@@ -6,32 +6,55 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
+import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import { Modes } from '../../utils/GeoStoryUtils';
 import {
-    ADD, add,
-    CHANGE_MODE, setEditing,
-    SET_CURRENT_STORY, setCurrentStory,
-    UPDATE, update,
-    UPDATE_CURRENT_PAGE, updateCurrentPage,
-    LOAD_GEOSTORY, loadGeostory,
-    LOADING_GEOSTORY, loadingGeostory,
-    LOAD_GEOSTORY_ERROR, loadGeostoryError,
-    editResource, EDIT_RESOURCE,
-    move, MOVE,
-    remove, REMOVE,
-    selectCard, SELECT_CARD,
-    SAVE, saveStory,
-    setFocusOnContent,
+    ADD,
+    CHANGE_MODE,
+    CLEAR_SAVE_ERROR,
+    EDIT_RESOURCE,
+    LOADING_GEOSTORY,
+    LOAD_GEOSTORY,
+    LOAD_GEOSTORY_ERROR,
+    MOVE,
+    REMOVE,
+    SAVE,
+    SELECT_CARD,
+    SET_CURRENT_STORY,
+    TOGGLE_CARD_PREVIEW,
     TOGGLE_CONTENT_FOCUS,
-    toggleSettingsPanel, TOGGLE_SETTINGS_PANEL,
-    toggleSetting, TOGGLE_SETTING,
-    toggleCardPreview, TOGGLE_CARD_PREVIEW,
-    updateSetting, UPDATE_SETTING
+    TOGGLE_SETTING,
+    TOGGLE_SETTINGS_PANEL,
+    UPDATE,
+    UPDATE_CURRENT_PAGE,
+    UPDATE_SETTING,
+    add,
+    clearSaveError,
+    editResource,
+    loadGeostory,
+    loadGeostoryError,
+    loadingGeostory,
+    move,
+    remove,
+    saveStory,
+    selectCard,
+    setCurrentStory,
+    setEditing,
+    setFocusOnContent,
+    toggleCardPreview,
+    toggleSetting,
+    toggleSettingsPanel,
+    update,
+    updateCurrentPage,
+    updateSetting
 } from '../geostory';
 
 describe('test geostory action creators', () => {
+    it('clearSaveError', () => {
+        const action = clearSaveError();
+        expect(action.type).toBe(CLEAR_SAVE_ERROR);
+    });
     it('setEditing', () => {
         const action = setEditing(true);
         expect(action.type).toBe(CHANGE_MODE);
