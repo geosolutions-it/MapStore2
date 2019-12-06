@@ -12,6 +12,9 @@ import ReactTestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
+import { isEqual } from 'lodash';
+
+
 import expect from 'expect';
 import ContextCreator, { pluginsFilterOverride } from '../ContextCreator';
 
@@ -72,29 +75,32 @@ describe('ContextCreator component', () => {
     });
     describe('viewerPlugins filtering', () => {
         it('filter plugins accordingly', () => {
-            expect(pluginsFilterOverride(["P1", "P2"], ["P1"])).toEqual(["P1"]);
+            expect(isEqual(pluginsFilterOverride(["P1", "P2"], ["P1"]), ["P1"]));
         });
         it('apply plugins overrides', () => {
             // add cfg where missing
-            expect(pluginsFilterOverride(["P1", "P2"], [{
-                "name": "P1",
-                "overrides": {
+            expect(isEqual(
+                pluginsFilterOverride(["P1", "P2"], [{
+                    "name": "P1",
+                    "overrides": {
+                        "cfg": { test: "newValue" }
+                    }
+                }]),
+                [{
+                    "name": "P1",
                     "cfg": { test: "newValue" }
-                }
-            }])).toEqual([{
-                "name": "P1",
-                "cfg": { test: "newValue" }
-            }]);
+                }]
+            )).toBeTruthy();
             // not modifies the existing cfg
-            expect(pluginsFilterOverride(["P1", { name: "P2", "cfg": { test: "value1", test2: "value2"}}], [{
+            expect(isEqual(pluginsFilterOverride(["P1", { name: "P2", "cfg": { test: "value1", test2: "value2" } }], [{
                 "name": "P2",
                 "overrides": {
                     "cfg": { test: "newValue" }
                 }
-            }])).toEqual([{
+            }]), [{
                 "name": "P2",
                 "cfg": { test: "newValue", test2: "value2" }
-            }]);
+            }])).toBeTruthy();
         });
 
     });
