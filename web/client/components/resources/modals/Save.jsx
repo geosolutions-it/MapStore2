@@ -84,8 +84,8 @@ class SaveModal extends React.Component {
      * @return the modal for unsaved changes
     */
     render() {
-        const canEditResourcePermission = this.props.user.role === 'ADMIN' ||
-        this.props.resource.attributes && this.props.resource.attributes.owner === this.props.user.name;
+        const canEditResourcePermission = this.props.user && this.props.user.role === 'ADMIN' ||
+        this.props.resource && this.props.resource.attributes && this.props.resource.attributes.owner === this.props.user.name;
         return (<Portal key="saveDialog">
             {<ResizableModal
                 loading={this.props.loading}
@@ -116,7 +116,7 @@ class SaveModal extends React.Component {
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
                         {
-                            canEditResourcePermission &&  <PermissionEditor
+                            !!canEditResourcePermission &&  <PermissionEditor
                                 rules={this.props.rules}
                                 onUpdateRules={this.props.onUpdateRules}
                                 availableGroups={this.props.availableGroups}
