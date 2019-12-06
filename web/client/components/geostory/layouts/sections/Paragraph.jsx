@@ -77,7 +77,15 @@ export default ({
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.MEDIA);
                 }
-            }]}
+            },
+            {
+                glyph: 'code', // TODO: change when new icon will be prepared
+                tooltipId: 'geostory.addWebPageSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTemplates.WEBPAGE);
+                }
+            }
+            ]}
         />}
     </section>
 );

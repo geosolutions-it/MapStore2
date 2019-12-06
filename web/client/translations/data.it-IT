@@ -1900,6 +1900,7 @@
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
+            "addWebPageSection": "Aggiungi sezione pagina Web",
             "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
             "addTextContent": "Aggiungi testo",
             "addMediaContent": "Aggiungi Media",
@@ -1955,6 +1956,8 @@
                     "titleMedia": "Sezione Media",
                     "titleImage": "Immagine",
                     "titleText": "Testo",
+                    "titleWebPage": "Pagina web",
+                    "titleWebPageSection": "Sezione pagina Web",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Elimina la sezione selezionata",

@@ -1904,6 +1904,7 @@
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
             "addMediaSection": "Add Media Section",
+            "addWebPageSection": "Add Web Page Section",
             "addImmersiveContent": "Add Immersive Content",
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
@@ -1959,6 +1960,8 @@
                     "titleMedia": "Media Section",
                     "titleImage": "Image",
                     "titleText": "Text",
+                    "titleWebPage": "Web Page",
+                    "titleWebPageSection": "Web Page Section",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Remove selected section",

@@ -1900,6 +1900,7 @@
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
+            "addWebPageSection": "Webseitenabschnitt hinzufügen",
             "addImmersiveContent": "Füge immersiven Inhalt hinzu",
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
@@ -1955,6 +1956,8 @@
                     "titleMedia": "Medienbereich",
                     "titleImage": "Bild",
                     "titleText": "Text",
+                    "titleWebPage": "Website",
+                    "titleWebPageSection": "Web Page Section",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Ausgewählten Abschnitt entfernen",

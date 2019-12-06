@@ -37,13 +37,14 @@ export const SectionTypes = {
 export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
-    WEBPAGE: 'webpage',
+    WEBPAGE: 'web page',
     COLUMN: 'column' // can have contents of type 'text' or 'media'
 };
 
 // Templates for contents that can be created using getDefaultSectionTemplate
 export const SectionTemplates = {
-    MEDIA: 'template-media'
+    MEDIA: 'template-media',
+    WEBPAGE: 'template-web-page'
 };
 
 export const MediaTypes = {
@@ -230,6 +231,25 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             ]
         };
     }
+    case SectionTemplates.WEBPAGE: {
+        return {
+            id: uuid(),
+            type: SectionTypes.PARAGRAPH,
+            title: localize("geostory.builder.defaults.titleWebPageSection"),
+            contents: [
+                {
+                    id: uuid(),
+                    type: ContentTypes.COLUMN,
+                    contents: [{
+                        id: uuid(),
+                        type: ContentTypes.WEBPAGE,
+                        size: 'medium',
+                        align: 'center'
+                    }]
+                }
+            ]
+        };
+    }
     case ContentTypes.COLUMN: {
         return {
             id: uuid(),
@@ -265,6 +285,15 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type,
             title: localize("geostory.builder.defaults.titleMedia"),
             size: 'full',
+            align: 'center'
+        };
+    }
+    case ContentTypes.WEBPAGE: {
+        return {
+            id: uuid(),
+            type,
+            title: localize("geostory.builder.defaults.titleWebPage"),
+            size: 'medium',
             align: 'center'
         };
     }

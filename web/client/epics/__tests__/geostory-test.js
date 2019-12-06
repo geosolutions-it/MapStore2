@@ -28,7 +28,8 @@ import {
     sortContentEpic,
     setFocusOnMapEditing,
     openWebPageComponentCreator,
-    inlineEditorEditMap
+    inlineEditorEditMap,
+    editWebPageComponent
 } from '../geostory';
 import {
     ADD,
@@ -49,7 +50,8 @@ import {
     move,
     CHANGE_MODE,
     TOGGLE_CONTENT_FOCUS,
-    SET_WEBPAGE_URL
+    SET_WEBPAGE_URL,
+    editWebPage
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -1145,5 +1147,20 @@ describe('Geostory Epics', () => {
             }
         }
         });
+    });
+
+    it('editWebPageComponent should open web page creator popup for edit', () => {
+        const path = 'sections[{"id": "eae41574-9799-44b8-b701-9f45f203a8cd"}].contents[{"id": "226889e0-c5ae-495b-8386-5cd4aa16c799"}].contents[{"id": "07b34499-c74e-4fde-9fb3-973fef729093"}]';
+
+        const callback = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE);
+            expect(actions[0].path).toBe(path);
+            expect(actions[0].element).toExist();
+            expect(actions[0].element.editURL).toBe(true);
+            expect(actions[0].mode).toBe('merge');
+        };
+
+        testEpic(editWebPageComponent, 1, editWebPage({ path }), callback);
     });
 });

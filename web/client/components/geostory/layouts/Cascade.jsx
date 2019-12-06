@@ -65,7 +65,15 @@ const ContainerDimensions = emptyState(
                 onClick: () => {
                     add(`sections`, 0, SectionTemplates.MEDIA);
                 }
-            }]}/>
+            },
+            {
+                glyph: 'code', // TODO: change when new icon will be prepared
+                tooltipId: 'geostory.addWebPageSection',
+                onClick: () => {
+                    add(`sections`, 0, SectionTemplates.WEBPAGE);
+                }
+            }
+            ]}/>
     }
     )
 )(ContainerDimensionsBase);

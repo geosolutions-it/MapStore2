@@ -134,7 +134,7 @@ describe("GeoStory Utils", () => {
         expect(ContentTypes).toEqual({
             TEXT: "text",
             MEDIA: "media",
-            WEBPAGE: "webpage",
+            WEBPAGE: "web page",
             COLUMN: "column"
         });
     });
@@ -153,7 +153,8 @@ describe("GeoStory Utils", () => {
     });
     it("test SectionTemplates", () => {
         expect(SectionTemplates).toEqual({
-            MEDIA: "template-media"
+            MEDIA: "template-media",
+            WEBPAGE: "template-web-page"
         });
     });
     it("test lists", () => {

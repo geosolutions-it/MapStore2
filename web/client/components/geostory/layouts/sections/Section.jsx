@@ -19,6 +19,7 @@ const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
     [SectionTypes.PARAGRAPH]: Paragraph,
     [SectionTemplates.MEDIA]: Paragraph,
+    [SectionTemplates.WEBPAGE]: Paragraph,
     [SectionTypes.TITLE]: Title,
     UNKNOWN: ({ type, inViewRef }) => <div ref={inViewRef} className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
