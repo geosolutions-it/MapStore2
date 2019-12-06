@@ -29,6 +29,7 @@ export default ({
     mode,
     add = () => {},
     editMedia = () => {},
+    editWebPage = () => {},
     update = () => {},
     remove = () => {}
 }) => (
@@ -39,6 +40,7 @@ export default ({
         mode={mode}
         add={add}
         editMedia={editMedia}
+        editWebPage={editWebPage}
         update={update}
         remove={remove}
         viewWidth={viewWidth}

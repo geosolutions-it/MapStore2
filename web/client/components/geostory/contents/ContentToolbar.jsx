@@ -66,14 +66,14 @@ const toolButtons = {
             update( 'editMap', !editMap);
         }
     }),
-    editURL: ({ editURL = false, update = () => {}}) => ({
+    editURL: ({ editURL = false, path, editWebPage = () => {}}) => ({
         glyph: "pencil",
         visible: true,
         disabled: editURL,
         bsStyle: editURL ? "success" : "default",
         tooltipId: "geostory.contentToolbar.editURL",
         onClick: () => {
-            update( 'editURL', !editURL, 'merge');
+            editWebPage({path});
         }
     })
 };

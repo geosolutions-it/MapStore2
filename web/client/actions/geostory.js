@@ -13,6 +13,7 @@ export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
+export const EDIT_WEBPAGE = "GEOSTORY:EDIT_WEBPAGE";
 export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
@@ -212,3 +213,5 @@ export const setFocusOnContent = (status, target, selector, hideContent, path) =
 export const updateSetting = (prop, value) => ({type: UPDATE_SETTING, prop, value});
 
 export const setWebPageUrl = (src) => ({ type: SET_WEBPAGE_URL, src });
+
+export const editWebPage = ({ path }, owner = 'GEOSTORY') => ({ type: EDIT_WEBPAGE, path, owner });

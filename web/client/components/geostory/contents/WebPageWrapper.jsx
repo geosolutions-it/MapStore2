@@ -22,7 +22,8 @@ export class WebPageWrapper extends React.PureComponent {
         editURL: PropTypes.bool,
         onClose: PropTypes.func,
         onChange: PropTypes.func,
-        src: PropTypes.string
+        src: PropTypes.string,
+        id: PropTypes.string
     }
 
     state = {

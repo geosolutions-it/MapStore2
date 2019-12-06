@@ -36,6 +36,7 @@ class Section extends React.Component {
         add: PropTypes.func,
         update: PropTypes.func,
         editMedia: PropTypes.func,
+        editWebPage: PropTypes.func,
         remove: PropTypes.func,
         updateCurrentPage: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
@@ -53,6 +54,7 @@ class Section extends React.Component {
         add: () => {},
         update: () => {},
         editMedia: () => {},
+        editWebPage: () => {},
         updateCurrentPage: () => {},
         remove: () => {},
         storyType: StoryTypes.CASCADE,
@@ -75,6 +77,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
+                editWebPage={this.props.editWebPage}
                 updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}
                 mode={this.props.mode}

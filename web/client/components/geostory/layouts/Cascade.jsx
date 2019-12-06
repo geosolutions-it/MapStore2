@@ -77,6 +77,7 @@ const Cascade = ({
     onVisibilityChange = () => {},
     updateCurrentPage = () => {},
     editMedia = () => {},
+    editWebPage = () => {},
     update = () => {},
     remove = () => {},
     focusedContent,
@@ -97,6 +98,7 @@ const Cascade = ({
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
+                                editWebPage={editWebPage}
                                 updateCurrentPage={updateCurrentPage}
                                 update={update}
                                 remove={remove}
