@@ -37,7 +37,7 @@ export const SectionTypes = {
 export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
-    WEBPAGE: 'web page',
+    WEBPAGE: 'webPage',
     COLUMN: 'column' // can have contents of type 'text' or 'media'
 };
 
