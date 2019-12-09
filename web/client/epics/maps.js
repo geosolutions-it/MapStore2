@@ -9,9 +9,10 @@
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
+const {push} = require('connected-react-router');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const { MAP_INFO_LOADED, mapSaveError, mapSaved, loadMapInfo } = require('../actions/config');
+const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo } = require('../actions/config');
 const {isNil, find} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
@@ -32,11 +33,13 @@ const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector,
     searchTextSelector,
-    searchParamsSelector
+    searchParamsSelector,
+    totalCountSelector
 } = require('../selectors/maps');
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
 } = require('../selectors/map');
+const {mapTypeSelector} = require('../selectors/maptype');
 const {
     currentMapDetailsTextSelector, currentMapIdSelector,
     currentMapDetailsUriSelector, currentMapSelector,
@@ -50,6 +53,21 @@ const {getIdFromUri} = require('../utils/MapUtils');
 const {getErrorMessage} = require('../utils/LocaleUtils');
 const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
 const {createResource, updateResource} = require("../api/persistence");
+
+
+const calculateNewParams = state => {
+    const totalCount = totalCountSelector(state);
+    const {start, limit, ...params} = searchParamsSelector(state) || {};
+    if (start === totalCount - 1) {
+        return {
+            start: Math.max(0, start - limit),
+            limit
+        };
+    }
+    return {
+        start, limit, ...params
+    };
+};
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
@@ -189,11 +207,11 @@ const loadMapsEpic = (action$) =>
         });
 
 const reloadMapsEpic = (action$, { getState = () => { } }) =>
-    action$.ofType(MAP_DELETED)
+    action$.ofType(MAP_DELETED, MAP_SAVED)
         .delay(1000)
         .switchMap(() => Rx.Observable.of(loadMaps(false,
             searchTextSelector(getState()),
-            searchParamsSelector(getState())
+            calculateNewParams(getState())
         )));
 
 const getMapsResourcesByCategoryEpic = (action$) =>
@@ -312,14 +330,16 @@ const storeDetailsInfoEpic = (action$, store) =>
 /**
  * Create or update map resource with persistence api
  */
-const mapSaveMapResourceEpic = (action$) =>
+const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => (!resource.id ? createResource(resource) : updateResource(resource))
             .switchMap((rid) => Rx.Observable.from([
                 ...(resource.id ? [loadMapInfo(rid)] : []),
                 resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
                 mapSaved(),
-                ...(!resource.id ? [mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data)]
+                ...(!resource.id ? [
+                    mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                    push(`/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
                     : [])
             ])
                 .merge(

@@ -1,3 +1,11 @@
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const CoordinatesEditor = require('./CoordinatesEditor');
@@ -13,6 +21,7 @@ class GeometryEditor extends React.Component {
         selected: PropTypes.object,
         featureType: PropTypes.string,
         format: PropTypes.string,
+        mapProjection: PropTypes.string,
         onComplete: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         onChangeFormat: PropTypes.func,
@@ -54,12 +63,13 @@ class GeometryEditor extends React.Component {
             aeronauticalOptions={this.props.aeronauticalOptions}
             onChangeFormat={this.props.onChangeFormat}
             format={this.props.format}
+            mapProjection={this.props.mapProjection}
             onHighlightPoint={this.props.onHighlightPoint}
             onSetInvalidSelected={this.props.onSetInvalidSelected}
             onChangeText={this.props.onChangeText}
-            onChange={(components, radius, text) => {
+            onChange={(components, radius, text, crs) => {
                 let coords = components.map(c => [c.lon, c.lat]);
-                this.props.onChange(coords, radius, text);
+                this.props.onChange(coords, radius, text, crs);
             }}/>);
     }
 

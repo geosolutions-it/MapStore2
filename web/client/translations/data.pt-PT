@@ -791,7 +791,7 @@
                 "group_label_b": "of the following conditions:",
                 "combo_placeholder": "Attribute",
                 "text_placeholder": "Type text to search",
-                "attribute_filter_header": "Attribute Filter",
+                "attribute_filter_header": "Filtro de Atributos",
                 "tooltipTextField": "use <b>*</b> for any number of any char</br>use <b>.</b> for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
                 "groupField": {
                     "any": "any",
@@ -812,8 +812,8 @@
                 }
             },
             "spatialfilter": {
-                "filterType": "Filter Type",
-                "geometric_operation": "Geometric Operation",
+                "filterType": "Tipo de filtro",
+                "geometric_operation": "Operação geométrica",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region of interest",
                 "remove": "Remove",
@@ -1579,7 +1579,7 @@
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
                 },
-                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+                "resourceAlreadyExists": "A resource with this name already exists"
             },
             "editor": {
                 "save": "Save the dashboard",

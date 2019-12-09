@@ -620,7 +620,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "Login", "Language", "NavMenu", "Attribution", "Home", {
+        }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -671,6 +671,7 @@
           "GeoStory",
           "GeoStorySave",
           "GeoStorySaveAs",
+          "MapEditor",
           "MediaEditor",
           {
             "name": "GeoStoryEditor",
@@ -700,6 +701,7 @@
               "className": "navbar shadow navbar-home"
             }
           },
+          "Redirect",
           "Login",
           "Language",
           "NavMenu",
@@ -721,6 +723,6 @@
           }
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
-        "context-manager": ["Header", "Home", "ContextManager", "Footer"]
+        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
     }
 }

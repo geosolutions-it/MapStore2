@@ -9,15 +9,16 @@ import React from "react";
 import {isNil} from 'lodash';
 
 import { MediaTypes } from '../../utils/GeoStoryUtils';
+import { SourceTypes } from '../../utils/MediaEditorUtils';
 import Toolbar from '../misc/toolbar/Toolbar';
-import MapList from "./map/MapList";
-import ImageList from "./image/ImageList";
+import MapList from './map/MapList';
+import ImageList from './image/ImageList';
+import withMapEditing from  './enhancers/withMapEditing';
 
-
-export default ({
+export default withMapEditing(({
     resources = [],
     selectedItem,
-    selectedSource,
+    selectedSource = {},
     selectedService,
     mediaType,
     onMapChoice = () => {},
@@ -26,19 +27,28 @@ export default ({
     loadItems = () => {},
     setAddingMedia = () => {},
     setEditingMedia = () => {},
+    importInLocal = () => {},
+    localSource = SourceTypes.GEOSTORY,
     buttons = [
         {
             glyph: 'plus',
             tooltipId: 'mediaEditor.mediaPicker.add',
-            visible: mediaType !== MediaTypes.MAP,
+            visible: selectedSource.type === SourceTypes.GEOSTORY,
             onClick: () => setAddingMedia(true)
         },
         {
             glyph: 'pencil',
             tooltipId: 'mediaEditor.mediaPicker.edit',
-            visible: !isNil(selectedItem) && mediaType !== MediaTypes.MAP,
+            visible: selectedSource.type === SourceTypes.GEOSTORY && !isNil(selectedItem),
             onClick: () => setEditingMedia(true)
+        },
+        {
+            glyph: 'upload',
+            tooltipId: 'mediaEditor.mediaPicker.import',
+            visible: selectedSource.type === SourceTypes.GEOSTORE && mediaType === MediaTypes.MAP && !isNil(selectedItem),
+            onClick: () => importInLocal({resource: selectedItem, mediaType: localSource})
         }
+
     ]
 }) => (
     <div style={{position: 'relative'}} className="ms-mediaList">
@@ -79,4 +89,4 @@ export default ({
                 selectedSource={selectedSource}
             />
         }
-    </div>);
+    </div>));

@@ -9,6 +9,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import withCloseConfirm from './withCloseConfirm';
 
 import {
     setAddingMedia,
@@ -67,22 +68,23 @@ const MediaModal = ({
     chooseMedia,
     selectedItem,
     editing,
+    adding,
     hide = () => { }
 }) => {
-
     return (
         <Portal>
             <ResizableModal
                 title={<Message msgId="mediaEditor.modalTitle"/>}
                 show={open}
                 clickOutEnabled={false}
-                onClose={() => hide()}
+                onClose={hide}
                 size="lg"
+                modalClassName="media-editor-modal"
                 buttons={[
                     {
                         text: <Message msgId="mediaEditor.apply"/>,
                         bsSize: 'sm',
-                        disabled: !selectedItem || editing,
+                        disabled: adding || editing,
                         onClick: () => chooseMedia(selectedItem)
                     }
                 ]}>
@@ -92,4 +94,4 @@ const MediaModal = ({
     );
 };
 
-export default MediaModal;
+export default withCloseConfirm(MediaModal);

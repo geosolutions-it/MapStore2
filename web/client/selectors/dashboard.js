@@ -3,6 +3,7 @@ const {pathnameSelector} = require('../selectors/router');
 
 const isDashboardAvailable = state => state && state.dashboard && state.dashboard.editor && state.dashboard.editor.available;
 const isShowSaveOpen = state => state && state.dashboard && state.dashboard.showSaveModal;
+const isShowSaveAsOpen = state => state && state.dashboard && state.dashboard.showSaveAsModal;
 const isDashboardEditing = state => state && state.dashboard && state.dashboard.editing;
 const showConnectionsSelector = state => state && state.dashboard && state.dashboard.showConnections;
 const dashboardResource = state => state && state.dashboard && state.dashboard.resource;
@@ -14,6 +15,7 @@ const buttonCanEdit = createSelector(pathnameSelector, dashboardResource,
 module.exports = {
     isDashboardAvailable,
     isShowSaveOpen,
+    isShowSaveAsOpen,
     isDashboardEditing,
     showConnectionsSelector,
     dashboardResource,

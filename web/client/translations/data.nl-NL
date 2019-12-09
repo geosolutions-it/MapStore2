@@ -1429,7 +1429,7 @@
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
                 },
-                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+                "resourceAlreadyExists": "A resource with this name already exists"
             },
             "editor": {
                 "save": "Save the dashboard",

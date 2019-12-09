@@ -12,6 +12,7 @@ const {
     isDashboardEditing,
     showConnectionsSelector,
     isShowSaveOpen,
+    isShowSaveAsOpen,
     dashboardResource,
     isDashboardLoading,
     getDashboardSaveErrors,
@@ -37,6 +38,13 @@ describe('dashboard selectors', () => {
         expect(isShowSaveOpen({
             dashboard: {
                 showSaveModal: true
+            }
+        })).toBe(true);
+    });
+    it('isShowSaveAsOpen', () => {
+        expect(isShowSaveAsOpen({
+            dashboard: {
+                showSaveAsModal: true
             }
         })).toBe(true);
     });

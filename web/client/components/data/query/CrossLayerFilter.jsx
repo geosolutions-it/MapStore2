@@ -64,9 +64,9 @@ module.exports = ({
         ]}
         onSwitch={expandCrossLayerFilterPanel}
         title={<Message msgId="queryform.crossLayerFilter.title" />} >
-        <Row className="filter-field-fixed-row">
+        <Row className="inline-form filter-field-fixed-row">
             <Col xs={6}>
-                <div className="m-label"><Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
+                <div><Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
             </Col>
             <Col xs={6}>
                 <Select
@@ -88,9 +88,9 @@ module.exports = ({
             </Col>
         </Row>
         {(typeName && geometryName)
-            ? (<Row className="filter-field-fixed-row">
+            ? (<Row className="inline-form filter-field-fixed-row">
                 <Col xs={6}>
-                    <div className="m-label"><Message msgId="queryform.crossLayerFilter.operation"/></div>
+                    <div><Message msgId="queryform.crossLayerFilter.operation"/></div>
                 </Col>
                 <Col xs={6}>
                     <GeometricOperationSelector

@@ -26,7 +26,8 @@ import {
     saveGeoStoryResource,
     reloadGeoStoryOnLoginLogout,
     sortContentEpic,
-    setFocusOnMapEditing
+    setFocusOnMapEditing,
+    inlineEditorEditMap
 } from '../geostory';
 import {
     ADD,
@@ -58,6 +59,13 @@ import {
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { Modes, ContentTypes, MediaTypes, Controls } from '../../utils/GeoStoryUtils';
+
+import {
+    show as mapEditorShow,
+    save as saveMapEditor,
+    HIDE as HIDE_MAP_EDITOR
+
+} from '../../actions/mapEditor';
 
 let mockAxios;
 describe('Geostory Epics', () => {
@@ -1068,6 +1076,40 @@ describe('Geostory Epics', () => {
                         ]
                     }
                 ]
+            }
+        }
+        });
+    });
+    it('inlineEditorEditMap on advancedEditing save', done => {
+        const launchActions = [mapEditorShow("inlineEditor", {data: {}, id: 1}), saveMapEditor({}, "inlineEditor")];
+
+        const NUM_ACTIONS = 3;
+        testEpic(inlineEditorEditMap, NUM_ACTIONS, launchActions, (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.forEach(({type, ...a}) => {
+                switch (type) {
+                case UPDATE:
+                    expect(a.path.endsWith(".map") || a.path.endsWith(".editMap")).toBeTruthy();
+                    break;
+                case HIDE_MAP_EDITOR:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+
+        }, {geostory: {
+            focusedContent: {
+                target: {
+                    id: '07b34499-c74e-4fde-9fb3-973fef729093',
+                    type: 'contents',
+                    contentType: 'map'
+                },
+                selector: '#07b34499-c74e-4fde-9fb3-973fef729093',
+                hideContent: false,
+                path: 'sections[{"id": "eae41574-9799-44b8-b701-9f45f203a8cd"}].contents[{"id": "226889e0-c5ae-495b-8386-5cd4aa16c799"}].contents[{"id": "07b34499-c74e-4fde-9fb3-973fef729093"}]'
             }
         }
         });

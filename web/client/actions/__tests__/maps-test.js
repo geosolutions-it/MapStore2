@@ -257,9 +257,12 @@ describe('Test correctness of the maps actions', () => {
         expect(a.type).toBe(MAPS_LIST_LOAD_ERROR);
     });
     it('mapError', () => {
-        const a = mapError("error");
+        const resourceId = 1;
+        const error = "error";
+        const a = mapError(resourceId, error);
         expect(a.type).toBe(MAP_ERROR);
-        expect(a.error).toBe("error");
+        expect(a.error).toBe(error);
+        expect(a.resourceId).toBe(resourceId);
     });
     it('mapMetadataUpdated', () => {
         const a = mapMetadataUpdated("resourceId", "newName", "newDescription", "result", "error");

@@ -13,7 +13,6 @@ var expect = require('expect');
 
 describe('This test for MetadataModal', () => {
 
-
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -248,5 +247,84 @@ describe('This test for MetadataModal', () => {
         expect(saveButton.disabled).toBeFalsy();
         ReactTestUtils.Simulate.click(saveButton);
         expect(spyonOnSave).toHaveBeenCalled();
+    });
+    it('showing unsaved changes modal and closing the modal', () => {
+        const actions = {
+            onToggleUnsavedChangesModal: () => {},
+            onDisplayMetadataEdit: () => {},
+            onResetCurrentMap: () => {}
+        };
+        const onDisplayMetadataEditSpy = expect.spyOn(actions, 'onDisplayMetadataEdit');
+        const onToggleUnsavedChangesModalSpy = expect.spyOn(actions, 'onToggleUnsavedChangesModal');
+        const onResetCurrentMapSpy = expect.spyOn(actions, 'onResetCurrentMap');
+
+        const metadataModal = ReactDOM.render(
+            <MetadataModal
+                show
+                useModal
+                map={{showUnsavedChanges: true}}
+                id="MetadataModal"
+                onDisplayMetadataEdit={actions.onDisplayMetadataEdit}
+                onResetCurrentMap={actions.onResetCurrentMap}
+                detailsSheetActions={{onToggleUnsavedChangesModal: actions.onToggleUnsavedChangesModal}}
+            />, document.getElementById("container"));
+        expect(metadataModal).toExist();
+        const unsavedChangesDialog = document.querySelector('.modal-dialog');
+        const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body');
+        let buttons = document.querySelectorAll('button');
+        expect(unsavedChangesDialog).toExist();
+        expect(unsavedChangesDialogBody).toExist();
+        expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
+        expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
+        expect(buttons.length).toBe(3);
+        let closeBtn = buttons[1];
+        let cancelBtn = buttons[2];
+        expect(closeBtn.innerText).toBe("saveDialog.close");
+        expect(cancelBtn.innerText).toBe("saveDialog.cancel");
+        ReactTestUtils.Simulate.click(closeBtn);
+
+        expect(onResetCurrentMapSpy).toHaveBeenCalled();
+        expect(onDisplayMetadataEditSpy).toNotHaveBeenCalled();
+        expect(onToggleUnsavedChangesModalSpy).toNotHaveBeenCalled();
+    });
+
+    it('showing unsaved changes modal and without closing the modal', () => {
+        const actions = {
+            onToggleUnsavedChangesModal: () => {},
+            onDisplayMetadataEdit: () => {},
+            onResetCurrentMap: () => {}
+        };
+        const onDisplayMetadataEditSpy = expect.spyOn(actions, 'onDisplayMetadataEdit');
+        const onToggleUnsavedChangesModalSpy = expect.spyOn(actions, 'onToggleUnsavedChangesModal');
+        const onResetCurrentMapSpy = expect.spyOn(actions, 'onResetCurrentMap');
+
+        const metadataModal = ReactDOM.render(
+            <MetadataModal
+                show
+                useModal
+                map={{showUnsavedChanges: true}}
+                id="MetadataModal"
+                onDisplayMetadataEdit={actions.onDisplayMetadataEdit}
+                onResetCurrentMap={actions.onResetCurrentMap}
+                detailsSheetActions={{onToggleUnsavedChangesModal: actions.onToggleUnsavedChangesModal}}
+            />, document.getElementById("container"));
+        expect(metadataModal).toExist();
+        const unsavedChangesDialog = document.querySelector('.modal-dialog');
+        const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body');
+        let buttons = document.querySelectorAll('button');
+        expect(unsavedChangesDialog).toExist();
+        expect(unsavedChangesDialogBody).toExist();
+        expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
+        expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
+        expect(buttons.length).toBe(3);
+        let closeBtn = buttons[1];
+        let cancelBtn = buttons[2];
+        expect(closeBtn.innerText).toBe("saveDialog.close");
+        expect(cancelBtn.innerText).toBe("saveDialog.cancel");
+        ReactTestUtils.Simulate.click(cancelBtn);
+
+        expect(onResetCurrentMapSpy).toNotHaveBeenCalled();
+        expect(onDisplayMetadataEditSpy).toHaveBeenCalled();
+        expect(onToggleUnsavedChangesModalSpy).toHaveBeenCalled();
     });
 });

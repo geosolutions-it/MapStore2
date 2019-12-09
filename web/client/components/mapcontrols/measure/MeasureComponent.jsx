@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -49,6 +49,7 @@ class MeasureComponent extends React.Component {
         bearingMeasureEnabled: PropTypes.bool,
         showButtons: PropTypes.bool,
         showResults: PropTypes.bool,
+        mapProjection: PropTypes.string,
         lineGlyph: PropTypes.string,
         areaGlyph: PropTypes.string,
         bearingGlyph: PropTypes.string,
@@ -80,6 +81,7 @@ class MeasureComponent extends React.Component {
     };
 
     static defaultProps = {
+        mapProjection: "EPSG:3857",
         columnProperties: {
             xs: 4,
             sm: 4,
@@ -325,6 +327,7 @@ class MeasureComponent extends React.Component {
                                 isMouseEnterEnabled
                                 isMouseLeaveEnabled
                                 format={this.props.format}
+                                mapProjection={this.props.mapProjection}
                                 onChangeFormat={this.props.onChangeFormat}
                                 onHighlightPoint={this.props.onHighlightPoint}
                                 onChange={this.props.onChangeCoordinates}

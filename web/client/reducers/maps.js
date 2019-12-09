@@ -7,13 +7,12 @@
  */
 
 const {
-    MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING,
+    MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_ERROR, MAP_UPDATING,
     MAP_METADATA_UPDATED, MAP_DELETING, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING,
     MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED, SHOW_DETAILS} = require('../actions/maps');
 const {
     EDIT_MAP, RESET_CURRENT_MAP} = require('../actions/currentMap');
-const {MAP_INFO_LOADED} = require('../actions/config');
 const assign = require('object-assign');
 const {isArray, isNil} = require('lodash');
 /**
@@ -187,17 +186,7 @@ function maps(state = {
         }
         return assign({}, state, {results: newMaps});
     }
-    case THUMBNAIL_ERROR: {
-        let newMaps = state.results === "" ? [] : [...state.results];
-
-        for (let i = 0; i < newMaps.length; i++) {
-            if (newMaps[i].id && newMaps[i].id === action.resourceId ) {
-                newMaps[i] = assign({}, newMaps[i], {updating: false});
-            }
-        }
-        return assign({}, state, {results: newMaps});
-    }
-    case RESET_UPDATING: {
+    case THUMBNAIL_ERROR: case MAP_ERROR: case RESET_UPDATING: {
         let newMaps = state.results === "" ? [] : [...state.results];
 
         for (let i = 0; i < newMaps.length; i++) {
@@ -251,17 +240,6 @@ function maps(state = {
         }
         );
         return newState;
-    }
-    case MAP_INFO_LOADED: {
-        let newMaps = state.results === "" ? [] : [...state.results];
-
-        for (let i = 0; i < newMaps.length; i++) {
-            if (newMaps[i].id && newMaps[i].id === action.mapId ) {
-                const {data, permissions, attributes, ...others} = action.info;
-                newMaps[i] = assign({}, newMaps[i], {...others, thumbnail: attributes && attributes.thumbnail});
-            }
-        }
-        return assign({}, state, {results: newMaps});
     }
     default:
         return state;

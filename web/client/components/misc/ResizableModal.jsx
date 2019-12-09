@@ -77,12 +77,13 @@ const ResizableModal = ({
     fullscreenState,
     onFullscreen,
     fade = false,
-    fitContent
+    fitContent,
+    modalClassName = ''
 }) => {
     const sizeClassName = sizes[size] || '';
     const fullscreenClassName = showFullscreen && fullscreenState === 'expanded' && fullscreen.className[fullscreenType] || '';
     const dialog = show ? (
-        <div className={'modal-fixed ' + (draggable ? 'ms-draggable' : '')}>
+        <div className={`modal-fixed ${modalClassName} ` + (draggable ? 'ms-draggable' : '')}>
             <Dialog
                 id="ms-resizable-modal"
                 style={{display: 'flex'}}
@@ -132,4 +133,4 @@ const ResizableModal = ({
         </ReactCSSTransitionGroup>) : dialog;
 };
 
-module.exports = withState('fullscreenState', 'onFullscreen', 'collapsed')(ResizableModal);
+module.exports = withState('fullscreenState', 'onFullscreen', ({initialFullscreenState = 'collapsed'}) => initialFullscreenState)(ResizableModal);

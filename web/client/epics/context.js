@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { getResource, getResourceIdByName } from '../api/persistence';
+import { getResource, getResourceIdByName, getResourceDataByName } from '../api/persistence';
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 import { isLoggedIn } from '../selectors/security';
 
@@ -51,9 +51,9 @@ const createContextFlow = (id, action$, getState) =>
  * @param {string|number} id id of the map
  * @param {*} action$ stream of actions
  */
-const createMapFlow = (mapId = 'new', action$) => {
+const createMapFlow = (mapId = 'new', mapConfig, action$) => {
     const { configUrl } = ConfigUtils.getConfigUrl({ mapId });
-    return Observable.of(loadMapConfig(configUrl, mapId === 'new' ? null : mapId)).merge(
+    return Observable.of(loadMapConfig(configUrl, mapId === 'new' ? null : mapId, mapConfig)).merge(
         action$.ofType(MAP_CONFIG_LOAD_ERROR)
             .switchMap(({ type, error }) => {
                 if (type === MAP_CONFIG_LOAD_ERROR) {
@@ -86,7 +86,8 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
         Observable.merge(
             getResourceIdByName('CONTEXT', contextName)
                 .switchMap(id => createContextFlow(id, action$, getState)).catch(e => {throw new ContextError(e); }),
-            createMapFlow(mapId, action$, getState).catch(e => { throw new MapError(e); })
+            (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
+                .switchMap(data => createMapFlow(mapId, data && data.mapConfig, action$, getState)).catch(e => { throw new MapError(e); })
         )
             // if everything went right, trigger loadFinished
             .concat(Observable.of(loadFinished()))

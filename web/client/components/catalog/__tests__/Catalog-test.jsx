@@ -90,4 +90,28 @@ describe('Test Catalog panel', () => {
         expect(formatSelect.props.value).toBe('image/png8');
         expect(formatSelect.props.options).toEqual(formatOptions);
     });
+    it('test rendering records with expand button', () => {
+        const title = "title";
+        const description = "description";
+        const item = ReactDOM.render(<Catalog
+            services={{"csw": {
+                type: "csw",
+                url: "url",
+                title: "csw",
+                format: "image/png8",
+                metadataTemplate: "<p>${title} and ${description}</p>",
+                showTemplate: true
+            }}}
+            searchOptions={{}}
+            selectedService="csw"
+            loading={false}
+            mode="view"
+            result={{numberOfRecordsMatched: 1}}
+            records={[{title, description, references: []}]}
+        />, document.getElementById("container"));
+        expect(item).toExist();
+        const expandClass = ".glyphicon-chevron-left";
+        const expandButton = document.querySelector(expandClass);
+        expect(expandButton).toExist(`${expandClass} does not exist`);
+    });
 });

@@ -15,10 +15,18 @@ const renderLoading = () => {
     return <div style={{ width: "100px", overflow: "visible", margin: "auto" }}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /></div>;
 };
 
-const renderMetadataModal = ({ Component, edit, resource, setEdit, onSaveSuccess, user }) => {
+const renderMetadataModal = ({ Component, edit, resource, setEdit, errors, setErrors, onSaveSuccess, user, nameFieldFilter }) => {
     if (Component) {
         let MetadataModal = Component;
-        return (<MetadataModal user={user} setEdit={setEdit} key="metadataModal" show={edit} onSaveSuccess={onSaveSuccess}
+        return (<MetadataModal
+            key="metadataModal"
+            user={user}
+            setEdit={setEdit}
+            show={edit}
+            setErrors={setErrors}
+            errors={errors}
+            onSaveSuccess={onSaveSuccess}
+            nameFieldFilter={nameFieldFilter}
             resource={resource} />);
     }
     return null;
@@ -38,15 +46,20 @@ module.exports = ({
     metadataModal,
     viewerUrl,
     edit,
+    errors,
     user,
     editDataEnabled,
+    shareToolEnabled,
     cardTooltips,
     onEdit = () => {},
     onEditData = () => {},
     setEdit = () => {},
+    setErrors = () => {},
     onSaveSuccess = () => {},
     onDelete = () => {},
-    onUpdateAttribute = () => {}
+    onShare = () => {},
+    onUpdateAttribute = () => {},
+    nameFieldFilter = () => {}
 }) => (
     <Grid id={id} fluid={fluid} className={'ms-grid-container ' + className} style={style}>
         {title && <Row>
@@ -61,9 +74,11 @@ module.exports = ({
                             viewerUrl={viewerUrl}
                             resource={res}
                             editDataEnabled={editDataEnabled}
+                            shareToolEnabled={shareToolEnabled}
                             onEdit={onEdit}
                             onEditData={onEditData}
                             onDelete={onDelete}
+                            onShare={onShare}
                             tooltips={cardTooltips}
                             onUpdateAttribute={onUpdateAttribute} />
                     </Col>))
@@ -75,8 +90,11 @@ module.exports = ({
             user,
             onSaveSuccess,
             resource,
+            setErrors,
+            errors,
             setEdit,
-            edit
+            edit,
+            nameFieldFilter
             // resource
         })}
     </Grid>

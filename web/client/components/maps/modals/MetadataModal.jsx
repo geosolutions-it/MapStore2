@@ -22,6 +22,7 @@ const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const { NO_DETAILS_AVAILABLE } = require('../../../actions/maps');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const ConfirmModal = require('../../resources/modals/ConfirmModal');
 
 
 /**
@@ -245,37 +246,23 @@ class MetadataModal extends React.Component {
      * @return the modal for unsaved changes
     */
     renderUnsavedChanges = () => {
-        return (<Portal>
-            <ResizableModal
-                size="xs"
-                clickOutEnabled={false}
-                showClose={false}
-                title={<Message msgId="warning" />}
-                bodyClassName="modal-details-sheet-confirm"
+        return (
+            <ConfirmModal
                 show={!!this.props.map.showUnsavedChanges}
-                buttons={[{
-                    text: <Message msgId="no" />,
-                    onClick: () => {
-                        if (this.props.detailsSheetActions.onToggleUnsavedChangesModal) {
-                            this.props.detailsSheetActions.onToggleUnsavedChangesModal();
-                        }
-                        this.props.onDisplayMetadataEdit(true);
+                confirmText={<Message msgId="saveDialog.close" />}
+                cancelText={<Message msgId="saveDialog.cancel" />}
+                onConfirm={() => this.props.onResetCurrentMap()}
+                onClose={() => {
+                    if (this.props.detailsSheetActions.onToggleUnsavedChangesModal) {
+                        this.props.detailsSheetActions.onToggleUnsavedChangesModal();
                     }
-                }, {
-                    text: <Message msgId="yes" />,
-                    onClick: () => {
-                        this.props.onResetCurrentMap();
-                    }
-                }]}>
-                <div className="ms-alert">
-                    <span className="ms-alert-center">
-                        <Message msgId="map.details.fieldsChanged" />
-                        <br />
-                        <Message msgId="map.details.sureToClose" />
-                    </span>
-                </div>
-            </ResizableModal>
-        </Portal>);
+                    this.props.onDisplayMetadataEdit(true);
+                }}
+            >
+                <Message msgId="map.details.fieldsChanged" />
+                <br/>
+                <Message msgId="map.details.sureToClose" />
+            </ConfirmModal>);
     }
     renderDetailsRow = () => {
         return (

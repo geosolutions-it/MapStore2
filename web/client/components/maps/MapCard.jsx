@@ -21,10 +21,12 @@ class MapCard extends React.Component {
         map: PropTypes.object,
         showMapDetails: PropTypes.bool,
         detailsSheetActions: PropTypes.object,
+        shareToolEnabled: PropTypes.bool,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         onEdit: PropTypes.func,
         onMapDelete: PropTypes.func,
+        onShare: PropTypes.func,
         onUpdateAttribute: PropTypes.func,
         backgroundOpacityStart: PropTypes.number,
         backgroundOpacityEnd: PropTypes.number,
@@ -46,6 +48,7 @@ class MapCard extends React.Component {
         detailsSheetActions: {
             onToggleDetailsSheet: () => {}
         },
+        shareToolEnabled: true,
         // CALLBACKS
         onMapDelete: ()=> {},
         onEdit: () => {},
@@ -55,6 +58,7 @@ class MapCard extends React.Component {
         tooltips: {
             deleteResource: "resources.resource.deleteResource",
             editResource: "resources.resource.editResource",
+            shareResource: "share.title",
             addToFeatured: "resources.resource.addToFeatured",
             showDetails: "resources.resource.showDetails",
             removeFromFeatured: "resources.resource.removeFromFeatured"
@@ -113,6 +117,17 @@ class MapCard extends React.Component {
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.map, true);
+                }
+            },
+            {
+                visible: this.props.shareToolEnabled === true,
+                glyph: 'share-alt',
+                disabled: this.props.map && this.props.map.updating,
+                loading: this.props.map && this.props.map.updating,
+                tooltipId: this.props.tooltips.shareResource,
+                onClick: evt => {
+                    this.stopPropagate(evt);
+                    this.props.onShare(this.props.map);
                 }
             },
             {

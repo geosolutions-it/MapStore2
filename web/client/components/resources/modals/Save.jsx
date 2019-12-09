@@ -25,10 +25,12 @@ class SaveModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
         loading: PropTypes.bool,
+        canSave: PropTypes.bool, // check if resource can be saved
         errors: PropTypes.array,
         rules: PropTypes.array,
         onSave: PropTypes.func,
         onUpdateRules: PropTypes.func,
+        nameFieldFilter: PropTypes.func,
         resource: PropTypes.object,
         linkedResources: PropTypes.object,
         style: PropTypes.object,
@@ -53,6 +55,7 @@ class SaveModal extends React.Component {
         resource: {},
         linkedResources: {},
         onUpdateRules: ()=> {},
+        nameFieldFilter: () => {},
         metadataChanged: ()=> {},
         metadata: {name: "", description: ""},
         options: {},
@@ -64,7 +67,8 @@ class SaveModal extends React.Component {
         onUpdateLinkedResource: () => {},
         onSave: ()=> {},
         availablePermissions: ["canRead", "canWrite"],
-        availableGroups: []
+        availableGroups: [],
+        canSave: true
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
@@ -92,7 +96,7 @@ class SaveModal extends React.Component {
                 }, {
                     text: <span><Message msgId="save"/></span>,
                     onClick: () => { this.onSave(); },
-                    disabled: !this.isValidForm() || this.props.loading
+                    disabled: !this.isValidForm() || this.props.loading || !this.props.canSave
                 }]}
                 showClose={!this.props.resource.loading}
                 onClose={this.onCloseMapPropertiesModal}>
@@ -105,6 +109,7 @@ class SaveModal extends React.Component {
                             linkedResources={this.props.linkedResources}
                             onMetadataChanged={this.props.metadataChanged}
                             onError={this.props.onError}
+                            nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
                         <PermissionEditor
                             rules={this.props.rules}

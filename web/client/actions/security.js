@@ -15,6 +15,7 @@ const SecurityUtils = require('../utils/SecurityUtils');
 const {loadMaps} = require('./maps');
 const ConfigUtils = require('../utils/ConfigUtils');
 
+const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
 const LOGIN_PROMPT_CLOSED = "LOGIN:LOGIN_PROMPT_CLOSED";
 const LOGIN_REQUIRED = "LOGIN:LOGIN_REQUIRED";
@@ -161,7 +162,10 @@ function verifySession() {
     };
 }
 
+const checkLoggedUser = () => ({type: CHECK_LOGGED_USER});
+
 module.exports = {
+    CHECK_LOGGED_USER,
     LOGIN_SUBMIT,
     LOGIN_PROMPT_CLOSED,
     LOGIN_REQUIRED,
@@ -174,6 +178,7 @@ module.exports = {
     LOGOUT,
     REFRESH_SUCCESS,
     SESSION_VALID,
+    checkLoggedUser,
     login,
     loginPromptClosed,
     loginRequired,

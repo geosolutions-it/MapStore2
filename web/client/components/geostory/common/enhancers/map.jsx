@@ -6,19 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {withProps, compose, withHandlers, withStateHandlers, branch, withPropsOnChange} from 'recompose';
+import {withProps, compose, withHandlers, withStateHandlers, branch, withPropsOnChange, mapPropsStream, createEventHandler} from 'recompose';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import { find, isEqual} from 'lodash';
+import uuid from "uuid";
+
+
+import {show} from '../../../../actions/mapEditor';
 
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
-import {resourcesSelector, getCurrentFocusedContentEl} from '../../../../selectors/geostory';
+import {resourcesSelector, getCurrentFocusedContentEl, isFocusOnContentSelector} from '../../../../selectors/geostory';
 
 
 import Message from '../../../I18N/Message';
 import withNodeSelection from '../../../widgets/builder/wizard/map/enhancers/handleNodeSelection';
 
-import withConfirm from '../../../misc/toolbar/withConfirm';
+import withConfirm from '../../../misc/withConfirm';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 const ConfirmButton = withConfirm(ToolbarButton);
 
@@ -27,7 +31,14 @@ const ConfirmButton = withConfirm(ToolbarButton);
  * resourceId a and map should be present in props
  */
 export default compose(
-    connect(createSelector(resourcesSelector, (resources) => ({ resources }))),
+    connect(
+        createSelector(
+            resourcesSelector,
+            isFocusOnContentSelector,
+            (resources, isContentFocused) => ({
+                resources,
+                isContentFocused
+            }))),
     withProps(
         ({ resources, resourceId, map = {}}) => {
             const cleanedMap = {...map, layers: (map.layers || []).map(l => l ? l : undefined)};
@@ -50,12 +61,28 @@ export const withFocusedContentMap = compose(
  * It Adjusts the path to update content map config obj
  */
 export const handleMapUpdate = withHandlers({
+    onChangeMap: ({update, focusedContent = {}}) =>
+        (path, value) => {
+            update(`${focusedContent.path}.map.${path}`, value, "merge");
+        },
     onChange: ({update, focusedContent = {}}) =>
         (path, value) => {
             update(focusedContent.path + `.${path}`, value, "merge");
         }});
 /**
- * Handle edit map toggle and map rest.
+ * Connect and toggle advanced Editor
+ */
+export const handleAdvancedMapEditor = compose(
+    connect(null, {toggleAdvancedEditing: show}),
+    withHandlers({
+        toggleAdvancedEditing: ({toggleAdvancedEditing = () => {}, map = {}}) => () => {
+            const {id, ...data} = map;
+            toggleAdvancedEditing('inlineEditor', {data, id});
+        }
+    })
+);
+/**
+ * Handle edit map toggle, map rest and open AdvancedMapEditor.
  * Map reset restores the original resource map configuration by removing all content map configs
  */
 export const handleToolbar = withHandlers({
@@ -72,25 +99,30 @@ export const handleToolbar = withHandlers({
 /**
  * It adds toolbar button and handling of layer selection
  */
+const ResetButton = (props) => (<ConfirmButton
+    glyph="repeat"
+    bsStyle= "primary"
+    className="square-button-md no-border"
+    tooltipId="geostory.contentToolbar.resetMap"
+    confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
+    confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}
+    {...props}
+/>);
+
 export const withToolbar = compose(
-    withProps(({pendingChanges, toggleEditing, disableReset, onReset}) => ({
+    withProps(({pendingChanges, toggleEditing, disableReset, onReset, toggleAdvancedEditing = () => {}}) => ({
         buttons: [{
             glyph: "floppy-disk",
-            visible: true,
             disabled: !pendingChanges,
             tooltipId: "geostory.contentToolbar.saveChanges",
             onClick: toggleEditing
         }, {
-            Element: () => (<ConfirmButton
-                glyph="repeat"
-                visible
-                bsStyle= "primary"
-                className="square-button-md no-border"
-                tooltipId="geostory.contentToolbar.resetMap"
-                confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
-                disabled= {disableReset}
-                confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}
-                onClick={onReset} />)
+            renderButton: <ResetButton disabled={disableReset} onClick={onReset}/>
+        },
+        {
+            glyph: "pencil",
+            tooltipId: "geostory.contentToolbar.advancedMapEditor",
+            onClick: toggleAdvancedEditing
         }]
     })),
     withNodeSelection,      // Node selection
@@ -147,3 +179,47 @@ export const withConfirmClose = compose(
         }))
     )
 );
+
+/**
+ * Add local map state management to map component
+ */
+export const withLocalMapState  = mapPropsStream(props$ => {
+    const { stream: onMapViewChanges$, handler: onMapViewLocalChanges} = createEventHandler();
+    return props$
+        .pluck('map')
+        .distinctUntilChanged((a, b ) => isEqual(a, b))
+        .switchMap((map) => {
+            return onMapViewChanges$.map((localMapState) => {
+                return { map: {...map, ...localMapState}};
+            }).startWith({map});
+        })
+        .combineLatest(props$, ({map} = {}, props = {}) => {
+            return {
+                ...props,
+                onMapViewLocalChanges,
+                map
+            };
+        });
+});
+// current implementation will update the map only if the movement
+// between 12 decimals in the reference system to avoid rounded value
+// changes due to float mathematic operations.
+const isNearlyEqual = function(a, b) {
+    if (a === undefined || b === undefined) {
+        return false;
+    }
+    return a.toFixed(12) - b.toFixed(12) === 0;
+};
+/**
+ * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
+ */
+export const withMapEditingAndLocalMapState = withHandlers( {
+    onMapViewChanges: ({update, editMap = false, onMapViewLocalChanges, map: {center: oCenter = {}, zoom: oZoom} = {}} = {}) => ({center = {}, zoom, mapStateSource}) => {
+        const equalCenter =  isNearlyEqual(oCenter.x, center.x) && isNearlyEqual(oCenter.y, center.y);
+        if (editMap && !(equalCenter && oZoom === zoom)) {
+            update("map", {center, zoom, mapStateSource: uuid()}, 'merge');
+        } else {
+            onMapViewLocalChanges({center, zoom, mapStateSource});
+        }
+    }
+});

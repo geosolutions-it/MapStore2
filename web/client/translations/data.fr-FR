@@ -283,6 +283,7 @@
             "search": "rechercher ..."
         },
         "resources": {
+            "successSaved": "Cette ressource a été enregistrée correctement",
             "deleteConfirmTitle": "Etes-vous sûr",
             "deleteConfirmMessage": "Etes-vous sûr de vouloir supprimer cette ressource?",
             "deleteConfirmButtonText": "Supprimer",
@@ -339,7 +340,8 @@
             "message": "Déposez ou cliquez sur pour importer une image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Formats supportés: png/jpg",
-            "errorSize": "taille maximum autorisée: 500kb",
+            "errorSize": "Taille maximum autorisée: 500kb",
+            "errorCustomSize": "taille maximum autorisée: {maxFileSize}",
             "error": "L'image fournie n'est pas valide",
             "savedMapTitle": "Carte sauvegardée",
             "savedMapMessage": "La carte a été enregistrée correctement",
@@ -353,7 +355,7 @@
                 "errorTitle": "Impossible d'enregistrer la carte actuelle",
                 "error403": "Une erreur est survenue lors de la suppression de la carte",
                 "error404": "Une erreur est survenue lors de la création de la carte",
-                "error409": "Nom de la carte déjà choisi",
+                "error409": "Une ressource portant ce nom existe déjà",
                 "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la carte dépasse la limite fixée",
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
@@ -388,6 +390,7 @@
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte non accessible",
                     "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "projectionError": "La projection {projection} de la carte n'est pas configurée",
                     "title" : "La carte ne peut pas être vue"
                 }
             }
@@ -858,7 +861,7 @@
                     "reset_bbox": "Recommencer",
                     "save_bbox": "Sauver les modifications",
                     "save_radius": "Sauver les modifications",
-                    "radius": "Rayon (m)"
+                    "radius": "Rayon ({unit})"
                 },
                 "methods": {
                     "zone": "Zone",
@@ -1614,7 +1617,7 @@
                     "notFound": "Tableau de bord introuvable",
                     "notAccessible": "Tableau de bord non accessible"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. Essai '{data}'"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             },
             "editor": {
                 "save": "Sauvegarder le tableau de bord",
@@ -1646,7 +1649,7 @@
                     "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
                     "notFound": "La carte que vous essayez d'accéder n'existe pas"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. essayer « {data} »"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             }
         },
         "wizard": {
@@ -1933,7 +1936,8 @@
                 "saveChanges": "Sauvegarder les modifications",
                 "closeMapEditing": "Proche",
                 "confirmCloseMapEditing": "Fermer l'édition de la carte",
-                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?"
+                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?",
+                "advancedMapEditor": "Ouvrir l'éditeur de carte avancé"
             },
             "navigation": {
                 "edit": "Modifier l'histoire"
@@ -1990,7 +1994,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configurer la carte",
+                "settings": "Paramètres",
+                "settingsSubTitle": "Gérer les interactions utilisateur",
+                "toc": "Couches",
+                "pan": "Interaction pan",
+                "zoom": "Interactions zoom avant / arrière",
+                "topLeft": "En haut à gauche",
+                "topRight": "En haut à droite",
+                "bottomLeft": "En bas à gauche",
+                "bottomRight": "En bas à droite"
             }
         },
         "saveDialog": {
@@ -2007,6 +2020,11 @@
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Fermer l'éditeur de carte",
+            "confirmExitContent": "Supprimer les modifications en attente?"
+        },
         "mediaEditor": {
             "modalTitle": "Médias",
             "images": "Images",
@@ -2014,6 +2032,8 @@
             "maps": "Plans",
             "preview": "Aperçu",
             "apply": "Appliquer",
+            "confirmExitTitle": "Fermer Media Editor",
+            "confirmExitContent": "Supprimer les modifications en attente?",
             "mediaPicker": {
                 "services": "Services: ",
                 "clean": "Résultats nets",
@@ -2035,7 +2055,15 @@
                 "credits": "Crédits",
                 "mapFilter": "Filtrer les cartes",
                 "videoFilter": "Filtrer les vidéos",
-                "imageFilter": "Filtrer les images"
+                "imageFilter": "Filtrer les images",
+                "import": "Importer une ressource dans un magasin local"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Fermer Media Form",
+                "confirmExitContent": "Supprimer les modifications en attente?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko."
             }
         },
         "backgroundDialog": {
@@ -2072,8 +2100,14 @@
                 "windowTitle": "Titre de la fenêtre",
                 "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
             },
+            "configureMap": {
+                "label": "Configurer la carte",
+                "reload": "Recharger la carte",
+                "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder?"
+            },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
+                "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
@@ -2081,7 +2115,7 @@
         "contextManager": {
             "title": "Gérer les contextes",
             "gridTitle": "Contextes",
-            "searchPlaceholder": "contextes de recherche...",
+            "searchPlaceholder": "rechercher...",
             "newContext": "Nouveau contexte",
             "editContextTooltip": "Modifier le contexte"
         },

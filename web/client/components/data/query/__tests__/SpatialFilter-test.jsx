@@ -77,7 +77,7 @@ describe('SpatialFilter', () => {
 
         let logicHeader = containerFluid.childNodes[0];
         expect(logicHeader).toExist();
-        expect(logicHeader.className).toBe("logicHeader filter-field-row filter-field-fixed-row row");
+        expect(logicHeader.className).toBe("logicHeader inline-form filter-field-row filter-field-fixed-row row");
 
         let operationPanelRows = combosPanel[2].getElementsByClassName('row');
         expect(operationPanelRows.length).toBe(2);

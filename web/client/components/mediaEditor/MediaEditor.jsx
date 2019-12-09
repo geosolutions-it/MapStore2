@@ -76,6 +76,7 @@ export default ({
                     <strong><Message msgId="mediaEditor.mediaPicker.services"/></strong>
                 </div>
                 <Select
+                    disabled={saveState && saveState.addingMedia}
                     clearValueText="mediaEditor.mediaPicker.clean"
                     noResultsText="mediaEditor.mediaPicker.noResults"
                     placeholder="mediaEditor.mediaPicker.selectService"

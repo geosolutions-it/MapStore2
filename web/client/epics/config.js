@@ -7,6 +7,7 @@
  */
 import {Observable} from 'rxjs';
 import axios from '../libs/ajax';
+import {get} from 'lodash';
 import {
     LOAD_MAP_CONFIG,
     LOAD_MAP_INFO,
@@ -18,13 +19,27 @@ import {
     loadMapInfo
 } from '../actions/config';
 import Persistence from '../api/persistence';
+import { isLoggedIn } from '../selectors/security';
+import {projectionDefsSelector} from '../selectors/map';
 
-export const loadMapConfigAndConfigureMap = action$ =>
+export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
-        .switchMap( ({configName, mapId}) =>
-            Observable.defer(() => axios.get(configName))
+        .switchMap(({configName, mapId, config}) =>
+            // delay here is to postpone map load to ensure that
+            // certain epics always function correctly
+            // i.e. FeedbackMask disables correctly after load
+            // TODO: investigate the root causes of the problem and come up with a better solution, if possible
+            (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
+                    if (configName === "new.json" && !isLoggedIn(store.getState())) {
+                        return Observable.of(configureError({status: 403}));
+                    }
                     if (typeof response.data === 'object') {
+                        const projectionDefs = projectionDefsSelector(store.getState());
+                        const projection = get(response, "data.map.projection", "EPSG:3857");
+                        if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
+                            return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
+                        }
                         return mapId ? Observable.of(configureMap(response.data, mapId), loadMapInfo(mapId)) :
                             Observable.of(configureMap(response.data, mapId));
                     }

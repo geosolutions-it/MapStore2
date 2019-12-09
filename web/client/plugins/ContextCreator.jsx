@@ -9,9 +9,12 @@
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
+import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, creationStepSelector} from '../selectors/contextcreator';
-import {setCreationStep, changeAttribute, saveNewContext} from '../actions/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector} from '../selectors/contextcreator';
+import {mapTypeSelector} from '../selectors/maptype';
+import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload,
+    showMapViewerReloadConfirm} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -27,11 +30,17 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
 export default createPlugin('ContextCreator', {
     component: connect(createStructuredSelector({
         curStepId: creationStepSelector,
-        newContext: newContextSelector
+        newContext: newContextSelector,
+        resource: resourceSelector,
+        mapType: mapTypeSelector,
+        showReloadConfirm: reloadConfirmSelector,
+        pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
     }), {
         onSetStep: setCreationStep,
         onChangeAttribute: changeAttribute,
-        onSave: saveNewContext
+        onSave: saveNewContext,
+        onMapViewerReload: mapViewerReload,
+        onReloadConfirm: showMapViewerReloadConfirm
     })(ContextCreator),
     reducers: {
         contextcreator

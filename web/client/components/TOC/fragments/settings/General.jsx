@@ -9,7 +9,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
+const { get } = require('lodash');
 const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react-bootstrap');
+const LayersUtils = require('../../../../utils/LayersUtils');
 const Message = require('../../../I18N/Message');
 const { SimpleSelect } = require('react-selectize');
 const { isString, isObject, find } = require('lodash');
@@ -47,8 +49,11 @@ class General extends React.Component {
         allowNew: false
     };
 
-    getLabelName = (groupLable = "") => {
-        return groupLable.replace(/\./g, '/').replace(/\${dot}/g, '.');
+    getLabelName = (groupLabel = "") => {
+        return groupLabel.replace(/[^\.\/]+/g,
+            match => this.props.groups && get(LayersUtils.getGroupByName(match, this.props.groups), 'title') || match)
+            .replace(/\./g, '/')
+            .replace(/\${dot}/g, '.');
     };
 
     render() {
@@ -127,9 +132,9 @@ class General extends React.Component {
                             <SimpleSelect
                                 key="group-dropdown"
                                 options={
-                                    ((this.props.groups && flattenGroups(this.props.groups)) || (this.props.element && this.props.element.group) || []).map(function(item) {
+                                    ((this.props.groups && flattenGroups(this.props.groups)) || (this.props.element && this.props.element.group) || []).map(item => {
                                         if (isObject(item)) {
-                                            return item;
+                                            return {...item, label: this.getLabelName(item.label)};
                                         }
                                         return { label: this.getLabelName(item), value: item };
                                     })

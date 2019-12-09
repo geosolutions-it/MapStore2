@@ -14,6 +14,7 @@ var { LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PARAMS, CHANGE_LAYER_
 const {TOGGLE_CONTROL} = require('../actions/controls');
 
 var assign = require('object-assign');
+const uuidv1 = require('uuid/v1');
 var {isObject, isArray, head, isString, includes, castArray} = require('lodash');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -336,11 +337,11 @@ function layers(state = { flat: [] }, action) {
         });
     }
     case ADD_GROUP: {
-        const id = action.group.replace(/\./g, '\${dot}');
+        const id = uuidv1();
         const newGroups = insertNode(state.groups, {
             id: action.parent ? (action.parent + '.' + id) : id,
             title: action.group,
-            name: action.group,
+            name: id,
             nodes: [],
             expanded: true
         }, action.parent);

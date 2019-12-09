@@ -283,6 +283,7 @@
             "search": "buscar..."
         },
         "resources": {
+            "successSaved": "Este recurso se ha guardado correctamente",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
@@ -340,6 +341,7 @@
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
             "errorSize": "Tamaño máximo admitido: 500kb",
+            "errorCustomSize": "Tamaño máximo admitido: {maxFileSize}",
             "error": "La imagen proporcionada no es válida",
             "savedMapTitle": "Mapa guardado",
             "savedMapMessage": "El mapa se ha guardado correctamente",
@@ -353,7 +355,7 @@
                 "errorTitle": "No se puede guardar el mapa actual",
                 "error403": "Error al modificar el mapa",
                 "error404": "Error al crear el mapa",
-                "error409": "Nombre del mapa repetido",
+                "error409": "Ya existe un recurso con este nombre",
                 "error500": "Error de servidor interno. Verificar si el tamaño del archivo de configuración del mapa excede el límite fijado",
                 "errorDefault": "Error de red"
             },
@@ -388,6 +390,7 @@
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li> <li>La proyección del mapa no está configurada </li></ul> <p>",
+                    "projectionError": "La proyección {projection} del mapa no está configurada",
                     "title" : "El mapa no se puede ver"
                 }
             }
@@ -858,7 +861,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Guardar los cambios",
                     "save_radius": "Guardar los cambios",
-                    "radius": "Radio(m)"
+                    "radius": "Radio({unit})"
                 },
                 "methods": {
                     "zone": "Zona",
@@ -1614,7 +1617,7 @@
                     "notFound": "Panel de control no encontrado",
                     "notAccessible": "Panel de control no accesible"
                 },
-                "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre"
             },
             "editor": {
                 "save": "Guardar el panel de control",
@@ -1624,7 +1627,7 @@
             },
             "emptyTitle": "El panel de control está vacío"
         },
-                "context": {
+        "context": {
             "loadingSpinner": "Cargando Contexto",
             "errors": {
                 "loading": {
@@ -1646,7 +1649,7 @@
                     "unknownError": "Hubo un error al cargar el mapa. Por favor, póngase en contacto con el administrador",
                     "notFound": "El mapa que está intentando acceder no existe"
                 },
-                "resourceAlreadyExists": "Un recurso con este nombre ya existe. Try '{datos}'"
+                "resourceAlreadyExists": "Ya existe un recurso con este nombre"
             }
         },
         "wizard": {
@@ -1933,7 +1936,8 @@
                 "saveChanges": "Guardar cambios",
                 "closeMapEditing": "Cerrar",
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
-                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?"
+                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
+                "advancedMapEditor": "Abrir editor de mapas avanzado"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -1990,7 +1994,16 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurar mapa"
+                "configureMapOptions": "Configurar mapa",
+                "settings": "Configuraciones",
+                "settingsSubTitle": "Gestionar interacciones de usuario",
+                "toc": "Capas",
+                "pan": "interacción pan",
+                "zoom": "Acercar/alejar interacciones",
+                "topLeft": "Arriba a la izquierda",
+                "topRight": "Parte superior derecha",
+                "bottomLeft": "Abajo a la izquierda",
+                "bottomRight": "Abajo a la derecha"
             }
         },
         "saveDialog": {
@@ -2007,6 +2020,11 @@
             "saveSuccessTitle": "éxito",
             "saveSuccessMessage": "Guardado con éxito"
         },
+        "mapEditor": {
+            "modalTitle": "Map Editor",
+            "confirmExitTitle": "Cerrar el editor de mapas",
+            "confirmExitContent": "¿Descartar cambios pendientes?"
+        },
         "mediaEditor": {
             "modalTitle": "Media",
             "images": "Imágenes",
@@ -2014,6 +2032,8 @@
             "maps": "Mapas",
             "preview": "Avance",
             "apply": "Aplicar",
+            "confirmExitTitle": "Cerrar el Media Editor",
+            "confirmExitContent": "¿Descartar cambios pendientes?",
             "mediaPicker": {
                 "services": "Servicios: ",
                 "clean": "Resultados limpios",
@@ -2035,7 +2055,15 @@
                 "credits": "Créditos",
                 "mapFilter": "Filtrar mapas",
                 "videoFilter": "Filtrar videos",
-                "imageFilter": "Filtrar imágenes"
+                "imageFilter": "Filtrar imágenes",
+                "import": "Importar recurso a store locale"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Cerrar el Media Form",
+                "confirmExitContent": "¿Descartar cambios pendientes?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
             }
         },
         "backgroundDialog": {
@@ -2072,8 +2100,14 @@
                 "windowTitle": "Título de la ventana",
                 "windowTitlePlaceholder": "Ingrese el título de la ventana..."
             },
+            "configureMap": {
+                "label": "Configurar mapa",
+                "reload": "Actualizar mapa",
+                "confirm": "Esto va a descartar todos los cambios actuales del mapa. ¿Proceder?"
+            },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
+                "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
@@ -2081,7 +2115,7 @@
         "contextManager": {
             "title": "Administrar contextos",
             "gridTitle": "Contextos",
-            "searchPlaceholder": "contextos de búsqueda...",
+            "searchPlaceholder": "buscar...",
             "newContext": "Nuevo contexto",
             "editContextTooltip": "Editar contexto"
         },

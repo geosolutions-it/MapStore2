@@ -66,19 +66,32 @@ class FeaturedMaps extends React.Component {
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
                 maps={items}
                 colProps={this.props.colProps}
-                viewerUrl={(res) => {
-                    if (res.category && res.category.name === "DASHBOARD") {
-                        return this.context.router.history.push(`/dashboard/${res.id}`);
-                    }
-                    if (res.category && res.category.name === "GEOSTORY") {
-                        return this.context.router.history.push(`/geostory/${res.id}`);
-                    }
-                    return this.context.router.history.push("/viewer/" + this.props.mapType + "/" + res.id);
-                }}
+                viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
+                getShareUrl={this.makeShareUrl}
+                shareOptions={{ embedPanel: false }} // embed is not enabled for featured maps. TODO: share options depending on the content type
                 metadataModal={MetadataModal}
                 bottom={this.props.bottom}
                 style={items.length === 0 ? {display: 'none'} : {}}/>
         );
+    }
+
+    makeShareUrl = (res) => {
+        if (res.category && res.category.name === "DASHBOARD") {
+            return {
+                url: `dashboard/${res.id}`,
+                shareApi: false
+            };
+        }
+        if (res.category && res.category.name === "GEOSTORY") {
+            return {
+                url: `geostory/${res.id}`,
+                shareApi: false
+            };
+        }
+        return {
+            url: "viewer/" + this.props.mapType + "/" + res.id,
+            shareApi: true
+        };
     }
 }
 
