@@ -1017,4 +1017,20 @@ describe('LayersUtils', () => {
                 availableStyles: [{ name: 'generic' }]
             });
     });
+
+    it('test getCapabilitiesUrl with custom params in in layer options', () => {
+
+        const EXPECTED_CAPABILITIES_URL = 'localhost:8080/geoserver/woekspace/layer/wms?token=value';
+
+        const layer = {
+            url: 'localhost:8080/geoserver/wms',
+            name: 'woekspace:layer',
+            params: {
+                token: 'value'
+            }
+        };
+
+        expect(LayersUtils.getCapabilitiesUrl(layer)).toEqual(EXPECTED_CAPABILITIES_URL);
+
+    });
 });
