@@ -12,7 +12,7 @@ import { head, isArray, isObject, mapValues } from 'lodash';
 import Proj4js from 'proj4';
 import CoordinatesUtils from '../../../utils/CoordinatesUtils';
 import MapUtils from '../../../utils/MapUtils';
-import { editWidget } from '../../../actions/widgets';
+import { onEditorChange } from '../../../actions/widgets';
 
 /**
  * Convert and normalize the extent into an array `minx,miny,maxx, maxy`
@@ -48,7 +48,7 @@ const toBoundsArray = extent => {
 
 const enhancer = compose(
     connect(() => ({}), {
-        onEditWidget: editWidget
+        setMap: map => onEditorChange('map', map)
     }),
     withHandlers({
         isEpsgSupported: ({ selectedNodes = [], editorData = {} }) => () => {
@@ -59,7 +59,7 @@ const enhancer = compose(
             const currentEPSG = !!head(layersBbox) && uniqueCRS.crs !== 'differentCRS' && uniqueCRS.crs;
             return currentEPSG && Proj4js.defs(currentEPSG);
         },
-        zoomTo: ({ editorData = {}, onEditWidget = () => {} }) => (selectedNodes) => {
+        zoomTo: ({ editorData = {}, setMap = () => {} }) => (selectedNodes) => {
             const map = editorData.map;
             const layers = editorData.map.layers;
             const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId));
@@ -93,16 +93,14 @@ const enhancer = compose(
 
                 let newBounds = { minx: bounds[0], miny: bounds[1], maxx: bounds[2], maxy: bounds[3] };
                 let newBbox = { ...map.bbox, bounds: newBounds };
-                const newEditorData = {
-                    ...editorData,
-                    map: {
-                        ...editorData.map,
-                        center,
-                        zoom,
-                        bbox: newBbox
-                    }
-                };
-                onEditWidget(newEditorData);
+
+                setMap({
+                    ...editorData.map,
+                    center,
+                    zoom,
+                    bbox: newBbox,
+                    mapStateSource: "tool"
+                });
             }
         }
     }),

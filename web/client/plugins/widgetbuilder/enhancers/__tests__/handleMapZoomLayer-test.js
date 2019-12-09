@@ -60,10 +60,10 @@ describe('handleMapZoomLayer enhancer', function() {
             }}]
         }};
         const actions = {
-            onEditWidget: () => {}
+            setMap: () => {}
         };
-        const editWidgetSpy = expect.spyOn(actions, "onEditWidget");
-        ReactDOM.render(<Provider store={store}><Sink editorData={editorData} onEditWidget={actions.onEditWidget} /></Provider>, document.getElementById("container"));
+        const editWidgetSpy = expect.spyOn(actions, "setMap");
+        ReactDOM.render(<Provider store={store}><Sink editorData={editorData} setMap={actions.setMap} /></Provider>, document.getElementById("container"));
         expect(editWidgetSpy).toHaveBeenCalled();
     });
 });
