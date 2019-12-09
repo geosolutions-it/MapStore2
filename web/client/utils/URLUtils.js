@@ -70,3 +70,11 @@ export const isSameUrl = (u1, u2) => {
     const isSameQueryParams = sameQueryParams(urlParsed.query, otherUrlParsed.query);
     return isSameProtocol && isSamePort && isSameDomain && isSamePathname && isSameQueryParams;
 };
+
+/**
+ * Validator of URL
+ * @param {string} url - url to validate
+ */
+export const isValidURL = (url) => {
+    return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(url);
+};

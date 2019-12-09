@@ -2013,6 +2013,7 @@
             "webPageCreator": {
                 "title": "Page Web",
                 "saveButton": "Enregistrer",
+                "error": "Veuillez fournir une URL de page Web valide",
                 "url": {
                     "label": "URL"
                 }

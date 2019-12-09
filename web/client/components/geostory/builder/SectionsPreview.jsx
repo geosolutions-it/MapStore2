@@ -54,7 +54,8 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         map: '1-map',
         columnleft: 'align-left',
         columnright: 'align-right',
-        columncenter: 'align-center'
+        columncenter: 'align-center',
+        'web page': 'code'
     };
     const imgSrc = src || thumbnail;
     return imgSrc ? <img src={imgSrc}/> : <Glyphicon glyph={glyphs[type] || 'picture'} />;
@@ -139,6 +140,7 @@ const previewContents = {
                     const contentType = content.type === 'column'
                         ? `${content.type}${content.align || 'center'}`
                         : content.type;
+                    console.log(contentType, content.type);
                     const PreviewContents = previewContents[content.type];
                     return {
                         id: content.id,

@@ -2017,6 +2017,7 @@
             "webPageCreator": {
                 "title": "Web page",
                 "saveButton": "Save",
+                "error": "Please provide valid web page URL",
                 "url": {
                     "label": "URL"
                 }

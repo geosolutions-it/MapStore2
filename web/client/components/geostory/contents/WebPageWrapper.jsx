@@ -16,6 +16,7 @@ import Portal from '../../misc/Portal';
 import PropTypes from 'prop-types';
 import WebPage from './WebPage';
 import { compose, withHandlers } from 'recompose';
+import { isValidURL } from '../../../utils/URLUtils';
 
 export class WebPageWrapper extends React.PureComponent {
     static propTypes = {
@@ -27,29 +28,35 @@ export class WebPageWrapper extends React.PureComponent {
     }
 
     state = {
-        url: this.props.src || ''
+        url: this.props.src || '',
+        error: false
     }
 
     render() {
-        const { onChange, onClose, editURL } = this.props;
-        const { url } = this.state;
-
+        const { onClose, editURL } = this.props;
+        const { url, error } = this.state;
         return (
             <React.Fragment>
                 <Portal>
                     <Dialog
                         modal
                         show={editURL}
+                        onClickOut={(e) => e.preventDefault() && e.stopPropagation()}
                         title={<Message msgId="geostory.webPageCreator.title" />}
                         onClose={onClose}
                         id="web-page-creator"
                         footer={(
-                            <Button bsSize="small" onClick={() => onChange(url)} >
+                            <Button bsSize="small" onClick={this.save} >
                                 <Message msgId="geostory.webPageCreator.saveButton" />
                             </Button>
                         )}
                     >
-                        <FormGroup controlId="WEBPAGE_URL">
+                        { error && (
+                            <div className="dropzone-errorBox alert-danger">
+                                <Message msgId="geostory.webPageCreator.error"/>
+                            </div>
+                        )}
+                        <FormGroup controlId="WEBPAGE_URL" validationState={error && 'error'}>
                             <ControlLabel>
                                 <Message msgId="geostory.webPageCreator.url.label" />
                             </ControlLabel>
@@ -58,6 +65,7 @@ export class WebPageWrapper extends React.PureComponent {
                                 type="text"
                                 value={url}
                                 onChange={this.updateURL}
+                                required
                             />
                         </FormGroup>
                     </Dialog>
@@ -69,6 +77,15 @@ export class WebPageWrapper extends React.PureComponent {
 
     updateURL = ({ target: { value: url }}) => {
         this.setState({ url });
+    }
+
+    save = () => {
+        const { url } = this.state;
+        const error = !isValidURL(url);
+        this.setState({ error: !isValidURL(url) });
+        if (!error) {
+            this.props.onChange(url);
+        }
     }
 }
 
