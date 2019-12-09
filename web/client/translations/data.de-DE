@@ -1980,7 +1980,8 @@
                     "autoplayInterval": "Autoplay-Intervall (Sekunden)",
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
-                    "showNavbar": "Navigationsleiste anzeigen"
+                    "showNavbar": "Navigationsleiste anzeigen",
+                    "homeButton": "Link zur MapStore-Startseite"
                 }
             },
             "errors": {

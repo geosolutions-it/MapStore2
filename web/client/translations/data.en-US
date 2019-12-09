@@ -1984,7 +1984,8 @@
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
-                    "showNavbar" : "Show navbar"
+                    "showNavbar" : "Show navbar",
+                    "homeButton": "Link to MapStore home"
                 }
             },
             "errors": {

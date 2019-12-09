@@ -1981,7 +1981,8 @@
                     "autoplayInterval": "Intervallo dell'autoplay (secondi)",
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
-                    "showNavbar": "Mostra barra di navigazione"
+                    "showNavbar": "Mostra barra di navigazione",
+                    "homeButton": "Link alla home di MapStore"
                 }
             },
             "errors": {

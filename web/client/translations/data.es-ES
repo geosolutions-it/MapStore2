@@ -1980,7 +1980,8 @@
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
-                    "showNavbar": "Mostrar barra de navegación"
+                    "showNavbar": "Mostrar barra de navegación",
+                    "homeButton": "Enlace al inicio de MapStore"
                 }
             },
             "errors": {
