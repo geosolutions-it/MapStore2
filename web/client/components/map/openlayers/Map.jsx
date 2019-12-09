@@ -16,7 +16,7 @@ import Units from 'ol/proj/Units';
 
 import { getWidth, getHeight } from 'ol/extent';
 
-import proj4 from '@geosolutions/proj4';
+import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
 import PropTypes from 'prop-types';
 import React from 'react';
