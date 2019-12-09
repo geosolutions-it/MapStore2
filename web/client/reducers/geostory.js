@@ -13,6 +13,7 @@ import {
     ADD,
     ADD_RESOURCE,
     CHANGE_MODE,
+    CLEAR_SAVE_ERROR,
     EDIT_RESOURCE,
     LOADING_GEOSTORY,
     REMOVE,
@@ -214,7 +215,7 @@ export default (state = INITIAL_STATE, action) => {
 
         )(state);
     }
-    case SAVED: {
+    case SAVED: case CLEAR_SAVE_ERROR: {
         return unset(`errors.save`, state);
     }
     case SAVE_ERROR: {

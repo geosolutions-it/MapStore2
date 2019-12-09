@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose, withProps, setObservableConfig } from 'recompose';
+import { compose, withProps, withHandlers, setObservableConfig } from 'recompose';
 // TODO: externalize
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
@@ -29,7 +29,7 @@ import {
     loadingSelector,
     saveErrorSelector
 } from '../selectors/geostory';
-import { saveStory, setControl } from '../actions/geostory';
+import { saveStory, clearSaveError, setControl } from '../actions/geostory';
 import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
 import geostory from '../reducers/geostory';
 
@@ -45,8 +45,15 @@ const SaveBaseDialog = compose(
         saveErrorSelector,
         (data, user, loading, errors) => ({ data, user, loading, errors })
     ), {
-        onClose: () => setControl(Controls.SHOW_SAVE, false),
-        onSave: saveStory
+        onSave: saveStory,
+        clearGeostorySaveError: clearSaveError,
+        onClose: () => setControl(Controls.SHOW_SAVE, false)
+    }),
+    withHandlers({
+        onClose: ({onClose = () => {}, clearGeostorySaveError = () => {}} = {}) => () => {
+            onClose();
+            clearGeostorySaveError(); // reset errors when closing the modal
+        }
     }),
     withProps({
         category: "GEOSTORY"
