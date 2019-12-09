@@ -39,6 +39,7 @@
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
+      {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "projectionDefs": [],
     "initialState": {
@@ -691,7 +692,8 @@
             "cfg": {
               "containerPosition": "header"
             }
-          }
+          },
+          "Share"
         ],
         "context-creator": [
           {

@@ -85,7 +85,7 @@ const Share = connect(createSelector([
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('router') && state('router').endsWith('new')}",
+    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory'))}",
     BurgerMenu: {
         name: 'share',
         position: 1000,

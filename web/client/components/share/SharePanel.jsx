@@ -18,7 +18,7 @@ import ShareQRCode from './ShareQRCode';
 import { Glyphicon, Tabs, Tab, Checkbox } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join } from 'lodash';
-import { removeQueryFromUrl } from '../../utils/ShareUtils';
+import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 
 /**
@@ -110,7 +110,8 @@ class SharePanel extends React.Component {
     }
 
     getShareUrl = () => {
-        const shareUrl = removeQueryFromUrl(this.props.shareUrl);
+        let shareUrl = removeQueryFromUrl(this.props.shareUrl);
+        shareUrl = getSharedGeostoryUrl(shareUrl);
         return (this.props.settings.bboxEnabled && !this.props.hideAdvancedSettings && this.state.bbox)
             ? `${shareUrl}?bbox=${this.state.bbox}`
             : shareUrl;
@@ -127,7 +128,7 @@ class SharePanel extends React.Component {
     render() {
         // ************************ CHANGE URL PARAMETER FOR EMBED CODE ****************************
         /* if the property shareUrl is not defined it takes the url from location.href */
-        const cleanShareUrl = this.getShareUrl();
+        let cleanShareUrl = this.getShareUrl();
         const shareUrl = cleanShareUrl || location.href;
         let shareEmbeddedUrl = cleanShareUrl || location.href;
         if (this.props.shareUrlRegex && this.props.shareUrlReplaceString) {

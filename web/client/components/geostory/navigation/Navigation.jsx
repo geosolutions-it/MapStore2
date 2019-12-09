@@ -10,6 +10,7 @@ import React from 'react';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
+import Home from '../../../components/home/Home';
 
 /**
  * Navigation Bar for view mode of GeoStory
@@ -59,6 +60,7 @@ export default ({
                             }
                         ]} />
                 </div>
+                { settings && settings.isHomeButtonEnabled && <Home tooltipPosition="right"/>}
                 <div className="ms-geostory-navigation-elements">
                     {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
                         (<div className="ms-geostory-navigation-navigableItems">

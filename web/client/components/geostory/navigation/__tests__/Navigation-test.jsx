@@ -57,5 +57,8 @@ describe('GeoStory Navigation component', () => {
         expect(selectedElement).toExist();
         expect(selectedElement.innerText).toBe("Abstract");
     });
-
+    it('should render home icon', () => {
+        ReactDOM.render(<Navigation settings={{isHomeButtonEnabled: true}} />, document.getElementById('container'));
+        expect(document.querySelector('#home-button')).toExist();
+    });
 });

@@ -55,4 +55,11 @@ describe('ShareUtils test', () => {
         const urlWithoutQueries = ShareUtils.removeQueryFromUrl(urlWithQueries);
         expect(urlWithoutQueries).toBe(expectedUrl);
     });
+    it('getSharedGeostoryUrl', () => {
+        const expectedURL = 'http://test-url/#/geostory/shared/111';
+        expect(ShareUtils.getSharedGeostoryUrl(expectedURL)).toBe(expectedURL);
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111')).toBe(expectedURL);
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/newgeostory')).toBe('http://test-url/#/geostory/newgeostory');
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/other')).toBe('http://test-url/#/other');
+    });
 });
