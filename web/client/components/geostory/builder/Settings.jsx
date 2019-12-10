@@ -92,14 +92,6 @@ export default updateTitle(({
                 onExpand={expandVal => setExpanded(expandVal)}
             />)}
         </FormGroup>
-        <FormGroup>
-            <ControlLabel><Message msgId="geostory.builder.settings.homeButton"/></ControlLabel>
-            <SwitchButton
-                onChange={() => onToggleSettings("isHomeButtonEnabled")}
-                className="ms-geostory-settings-switch"
-                checked={settings.isHomeButtonEnabled}
-            />
-        </FormGroup>
     </Form>);
 }
 );

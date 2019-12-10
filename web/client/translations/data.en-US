@@ -1072,7 +1072,8 @@
             "advancedOptions": "Advanced Options",
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
-            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Link to MapStore home"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1984,8 +1985,7 @@
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
-                    "showNavbar" : "Show navbar",
-                    "homeButton": "Link to MapStore home"
+                    "showNavbar" : "Show navbar"
                 }
             },
             "errors": {

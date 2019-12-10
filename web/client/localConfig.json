@@ -693,7 +693,15 @@
               "containerPosition": "header"
             }
           },
-          "Share"
+          {
+            "name": "Share",
+            "cfg": {
+              "embedPanel": false,
+              "hideAdvancedSettings": true,
+              "hideAdvancedGeostorySettings": false,
+              "closeOnClickOut": true
+            }
+          }
         ],
         "context-creator": [
           {

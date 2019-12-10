@@ -71,6 +71,7 @@ import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePa
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
+import { getQueryParams } from '../utils/URLUtils';
 
 const updateMediaSection = (store, path) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
@@ -210,7 +211,7 @@ export const editMediaForBackgroundEpic = (action$, store) =>
  */
 export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_GEOSTORY)
-    .switchMap( ({id}) => {
+    .switchMap( ({id, options}) => {
         return Observable.defer(() => {
             if (id && isNaN(parseInt(id, 10))) {
                 return axios.get(`configs/${id}.json`)
@@ -229,13 +230,19 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
             .switchMap(({ data, ...resource }) => {
                 const isAdmin = isAdminUserSelector(getState());
                 const user = isLoggedIn(getState());
+                const story = isString(data) ? JSON.parse(data) : data;
+                if (options && options.location) {
+                    const { search, pathname } = options.location;
+                    const { showHome } = getQueryParams(search);
+                    story.settings = { ...story.settings, isHomeButtonEnabled: showHome && pathname.includes('/geostory/shared') };
+                }
                 if (!user && isNaN(parseInt(id, 10))) {
                     return Observable.of(loadGeostoryError({status: 403}));
                 }
                 return Observable.from([
                     setEditing(resource && resource.canEdit || isAdmin),
                     geostoryLoaded(id),
-                    setCurrentStory(isString(data) ? JSON.parse(data) : data),
+                    setCurrentStory(story),
                     setResource(resource)
                 ]);
             })

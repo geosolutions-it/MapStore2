@@ -60,7 +60,13 @@ export default ({
                             }
                         ]} />
                 </div>
-                { settings && settings.isHomeButtonEnabled && <Home tooltipPosition="right"/>}
+                { settings && settings.isHomeButtonEnabled && (
+                    <Home
+                        bsStyle="default"
+                        className="square-button-md no-border"
+                        tooltipPosition="right"
+                    />
+                )}
                 <div className="ms-geostory-navigation-elements">
                     {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
                         (<div className="ms-geostory-navigation-navigableItems">

@@ -1071,7 +1071,8 @@
             "advancedOptions": "Erweiterte Optionen",
             "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
             "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
-            "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und schreiben als bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und schreiben als bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Link zur MapStore-Startseite"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1980,8 +1981,7 @@
                     "autoplayInterval": "Autoplay-Intervall (Sekunden)",
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
-                    "showNavbar": "Navigationsleiste anzeigen",
-                    "homeButton": "Link zur MapStore-Startseite"
+                    "showNavbar": "Navigationsleiste anzeigen"
                 }
             },
             "errors": {

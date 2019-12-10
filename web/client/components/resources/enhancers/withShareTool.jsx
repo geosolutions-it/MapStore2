@@ -14,9 +14,9 @@ import ShareUtils from '../../../utils/ShareUtils';
 import {isString} from 'lodash';
 
 export const addSharePanel = Component => props => {
-    const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions, getLocationObject = () => window.location, ...other } = props;
+    const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, ...other } = props;
     const { getShareUrl = () => { }, shareApi = false } = other;
-
+    const options = editedResource && typeof shareOptions === 'function' ? shareOptions(editedResource) : shareOptions;
     const shareUrlResult = editedResource ? getShareUrl(editedResource) : '';
     const resourceUrl = isString(shareUrlResult) ? shareUrlResult : shareUrlResult.url;
     const showAPI = isString(shareUrlResult) ? shareApi : shareUrlResult.shareApi;
@@ -42,7 +42,7 @@ export const addSharePanel = Component => props => {
             shareConfigUrl={ShareUtils.getConfigUrl(fullUrl, ConfigUtils.getConfigProp('geoStoreUrl'))}
             onClose={() => onShowShareModal(false)}
             onUpdateSettings={setShareModalSettings}
-            {...shareOptions} />
+            {...options} />
     </div>);
 };
 

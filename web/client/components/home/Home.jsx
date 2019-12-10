@@ -34,12 +34,12 @@ class Home extends React.Component {
         return (
             <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
                 <Button
-                    {...restProps}
                     id="home-button"
                     className="square-button"
                     bsStyle="primary"
                     onClick={this.goHome}
                     tooltip={tooltip}
+                    {...restProps}
                 >{this.props.icon}</Button>
             </OverlayTrigger>
         );

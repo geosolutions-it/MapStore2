@@ -101,5 +101,4 @@ describe('URLUtils', () => {
         // dirty, different sorting
         expect(sameQueryParams("a=b&c=d&", "&c=d&a=b")).toBe(true);
     });
-
 });

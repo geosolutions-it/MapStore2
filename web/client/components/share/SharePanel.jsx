@@ -62,9 +62,11 @@ class SharePanel extends React.Component {
         version: PropTypes.string,
         bbox: PropTypes.object,
         hideAdvancedSettings: PropTypes.bool,
+        hideAdvancedGeostorySettings: PropTypes.bool,
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
-        selectedTab: PropTypes.string
+        selectedTab: PropTypes.string,
+        closeOnClickOut: PropTypes.bool
     };
 
     static defaultProps = {
@@ -79,7 +81,9 @@ class SharePanel extends React.Component {
         showAPI: true,
         closeGlyph: "1-close",
         settings: {},
-        onUpdateSettings: () => {}
+        onUpdateSettings: () => {},
+        hideAdvancedGeostorySettings: true,
+        closeOnClickOut: false
     };
 
     state = {
@@ -110,11 +114,10 @@ class SharePanel extends React.Component {
     }
 
     getShareUrl = () => {
-        let shareUrl = removeQueryFromUrl(this.props.shareUrl);
-        shareUrl = getSharedGeostoryUrl(shareUrl);
-        return (this.props.settings.bboxEnabled && !this.props.hideAdvancedSettings && this.state.bbox)
-            ? `${shareUrl}?bbox=${this.state.bbox}`
-            : shareUrl;
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
+        if (this.props.settings.bboxEnabled && !this.props.hideAdvancedSettings && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
+        if (this.props.settings.showHome && !this.props.hideAdvancedGeostorySettings) shareUrl = `${shareUrl}?showHome=true`;
+        return shareUrl;
     };
 
     generateUrl = (orig = location.href, pattern, replaceString) => {
@@ -146,13 +149,13 @@ class SharePanel extends React.Component {
             <Tab eventKey={2} title={<Message msgId="share.social" />}>{this.state.eventKey === 2 && social}</Tab>
             {this.props.embedPanel ? <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab> : null}
         </Tabs>);
-
         let sharePanel =
             (<Dialog
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
                 className="modal-dialog modal-content share-win"
                 modal={this.props.modal}
                 draggable={this.props.draggable}
+                onClickOut={(e) => this.props.closeOnClickOut && this.props.onClose(e)}
                 style={{zIndex: 1993}}>
                 <span role="header">
                     <span className="share-panel-title">
@@ -177,6 +180,21 @@ class SharePanel extends React.Component {
                                     bboxEnabled: !this.props.settings.bboxEnabled
                                 })}>
                             <Message msgId="share.addBboxParam" />
+                        </Checkbox>
+                    </SwitchPanel>}
+                    {!this.props.hideAdvancedGeostorySettings &&
+                    <SwitchPanel
+                        title={<Message msgId="share.advancedOptions"/>}
+                        expanded={this.state.showAdvanced}
+                        onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
+                        <Checkbox
+                            checked={this.props.settings.showHome ? true : false}
+                            onChange={() =>
+                                this.props.onUpdateSettings({
+                                    ...this.props.settings,
+                                    showHome: !this.props.settings.showHome
+                                })}>
+                            <Message msgId="share.showHomeButton" />
                         </Checkbox>
                     </SwitchPanel>}
                 </div>

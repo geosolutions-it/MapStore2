@@ -1071,7 +1071,8 @@
             "advancedOptions": "Options avancées",
             "addBboxParam": "Ajouter un paramètre bbox au lien de partage",
             "wrongBboxParamTitle": "Param bbox invalide",
-            "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Lien vers l'accueil MapStore"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1980,8 +1981,7 @@
                     "autoplayInterval": "Intervalle de lecture automatique (secondes)",
                     "autoplayIntervalPlaceholder": "Activer l'intervalle de lecture automatique",
                     "navbar": "Barre de navigation",
-                    "showNavbar": "Afficher la barre de navigation",
-                    "homeButton": "Lien vers l'accueil MapStore"
+                    "showNavbar": "Afficher la barre de navigation"
                 }
             },
             "errors": {
