@@ -60,7 +60,7 @@ class CoordinatesRow extends React.Component {
             </Button></div>);
 
         return (
-            <Row className={`coordinateRow ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
+            <Row className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
                 if (this.props.onMouseEnter && this.props.component.lat && this.props.component.lon) {
                     this.props.onMouseEnter(this.props.component);
                 }
@@ -69,55 +69,60 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseLeave();
                 }
             }}>
+
                 <Col xs={1}>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
-                <Col xs={5}>
-                    {this.props.showLabels && <div><Message msgId="latitude"/></div>}
-                    <CoordinateEntry
-                        format={this.props.format}
-                        aeronauticalOptions={this.props.aeronauticalOptions}
-                        coordinate="lat"
-                        idx={idx}
-                        value={this.props.component.lat}
-                        onChange={(dd) => this.props.onChange(idx, "lat", dd)}
-                        constraints={{
-                            decimal: {
-                                lat: {
-                                    min: -90,
-                                    max: 90
-                                },
-                                lon: {
-                                    min: -180,
-                                    max: 180
+                <div className="coordinate lat" style={{width: "100%"}}>
+                    <Col xs={5}>
+                        {this.props.showLabels && <div><Message msgId="latitude"/></div>}
+                        <CoordinateEntry
+                            format={this.props.format}
+                            aeronauticalOptions={this.props.aeronauticalOptions}
+                            coordinate="lat"
+                            idx={idx}
+                            value={this.props.component.lat}
+                            onChange={(dd) => this.props.onChange(idx, "lat", dd)}
+                            constraints={{
+                                decimal: {
+                                    lat: {
+                                        min: -90,
+                                        max: 90
+                                    },
+                                    lon: {
+                                        min: -180,
+                                        max: 180
+                                    }
                                 }
-                            }
-                        }}
-                    />
-                </Col>
-                <Col xs={5}>
-                    {this.props.showLabels && <div><Message msgId="longitude"/></div>}
-                    <CoordinateEntry
-                        format={this.props.format}
-                        aeronauticalOptions={this.props.aeronauticalOptions}
-                        coordinate="lon"
-                        idx={idx}
-                        value={this.props.component.lon}
-                        onChange={(dd) => this.props.onChange(idx, "lon", dd)}
-                        constraints={{
-                            decimal: {
-                                lat: {
-                                    min: -90,
-                                    max: 90
-                                },
-                                lon: {
-                                    min: -180,
-                                    max: 180
+                            }}
+                        />
+                    </Col>
+                </div>
+                <div className="coordinate lon" style={{width: "100%"}}>
+                    <Col xs={5}>
+                        {this.props.showLabels && <div><Message msgId="longitude"/></div>}
+                        <CoordinateEntry
+                            format={this.props.format}
+                            aeronauticalOptions={this.props.aeronauticalOptions}
+                            coordinate="lon"
+                            idx={idx}
+                            value={this.props.component.lon}
+                            onChange={(dd) => this.props.onChange(idx, "lon", dd)}
+                            constraints={{
+                                decimal: {
+                                    lat: {
+                                        min: -90,
+                                        max: 90
+                                    },
+                                    lon: {
+                                        min: -180,
+                                        max: 180
+                                    }
                                 }
-                            }
-                        }}
-                    />
-                </Col>
+                            }}
+                        />
+                    </Col>
+                </div>
                 <Col xs={1}>
                     <Toolbar
                         btnGroupProps={{ className: 'pull-right' }}
