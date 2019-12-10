@@ -73,7 +73,7 @@ class CoordinatesRow extends React.Component {
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
                 <Col xs={5}>
-                    {this.props.showLabels && <span><Message msgId="latitude"/></span>}
+                    {this.props.showLabels && <div><Message msgId="latitude"/></div>}
                     <CoordinateEntry
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
@@ -96,7 +96,7 @@ class CoordinatesRow extends React.Component {
                     />
                 </Col>
                 <Col xs={5}>
-                    {this.props.showLabels && <span><Message msgId="longitude"/></span>}
+                    {this.props.showLabels && <div><Message msgId="longitude"/></div>}
                     <CoordinateEntry
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
