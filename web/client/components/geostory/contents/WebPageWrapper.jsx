@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import WebPage from './WebPage';
 import { compose, withHandlers } from 'recompose';
 import { isValidURL } from '../../../utils/URLUtils';
+import { getConfigProp } from '../../../utils/ConfigUtils';
 
 export class WebPageWrapper extends React.PureComponent {
     static propTypes = {
@@ -81,8 +82,8 @@ export class WebPageWrapper extends React.PureComponent {
 
     save = () => {
         const { url } = this.state;
-        const error = !isValidURL(url);
-        this.setState({ error: !isValidURL(url) });
+        const error = !isValidURL(url, getConfigProp("GeoStoryValidIframeURLRegex"));
+        this.setState({ error });
         if (!error) {
             this.props.onChange(url);
         }
