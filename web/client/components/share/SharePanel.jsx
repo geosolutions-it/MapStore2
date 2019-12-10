@@ -131,7 +131,7 @@ class SharePanel extends React.Component {
     render() {
         // ************************ CHANGE URL PARAMETER FOR EMBED CODE ****************************
         /* if the property shareUrl is not defined it takes the url from location.href */
-        let cleanShareUrl = this.getShareUrl();
+        const cleanShareUrl = this.getShareUrl();
         const shareUrl = cleanShareUrl || location.href;
         let shareEmbeddedUrl = cleanShareUrl || location.href;
         if (this.props.shareUrlRegex && this.props.shareUrlReplaceString) {
