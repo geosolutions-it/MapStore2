@@ -245,7 +245,7 @@
     "clean": "rimraf ./web/client/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress  --colors --config build/prod-webpack.config.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
-    "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --host 192.168.1.176 --config build/webpack.config.js --content-base web/client",
+    "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
     "startprod": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
     "examples": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client --config build/examples-webpack.config.js",
     "test": "karma start ./build/karma.conf.single-run.js --colors",
