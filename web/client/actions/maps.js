@@ -461,9 +461,8 @@ function loadPermissions(mapId) {
         GeoStoreApi.getPermissions(mapId, {}).then((response) => {
             dispatch(permissionsLoaded(response, mapId));
             dispatch(updateCurrentMapPermissions(response));
-        }).catch((e) => {
+        }).catch(() => {
             dispatch(permissionsLoaded(null, mapId));
-            dispatch(loadError(e));
         });
     };
 }

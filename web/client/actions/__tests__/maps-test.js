@@ -27,6 +27,8 @@ const {
     MAP_UPDATING, mapUpdating,
     DETAILS_LOADED, detailsLoaded,
     PERMISSIONS_UPDATED, permissionsUpdated,
+    loadPermissions,
+    PERMISSIONS_LIST_LOADING, PERMISSIONS_LIST_LOADED,
     ATTRIBUTE_UPDATED, attributeUpdated,
     SAVE_MAP, saveMap,
     DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
@@ -398,6 +400,24 @@ describe('Test correctness of the maps actions', () => {
         const a = setFeaturedMapsLatestResource(resource);
         expect(a.type).toBe(FEATURED_MAPS_SET_LATEST_RESOURCE);
         expect(a.resource).toBe(resource);
+    });
+    it('loadPermissions error', done => {
+        const NOT_EXISTING = "UNKNOWN_RESOURCE";
+        loadPermissions(NOT_EXISTING)(action => {
+            switch (action.type) {
+            case PERMISSIONS_LIST_LOADED:
+                expect(action.permissions).toBe(null);
+                expect(action.mapId).toBe(NOT_EXISTING);
+                done();
+                break;
+            case PERMISSIONS_LIST_LOADING:
+                expect(action.mapId).toBe(NOT_EXISTING);
+                break;
+            default:
+                done(`${action.type} action triggered, not expected`);
+                break;
+            }
+        });
     });
 
 });
