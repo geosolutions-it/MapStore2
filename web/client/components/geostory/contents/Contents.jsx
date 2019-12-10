@@ -46,6 +46,7 @@ export default ({
     mode,
     sectionType,
     editMedia = () => {},
+    editWebPage = () => {},
     add = () => {},
     update = () => {},
     remove = () => {}
@@ -61,6 +62,7 @@ export default ({
                     sectionType={sectionType}
                     viewHeight={viewHeight}
                     editMedia={({path = ""}, ...args) => editMedia({path: `contents[{"id": "${id}"}]` + path}, ...args)}
+                    editWebPage={({path = ""}, ...args) => editWebPage({ path: `contents[{"id": "${id}"}]` + path }, ...args)}
                     // restructure the path to give it the correct scope
                     add={(path, ...args) => add(`contents[{"id": "${id}"}].` + path, ...args)}
                     update={(path, ...args) => update(`contents[{"id": "${id}"}].` + path, ...args)}

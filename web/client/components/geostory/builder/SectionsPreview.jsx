@@ -54,7 +54,8 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         map: '1-map',
         columnleft: 'align-left',
         columnright: 'align-right',
-        columncenter: 'align-center'
+        columncenter: 'align-center',
+        webPage: 'code'
     };
     const imgSrc = src || thumbnail;
     return imgSrc ? <img src={imgSrc}/> : <Glyphicon glyph={glyphs[type] || 'picture'} />;

@@ -19,6 +19,7 @@ const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
     [SectionTypes.PARAGRAPH]: Paragraph,
     [SectionTemplates.MEDIA]: Paragraph,
+    [SectionTemplates.WEBPAGE]: Paragraph,
     [SectionTypes.TITLE]: Title,
     UNKNOWN: ({ type, inViewRef }) => <div ref={inViewRef} className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
@@ -36,6 +37,7 @@ class Section extends React.Component {
         add: PropTypes.func,
         update: PropTypes.func,
         editMedia: PropTypes.func,
+        editWebPage: PropTypes.func,
         remove: PropTypes.func,
         updateCurrentPage: PropTypes.func,
         mode: PropTypes.oneOf(lists.Modes),
@@ -53,6 +55,7 @@ class Section extends React.Component {
         add: () => {},
         update: () => {},
         editMedia: () => {},
+        editWebPage: () => {},
         updateCurrentPage: () => {},
         remove: () => {},
         storyType: StoryTypes.CASCADE,
@@ -75,6 +78,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
+                editWebPage={this.props.editWebPage}
                 updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}
                 mode={this.props.mode}
