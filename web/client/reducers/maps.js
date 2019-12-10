@@ -211,7 +211,7 @@ function maps(state = {
         return newState;
     }
     case PERMISSIONS_LIST_LOADED: {
-        let newMaps = state.results === "" ? [] : [...state.results];
+        let newMaps = state.results === "" ? [] : [...(state.results || [])];
         // TODO: Add the fix for GeoStore single-item arrays
         let newState = assign({}, state, {
             results: newMaps.map(function(map) {
