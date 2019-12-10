@@ -36,7 +36,8 @@ describe('Title component', () => {
                 type: 'column',
                 background: {
                     type: 'image',
-                    src: IMAGE_SRC
+                    src: IMAGE_SRC,
+                    lazy: false
                 },
                 html: '<h1>Title</h1>'
             }

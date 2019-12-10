@@ -45,6 +45,7 @@ describe('Background component', () => {
                     height={VIEW_HEIGHT}
                     type="image"
                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                    lazy={false}
                 />
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -68,6 +69,7 @@ describe('Background component', () => {
                     mode="edit"
                     height={VIEW_HEIGHT}
                     type="map"
+                    lazy={false}
                 />
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');

@@ -2,6 +2,7 @@
 @ms-story-bg-grey: @ms2-color-shade-lighter;
 @ms-story-highlight: lighten(@ms2-color-primary, 20%);
 @ms-story-text: @ms2-color-text;
+@ms-story-loader: lighten(@ms-story-text, 20%);
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
@@ -726,6 +727,26 @@
                 top: 50px;
             }
 
+        }
+    }
+    .ms-media-visibility-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .ms-media-loader {
+        background-color: transparent;
+        min-height: 128px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .mapstore-small-size-loader,
+        .mapstore-medium-size-loader,
+        .mapstore-full-size-loader {
+            border-color: fade(@ms-story-loader, 20%);
+            border-left-color: @ms-story-loader;
         }
     }
     .empty-state-container {
