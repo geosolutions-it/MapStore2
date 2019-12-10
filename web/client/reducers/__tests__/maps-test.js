@@ -155,6 +155,7 @@ describe('Test the maps reducer', () => {
         }));
         state = maps(state, permissionsLoading(sampleMap.id));
         expect(state.results[0].permissionLoading).toBe(true);
+
         state = maps(state, permissionsLoaded(permissions, sampleMap.id));
         expect(state.results[0].permissionLoading).toBe(false);
         expect(state.results[0].permissions).toExist();
@@ -168,6 +169,11 @@ describe('Test the maps reducer', () => {
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule).toExist();
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule.length).toBe(1);
 
+        // check permission list loading doesn't fail if permission is undefined or null
+        // i.e. when some error occurs loading permissions
+        const errorState = maps({}, permissionsLoaded(null, sampleMap.id));
+        expect(errorState).toExist();
+        expect(errorState.results).toExist();
     });
 
 });
