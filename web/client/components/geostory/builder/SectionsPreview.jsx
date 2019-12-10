@@ -140,7 +140,6 @@ const previewContents = {
                     const contentType = content.type === 'column'
                         ? `${content.type}${content.align || 'center'}`
                         : content.type;
-                    console.log(contentType, content.type);
                     const PreviewContents = previewContents[content.type];
                     return {
                         id: content.id,

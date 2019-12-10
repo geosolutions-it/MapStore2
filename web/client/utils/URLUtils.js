@@ -74,7 +74,8 @@ export const isSameUrl = (u1, u2) => {
 /**
  * Validator of URL
  * @param {string} url - url to validate
+ * @param {RegExp} regexp - optional custom regexp
  */
-export const isValidURL = (url) => {
-    return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(url);
+export const isValidURL = (url, regexp = /^(http(s{0,1}):\/\/)+?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/) => {
+    return regexp.test(url);
 };
