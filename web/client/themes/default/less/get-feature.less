@@ -1,4 +1,24 @@
 
+#identify-container {
+    .coordinateRow.coord-editor.aeronautical {
+        @media screen and (max-width: 660px) {
+            display: block;
+            & .col-xs-1 .pull-right.btn-group {
+                margin-top: -70px;
+            }
+
+        }
+        & .form-group {
+            left: ~'calc(50% - 133px)';
+            position: relative;
+            & .seconds {
+                min-width: 120px;
+                flex: unset !important;
+            }
+        }
+    }
+}
+
 .coordinateRow {
     margin: 8px 0px;
     border: 1px solid #dddddd;
@@ -6,6 +26,7 @@
     display: flex;
     align-items: center;
     box-sizing: border-box;
+
     input {
         font-size: 12px;
         font-family: Menlo, Monaco, Consolas, Courier New, monospace;
