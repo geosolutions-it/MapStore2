@@ -37,12 +37,14 @@ export const SectionTypes = {
 export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
+    WEBPAGE: 'webPage',
     COLUMN: 'column' // can have contents of type 'text' or 'media'
 };
 
 // Templates for contents that can be created using getDefaultSectionTemplate
 export const SectionTemplates = {
-    MEDIA: 'template-media'
+    MEDIA: 'template-media',
+    WEBPAGE: 'template-web-page'
 };
 
 export const MediaTypes = {
@@ -229,6 +231,25 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             ]
         };
     }
+    case SectionTemplates.WEBPAGE: {
+        return {
+            id: uuid(),
+            type: SectionTypes.PARAGRAPH,
+            title: localize("geostory.builder.defaults.titleWebPageSection"),
+            contents: [
+                {
+                    id: uuid(),
+                    type: ContentTypes.COLUMN,
+                    contents: [{
+                        id: uuid(),
+                        type: ContentTypes.WEBPAGE,
+                        size: 'medium',
+                        align: 'center'
+                    }]
+                }
+            ]
+        };
+    }
     case ContentTypes.COLUMN: {
         return {
             id: uuid(),
@@ -264,6 +285,15 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type,
             title: localize("geostory.builder.defaults.titleMedia"),
             size: 'full',
+            align: 'center'
+        };
+    }
+    case ContentTypes.WEBPAGE: {
+        return {
+            id: uuid(),
+            type,
+            title: localize("geostory.builder.defaults.titleWebPage"),
+            size: 'medium',
             align: 'center'
         };
     }
@@ -345,4 +375,40 @@ export const findSectionIdFromColumnId = (immSections, columnId) => {
         }
         return p;
     }, null);
+};
+
+/**
+ * tells if an element is a paragraph and it contains a WebPage component
+ * @param {object} element
+ * @return {boolean}
+ */
+export const isWebPageSection = (element) =>
+    element.type === SectionTypes.PARAGRAPH &&
+    element &&
+    isArray(element.contents) &&
+    element.contents.length &&
+    isArray(element.contents[0].contents) &&
+    element.contents[0].contents.length &&
+    element.contents[0].contents[0].type === ContentTypes.WEBPAGE;
+
+/**
+* computes container height based on object size
+* @param {string} size - size of element
+* @param {number} viewHeight - height of viewport
+*/
+export const getWebPageComponentHeight = (size, viewHeight) => {
+    if (viewHeight) {
+        switch (size) {
+        case 'small':
+            return viewHeight * 0.4;
+        case 'medium':
+            return viewHeight * 0.6;
+        case 'large':
+            return viewHeight * 0.8;
+        default:
+            return viewHeight;
+        }
+    }
+
+    return 0;
 };

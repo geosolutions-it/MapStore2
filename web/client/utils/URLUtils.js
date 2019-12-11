@@ -80,3 +80,13 @@ export const isSameUrl = (u1, u2) => {
 export const getQueryParams = (url) => {
     return queryString.parse(url);
 };
+
+/**
+ * Validator of URL
+ * @param {string} url - url to validate
+ * @param {RegExp} regexp - optional custom regexp
+ */
+export const isValidURL = (url, regexp = /^(http(s{0,1}):\/\/)+?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/) => {
+    const regex = new RegExp(regexp);
+    return regex.test(url);
+};

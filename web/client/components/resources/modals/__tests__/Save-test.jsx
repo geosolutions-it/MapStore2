@@ -123,5 +123,20 @@ describe('This test for dashboard save form', () => {
         const permissionSection = document.querySelector(".permissions-table");
         expect(permissionSection).toBeNull;
     });
+    it('modal shows permissions when the map is new (no owner)', () => {
+        const user = { role: 'USER', name: 'solution' };
+        const resource = {  };
+        const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} resource={resource} useModal id="MetadataModal" />, document.getElementById("container"));
+        expect(metadataModalItem).toExist();
+
+        const getModals = () => {
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+        };
+
+        expect(getModals().length).toBe(1);
+
+        const permissionSection = document.querySelector(".permissions-table");
+        expect(permissionSection).toExist();
+    });
 
 });

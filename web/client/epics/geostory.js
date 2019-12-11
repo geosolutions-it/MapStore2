@@ -46,7 +46,9 @@ import {
     storySaved,
     update,
     setFocusOnContent,
-    UPDATE
+    UPDATE,
+    SET_WEBPAGE_URL,
+    EDIT_WEBPAGE
 } from '../actions/geostory';
 
 import {
@@ -66,7 +68,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -128,7 +130,42 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
+const updateWebPageSection = path => action$ =>
+    action$.ofType(SET_WEBPAGE_URL)
+        .switchMap(({ src }) => {
+            return Observable.of(
+                update(`${path}`, { src, editURL: false }, 'merge'),
+            );
+        });
 
+    /**
+     * Epic that handles opening webPageCreator and saves url of WebPage component
+     * @param {Observable} action$ stream of redux action
+     */
+export const openWebPageComponentCreator = action$ =>
+    action$.ofType(ADD)
+        .filter(({ element = {} }) => {
+            const isWebPage = element.type === ContentTypes.WEBPAGE;
+            return isWebPage || isWebPageSection(element);
+        })
+        .switchMap(({ path: arrayPath, element }) => {
+            let mediaPath = '';
+            if (isWebPageSection(element) && arrayPath === "sections") {
+                mediaPath = ".contents[0].contents[0]";
+            }
+            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
+            return Observable.of(update(path, { editURL: true }, 'merge'))
+                .merge(action$.let(updateWebPageSection(path)))
+                .takeUntil(action$.ofType(EDIT_WEBPAGE));
+        });
+
+export const editWebPageComponent = action$ =>
+    action$.ofType(EDIT_WEBPAGE)
+        .switchMap(({ path }) => {
+            return Observable.of(update(path, { editURL: true }, 'merge'))
+                .merge(action$.let(updateWebPageSection(path)))
+                .takeUntil(action$.ofType(ADD));
+        });
 /**
  * Epic that handles the save story workflow. It uses persistence
  * @param {Observable} action$ stream of redux action
