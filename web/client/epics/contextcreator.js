@@ -7,16 +7,17 @@
  */
 
 import Rx from 'rxjs';
-import {omit, cloneDeep} from 'lodash';
+import {omit, flatten, findIndex, cloneDeep} from 'lodash';
 import {push} from 'connected-react-router';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import MapUtils from '../utils/MapUtils';
 
-import {SAVE_CONTEXT, LOAD_CONTEXT, SET_CREATION_STEP, MAP_VIEWER_LOAD, MAP_VIEWER_RELOAD, contextSaved, setResource, startResourceLoad,
-    loadFinished, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded} from '../actions/contextcreator';
-import {newContextSelector, resourceSelector, creationStepSelector,
-    mapConfigSelector, mapViewerLoadedSelector} from '../selectors/contextcreator';
+import {SAVE_CONTEXT, LOAD_CONTEXT, SET_CREATION_STEP, MAP_VIEWER_LOAD, MAP_VIEWER_RELOAD, EDIT_PLUGIN, CHANGE_PLUGINS_KEY,
+    contextSaved, setResource, startResourceLoad, loadFinished, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded,
+    setEditedPlugin, setEditedCfg, changePluginsKey} from '../actions/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector,
+    editedPluginSelector, editedCfgSelector, pluginsSelector} from '../selectors/contextcreator';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
@@ -38,6 +39,12 @@ const saveContextErrorStatusToMessage = (status) => {
     }
 };
 
+const flattenPluginTree = (plugins = []) =>
+    flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(flattenPluginTree(plugin.children))));
+
+const makePlugins = (plugins = []) =>
+    plugins.map(plugin => ({...plugin.pluginConfig, ...(plugin.isUserPlugin ? {active: plugin.active} : {})}));
+
 export const saveContextResource = (action$, store) => action$
     .ofType(SAVE_CONTEXT)
     .exhaustMap(({destLocation}) => {
@@ -50,9 +57,15 @@ export const saveContextResource = (action$, store) => action$
         const backgrounds = backgroundListSelector(state);
         const textSearchConfig = textSearchConfigSelector(state);
         const additionalOptions = mapOptionsToSaveSelector(state);
+        const plugins = pluginsSelector(state);
 
         const mapConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
-        const newContext = {...context, mapConfig};
+
+        const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled);
+        const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
+        const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
+
+        const newContext = {...context, mapConfig, plugins: {desktop: unselectablePlugins}, userPlugins};
         const newResource = resource && resource.id ? {
             ...omit(resource, 'name', 'description'),
             data: newContext,
@@ -91,7 +104,7 @@ export const saveContextResource = (action$, store) => action$
 export const contextCreatorLoadContext = (action$, store) => action$
     .ofType(LOAD_CONTEXT)
     .switchMap(({id}) => (id === 'new' ?
-        Rx.Observable.empty() :
+        Rx.Observable.of(setResource()) :
         Rx.Observable.of(startResourceLoad())
             .concat(getResource(id).switchMap(resource => Rx.Observable.of(setResource(resource)))))
         .concat(Rx.Observable.of(loadFinished(), setCreationStep('general-settings')))
@@ -152,4 +165,46 @@ export const mapViewerReload = (action$, store) => action$
                 mapViewerLoaded(false),
                 mapViewerLoad()
             );
+    });
+
+export const resetConfigOnPluginKeyChange = (action$, store) => action$
+    .ofType(CHANGE_PLUGINS_KEY)
+    .switchMap(({ids, key, value}) => {
+        const state = store.getState();
+        const editedPlugin = editedPluginSelector(state);
+        return findIndex(ids, id => editedPlugin === id) > -1 && key === 'enabled' && value === false ?
+            Rx.Observable.of(setEditedPlugin()) :
+            Rx.Observable.empty();
+    });
+
+export const editPluginEpic = (action$, store) => action$
+    .ofType(EDIT_PLUGIN)
+    .switchMap(({pluginName}) => {
+        const state = store.getState();
+        const editedPluginName = editedPluginSelector(state);
+        const editedCfg = editedCfgSelector(state);
+
+        const endActions = [setEditedPlugin(pluginName), setEditedCfg(pluginName)];
+
+        if (editedPluginName && editedCfg) {
+            try {
+                const parsedCfg = JSON.parse(editedCfg);
+                return Rx.Observable.of(changePluginsKey([editedPluginName], 'pluginConfig.cfg', parsedCfg), ...endActions);
+            } catch (e) {
+                return Rx.Observable.of(
+                    error({
+                        title: 'contextCreator.configurePlugins.saveCfgErrorNotification.title',
+                        message: 'contextCreator.configurePlugins.saveCfgErrorNotification.message',
+                        position: "tc",
+                        autoDismiss: 10,
+                        values: {
+                            pluginName: editedPluginName,
+                            error: e.message
+                        }
+                    })
+                );
+            }
+        }
+
+        return Rx.Observable.of(...endActions);
     });

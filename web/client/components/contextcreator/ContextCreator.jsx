@@ -8,10 +8,11 @@
 
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import {keys, isObject} from 'lodash';
+import {keys, findIndex, isObject} from 'lodash';
 
 import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
+import ConfigurePlugins from './ConfigurePluginsStep';
 import ConfigureMap from './ConfigureMapStep';
 
 
@@ -24,11 +25,22 @@ export default class ContextCreator extends React.Component {
         pluginsConfig: PropTypes.object,
         viewerPlugins: PropTypes.array,
         ignoreViewerPlugins: PropTypes.bool,
+        allAvailablePlugins: PropTypes.array,
+        editedPlugin: PropTypes.string,
+        editedCfg: PropTypes.string,
+        availablePluginsFilterText: PropTypes.string,
+        enabledPluginsFilterText: PropTypes.string,
+        onFilterAvailablePlugins: PropTypes.func,
+        onFilterEnabledPlugins: PropTypes.func,
+        setSelectedPlugins: PropTypes.func,
+        changePluginsKey: PropTypes.func,
         mapType: PropTypes.string,
         showReloadConfirm: PropTypes.bool,
         onSetStep: PropTypes.func,
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
+        onEditPlugin: PropTypes.func,
+        onUpdateCfg: PropTypes.func,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
         saveDestLocation: PropTypes.string
@@ -36,7 +48,7 @@ export default class ContextCreator extends React.Component {
 
     static contextTypes = {
         messages: PropTypes.object,
-        plugins: PropTypes.array
+        plugins: PropTypes.object
     };
 
     static defaultProps = {
@@ -68,6 +80,7 @@ export default class ContextCreator extends React.Component {
             "ZoomAll"
         ],
         ignoreViewerPlugins: false,
+        allAvailablePlugins: [],
         curStepId: 'general-settings',
         saveDestLocation: '/context-manager',
         onSetStep: () => {},
@@ -93,6 +106,22 @@ export default class ContextCreator extends React.Component {
                             context={this.context}
                             onChange={this.props.onChangeAttribute}/>
                 }, {
+                    id: 'configure-plugins',
+                    label: 'contextCreator.configurePlugins.label',
+                    component:
+                        <ConfigurePlugins
+                            allPlugins={this.props.allAvailablePlugins}
+                            editedPlugin={this.props.editedPlugin}
+                            editedCfg={this.props.editedCfg}
+                            availablePluginsFilterText={this.props.availablePluginsFilterText}
+                            enabledPluginsFilterText={this.props.enabledPluginsFilterText}
+                            onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
+                            onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
+                            onEditPlugin={this.props.onEditPlugin}
+                            onUpdateCfg={this.props.onUpdateCfg}
+                            setSelectedPlugins={this.props.setSelectedPlugins}
+                            changePluginsKey={this.props.changePluginsKey}/>
+                }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',
                     extraToolbarButtons: [{
@@ -107,7 +136,7 @@ export default class ContextCreator extends React.Component {
                                 keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
                                     ...curConfig,
                                     [mode]: this.props.pluginsConfig[mode]
-                                        .filter(p => this.props.viewerPlugins.findIndex(x => x === (isObject(p) ? p.name : p)) > -1)
+                                        .filter(p => findIndex(this.props.viewerPlugins, x => x === (isObject(p) ? p.name : p)) > -1)
                                 }), {})}
                             plugins={this.context.plugins}
                             mapType={this.props.mapType}

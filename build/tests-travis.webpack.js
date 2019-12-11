@@ -1,3 +1,2 @@
-var context = require.context('../web', true, /-test\.jsx?$/);
-context.keys().forEach(context);
+var context = require('../web/client/components/misc/__tests__/TransferColumnCardList-test');
 module.exports = context;

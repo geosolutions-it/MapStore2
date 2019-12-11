@@ -248,7 +248,6 @@
     "startprod": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
     "examples": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client --config build/examples-webpack.config.js",
     "test": "karma start ./build/karma.conf.single-run.js --colors",
-    "pretest": "npm run cleandoc && npm run lint",
     "continuoustest": "karma start ./build/karma.conf.continuous-test.js --colors",
     "mvntest": "karma start ./build/karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",

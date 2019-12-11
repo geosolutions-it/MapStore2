@@ -2102,6 +2102,26 @@
                 "windowTitle": "Window title",
                 "windowTitlePlaceholder": "Enter window title..."
             },
+            "configurePlugins": {
+                "label": "Configure Plugins",
+                "pluginsFilterPlaceholder": "Filter plugins by name...",
+                "availablePlugins": "Available Plugins",
+                "enabledPlugins": "Enabled Plugins",
+                "availablePluginsEmpty": "Enabled all available plugins",
+                "enabledPluginsEmpty": "Add plugins to configuration from list of available plugins",
+                "searchResultsEmpty": "No plugins found that satisfy the search criteria",
+                "tooltips": {
+                    "enableUserPlugin": "Enable selection of current plugin for user",
+                    "disableUserPlugin": "Disable selection of current plugin for user",
+                    "activatePlugin": "Enable loading this plugin on startup",
+                    "deactivatePlugin": "Disable loading this plugin on startup",
+                    "editConfiguration": "Edit plugin configuration"
+                },
+                "saveCfgErrorNotification":  {
+                    "title": "Syntax error in plugin configuration",
+                    "message": "Plugin \"{pluginName}\" contains an error in configuration:\"{error}\". Please fix before proceeding"
+                }
+            },
             "configureMap": {
                 "label": "Configure Map",
                 "reload": "Reload Map",

@@ -13,6 +13,14 @@ export const MAP_VIEWER_RELOAD = 'CONTEXTCREATOR:MAP_VIEWER_RELOAD';
 export const SHOW_MAP_VIEWER_RELOAD_CONFIRM = 'CONTEXTCREATOR:SHOW_MAP_VIEWER_RELOAD_CONFIRM';
 export const CLEAR_CONTEXT_CREATOR = 'CONTEXTCREATOR:CLEAR_CONTEXT_CREATOR';
 export const CHANGE_ATTRIBUTE = 'CONTEXTCREATOR:CHANGE_ATTRIBUTE';
+export const SET_FILTER_TEXT = 'CONTEXTCREATOR:SET_FILTER_TEXT';
+export const SET_SELECTED_PLUGINS = 'CONTEXTCREATOR:SET_SELECTED_PLUGINS';
+export const EDIT_PLUGIN = 'CONTEXTCREATOR:EDIT_PLUGIN';
+export const SET_EDITED_PLUGIN = 'CONTEXTCREATOR:SET_EDITED_PLUGIN';
+export const SET_EDITED_CFG = 'CONTEXTCREATOR:SET_EDITED_CFG';
+export const UPDATE_EDITED_CFG = 'CONTEXTCREATOR:UPDATE_EDITED_CFG';
+export const CHANGE_PLUGINS_KEY = 'CONTEXTCREATOR:CHANGE_PLUGINS_KEY';
+export const SET_PLUGINS = 'CONTEXTCREATOR:SET_PLUGINS';
 export const SET_RESOURCE = 'CONTEXTCREATOR:SET_RESOURCE';
 export const LOAD_CONTEXT = 'CONTEXTCREATOR:LOAD_CONTEXT';
 export const START_RESOURCE_LOAD = 'CONTEXTCREATOR:START_RESOURCE_LOAD';
@@ -47,6 +55,44 @@ export const showMapViewerReloadConfirm = (show) => ({
 
 export const changeAttribute = (key, value) => ({
     type: CHANGE_ATTRIBUTE,
+    key,
+    value
+});
+
+export const setFilterText = (propName, text) => ({
+    type: SET_FILTER_TEXT,
+    propName,
+    text
+});
+
+export const setSelectedPlugins = (ids) => ({
+    type: SET_SELECTED_PLUGINS,
+    ids
+});
+
+export const editPlugin = (pluginName) => ({
+    type: EDIT_PLUGIN,
+    pluginName
+});
+
+export const setEditedPlugin = (pluginName) => ({
+    type: SET_EDITED_PLUGIN,
+    pluginName
+});
+
+export const setEditedCfg = (pluginName) => ({
+    type: SET_EDITED_CFG,
+    pluginName
+});
+
+export const updateEditedCfg = (cfg) => ({
+    type: UPDATE_EDITED_CFG,
+    cfg
+});
+
+export const changePluginsKey = (ids, key, value) => ({
+    type: CHANGE_PLUGINS_KEY,
+    ids,
     key,
     value
 });

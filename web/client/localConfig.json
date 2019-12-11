@@ -345,7 +345,10 @@
                 }
             },
             "AddGroup",
-            "TOCItemsSettings",
+            {
+                "name": "TOCItemsSettings",
+                "parentPlugin": "TOC"
+            },
             "Tutorial", "MapFooter", {
                 "name": "Measure",
                 "cfg": {
@@ -442,7 +445,8 @@
             "Timeline",
             "Playback",
             "FeedbackMask",
-            "StyleEditor"
+            "StyleEditor",
+            "MapTemplates"
         ],
         "embedded": [{
                 "name": "Map",

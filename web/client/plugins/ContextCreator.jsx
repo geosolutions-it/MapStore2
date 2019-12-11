@@ -11,10 +11,11 @@ import {createStructuredSelector} from 'reselect';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector} from '../selectors/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, pluginsSelector, editedPluginSelector,
+    editedCfgSelector, availablePluginsFilterTextSelector, enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
-import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload,
-    showMapViewerReloadConfirm} from '../actions/contextcreator';
+import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload, showMapViewerReloadConfirm, setFilterText,
+    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -32,10 +33,21 @@ export default createPlugin('ContextCreator', {
         curStepId: creationStepSelector,
         newContext: newContextSelector,
         resource: resourceSelector,
+        allAvailablePlugins: pluginsSelector,
+        editedPlugin: editedPluginSelector,
+        editedCfg: editedCfgSelector,
+        availablePluginsFilterText: availablePluginsFilterTextSelector,
+        enabledPluginsFilterText: enabledPluginsFilterTextSelector,
         mapType: mapTypeSelector,
         showReloadConfirm: reloadConfirmSelector,
         pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
     }), {
+        onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),
+        onFilterEnabledPlugins: setFilterText.bind(null, 'enabledPlugins'),
+        setSelectedPlugins,
+        onEditPlugin: editPlugin,
+        onUpdateCfg: updateEditedCfg,
+        changePluginsKey,
         onSetStep: setCreationStep,
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,
