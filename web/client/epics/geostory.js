@@ -46,8 +46,10 @@ import {
     storySaved,
     update,
     setFocusOnContent,
-    UPDATE
+    UPDATE,
+    CHANGE_MODE
 } from '../actions/geostory';
+import { setControlProperty } from '../actions/controls';
 
 import {
     show as showMediaEditor,
@@ -234,7 +236,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 if (options && options.location) {
                     const { search, pathname } = options.location;
                     const { showHome } = getQueryParams(search);
-                    story.settings = { ...story.settings, isHomeButtonEnabled: showHome && pathname.includes('/geostory/shared') };
+                    story.settings = { ...story.settings, isHomeButtonEnabled: showHome === 'true' && pathname.includes('/geostory/shared') };
                 }
                 if (!user && isNaN(parseInt(id, 10))) {
                     return Observable.of(loadGeostoryError({status: 403}));
@@ -366,3 +368,8 @@ export const inlineEditorEditMap = (action$, {getState}) =>
                         .takeUntil(action$.ofType(HIDE_MAP_EDITOR));
             });
         });
+
+
+export const closeShareOnGeostoryChangeMode = action$ =>
+    action$.ofType(CHANGE_MODE)
+        .switchMap(() => Observable.of(setControlProperty('share', 'enabled', false)));

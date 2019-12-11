@@ -291,7 +291,15 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+            {
+              "name": "Share",
+              "cfg": {
+                "advancedSettings": {
+                  "bbox": true
+                }
+              }
+            },
             {
                 "name": "Identify",
                 "cfg": {
@@ -697,9 +705,9 @@
             "name": "Share",
             "cfg": {
               "embedPanel": false,
-              "hideAdvancedSettings": true,
-              "hideAdvancedGeostorySettings": false,
-              "closeOnClickOut": true
+              "advancedSettings": {
+                "homeButton": true
+              }
             }
           }
         ],

@@ -61,7 +61,7 @@ const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
  * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
- * @prop {boolean} [hideAdvancedSettings] hide advanced settings (bbox param)
+ * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
  */
 
 const Share = connect(createSelector([

@@ -32,7 +32,6 @@ export const addSharePanel = Component => props => {
         }} {...other} />
         <SharePanel
             modal
-            hideAdvancedSettings
             draggable={false}
             isVisible={showShareModal}
             settings={shareModalSettings}

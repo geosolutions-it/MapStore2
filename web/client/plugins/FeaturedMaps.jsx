@@ -60,7 +60,9 @@ class FeaturedMaps extends React.Component {
         if (res.category && res.category.name === 'GEOSTORY') {
             return {
                 embedPanel: false,
-                hideAdvancedGeostorySettings: false
+                advancedSettings: {
+                    homeButton: true
+                }
             };
         }
 

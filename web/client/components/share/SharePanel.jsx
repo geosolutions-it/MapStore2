@@ -61,12 +61,13 @@ class SharePanel extends React.Component {
         closeGlyph: PropTypes.string,
         version: PropTypes.string,
         bbox: PropTypes.object,
-        hideAdvancedSettings: PropTypes.bool,
-        hideAdvancedGeostorySettings: PropTypes.bool,
+        advancedSettings: PropTypes.shape({
+            bbox: PropTypes.bool,
+            homeButton: PropTypes.bool
+        }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
-        selectedTab: PropTypes.string,
-        closeOnClickOut: PropTypes.bool
+        selectedTab: PropTypes.string
     };
 
     static defaultProps = {
@@ -81,9 +82,7 @@ class SharePanel extends React.Component {
         showAPI: true,
         closeGlyph: "1-close",
         settings: {},
-        onUpdateSettings: () => {},
-        hideAdvancedGeostorySettings: true,
-        closeOnClickOut: false
+        onUpdateSettings: () => {}
     };
 
     state = {
@@ -114,9 +113,10 @@ class SharePanel extends React.Component {
     }
 
     getShareUrl = () => {
+        const { settings, advancedSettings } = this.props;
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
-        if (this.props.settings.bboxEnabled && !this.props.hideAdvancedSettings && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
-        if (this.props.settings.showHome && !this.props.hideAdvancedGeostorySettings) shareUrl = `${shareUrl}?showHome=true`;
+        if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
+        if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         return shareUrl;
     };
 
@@ -155,7 +155,6 @@ class SharePanel extends React.Component {
                 className="modal-dialog modal-content share-win"
                 modal={this.props.modal}
                 draggable={this.props.draggable}
-                onClickOut={(e) => this.props.closeOnClickOut && this.props.onClose(e)}
                 style={{zIndex: 1993}}>
                 <span role="header">
                     <span className="share-panel-title">
@@ -167,40 +166,39 @@ class SharePanel extends React.Component {
                 </span>
                 <div role="body" className="share-panels">
                     {tabs}
-                    {!this.props.hideAdvancedSettings &&
-                    <SwitchPanel
-                        title={<Message msgId="share.advancedOptions"/>}
-                        expanded={this.state.showAdvanced}
-                        onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
-                        <Checkbox
-                            checked={this.props.settings.bboxEnabled ? true : false}
-                            onChange={() =>
-                                this.props.onUpdateSettings({
-                                    ...this.props.settings,
-                                    bboxEnabled: !this.props.settings.bboxEnabled
-                                })}>
-                            <Message msgId="share.addBboxParam" />
-                        </Checkbox>
-                    </SwitchPanel>}
-                    {!this.props.hideAdvancedGeostorySettings &&
-                    <SwitchPanel
-                        title={<Message msgId="share.advancedOptions"/>}
-                        expanded={this.state.showAdvanced}
-                        onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
-                        <Checkbox
-                            checked={this.props.settings.showHome ? true : false}
-                            onChange={() =>
-                                this.props.onUpdateSettings({
-                                    ...this.props.settings,
-                                    showHome: !this.props.settings.showHome
-                                })}>
-                            <Message msgId="share.showHomeButton" />
-                        </Checkbox>
-                    </SwitchPanel>}
+                    {this.props.advancedSettings && this.renderAdvancedSettings()}
                 </div>
             </Dialog>);
 
         return this.props.isVisible ? sharePanel : null;
+    }
+
+    renderAdvancedSettings = () => {
+        return (
+            <SwitchPanel
+                title={<Message msgId="share.advancedOptions"/>}
+                expanded={this.state.showAdvanced}
+                onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
+                {this.props.advancedSettings.bbox && <Checkbox
+                    checked={this.props.settings.bboxEnabled ? true : false}
+                    onChange={() =>
+                        this.props.onUpdateSettings({
+                            ...this.props.settings,
+                            bboxEnabled: !this.props.settings.bboxEnabled
+                        })}>
+                    <Message msgId="share.addBboxParam" />
+                </Checkbox>}
+                {this.props.advancedSettings.homeButton && <Checkbox
+                    checked={this.props.settings.showHome ? true : false}
+                    onChange={() =>
+                        this.props.onUpdateSettings({
+                            ...this.props.settings,
+                            showHome: !this.props.settings.showHome
+                        })}>
+                    <Message msgId="share.showHomeButton" />
+                </Checkbox>}
+            </SwitchPanel>
+        );
     }
 }
 

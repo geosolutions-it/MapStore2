@@ -27,7 +27,8 @@ import {
     reloadGeoStoryOnLoginLogout,
     sortContentEpic,
     setFocusOnMapEditing,
-    inlineEditorEditMap
+    inlineEditorEditMap,
+    closeShareOnGeostoryChangeMode
 } from '../geostory';
 import {
     ADD,
@@ -49,6 +50,7 @@ import {
     CHANGE_MODE,
     TOGGLE_CONTENT_FOCUS
 } from '../../actions/geostory';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
     SHOW,
     SELECT_ITEM,
@@ -1113,5 +1115,16 @@ describe('Geostory Epics', () => {
             }
         }
         });
+    });
+    it('closeShareGeostoryChangeMode', () => {
+        const action = { type: CHANGE_MODE };
+        const callback = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            expect(actions[0].control).toBe('share');
+            expect(actions[0].property).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+        };
+        testEpic(closeShareOnGeostoryChangeMode, 1, action, callback);
     });
 });
