@@ -1,9 +1,6 @@
-import React from "react";
 import {connect} from "react-redux";
 
-const Extension = ({value = 0, onIncrease}) => {
-    return <div style={{position: "absolute"}}><span>{value}</span><button onClick={onIncrease}>+</button></div>;
-};
+import Extension from "../components/Extension";
 
 export default {
     component: connect(state => ({
