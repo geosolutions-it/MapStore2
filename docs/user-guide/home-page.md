@@ -1,74 +1,68 @@
 # Home Page
 *******************
 
-In order to get started, let us take a look at the portal interface and get an idea of how to navigate around it. Some functionalities are only restricted for
-*Administrators* and will be pointed out once encountered. However, you will learn more about *Administrators*, *Users* and *Groups* [here](managing-users-and-groups.md).
+In order to get started, let us take a look at the portal interface and get an idea of how to navigate around it. First of all it's necessary to specify that the user can take advantage of different tools and sections according to his authentication in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/). In particular, a user can access the [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) application by:
 
-Once logged in as *Administrator*, the *Welcome Home Page* shows up as in the figure below and you will be able to view and make use of all the functionalities.
+* Anonymous user
 
-<img src="../img/home-page/home-page.jpg" class="ms-docimage" />
+* Normal user
 
-Menu bar
---------
+* Administrator user
 
-On the top of the page, you can find the *Main Menu bar* showing the following menus :
+## Anonymous user
 
-* Connections to [GeoSolutions](https://www.geo-solutions.it/), Featured and Contents sections <img src="../img/home-page/connections.jpg" class="ms-docbutton" style="max-height:20px;"/> (will be treated later).
+Accessing MapStore as anonymous user, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) shows up as in the figure below:
 
-* Language Switcher menu list.
+<img src="../img/home-page/homepage-anonym.jpg" class="ms-docimage"/>
 
-<img src="../img/home-page/language-switcher.jpg" class="ms-docimage"  style="max-width:200px;"/>
+The anonymous user is allowed to:
 
-* Own Account Manager menu.
+* Navigate through the *Featured* and *Contents* section 
 
-<img src="../img/home-page/own-account.jpg" class="ms-docimage"  style="max-width:200px;"/>
+<img src="../img/home-page/feat-cont.jpg" class="ms-docimage"/>
 
-* Accounts manager
+* Set the application language, with the *Language switcher*:
 
-<img src="../img/home-page/manage-accounts.jpg" class="ms-docimage"  style="max-width:200px;"/>
+<img src="../img/home-page/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-!!! note
-    The *Accounts manager* section, where *Users* and *Groups* can be managed, is reserved to the *Administrator*.
+* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/>:
 
-Search bar
-------------
+<img src="../img/home-page/login.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Under the menu bar, you can use the *Search bar* to search maps and dashboards stored in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/).
+* Perform a search for resources, through the *Search bar*:
 
 <img src="../img/home-page/search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-New Map and Dashboard
----------------------
+* [Share](share.md) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
 
-Under the search bar you can find two icon buttons to create a <span style="color:red">New Map</span> or a <span style="color:blue">New Dashboard</span>.
+* Take a look at map [details](resources-properties.md#details) when available <img src="../img/button/details_button.jpg" class="ms-docbutton"/>
 
-<img src="../img/home-page/map-dash.jpg" class="ms-docimage"/>
+* Open resources and navigate inside it according to their [permissions](resources-properties.md#permission-rules)
 
-Featured
---------
+## Normal user
 
-In this container the favorites maps and dashboards are stored and marked by a green star.
+With a login as normal user, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) displays as below:
 
-<img src="../img/home-page/featured.jpg" class="ms-docimage"/>
+<img src="../img/home-page/homepage-user.jpg" class="ms-docimage" />
 
-!!! note
-    Only *Administrators* can add maps and dashboards to *Featured* by clicking on the star icon button.
+The normal user, in addition to what the anonymous user can do, is allowed to:
 
-Contents
---------
+* Create new resources:
 
-In this section new maps will be stored into the <span style="color:red">*Maps* </span>container and new dashboards into the <span style="color:blue">*Dashboards* </span>container.
+<img src="../img/home-page/new-res.jpg" class="ms-docimage" style="max-width:150px;"/>
 
-<img src="../img/home-page/contents.jpg" class="ms-docimage"/>
+* View, edit and remove resources according to their [permissions](resources-properties.md#permission-rules) <img src="../img/button/remove-edit.jpg" class="ms-docbutton"/>
 
-Depending on the permissions, the user can view and use the configuration icon buttons for each map or dashboard.
+## Administrator user
 
-<img src="../img/home-page/config.jpg" class="ms-docimage"/>
+Once logged in as *Administrator*, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) it's like the following:
 
-* <img src="../img/button/delete.jpg" class="ms-docbutton"/> allows you to delete the map or the dashboard.
+<img src="../img/home-page/homepage-admin.jpg" class="ms-docimage" />
 
-* <img src="../img/button/properties.jpg" class="ms-docbutton"/> allows you to edit the properties of the map or the dashboard such as the thumbnail, name, details and permissions.
+The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator:
 
-* <img src="../img/button/details.jpg" class="ms-docbutton"/> allows you to show the map or the dashboard details.
+* Access the [Accounts manager](managing-users-and-groups.md) <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/>
 
-* <img src="../img/button/add-featured.jpg" class="ms-docbutton"/> allows you to add the map or the dashboard to *Featured*.
+* Menage the *Featured* resources by including <img src="../img/button/featured.jpg" class="ms-docbutton"/> or excluding <img src="../img/button/unfeatured.jpg" class="ms-docbutton"/> them from this section
+
+* View, edit and remove any resource

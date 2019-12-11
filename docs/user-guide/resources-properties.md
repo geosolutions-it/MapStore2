@@ -1,15 +1,7 @@
 # Resource Properties
 ------------------------------
 
-What a user can do on a resource (both maps and dashboards) depends on its role.
-
-* **Admin** users can manage accounts and can *view* and *edit* all the maps and dashboards, whoever created them
-
-* **Users** can view and edit only those maps and dashboards which they have created. If they are neither administrators nor owners, what they can do depends on the *Rights* assigned to the group they belong to
-
-* **Everyone** can view or edit the maps and dashboard according to the *rights* that have been assigned by the administrator or their owners
-
-In order to customize the properties of a resource, the admin or an user with permission can access the **Edit properties** window from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) or from the **Save**/**Save as** button inside the resource viewer.
+In order to customize the properties of a resource, the admin or a normal user with permission can access the **Edit properties** window from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) or from the **Save**/**Save as** button inside the resource viewer.
 
 <img src="../img/resource-properties/edit-properties.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -31,11 +23,11 @@ It is possible to add an image as **thumbnail** dropping it or clicking inside t
 <img src="../img/resource-properties/thumb.jpg" class="ms-docimage"/>
 
 !!! warning
-    The image to be added must not be larger than 500 kb and its best dimensions are 300x180 px.
+    The image to be added must not be larger than 500 kb and its best dimensions are 300x180 px. The supported formats are `jpg` (or `jpeg`) and `png`.
 
-## Permission rule
+## Permission rules
 
-In the **Add a rule...** section you can set one ore more permission rules in order to allow everyone and/or specific groups of users to access the resource. Moreover it is possible to choose between two different ways with which the selected group can approach the resource:
+In the **Add a rule...** section you can set one ore more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users. Moreover it is possible to choose between two different ways with which the selected group can approach the resource:
 
 * **View** the map and save a copy
 
