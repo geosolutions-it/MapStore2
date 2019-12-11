@@ -1,41 +1,70 @@
 # Managing Users
 ****************
 
-Creating New User
---------------
+Switching to Users Manager, the page displayed is the following:
 
-From the *Users* page:
+<img src="../img/managing-users/manager-page.jpg" class="ms-docimage"/>
 
-* **Click** on *New User* icon <img src="../img/managing-users/new-user.jpg" class="ms-docbutton"  style="max-height:20px;"/>. A pop up form will open
+In this page the *Admin* can:
 
-* **Fill** the first page of the form by assigning a *Username* and a *Password*
+* Perform a search among the existing users
 
-* **Select** from the list menu to assign a user or an admin role for the user
+<img src="../img/managing-users/search-users.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Finally, **Check** the flag to enable the user
+* Create a new user with the *New User* button <img src="../img/button/new-user.jpg" class="ms-docbutton"/>
 
-<img src="../img/managing-users/popup-user.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-!!! note
-    Enabled users will have a green status icon under their profile otherwise will have a red status and will not be able to log in.
-
-     <img src="../img/managing-users/user-status.jpg" class="ms-docimage"/>
-
-* On the second page, **Compile** the form by providing further informations about the user.
-
-<img src="../img/managing-users/info-user.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-* On the third page, **Select** the groups which the users will belong to, then **Click** on *Create*.
-
-<img src="../img/managing-users/user-group.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-Editing a User
---------------
-
-From the *Users* page:
-
-* **Click** on the *Settings* icon in order to edit a user, you will be redirected to the pop up form where you can change the user details.
+* Edit or remove an existing one, through the *Edit user* <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and *Remove* <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each user card:
 
 <img src="../img/managing-users/edit-user.jpg" class="ms-docimage"/>
 
-* Or, **Click** simply on the <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> icon to delete the user.
+Both the *New User* <img src="../img/button/new-user.jpg" class="ms-docbutton"/> and the *Edit user* <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *User editor* window, composed of three sections:
+
+* *User ID*
+
+* *Other information*
+
+* *Group membership*
+
+## User ID
+
+As soon as the *New User* window opens, the *User ID* section is displayed:
+
+<img src="../img/managing-users/popup-user.jpg" class="ms-docimage"/>
+
+In this section the Amin is allowed to:
+
+* Set the Username
+
+* Set the Password
+
+* Select the User type (User or Admin)
+
+* Choose if an User is *Enabled* or not. Enabled users will have a green status icon under their profile otherwise will have a red status and will not be able to log in.
+
+<img src="../img/managing-users/user-status.jpg" class="ms-docimage"/>
+
+!!! warning
+    Username and Password are the only mandatory fields. The password must contain at least 6 characters.
+
+## Other information
+
+Changing to *Other information* section, it display the following:
+
+<img src="../img/managing-users/other-info.jpg" class="ms-docimage"/>
+
+Here the *Admin* can set:
+
+* Email
+
+* Company
+
+* Notes
+
+## Group membership
+
+Through the last section of the window it is possible to manage the groups in which the user is aggregated:
+
+<img src="../img/managing-users/sel-groups.gif" class="ms-docimage"/>
+
+!!! note
+    The *everyone* group, set by default, it is impossible to remove since it must be attributed to all users.
