@@ -1901,10 +1901,12 @@
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
+            "addWebPageSection": "Aggiungi sezione pagina Web",
             "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
             "addTextContent": "Aggiungi testo",
             "addMediaContent": "Aggiungi Media",
             "zoomToContent": "Zoom al contenuto",
+            "addWebPageContent": "Aggiungi contenuto alla pagina Web",
             "emptyTitle": "Questa storia è vuota",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
@@ -1938,6 +1940,7 @@
                 "closeMapEditing": "Chiudi editing",
                 "confirmCloseMapEditing": "Chiudi editing mappa",
                 "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?",
+                "editURL": "Modifica l'URL della pagina web",
                 "advancedMapEditor": "Apri editor di mappe avanzato"
             },
             "navigation": {
@@ -1954,6 +1957,8 @@
                     "titleMedia": "Sezione Media",
                     "titleImage": "Immagine",
                     "titleText": "Testo",
+                    "titleWebPage": "Pagina web",
+                    "titleWebPageSection": "Sezione pagina Web",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Elimina la sezione selezionata",
@@ -2006,6 +2011,14 @@
                 "topRight": "Angolo in alto a destra",
                 "bottomLeft": "Angolo in basso a sinistra",
                 "bottomRight": "Angolo in basso a destra"
+            },
+            "webPageCreator": {
+                "title": "Pagina web",
+                "saveButton": "Salva",
+                "error": "Fornisci un URL di pagina Web valido",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
          "saveDialog": {

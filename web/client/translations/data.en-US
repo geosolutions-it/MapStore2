@@ -1905,9 +1905,11 @@
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
             "addMediaSection": "Add Media Section",
+            "addWebPageSection": "Add Web Page Section",
             "addImmersiveContent": "Add Immersive Content",
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
+            "addWebPageContent": "Add Web Page Content",
             "zoomToContent": "Zoom to content",
             "emptyTitle": "This story is empty",
             "emptyDescription": "Start creating an awesome geostory by adding new content",
@@ -1942,6 +1944,7 @@
                 "closeMapEditing": "Close",
                 "confirmCloseMapEditing": "Close Map Editing",
                 "pendingChangesDiscardConfirm": "Discard current map changes?",
+                "editURL": "Edit web page URL",
                 "advancedMapEditor": "Open advanced map editor"
             },
             "navigation": {
@@ -1958,6 +1961,8 @@
                     "titleMedia": "Media Section",
                     "titleImage": "Image",
                     "titleText": "Text",
+                    "titleWebPage": "Web Page",
+                    "titleWebPageSection": "Web Page Section",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Remove selected section",
@@ -2009,6 +2014,14 @@
                 "topRight": "Top Right",
                 "bottomLeft": "Bottom Left",
                 "bottomRight": "Bottom Right"
+            },
+            "webPageCreator": {
+                "title": "Web page",
+                "saveButton": "Save",
+                "error": "Please provide valid web page URL",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {
