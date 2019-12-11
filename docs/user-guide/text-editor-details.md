@@ -28,3 +28,6 @@ With the *text editor toolbar* it is possible to customize the text by modifying
 * **Link** to add a hyperlink to the text (<img src="../img/button/link-button.jpg" class="ms-docbutton"/>)
 
 <img src="../img/text-editor-details/link-text-details.jpg" class="ms-docimage"/>
+
+!!! note
+    In order to connect to a website external to Mapstore, the protocol must be specified (e.g., `http://` or `https://`).
