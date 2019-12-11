@@ -40,6 +40,23 @@ describe('MeasureEditor component', () => {
         const el = container.querySelector('input');
         expect(el).toExist();
         expect(el.value).toBe('10');
+        const options = document.querySelectorAll("option");
+        expect(options.length).toBe(5);
+        expect(options[0].innerText).toBe("ft");
+        expect(options[1].innerText).toBe("m");
+        expect(options[2].innerText).toBe("km");
+        expect(options[3].innerText).toBe("mi");
+        expect(options[4].innerText).toBe("nm");
+    });
+    it('MeasureEditor rendering only degrees uom', () => {
+        ReactDOM.render(<MeasureEditor value={10} projection="EPSG:4326"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('input');
+        expect(el).toExist();
+        expect(el.value).toBe('10');
+        const options = document.querySelectorAll("option");
+        expect(options.length).toBe(1);
+        expect(options[0].innerText).toBe("deg");
     });
     it('MeasureEditor rendering value changes', () => {
         ReactDOM.render(<MeasureEditor value={10000} displayUom="km" />, document.getElementById("container"));

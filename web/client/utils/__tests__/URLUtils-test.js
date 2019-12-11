@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const { urlParts, isSameUrl, sameQueryParams} = require('../URLUtils');
+const { urlParts, isSameUrl, sameQueryParams, isValidURL } = require('../URLUtils');
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
@@ -101,5 +101,29 @@ describe('URLUtils', () => {
         // dirty, different sorting
         expect(sameQueryParams("a=b&c=d&", "&c=d&a=b")).toBe(true);
     });
-
+    it('isValidURL', () => {
+        expect(isValidURL('http://www.my-site.com')).toBe(true);
+        expect(isValidURL('http://www.my-site.com/some/path/to/resource')).toBe(true);
+        expect(isValidURL('http://www.my-site.com/some/path/to/resource?query=true&passtest=true')).toBe(true);
+        expect(isValidURL('http://www.my-site.com/#/some/path/to/resource')).toBe(true);
+        expect(isValidURL('http://www.my-site.com/#/some/path/to/resource?query=true&passtest=true')).toBe(true);
+        expect(isValidURL('http://my-site.com')).toBe(true);
+        expect(isValidURL('http://my-site.com/some/path/to/resource')).toBe(true);
+        expect(isValidURL('http://my-site.com/some/path/to/resource?query=true&passtest=true')).toBe(true);
+        expect(isValidURL('http://my-site.com/#/some/path/to/resource')).toBe(true);
+        expect(isValidURL('http://my-site.com/#/some/path/to/resource?query=true&passtest=true')).toBe(true);
+        expect(isValidURL('https://my-site.com')).toBe(true);
+        expect(isValidURL('https://my-site.com/some/path/to/resource')).toBe(true);
+        expect(isValidURL('https://my-site.com/some/path/to/resource?query=true&passtest=true')).toBe(true);
+        expect(isValidURL('https://my-site.com/#/some/path/to/resource')).toBe(true);
+        expect(isValidURL('https://my-site.com/#/some/path/to/resource?query=true&passtest=true')).toBe(true);
+        expect(isValidURL('my-site.com')).toBe(false);
+        expect(isValidURL('my-site.com/some/path/to/resource')).toBe(false);
+        expect(isValidURL('my-site.com/some/path/to/resource?query=false&passtest=false')).toBe(false);
+        expect(isValidURL('my-site.com/#/some/path/to/resource')).toBe(false);
+        expect(isValidURL('my-site.com/#/some/path/to/resource?query=false&passtest=false')).toBe(false);
+        expect(isValidURL('lorem-ipsum-dolor-sit-amet')).toBe(false);
+        expect(isValidURL('lorem ipsum dolor sit amet')).toBe(false);
+        expect(isValidURL('lorem')).toBe(false);
+    });
 });

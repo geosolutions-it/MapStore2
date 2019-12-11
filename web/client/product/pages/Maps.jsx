@@ -14,8 +14,10 @@ const {connect} = require('react-redux');
 
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 const {resetControls} = require('../../actions/controls');
+const {loadMaps} = require('../../actions/maps');
 
 const Page = require('../../containers/Page');
 
@@ -24,6 +26,7 @@ class MapsPage extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         reset: PropTypes.func,
+        loadMaps: PropTypes.func,
         plugins: PropTypes.object
     };
 
@@ -44,6 +47,7 @@ class MapsPage extends React.Component {
     render() {
         return (<Page
             id="maps"
+            onMount={this.props.loadMaps}
             plugins={this.props.plugins}
             params={this.props.match.params}
         />);
@@ -54,5 +58,9 @@ module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {
+    loadMaps: () => loadMaps(
+        ConfigUtils.getDefaults().geoStoreUrl,
+        ConfigUtils.getDefaults().initialMapFilter || "*"
+    ),
     reset: resetControls
 })(MapsPage);

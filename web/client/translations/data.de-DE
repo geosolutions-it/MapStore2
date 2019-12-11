@@ -283,6 +283,7 @@
             "search": "Suche..."
         },
         "resources": {
+            "successSaved": "Diese Ressource wurde korrekt gespeichert",
             "deleteConfirmTitle": "Bist du sicher",
             "deleteConfirmMessage": "Möchten Sie diese Ressource wirklich löschen?",
             "deleteConfirmButtonText": "Löschen",
@@ -354,7 +355,7 @@
                 "errorTitle": "Aktuelle Karte kann nicht gespeichert werden",
                 "error403": "Du hast keine Berechtigung die Karte zu aktualisieren",
                 "error404": "Es gab einen Fehler während der Erstellung der Karte",
-                "error409": "Eine Karte mit diesem Namen existiert bereits",
+                "error409": "Eine Ressource mit diesem Namen ist bereits vorhanden",
                 "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Kartenkonfigurationsdatei den festgelegten Grenzwert überschreitet",
                 "errorDefault": "Netzwerk Fehler"
             },
@@ -860,7 +861,7 @@
                     "reset_bbox": "Zurücksetzen",
                     "save_bbox": "BBOX Änderungen speichern",
                     "save_radius": "Radius/Kreiszentrum Änderungen speichern",
-                    "radius": "Radius(m)"
+                    "radius": "Radius({unit})"
                 },
                 "methods": {
                     "zone": "Zone",
@@ -1616,7 +1617,7 @@
                     "notFound": "Dashboard nicht gefunden",
                     "notAccessible": "Dashboard nicht zugänglich"
                 },
-                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits. Versuchen Sie '{data}'"
+                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits"
             },
             "editor": {
                 "save": "Speichern Sie das Dashboard",
@@ -1648,7 +1649,7 @@
                     "unknownError": "Es gab einen Fehler in der Karte geladen werden. Bitte kontaktieren Sie den Administrator",
                     "notFound": "Die Karte, die Sie zugreifen möchten, existiert nicht"
                 },
-                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits. versuchen '{data}'"
+                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits"
             }
         },
         "wizard": {
@@ -1899,10 +1900,12 @@
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
+            "addWebPageSection": "Webseitenabschnitt hinzufügen",
             "addImmersiveContent": "Füge immersiven Inhalt hinzu",
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
+            "addWebPageContent": "Webseitenabschnitt hinzufügen",
             "emptyTitle": "Diese Geschichte ist leer",
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {
@@ -1935,7 +1938,9 @@
                 "saveChanges": "Änderungen speichern",
                 "closeMapEditing": "Schließen",
                 "confirmCloseMapEditing": "Schließen Sie die Kartenbearbeitung",
-                "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?"
+                "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?",
+                "editURL": "Webseiten-URL bearbeiten",
+                "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
@@ -1951,6 +1956,8 @@
                     "titleMedia": "Medienbereich",
                     "titleImage": "Bild",
                     "titleText": "Text",
+                    "titleWebPage": "Website",
+                    "titleWebPageSection": "Web Page Section",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Ausgewählten Abschnitt entfernen",
@@ -2002,6 +2009,14 @@
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
                 "bottomRight": "Unten rechts"
+            },
+            "webPageCreator": {
+                "title": "Website",
+                "saveButton": "Speichern",
+                "error": "Bitte geben Sie eine gültige URL der Webseite an",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {
@@ -2105,7 +2120,7 @@
             },
             "saveErrorNotification": {
                 "title": "Das Speichern des Kontexts ist fehlgeschlagen",
-                "conflict": "Ein Kontext mit demselben Namen ist bereits vorhanden. versuche '{data}'",
+                "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
                 "defaultMessage": "Unbekannter Fehler"
             },
             "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"

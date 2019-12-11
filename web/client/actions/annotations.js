@@ -130,12 +130,13 @@ function newAnnotation() {
         type: NEW_ANNOTATION
     };
 }
-function changeSelected(coordinates, radius, text) {
+function changeSelected(coordinates, radius, text, crs) {
     return {
         type: CHANGED_SELECTED,
         coordinates,
         radius,
-        text
+        text,
+        crs
     };
 }
 function setInvalidSelected(errorFrom, coordinates) {
@@ -322,11 +323,12 @@ function resetCoordEditor() {
         type: RESET_COORD_EDITOR
     };
 }
-function changeRadius(radius, components) {
+function changeRadius(radius, components, crs) {
     return {
         type: CHANGE_RADIUS,
         radius,
-        components
+        components,
+        crs
     };
 }
 

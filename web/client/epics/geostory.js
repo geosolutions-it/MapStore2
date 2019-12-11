@@ -46,7 +46,9 @@ import {
     storySaved,
     update,
     setFocusOnContent,
-    UPDATE
+    UPDATE,
+    SET_WEBPAGE_URL,
+    EDIT_WEBPAGE
 } from '../actions/geostory';
 
 import {
@@ -62,13 +64,15 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector} from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
+
+import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
 
 const updateMediaSection = (store, path) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
@@ -125,7 +129,42 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
+const updateWebPageSection = path => action$ =>
+    action$.ofType(SET_WEBPAGE_URL)
+        .switchMap(({ src }) => {
+            return Observable.of(
+                update(`${path}`, { src, editURL: false }, 'merge'),
+            );
+        });
 
+    /**
+     * Epic that handles opening webPageCreator and saves url of WebPage component
+     * @param {Observable} action$ stream of redux action
+     */
+export const openWebPageComponentCreator = action$ =>
+    action$.ofType(ADD)
+        .filter(({ element = {} }) => {
+            const isWebPage = element.type === ContentTypes.WEBPAGE;
+            return isWebPage || isWebPageSection(element);
+        })
+        .switchMap(({ path: arrayPath, element }) => {
+            let mediaPath = '';
+            if (isWebPageSection(element) && arrayPath === "sections") {
+                mediaPath = ".contents[0].contents[0]";
+            }
+            const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
+            return Observable.of(update(path, { editURL: true }, 'merge'))
+                .merge(action$.let(updateWebPageSection(path)))
+                .takeUntil(action$.ofType(EDIT_WEBPAGE));
+        });
+
+export const editWebPageComponent = action$ =>
+    action$.ofType(EDIT_WEBPAGE)
+        .switchMap(({ path }) => {
+            return Observable.of(update(path, { editURL: true }, 'merge'))
+                .merge(action$.let(updateWebPageSection(path)))
+                .takeUntil(action$.ofType(ADD));
+        });
 /**
  * Epic that handles the save story workflow. It uses persistence
  * @param {Observable} action$ stream of redux action
@@ -335,3 +374,25 @@ export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
 
             return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
      });
+
+/**
+* Handles map editing from inline editor
+* On map save:
+* update current edited map in current story resources
+* hide mapEditor,
+* toggle inline map editor
+* @memberof epics.mediaEditor
+* @param {Observable} action$ stream of actions
+* @param {object} store redux store
+*/
+export const inlineEditorEditMap = (action$, {getState}) =>
+    action$.ofType(MAP_EDITOR_SHOW)
+        .filter(({owner, map}) => owner === 'inlineEditor' && !!map)
+        .switchMap(() => {
+            return action$.ofType(SAVE_MAP_EDITOR)
+            .switchMap(({map}) => {
+                const {path} = getFocusedContentSelector(getState());
+                return  Observable.of(update(`${path}.map`, map), update(`${path}.editMap`, false), hideMapEditor())
+                        .takeUntil(action$.ofType(HIDE_MAP_EDITOR));
+            });
+        });

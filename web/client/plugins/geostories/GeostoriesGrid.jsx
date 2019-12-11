@@ -14,10 +14,13 @@ const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
 const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
+const { success } = require('../../actions/notifications');
+
 const Grid = compose(
     connect(createSelector(userSelector, user => ({ user })), {
         onDelete: deleteGeostory,
         reloadGeostories,
+        onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" }),
         setFeaturedMapsLatestResource,
         onUpdateAttribute: updateAttribute
     }),
@@ -28,6 +31,9 @@ const Grid = compose(
             }
             if (props.setFeaturedMapsLatestResource) {
                 props.setFeaturedMapsLatestResource(resource);
+            }
+            if (props.onShowSuccessNotification) {
+                props.onShowSuccessNotification();
             }
         }
     }),

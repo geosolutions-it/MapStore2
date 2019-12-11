@@ -283,6 +283,7 @@
 			"search": "Cerca..."
 		},
         "resources": {
+            "successSaved": "Questa risorsa è stata salvata correttamente",
             "deleteConfirmTitle": "Sei sicuro",
             "deleteConfirmMessage": "Sei sicuro di voler eliminare questa risorsa?",
             "deleteConfirmButtonText": "Elimina",
@@ -354,7 +355,7 @@
                 "errorTitle": "Non è stato possibile salvare la mappa",
                 "error403": "Non disponi dei permessi per aggiornare la mappa",
                 "error404": "Non è stato possibile creare la mappa sul server",
-                "error409": "Una mappa con questo nome esiste già",
+                "error409": "Una risorsa con questo nome esiste già",
                 "error500": "Errore interno del server. Verificare se la dimensione della configurazione di mappa supera il limite fissato",
                 "errorDefault": "Errore di rete"
             },
@@ -860,7 +861,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
-                    "radius": "Raggio(m)"
+                    "radius": "Raggio({unit})"
                 },
                 "methods": {
                     "zone": "Zona",
@@ -1616,7 +1617,7 @@
                     "notFound": "Dashboard non trovata",
                     "notAccessible": "Dashboard non accessibile"
                 },
-                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
             },
             "editor": {
                 "save": "Salva la dashboard",
@@ -1648,7 +1649,7 @@
                     "unknownError": "Si è verificato un errore durante il caricamento della mappa. Si prega di contattare l'amministratore",
                     "notFound": "La mappa si sta tentando di accedere non esiste"
                 },
-                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. provare '{data}'"
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
             }
         },
         "wizard": {
@@ -1899,10 +1900,12 @@
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
+            "addWebPageSection": "Aggiungi sezione pagina Web",
             "addImmersiveContent": "Aggiungi contenuto alla sezione immersiva",
             "addTextContent": "Aggiungi testo",
             "addMediaContent": "Aggiungi Media",
             "zoomToContent": "Zoom al contenuto",
+            "addWebPageContent": "Aggiungi contenuto alla pagina Web",
             "emptyTitle": "Questa storia è vuota",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "contentToolbar": {
@@ -1935,7 +1938,9 @@
                 "saveChanges": "Salva le modifiche",
                 "closeMapEditing": "Chiudi editing",
                 "confirmCloseMapEditing": "Chiudi editing mappa",
-                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?"
+                "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?",
+                "editURL": "Modifica l'URL della pagina web",
+                "advancedMapEditor": "Apri editor di mappe avanzato"
             },
             "navigation": {
                 "edit": "Modifica storia"
@@ -1951,6 +1956,8 @@
                     "titleMedia": "Sezione Media",
                     "titleImage": "Immagine",
                     "titleText": "Testo",
+                    "titleWebPage": "Pagina web",
+                    "titleWebPageSection": "Sezione pagina Web",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Elimina la sezione selezionata",
@@ -2002,7 +2009,15 @@
                 "topLeft": "Angolo in alto a sinistra",
                 "topRight": "Angolo in alto a destra",
                 "bottomLeft": "Angolo in basso a sinistra",
-                "bottomRight": "Angolo in basse a destra"
+                "bottomRight": "Angolo in basso a destra"
+            },
+            "webPageCreator": {
+                "title": "Pagina web",
+                "saveButton": "Salva",
+                "error": "Fornisci un URL di pagina Web valido",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
          "saveDialog": {
@@ -2106,7 +2121,7 @@
             },
             "saveErrorNotification": {
                 "title": "Salvataggio del contesto non riuscito",
-                "conflict": "Un contesto con lo stesso nome esiste già. prova '{data}'",
+                "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"

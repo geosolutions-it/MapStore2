@@ -13,8 +13,6 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
     const LocaleUtils = require('../utils/LocaleUtils');
 
     const startApp = () => {
-        const ConfigUtils = require('../utils/ConfigUtils');
-        const {loadMaps} = require('../actions/maps');
         const {loadVersion} = require('../actions/version');
         const {versionSelector} = require('../selectors/version');
         const {loadAfterThemeSelector} = require('../selectors/config');
@@ -71,10 +69,6 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
         );
 
         const initialActions = [
-            () => loadMaps(
-                ConfigUtils.getDefaults().geoStoreUrl,
-                ConfigUtils.getDefaults().initialMapFilter || "*"
-            ),
             loadVersion
         ];
 

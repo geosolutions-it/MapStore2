@@ -19,9 +19,10 @@ import {
     loadMapInfo
 } from '../actions/config';
 import Persistence from '../api/persistence';
+import { isLoggedIn } from '../selectors/security';
 import {projectionDefsSelector} from '../selectors/map';
 
-export const loadMapConfigAndConfigureMap = (action$, {getState = () => {}} = {}) =>
+export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap(({configName, mapId, config}) =>
             // delay here is to postpone map load to ensure that
@@ -30,8 +31,12 @@ export const loadMapConfigAndConfigureMap = (action$, {getState = () => {}} = {}
             // TODO: investigate the root causes of the problem and come up with a better solution, if possible
             (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
+                    // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
+                    if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
+                        return Observable.of(configureError({status: 403}));
+                    }
                     if (typeof response.data === 'object') {
-                        const projectionDefs = projectionDefsSelector(getState());
+                        const projectionDefs = projectionDefsSelector(store.getState());
                         const projection = get(response, "data.map.projection", "EPSG:3857");
                         if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                             return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));

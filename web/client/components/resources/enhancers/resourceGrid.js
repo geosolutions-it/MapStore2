@@ -8,6 +8,7 @@
 */
 const Rx = require('rxjs');
 const { compose, branch, withState, withHandlers, defaultProps, mapPropsStream, createEventHandler } = require('recompose');
+
 const handleSaveModal = require('../modals/enhancers/handleSaveModal');
 const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
 const { updateResource } = require('../../../api/persistence');
@@ -27,22 +28,26 @@ const handleSave = mapPropsStream(props$ => {
                             if (props.onSaveSuccess) {
                                 props.onSaveSuccess(resource);
                             }
+                            if (props.onShowSuccessNotification) {
+                                props.onShowSuccessNotification();
+                            }
                         }
                     })
-                    .catch(e => Rx.Observable.of({
-                        errors: [
-                            ...(props.errors || []),
-                            e
-                        ]
-                    }))
-                    .startWith({ loading: true })
                     .concat(Rx.Observable.of({ loading: false }))
+                    .startWith({ loading: true })
+                    .catch(e => {
+                        props.setErrors([...(props.errors || []), e]);
+                        return Rx.Observable.of({
+                            loading: false
+                        });
+                    })
             );
     return props$.combineLatest(
         saveStream$.startWith({}),
         (props, saveProps) => ({
             ...props,
             ...saveProps,
+            errors: props.errors,
             onSave
         })
     );
@@ -54,7 +59,13 @@ const handleSave = mapPropsStream(props$ => {
 const EditDialog = compose(
     handleResourceDownload,
     withHandlers({
-        onClose: ({ setEdit = () => { } }) => () => setEdit(false)
+        onClose: ({
+            setEdit = () => {},
+            setErrors = () => {}
+        }) => () => {
+            setEdit(false);
+            setErrors([]);
+        }
     }),
     branch(
         ({ resource }) => resource && resource.id,
@@ -66,12 +77,14 @@ const EditDialog = compose(
 )(require('../modals/Save'));
 
 const resourceGrid = compose(
+    withState('resource', 'setResource'),
     defaultProps({
         bsSize: "small",
         metadataModal: EditDialog
     }),
     withState('resource', 'setResource'),
     withState('edit', 'setEdit', false),
+    withState('errors', 'setErrors', ({errors = []}) => errors),
     withHandlers({
         onEdit: ({ setEdit = () => { }, setResource = () => { } }) => (resource) => {
             if (resource) {
