@@ -25,8 +25,8 @@ const Lazy = ({ onLoad, onRemove, onChangeStatus, loaded, toRestore = [] }) => {
         const path = paths["extensions/index"];
         const version = path.js.split(/\./)[1];
         const pluginUrl = "lazy/" + name.toLowerCase() + "." + version + ".chunk.js";
-        loadPlugin(pluginUrl).then(plugin => {
-            onLoad(name, plugin, status);
+        loadPlugin(pluginUrl).then(({declaredName, plugin}) => {
+            onLoad(declaredName || name, plugin, status);
         });
     };
 

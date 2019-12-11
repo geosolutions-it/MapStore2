@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {Provider} = require('react-redux');
-const expect = require('expect');
-const PluginsUtils = require('../PluginsUtils');
-const assign = require('object-assign');
-const MapSearchPlugin = require('../../plugins/MapSearch');
-const Rx = require('rxjs');
-const { ActionsObservable } = require('redux-observable');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import expect from 'expect';
+import PluginsUtils from '../PluginsUtils';
+import assign from 'object-assign';
+import MapSearchPlugin from '../../plugins/MapSearch';
+import Rx from 'rxjs';
+import { ActionsObservable } from 'redux-observable';
+import axios from '../../libs/ajax';
 
 const epicTest = (epic, count, action, callback, state = {}) => {
     const actions = new Rx.Subject();
@@ -422,6 +423,30 @@ describe('PluginsUtils', () => {
             expect(resp.myproperty).toBe(true);
             expect(resp.isMapStorePlugin).toBe(true);
             done();
+        });
+    });
+
+    it('importPlugin', (done) => {
+        axios.get('base/web/client/test-resources/lazy/dummy.js').then(source => {
+            PluginsUtils.importPlugin(source.data, (name, plugin) => {
+                expect(name).toBe('Dummy');
+                plugin.loadPlugin((pluginDef) => {
+                    expect(pluginDef).toExist();
+                    expect(pluginDef.component).toExist();
+                    done();
+                });
+            });
+        });
+    });
+
+    it('loadPlugin', (done) => {
+        PluginsUtils.loadPlugin('base/web/client/test-resources/lazy/dummy.js').then(({name, plugin}) => {
+            expect(name).toBe('Dummy');
+            plugin.loadPlugin((pluginDef) => {
+                expect(pluginDef).toExist();
+                expect(pluginDef.component).toExist();
+                done();
+            });
         });
     });
 });

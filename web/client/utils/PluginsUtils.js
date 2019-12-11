@@ -531,7 +531,7 @@ const PluginsUtils = {
     loadPlugin: (pluginUrl) => {
         return new Promise((resolve, reject = () => {}) => {
             axios.get(pluginUrl).then(response => {
-                importPlugin(response.data, (name, plugin) => resolve(plugin));
+                importPlugin(response.data, (name, plugin) => resolve({name, plugin}));
             }).catch(e => {
                 reject(e);
             });
