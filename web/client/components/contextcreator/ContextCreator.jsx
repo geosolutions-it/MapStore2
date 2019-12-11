@@ -8,7 +8,7 @@
 
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import { keys, isObject, findIndex, find } from 'lodash';
+import { keys, isObject, find } from 'lodash';
 
 import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
