@@ -11,6 +11,7 @@ const { insertWidget, setPage, onEditorChange} = require('../../../actions/widge
 const manageLayers = require('./manageLayers');
 const handleNodeEditing = require('./handleNodeEditing');
 const handleRemoveLayer = require('./handleMapRemoveLayer');
+const handleMapZoomLayer = require("./handleMapZoomLayer").default;
 const { wizardSelector, wizardStateToProps } = require('../commons');
 
 const mapBuilderConnect = require('./connection/mapBuilderConnect');
@@ -27,6 +28,7 @@ module.exports = compose(
     manageLayers,
     handleNodeEditing,
     handleRemoveLayer,
+    handleMapZoomLayer,
     branch(
         ({editNode}) => !!editNode,
         withProps(({ selectedNodes = [], setEditNode = () => { } }) => ({
@@ -37,8 +39,14 @@ module.exports = compose(
                 onClick: () => setEditNode(false)
             }]
         })),
-        withProps(({ selectedNodes = [], onRemoveSelected = () => { }, setEditNode = () => { } }) => ({
+        withProps(({ selectedNodes = [], epsgSupported = false, onRemoveSelected = () => { }, setEditNode = () => { }, zoomTo = () => {} }) => ({
             tocButtons: [{
+                visible: selectedNodes.length > 0,
+                glyph: "zoom-to",
+                tooltipId: selectedNodes.length === 1 ? "toc.toolZoomToLayerTooltip" : "toc.toolZoomToLayersTooltip",
+                disabled: !epsgSupported,
+                onClick: epsgSupported ? () => zoomTo(selectedNodes) : () => {}
+            }, {
                 visible: selectedNodes.length === 1,
                 glyph: "wrench",
                 tooltipId: "toc.toolLayerSettingsTooltip",
