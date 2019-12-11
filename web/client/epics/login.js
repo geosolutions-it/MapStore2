@@ -20,6 +20,7 @@ const Rx = require('rxjs');
 const { LOCATION_CHANGE } = require('connected-react-router');
 const url = require('url');
 const {get} = require('lodash');
+const {push} = require('connected-react-router');
 
 /**
  * Refresh the access_token every 5 minutes
@@ -83,6 +84,11 @@ const initCatalogOnLoginOutEpic = (action$) =>
             return Rx.Observable.of(initCatalog());
         });
 
+const redirectOnLogout = action$ =>
+    action$.ofType(LOGOUT)
+        .filter(({ redirectUrl }) => redirectUrl)
+        .switchMap(({ redirectUrl }) => Rx.Observable.of(push(redirectUrl)));
+
 /**
  * Epics for login functionality
  * @name epics.login
@@ -92,5 +98,6 @@ module.exports = {
     refreshTokenEpic,
     reloadMapConfig,
     promptLoginOnMapError,
-    initCatalogOnLoginOutEpic
+    initCatalogOnLoginOutEpic,
+    redirectOnLogout
 };

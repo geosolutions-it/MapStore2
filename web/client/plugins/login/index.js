@@ -7,7 +7,7 @@
 */
 const React = require('react');
 const {connect} = require('../../utils/PluginsUtils');
-const {login, loginFail, logoutWithReload, changePassword, resetError} = require('../../actions/security');
+const {login, loginFail, logoutWithReload, changePassword, resetError, logout} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 const {checkMapChanges} = require('../../actions/map');
 const {Glyphicon} = require('react-bootstrap');
@@ -84,7 +84,8 @@ const LoginNav = connect((state) => ({
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
     onLogout: logoutWithReload,
     onCheckMapChanges: checkUnsavedMapChanges,
-    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false)
+    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
+    onLogoutWithRedirect: logout.bind(null, '/')
 
 })(require('../../components/security/UserMenu'));
 
