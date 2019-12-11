@@ -6,8 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const API = require('../WMS');
+import expect from 'expect';
+import * as API from '../WMS';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
+
+let mockAxios;
 
 describe('Test correctness of the WMS APIs', () => {
     it('describeLayers', (done) => {
@@ -179,5 +183,35 @@ describe('Test correctness of the WMS APIs', () => {
 
         const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
         expect(capability).toExist();
+    });
+});
+
+describe('Test correctness of the WMS APIs (mock axios)', () => {
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
+    it('describeLayer with query option', (done) => {
+
+        mockAxios.onGet(/\/geoserver/).reply((config) => {
+            try {
+                expect(!!config.url.match('token=value')).toBe(true);
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [ 200, {}];
+        });
+
+        const url = 'localhost:8080/geoserver/wms';
+        const layers = 'workspace:layer';
+        const query = { token: 'value' };
+        API.describeLayer(url, layers, { query });
     });
 });

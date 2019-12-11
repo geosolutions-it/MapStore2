@@ -533,7 +533,11 @@ const LayersUtils = {
                 }
             }
         }
-        return addBaseParams(reqUrl, layer.baseParams || {});
+        const params = {
+            ...layer.baseParams,
+            ...layer.params
+        };
+        return addBaseParams(reqUrl, params);
     },
     /**
      * Gets the layer search url or the current url
