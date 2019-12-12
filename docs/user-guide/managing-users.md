@@ -11,13 +11,13 @@ In this page the *Admin* can:
 
 <img src="../img/managing-users/search-users.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Create a new user with the *New User* button <img src="../img/button/new-user.jpg" class="ms-docbutton"/>
+* Create a new user with the **New User** button <img src="../img/button/new-user.jpg" class="ms-docbutton"/>
 
-* Edit or remove an existing one, through the *Edit user* <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and *Remove* <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each user card:
+* Edit or remove an existing one, through the **Edit user** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete user** <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each user card:
 
 <img src="../img/managing-users/edit-user.jpg" class="ms-docimage"/>
 
-Both the *New User* <img src="../img/button/new-user.jpg" class="ms-docbutton"/> and the *Edit user* <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *User editor* window, composed of three sections:
+Both the **New User** <img src="../img/button/new-user.jpg" class="ms-docbutton"/> and the **Edit user** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *User editor* window, composed of three sections:
 
 * *User ID*
 

@@ -1,22 +1,45 @@
 # Managing Groups
 *****************
 
-Creating New Group
-------------------
+The Groups Manager section displays like the following:
 
-From the *Groups* page:
+<img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* **Click** on the *New Group* icon <img src="../img/managing-groups/new-group.jpg" class="ms-docbutton"  style="max-height:20px;"/>. A pop up form will open
+Similar to what happens for users manager, in this page the *Admin* can:
 
-**Fill** the first page of the form by assigning a *Group Name* and a *Description*.
+* Perform a search among the existing groups
 
-<img src="../img/managing-groups/popup-group.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/managing-groups/search-groups.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* On the second page, you can add members to the group. **Type** the user name under *Add Member* to find it then **Click** on it to add it to the list.
+* Create a new group with the **New Group** button <img src="../img/button/new-group.jpg" class="ms-docbutton"/>
 
-<img src="../img/managing-groups/add-user.jpg" class="ms-docimage"/>
+* Edit or remove an existing one, through the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete group** <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each user card:
 
-Edit a Group
-------------
+<img src="../img/managing-groups/edit-group.jpg" class="ms-docimage"/>
 
-As for users, you can use the edit icon <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> to modify the group settings or the delete icon <img src="../img/button/delete-icon.jpg" class="ms-docbutton"/> to delete the group.
+Both the **New Group** <img src="../img/button/new-group.jpg" class="ms-docbutton"/> and the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *Group editor* window, composed of two sections:
+
+* *Group ID*
+
+* *Members manager*
+
+## Group ID
+
+As soon as the *New Group* window opens, the *Group ID* section is displayed:
+
+<img src="../img/managing-groups/popup-group.jpg" class="ms-docimage"/>
+
+In this section the Amin is allowed to:
+
+* Set the Group Name
+
+* Set the Description
+
+!!! warning
+    The Group Name is the only mandatory field.
+
+## Members manager
+
+Through the *Members manager* section it is possible to choose which users are part of the group:
+
+<img src="../img/managing-groups/sel-users.gif" class="ms-docimage"/>

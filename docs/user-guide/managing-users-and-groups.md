@@ -5,11 +5,11 @@ User and group management is only possible for administrator users:
 
 <img src="../img/managing-users-and-groups/account.jpg" class="ms-docimage" style="max-width:600px"/>
 
-Once logged ad Admin, the *Manage Accounts* button appears in [Homepage](home-page.md):
+Once logged ad Admin, the **Manage Accounts** button appears in [Homepage](home-page.md):
 
 <img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage"/>
 
-With a click on the *Manage Accounts* button, the *Account Manager* opens:
+With a click on the **Manage Accounts** button, the *Account Manager* opens:
 
 <img src="../img/managing-users-and-groups/manager-page.jpg" class="ms-docimage"/>
 
