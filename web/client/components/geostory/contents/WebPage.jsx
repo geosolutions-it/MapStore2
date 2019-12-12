@@ -6,33 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, branch, withProps } from 'recompose';
-import { connect } from "react-redux";
-import { createSelector } from 'reselect';
-import { resourcesSelector } from '../../../selectors/geostory';
-import emptyState from '../../misc/enhancers/emptyState';
-import { find } from 'lodash';
+import { compose } from 'recompose';
+import { getWebPageComponentHeight } from '../../../utils/GeoStoryUtils';
+import { webPagePlaceholderEnhancer } from './enhancers/editURL';
 
-const WebPage = ({ src, width, height }) => (
-    <div
-        className="ms-webpage-wrapper"
-        width={width}
-        height={height}
-    >
-        <iframe src={src} />
+export const WebPage = ({ src, size, viewHeight }) => (
+    <div className="ms-webpage-wrapper">
+        <iframe
+            src={src}
+            height={`${getWebPageComponentHeight(size, viewHeight)}px`}
+        />
     </div>
 );
 
 export default compose(
-    branch(
-        ({resourceId}) => resourceId,
-        compose(
-            connect(createSelector(resourcesSelector, (resources) => ({resources}))),
-            withProps(({resources, resourceId: id}) => (find(resources, { id }) || {}).data)
-        ),
-        emptyState(
-            ({src = "", width, height} = {}) => (!src || !width || !height),
-            () => ({ glyph: "code" })
-        )
-    )
+    webPagePlaceholderEnhancer
 )(WebPage);

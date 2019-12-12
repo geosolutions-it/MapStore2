@@ -19,6 +19,30 @@ const ruleEditor = require('./enhancers/ruleEditor');
 const PermissionEditor = ruleEditor(require('./fragments/PermissionEditor'));
 
 /**
+ * Defines if the resource permissions are available or not.
+ * Actually GeoStore allow editing of the permission to the owner or to the administrators.
+ * For new resources the owner (will be) the current user so if owner is missing (as for new resources),
+ * this returns true.
+ * @param {object} user the user object, with role and name properties
+ * @param {object} resource the resource object, with attributes (owner)
+ */
+const canEditResourcePermission = (user = {}, resource) => {
+    // anonymous users can not edit
+    if (!user) {
+        return false;
+    }
+    const { role, name } = user;
+    if (role === 'ADMIN') {
+        return true;
+    }
+    // if owner is present, permissions are editable only by him
+    const owner = resource && resource.attributes && resource.attributes.owner;
+    if (owner) {
+        return owner === name;
+    }
+    return true;
+};
+/**
  * A Modal window to show map metadata form
 */
 class SaveModal extends React.Component {
@@ -84,8 +108,8 @@ class SaveModal extends React.Component {
      * @return the modal for unsaved changes
     */
     render() {
-        const canEditResourcePermission = this.props.user && this.props.user.role === 'ADMIN' ||
-        this.props.resource && this.props.resource.attributes && this.props.resource.attributes.owner === this.props.user.name;
+        const canEditPermission = canEditResourcePermission(this.props.user, this.props.resource);
+
         return (<Portal key="saveDialog">
             {<ResizableModal
                 loading={this.props.loading}
@@ -116,7 +140,7 @@ class SaveModal extends React.Component {
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
                         {
-                            !!canEditResourcePermission &&  <PermissionEditor
+                            !!canEditPermission &&  <PermissionEditor
                                 rules={this.props.rules}
                                 onUpdateRules={this.props.onUpdateRules}
                                 availableGroups={this.props.availableGroups}

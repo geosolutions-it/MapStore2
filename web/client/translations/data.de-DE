@@ -1900,10 +1900,12 @@
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
+            "addWebPageSection": "Webseitenabschnitt hinzufügen",
             "addImmersiveContent": "Füge immersiven Inhalt hinzu",
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
+            "addWebPageContent": "Webseitenabschnitt hinzufügen",
             "emptyTitle": "Diese Geschichte ist leer",
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "contentToolbar": {
@@ -1937,6 +1939,7 @@
                 "closeMapEditing": "Schließen",
                 "confirmCloseMapEditing": "Schließen Sie die Kartenbearbeitung",
                 "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?",
+                "editURL": "Webseiten-URL bearbeiten",
                 "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor"
             },
             "navigation": {
@@ -1953,6 +1956,8 @@
                     "titleMedia": "Medienbereich",
                     "titleImage": "Bild",
                     "titleText": "Text",
+                    "titleWebPage": "Website",
+                    "titleWebPageSection": "Web Page Section",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Ausgewählten Abschnitt entfernen",
@@ -2004,6 +2009,14 @@
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
                 "bottomRight": "Unten rechts"
+            },
+            "webPageCreator": {
+                "title": "Website",
+                "saveButton": "Speichern",
+                "error": "Bitte geben Sie eine gültige URL der Webseite an",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {

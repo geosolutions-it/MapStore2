@@ -23,6 +23,7 @@ export default ({
     add = () => {},
     update = () => {},
     editMedia = () => {},
+    editWebPage = () => {},
     remove = () => {},
     inViewRef,
     viewWidth,
@@ -39,6 +40,7 @@ export default ({
             mode={mode}
             add={add}
             editMedia={editMedia}
+            editWebPage={editWebPage}
             update={update}
             remove={remove}
             sectionId={id}
@@ -75,7 +77,15 @@ export default ({
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.MEDIA);
                 }
-            }]}
+            },
+            {
+                glyph: 'code', // TODO: change when new icon will be prepared
+                tooltipId: 'geostory.addWebPageSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTemplates.WEBPAGE);
+                }
+            }
+            ]}
         />}
     </section>
 );

@@ -65,6 +65,16 @@ const toolButtons = {
         onClick: () => {
             update( 'editMap', !editMap);
         }
+    }),
+    editURL: ({ editURL = false, path, editWebPage = () => {}}) => ({
+        glyph: "pencil",
+        visible: true,
+        disabled: editURL,
+        bsStyle: editURL ? "success" : "default",
+        tooltipId: "geostory.contentToolbar.editURL",
+        onClick: () => {
+            editWebPage({path});
+        }
     })
 };
 

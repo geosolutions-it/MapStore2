@@ -1900,10 +1900,12 @@
             "addParagraphSection": "Ajouter une section de paragraphe",
             "addImmersiveSection": "Ajouter une section immersive",
             "addMediaSection": "Ajouter une section multimédia",
+            "addWebPageSection": "Ajouter une section de page Web",
             "addImmersiveContent": "Ajouter du contenu immersif",
             "addTextContent": "Ajouter du contenu texte",
             "addMediaContent": "Ajouter du contenu multimédia",
             "zoomToContent": "Zoom sur le contenu",
+            "addWebPageContent": "Ajouter du contenu de page Web",
             "emptyTitle": "Cette histoire est vide",
             "emptyDescription": "Commencez à créer une géostory géniale en ajoutant du nouveau contenu",
             "contentToolbar": {
@@ -1937,6 +1939,7 @@
                 "closeMapEditing": "Proche",
                 "confirmCloseMapEditing": "Fermer l'édition de la carte",
                 "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?",
+                "editURL": "Modifier l'URL de la page Web",
                 "advancedMapEditor": "Ouvrir l'éditeur de carte avancé"
             },
             "navigation": {
@@ -1953,6 +1956,8 @@
                     "titleMedia": "Section multimédia",
                     "titleImage": "Image",
                     "titleText": "Texte",
+                    "titleWebPage": "Page Web",
+                    "titleWebPageSection": "Section de la page Web",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Supprimer la section sélectionnée",
@@ -2004,6 +2009,14 @@
                 "topRight": "En haut à droite",
                 "bottomLeft": "En bas à gauche",
                 "bottomRight": "En bas à droite"
+            },
+            "webPageCreator": {
+                "title": "Page Web",
+                "saveButton": "Enregistrer",
+                "error": "Veuillez fournir une URL de page Web valide",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {

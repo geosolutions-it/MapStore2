@@ -27,7 +27,9 @@ import {
     reloadGeoStoryOnLoginLogout,
     sortContentEpic,
     setFocusOnMapEditing,
-    inlineEditorEditMap
+    openWebPageComponentCreator,
+    inlineEditorEditMap,
+    editWebPageComponent
 } from '../geostory';
 import {
     ADD,
@@ -47,7 +49,9 @@ import {
     ADD_RESOURCE,
     move,
     CHANGE_MODE,
-    TOGGLE_CONTENT_FOCUS
+    TOGGLE_CONTENT_FOCUS,
+    SET_WEBPAGE_URL,
+    editWebPage
 } from '../../actions/geostory';
 import {
     SHOW,
@@ -1080,6 +1084,36 @@ describe('Geostory Epics', () => {
         }
         });
     });
+
+    describe('openWebPageComponentCreator epic', () => {
+        it('should show webPageCreator when user tries to add new component', (done) => {
+            const action = { type: ADD, element: { type: ContentTypes.WEBPAGE } };
+            const callback = (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE);
+                expect(actions[0].element).toExist();
+                expect(actions[0].element.editURL).toBe(true);
+                expect(actions[0].mode).toBe('merge');
+                done();
+            };
+
+            testEpic(openWebPageComponentCreator, 1, [action], callback);
+        });
+        it('should updated src to web page when user provides it', (done) => {
+            const webPageURL = 'some-url';
+            const showAction = { type: ADD, path: 'test', element: { type: ContentTypes.WEBPAGE, id: '123' } };
+            const updateAction = { type: SET_WEBPAGE_URL, src: webPageURL };
+            const callback = (actions) => {
+                expect(actions.length).toBe(2);
+                expect(actions[1].type).toBe(UPDATE);
+                expect(actions[1].element.src).toBe(webPageURL);
+                done();
+            };
+
+            testEpic(openWebPageComponentCreator, 2, [showAction, updateAction], callback);
+        });
+    });
+
     it('inlineEditorEditMap on advancedEditing save', done => {
         const launchActions = [mapEditorShow("inlineEditor", {data: {}, id: 1}), saveMapEditor({}, "inlineEditor")];
 
@@ -1113,5 +1147,20 @@ describe('Geostory Epics', () => {
             }
         }
         });
+    });
+
+    it('editWebPageComponent should open web page creator popup for edit', () => {
+        const path = 'sections[{"id": "eae41574-9799-44b8-b701-9f45f203a8cd"}].contents[{"id": "226889e0-c5ae-495b-8386-5cd4aa16c799"}].contents[{"id": "07b34499-c74e-4fde-9fb3-973fef729093"}]';
+
+        const callback = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE);
+            expect(actions[0].path).toBe(path);
+            expect(actions[0].element).toExist();
+            expect(actions[0].element.editURL).toBe(true);
+            expect(actions[0].mode).toBe('merge');
+        };
+
+        testEpic(editWebPageComponent, 1, editWebPage({ path }), callback);
     });
 });
