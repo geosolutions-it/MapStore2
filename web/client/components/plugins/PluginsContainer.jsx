@@ -115,7 +115,7 @@ class PluginsContainer extends React.Component {
     };
 
     renderPlugins = (plugins) => {
-        return plugins && plugins
+        return plugins
             // filter out plugins by localConfig hide property (the plugin is hidden when "hide" resolves to true)
             // @deprecated: use cfg.disablePluginIf to achieve the same behaviour
             .filter((Plugin) => !PluginsUtils.handleExpression(this.getState, this.props.plugins && this.props.plugins.requires, Plugin.hide))

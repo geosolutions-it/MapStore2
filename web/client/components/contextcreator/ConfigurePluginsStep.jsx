@@ -12,7 +12,7 @@ import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 
-import Transfer from '../misc/DoubleColumnTransfer';
+import Transfer from '../misc/Transfer';
 
 const pluginsToItems = (plugins, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg, changePluginsKey,
     processChildren, isRoot, rootIsEnabled) =>

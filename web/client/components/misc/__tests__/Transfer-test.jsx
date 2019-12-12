@@ -10,9 +10,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 
-import DoubleColumnTransfer from '../DoubleColumnTransfer';
+import Transfer from '../Transfer';
 
-describe('DoubleColumnTransfer component', () => {
+describe('Transfer component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -22,8 +22,8 @@ describe('DoubleColumnTransfer component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('DoubleColumnTransfer rendering with defaults', () => {
-        ReactDOM.render(<DoubleColumnTransfer />, document.getElementById("container"));
+    it('Transfer rendering with defaults', () => {
+        ReactDOM.render(<Transfer />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
     });

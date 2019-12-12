@@ -8,7 +8,7 @@
 
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import { keys, isObject, find } from 'lodash';
+import { keys, isObject, find, get } from 'lodash';
 
 import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
@@ -172,6 +172,8 @@ export default class ContextCreator extends React.Component {
                 }, {
                     id: 'configure-plugins',
                     label: 'contextCreator.configurePlugins.label',
+                    disableNext: !this.props.allAvailablePlugins.filter(
+                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length,
                     component:
                         <ConfigurePlugins
                             allPlugins={this.props.allAvailablePlugins}
