@@ -96,7 +96,7 @@ const renderColumn = (
     </div>
 );
 
-const DoubleColumnTransfer = ({
+const Transfer = ({
     leftColumn = {},
     rightColumn = {},
     allowCtrlMultiSelect = false,
@@ -147,6 +147,6 @@ const DoubleColumnTransfer = ({
         {renderColumn(context.messages, 'right', rightColumn, allowCtrlMultiSelect, selectedItems, selectedSide, onSelect, sortStrategy, filter)}
     </div>
 );
-DoubleColumnTransfer.contextTypes = {messages: PropTypes.object};
+Transfer.contextTypes = {messages: PropTypes.object};
 
-export default DoubleColumnTransfer;
+export default Transfer;
