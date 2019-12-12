@@ -30,6 +30,7 @@ describe('Metadata component', () => {
     it('Metadata rendering with meta-data', () => {
         const resource = {
             modifiedAt: new Date(),
+            createdAt: new Date(),
             metadata: {
                 name: "NAME",
                 description: "DESCRIPTION"
@@ -38,10 +39,24 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
-        expect(el.length).toBe(2);
+        const labels = container.querySelectorAll('label');
+        expect(labels.length).toBe(6);
         expect(el[0].value).toBe("NAME");
         expect(el[1].value).toBe("DESCRIPTION");
     });
+    it('Metadata rendering without timestamp', () => {
+        const resource = {
+            metadata: {
+                name: "NAME",
+                description: "DESCRIPTION"
+            }
+        };
+        ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const labels = container.querySelectorAll('label');
+        expect(labels.length).toBe(2);
+    });
+
     it('Test Metadata onChange', () => {
         const actions = {
             onChange: () => {}
