@@ -1,16 +1,18 @@
 # Managing Users and Groups
-------------------------------
+****************************
 
-From the *Home Page*:
+User and group management is only possible for administrator users:
 
-* **Click** on the *Account* icon then **Log in** as administrator.
+<img src="../img/managing-users-and-groups/account.jpg" class="ms-docimage" style="max-width:600px"/>
 
-<img src="../img/managing-users-and-groups/account.jpg" class="ms-docimage"/>
-
-* **Click** on the *Manager Menu* then on *MANAGE ACCOUNTS*.
+Once logged ad Admin, the **Manage Accounts** button appears in [Homepage](home-page.md):
 
 <img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage"/>
 
-You will be addressed to a new page in which the <span style="color:red">Manage Users</span> and the <span style="color:blue">Manage Groups</span> sections allow you to create new users and groups or to modify them, if already existing.
+With a click on the **Manage Accounts** button, the *Account Manager* opens:
 
 <img src="../img/managing-users-and-groups/manager-page.jpg" class="ms-docimage"/>
+
+In this page it is possible to switch between [Manage Users](managing-users.md) or [Manage Groups](managing-groups.md) sections:
+
+<img src="../img/managing-users-and-groups/man-users-groups.jpg" class="ms-docimage" style="max-width:200px"/>
