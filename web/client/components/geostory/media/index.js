@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useInView } from 'react-intersection-observer';
+import VisibilityContainer from '../common/VisibilityContainer';
+import { Glyphicon } from 'react-bootstrap';
 import image from './Image';
 import map from './Map';
 import Loader from '../../misc/Loader';
-import debounce from 'lodash/debounce';
 
 export const Image = image;
 const typesMap = {
@@ -19,63 +19,8 @@ const typesMap = {
     map
 };
 
-/**
- * MediaVisibilityContainer: container to control loading state of a media based on component visibility
- */
-
-const MediaVisibilityContainer = ({
-    id,
-    onLoad,
-    loading,
-    debounceTime,
-    children
-}) => {
-    const  [ref, inView] = useInView();
-    const updateVisibility = useRef(null);
-
-    useEffect(() => {
-        updateVisibility.current = debounce((loadedId) => {
-            onLoad(loadedId);
-        }, debounceTime);
-        return () => {
-            updateVisibility.current.cancel();
-        };
-    }, []);
-
-    useEffect(() => {
-        if (inView && loading) {
-            updateVisibility.current(id);
-        }
-        // cancel visibility update when user scroll faster than debounce time
-        if (!inView && loading) {
-            updateVisibility.current.cancel();
-        }
-    }, [ inView, loading, id ]);
-
-    return (
-        <div
-            ref={ref}
-            className="ms-media-visibility-container">
-            {!loading
-                ? children
-                : <div className="ms-media-loader"><Loader size={52}/></div>}
-        </div>
-    );
-};
-
-MediaVisibilityContainer.propTypes = {
-    id: PropTypes.string,
-    debounceTime: PropTypes.number,
-    loading: PropTypes.bool,
-    onLoad: PropTypes.func
-};
-
-MediaVisibilityContainer.defaultProps = {
-    id: '',
-    debounceTime: 300,
-    loading: true,
-    onLoad: () => {}
-};
+const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
+const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}/></div>;
 
 /**
  * Media component renders different kind of media based on type or mediaType
@@ -85,7 +30,6 @@ MediaVisibilityContainer.defaultProps = {
  * @prop {string} type one of 'image' or 'map' (used when mediaType is equal to undefined)
  * @prop {number} debounceTime debounce time for lazy loading
  */
-
 export const Media = ({ debounceTime, ...props }) => {
     // store all ids inside an immersive section
     // in this way every media is loaded only when in view
@@ -96,20 +40,26 @@ export const Media = ({ debounceTime, ...props }) => {
     const MediaType = typesMap[props.mediaType || props.type] || Image;
     return props.lazy
         ? (
-            <MediaVisibilityContainer
+            <VisibilityContainer
                 // key needed for immersive background children
                 key={props.id}
                 id={props.id}
                 debounceTime={debounceTime}
                 loading={isLoading}
-                onLoad={(id) => onLoad({ ...loading, [id]: false })}>
-                <MediaType {...props}/>
-            </MediaVisibilityContainer>
+                onLoad={(id) => onLoad({ ...loading, [id]: false })}
+                loaderComponent={LoaderComponent}>
+                <MediaType
+                    {...props}
+                    loaderComponent={LoaderComponent}
+                    errorComponent={ErrorComponent}/>
+            </VisibilityContainer>
         )
         : (
             <MediaType
+                {...props}
                 key={props.id}
-                {...props}/>
+                loaderComponent={LoaderComponent}
+                errorComponent={ErrorComponent}/>
         );
 };
 

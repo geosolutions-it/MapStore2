@@ -33,7 +33,7 @@ describe('Media component', () => {
             document.getElementById("container"));
         try {
             let container = document.getElementById('container');
-            expect(container.querySelector('.ms-media-visibility-container')).toExist();
+            expect(container.querySelector('.ms-visibility-container')).toExist();
             expect(container.querySelector('.ms-media-loader')).toExist();
             const scrollContainer =  document.getElementById('scroll-container');
             scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
@@ -59,7 +59,7 @@ describe('Media component', () => {
             document.getElementById("container"));
         try {
             let container = document.getElementById('container');
-            expect(container.querySelector('.ms-media-visibility-container')).toExist();
+            expect(container.querySelector('.ms-visibility-container')).toExist();
             expect(container.querySelector('.ms-media-loader')).toExist();
             const scrollContainer =  document.getElementById('scroll-container');
             scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
