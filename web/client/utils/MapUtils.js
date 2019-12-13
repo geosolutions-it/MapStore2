@@ -46,7 +46,7 @@ let CoordinatesUtils = require('./CoordinatesUtils');
 let {set} = require('./ImmutableUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isObject, head, isEmpty, findIndex, cloneDeep} = require('lodash');
+const {isEmpty, findIndex, cloneDeep} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
