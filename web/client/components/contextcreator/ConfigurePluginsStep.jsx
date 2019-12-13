@@ -12,17 +12,29 @@ import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 
-import Transfer from '../misc/Transfer';
+import Transfer from '../misc/transfer/Transfer';
 
+/**
+ * Converts plugin objects to Transform items
+ * @param {[object]} plugins plugin objects to convert
+ * @param {string} editedPlugin currently edited plugin
+ * @param {string} editedCfg text of a configuration of currently edited plugin
+ * @param {function} onEditPlugin edit plugin configuration callback
+ * @param {function} onUpdateCfg update currently edited configuration callback
+ * @param {function} changePluginsKey callback to change properties of plugin objects
+ * @param {boolean} processChildren if true this function will recursively convert the children
+ * @param {boolean} isRoot true if plugin objects in plugins argument are at the root level of a tree hierarchy
+ * @param {boolean} parentIsEnabled true if 'enabled' property of parent plugin object is true
+ */
 const pluginsToItems = (plugins, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg, changePluginsKey,
-    processChildren, isRoot, rootIsEnabled) =>
+    processChildren, isRoot, parentIsEnabled) =>
     plugins && plugins.map(plugin => {
-        const enableTools = (isRoot || rootIsEnabled) && plugin.enabled;
+        const enableTools = (isRoot || parentIsEnabled) && plugin.enabled;
         return {
             id: plugin.name,
             title: plugin.label || plugin.name,
             description: 'plugin name: ' + plugin.name,
-            className: !isRoot && rootIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
+            className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
             tools: enableTools ? [{
                 glyph: '1-user-mod',
                 tooltipId: plugin.isUserPlugin ?
@@ -55,7 +67,7 @@ const pluginsToItems = (plugins, editedPlugin, editedCfg, onEditPlugin, onUpdate
                         indentUnit: 2,
                         tabSize: 2
                     }}/> : null,
-            preview: !isRoot && rootIsEnabled &&
+            preview: !isRoot && parentIsEnabled &&
                 <Button
                     className="square-button-md no-border"
                     onClick={(event) => {
@@ -66,7 +78,7 @@ const pluginsToItems = (plugins, editedPlugin, editedCfg, onEditPlugin, onUpdate
                 </Button> || null,
             children: processChildren &&
                 pluginsToItems(plugin.children, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg, changePluginsKey,
-                    true, false, isRoot && plugin.enabled) || []
+                    true, false, plugin.enabled) || []
         };
     });
 

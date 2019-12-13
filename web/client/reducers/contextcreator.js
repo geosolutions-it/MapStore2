@@ -10,7 +10,7 @@ import {get, pick, omit, isObject, head} from 'lodash';
 import ConfigUtils from '../utils/ConfigUtils';
 
 import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, CLEAR_CONTEXT_CREATOR,
-    SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, SET_PLUGINS, CHANGE_ATTRIBUTE, LOADING,
+    SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_ATTRIBUTE, LOADING,
     SET_EDITED_CFG, UPDATE_EDITED_CFG} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
@@ -143,9 +143,6 @@ export default (state = {}, action) => {
     }
     case CHANGE_PLUGINS_KEY: {
         return set('plugins', changePlugins(get(state, 'plugins', []), action.ids || [], action.key, action.value), state);
-    }
-    case SET_PLUGINS: {
-        return set('plugins', action.plugins, state);
     }
     case SET_EDITED_CFG: {
         return action.pluginName ?

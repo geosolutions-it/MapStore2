@@ -8,9 +8,9 @@
 
 import React from 'react';
 
-import SideCard from './cardgrids/SideCard';
-import Toolbar from './toolbar/Toolbar';
-import emptyState from './enhancers/emptyState';
+import SideCard from '../cardgrids/SideCard';
+import Toolbar from '../toolbar/Toolbar';
+import emptyState from '../enhancers/emptyState';
 
 const TransferColumnCardList = ({
     items = [],

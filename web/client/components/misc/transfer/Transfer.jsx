@@ -10,9 +10,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, ButtonGroup} from 'react-bootstrap';
 
-import LocaleUtils from '../../utils/LocaleUtils';
-import Message from '../I18N/Message';
-import Filter from './Filter';
+import LocaleUtils from '../../../utils/LocaleUtils';
+import Message from '../../I18N/Message';
+import Filter from '../Filter';
 import CardList from './TransferColumnCardList';
 
 const renderTools = (messages, tools) => (
@@ -96,6 +96,32 @@ const renderColumn = (
     </div>
 );
 
+/**
+ * Transfer component
+ * @memberof components.misc.transfer
+ * @function
+ * @name Transfer
+ * @prop {object} leftColumn object that describes a transfer column on the left. It should have the following properties
+*  - *items*: an array of items
+*  - *title*: column title
+*  - *filterText*: current filter text
+*  - *filterPlaceholder*: placeholder text of a filter input field
+*  - *tools*: array that describes buttons that are rendered in the column's header
+*  - *emptyStateProps*: empty state props when filter text is not present
+*  - *emptyStateSearchProps*: empty state props when filter text is present
+*  - *onFilter*: callback that is called when filter text changes
+ * @prop {object} rightColumn object that describes a transfer column on the right. For object props see *leftColumn*
+ * @prop {boolean} [allowCtrlMultiSelect=false] when true, allows multiple items selected when ctrl key is pressed
+ * @prop {array} selectedItems array of selected items
+ * @prop {string} selectedSide column that is currently selected. Can be 'left' or 'right'
+ * @prop {string} className className to add to the root div
+ * @prop {function} filter function used to filter items, by default returns the original array of items
+ * @prop {function} sortStrategy function that sorts items
+ * @prop {function} onSelect callback that is called when an item is selected
+ * @prop {function} onTransfer callback that is called when items are to be transferred between columns
+ * @prop {array} moveButtons allows to override default implementations of move buttons
+ * @returns {object} react element
+ */
 const Transfer = ({
     leftColumn = {},
     rightColumn = {},

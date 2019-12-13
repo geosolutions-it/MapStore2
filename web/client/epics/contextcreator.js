@@ -40,11 +40,17 @@ const saveContextErrorStatusToMessage = (status) => {
 };
 
 const flattenPluginTree = (plugins = []) =>
-    flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(flattenPluginTree(plugin.children))));
+    flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
 
 const makePlugins = (plugins = []) =>
     plugins.map(plugin => ({...plugin.pluginConfig, ...(plugin.isUserPlugin ? {active: plugin.active} : {})}));
 
+/**
+ * Handles saving context resource
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `SAVE_CONTEXT`
+ * @param {object} store
+ */
 export const saveContextResource = (action$, store) => action$
     .ofType(SAVE_CONTEXT)
     .exhaustMap(({destLocation}) => {
@@ -101,6 +107,12 @@ export const saveContextResource = (action$, store) => action$
             })));
     });
 
+/**
+ * Loads context resource and sets up context creator state
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `LOAD_CONTEXT`
+ * @param {object} store
+ */
 export const contextCreatorLoadContext = (action$, store) => action$
     .ofType(LOAD_CONTEXT)
     .switchMap(({id}) => (id === 'new' ?
@@ -129,11 +141,22 @@ export const contextCreatorLoadContext = (action$, store) => action$
         )
     );
 
+/**
+ * Emits mapViewerLoad actions, when current step changes to Map Configuration
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `SET_CREATION_STEP`
+ */
 export const loadMapViewerOnStepChange = (action$) => action$
     .ofType(SET_CREATION_STEP)
     .filter(({stepId}) => stepId === 'configure-map')
     .switchMap(() => Rx.Observable.of(mapViewerLoad()));
 
+/**
+ * Initiates context map load
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `MAP_VIEWER_LOAD`
+ * @param {object} store
+ */
 export const mapViewerLoadEpic = (action$, store) => action$
     .ofType(MAP_VIEWER_LOAD)
     .switchMap(() => {
@@ -153,6 +176,12 @@ export const mapViewerLoadEpic = (action$, store) => action$
             );
     });
 
+/**
+ * Handles map reload
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `MAP_VIEWER_RELOAD`
+ * @param {object} store
+ */
 export const mapViewerReload = (action$, store) => action$
     .ofType(MAP_VIEWER_RELOAD)
     .switchMap(() => {
@@ -167,6 +196,12 @@ export const mapViewerReload = (action$, store) => action$
             );
     });
 
+/**
+ * Unset currently edited plugin when such plugin is moved from enabled plugins list
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `CHANGE_PLUGINS_KEY`
+ * @param {object} store
+ */
 export const resetConfigOnPluginKeyChange = (action$, store) => action$
     .ofType(CHANGE_PLUGINS_KEY)
     .switchMap(({ids, key, value}) => {
@@ -177,6 +212,12 @@ export const resetConfigOnPluginKeyChange = (action$, store) => action$
             Rx.Observable.empty();
     });
 
+/**
+ * Handle plugin editing
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `EDIT_PLUGIN`
+ * @param {object} store
+ */
 export const editPluginEpic = (action$, store) => action$
     .ofType(EDIT_PLUGIN)
     .switchMap(({pluginName}) => {

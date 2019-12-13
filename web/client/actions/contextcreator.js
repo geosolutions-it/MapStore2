@@ -20,7 +20,6 @@ export const SET_EDITED_PLUGIN = 'CONTEXTCREATOR:SET_EDITED_PLUGIN';
 export const SET_EDITED_CFG = 'CONTEXTCREATOR:SET_EDITED_CFG';
 export const UPDATE_EDITED_CFG = 'CONTEXTCREATOR:UPDATE_EDITED_CFG';
 export const CHANGE_PLUGINS_KEY = 'CONTEXTCREATOR:CHANGE_PLUGINS_KEY';
-export const SET_PLUGINS = 'CONTEXTCREATOR:SET_PLUGINS';
 export const SET_RESOURCE = 'CONTEXTCREATOR:SET_RESOURCE';
 export const LOAD_CONTEXT = 'CONTEXTCREATOR:LOAD_CONTEXT';
 export const START_RESOURCE_LOAD = 'CONTEXTCREATOR:START_RESOURCE_LOAD';
@@ -59,37 +58,68 @@ export const changeAttribute = (key, value) => ({
     value
 });
 
+/**
+ * Sets current filter field text
+ * @param {string} propName one of filter field names: `availablePlugins`, `enabledPlugins`
+ * @param {string} text text to set
+ */
 export const setFilterText = (propName, text) => ({
     type: SET_FILTER_TEXT,
     propName,
     text
 });
 
+/**
+ * Sets currently selected plugins
+ * @param {string[]} ids names of plugins that are selected
+ */
 export const setSelectedPlugins = (ids) => ({
     type: SET_SELECTED_PLUGINS,
     ids
 });
 
+/**
+ * Trigger plugin configuration editor
+ * @param {string} pluginName the name of the plugin to edit
+ */
 export const editPlugin = (pluginName) => ({
     type: EDIT_PLUGIN,
     pluginName
 });
 
+/**
+ * Set the name of currently edited plugin
+ * @param {string} pluginName the name of the plugin
+ */
 export const setEditedPlugin = (pluginName) => ({
     type: SET_EDITED_PLUGIN,
     pluginName
 });
 
+/**
+ * Parse the configuration of a plugin and set it for editing
+ * @param {string} pluginName
+ */
 export const setEditedCfg = (pluginName) => ({
     type: SET_EDITED_CFG,
     pluginName
 });
 
+/**
+ * Update text context of currently edited configuration
+ * @param {string} cfg configuration text context
+ */
 export const updateEditedCfg = (cfg) => ({
     type: UPDATE_EDITED_CFG,
     cfg
 });
 
+/**
+ * Set a property of specified plugins to a specified value
+ * @param {string[]} ids names of plugins to modify
+ * @param {string} key name of the property
+ * @param {any} value new value
+ */
 export const changePluginsKey = (ids, key, value) => ({
     type: CHANGE_PLUGINS_KEY,
     ids,
