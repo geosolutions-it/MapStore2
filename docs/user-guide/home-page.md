@@ -25,9 +25,7 @@ The anonymous user is allowed to:
 
 <img src="../img/home-page/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/>:
-
-<img src="../img/home-page/login.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/> (more information about Login can be found in [Managing Users and Groups](managing-users-and-groups.md) section)
 
 * Perform a search for resources, through the *Search bar*:
 
@@ -59,7 +57,7 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geo-solutions
 
 <img src="../img/home-page/homepage-admin.jpg" class="ms-docimage" />
 
-The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator:
+The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
 * Access the [Accounts manager](managing-users-and-groups.md) <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/>
 
