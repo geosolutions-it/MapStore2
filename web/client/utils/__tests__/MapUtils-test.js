@@ -30,6 +30,7 @@ var {
     getSimpleGeomType,
     isSimpleGeomType,
     parseLayoutValue,
+    prepareMapObjectToCompare,
     compareMapChanges
 } = require('../MapUtils');
 
@@ -2038,7 +2039,8 @@ describe('Test the MapUtils', () => {
                         "catalogURL": "url",
                         "useForElevation": false,
                         "hidden": false,
-                        "params": { }
+                        "params": { },
+                        "apiKey": "some api key"
                     }
                 ],
                 "groups": [],
@@ -2094,4 +2096,24 @@ describe('Test the MapUtils', () => {
         expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
 
+    it('test prepareMapObjectToCompare', () => {
+        const obj1 = { time: new Date().toISOString() };
+        const obj2 = { apiKey: 'some api key' };
+        const obj3 = { test: undefined };
+        const obj4 = { test: null };
+        const obj5 = { test: false };
+        const obj6 = { test: {} };
+        prepareMapObjectToCompare(obj1);
+        prepareMapObjectToCompare(obj2);
+        prepareMapObjectToCompare(obj3);
+        prepareMapObjectToCompare(obj4);
+        prepareMapObjectToCompare(obj5);
+        prepareMapObjectToCompare(obj6);
+        expect(Object.keys(obj1).indexOf('time')).toBe(-1);
+        expect(Object.keys(obj2).indexOf('apiKey')).toBe(-1);
+        expect(Object.keys(obj3).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj4).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj5).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj6).indexOf('test')).toBe(-1);
+    });
 });

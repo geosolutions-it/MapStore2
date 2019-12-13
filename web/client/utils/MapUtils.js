@@ -46,7 +46,7 @@ let CoordinatesUtils = require('./CoordinatesUtils');
 let {set} = require('./ImmutableUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isObject, head, isEmpty, findIndex} = require('lodash');
+const {isObject, head, isEmpty, findIndex, cloneDeep} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -415,42 +415,36 @@ const parseLayoutValue = (value, size = 0) => {
     return isNumber(value) ? value : 0;
 };
 
-const compareMapChanges = (originalState = {}, newState = {}) => {
-    const cleanObjectFromUndefined = obj => {
-        Object.keys(obj).forEach(key => {
-            const value = obj[key];
-            const type = typeof value;
-            if (type === "object" && value !== null) {
-                cleanObjectFromUndefined(value);
-                if (!Object.keys(value).length) {
-                    delete obj[key];
-                }
-            /**
-             * ABOUT: in single layer stored in redux contains field "apiKey",
-             * which doesn't comes from API and it's not necessary to compare.
-             */
-            } else if (type === "undefined" || value === null || key === 'apiKey') {
+const prepareMapObjectToCompare = obj => {
+    const skippedKeys = ['apiKey', 'time'];
+    const shouldBeSkipped = (key) => skippedKeys.reduce((p, n) => p || key === n, false);
+    Object.keys(obj).forEach(key => {
+        const value = obj[key];
+        const type = typeof value;
+        if (type === "object" && value !== null) {
+            prepareMapObjectToCompare(value);
+            if (!Object.keys(value).length) {
                 delete obj[key];
             }
-        });
-    };
+        } else if (type === "undefined" || !value || shouldBeSkipped(key)) {
+            delete obj[key];
+        }
+    });
+};
 
+const compareMapChanges = (map1 = {}, map2 = {}) => {
     const pickedFields = [
         'map.layers',
-        'map.groups',
         'map.backgrounds',
         'map.text_search_config',
         'map.zoom',
-        'catalogServices',
         'widgetsConfig'
     ];
-
-    const filteredOriginalState = pick(originalState, pickedFields);
-    const filteredNewState = pick(newState, pickedFields);
-    cleanObjectFromUndefined(filteredOriginalState);
-    cleanObjectFromUndefined(filteredNewState);
-
-    return isEqual(filteredOriginalState, filteredNewState);
+    const filteredMap1 = pick(cloneDeep(map1), pickedFields);
+    const filteredMap2 = pick(cloneDeep(map2), pickedFields);
+    prepareMapObjectToCompare(filteredMap1);
+    prepareMapObjectToCompare(filteredMap2);
+    return isEqual(filteredMap1, filteredMap2);
 };
 
 module.exports = {
@@ -485,5 +479,6 @@ module.exports = {
     getSimpleGeomType,
     getIdFromUri,
     parseLayoutValue,
+    prepareMapObjectToCompare,
     compareMapChanges
 };
