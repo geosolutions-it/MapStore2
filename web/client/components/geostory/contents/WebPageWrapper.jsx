@@ -18,6 +18,10 @@ import WebPage from './WebPage';
 import { compose, withHandlers } from 'recompose';
 import { isValidURL } from '../../../utils/URLUtils';
 import { getConfigProp } from '../../../utils/ConfigUtils';
+import VisibilityContainer from '../common/VisibilityContainer';
+import Loader from '../../misc/Loader';
+
+const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}/></div>;
 
 export class WebPageWrapper extends React.PureComponent {
     static propTypes = {
@@ -25,12 +29,19 @@ export class WebPageWrapper extends React.PureComponent {
         onClose: PropTypes.func,
         onChange: PropTypes.func,
         src: PropTypes.string,
-        id: PropTypes.string
+        id: PropTypes.string,
+        debounceTime: PropTypes.number,
+        lazy: PropTypes.bool
     }
+
+    static defaultProps = {
+        lazy: true
+    };
 
     state = {
         url: this.props.src || '',
-        error: false
+        error: false,
+        loading: true
     }
 
     render() {
@@ -71,7 +82,17 @@ export class WebPageWrapper extends React.PureComponent {
                         </FormGroup>
                     </Dialog>
                 </Portal>
-                <WebPage {...this.props} />
+                {this.props.lazy
+                    ? <VisibilityContainer
+                        key={this.props.id}
+                        id={this.props.id}
+                        debounceTime={this.props.debounceTime}
+                        loading={this.state.loading}
+                        onLoad={() => this.setState({ loading: false })}
+                        loaderComponent={LoaderComponent}>
+                        <WebPage {...this.props} />
+                    </VisibilityContainer>
+                    : <WebPage {...this.props} />}
             </React.Fragment>
         );
     }
