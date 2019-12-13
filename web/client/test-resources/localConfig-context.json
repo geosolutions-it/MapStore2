@@ -1,0 +1,9 @@
+{
+  "initialState": {
+    "defaultState": {
+      "testMode": "{'EXPRESSION_MODE_' + context.mode}",
+      "test": "test"
+    },
+    "mobile": {}
+  }
+}
