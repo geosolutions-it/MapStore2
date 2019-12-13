@@ -286,11 +286,14 @@ describe('MapEditor component', () => {
             expect(val).toBeFalsy();
             done();
         };
-        ReactDOM.render(<Provider store={store}><TestMapEditor update={update} mode="edit"
-            story={currentStory}
-            messages="en-US"
-            focusedContent={focusedContent}
-        /></Provider>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}>
+            <TestMapEditor
+                update={update}
+                mode="edit"
+                story={currentStory}
+                messages="en-US"
+                focusedContent={focusedContent}
+            /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
 
         const visibilityBtn = container.querySelector(".toc-list-item .toc-layer-tool.visibility-check");

@@ -27,6 +27,7 @@ class Background extends Component {
 
     static propTypes = {
         id: PropTypes.string,
+        resourceId: PropTypes.string,
         sectionId: PropTypes.string,
         mode: PropTypes.string,
         fit: PropTypes.string,
@@ -77,6 +78,8 @@ class Background extends Component {
                 tools={this.props.tools && this.props.type && this.props.tools[this.props.type] || defaultTools}
             />
         );
+
+        const id = `${this.props.sectionId || "ms"}-media-${(this.props.id || this.props.resourceId)}`;
         return (
             <div
                 ref="div"
@@ -91,7 +94,7 @@ class Background extends Component {
                             : {})
                     }}>
                     <Media
-                        id={`${this.props.sectionId || "ms"}-media-${this.props.id}`}
+                        id={id}
                         {...this.props}
                         enableFullscreen={false}
                         descriptionEnabled={false}

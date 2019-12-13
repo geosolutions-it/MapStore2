@@ -283,6 +283,7 @@
             "search": "rechercher ..."
         },
         "resources": {
+            "successSaved": "Cette ressource a été enregistrée correctement",
             "deleteConfirmTitle": "Etes-vous sûr",
             "deleteConfirmMessage": "Etes-vous sûr de vouloir supprimer cette ressource?",
             "deleteConfirmButtonText": "Supprimer",
@@ -358,7 +359,7 @@
                 "errorTitle": "Impossible d'enregistrer la carte actuelle",
                 "error403": "Une erreur est survenue lors de la suppression de la carte",
                 "error404": "Une erreur est survenue lors de la création de la carte",
-                "error409": "Nom de la carte déjà choisi",
+                "error409": "Une ressource portant ce nom existe déjà",
                 "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la carte dépasse la limite fixée",
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
@@ -864,7 +865,7 @@
                     "reset_bbox": "Recommencer",
                     "save_bbox": "Sauver les modifications",
                     "save_radius": "Sauver les modifications",
-                    "radius": "Rayon (m)"
+                    "radius": "Rayon ({unit})"
                 },
                 "methods": {
                     "zone": "Zone",
@@ -1620,7 +1621,7 @@
                     "notFound": "Tableau de bord introuvable",
                     "notAccessible": "Tableau de bord non accessible"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. Essai '{data}'"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             },
             "editor": {
                 "save": "Sauvegarder le tableau de bord",
@@ -1652,7 +1653,7 @@
                     "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
                     "notFound": "La carte que vous essayez d'accéder n'existe pas"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. essayer « {data} »"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             }
         },
         "wizard": {
@@ -1903,10 +1904,12 @@
             "addParagraphSection": "Ajouter une section de paragraphe",
             "addImmersiveSection": "Ajouter une section immersive",
             "addMediaSection": "Ajouter une section multimédia",
+            "addWebPageSection": "Ajouter une section de page Web",
             "addImmersiveContent": "Ajouter du contenu immersif",
             "addTextContent": "Ajouter du contenu texte",
             "addMediaContent": "Ajouter du contenu multimédia",
             "zoomToContent": "Zoom sur le contenu",
+            "addWebPageContent": "Ajouter du contenu de page Web",
             "emptyTitle": "Cette histoire est vide",
             "emptyDescription": "Commencez à créer une géostory géniale en ajoutant du nouveau contenu",
             "contentToolbar": {
@@ -1939,7 +1942,9 @@
                 "saveChanges": "Sauvegarder les modifications",
                 "closeMapEditing": "Proche",
                 "confirmCloseMapEditing": "Fermer l'édition de la carte",
-                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?"
+                "pendingChangesDiscardConfirm": "Annuler les modifications de la carte actuelle?",
+                "editURL": "Modifier l'URL de la page Web",
+                "advancedMapEditor": "Ouvrir l'éditeur de carte avancé"
             },
             "navigation": {
                 "edit": "Modifier l'histoire"
@@ -1955,6 +1960,8 @@
                     "titleMedia": "Section multimédia",
                     "titleImage": "Image",
                     "titleText": "Texte",
+                    "titleWebPage": "Page Web",
+                    "titleWebPageSection": "Section de la page Web",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Supprimer la section sélectionnée",
@@ -1996,13 +2003,32 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configure map"
+                "configureMapOptions": "Configurer la carte",
+                "settings": "Paramètres",
+                "settingsSubTitle": "Gérer les interactions utilisateur",
+                "toc": "Couches",
+                "pan": "Interaction pan",
+                "zoom": "Interactions zoom avant / arrière",
+                "topLeft": "En haut à gauche",
+                "topRight": "En haut à droite",
+                "bottomLeft": "En bas à gauche",
+                "bottomRight": "En bas à droite"
+            },
+            "webPageCreator": {
+                "title": "Page Web",
+                "saveButton": "Enregistrer",
+                "error": "Veuillez fournir une URL de page Web valide",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {
             "title": "Modifier les propriétés",
             "name": "Nom",
             "description": "Description",
+            "createdAt": "établi",
+            "modifiedAt": "modifié",
             "namePlaceholder": "Tapez un nom...",
             "descriptionPlaceholder": "Tapez une description...",
             "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
@@ -2091,8 +2117,14 @@
                 "windowTitle": "Titre de la fenêtre",
                 "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
             },
+            "configureMap": {
+                "label": "Configurer la carte",
+                "reload": "Recharger la carte",
+                "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder?"
+            },
             "saveErrorNotification": {
                 "title": "L'enregistrement de contexte a échoué",
+                "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"

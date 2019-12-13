@@ -65,5 +65,9 @@ describe('Test correctness of the close actions', () => {
         expect(security.loginRequired().type).toBe(security.LOGIN_REQUIRED);
         expect(security.loginPromptClosed().type).toBe(security.LOGIN_PROMPT_CLOSED);
     });
+    it('checkLoggedUser', () => {
+        expect(security.checkLoggedUser().type).toBe(security.CHECK_LOGGED_USER);
+    });
+
 
 });

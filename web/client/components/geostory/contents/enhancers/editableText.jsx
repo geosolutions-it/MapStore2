@@ -71,7 +71,8 @@ export default compose(
                 placeholder,
                 toolbarStyle,
                 toolbar: {
-                    options: ['fontFamily', 'blockType', 'inline', 'textAlign', 'colorPicker', 'link', 'remove'],
+                    // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
+                    options: ['fontFamily', 'blockType', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
                     fontFamily: {
                         options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
                         className: undefined,

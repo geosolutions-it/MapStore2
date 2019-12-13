@@ -246,6 +246,10 @@ const LayersUtils = {
     getSourceId,
     extractSourcesFromLayers,
     extractTileMatrixSetFromLayers,
+    getGroupByName: (groupName, groups) => {
+        const result = head(groups.filter(g => g.name === groupName));
+        return result || groups.reduce((prev, g) => prev || !!g.nodes && LayersUtils.getGroupByName(groupName, g.nodes), undefined);
+    },
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
         case 'elevation':
@@ -529,7 +533,11 @@ const LayersUtils = {
                 }
             }
         }
-        return addBaseParams(reqUrl, layer.baseParams || {});
+        const params = {
+            ...layer.baseParams,
+            ...layer.params
+        };
+        return addBaseParams(reqUrl, params);
     },
     /**
      * Gets the layer search url or the current url

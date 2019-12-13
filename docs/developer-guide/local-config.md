@@ -26,6 +26,10 @@ This is the main structure:
   },
   // API keys for bing and mapquest services
   "bingApiKey",
+  // force dates to be in this specified format. use moment js format pattern
+  "forceDateFormat": "YYYY-MM-DD",
+  // force time to be in this specified format. use moment js format pattern
+  "forceTimeFormat": "hh:mm A",
   "mapquestApiKey",
   // list of actions types that are available to be launched dynamically from query param (#3817)
   "initialActionsWhiteList": ["ZOOM_TO_EXTENT", "ADD_LAYER", ...],

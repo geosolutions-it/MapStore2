@@ -27,7 +27,9 @@ import {
     isMediaSection,
     lists,
     scrollToContent,
-    testRegex
+    testRegex,
+    isWebPageSection,
+    getWebPageComponentHeight
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -132,6 +134,7 @@ describe("GeoStory Utils", () => {
         expect(ContentTypes).toEqual({
             TEXT: "text",
             MEDIA: "media",
+            WEBPAGE: "webPage",
             COLUMN: "column"
         });
     });
@@ -150,7 +153,8 @@ describe("GeoStory Utils", () => {
     });
     it("test SectionTemplates", () => {
         expect(SectionTemplates).toEqual({
-            MEDIA: "template-media"
+            MEDIA: "template-media",
+            WEBPAGE: "template-web-page"
         });
     });
     it("test lists", () => {
@@ -288,7 +292,8 @@ describe("GeoStory Utils", () => {
             mapOptions: {
                 interactions: {
                     mouseWheelZoom: false,
-                    mouseClick: false
+                    mouseClick: false,
+                    dragPan: true
                 }
             }
         };
@@ -310,5 +315,25 @@ describe("GeoStory Utils", () => {
         const resources = [{data: {title: "res1"}}, {data: {title: "res2"}}, {data: {title: "not matching title"}}];
         expect(filterResources(resources, "re").length).toBe(2);
         expect(filterResources(resources, "e").length).toBe(3);
+    });
+    it('test isWebPageSection', () => {
+        const element = {
+            type: SectionTypes.PARAGRAPH,
+            contents: [
+                {
+                    contents: [
+                        { type: ContentTypes.WEBPAGE }
+                    ]
+                }
+            ]
+        };
+        expect(isWebPageSection(element)).toBe(true);
+    });
+
+    it('test getWebPageComponentHeight', () => {
+        expect(getWebPageComponentHeight('small', 1000)).toBe(400);
+        expect(getWebPageComponentHeight('medium', 1000)).toBe(600);
+        expect(getWebPageComponentHeight('large', 1000)).toBe(800);
+        expect(getWebPageComponentHeight('full', 1000)).toBe(1000);
     });
 });

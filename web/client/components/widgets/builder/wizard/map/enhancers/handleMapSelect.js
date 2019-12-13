@@ -17,7 +17,7 @@ import { excludeGoogleBackground } from '../../../../../../utils/LayersUtils';
 const handleMapSelect = compose(
     withState('selected', "setSelected", null),
     withHandlers({
-        onMapChoice: ({ onMapSelected = () => { }, selectedSource = {} } = {}) => map =>
+        onMapChoice: ({ onMapSelected = () => { }, selectedSource = {}, includeMapId = false } = {}) => map =>
             (typeof map.id === 'string'
                 ? axios.get(map.id).then(response => response.data)
                 : GeoStoreDAO.getData(map.id, {baseURL: selectedSource.baseURL})
@@ -25,7 +25,7 @@ const handleMapSelect = compose(
                 let mapState = (!config.version && typeof map.id !== 'string') ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
                 return {
                     ...(mapState && mapState.map || {}),
-                    id: map.id,
+                    ...(includeMapId ? {id: map.id} : {}),
                     layers: excludeGoogleBackground(mapState.layers.map(l => {
                         if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
                             l.type = "empty";

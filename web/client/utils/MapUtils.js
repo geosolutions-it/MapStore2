@@ -300,10 +300,7 @@ function transformExtent(projection, center, width, height) {
 }
 
 const groupSaveFormatted = (node) => {
-    if (isObject(node.title) && head(Object.keys(node.title).filter(t => node.title[t]))) {
-        return {id: node.id, title: node.title, expanded: node.expanded};
-    }
-    return {id: node.id, expanded: node.expanded};
+    return {id: node.id, title: node.title, expanded: node.expanded};
 };
 
 

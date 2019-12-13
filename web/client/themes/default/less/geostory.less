@@ -2,6 +2,7 @@
 @ms-story-bg-grey: @ms2-color-shade-lighter;
 @ms-story-highlight: lighten(@ms2-color-primary, 20%);
 @ms-story-text: @ms2-color-text;
+@ms-story-loader: lighten(@ms-story-text, 20%);
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
@@ -61,7 +62,14 @@
         }
     }
 }
-
+.ms-geostory-map-controls {
+    padding-top: 8px;
+}
+.ms-geostory-settings-switch, .ms-geostory-map-controls-switch {
+    float: right;
+    position: relative;
+    top: unset;
+}
 .ms-geostory-builder {
     .ms-geostory-settings {
         padding: 8px;
@@ -69,11 +77,7 @@
             position: relative;
             display: block;
         }
-        .ms-geostory-settings-switch {
-            float: right;
-            position: relative;
-            top: unset;
-        }
+
         .ms-geostory-settings-immersive-section {
             padding-left: 20px;
         }
@@ -213,6 +217,7 @@
             margin-top: 5px;
         }
     }
+    padding: 8px;
 }
 .ms-cascade-story {
 
@@ -293,11 +298,6 @@
                 }
                 &.ms-dark {
                     background-color: contrast(@ms-story-bg);
-                }
-                &.ms-align-right .ms-media.ms-media-map .ol-zoom {
-                    top: 50px;
-                    right: 10px;
-                    left: auto;
                 }
             }
         }
@@ -543,6 +543,13 @@
         we need to restore the possibility to interact with the content body
         using `pointer-events: auto;`
         */
+
+        .ms-webpage-wrapper > iframe {
+            border: none;
+            width: 100%;
+            min-height: 100%;
+        }
+
         .ms-content-body > * {
             pointer-events: auto;
             position: relative; /* sets the position of the add bar overlay relative to the button */
@@ -689,6 +696,11 @@
             position: relative;
             width: 100%;
             height: 100%;
+            .ms-media-loader {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
         }
         &.ms-media-image {
             & > img {
@@ -727,6 +739,31 @@
                 top: 50px;
             }
 
+        }
+    }
+
+    .ms-media-error,
+    .ms-media-loader {
+        min-height: 128px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .ms-media-error {
+        background-color: @ms-story-bg-grey;
+        .glyphicon {
+            font-size: @square-btn-size;
+        }
+    }
+    .ms-media-loader {
+        background-color: transparent;
+        .mapstore-small-size-loader,
+        .mapstore-medium-size-loader,
+        .mapstore-full-size-loader {
+            border-color: fade(@ms-story-loader, 20%);
+            border-left-color: @ms-story-loader;
         }
     }
     .empty-state-container {
@@ -771,9 +808,15 @@
             &.ms-section-paragraph {
                 .ms-section-contents{
                     padding-bottom: 120px;
-                }                
+                }
             }
         }
+    }
+
+    .ms-visibility-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
     }
 
     /////////////////////
@@ -784,4 +827,31 @@
     .public-DraftStyleDefault-ltr {
         text-align: inherit;
     }
+}
+
+.ms-media-map.topLeft .ol-zoom.ol-unselectable.ol-control {
+    top: 50px;
+    right: unset;
+    bottom: unset;
+    left: 10px;
+}
+.ms-media-map.topRight .ol-zoom.ol-unselectable.ol-control {
+    top: 50px;
+    right: 10px;
+    bottom: unset;
+    left: unset;
+}
+
+.ms-media-map.bottomRight .ol-zoom.ol-unselectable.ol-control {
+    top: unset;
+    right: 10px;
+    bottom: 50px;
+    left: unset;
+}
+
+.ms-media-map.bottomLeft .ol-zoom.ol-unselectable.ol-control {
+    top: unset;
+    right: unset;
+    bottom: 50px;
+    left: 10px;
 }

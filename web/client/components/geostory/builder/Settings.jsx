@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {Form, FormControl, FormGroup, /* Checkbox, */ControlLabel} from 'react-bootstrap';
+import {Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Thumbnail from '../../maps/forms/Thumbnail';
@@ -36,7 +36,9 @@ export default updateTitle(({
     setStoryTitle = () => {}
 }) => {
     return (<Form className="ms-geostory-settings">
-        <div className="text-center"><h4>Story Settings</h4></div>
+        <div className="text-center">
+            <h4><Message msgId="geostory.builder.settings.headerTitle"/></h4>
+        </div>
         <FormGroup>
             <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
             <SwitchButton

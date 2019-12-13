@@ -21,6 +21,7 @@
           {
             "id": "SomeID2",
             "type": "image",
+            "lazy": false,
             "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
           }
         ]
@@ -44,7 +45,8 @@
             },
             {
               "id": "imm1_col1_content2",
-              "type": "media"
+              "type": "media",
+              "lazy": false
             }
           ]
         },
@@ -60,7 +62,8 @@
             },
             {
               "id": "imm1_col2_content2",
-              "type": "media"
+              "type": "media",
+              "lazy": false
             }
           ]
         }

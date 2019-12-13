@@ -12,7 +12,9 @@ import { Modes, getDefaultSectionTemplate } from '../utils/GeoStoryUtils';
 export const ADD = "GEOSTORY:ADD";
 export const ADD_RESOURCE = "GEOSTORY:ADD_RESOURCE";
 export const CHANGE_MODE = "GEOSTORY:CHANGE_MODE";
+export const CLEAR_SAVE_ERROR = "GEOSTORY:CLEAR_SAVE_ERROR";
 export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
+export const EDIT_WEBPAGE = "GEOSTORY:EDIT_WEBPAGE";
 export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
@@ -27,6 +29,7 @@ export const SELECT_CARD = "GEOSTORY:SELECT_CARD";
 export const SET_CONTROL = "GEOSTORY:SET_CONTROL";
 export const SET_RESOURCE = "GEOSTORY:SET_RESOURCE";
 export const SET_CURRENT_STORY = "GEOSTORY:SET_CURRENT_STORY";
+export const SET_WEBPAGE_URL = "GEOSTORY:SET_WEBPAGE_URL";
 export const TOGGLE_CARD_PREVIEW = "GEOSTORY:TOGGLE_CARD_PREVIEW";
 export const TOGGLE_SETTINGS_PANEL = "GEOSTORY:TOGGLE_SETTINGS_PANEL";
 export const TOGGLE_SETTING = "GEOSTORY:TOGGLE_SETTING";
@@ -34,6 +37,7 @@ export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_SETTING = "GEOSTORY:UPDATE_SETTING";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
+
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -54,6 +58,10 @@ export const add = (path, position, element, localize = v => v) => ({
  * Adds a resource to the current story
  */
 export const addResource = ( id, mediaType, data ) => ({type: ADD_RESOURCE, id, mediaType, data});
+/**
+ * ClearSaveError
+*/
+export const clearSaveError = () => ({ type: CLEAR_SAVE_ERROR});
 /**
  * Turn on/off editing mode.
  * @param {boolean} editing editing mode. true to activate, false to deactivate.
@@ -209,3 +217,7 @@ export const setFocusOnContent = (status, target, selector, hideContent, path) =
  * @param {*} value value used to update the prop
  */
 export const updateSetting = (prop, value) => ({type: UPDATE_SETTING, prop, value});
+
+export const setWebPageUrl = (src) => ({ type: SET_WEBPAGE_URL, src });
+
+export const editWebPage = ({ path }, owner = 'GEOSTORY') => ({ type: EDIT_WEBPAGE, path, owner });

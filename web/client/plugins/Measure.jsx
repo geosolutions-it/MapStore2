@@ -16,66 +16,10 @@ const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates,
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
-const {cancelRemoveAnnotation, confirmRemoveAnnotation, openEditor, removeAnnotation, cancelEditAnnotation,
-    saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
-    cleanHighlight, cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges,
-    toggleUnsavedChangesModal, changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download,
-    changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected, highlight,
-    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat
-} = require('../actions/annotations');
-const { zoomToExtent } = require('../actions/map');
-const { annotationsInfoSelector } = require('../selectors/annotations');
+const {highlightPoint} = require('../actions/annotations');
 const { isOpenlayers } = require('../selectors/maptype');
 const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector } = require('../selectors/measurement');
 const { showCoordinateEditorSelector, measureSelector } = require('../selectors/controls');
-
-const commonEditorActions = {
-    onEdit: openEditor,
-    onCancelEdit: cancelEditAnnotation,
-    onChangeStyler: changeStyler,
-    onChangeFormat: changeFormat,
-    onConfirmDeleteFeature: confirmDeleteFeature,
-    onCleanHighlight: cleanHighlight,
-    onHighlightPoint: highlightPoint,
-    onHighlight: highlight,
-    onError: validationError,
-    onSave: saveAnnotation,
-    onRemove: removeAnnotation,
-    onAddGeometry: toggleAdd,
-    onAddText: addText,
-    onSetUnsavedChanges: setUnsavedChanges,
-    onSetUnsavedStyle: setUnsavedStyle,
-    onChangeProperties: changedProperties,
-    onToggleDeleteFtModal: toggleDeleteFtModal,
-    onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
-    onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
-    onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
-    onAddNewFeature: addNewFeature,
-    onResetCoordEditor: resetCoordEditor,
-    onStyleGeometry: toggleStyle,
-    onCancelStyle: restoreStyle,
-    onChangeSelected: changeSelected,
-    onSaveStyle: toggleStyle,
-    onSetStyle: setStyle,
-    onStartDrawing: startDrawing,
-    onDeleteGeometry: removeAnnotationGeometry,
-    onZoom: zoomToExtent,
-    onChangeRadius: changeRadius,
-    onSetInvalidSelected: setInvalidSelected,
-    onChangeText: changeText,
-    onDownload: download
-};
-
-const AnnotationsInfoViewer = connect(annotationsInfoSelector,
-    {
-        onCancelRemove: cancelRemoveAnnotation,
-        onCancelEdit: cancelEditAnnotation,
-        onCancelClose: cancelCloseAnnotations,
-        onConfirmClose: confirmCloseAnnotations,
-        onConfirmRemove: confirmRemoveAnnotation,
-        ...commonEditorActions
-    })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
-
 
 const selector = (state) => {
     return {
@@ -146,5 +90,5 @@ module.exports = {
         }
     }),
     reducers: {measurement: require('../reducers/measurement')},
-    epics: require('../epics/measurement')(AnnotationsInfoViewer)
+    epics: require('../epics/measurement')
 };

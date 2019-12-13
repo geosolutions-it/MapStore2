@@ -8,6 +8,7 @@
 
 const expect = require('expect');
 const { INIT_CATALOG } = require('../../actions/catalog');
+const { MAP_CONFIG_LOAD_ERROR } = require('../../actions/config');
 const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/controls');
 const { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } = require('../../actions/security');
 const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig, redirectOnLogout } = require('../login');
@@ -15,6 +16,43 @@ const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig, redir
 const { testEpic } = require('./epicTestUtils');
 
 describe('login Epics', () => {
+    describe('reloadMapConfig', () => {
+        it('keeps map changes on login', (done) => {
+            const epicResult = actions => {
+                expect(actions.length).toBe(0);
+                done();
+            };
+            testEpic(reloadMapConfig, 0, loginSuccess(), epicResult, {});
+        });
+        it('removes unsaved map changes on logout', (done) => {
+            const epicResult = actions => {
+                expect(actions.length).toBe(0);
+                done();
+            };
+            testEpic(reloadMapConfig, 0, logoutWithReload(), epicResult, {});
+        });
+
+        it('show prompt login when users logs out from new map', (done) => {
+            const NUM_ACTIONS = 1;
+            const epicResult = actions => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [a] = actions;
+                expect(a).toExist();
+                expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
+                expect(a.error.status).toBe(403);
+                done();
+            };
+            const state = {
+                router: {
+                    location: {
+                        pathname: "/viewer/openlayers/new"
+                    }
+                }
+            };
+            testEpic(reloadMapConfig, NUM_ACTIONS, logout(null), epicResult, state);
+        });
+
+    });
     it('init catalog on login', (done) => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
@@ -23,35 +61,6 @@ describe('login Epics', () => {
             done();
         };
         testEpic(initCatalogOnLoginOutEpic, 1, loginSuccess(), epicResult, {});
-    });
-    it('keeps map changes on login', (done) => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(0);
-            done();
-        };
-        testEpic(reloadMapConfig, 0, loginSuccess(), epicResult, {});
-    });
-    it('removes unsaved map changes on logout', (done) => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(0);
-            done();
-        };
-        testEpic(reloadMapConfig, 0, logoutWithReload(), epicResult, {});
-    });
-
-    it('reload new map config on logout', (done) => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(1);
-            done();
-        };
-        const state = {
-            router: {
-                location: {
-                    pathname: "/viewer/openlayers/new"
-                }
-            }
-        };
-        testEpic(reloadMapConfig, 1, logout(null), epicResult, state);
     });
 
     it('init catalog on logout', (done) => {

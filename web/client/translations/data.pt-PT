@@ -1563,6 +1563,8 @@
                 "title": "Edit dashboard properties",
                 "name": "Name",
                 "description": "Description",
+                "createdAt": "Criado",
+                "modifiedAt": "Modificado",
                 "namePlaceholder": "Type a name...",
                 "descriptionPlaceholder": "Type a description...",
                 "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
@@ -1581,7 +1583,7 @@
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
                 },
-                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+                "resourceAlreadyExists": "A resource with this name already exists"
             },
             "editor": {
                 "save": "Save the dashboard",

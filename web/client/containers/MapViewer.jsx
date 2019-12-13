@@ -28,6 +28,7 @@ const PluginsContainer = connect((state) => ({
 
 class MapViewer extends React.Component {
     static propTypes = {
+        className: PropTypes.string,
         params: PropTypes.object,
         statePluginsConfig: PropTypes.object,
         pluginsConfig: PropTypes.object,
@@ -37,6 +38,7 @@ class MapViewer extends React.Component {
 
     static defaultProps = {
         mode: 'desktop',
+        className: 'viewer',
         loadMapConfig: () => {}
     };
 
@@ -45,7 +47,7 @@ class MapViewer extends React.Component {
     }
 
     render() {
-        return (<PluginsContainer key="viewer" id="viewer" className="viewer"
+        return (<PluginsContainer key="viewer" id="viewer" className={this.props.className}
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}

@@ -218,7 +218,7 @@
                     "title": "Lỗi tải bảng điều khiển",
                     "unknownError": "Có lỗi khi tải bảng điều khiển. Vui lòng liên hệ với quản trị viên"
                 },
-                "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại. thử '{data}'"
+                "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại"
             },
             "loadingSpinner": "Đang tải Bảng điều khiển",
             "saveDialog": {
@@ -228,6 +228,8 @@
                 "description": "Mô tả",
                 "descriptionPlaceholder": "Nhập mô tả ...",
                 "name": "Tên",
+                "createdAt": "Tạo",
+                "modifiedAt": "Sửa đổi",
                 "namePlaceholder": "Nhập tên ...",
                 "saveSuccessMessage": "Bảng điều khiển được lưu thành công",
                 "saveSuccessTitle": "Thành công",

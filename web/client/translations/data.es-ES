@@ -283,6 +283,7 @@
             "search": "buscar..."
         },
         "resources": {
+            "successSaved": "Este recurso se ha guardado correctamente",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
@@ -358,7 +359,7 @@
                 "errorTitle": "No se puede guardar el mapa actual",
                 "error403": "Error al modificar el mapa",
                 "error404": "Error al crear el mapa",
-                "error409": "Nombre del mapa repetido",
+                "error409": "Ya existe un recurso con este nombre",
                 "error500": "Error de servidor interno. Verificar si el tamaño del archivo de configuración del mapa excede el límite fijado",
                 "errorDefault": "Error de red"
             },
@@ -864,7 +865,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Guardar los cambios",
                     "save_radius": "Guardar los cambios",
-                    "radius": "Radio(m)"
+                    "radius": "Radio({unit})"
                 },
                 "methods": {
                     "zone": "Zona",
@@ -1620,7 +1621,7 @@
                     "notFound": "Panel de control no encontrado",
                     "notAccessible": "Panel de control no accesible"
                 },
-                "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre"
             },
             "editor": {
                 "save": "Guardar el panel de control",
@@ -1630,7 +1631,7 @@
             },
             "emptyTitle": "El panel de control está vacío"
         },
-                "context": {
+        "context": {
             "loadingSpinner": "Cargando Contexto",
             "errors": {
                 "loading": {
@@ -1652,7 +1653,7 @@
                     "unknownError": "Hubo un error al cargar el mapa. Por favor, póngase en contacto con el administrador",
                     "notFound": "El mapa que está intentando acceder no existe"
                 },
-                "resourceAlreadyExists": "Un recurso con este nombre ya existe. Try '{datos}'"
+                "resourceAlreadyExists": "Ya existe un recurso con este nombre"
             }
         },
         "wizard": {
@@ -1903,10 +1904,12 @@
             "addParagraphSection": "Agregar sección de párrafo",
             "addImmersiveSection": "Añadir sección inmersiva",
             "addMediaSection": "Agregar sección de multimedia",
+            "addWebPageSection": "Agregar sección de página web",
             "addImmersiveContent": "Añadir contenido inmersivo",
             "addTextContent": "Agregar contenido de texto",
             "addMediaContent": "Agregar contenido multimedia",
             "zoomToContent": "Zoom al contenido",
+            "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "contentToolbar": {
@@ -1939,7 +1942,9 @@
                 "saveChanges": "Guardar cambios",
                 "closeMapEditing": "Cerrar",
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
-                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?"
+                "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
+                "editURL": "Editar URL de página web",
+                "advancedMapEditor": "Abrir editor de mapas avanzado"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -1955,6 +1960,8 @@
                     "titleMedia": "Sección de multimedia",
                     "titleImage": "Imagen",
                     "titleText": "Texto",
+                    "titleWebPage": "Página web",
+                    "titleWebPageSection": "Sección de la página web",
                     "titleUnknown": "UNKNOWN"
                 },
                 "delete": "Eliminar la sección seleccionada",
@@ -1996,13 +2003,32 @@
                 }
             },
             "mapEditor": {
-                "configureMapOptions": "Configurar mapa"
+                "configureMapOptions": "Configurar mapa",
+                "settings": "Configuraciones",
+                "settingsSubTitle": "Gestionar interacciones de usuario",
+                "toc": "Capas",
+                "pan": "interacción pan",
+                "zoom": "Acercar/alejar interacciones",
+                "topLeft": "Arriba a la izquierda",
+                "topRight": "Parte superior derecha",
+                "bottomLeft": "Abajo a la izquierda",
+                "bottomRight": "Abajo a la derecha"
+            },
+            "webPageCreator": {
+                "title": "Página web",
+                "saveButton": "Salvar",
+                "error": "Proporcione una URL de página web válida",
+                "url": {
+                    "label": "URL"
+                }
             }
         },
         "saveDialog": {
             "title": "Editar propiedades",
             "name": "Nombre",
             "description": "Descripción",
+            "createdAt": "Creado",
+            "modifiedAt": "Modificado",
             "namePlaceholder": "Escriba un nombre ...",
             "descriptionPlaceholder": "Escriba una descripción ...",
             "confirmCloseText": "Hay cambios pendientes, ¿está seguro que quiere cerrar sin guardar?",
@@ -2091,8 +2117,14 @@
                 "windowTitle": "Título de la ventana",
                 "windowTitlePlaceholder": "Ingrese el título de la ventana..."
             },
+            "configureMap": {
+                "label": "Configurar mapa",
+                "reload": "Actualizar mapa",
+                "confirm": "Esto va a descartar todos los cambios actuales del mapa. ¿Proceder?"
+            },
             "saveErrorNotification": {
                 "title": "Error al guardar el contextod",
+                "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"

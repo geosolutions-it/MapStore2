@@ -18,6 +18,7 @@ const ConfirmModal = compose(
     confirmNo = <Message msgId="no"/>,
     confirmTitle = <Message msgId="confirm"/>,
     confirmContent,
+    confirmButtonBSStyle = "default",
     show = false,
     confirmModal = true,
     draggable = false,
@@ -35,7 +36,7 @@ const ConfirmModal = compose(
                 title={confirmTitle}
                 confirmButtonContent={confirmYes}
                 closeText={confirmNo}
-                confirmButtonBSStyle="default"
+                confirmButtonBSStyle={confirmButtonBSStyle}
                 closeGlyph="1-close">
                 {confirmContent}
             </Confirm>

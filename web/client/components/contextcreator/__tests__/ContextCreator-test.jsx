@@ -9,12 +9,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
+import {Provider} from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+
+import { isEqual } from 'lodash';
+
 
 import expect from 'expect';
-import ContextCreator from '../ContextCreator';
+import ContextCreator, { pluginsFilterOverride } from '../ContextCreator';
+
+const mockStore = configureMockStore();
 
 describe('ContextCreator component', () => {
+    let store;
     beforeEach((done) => {
+        store = mockStore();
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -34,9 +43,14 @@ describe('ContextCreator component', () => {
                 onSave: () => { }
             };
             const spyonSave = expect.spyOn(actions, 'onSave');
-            ReactDOM.render(<ContextCreator onSave={actions.onSave} />, document.getElementById("container"));
+            ReactDOM.render(
+                <Provider store={store}>
+                    <ContextCreator curStepId="configure-map" onSave={actions.onSave} />
+                </Provider>, document.getElementById("container"));
             // save button
-            const saveBtn = document.querySelectorAll('.footer-button-toolbar-div button')[1];
+            const saveBtn = document.querySelectorAll('.footer-button-toolbar button')[0];
+            expect(saveBtn).toExist();
+            expect(saveBtn.childNodes[0].innerHTML).toBe('save');
             ReactTestUtils.Simulate.click(saveBtn); // <-- trigger event callback
             // check destination path
             expect(spyonSave).toHaveBeenCalledWith("/context-manager");
@@ -46,12 +60,48 @@ describe('ContextCreator component', () => {
                 onSave: () => { }
             };
             const spyonSave = expect.spyOn(actions, 'onSave');
-            ReactDOM.render(<ContextCreator saveDestLocation="MY_DESTINATION" onSave={actions.onSave} />, document.getElementById("container"));
+            ReactDOM.render(
+                <Provider store={store}>
+                    <ContextCreator curStepId="configure-map" saveDestLocation="MY_DESTINATION" onSave={actions.onSave} />
+                </Provider>, document.getElementById("container"));
             // save button
-            const button = document.querySelectorAll('.footer-button-toolbar-div button')[1];
-            ReactTestUtils.Simulate.click(button); // <-- trigger event callback
+            const saveBtn = document.querySelectorAll('.footer-button-toolbar button')[0];
+            expect(saveBtn).toExist();
+            expect(saveBtn.childNodes[0].innerHTML).toBe('save');
+            ReactTestUtils.Simulate.click(saveBtn); // <-- trigger event callback
             // check customization of destination path
             expect(spyonSave).toHaveBeenCalledWith("MY_DESTINATION");
         });
+    });
+    describe('viewerPlugins filtering', () => {
+        it('filter plugins accordingly', () => {
+            expect(isEqual(pluginsFilterOverride(["P1", "P2"], ["P1"]), ["P1"]));
+        });
+        it('apply plugins overrides', () => {
+            // add cfg where missing
+            expect(isEqual(
+                pluginsFilterOverride(["P1", "P2"], [{
+                    "name": "P1",
+                    "overrides": {
+                        "cfg": { test: "newValue" }
+                    }
+                }]),
+                [{
+                    "name": "P1",
+                    "cfg": { test: "newValue" }
+                }]
+            )).toBeTruthy();
+            // not modifies the existing cfg
+            expect(isEqual(pluginsFilterOverride(["P1", { name: "P2", "cfg": { test: "value1", test2: "value2" } }], [{
+                "name": "P2",
+                "overrides": {
+                    "cfg": { test: "newValue" }
+                }
+            }]), [{
+                "name": "P2",
+                "cfg": { test: "newValue", test2: "value2" }
+            }])).toBeTruthy();
+        });
+
     });
 });

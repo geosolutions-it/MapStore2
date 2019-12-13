@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+import { DragPan, PinchRotate, DragRotate, KeyboardPan, MouseWheelZoom, PinchZoom, DoubleClickZoom, DragZoom, KeyboardZoom } from 'ol/interaction';
 import {Point, LineString, MultiPoint, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
 import {fromCircle} from 'ol/geom/Polygon';
 
@@ -28,4 +29,43 @@ export const createOLGeometry = ({ type, coordinates, radius, center } = {}) => 
 
 export const isPolygon = (feature = {}) => {
     return feature && feature.geometry && feature.geometry.type === "Polygon";
+};
+
+export const DEFAULT_INTERACTION_OPTIONS = {
+    "dragPan": {
+        options: { kinetic: false },
+        Instance: DragPan
+    },
+    "keyboardPan": {
+        options: { kinetic: false },
+        Instance: KeyboardPan
+    },
+    "mouseWheelZoom": {
+        options: { duration: 0 },
+        Instance: MouseWheelZoom
+    },
+    "doubleClickZoom": {
+        options: { duration: 0 },
+        Instance: DoubleClickZoom
+    },
+    "shiftDragZoom": {
+        options: { duration: 0 },
+        Instance: DragZoom
+    },
+    "keyboardZoom": {
+        options: {  },
+        Instance: KeyboardZoom
+    },
+    "pinchZoom": {
+        options: { duration: 0 },
+        Instance: PinchZoom
+    },
+    "pinchRotate": {
+        options: { },
+        Instance: PinchRotate
+    },
+    "altShiftDragRotate": {
+        options: { },
+        Instance: DragRotate
+    }
 };

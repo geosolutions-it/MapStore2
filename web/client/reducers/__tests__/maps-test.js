@@ -10,7 +10,7 @@ const expect = require('expect');
 const maps = require('../maps');
 const {
     mapsLoaded, mapsLoading, loadError, mapCreated, mapUpdating,
-    mapMetadataUpdated, mapDeleting, attributeUpdated, thumbnailError, permissionsLoading,
+    mapMetadataUpdated, mapDeleting, attributeUpdated, thumbnailError, mapError, permissionsLoading,
     permissionsLoaded, saveMap, permissionsUpdated, resetUpdating,
     mapsSearchTextChanged, setShowMapDetails} = require('../../actions/maps');
 
@@ -95,7 +95,7 @@ describe('Test the maps reducer', () => {
         let state = maps(null, loadError("ERROR"));
         expect(state.loadingError).toBe("ERROR");
     });
-    it('on mapUpdating, mapMetadataUpdated, attributeUpdated, permissionsUpdated and resetUpdating, thumbnailError', () => {
+    it('on mapUpdating, mapMetadataUpdated, attributeUpdated, permissionsUpdated and resetUpdating, thumbnailError, mapError', () => {
         let state = maps(null, mapsLoaded(mapsSampleResult, "TEST", {
             start: 0,
             limit: 10
@@ -117,6 +117,8 @@ describe('Test the maps reducer', () => {
         state = maps(state, mapUpdating(sampleMap.id));
         expect(state.results[0].updating).toBe(true);
         state = maps(state, thumbnailError(sampleMap.id));
+        expect(state.results[0].updating).toBe(false);
+        state = maps(state, mapError(sampleMap.id));
         expect(state.results[0].updating).toBe(false);
     });
     it('on mapCreated, mapDeleting and mapDeleted', () => {
@@ -153,6 +155,7 @@ describe('Test the maps reducer', () => {
         }));
         state = maps(state, permissionsLoading(sampleMap.id));
         expect(state.results[0].permissionLoading).toBe(true);
+
         state = maps(state, permissionsLoaded(permissions, sampleMap.id));
         expect(state.results[0].permissionLoading).toBe(false);
         expect(state.results[0].permissions).toExist();
@@ -166,14 +169,11 @@ describe('Test the maps reducer', () => {
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule).toExist();
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule.length).toBe(1);
 
-    });
-    it('on map info loaded', () => {
-        const prevState = {
-            results: [{id: 1, name: 'Map'}]
-        };
-        const state = maps(prevState, {type: "MAP_INFO_LOADED", mapId: 1, info: {canEdit: true, canDelete: true, name: 'Map 1'}});
-        const found = state.results.find(item => item.id === 1);
-        expect(found.name).toEqual('Map 1');
+        // check permission list loading doesn't fail if permission is undefined or null
+        // i.e. when some error occurs loading permissions
+        const errorState = maps({}, permissionsLoaded(null, sampleMap.id));
+        expect(errorState).toExist();
+        expect(errorState.results).toExist();
     });
 
 });
