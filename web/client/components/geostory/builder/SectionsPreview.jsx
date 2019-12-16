@@ -55,7 +55,7 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         columnleft: 'align-left',
         columnright: 'align-right',
         columncenter: 'align-center',
-        webPage: 'code'
+        webPage: 'story-webpage-section'
     };
     const imgSrc = src || thumbnail;
     return imgSrc ? <img src={imgSrc}/> : <Glyphicon glyph={glyphs[type] || 'picture'} />;

@@ -57,7 +57,7 @@ const toolButtons = {
     }),
     editMap: ({editMap = false, update = () => {}}) => ({
         // using normal ToolbarButton because this has no options
-        glyph: "1-map",
+        glyph: "map-edit",
         visible: true,
         disabled: editMap,
         bsStyle: editMap ? "success" : "default",
