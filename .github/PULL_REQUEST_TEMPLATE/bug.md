@@ -10,7 +10,7 @@ assignees: ''
 <!-- Thank you so much for your time taking to contribute, your work is appreciated! 😃 -->
 
 ## Description
-<!-- A few sentences describing the overall goals of the pull request' s commits. -->
+<!-- A few sentences describing the real problem AND the solution implemented -->
 
 **Please check if the PR fulfills these requirements**
 - [ ] The commit message follows our guidelines: https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md
@@ -25,3 +25,5 @@ assignees: ''
 
 **What is the new behavior?**
 <!-- Describe here the new behaviour based on your changes -->
+
+## Other useful information

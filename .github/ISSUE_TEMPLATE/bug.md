@@ -6,10 +6,10 @@ labels: 'bug'
 assignees: ''
 ---
 
-## How to reproduce
+## Description
 <!-- Add here a few sentences describing the bug. -->
 
-
+## How to reproduce
 <!-- A list of steps to reproduce the bug -->
 -  
 - 
@@ -37,5 +37,5 @@ assignees: ''
 |Safari| |
 </details>
 
-## Other useful information (optional):
-<!-- error stack trace, screenshot, videos, or link to repository code is welcome -->
+## Other useful information
+<!-- error stack trace, screenshot, videos, or link to repository code are welcome -->

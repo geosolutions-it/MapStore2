@@ -14,3 +14,5 @@ assignees: ''
 *Documentation section involved*
 - [ ] User Guide
 - [ ] Developer Guide
+
+## Other useful information

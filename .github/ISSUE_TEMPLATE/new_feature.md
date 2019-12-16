@@ -2,7 +2,7 @@
 name: New Feature
 about: Suggest an idea for this project
 title: ''
-labels: 'enhancement'
+labels: 'New Feature'
 assignees: ''
 
 ---
@@ -16,3 +16,5 @@ assignees: ''
 <!-- Describe here the list of acceptance criteria -->
 - [ ] 
 - [ ] 
+
+## Other useful information

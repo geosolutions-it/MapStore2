@@ -2,7 +2,7 @@
 name: Pull Request for a new feature
 about: Use this template for new features
 title: ''
-labels: ''
+labels: 'New Feature'
 assignees: ''
 
 ---
@@ -32,3 +32,5 @@ assignees: ''
  - [x] No
 
 <!-- If this PR contains a breaking change, please describe the impact and migration path for existing applications -->
+
+## Other useful information

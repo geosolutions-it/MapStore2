@@ -24,3 +24,5 @@ assignees: ''
 ## Issue
 <!-- You can also link to an existing issue here -->
 #<issue>
+
+## Other useful information
