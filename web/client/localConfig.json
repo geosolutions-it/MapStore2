@@ -33,7 +33,7 @@
         "method": "bearer"
       }, {
         "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
-        "authkeyParamName": "authkey-qa",
+        "authkeyParamName": "authkey",
         "method": "authkey"
     }],
     "monitorState": [
@@ -563,10 +563,15 @@
         }, {
             "name": "ManagerMenu",
             "cfg": {
-                "enableContextManager": true
+                "enableContextManager": false
             }
         }, "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps", "ContentTabs",
+        "maps": ["HomeDescription", "Fork", "MapSearch", {
+          "name": "CreateNewMap",
+          "cfg": {
+            "showNewGeostory": false
+          }
+        }, "FeaturedMaps", "ContentTabs",
 
           {
             "name": "Maps",
@@ -579,16 +584,6 @@
             }
           }, {
             "name": "Dashboards",
-            "cfg": {
-              "mapsOptions": {
-                "start": 0,
-                "limit": 12
-              },
-              "fluid": true
-            }
-          },
-          {
-            "name": "GeoStories",
             "cfg": {
               "mapsOptions": {
                 "start": 0,
