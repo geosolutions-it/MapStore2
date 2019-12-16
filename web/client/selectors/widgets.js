@@ -1,4 +1,12 @@
-const { get, castArray} = require('lodash');
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
+const { find, get, castArray} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
@@ -31,6 +39,13 @@ const getVisibleFloatingWidgets = createSelector(
         return widgets;
     }
 );
+const getWidgetAttributeFilter = (id, attributeName) => createSelector(
+    getVisibleFloatingWidgets,
+    (widgets) => {
+        const widget = find(widgets, {id});
+        return widget && widget.quickFilters && widget.quickFilters[attributeName] || {};
+    });
+
 const getCollapsedIds = createSelector(
     getCollapsedState,
     (collapsed = {}) => Object.keys(collapsed)
@@ -87,6 +102,7 @@ module.exports = {
     getEditorSettings,
     getWidgetLayer,
     getMapWidgets,
+    getWidgetAttributeFilter,
     availableDependenciesSelector,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
