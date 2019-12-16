@@ -1,163 +1,160 @@
 # Menu Bar
 **********
 
-In this section you will learn how to use the *Menu Bar*. As mentioned before, it includes connections to the <span style="color:red">*Home Page*</span> and the <span style="color:blue">*Account*</span>.
+The *Menu Bar* consist of four different parts:
+
+* The **Search bar**
+
+* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
+
+* The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
+
+* The **Burger Menu** button <img src="../img/button/burger.jpg" class="ms-docbutton"/>
 
 <img src="../img/menu-bar/menu-bar.jpg" class="ms-docimage"/>
 
-It contains also a *Search bar* and a *Burger menu* that will be treated in details here below.
+## Search Bar
 
-Search Bar
-----------
+The search bar is a tool that allows the user to query the layers in order to find a specific information. In [Mapstore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in three different ways:
 
-The *Search Bar* of the portal allows you to find point of interests (POIs), streets or locations by name (default) or by coordinates.
+* By **Location name**
 
-In the *Search Bar*, for example, **Type** the text "rome" then **Select** the first record. The map will automatically re-center on that area delimiting it by a polygon in the case of an area, by a line in the case of a linear shape (e.g. streets, streams) and by a marker in the case of a point.
+* By **Coordinates**
+
+* By **Configuring a search service**
+
+<img src="../img/menu-bar/search-types.jpg" class="ms-docimage"/>
+
+### Search by location name
+
+The *Search by location name*, set by default when a new map is created, allow the user to find polygonal, linear and points features. Typing the name of a city in the input box and selecting the desired record, for example, the map will automatically re-center on the chosen area highlighting with a polygon the border of the administrative area:
 
 <img src="../img/menu-bar/rome.jpg" class="ms-docimage" />
 
-### Searching by coordinates
+A similar behavior happens when looking for a linear feature (like, for example, can be a street or a river) or a point feature (like a restaurant or the top of a mountain)
 
-Through the *Search Bar* you have the possibility to zoom to a specific point and place a marker in its position. The map will be centered in that point.
-The point can be specified typing its coordinates both in `decimal` and `aeronautical` formats.
+### Search by coordinates
+
+Performing a *Search by coordinates* the user can zoom to a specific point and place a marker in its position. That point can be specified typing the coordinates in two different formats:
+
+* **Decimal** (the default format)
+
+<img src="../img/menu-bar/decimal.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+* **Aeronautical** (that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button)
+
+<img src="../img/menu-bar/aeronautical.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+Once the coordinates are set, it is possible to perform the search with the <img src="../img/button/magnifying_glass_icon.jpg" class="ms-docbutton"/> button. The displayed result is similar to the following:
+
+<img src="../img/menu-bar/performed-search.jpg" class="ms-docimage"/>
+
+### Configuring a search service
+
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option, the following window opens:
+
+<img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+In order to create a new custom service, the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button takes the user to a page where he can set the *WFS service props*, for example:
+
+<img src="../img/menu-bar/wfs-service-props-form.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+In particular, the information to be entered is:
+
+* **Name** of the service
+
+* WFS **Service url** that the user want to call
+
+* **Layer** to be queried
+
+* Specific **Attributes** (fileds) that the user wants to query
+
+When all the options are set, by clicking on the <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> button a new panel opens, where it is possible to choose the properties of the displayed results:
+
+<img src="../img/menu-bar/result-display-properties-form.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+In this case, the user can define the following settings:
+
+* The **Title** displayed on the top of each results row (in the previous image, for  example, the chosen title for the results is the NAME of the objects)
+
+* The **Description** inserted in the results just below the title (in the previous image for  example, a static text was set in order to show the name of the layer in which the results are sought)
+
+* The **Priority**, a parameter which determines the position of the records in the results list. Lower values imply a higher positions in the results list and vice versa. By default the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, therefore in order to see the custom results in a higher position a lower priority value is needed 
+
+* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up selecting a record from the search results. Selecting *All Layers* or *Search Layer*, instead, the Info panel show up displaying respectively the information of all layers visible in the map and the data already available through the custom search
+
+<img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+!!! note
+    Selecting *All Layers* in the Launch Info panel the result is something like the following:
+    
+    <img src="../img/menu-bar/custom-search-results-all-layers.jpg" class="ms-docimage"/>
+
+    Selecting *Search Layer*, instead, is something like:
+
+    <img src="../img/menu-bar/custom-search-results-search-layer.jpg" class="ms-docimage"/>
 
 !!! warning
-    This functionality is available in **desktop** mode only, on mobile it is disabled.
+    In this panel, and in the previous one, all the options are required in order to move to the next page.
 
-To experience this, follow these steps:
+Once all the option are set, it is possible to move forward with the Next button <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> that opens the *Optional props* panel:
 
-* click on the **Burger Icon** of the *Search Bar* to open the *Options Panel*
+<img src="../img/menu-bar/optional-props-form.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-<img src="../img/menu-bar/search_by_coordinates_option.jpg" class="ms-docimage"  style="max-width:500px;"/>
+In here the user can choose:
 
-* click on **Search By Coordinates** to activate the coordinates input fields (*Decimal* format by default)
+* To **Sort** the results **by** a field
 
-<img src="../img/menu-bar/decimal_coordinates_editor.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* The **Max** number of **features** (rows) displayed in the custom search results
 
-* type **Latitude** and **Longitude** and click on the magnifying glass icon <img src="../img/button/magnifying_glass_icon.jpg" class="ms-docbutton"/> to perform the search
-
-<img src="../img/menu-bar/search_by_decimal_coordinates.gif" class="ms-docimage"  style="max-width:700px;"/>
-
-By default [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) use the `decimal` format but the `aeronautical` one is also available. Click the gear icon <img src="../img/button/gear_icon.jpg" class="ms-docbutton"> of the coordinates editor, select *Aeronautical* and click on it to switch to this coordinate format.
-
-<img src="../img/menu-bar/search_by_aeronautical_coordinates.gif" class="ms-docimage"  style="max-width:700px;" />
-
-### Custom WFS Searches
-
-When you search a place, you might want to extend the default OSM results through additional *WFS Search Services*.
-The **Configure Search Services** option of the *Search Bar* allows you to do that.
-
-To better understand how it works, create an empty map and try to search somethings, for example **'`grand`'**, and see the result provided by the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/):
-
-<img src="../img/menu-bar/default-osm-search.jpg" class="ms-docimage"/>
-
-The following example shows the steps required to set up a custom service:
-
-* Click on the **Burger Icon** of the *Search Bar*, the options panel will open
-
-<img src="../img/menu-bar/search_tool.jpg" class="ms-docimage"  style="max-width:500px;" />
-
-* Click on the **Configure search services** button to open the **Create/edit search service** panel
-
-<img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage"  style="max-width:500px;" />
-
-The custom search services are listed in the *Available services* section.
-
-* Click on the **Add** button to open the *WFS service props* form and fill out it
-
-<img src="../img/menu-bar/wfs-service-props-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-**Name** can be whatever you prefer, it is a good practice to refer it to some other properties as the *Layer* and/or the *Attributes*
-
-**Service url** is the WFS you want to call, in this example we used a WFS service available on the GeoSolutions Demo Server
-
-**Layer** is the layer from which you want to retrieve information, for example the TIGER layer *Manhattan (NY) roads*
-
-**Attributes** identifies which field should be considered by the search query, in this case we are interested in roads' name so we choose the NAME field<br>
-
-* Click on the **Next** button to open the *Result display properties* form
-
-<img src="../img/menu-bar/result-display-properties-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-**Title** is displayed on the top of each results row. You might want to show here the content of the fields of interest, in this example we choose to display the NAME field values so we type `${properties.NAME}`
-
-**Description** is displayed to the bottom of each results row. We use *Manhattan Roads* to point out the source layer name but feel free to change it. You can use the same property placeholder syntax here.
-
-**Priority** is a weight assigned to the custom results. It is used to sort all the search results so lower values determine higher positions in the results list (top). The default [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, so to see our custom results in the first positions we should set a value lower than 5 for this field. We use 3.
-
-**Launch Info Panel** is a flag that can be used to trigger GetFeatureInfo requests when selecting a record after a search. It has three values as shown here:
-
-<img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-"No info" means that no GFI request will be triggered and it is the default value.
-
-Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
-
-"Search Layer" means that the GFI will filter results to the record selected and to its layer. It will also force the info_format to "application/json" (PROPERTIES) for allowing filtering on the features by using the id of the selected record.
-
-"All Layers" means that there will be no filtering as it happens when you click on map.
-
-* Click on the **Next** button to open the *Optional props* form
-
-<img src="../img/menu-bar/optional-props-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-**Sort by** lets you decide on which field to sort the results, we choose NAME again
-
-**Max features** is the maximum number of rows displayed in your custom search results, in this example we consider that 5 is enough
-
-* Click on the **Save/Update** <img src="../img/button/save-update-button.jpg" class="ms-docbutton"  style="max-height:20px;"/> button to save your settings
-
-Now you can see your custom *WFS Search Service* in the *Available services* list, click on the **Edit** <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> icon if you want to change some settings or on the **Delete** <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> icon to remove this service from the list.
+After the <img src="../img/button/save-update-button.jpg" class="ms-docbutton"/> it is possible to see the custom WFS search service inside the *Available services* list:
 
 <img src="../img/menu-bar/wfs-services-list.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Come on to test our new search service. Type **'`grand`'** in the search box again and take a look at the results:
+Once a search service is created, it is always possible to Edit it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or Remove it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list. By default, the **Override default services** option is disabled, and performing a search not only the custom search service results are shown, but also the OSM ones:
 
-<img src="../img/menu-bar/custom-search-results.jpg" class="ms-docimage"/>
+<img src="../img/menu-bar/override-no.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-We have 5 (the **Max features**) more results displayed in the first five positions (because of **Priority**), these results are labelled as *Manhattan Roads* (the **Description**) and they show the roads' names (the **Title**) at the top of each row. The results are sorted by NAME (the **Sort by** property).
-<br>
-The **Override default services** option of the **Create/edit search service** panel, if enabled, allows to show only those results from your custom service. Let's tick the checkbox corresponding to this option:
+Once the **Override default services** option is enabled, instead, only the custom search service results are shown:
 
-<img src="../img/menu-bar/override-default-service.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/menu-bar/override-yes.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Since the option is enabled no results from the default service are shown:
+## Burger Menu
 
-<img src="../img/menu-bar/override-default-service-results.jpg" class="ms-docimage"/>
+The *Burger Menu* is an important tools container that allows the user to perform different operations and take a look at several information:
 
-Testing Launch Info panel options
------------
+<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:150px;"/>
 
-You can follow the previous procedure and use "Search Layer" as launch info panel value.
+In particular, with these options it is possible to:
 
-You can see that when you click on the first result
+* [Print](print.md) the map
 
-<img src="../img/menu-bar/custom-search-results-click-records.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* **Export map** in `json` format
 
-The result will be something like:
+* [Import](local-files.md) vector files from your machine
 
-<img src="../img/menu-bar/custom-search-results-search-layer.jpg" class="ms-docimage"/>
+* Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map
 
-If "All Layers" option is used then the results would be something like this:
+* Perform a [Measure](measure.md) on the map
 
-<img src="../img/menu-bar/custom-search-results-all-layers.jpg" class="ms-docimage"/>
+* **Save** the map in order to apply the changes (see [Resources Properties](resources-properties.md) section for more information)
 
-Since other layers are on the map then the navigation arrows is visible in the top-right corner of the FeatureInfo panel under the calculated search point.
+* **Save as** when the user needs to save a copy of the map (see [Resources Properties](resources-properties.md) section for more information)
 
-Burger Menu
------------
+* Create [Annotations](annotations.md) and add them to the map
 
-The *Burger Menu* is the core of the *Menu Bar* and it will be later addressed in details. It contains several options to add data from different sources to the map, to perform measurments and to save, print and share the created map.<br>
-Click on the following links to learn more about the main options:
+* Access the map **Settings** where the user can change the *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
 
-* [PRINT](print.md): allows you to print a created map
+<img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-* [ADD LOCAL VECTOR FILES](local-files.md): allows to import from your machine vector files to be added to  the map
+* See the **About this map** panel, when [details](resources-properties.md#details) are present
 
-* [CATALOG](catalog.md): allows you to import data from several remote services
+* [Share](share.md) the map
 
-* [MEASURE](measure.md): tools to perform measurments on the map
+* Open the [Mapstore Documentation](https://mapstore.readthedocs.io/en/latest/)
 
-* [ANNOTATIONS](annotations.md): allows you to create customized annotations and add them to the map
+* Start the **Tutorial** 
 
-* [SHARE](share.md): allows you to share your map
+* Know more information **About** [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)
+
+<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
