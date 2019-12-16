@@ -4,7 +4,6 @@ about: Use this template for bugs
 title: ''
 labels: 'bug'
 assignees: ''
-
 ---
 
 <!-- Thank you so much for your time taking to contribute, your work is appreciated! 😃 -->

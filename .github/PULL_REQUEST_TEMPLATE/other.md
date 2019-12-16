@@ -4,7 +4,6 @@ about: Use this template for any other case
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 <!-- Thank you so much for your time taking to contribute, your work is appreciated! 😃 -->
