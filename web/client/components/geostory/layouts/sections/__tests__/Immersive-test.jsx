@@ -44,7 +44,8 @@ const CONTENTS = [
         },
         contents: [{
             type: 'image',
-            src: IMAGE_SRC
+            src: IMAGE_SRC,
+            lazy: false
 
         }]
     }
