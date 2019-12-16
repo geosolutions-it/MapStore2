@@ -117,7 +117,7 @@ class Builder extends React.Component {
                             },
                             {
                                 tooltipId: "geostory.builder.preview",
-                                glyph: "eye-open",
+                                glyph: "preview",
                                 visible: !isSettingsEnabled,
                                 disabled: !isToolbarEnabled,
                                 onClick: () => setEditing(mode === Modes.VIEW)
