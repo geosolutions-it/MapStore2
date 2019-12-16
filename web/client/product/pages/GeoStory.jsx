@@ -36,11 +36,10 @@ class GeoStoryPage extends React.Component {
     };
 
     componentWillMount() {
-        const { location } = this.props;
         this.redirectAuth();
         const id = get(this.props, "match.params.gid");
         this.props.reset();
-        this.props.loadResource(id, { location });
+        this.props.loadResource(id);
     }
     componentDidUpdate(oldProps) {
         const id = get(this.props, "match.params.gid");
@@ -49,8 +48,7 @@ class GeoStoryPage extends React.Component {
             if (isNil(id)) {
                 this.props.reset();
             } else {
-                const { location } = this.props;
-                this.props.loadResource(id, { location });
+                this.props.loadResource(id);
             }
         }
     }

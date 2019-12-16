@@ -11,6 +11,7 @@ import React from 'react';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
+import { getQueryParams } from '../../../utils/URLUtils';
 
 /**
  * Navigation Bar for view mode of GeoStory
@@ -21,6 +22,7 @@ import Home from '../../../components/home/Home';
  * @prop {object} currentPage contains current `sectionId`
  * @prop {number} currentPosition currentPosition indicates the position of current sections
  * @prop {number} totalItems totalItems is the total number of sections present in the story
+ * @prop {object} router router object in store contains location data
  */
 export default ({
     settings,
@@ -30,7 +32,8 @@ export default ({
     currentPage, // current page progress (current page + 1/totPages),
     totalItems = 1,
     isEditAllowed = true,
-    currentPosition = 0
+    currentPosition = 0,
+    router
 }) => {
     return (
         <div className="ms-geostory-navigation-bar">
@@ -60,13 +63,19 @@ export default ({
                             }
                         ]} />
                 </div>
-                { settings && settings.isHomeButtonEnabled && (
-                    <Home
-                        bsStyle="default"
-                        className="square-button-md no-border"
-                        tooltipPosition="right"
-                    />
-                )}
+                {
+                    router &&
+                    router.pathname &&
+                    router.search &&
+                    getQueryParams(router.search).showHome === 'true' &&
+                    router.pathname.includes('/geostory/shared') && (
+                        <Home
+                            bsStyle="default"
+                            className="square-button-md no-border"
+                            tooltipPosition="right"
+                        />
+                    )
+                }
                 <div className="ms-geostory-navigation-elements">
                     {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
                         (<div className="ms-geostory-navigation-navigableItems">
