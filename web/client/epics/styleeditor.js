@@ -257,7 +257,8 @@ module.exports = {
 
                 const layer = getUpdatedLayer(state);
 
-                const describeAction = layer && !layer.describeFeatureType && getDescribeLayer(layer.url, layer);
+                const query = layer && layer.params || {};
+                const describeAction = layer && !layer.describeFeatureType && getDescribeLayer(layer.url, layer, { query });
                 const selectedStyle = selectedStyleSelector(state);
                 const styleName = selectedStyle || layer.availableStyles && layer.availableStyles[0] && layer.availableStyles[0].name;
 
