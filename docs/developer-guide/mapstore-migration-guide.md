@@ -6,6 +6,15 @@ This is a list of things to do if you want to update from a previous version val
  - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
  - Follow the instructions, in order
 
+## Migration from 2019.02.01 to 2019.03.00
+With MapStore **2019.03.00** some dependencies that were previously hosted on github, have now been published on the npm registry, and package.json has been updated accordingly.
+[Here](https://github.com/geosolutions-it/MapStore2/pull/4598) is the PR that documents how to update local package.json and local webpack if not using the mapstore buildConfig/testConfig common files.
+
+After updating package.json run **npm install**
+Now you should be able to run locally with **npm start**
+
+For more info see the related [issue](https://github.com/geosolutions-it/MapStore2/issues/4569)
+
 ## Migration from 2019.01.00 to 2019.01.01
 MapStore **2019.01.01** changes the location of some of the build and test configuration files.
 This also affects projects using MapStore build files, sp if you update MapStore subproject to the **2019.01.01** version you also have to update some of the project configuration files. In particular:
