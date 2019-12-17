@@ -413,12 +413,12 @@ const parseLayoutValue = (value, size = 0) => {
 };
 
 const prepareMapObjectToCompare = obj => {
-    const skippedKeys = ['apiKey', 'time'];
+    const skippedKeys = ['apiKey', 'time', 'args', 'fixed'];
     const shouldBeSkipped = (key) => skippedKeys.reduce((p, n) => p || key === n, false);
     Object.keys(obj).forEach(key => {
         const value = obj[key];
         const type = typeof value;
-        if (type === "object" && value !== null) {
+        if (type === "object" && value !== null && !shouldBeSkipped(key)) {
             prepareMapObjectToCompare(value);
             if (!Object.keys(value).length) {
                 delete obj[key];

@@ -247,16 +247,12 @@ describe('map epics', () => {
         }, state);
     });
     describe('compareMapChanges', () => {
-        it('shouldn\'t do anything if mapId missing or current view is different than map', (done) => {
+        it('shouldn\'t do anything if user is not logged or current view is different than map', (done) => {
             const state = {
                 security: {
                     user: null
                 },
-                map: {
-                    present: {
-                        mapId: ''
-                    }
-                },
+
                 feedbackMask: {
                     currentPage: ''
                 }

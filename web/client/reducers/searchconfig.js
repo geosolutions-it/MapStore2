@@ -19,7 +19,7 @@ function searchconfig(state = null, action) {
             [action.property]: action.value
         });
     case MAP_CONFIG_LOADED: {
-        const textSearchConfig = action.config.map.text_search_config;
+        const textSearchConfig = action.config.map.text_search_config || action.config.map.text_serch_config;
         return assign({}, state, {textSearchConfig});
     }
     case RESET_CONTROLS:

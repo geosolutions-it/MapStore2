@@ -226,38 +226,29 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
         .switchMap(({ action, source }) => {
             const allowedRoles = ['ADMIN', 'USER'];
             const state = getState();
-            const mapId = state.map && state.map.present && state.map.present.mapId;
             const { currentPage } = feedbackMaskSelector(state);
             const userRole = userRoleSelector(state);
 
             if ((currentPage) !== 'viewer' || allowedRoles.indexOf(userRole) === -1) {
                 return action ? Rx.Observable.of(action) : Rx.Observable.empty();
             }
-
-            if (mapId) {
-                const { mapConfigRawData } = state;
-                const updatedMap = MapUtils.saveMapConfiguration(
-                    mapSelector(state),
-                    layersSelector(state),
-                    groupsSelector(state),
-                    backgroundListSelector(state),
-                    textSearchConfigSelector(state),
-                    mapOptionsToSaveSelector(state)
-                );
-                const isEqual = MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
-                if (!isEqual) {
-                    return Rx.Observable.of(
-                        setControlProperty('unsavedMap', 'enabled', true, false),
-                        setControlProperty('unsavedMap', 'source', source, false)
-                    );
-                }
-                return action ? Rx.Observable.of(action) : Rx.Observable.empty();
-            }
-
-            return Rx.Observable.of(
-                setControlProperty('unsavedMap', 'enabled', true, false),
-                setControlProperty('unsavedMap', 'source', source, false)
+            const { mapConfigRawData } = state;
+            const updatedMap = MapUtils.saveMapConfiguration(
+                mapSelector(state),
+                layersSelector(state),
+                groupsSelector(state),
+                backgroundListSelector(state),
+                textSearchConfigSelector(state),
+                mapOptionsToSaveSelector(state)
             );
+            const isEqual = MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
+            if (!isEqual) {
+                return Rx.Observable.of(
+                    setControlProperty('unsavedMap', 'enabled', true, false),
+                    setControlProperty('unsavedMap', 'source', source, false)
+                );
+            }
+            return action ? Rx.Observable.of(action) : Rx.Observable.empty();
         });
 
 module.exports = {
