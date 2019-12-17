@@ -23,6 +23,16 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 require("ag-grid/dist/styles/ag-grid.css");
 require("ag-grid/dist/styles/theme-fresh.css");
 
+const calcVisibility = (def, state) => {
+    if (state === true) {
+        return true;
+    }
+    if (state === false) {
+        return false;
+    }
+    return def;
+};
+
 const FeatureGrid = React.createClass({
     propTypes: {
         features: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.func]),
@@ -247,8 +257,9 @@ const FeatureGrid = React.createClass({
                 return assign({}, defaultOptions, {headerName: key, field: "properties." + key});
             });
         }
+
         defs = defs.map((def) => assign({}, def, {
-            hide: def.hide === true || this.state.columnsVisibility[def.field] === false
+            hide: !calcVisibility(!def.hide, this.state.columnsVisibility[def.field])
         }));
         return (this.props.enableZoomToFeature) ? [
         {
