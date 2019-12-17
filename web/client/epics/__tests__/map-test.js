@@ -247,12 +247,8 @@ describe('map epics', () => {
         }, state);
     });
     describe('compareMapChanges', () => {
-        it('shouldn\'t do anything if user is not logged or current view is different than map', (done) => {
+        it('shouldn\'t do anything if current view is different than map', (done) => {
             const state = {
-                security: {
-                    user: null
-                },
-
                 feedbackMask: {
                     currentPage: ''
                 }
@@ -266,16 +262,101 @@ describe('map epics', () => {
 
             testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, state);
         });
-        it('shouldn\'t do anything if map is same', (done) => {
+        it('shouldn\'t do anything if map not editable', (done) => {
             const state = {
-                security: {
-                    user: {
-                        role: 'USER'
-                    }
-                },
                 map: {
                     present: {
-                        mapId: '1'
+                        mapId: '1',
+                        info: {
+                            canEdit: false
+                        }
+                    }
+                },
+                feedbackMask: {
+                    view: 'viewer'
+                },
+                layers: [
+                    {
+                        allowedSRS: {},
+                        bbox: {},
+                        dimensions: [],
+                        id: "layer001",
+                        loading: true,
+                        name: "layer001",
+                        params: {},
+                        search: {},
+                        singleTile: false,
+                        thumbURL: "THUMB_URL",
+                        title: "layer001",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url"
+                    }
+                ],
+                backgroundSelector: {
+                    backgrounds: [
+                        {id: 'layer005', thumbnail: 'data'},
+                        {id: 'layer006', thumbnail: null}
+                    ]
+                },
+                mapConfigRawData: {
+                    "version": 2,
+                    "map": {
+                        "mapOptions": {},
+                        "layers": [
+                            {
+                                "id": "layer001",
+                                "thumbURL": "THUMB_URL",
+                                "search": {},
+                                "name": "layer001",
+                                "title": "layer001",
+                                "type": "wms",
+                                "url": "",
+                                "bbox": {},
+                                "visibility": true,
+                                "singleTile": false,
+                                "allowedSRS": {},
+                                "dimensions": [],
+                                "hideLoading": false,
+                                "handleClickOnLayer": false,
+                                "catalogURL": "url",
+                                "useForElevation": false,
+                                "hidden": false,
+                                "params": {}
+                            }
+                        ],
+                        "groups": [],
+                        "backgrounds": [
+                            {
+                                "id": "layer005",
+                                "thumbnail": "data"
+                            }
+                        ]
+                    },
+                    "catalogServices": {},
+                    "widgetsConfig": {},
+                    "mapInfoConfiguration": {}
+                }
+            };
+
+
+            const epicResponse = (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, state);
+        });
+        it('shouldn\'t do anything if map is same', (done) => {
+            const state = {
+                map: {
+                    present: {
+                        mapId: '1',
+                        info: {
+                            canEdit: true
+                        }
                     }
                 },
                 feedbackMask: {
@@ -357,15 +438,13 @@ describe('map epics', () => {
         });
         it('should show confirm prompt if anything changed', (done) => {
             const state = {
-                security: {
-                    user: {
-                        role: 'USER'
-                    }
-                },
                 map: {
                     present: {
                         mapId: '1',
-                        zoom: 10
+                        zoom: 10,
+                        info: {
+                            canEdit: true
+                        }
                     }
                 },
                 feedbackMask: {

@@ -43,7 +43,6 @@ const { head, isArray, isObject, mapValues } = require('lodash');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
-const {userRoleSelector} = require('../selectors/security');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
@@ -224,17 +223,17 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
     action$
         .ofType(CHECK_MAP_CHANGES)
         .switchMap(({ action, source }) => {
-            const allowedRoles = ['ADMIN', 'USER'];
             const state = getState();
+            const currentMap = mapSelector(state) || {};
+            const { canEdit } = currentMap.info || {};
             const { currentPage } = feedbackMaskSelector(state);
-            const userRole = userRoleSelector(state);
+            const { mapConfigRawData } = state;
 
-            if ((currentPage) !== 'viewer' || allowedRoles.indexOf(userRole) === -1) {
+            if ((currentPage) !== 'viewer' || (!canEdit && currentMap.mapId)) {
                 return action ? Rx.Observable.of(action) : Rx.Observable.empty();
             }
-            const { mapConfigRawData } = state;
             const updatedMap = MapUtils.saveMapConfiguration(
-                mapSelector(state),
+                currentMap,
                 layersSelector(state),
                 groupsSelector(state),
                 backgroundListSelector(state),
