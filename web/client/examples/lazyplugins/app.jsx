@@ -34,7 +34,7 @@ const startApp = (loadedPlugins) => {
     const updateReducers = (name, plugin) => {
         if (plugin.reducers) {
             extensionReducers = { ...extensionReducers, ...plugin.reducers };
-            updateStore(store, { plugins, reducers: extensionReducers });
+            updateStore({ plugins, reducers: extensionReducers });
         }
     };
 

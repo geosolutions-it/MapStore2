@@ -14,14 +14,14 @@ const map = mapConfigHistory(require('../reducers/map'));
 const layers = require('../reducers/layers');
 const mapConfig = require('../reducers/config');
 
-const DebugUtils = require('../utils/DebugUtils');
-const {combineReducers, combineEpics} = require('../utils/PluginsUtils');
+const DebugUtils = require('../utils/DebugUtils').default;
+const {combineEpics} = require('../utils/PluginsUtils');
+const { combineReducers } = require('../utils/StateUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');
 const {createEpicMiddleware} = require('redux-observable');
 
-const SecurityUtils = require('../utils/SecurityUtils');
 const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer').default;
 
 const { routerMiddleware, connectRouter } = require('connected-react-router');
@@ -115,6 +115,5 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
             });
         });
     }
-    SecurityUtils.setStore(store);
     return store;
 };

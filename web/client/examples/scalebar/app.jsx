@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var DebugUtils = require('../../utils/DebugUtils');
+var DebugUtils = require('../../utils/DebugUtils').default;
 
 var {connect} = require('react-redux');
 var {bindActionCreators, combineReducers} = require('redux');

@@ -9,11 +9,11 @@
 import React from 'react';
 import assign from 'object-assign';
 import { omit, isObject, head, isArray, isString, memoize, get, endsWith } from 'lodash';
-import {combineReducers as originalCombineReducers} from 'redux';
 import {connect as originalConnect} from 'react-redux';
 import { combineEpics as originalCombineEpics } from 'redux-observable';
 import axios from '../libs/ajax';
 import url from 'url';
+import {combineReducers} from "./StateUtils";
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 
@@ -229,8 +229,6 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
         .filter((item) => (!filter || filter(item)));
 };
 
-export const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
-    .reduce((previous, current) => assign({}, previous, current), {});
 const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
     .reduce((previous, current) => assign({}, previous, current), {});
 
@@ -249,17 +247,6 @@ export const defaultEpicWrapper = epic => (...args) =>
         setTimeout(() => { throw error; }, 0);
         return source;
     });
-
-/**
- * Produces the reducers from the plugins, combined with other plugins
- * @param {array} plugins the plugins
- * @param {object} [reducers] other reducers
- * @returns {function} a reducer made from the plugins' reducers and the reducers passed as 2nd parameter
- */
-export const combineReducers = (plugins, reducers) => {
-    const pluginsReducers = getReducers(plugins);
-    return originalCombineReducers(assign({}, reducers, pluginsReducers));
-};
 
 /**
  * Produces the rootEpic for the plugins, combined with other epics passed as 2nd argument
@@ -545,7 +532,6 @@ export default {
     defaultEpicWrapper,
     combineReducers,
     combineEpics,
-    getReducers,
     filterState,
     filterDisabledPlugins,
     getMonitoredState,
