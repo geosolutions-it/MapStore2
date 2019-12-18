@@ -389,7 +389,8 @@ export const isWebPageSection = (element) =>
     element.contents.length &&
     isArray(element.contents[0].contents) &&
     element.contents[0].contents.length &&
-    element.contents[0].contents[0].type === ContentTypes.WEBPAGE;
+    element.contents[0].contents[0].type === ContentTypes.WEBPAGE &&
+    element.contents[0].contents[0].editURL !== false;
 
 /**
 * computes container height based on object size

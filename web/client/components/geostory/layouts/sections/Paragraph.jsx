@@ -79,7 +79,7 @@ export default ({
                 }
             },
             {
-                glyph: 'code', // TODO: change when new icon will be prepared
+                glyph: 'story-webpage-section',
                 tooltipId: 'geostory.addWebPageSection',
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.WEBPAGE);

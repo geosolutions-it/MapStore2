@@ -28,7 +28,7 @@ This is the overall framework folder structure:
     |   |   +-- webapp
     |   +-- test
     |        +-- java
-    |        +-- resources   
+    |        +-- resources
     +-- client
     |   +-- index.html (demo application home page)
         +-- plugins (ReactJS smart components with required reducers)
@@ -44,7 +44,7 @@ This is the overall framework folder structure:
         +-- reducers   (Redux reducers)
         +-- stores     (Redux stores)
         +-- translations (i18n localization files)
-        |  +-- data.en-US
+        |  +-- data.en-US.json
         |  ...
         |  product (the MapStore main application)
         |   +...

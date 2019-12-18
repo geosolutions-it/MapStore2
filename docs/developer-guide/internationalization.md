@@ -16,7 +16,7 @@ To provide support to a specific language MapStore need to have the necessary se
 In addition you need the proper translations files.
 
 Let's imagine that the variable code is 'en', CODE is 'EN' standing for english. For each language you need to have **messages file** containing the localized strings, a **flag image** to identify the language and some **html fragments** (optional) for some specific plugins.
- - Messages: located in `web\client\translations` folder. For each language there is a json file named data.code-CODE. e.g. `data.en-EN`.
+ - Messages: located in `web\client\translations` folder. For each language there is a json file named data.code-CODE.json. e.g. `data.en-EN.json`.
  - Flags: located in `web\client\components\I18N\images\flags` folder. For each language flag image named code-CODE.png of 16px x 11px is required.
  - Fragments: actually only for cookies policy ....  (required only if the Cookie plugin is present) located in `web\client\translations\fragments\cookie` folder and named cookieDetails-code-CODE.html. We recommend to add it for any language you want to support at least by copying the english version.
 
@@ -40,8 +40,8 @@ You can configure MapStore to provide to the user only a restricted list of sele
 }
 ```
 Setting locales in localConfig.json file is doable only for supported locales present in LocaleUtils.js.
-The default behaviour is to use those already configured in "supportedLocales" object.
-You can customize the messages by editing the data.code-CODE files.
+The default behavior is to use those already configured in "supportedLocales" object.
+You can customize the messages by editing the data.code-CODE.json files.
 
 # How to add a new language
 Let's say we want to add the russian language.
