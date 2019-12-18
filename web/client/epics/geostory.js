@@ -47,9 +47,11 @@ import {
     update,
     setFocusOnContent,
     UPDATE,
+    CHANGE_MODE,
     SET_WEBPAGE_URL,
     EDIT_WEBPAGE
 } from '../actions/geostory';
+import { setControlProperty } from '../actions/controls';
 
 import {
     show as showMediaEditor,
@@ -266,13 +268,14 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
             .switchMap(({ data, ...resource }) => {
                 const isAdmin = isAdminUserSelector(getState());
                 const user = isLoggedIn(getState());
+                const story = isString(data) ? JSON.parse(data) : data;
                 if (!user && isNaN(parseInt(id, 10))) {
                     return Observable.of(loadGeostoryError({status: 403}));
                 }
                 return Observable.from([
                     setEditing(resource && resource.canEdit || isAdmin),
                     geostoryLoaded(id),
-                    setCurrentStory(isString(data) ? JSON.parse(data) : data),
+                    setCurrentStory(story),
                     setResource(resource)
                 ]);
             })
@@ -396,3 +399,8 @@ export const inlineEditorEditMap = (action$, {getState}) =>
                         .takeUntil(action$.ofType(HIDE_MAP_EDITOR));
             });
         });
+
+
+export const closeShareOnGeostoryChangeMode = action$ =>
+    action$.ofType(CHANGE_MODE)
+        .switchMap(() => Observable.of(setControlProperty('share', 'enabled', false)));

@@ -26,7 +26,7 @@ const Grid = compose(
     resourceGrid,
     // add and configure share tool panel
     compose(
-        defaultProps({ shareOptions: {embedOptions: { showTOCToggle: false } }}),
+        defaultProps({ shareOptions: {embedOptions: { showTOCToggle: false }, advancedSettingsVisibility: { bbox: true } }}),
         withShareTool
     )
 )(require('../../components/resources/ResourceGrid'));

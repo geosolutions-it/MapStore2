@@ -8,6 +8,7 @@
 
 import Url from "url";
 import { isArray, isString, isEqual, sortBy } from 'lodash';
+import queryString from 'query-string';
 
 export const urlParts = (url) => {
     if (!url) return {};
@@ -69,6 +70,15 @@ export const isSameUrl = (u1, u2) => {
     const isSamePathname = urlParsed.pathname === otherUrlParsed.pathname;
     const isSameQueryParams = sameQueryParams(urlParsed.query, otherUrlParsed.query);
     return isSameProtocol && isSamePort && isSameDomain && isSamePathname && isSameQueryParams;
+};
+
+/**
+ * Method parse query string into object
+ * @param {string} url - any url
+ * @return {object}
+ */
+export const getQueryParams = (url) => {
+    return queryString.parse(url);
 };
 
 /**
