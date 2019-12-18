@@ -342,6 +342,8 @@ describe("GeoStory Utils", () => {
             ]
         };
         expect(isWebPageSection(element)).toBe(false);
+        const element2 = { type: ContentTypes.WEBPAGE, editURL: false };
+        expect(isWebPageSection(element2)).toBe(false);
     });
 
     it('test getWebPageComponentHeight', () => {

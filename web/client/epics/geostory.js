@@ -144,7 +144,7 @@ const updateWebPageSection = path => action$ =>
 export const openWebPageComponentCreator = action$ =>
     action$.ofType(ADD)
         .filter(({ element = {} }) => {
-            const isWebPage = element.type === ContentTypes.WEBPAGE;
+            const isWebPage = element.type === ContentTypes.WEBPAGE && element.editURL !== false;
             return isWebPage || isWebPageSection(element);
         })
         .switchMap(({ path: arrayPath, element }) => {
