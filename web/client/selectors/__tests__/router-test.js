@@ -8,9 +8,11 @@
 
 const expect = require('expect');
 const {
-    pathnameSelector
+    pathnameSelector,
+    searchSelector
 } = require("../router");
 const pathname = "/viewer/openlayers/123";
+const search = "?showHome=true";
 const state = {
     router: {
         location: {
@@ -24,5 +26,11 @@ describe('Test router selectors', () => {
         const retVal = pathnameSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe(pathname);
+    });
+
+    it('test searchSelector', () => {
+        const retVal = searchSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(search);
     });
 });
