@@ -16,7 +16,8 @@ const search = "?showHome=true";
 const state = {
     router: {
         location: {
-            pathname
+            pathname,
+            search
         }
     }
 };
