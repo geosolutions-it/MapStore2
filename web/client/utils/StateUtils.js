@@ -1,9 +1,16 @@
 import { createStore as createReduxStore, applyMiddleware, compose, combineReducers as originalCombineReducers }  from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import logger from 'redux-logger';
+import { createEpicMiddleware, combineEpics as originalCombineEpics } from 'redux-observable';
+import curry from 'lodash/curry';
+import ConfigUtils from './ConfigUtils';
 
-export const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
-    .reduce((previous, current) => ({...previous, ...current}), {});
+export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
+    .reduce((previous, current) => ({ ...previous, ...current }), {}));
+
+export const getReducers = getFromPlugins('reducers');
+
+export const getEpics = getFromPlugins('epics');
 
 /**
 * Produces the reducers from the plugins, combined with other plugins
@@ -16,45 +23,140 @@ export const combineReducers = (plugins, reducers) => {
     return originalCombineReducers({...reducers, ...pluginsReducers});
 };
 
+/**
+ * default wrapper for the epics.
+ * @memberof utils.PluginsUtils
+ * @param {epic} epic the epic to wrap
+ * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
+ */
+export const defaultEpicWrapper = epic => (...args) =>
+    epic(...args).catch((error, source) => {
+        setTimeout(() => { throw error; }, 0);
+        return source;
+    });
+
+/**
+ * Produces the rootEpic for the plugins, combined with other epics passed as 2nd argument
+ * @param {array} plugins the plugins
+ * @param {function[]} [epics] the epics to add to the plugins' ones
+ * @param {function} [epicWrapper] returns a function that wraps the epic
+ * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
+ */
+export const combineEpics = (plugins, epics = {}, epicWrapper = defaultEpicWrapper) => {
+    const pluginEpics = {...getEpics(plugins), ...epics};
+    return originalCombineEpics(...Object.keys(pluginEpics).map(k => pluginEpics[k]).map(epicWrapper));
+};
+
 export const getMiddlewares = (userMiddlewares = [], debug) => {
     return debug ? [thunkMiddleware, logger, ...userMiddlewares]
         : [thunkMiddleware, ...userMiddlewares];
 };
 
-export const createStore = ({
-    rootReducer,
-    plugins = [],
-    reducers = [],
-    state = {},
-    middlewares = [],
-    debug = false,
-    enhancer,
-    shared = true
-} = {}) => {
-    const reducer = rootReducer || combineReducers(plugins, reducers);
-    const middleware = applyMiddleware.apply(null, getMiddlewares(middlewares, debug));
-    const finalCreateStore = (window.devToolsExtension ? compose(
-        middleware,
-        window.devToolsExtension()
-    ) : middleware)(createReduxStore);
-    const store = finalCreateStore(reducer, state, enhancer);
-    if (shared) {
-        global.reduxStore = store;
-    }
+export const PERSISTED_STORE_NAME = 'persisted.reduxStore';
+
+/**
+ * Persists the given store.
+ *
+ * @param {object} store store to be persisted
+ * @param {string} name optional name (if you want to persist more than one store)
+ */
+export const setStore = (store, name = PERSISTED_STORE_NAME) => {
+    ConfigUtils.setConfigProp(name, store);
     return store;
 };
 
-export const updateStore = ({ rootReducer, plugins = [], reducers = [] } = {}, store) => {
+/**
+ * Returns a persisted store.
+ *
+ * @param {string} name optional name (if you want to restore more than one store)
+ */
+export const getStore = (name = PERSISTED_STORE_NAME) => {
+    return ConfigUtils.getConfigProp(name) || {};
+};
+
+/**
+ * Persists the given store.
+ *
+ * @param {object} store store to be persisted
+ * @param {string} name optional name (if you want to persist more than one store)
+ */
+export const persistMiddleware = (middleware, storeName = PERSISTED_STORE_NAME, name = 'epic') => {
+    ConfigUtils.setConfigProp(storeName + '.' + name, middleware);
+    return middleware;
+};
+
+/**
+ * Returns a persisted store.
+ *
+ * @param {string} name optional name (if you want to restore more than one store)
+ */
+export const fetchMiddleware = (storeName = PERSISTED_STORE_NAME, name = 'epic') => {
+    return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
+};
+
+/**
+ * Returns state from a persisted store.
+ *
+ * @param {string} name optional name (if you want to persist more than one store)
+ */
+export const getState = (name) => {
+    return getStore(name) && getStore(name).getState() || {};
+};
+
+/**
+ * Creates and returns a Redux store, using the given options.
+ * Includes the following functionalities by default: redux-thunk, redux-observables, debug mode.
+ *
+ * @param {object} options key-value pairs of options for the store.
+ * @param {function} options.rootReducer optional root (combined) reducer for the store, if not specified it is built using the reducers and plugins arrays.
+ * @param {function} options.rootEpic optional root (combined) epic for the store, if not specified it is built using the epics and plugins arrays.
+ * @param {array} options.plugins list of plugins from which reducers and epics will be extracted to build the store.
+ * @param {array} options.reducers list of reducers to add to those extracted from plugins list.
+ * @param {object} options.epics list of epics to add to those extracted from plugins list.
+ * @param {object} options.state initial state of the store.
+ * @param {array} options.middlewares custom middlewares to be added to the store.
+ * @param {boolean} options.debug enables debug mode (console logger and redux dev tools enabled).
+ * @param {function} enhancer optional store enhancer to be configured.
+ */
+export const createStore = ({
+    rootReducer,
+    rootEpic,
+    plugins = [],
+    reducers = [],
+    epics = {},
+    state = {},
+    middlewares = [],
+    debug = false,
+    enhancer
+} = {}) => {
     const reducer = rootReducer || combineReducers(plugins, reducers);
-    (store || global.reduxStore).replaceReducer(reducer);
+    const epic = rootEpic || combineEpics(plugins, epics);
+    const allMiddlewares = epic ? [persistMiddleware(createEpicMiddleware(epic)), ...middlewares] : middlewares;
+    const middleware = applyMiddleware.apply(null, getMiddlewares(allMiddlewares, debug));
+    const finalCreateStore = (window.devToolsExtension && debug ? compose(
+        middleware,
+        window.devToolsExtension()
+    ) : middleware)(createReduxStore);
+    return setStore(finalCreateStore(reducer, state, enhancer));
 };
 
-export const setStore = (store) => {
-    global.reduxStore = store;
-};
-
-export const getState = () => {
-    return global.reduxStore && global.reduxStore.getState() || {};
+/**
+ * Updates a Redux store with new reducers and epics.
+ *
+ * @param {object} options options to update
+ * @param {function} options.rootReducer optional root (combined) reducer for the store, if not specified it is built using the reducers and plugins arrays.
+ * @param {function} options.rootEpic optional root (combined) epic for the store, if not specified it is built using the epics and plugins arrays.
+ * @param {array} options.plugins list of plugins from which reducers and epics will be extracted to build the store.
+ * @param {array} options.reducers list of reducers to add to those extracted from plugins list.
+ * @param {object} options.epics list of epics to add to those extracted from plugins list.
+ * @param {object} store the store to update, if not specified, the persisted one will be used
+ * @param {object} epicMiddleware the epic middleware to update, if not specified the persisted one will be used
+ */
+export const updateStore = ({ rootReducer, rootEpic, plugins = [], reducers = [], epics = {} } = {}, store, epicMiddleware) => {
+    const reducer = rootReducer || combineReducers(plugins, reducers);
+    (store || getStore()).replaceReducer(reducer);
+    const epic = rootEpic || combineEpics(plugins, epics);
+    (epicMiddleware || fetchMiddleware()).replaceEpic(epic);
 };
 
 export default {

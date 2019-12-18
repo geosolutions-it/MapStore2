@@ -31,11 +31,15 @@ const startApp = (loadedPlugins) => {
 
     const store = createStore({ plugins, state: initialState });
     let extensionReducers = {};
-    const updateReducers = (name, plugin) => {
+    let extensionEpics = {};
+    const updatePlugins = (name, plugin) => {
         if (plugin.reducers) {
             extensionReducers = { ...extensionReducers, ...plugin.reducers };
-            updateStore({ plugins, reducers: extensionReducers });
         }
+        if (plugin.epics) {
+            extensionEpics = { ...extensionEpics, ...plugin.epics };
+        }
+        updateStore({ plugins, reducers: extensionReducers, epics: extensionEpics });
     };
 
     store.subscribe(() => {
@@ -62,7 +66,7 @@ const startApp = (loadedPlugins) => {
         const App = ({ mergedPlugins }) => {
             return (<Provider store={store}>
                 <Theme version="noversion" path="../../dist/themes">
-                    <Container plugins={mergedPlugins} onPluginLoaded={updateReducers} />
+                    <Container plugins={mergedPlugins} onPluginLoaded={updatePlugins} />
                 </Theme>
             </Provider>);
         };

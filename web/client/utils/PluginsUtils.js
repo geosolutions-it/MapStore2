@@ -10,12 +10,14 @@ import React from 'react';
 import assign from 'object-assign';
 import { omit, isObject, head, isArray, isString, memoize, get, endsWith } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
-import { combineEpics as originalCombineEpics } from 'redux-observable';
+import { combineEpics, combineReducers } from './StateUtils';
 import axios from '../libs/ajax';
 import url from 'url';
-import {combineReducers} from "./StateUtils";
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
+
+export {combineEpics};
+export {combineReducers};
 
 /**
  * Gives a reduced version of the status to check.
@@ -229,35 +231,9 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
         .filter((item) => (!filter || filter(item)));
 };
 
-const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
-    .reduce((previous, current) => assign({}, previous, current), {});
-
 const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     const {pluginCfg, ...otherProps} = ownProps;
     return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
-};
-/**
- * default wrapper for the epics.
- * @memberof utils.PluginsUtils
- * @param {epic} epic the epic to wrap
- * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
- */
-export const defaultEpicWrapper = epic => (...args) =>
-    epic(...args).catch((error, source) => {
-        setTimeout(() => { throw error; }, 0);
-        return source;
-    });
-
-/**
- * Produces the rootEpic for the plugins, combined with other epics passed as 2nd argument
- * @param {array} plugins the plugins
- * @param {function[]} [epics] the epics to add to the plugins' ones
- * @param {function} [epicWrapper] returns a function that wraps the epic
- * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
- */
-export const combineEpics = (plugins, epics = {}, epicWrapper = defaultEpicWrapper) => {
-    const pluginEpics = assign({}, getEpics(plugins), epics);
-    return originalCombineEpics(...Object.keys(pluginEpics).map(k => pluginEpics[k]).map(epicWrapper));
 };
 
 export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
@@ -529,7 +505,6 @@ export const loadPlugin = (pluginUrl) => {
  * @memberof utils
  */
 export default {
-    defaultEpicWrapper,
     combineReducers,
     combineEpics,
     filterState,

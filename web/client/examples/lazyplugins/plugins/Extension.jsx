@@ -1,6 +1,7 @@
 import {connect} from "react-redux";
 
 import Extension from "../components/Extension";
+import Rx from "rxjs";
 
 export default {
     component: connect(state => ({
@@ -17,6 +18,14 @@ export default {
             }
             return state;
         }
+    },
+    epics: {
+        logCounterValue: (action$, store) => action$.ofType('INCREASE_COUNTER').switchMap(() => {
+            /* eslint-disable */
+            console.log('CURRENT VALUE: ' + store.getState().extension.value);
+            /* eslint-enable */
+            return Rx.Observable.empty();
+        })
     },
     containers: {
         Toolbar: {
