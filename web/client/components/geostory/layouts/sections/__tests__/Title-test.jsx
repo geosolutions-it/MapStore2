@@ -36,7 +36,8 @@ describe('Title component', () => {
                 type: 'column',
                 background: {
                     type: 'image',
-                    src: IMAGE_SRC
+                    src: IMAGE_SRC,
+                    lazy: false
                 },
                 html: '<h1>Title</h1>'
             }
@@ -138,6 +139,6 @@ describe('Title component', () => {
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
-        testToolbarButtons(["pencil", "height-auto", "1-map", "size-extra-large", "align-center", "dropper"], container);
+        testToolbarButtons(["pencil", "height-auto", "map-edit", "size-extra-large", "align-center", "dropper"], container);
     });
 });

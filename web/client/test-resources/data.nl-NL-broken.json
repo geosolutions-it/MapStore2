@@ -1,0 +1,18 @@
+{
+    "locale": "nl-NL",
+    "messages": {
+        "Language": "Taal",
+        "msgId0": "{name} heeft op {takenDate, date, long} {numPhotos, plural, =0 {geen foto's} =1 {een foto} other {# foto's}} genomen.",
+        "htmlTest": "{name} {surname}",
+        "about_title": "Info over deze app...",
+        "aboutLbl": "Meer info",
+        "about_p0-0": "MapStore is een framework dat het mogelijk maakt cartografische webtoepassingen te ontwikkelen met behulp van de standaard libraries zoals",
+        "about_p0-1": "en",
+        "about_p1": "MapStore heeft meerdere toepassingsvoorbeelden:",
+        "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
+        "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. Voor meer informatie: ",
+        "about_h20": "Licentie",
+        "about_p3": "MapStore is open source software, gebaseerd op OpenLayers, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
+        "about_p5-0": "Voor meer informatie, zie",
+        "about_a0": "deze",
+        "about_p5-1": "bladzijde.",

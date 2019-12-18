@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import {compose, withHandlers, mapPropsStream} from 'recompose';
+import {compose, withProps, withHandlers, mapPropsStream} from 'recompose';
 
 import MapCatalogComp from '../../maps/MapCatalog';
 import mapCatalog from '../../maps/enhancers/mapCatalog';
@@ -114,5 +114,8 @@ export default compose(
             onMapSelected(map);
         }
     }),
+    withProps(() => ({
+        includeMapId: true
+    })),
     handleMapSelect
 )(MapList);

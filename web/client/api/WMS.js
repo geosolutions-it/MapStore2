@@ -134,7 +134,7 @@ const Api = {
             });
         });
     },
-    describeLayer: function(url, layers) {
+    describeLayer: function(url, layers, options = {}) {
         const parsed = urlUtil.parse(url, true);
         const describeLayerUrl = urlUtil.format(assign({}, parsed, {
             query: assign({
@@ -142,7 +142,9 @@ const Api = {
                 version: "1.1.1",
                 layers: layers,
                 request: "DescribeLayer"
-            }, parsed.query)
+            },
+            parsed.query,
+            options.query || {})
         }));
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/WMS'], () => {

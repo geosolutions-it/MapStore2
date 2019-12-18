@@ -121,7 +121,7 @@ class AeronauticalCoordinateEditor extends React.Component {
             top: 0,
             overflow: "visible",
             zIndex: 3,
-            left: -23,
+            left: -13,
             width: 0,
             height: 0
         };
@@ -164,7 +164,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&prime;</span>
                 </div>
-                <div style={{flex: 1, display: 'flex'}}>
+                <div className="seconds" style={{display: 'flex'}}>
                     <FormControl
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}

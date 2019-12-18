@@ -54,13 +54,17 @@ describe('Section Content (Container) component', () => {
     it('Content has intersection observer', (done) => {
         const ID_1 = "ID_1";
         const ID_2 = "ID_2";
-        ReactDOM.render((<TestScrollableContainer height="100">
-            <Content id={ID_1} type="text" height={100} />
-            <Content id={ID_2} onVisibilityChange={({ id, visible }) => {
-                expect(id).toBe(ID_2);
-                expect(visible).toBe(true);
-                done();
-            }} type="text" height={100} />
+        ReactDOM.render((<TestScrollableContainer height={100}>
+            <div style={{ width: '100%', height: 100 }}>
+                <Content id={ID_1} type="text" />
+            </div>
+            <div style={{ width: '100%', height: 100 }}>
+                <Content id={ID_2} onVisibilityChange={({ id, visible }) => {
+                    expect(id).toBe(ID_2);
+                    expect(visible).toBe(true);
+                    done();
+                }} type="text"/>
+            </div>
         </TestScrollableContainer>), document.getElementById("container"));
         const container = document.getElementById('container');
         const scrollable = container.querySelector(`#${SCROLLABLE_CONTAINER_ID}`);

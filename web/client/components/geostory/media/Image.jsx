@@ -26,8 +26,9 @@ import { SectionTypes } from '../../../utils/GeoStoryUtils';
  * @prop {string} src source of the image
  * @prop {string} fit one of 'cover' or 'contain'
  * @prop {boolean} enableFullscreen enable fullscreen preview with pan and zoom options
+ * @prop {element} loaderComponent render loader component
+ * @prop {element} errorComponent render error component
  */
-
 class Image extends Component {
 
     static propTypes = {
@@ -40,7 +41,11 @@ class Image extends Component {
         altText: PropTypes.string,
         enableFullscreen: PropTypes.bool,
         fullscreen: PropTypes.bool,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        onChangeStatus: PropTypes.func,
+        status: PropTypes.string,
+        loaderComponent: PropTypes.element,
+        errorComponent: PropTypes.element
     };
 
     componentDidMount() {
@@ -65,13 +70,18 @@ class Image extends Component {
             descriptionEnabled = true,
             credits
         } = this.props;
+
+        const LoaderComponent = this.props.loaderComponent;
+        const ErrorComponent = this.props.errorComponent;
         return (
             <div
                 id={id}
                 className="ms-media ms-media-image">
-                {src && <img
+                {src && this.props.status !== 'error' && <img
                     ref={node => { this._node = node; }}
                     src={src}
+                    onLoad={() => this.props.onChangeStatus('loaded')}
+                    onError={() => this.props.onChangeStatus('error')}
                     onClick={enableFullscreen ? () => onClick(true) : undefined}
                     style={{
                         objectFit: fit,
@@ -79,6 +89,8 @@ class Image extends Component {
                         fontFamily: `object-fit: ${fit}`,
                         cursor: enableFullscreen ? 'pointer' : 'default'
                     }}/>}
+                {(src && !this.props.status) && LoaderComponent && <LoaderComponent />}
+                {(this.props.status === 'error') && ErrorComponent && <ErrorComponent />}
                 {credits && <div className="ms-media-credits">
                     <small>
                         {credits}
@@ -118,5 +130,6 @@ export default compose(
             })
         )
     ),
-    withState('fullscreen', 'onClick', false)
+    withState('fullscreen', 'onClick', false),
+    withState('status', 'onChangeStatus', '')
 )(Image);

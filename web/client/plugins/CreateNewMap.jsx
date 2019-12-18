@@ -61,7 +61,7 @@ class CreateNewMap extends React.Component {
                         : null}
                     {this.props.showNewGeostory ?
                         <Button tooltipId="resources.geostories.newGeostory" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/geostory/newgeostory/"); }}>
-                            <Glyphicon glyph="geostory" />
+                            <Glyphicon glyph="add-geostory" />
                         </Button>
                         : null}
                 </ButtonToolbar>

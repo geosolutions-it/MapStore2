@@ -71,7 +71,7 @@ describe('Content component', () => {
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
     });
     it('Content rendering Media IMAGE', () => {
-        ReactDOM.render(<Content type={ContentTypes.MEDIA} mediaType={MediaTypes.IMAGE} src="http:/" />, document.getElementById("container"));
+        ReactDOM.render(<Content lazy={false} type={ContentTypes.MEDIA} mediaType={MediaTypes.IMAGE} src="http:/" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const imageContent = container.querySelector('.ms-media.ms-media-image');
         expect(imageContent).toExist();
@@ -79,7 +79,7 @@ describe('Content component', () => {
     it('Content rendering Media MAP', () => {
         ReactDOM.render(
             <Provider store={{subscribe: () => {}, getState: () => ({})}} >
-                <Content type={ContentTypes.MEDIA} mediaType={MediaTypes.MAP} />
+                <Content lazy={false} type={ContentTypes.MEDIA} mediaType={MediaTypes.MAP} />
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const imageContent = container.querySelector('.ms-media.ms-media-map');

@@ -330,6 +330,20 @@ describe("GeoStory Utils", () => {
         expect(isWebPageSection(element)).toBe(true);
     });
 
+    it('test isWebPageSection returns false if content has editURL set', () => {
+        const element = {
+            type: SectionTypes.PARAGRAPH,
+            contents: [
+                {
+                    contents: [
+                        { type: ContentTypes.WEBPAGE, editURL: false }
+                    ]
+                }
+            ]
+        };
+        expect(isWebPageSection(element)).toBe(false);
+    });
+
     it('test getWebPageComponentHeight', () => {
         expect(getWebPageComponentHeight('small', 1000)).toBe(400);
         expect(getWebPageComponentHeight('medium', 1000)).toBe(600);
