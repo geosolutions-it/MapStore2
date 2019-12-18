@@ -31,6 +31,7 @@ var {
     isSimpleGeomType,
     parseLayoutValue,
     prepareMapObjectToCompare,
+    updateObjectFieldKey,
     compareMapChanges
 } = require('../MapUtils');
 
@@ -2139,5 +2140,21 @@ describe('Test the MapUtils', () => {
         expect(Object.keys(obj6).indexOf('test')).toBe(-1);
         expect(Object.keys(obj7).indexOf('fixed')).toBe(-1);
         expect(Object.keys(obj8).indexOf('args')).toBe(-1);
+    });
+
+    it('test updateObjectFieldKey', () => {
+        const origin = { test1: 'test', test2: 'test' };
+        const clone = JSON.parse(JSON.stringify(origin));
+        const clone2 = JSON.parse(JSON.stringify(origin));
+        const clone3 = JSON.parse(JSON.stringify(origin));
+        updateObjectFieldKey(clone);
+        updateObjectFieldKey(clone2, 'test1', 'test3');
+        updateObjectFieldKey(clone2, 'test3', 'test4');
+        expect(clone.test1).toBe(origin.test1);
+        expect(clone.test2).toBe(origin.test2);
+        expect(clone2.test1).toNotExist();
+        expect(clone2.test3).toExist();
+        expect(clone3.test3).toNotExist();
+        expect(clone3.test4).toNotExist();
     });
 });

@@ -412,6 +412,12 @@ const parseLayoutValue = (value, size = 0) => {
     return isNumber(value) ? value : 0;
 };
 
+/**
+ * Method for cleanup map object from uneseccary fields which
+ * updated map contains and were set on map render
+ * @param {object} obj
+ */
+
 const prepareMapObjectToCompare = obj => {
     const skippedKeys = ['apiKey', 'time', 'args', 'fixed'];
     const shouldBeSkipped = (key) => skippedKeys.reduce((p, n) => p || key === n, false);
@@ -429,16 +435,41 @@ const prepareMapObjectToCompare = obj => {
     });
 };
 
+/**
+ * Method added for support old key with objects provided for compareMapChanges feature
+ * like text_serch_config
+ * @param {object} obj
+ * @param {string} oldKey
+ * @param {string} newKey
+ */
+const updateObjectFieldKey = (obj, oldKey, newKey) => {
+    if (obj[oldKey]) {
+        Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey));
+        delete obj[oldKey];
+    }
+};
+
+/**
+ * Feature for map change recognition. Returns value of isEqual method from lodash
+ * @param {object} map1 original map before changes
+ * @param {object} map2 updated map
+ * @returns {boolean}
+ */
 const compareMapChanges = (map1 = {}, map2 = {}) => {
     const pickedFields = [
         'map.layers',
         'map.backgrounds',
         'map.text_search_config',
+        'map.text_serch_config',
         'map.zoom',
         'widgetsConfig'
     ];
     const filteredMap1 = pick(cloneDeep(map1), pickedFields);
     const filteredMap2 = pick(cloneDeep(map2), pickedFields);
+    // ABOUT: used for support text_serch_config field in old maps
+    updateObjectFieldKey(filteredMap1.map, 'text_serch_config', 'text_search_config');
+    updateObjectFieldKey(filteredMap2.map, 'text_serch_config', 'text_search_config');
+
     prepareMapObjectToCompare(filteredMap1);
     prepareMapObjectToCompare(filteredMap2);
     return isEqual(filteredMap1, filteredMap2);
@@ -477,5 +508,6 @@ module.exports = {
     getIdFromUri,
     parseLayoutValue,
     prepareMapObjectToCompare,
+    updateObjectFieldKey,
     compareMapChanges
 };
