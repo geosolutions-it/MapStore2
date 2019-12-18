@@ -2149,7 +2149,7 @@ describe('Test the MapUtils', () => {
         const clone3 = JSON.parse(JSON.stringify(origin));
         updateObjectFieldKey(clone);
         updateObjectFieldKey(clone2, 'test1', 'test3');
-        updateObjectFieldKey(clone2, 'test3', 'test4');
+        updateObjectFieldKey(clone3, 'test3', 'test4');
         expect(clone.test1).toBe(origin.test1);
         expect(clone.test2).toBe(origin.test2);
         expect(clone2.test1).toNotExist();
