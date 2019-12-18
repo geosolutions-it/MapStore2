@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { compose, withPropsOnChange } = require('recompose');
-const { find, reduce} = require('lodash');
+const { find, reduce, isEmpty} = require('lodash');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const FilterUtils = require('../../../utils/FilterUtils');
@@ -48,14 +48,17 @@ module.exports = compose(
             const columnsFilters = reduce(quickFilters, (cFilters, value, attribute) => {
                 return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
             }, {});
-            const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
-            const newFilterObj = {...filterObj, ...composedFilterFields};
+            let newFilterObj = null;
+            if (!isEmpty(filterObj) || !isEmpty(columnsFilters)) {
+                const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
+                newFilterObj = {...filterObj, ...composedFilterFields};
+            }
 
             if (!mapSync || !dependencies.viewport) {
                 return {
                     filter: newFilterObj || layerFilter ? filter(and(
                         ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                        ...(     ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
+                        ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
                     )) : undefined
                 };
             }

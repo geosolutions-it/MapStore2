@@ -46,6 +46,8 @@ const mergeFilterCQLRes =
     + '<ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>-1 -1 -1 1 1 1 1 -1 -1 -1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>'
     + '</ogc:Intersects>'
     + '</ogc:And></ogc:Filter>';
+const quickFilters = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
+const spatialAndQuickFilters = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogc:Intersects></ogc:And></ogc:Filter>`;
 describe('widgets dependenciesToFilter enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -63,6 +65,40 @@ describe('widgets dependenciesToFilter enhancer', () => {
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
+    });
+    it('dependenciesToFilter with quickFilter only', (done) => {
+        const Sink = dependenciesToFilter(createSink( props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(quickFilters);
+            done();
+        }));
+        ReactDOM.render(<Sink quickFilters={{
+            state_abbr: {
+                rawValue: "I",
+                value: "I",
+                operator: "ilike",
+                type: "string",
+                attribute: "state_abbr"
+            }
+        }}/>, document.getElementById("container"));
+    });
+    it('dependenciesToFilter with quickFilter only', (done) => {
+        const Sink = dependenciesToFilter(createSink( props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(spatialAndQuickFilters);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            filter={filterObj}
+            quickFilters={{
+                state_abbr: {
+                    rawValue: "I",
+                    value: "I",
+                    operator: "ilike",
+                    type: "string",
+                    attribute: "state_abbr"
+                }
+            }}/>, document.getElementById("container"));
     });
     it('dependenciesToFilter spatial filter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
