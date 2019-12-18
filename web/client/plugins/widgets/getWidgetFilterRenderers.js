@@ -9,9 +9,10 @@
 const { connect } = require('react-redux');
 const { createSelector } = require('reselect');
 
-const { getAttributeFields } = require('../../../utils/FeatureGridUtils');
-const { getFilterRenderer } = require('../../../components/data/featuregrid/filterRenderers');
-const { getWidgetAttributeFilter } = require('../../../selectors/widgets');
+const { getAttributeFields } = require('../../utils/FeatureGridUtils');
+const { getFilterRenderer } = require('../../components/data/featuregrid/filterRenderers');
+const { getWidgetAttributeFilter } = require('../../selectors/widgets');
+
 
 const getWidgetFilterRenderers = createSelector(
     (d, id) => ({describe: d, id}),
@@ -28,6 +29,4 @@ const getWidgetFilterRenderers = createSelector(
                 ))(getFilterRenderer(cur.localType, {name: cur.name}))
         }), {}) : {});
 
-
 module.exports = {getWidgetFilterRenderers};
-

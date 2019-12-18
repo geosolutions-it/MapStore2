@@ -90,14 +90,6 @@ module.exports = {
    * @return {object}       The filter for the attribute
    */
     getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
-    /**
-   * get a filter for an attribute
-   * @memberof selectors.featuregrid
-   * @param  {object} state Application's state
-   * @param  {string} name  The name of the attribute
-   * @return {object}       The filter for the attribute
-   */
-    getWidgetAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
     selectedLayerIdSelector,
     getCustomAttributeSettings,
     /**

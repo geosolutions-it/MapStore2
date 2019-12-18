@@ -12,7 +12,7 @@ const LoadingSpinner = require('../../misc/LoadingSpinner');
 const EmptyRowsView = require('../../data/featuregrid/EmptyRowsView');
 const loadingState = require('../../misc/enhancers/loadingState');
 const errorChartState = require('../enhancers/errorChartState');
-const {getWidgetFilterRenderers} = require('../enhancers/getWidgetFilterRenderers');
+const {getWidgetFilterRenderers} = require('../../../plugins/widgets/getWidgetFilterRenderers');
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
 
@@ -33,7 +33,6 @@ module.exports = ({
         moreFeatures: () => {}
     },
     describeFeatureType,
-    filters = {},
     columnSettings,
     features,
     size,

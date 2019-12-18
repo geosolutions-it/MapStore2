@@ -16,6 +16,7 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
+const {Provider} = require('react-redux');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 const { compose, defaultProps } = require('recompose');
@@ -69,7 +70,15 @@ describe('TableWidget component', () => {
         expect(el).toExist();
     });
     it('TableWidget empty', () => {
-        ReactDOM.render(<TableWidget describeFeatureType={describePois} features={[]} />, document.getElementById("container"));
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {
+                return () => {};
+            },
+            unsubscribe: () => {},
+            getState: () => ({})
+        };
+        ReactDOM.render(<Provider store={store}><TableWidget describeFeatureType={describePois} features={[]} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.react-grid-Empty');
         expect(el).toExist();
