@@ -42,7 +42,7 @@ function loadLocale(translationFolder, language) {
         }
         const folders = castArray(translationFolder || ConfigUtils.getConfigProp('translationsPath'));
         Promise.all(folders.map((folder) => {
-            return axios.get(folder + '/data.' + locale);
+            return axios.get(folder + `/data.${locale}.json`);
         })).then((responses) => {
             dispatch(changeLocale(responses.reduce((previous, response) => {
                 if (typeof response.data === "string") {
