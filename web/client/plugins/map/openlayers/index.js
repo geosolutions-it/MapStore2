@@ -19,6 +19,7 @@ module.exports = {
     Overview: require('../../../components/map/openlayers/Overview').default,
     ScaleBar: require('../../../components/map/openlayers/ScaleBar').default,
     DrawSupport: require('../../../components/map/openlayers/DrawSupport').default,
+    PopupSupport: require('../../../components/map/openlayers/PopupSupport').default,
     HighlightFeatureSupport: require('../../../components/map/openlayers/HighlightFeatureSupport').default,
     SelectionSupport: require('../../../components/map/openlayers/SelectionSupport').default
 };

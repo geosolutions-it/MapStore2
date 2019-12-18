@@ -21,6 +21,7 @@ const {warning} = require('../../actions/notifications');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {projectionDefsSelector} = require('../../selectors/map');
+const Popup = require('./openlayers/Popup').default;
 
 const Empty = () => { return <span/>; };
 
@@ -93,6 +94,15 @@ module.exports = (mapType, actions) => {
     require('../../components/map/' + mapType + '/plugins/index');
     const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
 
+    const PopupSupport = connect((state) => ({
+        popups: [
+            {
+                id: 'sample-popup',
+                component: Popup
+            }
+        ]
+    }))(components.PopupSupport || Empty);
+
     return {
         Map: LMap,
         Layer: LLayer,
@@ -104,7 +114,8 @@ module.exports = (mapType, actions) => {
             scalebar: components.ScaleBar || Empty,
             draw: DrawSupport,
             highlight: HighlightSupport,
-            selection: SelectionSupport
+            selection: SelectionSupport,
+            popup: PopupSupport
         }
     };
 };
