@@ -89,6 +89,9 @@ describe('widgets selectors', () => {
                                     type: 'string',
                                     attribute: 'state'
                                 }
+                            },
+                            options: {
+                                propertyName: ['state']
                             }
                         }]
                     }

@@ -43,7 +43,7 @@ const getWidgetAttributeFilter = (id, attributeName) => createSelector(
     getVisibleFloatingWidgets,
     (widgets) => {
         const widget = find(widgets, {id});
-        return widget && widget.quickFilters && widget.quickFilters[attributeName] || {};
+        return widget && widget.quickFilters && widget.options && find(widget.options.propertyName, f => f === attributeName) && widget.quickFilters[attributeName] || {};
     });
 
 const getCollapsedIds = createSelector(

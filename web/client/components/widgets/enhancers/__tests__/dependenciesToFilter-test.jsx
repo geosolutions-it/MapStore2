@@ -80,6 +80,9 @@ describe('widgets dependenciesToFilter enhancer', () => {
                 type: "string",
                 attribute: "state_abbr"
             }
+        }}
+        options={{
+            propertyName: ["state_abbr"]
         }}/>, document.getElementById("container"));
     });
     it('dependenciesToFilter with quickFilter only', (done) => {
@@ -98,7 +101,11 @@ describe('widgets dependenciesToFilter enhancer', () => {
                     type: "string",
                     attribute: "state_abbr"
                 }
-            }}/>, document.getElementById("container"));
+            }}
+            options={{
+                propertyName: ["state_abbr"]
+            }}
+        />, document.getElementById("container"));
     });
     it('dependenciesToFilter spatial filter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {

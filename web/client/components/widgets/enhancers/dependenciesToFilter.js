@@ -28,24 +28,30 @@ const getLayerFilter = ({layerFilter} = {}) => layerFilter;
  */
 module.exports = compose(
     withPropsOnChange(
-        ({mapSync, geomProp, dependencies = {}, layer, quickFilters} = {}, nextProps = {}, filter) =>
+        ({mapSync, geomProp, dependencies = {}, layer, quickFilters, options } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync
             || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport)
             || geomProp !== nextProps.geomProp
             || filter !== nextProps.filter
+            || options !== nextProps.options
             || quickFilters !== nextProps.quickFilters
             || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
             || getLayerFilter(layer) !== getLayerFilter(nextProps.layer),
-        ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters} = {}) => {
+        ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options} = {}) => {
             const viewport = dependencies.viewport;
             const fb = filterBuilder({ gmlVersion: "3.1.1" });
             const toFilter = fromObject(fb);
             const {filter, property, and} = fb;
             const {layerFilter} = layer || {};
-
+            const quickFiltersForVisibleProperties = quickFilters && options &&
+                Object.keys(quickFilters)
+                    .filter(qf => find(options.propertyName, f => f === qf))
+                    .reduce((p, c) => {
+                        return {...p, [c]: quickFilters[c]};
+                    }, {});
 
             // Building new filterObj in order to and the two filters: old filterObj and quickFilter (from Table Widget)
-            const columnsFilters = reduce(quickFilters, (cFilters, value, attribute) => {
+            const columnsFilters = reduce(quickFiltersForVisibleProperties, (cFilters, value, attribute) => {
                 return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
             }, {});
             let newFilterObj = null;
