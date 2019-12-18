@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {combineReducers, combineEpics, setStore, getStore, createStore, updateStore} from '../StateUtils';
 import MapSearchPlugin from '../../plugins/MapSearch';
-import Rx, { Observable } from 'rxjs';
+import Rx from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
 
 const epicTest = (epic, count, action, callback, state = {}) => {
@@ -184,5 +184,134 @@ describe('StateUtils', () => {
         store.dispatch({ type: "fake" });
         expect(spy1.calls.length > 0).toBe(true);
         expect(spy1.calls[0].arguments[0].prop).toBe('value');
+    });
+    it('updateStore with rootReducer', () => {
+        const spy1 = expect.createSpy().andCall((action, state) => state);
+        const spy2 = expect.createSpy().andCall((action, state) => state);
+        const store = createStore({ rootReducer: spy1 });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({rootReducer: spy2}, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('updateStore with reducers', () => {
+        const spy1 = expect.createSpy().andCall((action, state) => state);
+        const spy2 = expect.createSpy().andCall((action, state) => state);
+        const store = createStore({ reducers: { test: spy1 } });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({ reducers: { test: spy2 } }, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('updateStore with reducers from plugins', () => {
+        const spy1 = expect.createSpy().andCall((action, state) => state);
+        const spy2 = expect.createSpy().andCall((action, state) => state);
+        const store = createStore({
+            plugins: [{
+                reducers: {
+                    test: spy1
+                }
+            }]
+        });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({
+            plugins: [{
+                reducers: {
+                    test: spy2
+                }
+            }]
+        }, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('updateStore with rootEpic', () => {
+        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy2 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const store = createStore({ rootEpic: spy1 });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({ rootEpic: spy2 }, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('updateStore with epics', () => {
+        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy2 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const store = createStore({ epics: { myepic: spy1 } });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({ epics: { myepic: spy2 } }, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('updateStore with epics', () => {
+        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy2 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const store = createStore({ epics: { myepic: spy1 } });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({ epics: { myepic: spy2 } }, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('updateStore with epics from plugins', () => {
+        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy2 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const store = createStore({
+            plugins: [{
+                epics: {
+                    test: spy1
+                }
+            }]
+        });
+        expect(store).toExist();
+        expect(store.dispatch).toExist();
+        store.dispatch({ type: "fake" });
+        const beforeUpdateCalls = spy1.calls.length;
+        expect(beforeUpdateCalls > 0).toBe(true);
+        expect(spy2.calls.length > 0).toBe(false);
+        updateStore({
+            plugins: [{
+                epics: {
+                    test: spy2
+                }
+            }]
+        }, store);
+        store.dispatch({ type: "fake" });
+        expect(spy2.calls.length > 0).toBe(true);
+        expect(spy1.calls.length).toBe(beforeUpdateCalls);
     });
 });
