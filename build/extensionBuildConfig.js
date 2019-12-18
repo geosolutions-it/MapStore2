@@ -9,14 +9,14 @@ var virtualModules = new VirtualModulesPlugin({
 });
 
 /**
- * Webpack configuration for building a single plugin bundle (usable with dynamic plugins loading functionality).
+ * Webpack configuration for building a single extension bundle (usable with dynamic plugins loading functionality).
  * Some environment variables are used to specify the plugin to be built:
  *  - name: name to be assigned to the plugin (and used as a prefix for the final bundle name)
  *  - source: path to the plugin entry point
  *  - version: will be appended to the bundle name to identify the build version
  *
  * example:
- * name=myplugin source=web/client/plugins/MyPlugin version=1111 npm run build-plugin
+ * name=myextension source=web/client/extensions/MyExtension version=1111 npm run build-extension
  */
 const paths = {
     base: path.join(__dirname, ".."),

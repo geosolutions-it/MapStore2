@@ -9,3 +9,4 @@ This guide wants to provide general information and suggestions about how to wri
  * Writing enhancers - TODO TBD
  * [Styling and theming](../customize-theme)
  * Using JS API - TODO (@kappu72)
+ * [Extensions](../extensions)
