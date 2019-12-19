@@ -1071,7 +1071,8 @@
             "advancedOptions": "Opciones avanzadas",
             "addBboxParam": "Añadir bbox param al enlace de compartir",
             "wrongBboxParamTitle": "Bbox no válido",
-            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Enlace al inicio de MapStore"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",

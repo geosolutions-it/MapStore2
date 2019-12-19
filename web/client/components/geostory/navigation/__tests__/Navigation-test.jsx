@@ -57,5 +57,16 @@ describe('GeoStory Navigation component', () => {
         expect(selectedElement).toExist();
         expect(selectedElement.innerText).toBe("Abstract");
     });
-
+    it('should render home icon', () => {
+        ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=true' }} />, document.getElementById('container'));
+        expect(document.querySelector('#home-button')).toExist();
+    });
+    it('should hide home icon when showHome is false', () => {
+        ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=false' }} />, document.getElementById('container'));
+        expect(document.querySelector('#home-button')).toBe(null);
+    });
+    it('should hide home icon without search query', () => {
+        ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1' }} />, document.getElementById('container'));
+        expect(document.querySelector('#home-button')).toBe(null);
+    });
 });

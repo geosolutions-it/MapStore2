@@ -39,6 +39,7 @@
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
+      {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "projectionDefs": [],
     "initialState": {
@@ -291,7 +292,15 @@
               },
               "tools": ["popup"]
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+            {
+              "name": "Share",
+              "cfg": {
+                "advancedSettings": {
+                  "bbox": true
+                }
+              }
+            },
             {
                 "name": "Identify",
                 "cfg": {
@@ -691,6 +700,15 @@
             "name": "FeedbackMask",
             "cfg": {
               "containerPosition": "header"
+            }
+          },
+          {
+            "name": "Share",
+            "cfg": {
+              "embedPanel": false,
+              "advancedSettings": {
+                "homeButton": true
+              }
             }
           }
         ],

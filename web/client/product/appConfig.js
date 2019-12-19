@@ -63,6 +63,10 @@ module.exports = {
         name: "geostory",
         path: "/geostory/:gid",
         component: require('./pages/GeoStory').default
+    }, {
+        name: "geostory",
+        path: "/geostory/shared/:gid",
+        component: require('./pages/GeoStory').default
     }],
     initialState: {
         defaultState: {

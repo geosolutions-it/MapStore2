@@ -14,7 +14,8 @@ const Message = require('../../components/I18N/Message');
 
 class Home extends React.Component {
     static propTypes = {
-        icon: PropTypes.node
+        icon: PropTypes.node,
+        tooltipPosition: PropTypes.string
     };
 
     static contextTypes = {
@@ -23,20 +24,22 @@ class Home extends React.Component {
     };
 
     static defaultProps = {
-        icon: <Glyphicon glyph="home"/>
+        icon: <Glyphicon glyph="home"/>,
+        tooltipPosition: 'left'
     };
 
     render() {
+        const { tooltipPosition, ...restProps} = this.props;
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
         return (
-            <OverlayTrigger overlay={tooltip} placement="left">
+            <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
                 <Button
-                    {...this.props}
                     id="home-button"
                     className="square-button"
                     bsStyle="primary"
                     onClick={this.goHome}
                     tooltip={tooltip}
+                    {...restProps}
                 >{this.props.icon}</Button>
             </OverlayTrigger>
         );
