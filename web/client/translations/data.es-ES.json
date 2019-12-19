@@ -2109,6 +2109,12 @@
             "back": "Atrás",
             "next": "Siguiente"
         },
+        "plugins": {
+            "TOC": {
+                "title": "Lista de capas",
+                "description": "Proporciona una lista de capas con la capacidad de ordenarlas"
+            }
+        },
         "contextCreator": {
             "generalSettings": {
                 "label": "Configuración general",
@@ -2126,16 +2132,21 @@
                 "availablePluginsEmpty": "Habilitado todos los complementos disponibles",
                 "enabledPluginsEmpty": "Agregue complementos a la configuración desde la lista de complementos disponibles",
                 "searchResultsEmpty": "No se encontraron complementos que satisfagan los criterios de búsqueda.",
+                "cfgParsingError": {
+                    "title": "Error de configuración",
+                    "body": "Error en el análisis de la configuración JSON.\nEl siguiente error ha ocurrido:\n\"{error}\""
+                },
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
                     "activatePlugin": "Habilite la carga de este complemento al inicio",
                     "deactivatePlugin": "Desactivar la carga de este complemento al inicio",
-                    "editConfiguration": "Editar configuración del complemento"
+                    "editConfiguration": "Editar configuración del complemento",
+                    "pluginDocumentation": "Abrir la documentación de configuración del complemento"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Error de sintaxis en la configuración del complemento",
-                    "message": "El complemento \"{pluginName}\" contiene un error en la configuración:\"{error}\". Por favor arregle antes de continuar"
+                    "message": "El complemento \"{pluginName}\" contiene un error en la configuración. Por favor arregle antes de continuar"
                 }
             },
             "configureMap": {

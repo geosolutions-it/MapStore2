@@ -2138,7 +2138,7 @@
                 "searchResultsEmpty": "No plugins found that satisfy the search criteria",
                 "cfgParsingError": {
                     "title": "Configuration Error",
-                    "body": "Configuration JSON parsing failed.\nThe following error occured:\n\"{error}\""
+                    "body": "Configuration JSON parsing failed.\nThe following error occurred:\n\"{error}\""
                 },
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",

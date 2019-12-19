@@ -41,7 +41,9 @@ const TransferColumnCardList = ({
                         className: 'square-button-md no-border',
                         onClick: (event) => {
                             event.stopPropagation();
-                            tool.onClick();
+                            if (tool.onClick) {
+                                tool.onClick();
+                            }
                         }
                     }))}/>
                 }

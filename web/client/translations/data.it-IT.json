@@ -2110,6 +2110,12 @@
             "back": "Indietro",
             "next": "Avanti"
         },
+        "plugins": {
+            "TOC": {
+                "title": "Elenco di livelli",
+                "description": "Fornisce un elenco di livelli con la possibilità di ordinarli"
+            }
+        },
         "contextCreator": {
             "generalSettings": {
                 "label": "Impostazioni Generali",
@@ -2127,16 +2133,21 @@
                 "availablePluginsEmpty": "Abilitato tutti i plugin disponibili",
                 "enabledPluginsEmpty": "Aggiungi plug-in alla configurazione dall'elenco dei plug-in disponibili",
                 "searchResultsEmpty": "Nessun plugin trovato che soddisfa i criteri di ricerca",
+                "cfgParsingError": {
+                    "title": "Errore di configurazione",
+                    "body": "Analisi JSON di configurazione non riuscita.\nSi è verificato il seguente errore:\n\"{error}\""
+                },
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",
                     "activatePlugin": "Abilita il caricamento di questo plugin all'avvio",
                     "deactivatePlugin": "Disabilita il caricamento di questo plugin all'avvio",
-                    "editConfiguration": "Modifica la configurazione del plugin"
+                    "editConfiguration": "Modifica la configurazione del plugin",
+                    "pluginDocumentation": "Apri la documentazione di configurazione del plugin"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Errore di sintassi nella configurazione del plug-in",
-                    "message": "Il plugin \"{pluginName}\" contiene un errore nella configurazione:\"{error}\". Correggi prima di procedere"
+                    "message": "Il plugin \"{pluginName}\" contiene un errore nella configurazione. Correggi prima di procedere"
                 }
             },
             "configureMap": {
