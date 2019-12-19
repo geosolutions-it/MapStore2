@@ -51,6 +51,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         help: require('../reducers/help'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
+        mapConfigRawData: () => null,
         layers: () => {return null; },
         router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
@@ -68,6 +69,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
                 loadingError: mapState.loadingError,
                 mapId: mapState.loadingError.mapId
             } || null,
+            mapConfigRawData: mapState && mapState.mapConfigRawData || null,
             layers: mapState ? layers(mapState.layers, action) : null
         };
         if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {

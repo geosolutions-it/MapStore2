@@ -73,6 +73,7 @@ export default ({
                             bsStyle="default"
                             className="square-button-md no-border"
                             tooltipPosition="right"
+                            renderUnsavedMapChangesDialog={false}
                         />
                     )
                 }

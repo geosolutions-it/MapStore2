@@ -11,7 +11,7 @@ const { INIT_CATALOG } = require('../../actions/catalog');
 const { MAP_CONFIG_LOAD_ERROR } = require('../../actions/config');
 const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/controls');
 const { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } = require('../../actions/security');
-const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig } = require('../login');
+const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig, redirectOnLogout } = require('../login');
 
 const { testEpic } = require('./epicTestUtils');
 
@@ -117,6 +117,15 @@ describe('login Epics', () => {
                 done();
             };
             testEpic(promptLoginOnMapError, 2, [loginRequired(), setControlProperty('LoginForm', 'enabled', false)], epicResult, {});
+        });
+    });
+    it('redirectOnLogout', () => {
+        testEpic(redirectOnLogout, 1, logout('/test'), (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
+        });
+        testEpic(redirectOnLogout, 1, logout(), (actions) => {
+            expect(actions.length).toBe(0);
         });
     });
 });

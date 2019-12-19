@@ -25,5 +25,7 @@ module.exports = {
     initialSettingsSelector: state => get(state, "controls.layersettings.initialSettings") || {},
     originalSettingsSelector: state => get(state, "controls.layersettings.originalSettings") || {},
     activeTabSettingsSelector: state => get(state, "controls.layersettings.activeTab") || 'general',
-    drawerEnabledControlSelector: (state) => get(state, "controls.drawer.enabled", false)
+    drawerEnabledControlSelector: (state) => get(state, "controls.drawer.enabled", false),
+    unsavedMapSelector: (state) => get(state, "controls.unsavedMap.enabled", false),
+    unsavedMapSourceSelector: (state) => get(state, "controls.unsavedMap.source", "")
 };

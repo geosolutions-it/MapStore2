@@ -14,7 +14,7 @@ describe('Test the searchconfig reducer', () => {
     it('Map config loaded with textSearchConfig', () => {
 
         const action = {type: 'MAP_CONFIG_LOADED',
-            config: { version: 2, map: {layers: [], text_serch_config: {override: true}}}};
+            config: { version: 2, map: {layers: [], text_search_config: {override: true}}}};
 
         const state = searchconfig({}, action);
         expect(state.textSearchConfig).toExist();
@@ -74,5 +74,26 @@ describe('Test the searchconfig reducer', () => {
         expect(state.prop).toExist();
         expect(state.prop).toBe('val');
     });
-
+    it('should support both: old textSearchConfig field with typo and corrected new one', () => {
+        const oldState = searchconfig({}, {
+            type: 'MAP_CONFIG_LOADED',
+            config: {
+                map: {
+                    text_serch_config: 'test'
+                }
+            }
+        });
+        const newState = searchconfig({}, {
+            type: 'MAP_CONFIG_LOADED',
+            config: {
+                map: {
+                    text_serch_config: 'test'
+                }
+            }
+        });
+        expect(oldState.textSearchConfig).toExist();
+        expect(newState.textSearchConfig).toExist();
+        expect(oldState.textSearchConfig).toBe('test');
+        expect(newState.textSearchConfig).toBe('test');
+    });
 });

@@ -311,7 +311,11 @@
             "maps": {
                 "title": "Mapas ({count})",
                 "noMapAvailable": "Nenhum mapa disponível",
-                "createNewOne": "Crie um novo"
+                "createNewOne": "Crie um novo",
+                "unsavedMapConfirmTitle": "Unsaved changes",
+                "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
+                "unsavedMapConfirmButtonText": "Leave",
+                "unsavedMapCancelButtonText": "Close"
             }
         },
         "map": {

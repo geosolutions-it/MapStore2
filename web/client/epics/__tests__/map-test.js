@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions} = require('../map');
+const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, compareMapChanges} = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
 const { LOAD_MAP_INFO, configureMap} = require('../../actions/config');
@@ -18,12 +18,13 @@ const MapUtils = require('../../utils/MapUtils');
 
 const {
     CHANGE_MAP_VIEW,
-    zoomToExtent
-
+    zoomToExtent,
+    checkMapChanges
 } = require('../../actions/map');
 
 
 const {LOGIN_SUCCESS} = require('../../actions/security');
+const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
 
 const LAYOUT_STATE = {
     layout: {
@@ -244,5 +245,286 @@ describe('map epics', () => {
             expect(minZoom).toBe(2);
             done();
         }, state);
+    });
+    describe('compareMapChanges', () => {
+        it('shouldn\'t do anything if current view is different than map', (done) => {
+            const state = {
+                feedbackMask: {
+                    currentPage: ''
+                }
+            };
+
+            const epicResponse = (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, state);
+        });
+        it('shouldn\'t do anything if map not editable', (done) => {
+            const state = {
+                map: {
+                    present: {
+                        mapId: '1',
+                        info: {
+                            canEdit: false
+                        }
+                    }
+                },
+                feedbackMask: {
+                    view: 'viewer'
+                },
+                layers: [
+                    {
+                        allowedSRS: {},
+                        bbox: {},
+                        dimensions: [],
+                        id: "layer001",
+                        loading: true,
+                        name: "layer001",
+                        params: {},
+                        search: {},
+                        singleTile: false,
+                        thumbURL: "THUMB_URL",
+                        title: "layer001",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url"
+                    }
+                ],
+                backgroundSelector: {
+                    backgrounds: [
+                        {id: 'layer005', thumbnail: 'data'},
+                        {id: 'layer006', thumbnail: null}
+                    ]
+                },
+                mapConfigRawData: {
+                    "version": 2,
+                    "map": {
+                        "mapOptions": {},
+                        "layers": [
+                            {
+                                "id": "layer001",
+                                "thumbURL": "THUMB_URL",
+                                "search": {},
+                                "name": "layer001",
+                                "title": "layer001",
+                                "type": "wms",
+                                "url": "",
+                                "bbox": {},
+                                "visibility": true,
+                                "singleTile": false,
+                                "allowedSRS": {},
+                                "dimensions": [],
+                                "hideLoading": false,
+                                "handleClickOnLayer": false,
+                                "catalogURL": "url",
+                                "useForElevation": false,
+                                "hidden": false,
+                                "params": {}
+                            }
+                        ],
+                        "groups": [],
+                        "backgrounds": [
+                            {
+                                "id": "layer005",
+                                "thumbnail": "data"
+                            }
+                        ]
+                    },
+                    "catalogServices": {},
+                    "widgetsConfig": {},
+                    "mapInfoConfiguration": {}
+                }
+            };
+
+
+            const epicResponse = (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, state);
+        });
+        it('shouldn\'t do anything if map is same', (done) => {
+            const state = {
+                map: {
+                    present: {
+                        mapId: '1',
+                        info: {
+                            canEdit: true
+                        }
+                    }
+                },
+                feedbackMask: {
+                    view: 'viewer'
+                },
+                layers: [
+                    {
+                        allowedSRS: {},
+                        bbox: {},
+                        dimensions: [],
+                        id: "layer001",
+                        loading: true,
+                        name: "layer001",
+                        params: {},
+                        search: {},
+                        singleTile: false,
+                        thumbURL: "THUMB_URL",
+                        title: "layer001",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url"
+                    }
+                ],
+                backgroundSelector: {
+                    backgrounds: [
+                        {id: 'layer005', thumbnail: 'data'},
+                        {id: 'layer006', thumbnail: null}
+                    ]
+                },
+                mapConfigRawData: {
+                    "version": 2,
+                    "map": {
+                        "mapOptions": {},
+                        "layers": [
+                            {
+                                "id": "layer001",
+                                "thumbURL": "THUMB_URL",
+                                "search": {},
+                                "name": "layer001",
+                                "title": "layer001",
+                                "type": "wms",
+                                "url": "",
+                                "bbox": {},
+                                "visibility": true,
+                                "singleTile": false,
+                                "allowedSRS": {},
+                                "dimensions": [],
+                                "hideLoading": false,
+                                "handleClickOnLayer": false,
+                                "catalogURL": "url",
+                                "useForElevation": false,
+                                "hidden": false,
+                                "params": {}
+                            }
+                        ],
+                        "groups": [],
+                        "backgrounds": [
+                            {
+                                "id": "layer005",
+                                "thumbnail": "data"
+                            }
+                        ]
+                    },
+                    "catalogServices": {},
+                    "widgetsConfig": {},
+                    "mapInfoConfiguration": {}
+                }
+            };
+
+
+            const epicResponse = (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            };
+
+            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, state);
+        });
+        it('should show confirm prompt if anything changed', (done) => {
+            const state = {
+                map: {
+                    present: {
+                        mapId: '1',
+                        zoom: 10,
+                        info: {
+                            canEdit: true
+                        }
+                    }
+                },
+                feedbackMask: {
+                    currentPage: 'viewer'
+                },
+                layers: [
+                    {
+                        allowedSRS: {},
+                        bbox: {},
+                        dimensions: [],
+                        id: "layer001",
+                        loading: true,
+                        name: "layer001",
+                        params: {},
+                        search: {},
+                        singleTile: false,
+                        thumbURL: "THUMB_URL",
+                        title: "layer001",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url"
+                    }
+                ],
+                backgroundSelector: {
+                    backgrounds: [
+                        {id: 'layer005', thumbnail: 'data'},
+                        {id: 'layer006', thumbnail: null}
+                    ]
+                },
+                mapConfigRawData: {
+                    "version": 2,
+                    "map": {
+                        "mapOptions": {},
+                        "layers": [
+                            {
+                                "id": "layer001",
+                                "thumbURL": "THUMB_URL",
+                                "search": {},
+                                "name": "layer001",
+                                "title": "layer001",
+                                "type": "wms",
+                                "url": "",
+                                "bbox": {},
+                                "visibility": true,
+                                "singleTile": false,
+                                "allowedSRS": {},
+                                "dimensions": [],
+                                "hideLoading": false,
+                                "handleClickOnLayer": false,
+                                "catalogURL": "url",
+                                "useForElevation": false,
+                                "hidden": false,
+                                "params": {}
+                            }
+                        ],
+                        "groups": [],
+                        "backgrounds": [
+                            {
+                                "id": "layer005",
+                                "thumbnail": "data"
+                            }
+                        ]
+                    },
+                    "catalogServices": {},
+                    "widgetsConfig": {},
+                    "mapInfoConfiguration": {}
+                }
+            };
+
+            const epicResponse = (actions) => {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[0].property).toBe('enabled');
+                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[1].property).toBe('source');
+                done();
+            };
+
+            testEpic(compareMapChanges, 2, checkMapChanges(), epicResponse, state);
+        });
     });
 });
