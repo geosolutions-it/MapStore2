@@ -384,6 +384,7 @@ export const findSectionIdFromColumnId = (immSections, columnId) => {
  */
 export const isWebPageSection = (element) =>
     element.type === SectionTypes.PARAGRAPH &&
+    element.editURL !== false &&
     element &&
     isArray(element.contents) &&
     element.contents.length &&

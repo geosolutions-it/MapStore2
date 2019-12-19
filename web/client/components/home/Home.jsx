@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,7 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const Message = require('../../components/I18N/Message');
@@ -19,7 +18,8 @@ class Home extends React.Component {
         onCheckMapChanges: PropTypes.func,
         onCloseUnsavedDialog: PropTypes.func,
         displayUnsavedDialog: PropTypes.bool,
-        renderUnsavedMapChangesDialog: PropTypes.bool
+        renderUnsavedMapChangesDialog: PropTypes.bool,
+        tooltipPosition: PropTypes.string
     };
 
     static contextTypes = {
@@ -31,21 +31,23 @@ class Home extends React.Component {
         icon: <Glyphicon glyph="home"/>,
         onCheckMapChanges: () => {},
         onCloseUnsavedDialog: () => {},
-        renderUnsavedMapChangesDialog: true
+        renderUnsavedMapChangesDialog: true,
+        tooltipPosition: 'left'
     };
 
     render() {
+        const { tooltipPosition, ...restProps} = this.props;
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
         return (
             <React.Fragment>
-                <OverlayTrigger overlay={tooltip} placement="left">
+                <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
                     <Button
-                        {...this.props}
                         id="home-button"
                         className="square-button"
                         bsStyle="primary"
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
+                        {...restProps}
                     >{this.props.icon}</Button>
                 </OverlayTrigger>
                 <ConfirmModal
@@ -67,7 +69,6 @@ class Home extends React.Component {
                         <Message msgId="resources.maps.unsavedMapConfirmMessage" />
                     </div>
                 </ConfirmModal>
-
             </React.Fragment>
         );
     }

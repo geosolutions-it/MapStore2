@@ -87,8 +87,13 @@ describe('Share Plugin', () => {
                     crs: 'EPSG:4326'
                 }
             };
+            const props = {
+                advancedSettings: {
+                    bbox: true
+                }
+            };
             const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
-            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
             setTimeout(() => {
                 expect(document.getElementById('share-panel-dialog')).toExist();
                 const inputLink = document.querySelector('input[type=\'text\']');
@@ -97,7 +102,7 @@ describe('Share Plugin', () => {
                 const query = splitUrl[splitUrl.length - 1];
                 expect(query).toBe('bbox=9,45,10,46');
                 done();
-            }, 100);
+            }, 500);
         } catch (e) {
             done(e);
         }
@@ -123,8 +128,13 @@ describe('Share Plugin', () => {
                 crs: 'EPSG:3857'
             }
         };
+        const props = {
+            advancedSettings: {
+                bbox: true
+            }
+        };
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
         setTimeout(() => {
             expect(document.getElementById('share-panel-dialog')).toExist();
@@ -139,7 +149,7 @@ describe('Share Plugin', () => {
             expect(extent[2]).toBe(24);
             expect(extent[3]).toBe(50);
             done();
-        }, 100);
+        }, 500);
 
     });
 
@@ -176,8 +186,13 @@ describe('Share Plugin', () => {
                 crs: 'EPSG:4326'
             }
         };
+        const props = {
+            advancedSettings: {
+                bbox: true
+            }
+        };
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
         setTimeout(() => {
             expect(document.getElementById('share-panel-dialog')).toExist();
             const inputLink = document.querySelector('input[type=\'text\']');
@@ -186,7 +201,7 @@ describe('Share Plugin', () => {
             const query = splitUrl[splitUrl.length - 1];
             expect(query).toBe(`bbox=${join(splitExtentRightScreen, ',')}`);
             done();
-        }, 100);
+        }, 1000);
     });
 
 });
