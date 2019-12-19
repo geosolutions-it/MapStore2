@@ -21,6 +21,7 @@ import {get} from 'lodash';
 const Immersive = ({
     add = () => {},
     editMedia = () => {},
+    editWebPage = () => {},
     onVisibilityChange = () => { },
     update = () => {},
     updateBackground = () => {},
@@ -81,6 +82,7 @@ const Immersive = ({
             add={add}
             updateCurrentPage={updateCurrentPage}
             editMedia={editMedia}
+            editWebPage={editWebPage}
             update={update}
             remove={remove}
             sectionId={id}
@@ -121,6 +123,13 @@ const Immersive = ({
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
                     add(`sections`, id, SectionTemplates.MEDIA);
+                }
+            },
+            {
+                glyph: 'story-webpage-section',
+                tooltipId: 'geostory.addWebPageSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTemplates.WEBPAGE);
                 }
             }]}/>}
     </section>);

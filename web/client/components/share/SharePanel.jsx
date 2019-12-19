@@ -18,7 +18,7 @@ import ShareQRCode from './ShareQRCode';
 import { Glyphicon, Tabs, Tab, Checkbox } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join } from 'lodash';
-import { removeQueryFromUrl } from '../../utils/ShareUtils';
+import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 
 /**
@@ -61,7 +61,10 @@ class SharePanel extends React.Component {
         closeGlyph: PropTypes.string,
         version: PropTypes.string,
         bbox: PropTypes.object,
-        hideAdvancedSettings: PropTypes.bool,
+        advancedSettings: PropTypes.shape({
+            bbox: PropTypes.bool,
+            homeButton: PropTypes.bool
+        }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
         selectedTab: PropTypes.string
@@ -110,10 +113,11 @@ class SharePanel extends React.Component {
     }
 
     getShareUrl = () => {
-        const shareUrl = removeQueryFromUrl(this.props.shareUrl);
-        return (this.props.settings.bboxEnabled && !this.props.hideAdvancedSettings && this.state.bbox)
-            ? `${shareUrl}?bbox=${this.state.bbox}`
-            : shareUrl;
+        const { settings, advancedSettings } = this.props;
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
+        if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
+        if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
+        return shareUrl;
     };
 
     generateUrl = (orig = location.href, pattern, replaceString) => {
@@ -145,7 +149,6 @@ class SharePanel extends React.Component {
             <Tab eventKey={2} title={<Message msgId="share.social" />}>{this.state.eventKey === 2 && social}</Tab>
             {this.props.embedPanel ? <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab> : null}
         </Tabs>);
-
         let sharePanel =
             (<Dialog
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
@@ -163,25 +166,39 @@ class SharePanel extends React.Component {
                 </span>
                 <div role="body" className="share-panels">
                     {tabs}
-                    {!this.props.hideAdvancedSettings &&
-                    <SwitchPanel
-                        title={<Message msgId="share.advancedOptions"/>}
-                        expanded={this.state.showAdvanced}
-                        onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
-                        <Checkbox
-                            checked={this.props.settings.bboxEnabled ? true : false}
-                            onChange={() =>
-                                this.props.onUpdateSettings({
-                                    ...this.props.settings,
-                                    bboxEnabled: !this.props.settings.bboxEnabled
-                                })}>
-                            <Message msgId="share.addBboxParam" />
-                        </Checkbox>
-                    </SwitchPanel>}
+                    {this.props.advancedSettings && this.renderAdvancedSettings()}
                 </div>
             </Dialog>);
 
         return this.props.isVisible ? sharePanel : null;
+    }
+
+    renderAdvancedSettings = () => {
+        return (
+            <SwitchPanel
+                title={<Message msgId="share.advancedOptions"/>}
+                expanded={this.state.showAdvanced}
+                onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
+                {this.props.advancedSettings.bbox && <Checkbox
+                    checked={this.props.settings.bboxEnabled ? true : false}
+                    onChange={() =>
+                        this.props.onUpdateSettings({
+                            ...this.props.settings,
+                            bboxEnabled: !this.props.settings.bboxEnabled
+                        })}>
+                    <Message msgId="share.addBboxParam" />
+                </Checkbox>}
+                {this.props.advancedSettings.homeButton && <Checkbox
+                    checked={this.props.settings.showHome ? true : false}
+                    onChange={() =>
+                        this.props.onUpdateSettings({
+                            ...this.props.settings,
+                            showHome: !this.props.settings.showHome
+                        })}>
+                    <Message msgId="share.showHomeButton" />
+                </Checkbox>}
+            </SwitchPanel>
+        );
     }
 }
 

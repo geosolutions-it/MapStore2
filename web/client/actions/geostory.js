@@ -74,8 +74,9 @@ export const editResource = ( id, mediaType, data ) => ({type: EDIT_RESOURCE, id
 /**
  * Load geostory from configuration
  * @param {string} id the story name of .json file
+ * @param {object} options custom data user in epics for specific cases
  */
-export const loadGeostory = (id) => ({ type: LOAD_GEOSTORY, id});
+export const loadGeostory = (id, options) => ({ type: LOAD_GEOSTORY, id, options});
 
 /**
  * GeoStory Loaded event

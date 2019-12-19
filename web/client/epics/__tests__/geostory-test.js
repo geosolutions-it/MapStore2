@@ -27,8 +27,9 @@ import {
     reloadGeoStoryOnLoginLogout,
     sortContentEpic,
     setFocusOnMapEditing,
-    openWebPageComponentCreator,
     inlineEditorEditMap,
+    closeShareOnGeostoryChangeMode,
+    openWebPageComponentCreator,
     editWebPageComponent
 } from '../geostory';
 import {
@@ -53,6 +54,7 @@ import {
     SET_WEBPAGE_URL,
     editWebPage
 } from '../../actions/geostory';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
     SHOW,
     SELECT_ITEM,
@@ -1147,6 +1149,17 @@ describe('Geostory Epics', () => {
             }
         }
         });
+    });
+    it('closeShareGeostoryChangeMode', () => {
+        const action = { type: CHANGE_MODE };
+        const callback = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            expect(actions[0].control).toBe('share');
+            expect(actions[0].property).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+        };
+        testEpic(closeShareOnGeostoryChangeMode, 1, action, callback);
     });
 
     it('editWebPageComponent should open web page creator popup for edit', () => {

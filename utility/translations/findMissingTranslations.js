@@ -18,9 +18,9 @@
  * So you can align them manually.
  * In the future we could expand this to compile missing entries.
  */
-const basefile = process.argv[2] || 'data.en-US';
+const basefile = process.argv[2] || 'data.en-US.json';
 const TRANSLATIONS_FOLDER = process.argv[3] || 'web/client/translations/';
-const MANDATORY_FILES = ["data.it-IT", "data.es-ES", "data.de-DE", "data.fr-FR"];
+const MANDATORY_FILES = ["data.it-IT.json", "data.es-ES.json", "data.de-DE.json", "data.fr-FR.json"];
 const log = s => process.stdout.write(s);
 const isMandatory = file => MANDATORY_FILES.filter( f => f === file).length > 0;
 const isPresent = translation => translation !== undefined;

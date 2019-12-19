@@ -101,6 +101,7 @@ describe('URLUtils', () => {
         // dirty, different sorting
         expect(sameQueryParams("a=b&c=d&", "&c=d&a=b")).toBe(true);
     });
+
     it('isValidURL', () => {
         expect(isValidURL('http://www.my-site.com')).toBe(true);
         expect(isValidURL('http://www.my-site.com/some/path/to/resource')).toBe(true);

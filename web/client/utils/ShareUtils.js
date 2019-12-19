@@ -60,6 +60,11 @@ var ShareUtils = {
         const parseHash = Url.parse(hash && trimStart(hash, '#') || '');
         const formatHash = Url.format({ ...parseHash, query: null, search: null });
         return Url.format({ ...parsedUrl, query: null, search: null, hash: formatHash ? `#${formatHash}` : null });
+    },
+    getSharedGeostoryUrl: (url = '') => {
+        return url.match(/\/(geostory)\/((shared)|(newgeostory))/)
+            ? url
+            : url.replace('/geostory/', '/geostory/shared/');
     }
 };
 

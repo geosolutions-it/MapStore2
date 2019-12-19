@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,14 +6,20 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const Message = require('../../components/I18N/Message');
+const ConfirmModal = require('../../components/misc/ResizableModal');
 
 class Home extends React.Component {
     static propTypes = {
-        icon: PropTypes.node
+        icon: PropTypes.node,
+        onCheckMapChanges: PropTypes.func,
+        onCloseUnsavedDialog: PropTypes.func,
+        displayUnsavedDialog: PropTypes.bool,
+        renderUnsavedMapChangesDialog: PropTypes.bool,
+        tooltipPosition: PropTypes.string
     };
 
     static contextTypes = {
@@ -23,23 +28,58 @@ class Home extends React.Component {
     };
 
     static defaultProps = {
-        icon: <Glyphicon glyph="home"/>
+        icon: <Glyphicon glyph="home"/>,
+        onCheckMapChanges: () => {},
+        onCloseUnsavedDialog: () => {},
+        renderUnsavedMapChangesDialog: true,
+        tooltipPosition: 'left'
     };
 
     render() {
+        const { tooltipPosition, ...restProps} = this.props;
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
         return (
-            <OverlayTrigger overlay={tooltip} placement="left">
-                <Button
-                    {...this.props}
-                    id="home-button"
-                    className="square-button"
-                    bsStyle="primary"
-                    onClick={this.goHome}
-                    tooltip={tooltip}
-                >{this.props.icon}</Button>
-            </OverlayTrigger>
+            <React.Fragment>
+                <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
+                    <Button
+                        id="home-button"
+                        className="square-button"
+                        bsStyle="primary"
+                        onClick={this.checkUnsavedChanges}
+                        tooltip={tooltip}
+                        {...restProps}
+                    >{this.props.icon}</Button>
+                </OverlayTrigger>
+                <ConfirmModal
+                    ref="unsavedMapModal"
+                    show={this.props.displayUnsavedDialog || false}
+                    onClose={this.props.onCloseUnsavedDialog}
+                    title={<Message msgId="resources.maps.unsavedMapConfirmTitle" />}
+                    buttons={[{
+                        bsStyle: "primary",
+                        text: <Message msgId="resources.maps.unsavedMapConfirmButtonText" />,
+                        onClick: this.goHome
+                    }, {
+                        text: <Message msgId="resources.maps.unsavedMapCancelButtonText" />,
+                        onClick: this.props.onCloseUnsavedDialog
+                    }]}
+                    fitContent
+                >
+                    <div className="ms-detail-body">
+                        <Message msgId="resources.maps.unsavedMapConfirmMessage" />
+                    </div>
+                </ConfirmModal>
+            </React.Fragment>
         );
+    }
+
+    checkUnsavedChanges = () => {
+        if (this.props.renderUnsavedMapChangesDialog) {
+            this.props.onCheckMapChanges(this.goHome);
+        } else {
+            this.props.onCloseUnsavedDialog();
+            this.goHome();
+        }
     }
 
     goHome = () => {

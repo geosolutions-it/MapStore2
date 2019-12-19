@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isString, trim, isNumber} = require('lodash');
+const {isString, trim, isNumber, pick, isEqual} = require('lodash');
+
 
 const DEFAULT_SCREEN_DPI = 96;
 
@@ -45,7 +46,7 @@ let CoordinatesUtils = require('./CoordinatesUtils');
 let {set} = require('./ImmutableUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isEmpty, findIndex} = require('lodash');
+const {isEmpty, findIndex, cloneDeep} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -364,7 +365,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_serch_config: textSearchConfig},
+        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -411,6 +412,69 @@ const parseLayoutValue = (value, size = 0) => {
     return isNumber(value) ? value : 0;
 };
 
+/**
+ * Method for cleanup map object from uneseccary fields which
+ * updated map contains and were set on map render
+ * @param {object} obj
+ */
+
+const prepareMapObjectToCompare = obj => {
+    const skippedKeys = ['apiKey', 'time', 'args', 'fixed'];
+    const shouldBeSkipped = (key) => skippedKeys.reduce((p, n) => p || key === n, false);
+    Object.keys(obj).forEach(key => {
+        const value = obj[key];
+        const type = typeof value;
+        if (type === "object" && value !== null && !shouldBeSkipped(key)) {
+            prepareMapObjectToCompare(value);
+            if (!Object.keys(value).length) {
+                delete obj[key];
+            }
+        } else if (type === "undefined" || !value || shouldBeSkipped(key)) {
+            delete obj[key];
+        }
+    });
+};
+
+/**
+ * Method added for support old key with objects provided for compareMapChanges feature
+ * like text_serch_config
+ * @param {object} obj
+ * @param {string} oldKey
+ * @param {string} newKey
+ */
+const updateObjectFieldKey = (obj, oldKey, newKey) => {
+    if (obj[oldKey]) {
+        Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey));
+        delete obj[oldKey];
+    }
+};
+
+/**
+ * Feature for map change recognition. Returns value of isEqual method from lodash
+ * @param {object} map1 original map before changes
+ * @param {object} map2 updated map
+ * @returns {boolean}
+ */
+const compareMapChanges = (map1 = {}, map2 = {}) => {
+    const pickedFields = [
+        'map.layers',
+        'map.backgrounds',
+        'map.text_search_config',
+        'map.text_serch_config',
+        'map.zoom',
+        'widgetsConfig'
+    ];
+    const filteredMap1 = pick(cloneDeep(map1), pickedFields);
+    const filteredMap2 = pick(cloneDeep(map2), pickedFields);
+    // ABOUT: used for support text_serch_config field in old maps
+    updateObjectFieldKey(filteredMap1.map, 'text_serch_config', 'text_search_config');
+    updateObjectFieldKey(filteredMap2.map, 'text_serch_config', 'text_search_config');
+
+    prepareMapObjectToCompare(filteredMap1);
+    prepareMapObjectToCompare(filteredMap2);
+    return isEqual(filteredMap1, filteredMap2);
+};
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -442,5 +506,8 @@ module.exports = {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    parseLayoutValue
+    parseLayoutValue,
+    prepareMapObjectToCompare,
+    updateObjectFieldKey,
+    compareMapChanges
 };

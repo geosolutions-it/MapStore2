@@ -56,7 +56,8 @@ function mapConfig(state = null, action) {
                     l.type = "empty";
                 }
                 return l;
-            })
+            }),
+            mapConfigRawData: { ...action.config }
         };
         newMapState.map = assign({}, newMapState.map, {mapId: action.mapId, size, version: hasVersion ? action.config.version : 1});
         // we store the map initial state for future usage

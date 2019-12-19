@@ -1,16 +1,31 @@
 # General Migration Guidelines
 This is a list of things to do if you want to update from a previous version valid for every version.
- - Take a list to migration notes below for your version
- - Take a look to the release notes
- - update your `package.json` to latest libs versions
- - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
- - Follow the instructions, in order
+
+- Take a list to migration notes below for your version
+- Take a look to the release notes
+- update your `package.json` to latest libs versions
+- take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
+- Follow the instructions, in order
+
+## Migration from 2020.01.00 to 2020.02.00
+
+- The translations file extension has been changed into JSON. Now translation files has been renamed from `data.<locale>` to `data.<locale>.json`. This change makes the `.json` extension mandatory for all translation files. This means that depending projects with custom translation files should be renabled in the same name. E.g. `data.it-IT` have to be renamed as `data.it-IT.json`
+
+## Migration from 2019.02.01 to 2020.01.00
+
+With MapStore **2020.01.00** some dependencies that were previously hosted on github, have now been published on the npm registry, and package.json has been updated accordingly.
+[Here](https://github.com/geosolutions-it/MapStore2/pull/4598) is the PR that documents how to update local package.json and local webpack if not using the mapstore buildConfig/testConfig common files.
+
+After updating package.json run **npm install**
+Now you should be able to run locally with **npm start**
+
+For more info see the related [issue](https://github.com/geosolutions-it/MapStore2/issues/4569)
 
 ## Migration from 2019.01.00 to 2019.01.01
 MapStore **2019.01.01** changes the location of some of the build and test configuration files.
 This also affects projects using MapStore build files, sp if you update MapStore subproject to the **2019.01.01** version you also have to update some of the project configuration files. In particular:
 
- * **webpack.config.js** and **prod-webpack.config.js**: 
+ * **webpack.config.js** and **prod-webpack.config.js**:
    * update path to themes.js from ./MapStore2/themes.js to ./MapStore2/build/themes.js
    * update path to buildConfig from ./MapStore2/buildConfig to ./MapStore2/build/buildConfig
  * **karma.conf.continuous-test.js** and **karma.config.single-run.js**: update path to testConfig from ./MapStore2/testConfig to ./MapStore2/build/testConfig

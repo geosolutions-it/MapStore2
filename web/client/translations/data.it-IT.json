@@ -312,7 +312,11 @@
             "maps": {
                 "title": "Mappe ({count})",
                 "noMapAvailable": "Nessuna mappa disponibile",
-                "createNewOne": "Creane una nuova"
+                "createNewOne": "Creane una nuova",
+                "unsavedMapConfirmTitle": "Modifiche non salvate",
+                "unsavedMapConfirmMessage": "Sei sicuro di voler uscire senza salvare le modifiche?",
+                "unsavedMapConfirmButtonText": "Si",
+                "unsavedMapCancelButtonText": "No"
             },
             "geostories": {
                 "newGeostory": "Nuova Storia",
@@ -1071,7 +1075,8 @@
             "advancedOptions": "Opzioni avanzate",
             "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
             "wrongBboxParamTitle": "Parametro bbox non valido",
-            "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Link alla home di MapStore"
         },
         "snapshot": {
             "title": "Istantanea",

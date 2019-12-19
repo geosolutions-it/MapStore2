@@ -312,7 +312,11 @@
             "maps": {
                 "title": "Mapas ({count})",
                 "noMapAvailable": "No hay mapa disponible",
-                "createNewOne": "Crea uno nuevo"
+                "createNewOne": "Crea uno nuevo",
+                "unsavedMapConfirmTitle": "Cambios no guardados",
+                "unsavedMapConfirmMessage": "¿Seguro que quieres dejar los cambios sin guardar?",
+                "unsavedMapConfirmButtonText": "Salir",
+                "unsavedMapCancelButtonText": "Cerrar"
             },
             "geostories": {
                 "newGeostory": "Nuevo Story",
@@ -1071,7 +1075,8 @@
             "advancedOptions": "Opciones avanzadas",
             "addBboxParam": "Añadir bbox param al enlace de compartir",
             "wrongBboxParamTitle": "Bbox no válido",
-            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Enlace al inicio de MapStore"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
