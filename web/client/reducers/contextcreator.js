@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, pick, omit, isObject, head} from 'lodash';
+import {get, omit, isObject, head} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
 import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, CLEAR_CONTEXT_CREATOR,
     SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_ATTRIBUTE, LOADING,
-    SET_EDITED_CFG, UPDATE_EDITED_CFG} from "../actions/contextcreator";
+    SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 const defaultPlugins = [
@@ -35,8 +35,8 @@ const defaultPlugins = [
         enableMapTemplates: true
     },
     {
-        name: 'Catalog',
-        label: 'Catalog'
+        name: 'MetadataExplorer',
+        label: 'MetadataExplorer'
     },
     {
         name: 'Scale',
@@ -65,23 +65,43 @@ const findPlugin = (plugins, pluginName) =>
     plugins && plugins.reduce((result, plugin) =>
         result || pluginName === getPluginName(plugin) && plugin || findPlugin(plugin.children, pluginName), null);
 
-const makePluginTree = config => {
-    const plugins = get(config, 'desktop');
+const makePluginTree = (plugins, localPluginsConfig) => {
+    const localPlugins = get(localPluginsConfig, 'desktop', []).map(plugin => isObject(plugin) ? plugin : {name: plugin});
 
     if (!plugins) {
         return defaultPlugins;
     }
 
-    const makeNode = (plugin) => ({
-        ...(isObject(plugin) ? pick(plugin, 'name', 'label') : {name: plugin}),
+    const rootPlugins = plugins.reduce((curRootPlugins, plugin) =>
+        get(plugin, 'children', []).reduce((newRootPlugins, childPlugin) =>
+            newRootPlugins.filter(rootPlugin => rootPlugin.name !== childPlugin), curRootPlugins), plugins);
+
+    const makeNode = (parent, plugin) => ({
+        name: plugin.name,
+        title: plugin.title,
+        description: plugin.description,
+        symbol: plugin.symbol,
+        parent,
+        mandatory: !!plugin.mandatory,
+        forcedMandatory: false,
+        enabledDependentPlugins: [],
+        hidden: !!plugin.hidden,
+        dependencies: plugin.dependencies || [],
         enabled: false,
         active: false,
         isUserPlugin: false,
-        pluginConfig: isObject(plugin) ? omit(plugin, 'parentPlugin') : {name: plugin},
-        children: plugins.filter(p => get(p, 'parentPlugin') === getPluginName(plugin)).map(makeNode)
+        pluginConfig: {
+            ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
+            name: plugin.name,
+            cfg: plugin.defaultConfig
+        },
+        children: get(plugin, 'children', [])
+            .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
+            .filter(childPlugin => childPlugin !== undefined)
+            .map(childPlugin => makeNode(plugin.name, childPlugin))
     });
 
-    return makeNode({}).children;
+    return rootPlugins.map(rootPlugin => makeNode(null, rootPlugin));
 };
 
 export default (state = {}, action) => {
@@ -100,7 +120,7 @@ export default (state = {}, action) => {
         const {plugins = {desktop: []}, userPlugins = [], ...otherData} = data;
         const contextPlugins = get(plugins, 'desktop', []);
 
-        const allPlugins = makePluginTree(ConfigUtils.getConfigProp('plugins'));
+        const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));
         const convertPlugins = curPlugins => curPlugins.map(plugin => {
             const getPlugin = pluginArray => head(pluginArray.filter(p => getPluginName(p) === plugin.name));
             const enabledPlugin = getPlugin(contextPlugins);
@@ -151,6 +171,15 @@ export default (state = {}, action) => {
     }
     case UPDATE_EDITED_CFG: {
         return set('editedCfg', action.cfg, state);
+    }
+    case SET_VALIDATION_STATUS: {
+        return set('validationStatus', action.status, state);
+    }
+    case SET_PARSED_CFG: {
+        return set('parsedCfg', action.parsedCfg, state);
+    }
+    case SET_CFG_ERROR: {
+        return set('cfgError', action.error, state);
     }
     case CHANGE_ATTRIBUTE: {
         return action.key === 'name' ?

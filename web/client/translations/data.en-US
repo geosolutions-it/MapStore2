@@ -2108,6 +2108,12 @@
             "back": "Back",
             "next": "Next"
         },
+        "plugins": {
+            "TOC": {
+                "title": "List of layers",
+                "description": "Provides a list of layers with an ability to sort them"
+            }
+        },
         "contextCreator": {
             "generalSettings": {
                 "label": "General Settings",
@@ -2125,16 +2131,21 @@
                 "availablePluginsEmpty": "Enabled all available plugins",
                 "enabledPluginsEmpty": "Add plugins to configuration from list of available plugins",
                 "searchResultsEmpty": "No plugins found that satisfy the search criteria",
+                "cfgParsingError": {
+                    "title": "Configuration Error",
+                    "body": "Configuration JSON parsing failed.\nThe following error occured:\n\"{error}\""
+                },
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",
                     "activatePlugin": "Enable loading this plugin on startup",
                     "deactivatePlugin": "Disable loading this plugin on startup",
-                    "editConfiguration": "Edit plugin configuration"
+                    "editConfiguration": "Edit plugin configuration",
+                    "pluginDocumentation": "Open plugin configuration documentation"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Syntax error in plugin configuration",
-                    "message": "Plugin \"{pluginName}\" contains an error in configuration:\"{error}\". Please fix before proceeding"
+                    "message": "Plugin \"{pluginName}\" contains an error in configuration. Please fix before proceeding"
                 }
             },
             "configureMap": {

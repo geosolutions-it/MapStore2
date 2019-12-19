@@ -9,7 +9,6 @@ import expect from 'expect';
 import {findIndex, flatten, omit} from 'lodash';
 
 import { createStateMocker } from './reducersTestUtils';
-import ConfigUtils from '../../utils/ConfigUtils';
 
 import contextcreator from '../contextcreator';
 import {
@@ -64,24 +63,25 @@ const testContextResource = {
 
 const defaultPlugins = [{
     name: 'Catalog',
-    label: 'Catalog',
-    someParameter: 'value',
-    cfg: {
+    title: 'Catalog',
+    defaultConfig: {
         parameter: false
-    }
+    },
+    children: ['CatalogChildPlugin']
 }, {
     name: 'ZoomIn',
-    label: 'ZoomIn'
+    title: 'ZoomIn'
 }, {
     name: 'ZoomOut',
-    cfg: {
+    defaultConfig: {
         parameter: 'value'
     }
 }, {
     name: 'CatalogChildPlugin',
-    label: 'ChildPlugin',
-    parentPlugin: 'Catalog'
+    title: 'ChildPlugin'
 }];
+
+const pluginsConfig = {plugins: defaultPlugins};
 
 const findPlugins = (plugins = [], predicate = () => {}) =>
     [...plugins.filter(plugin => predicate(plugin)).map(plugin => omit(plugin, 'children')),
@@ -89,12 +89,6 @@ const findPlugins = (plugins = [], predicate = () => {}) =>
 
 describe('contextcreator reducer', () => {
     const stateMocker = createStateMocker({contextcreator});
-    beforeEach(() => {
-        ConfigUtils.setConfigProp('plugins', {desktop: defaultPlugins});
-    });
-    afterEach(() => {
-        ConfigUtils.removeConfigProp('plugins');
-    });
     it('setCreationStep', () => {
         const state = contextcreator(undefined, setCreationStep('step'));
         expect(state).toExist();
@@ -115,7 +109,7 @@ describe('contextcreator reducer', () => {
         expect(enabledPluginsFilterTextSelector(state)).toBe('filtertext');
     });
     it('setResource', () => {
-        const state = stateMocker(setResource(testContextResource));
+        const state = stateMocker(setResource(testContextResource, pluginsConfig));
         const {data, ...resource} = testContextResource;
         const newContext = newContextSelector(state);
         const plugins = pluginsSelector(state);
@@ -128,40 +122,39 @@ describe('contextcreator reducer', () => {
         expect(plugins).toExist();
         expect(plugins.length).toBe(3);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
-        expect(plugins[0].label).toBe(defaultPlugins[0].label);
+        expect(plugins[0].title).toBe(defaultPlugins[0].title);
         expect(plugins[0].enabled).toBe(true);
         expect(plugins[0].isUserPlugin).toBe(false);
         expect(plugins[0].active).toBe(false);
         expect(plugins[0].pluginConfig).toExist();
         expect(plugins[0].pluginConfig.name).toBe(defaultPlugins[0].name);
-        expect(plugins[0].pluginConfig.label).toBe(defaultPlugins[0].label);
-        expect(plugins[0].pluginConfig.someParameter).toBe(defaultPlugins[0].someParameter);
         expect(plugins[0].pluginConfig.cfg).toEqual(data.plugins.desktop[0].cfg);
         expect(plugins[0].children.length).toBe(1);
         expect(plugins[0].children[0].name).toBe(defaultPlugins[3].name);
-        expect(plugins[0].children[0].label).toBe(defaultPlugins[3].label);
+        expect(plugins[0].children[0].title).toBe(defaultPlugins[3].title);
         expect(plugins[0].children[0].pluginConfig).toExist();
         expect(plugins[0].children[0].pluginConfig.name).toBe(defaultPlugins[3].name);
         expect(plugins[0].children[0].pluginConfig.cfg).toNotExist();
         expect(plugins[1].name).toBe(defaultPlugins[1].name);
-        expect(plugins[1].label).toBe(defaultPlugins[1].label);
+        expect(plugins[1].title).toBe(defaultPlugins[1].title);
         expect(plugins[1].enabled).toBe(true);
         expect(plugins[1].isUserPlugin).toBe(true);
         expect(plugins[1].active).toBe(true);
         expect(plugins[1].pluginConfig).toExist();
         expect(plugins[1].pluginConfig.name).toBe(defaultPlugins[1].name);
-        expect(plugins[1].pluginConfig.label).toBe(defaultPlugins[1].label);
         expect(plugins[1].pluginConfig.cfg).toEqual(data.userPlugins[0].cfg);
         expect(plugins[2].name).toBe(defaultPlugins[2].name);
-        expect(plugins[2].label).toBe(defaultPlugins[2].label);
+        expect(plugins[2].title).toBe(defaultPlugins[2].title);
         expect(plugins[2].enabled).toBe(false);
         expect(plugins[2].isUserPlugin).toBe(false);
         expect(plugins[2].active).toBe(false);
-        expect(plugins[2].pluginConfig).toEqual(defaultPlugins[2]);
+        expect(plugins[2].pluginConfig).toExist();
+        expect(plugins[2].pluginConfig.name).toEqual(defaultPlugins[2].name);
+        expect(plugins[2].pluginConfig.cfg).toEqual(defaultPlugins[2].defaultConfig);
     });
     it('setSelectedPlugins', () => {
         const pluginsToSelect = ['Catalog', 'ZoomIn'];
-        const state = stateMocker(setResource(testContextResource), setSelectedPlugins(pluginsToSelect));
+        const state = stateMocker(setResource(testContextResource, pluginsConfig), setSelectedPlugins(pluginsToSelect));
         const plugins = pluginsSelector(state);
         expect(plugins).toExist();
         const selectedPlugins = findPlugins(plugins, plugin => plugin.selected);
@@ -174,12 +167,12 @@ describe('contextcreator reducer', () => {
         expect(editedPluginSelector(state)).toBe('editedPlugin');
     });
     it('setEditedCfg', () => {
-        const state = stateMocker(setResource(testContextResource), setEditedCfg('ZoomIn'));
+        const state = stateMocker(setResource(testContextResource, pluginsConfig), setEditedCfg('ZoomIn'));
         expect(editedCfgSelector(state)).toBe('{}');
     });
     it('changePluginsKey', () => {
         const pluginsToChange = ['CatalogChildPlugin', 'ZoomIn'];
-        const state = stateMocker(setResource(testContextResource), changePluginsKey(pluginsToChange, 'enabled', true));
+        const state = stateMocker(setResource(testContextResource, pluginsConfig), changePluginsKey(pluginsToChange, 'enabled', true));
         const plugins = pluginsSelector(state);
         expect(plugins).toExist();
         const enabledPlugins = findPlugins(plugins, plugin => plugin.enabled);

@@ -12,10 +12,11 @@ import {createStructuredSelector} from 'reselect';
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
 import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, pluginsSelector, editedPluginSelector,
-    editedCfgSelector, availablePluginsFilterTextSelector, enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
+    editedCfgSelector, validationStatusSelector, cfgErrorSelector, availablePluginsFilterTextSelector,
+    enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload, showMapViewerReloadConfirm, setFilterText,
-    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey} from '../actions/contextcreator';
+    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey, enablePlugins, disablePlugins} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -36,6 +37,8 @@ export default createPlugin('ContextCreator', {
         allAvailablePlugins: pluginsSelector,
         editedPlugin: editedPluginSelector,
         editedCfg: editedCfgSelector,
+        isCfgValidated: validationStatusSelector,
+        cfgError: cfgErrorSelector,
         availablePluginsFilterText: availablePluginsFilterTextSelector,
         enabledPluginsFilterText: enabledPluginsFilterTextSelector,
         mapType: mapTypeSelector,
@@ -48,6 +51,8 @@ export default createPlugin('ContextCreator', {
         onEditPlugin: editPlugin,
         onUpdateCfg: updateEditedCfg,
         changePluginsKey,
+        onEnablePlugins: enablePlugins,
+        onDisablePlugins: disablePlugins,
         onSetStep: setCreationStep,
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,

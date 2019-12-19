@@ -15,43 +15,50 @@ import {
 import {
     editPlugin,
     changePluginsKey,
-    CHANGE_PLUGINS_KEY,
     SET_EDITED_PLUGIN,
-    SET_EDITED_CFG
+    SET_EDITED_CFG,
+    SET_CFG_ERROR
 } from '../../actions/contextcreator';
 
 describe('contextcreator epics', () => {
     it('resetConfigOnPluginKeyChange', (done) => {
         const startActions = [changePluginsKey(['plugin', 'editedPlugin'], 'enabled', false)];
-        testEpic(resetConfigOnPluginKeyChange, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(SET_EDITED_PLUGIN);
-            expect(actions[0].pluginName).toNotExist();
+        testEpic(resetConfigOnPluginKeyChange, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_CFG_ERROR);
+            expect(actions[0].error).toNotExist();
+            expect(actions[1].type).toBe(SET_EDITED_PLUGIN);
+            expect(actions[1].pluginName).toNotExist();
             done();
         }, {
             contextcreator: {
-                editedPlugin: 'editedPlugin'
+                editedPlugin: 'editedPlugin',
+                plugins: [{
+                    name: 'plugin',
+                    enabled: true,
+                    children: []
+                }, {
+                    name: 'editedPlugin',
+                    enabled: true,
+                    children: []
+                }]
             }
         });
     });
     it('editPluginEpic', (done) => {
         const pluginName = 'pluginName';
         const startActions = [editPlugin(pluginName)];
-        testEpic(editPluginEpic, 3, startActions, actions => {
-            expect(actions.length).toBe(3);
-            expect(actions[0].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[0].ids).toEqual(["editedPlugin"]);
-            expect(actions[0].key).toBe('pluginConfig.cfg');
-            expect(actions[0].value).toEqual({});
-            expect(actions[1].type).toBe(SET_EDITED_PLUGIN);
+        testEpic(editPluginEpic, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_EDITED_PLUGIN);
+            expect(actions[0].pluginName).toBe(pluginName);
+            expect(actions[1].type).toBe(SET_EDITED_CFG);
             expect(actions[1].pluginName).toBe(pluginName);
-            expect(actions[2].type).toBe(SET_EDITED_CFG);
-            expect(actions[2].pluginName).toBe(pluginName);
             done();
         }, {
             contextcreator: {
                 editedPlugin: "editedPlugin",
-                editedCfg: "{}"
+                validationStatus: true
             }
         });
     });

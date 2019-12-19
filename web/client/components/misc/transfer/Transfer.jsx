@@ -46,9 +46,10 @@ const renderMoveButtons = (messages, moveButtons) => (
     </ButtonGroup>
 );
 
-const localizeEmptyStateProps = (messages, {title, ...props}) => ({
-    ...props,
-    title: title && LocaleUtils.getMessageById(messages, title)
+const localizeItem = (messages, {title, description, ...other}) => ({
+    ...other,
+    title: title && LocaleUtils.getMessageById(messages, title),
+    description: description && LocaleUtils.getMessageById(messages, description)
 });
 
 const renderColumn = (
@@ -85,13 +86,14 @@ const renderColumn = (
                 onFilter={onFilter}/>
         </div>
         <CardList
-            items={sortStrategy(filter(filterText, items))}
-            emptyStateProps={localizeEmptyStateProps(messages,
+            items={sortStrategy(filter(filterText, items.map(item => localizeItem(messages, item))))}
+            emptyStateProps={localizeItem(messages,
                 items.length > 0 && filterText.length > 0 ? emptyStateSearchProps : emptyStateProps)}
             side={side}
             selectedItems={selectedItems}
             selectedSide={selectedSide}
             allowCtrlMultiSelect={allowCtrlMultiSelect}
+            messages={messages}
             onSelect={onSelect}/>
     </div>
 );
@@ -136,7 +138,7 @@ const Transfer = ({
     moveButtons = [{
         id: 'all-right',
         label: '>>',
-        disabled: !leftColumn.items || !leftColumn.items.length,
+        disabled: !leftColumn.items || (leftColumn.emptyTest ? leftColumn.emptyTest(leftColumn.items) : !leftColumn.items.length),
         onClick: () => {
             onTransfer(leftColumn.items, 'right');
             onSelect([]);
@@ -160,7 +162,7 @@ const Transfer = ({
     }, {
         id: 'all-left',
         label: '<<',
-        disabled: !rightColumn.items || !rightColumn.items.length,
+        disabled: !rightColumn.items || (rightColumn.emptyTest ? rightColumn.emptyTest(rightColumn.items) : !rightColumn.items.length),
         onClick: () => {
             onTransfer(rightColumn.items, 'left');
             onSelect([]);

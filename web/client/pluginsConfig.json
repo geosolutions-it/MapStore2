@@ -1,0 +1,220 @@
+{
+    "plugins": [{
+        "name": "Map",
+        "mandatory": true,
+        "defaultConfig": {
+            "mapTypeOverride": "openlayers",
+            "mapOptions": {
+                "openlayers": {
+                    "interactions": {
+                        "pinchRotate": false,
+                        "altShiftDragRotate": false
+                    },
+                    "attribution": {
+                        "container": "#mapstore-map-footer-container"
+                    }
+                },
+                "leaflet": {
+                    "attribution": {
+                        "container": "#mapstore-map-footer-container"
+                    }
+                }
+            },
+            "toolsOptions": {
+                "scalebar": {
+                    "container": "#mapstore-map-footer-container"
+                }
+            }
+        }
+    }, {
+        "name": "Notifications",
+        "mandatory": true,
+        "hidden": true
+    }, {
+        "name": "DrawerMenu"
+    }, {
+        "name": "TOC",
+        "symbol": "layers",
+        "title": "plugins.TOC.title",
+        "description": "plugins.TOC.description",
+        "defaultConfig": {
+            "activateQueryTool": true,
+            "activateAddLayerButton": true,
+            "activateAddGroupButton": true,
+            "activateMetedataTool": false,
+            "addLayersPermissions": true,
+            "removeLayersPermissions": true,
+            "sortingPermissions": true,
+            "addGroupsPermissions": true,
+            "removeGroupsPermissions": true
+        },
+        "children": ["TOCItemsSettings", "FeatureEditor", "AddGroup"],
+        "dependencies": ["DrawerMenu", "MetadataExplorer"]
+    }, {
+        "name": "FeatureEditor",
+        "defaultConfig": {}
+    }, {
+        "name": "TOCItemsSettings"
+    }, {
+        "name": "MapFooter",
+        "children": ["MousePosition", "CRSSelector", "ScaleBox"]
+    }, {
+        "name": "Widgets",
+        "children": ["WidgetsBuilder", "WidgetsTray"],
+        "dependencies": ["WidgetsBuilder"]
+    }, {
+        "name": "WidgetsTray"
+    }, {
+        "name": "WidgetsBuilder",
+        "hidden": true
+    }, {
+        "name": "Details"
+    }, {
+        "name": "AutoMapUpdate"
+    }, {
+        "name": "HelpLink"
+    }, {
+        "name": "Share"
+    }, {
+        "name": "Version"
+    }, {
+        "name": "BackgroundSelector",
+        "dependencies": ["MetadataExplorer"]
+    }, {
+        "name": "Annotations"
+    }, {
+        "name": "Identify",
+        "defaultConfig": {
+            "showHighlightFeatureButton": true,
+            "viewerOptions": {
+                "container": "{context.ReactSwipe}"
+            }
+        }
+    }, {
+        "name": "Locate"
+    }, {
+        "name": "Home"
+    }, {
+        "name": "WFSDownload"
+    }, {
+        "name": "QueryPanel",
+        "defaultConfig": {
+            "activateQueryTool": true,
+            "spatialOperations": [
+                {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+                {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+                {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+            ],
+            "spatialMethodOptions": [
+                {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
+                {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+                {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+                {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+            ]
+        }
+    }, {
+        "name": "AddGroup"
+    }, {
+        "name": "Tutorial"
+    }, {
+        "name": "Measure"
+    }, {
+        "name": "Print"
+    }, {
+        "name": "MapImport"
+    }, {
+        "name": "MapExport"
+    }, {
+        "name": "Settings",
+        "defaultConfig": {
+            "wrap": true
+        },
+        "dependencies": ["BurgerMenu"]
+    }, {
+        "name": "MetadataExplorer",
+        "defaultConfig": {
+            "wrap": true
+        }
+    }, {
+        "name": "About"
+    }, {
+        "name": "MousePosition",
+        "defaultConfig": {
+            "editCRS": true,
+            "showLabels": true,
+            "showToggle": true,
+            "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+            "additionalCRS": {}
+        }
+    }, {
+        "name": "CRSSelector",
+        "defaultConfig": {
+            "additionalCRS": {
+            },
+            "filterAllowedCRS": [
+                "EPSG:4326",
+                "EPSG:3857"
+            ],
+            "allowedRoles": [
+                "ADMIN"
+            ]
+        }
+    }, {
+        "name": "Search",
+        "defaultConfig": {
+            "withToggle": ["max-width: 768px", "min-width: 768px"]
+        }
+    }, {
+        "name": "Cookie",
+        "mandatory": true,
+        "hidden": true,
+        "defaultConfig": {
+            "externalCookieUrl" : "",
+            "declineUrl" : "http://www.google.com"
+        }
+    }, {
+        "name": "Toolbar",
+        "children": ["Locate", "ZoomIn", "ZoomOut", "ZoomAll", "Undo", "FeatureEditor", "FullScreen", "GlobeViewSwitcher", "MapLoading"]
+    }, {
+        "name": "ScaleBox"
+    }, {
+        "name": "ZoomAll"
+    }, {
+        "name": "ZoomIn"
+    }, {
+        "name": "ZoomOut"
+    }, {
+        "name": "OmniBar"
+    }, {
+        "name": "Login"
+    }, {
+        "name": "Save"
+    }, {
+        "name": "SaveAs"
+    }, {
+        "name": "BurgerMenu",
+        "children": ["Print", "MapImport", "MapExport", "Annotations", "Share", "Save", "SaveAs", "Measure", "Settings", "About"]
+    }, {
+        "name": "Expander"
+    }, {
+        "name": "Undo"
+    }, {
+        "name": "Redo"
+    }, {
+        "name": "FullScreen"
+    }, {
+        "name": "GlobeViewSwitcher"
+    }, {
+        "name": "SearchServicesConfig"
+    }, {
+        "name": "Timeline"
+    }, {
+        "name": "Playback"
+    }, {
+        "name": "FeedbackMask"
+    }, {
+        "name": "StyleEditor"
+    }, {
+        "name": "MapLoading"
+    }]
+}

@@ -345,10 +345,7 @@
                 }
             },
             "AddGroup",
-            {
-                "name": "TOCItemsSettings",
-                "parentPlugin": "TOC"
-            },
+            "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure",
                 "cfg": {
@@ -445,8 +442,7 @@
             "Timeline",
             "Playback",
             "FeedbackMask",
-            "StyleEditor",
-            "MapTemplates"
+            "StyleEditor"
         ],
         "embedded": [{
                 "name": "Map",
@@ -717,7 +713,12 @@
               "confirmMessage": "contextCreator.undo"
             }
           },
-          "ContextCreator",
+          {
+              "name": "ContextCreator",
+              "cfg": {
+                  "documentationBaseURL": "https://mapstore.geo-solutions.it/mapstore/docs/api/plugins"
+              }
+          },
           "Notifications",
           {
             "name": "FeedbackMask",

@@ -36,11 +36,9 @@ const TransferColumnCardList = ({
                         [...selectedItems, item] :
                         [item], side) : {}}
                 tools={item.tools && <Toolbar
-                    btnDefaultProps={{
-                        className: 'square-button-md no-border'
-                    }}
                     buttons={item.tools.map(tool => ({
                         ...tool,
+                        className: 'square-button-md no-border',
                         onClick: (event) => {
                             event.stopPropagation();
                             tool.onClick();

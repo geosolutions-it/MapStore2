@@ -19,6 +19,9 @@ export const isLoadingSelector = state => state.contextcreator && state.contextc
 export const pluginsSelector = state => state.contextcreator && state.contextcreator.plugins;
 export const editedPluginSelector = state => state.contextcreator && state.contextcreator.editedPlugin;
 export const editedCfgSelector = state => state.contextcreator && state.contextcreator.editedCfg;
+export const parsedCfgSelector = state => state.contextcreator && state.contextcreator.parsedCfg;
+export const cfgErrorSelector = state => state.contextcreator && state.contextcreator.cfgError;
+export const validationStatusSelector = state => get(state, 'contextcreator.validationStatus', true);
 export const filterTextSelector = state => state.contextcreator && state.contextcreator.filterText;
 export const availablePluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availablePlugins'));
 export const enabledPluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledPlugins'));

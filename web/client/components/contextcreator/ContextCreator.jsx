@@ -85,8 +85,11 @@ export default class ContextCreator extends React.Component {
         allAvailablePlugins: PropTypes.array,
         editedPlugin: PropTypes.string,
         editedCfg: PropTypes.string,
+        isCfgValidated: PropTypes.bool,
+        cfgError: PropTypes.object,
         availablePluginsFilterText: PropTypes.string,
         enabledPluginsFilterText: PropTypes.string,
+        documentationBaseURL: PropTypes.string,
         onFilterAvailablePlugins: PropTypes.func,
         onFilterEnabledPlugins: PropTypes.func,
         setSelectedPlugins: PropTypes.func,
@@ -97,6 +100,8 @@ export default class ContextCreator extends React.Component {
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
         onEditPlugin: PropTypes.func,
+        onEnablePlugins: PropTypes.func,
+        onDisablePlugins: PropTypes.func,
         onUpdateCfg: PropTypes.func,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
@@ -145,6 +150,7 @@ export default class ContextCreator extends React.Component {
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
+        isCfgValidated: false,
         curStepId: 'general-settings',
         saveDestLocation: '/context-manager',
         onSetStep: () => { },
@@ -173,17 +179,23 @@ export default class ContextCreator extends React.Component {
                     id: 'configure-plugins',
                     label: 'contextCreator.configurePlugins.label',
                     disableNext: !this.props.allAvailablePlugins.filter(
-                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length,
+                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
+                        !!this.props.cfgError ||
+                        !this.props.isCfgValidated,
                     component:
                         <ConfigurePlugins
                             allPlugins={this.props.allAvailablePlugins}
                             editedPlugin={this.props.editedPlugin}
                             editedCfg={this.props.editedCfg}
+                            cfgError={this.props.cfgError}
                             availablePluginsFilterText={this.props.availablePluginsFilterText}
                             enabledPluginsFilterText={this.props.enabledPluginsFilterText}
+                            documentationBaseURL={this.props.documentationBaseURL}
                             onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
                             onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
                             onEditPlugin={this.props.onEditPlugin}
+                            onEnablePlugins={this.props.onEnablePlugins}
+                            onDisablePlugins={this.props.onDisablePlugins}
                             onUpdateCfg={this.props.onUpdateCfg}
                             setSelectedPlugins={this.props.setSelectedPlugins}
                             changePluginsKey={this.props.changePluginsKey}/>

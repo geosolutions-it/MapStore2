@@ -7,35 +7,47 @@
 */
 
 import React from 'react';
+import {compose, withState, lifecycle} from 'recompose';
+import {get} from 'lodash';
 import {Glyphicon, Button} from 'react-bootstrap';
 import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 
 import Transfer from '../misc/transfer/Transfer';
+import ToolbarButton from '../misc/toolbar/ToolbarButton';
+import Message from '../I18N/Message';
 
 /**
  * Converts plugin objects to Transform items
- * @param {[object]} plugins plugin objects to convert
  * @param {string} editedPlugin currently edited plugin
  * @param {string} editedCfg text of a configuration of currently edited plugin
+ * @param {object} cfgError object describing current cfg editing error
+ * @param {function} setEditor editor instance setter
+ * @param {string} documentationBaseURL base url for plugin documentation
  * @param {function} onEditPlugin edit plugin configuration callback
+ * @param {function} onEnablePlugins enable plugins callback
+ * @param {function} onDisablePlugins disable plugins callback
  * @param {function} onUpdateCfg update currently edited configuration callback
  * @param {function} changePluginsKey callback to change properties of plugin objects
- * @param {boolean} processChildren if true this function will recursively convert the children
  * @param {boolean} isRoot true if plugin objects in plugins argument are at the root level of a tree hierarchy
+ * @param {object[]} plugins plugin objects to convert
+ * @param {boolean} processChildren if true this function will recursively convert the children
  * @param {boolean} parentIsEnabled true if 'enabled' property of parent plugin object is true
  */
-const pluginsToItems = (plugins, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg, changePluginsKey,
-    processChildren, isRoot, parentIsEnabled) =>
-    plugins && plugins.map(plugin => {
+const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin, onEnablePlugins,
+    onDisablePlugins, onUpdateCfg, changePluginsKey, isRoot, plugins = [], processChildren, parentIsEnabled) =>
+    plugins.filter(plugin => !plugin.hidden).map(plugin => {
         const enableTools = (isRoot || parentIsEnabled) && plugin.enabled;
+        const isMandatory = plugin.forcedMandatory || plugin.mandatory;
         return {
             id: plugin.name,
-            title: plugin.label || plugin.name,
-            description: 'plugin name: ' + plugin.name,
+            title: plugin.title || plugin.label || plugin.name,
+            description: plugin.description || 'plugin name: ' + plugin.name,
+            mandatory: isMandatory,
             className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
             tools: enableTools ? [{
+                visible: !isMandatory,
                 glyph: '1-user-mod',
                 tooltipId: plugin.isUserPlugin ?
                     'contextCreator.configurePlugins.tooltips.disableUserPlugin' :
@@ -54,60 +66,91 @@ const pluginsToItems = (plugins, editedPlugin, editedCfg, onEditPlugin, onUpdate
                 tooltipId: 'contextCreator.configurePlugins.tooltips.editConfiguration',
                 active: plugin.name === editedPlugin,
                 onClick: () => onEditPlugin(plugin.name === editedPlugin ? undefined : plugin.name)
+            }, {
+                visible: !!documentationBaseURL,
+                glyph: 'question-sign',
+                tooltipId: 'contextCreator.configurePlugins.tooltips.pluginDocumentation',
+                Element: (props) =>
+                    <a target="_blank" rel="noopener noreferrer"
+                        href={documentationBaseURL && documentationBaseURL + '#plugins.' + (plugin.docName || plugin.name)}>
+                        <ToolbarButton {...props}/>
+                    </a>
             }] : [],
             component: enableTools && plugin.name === editedPlugin ?
-                <Codemirror
-                    value={editedCfg}
-                    onBeforeChange={(editor, data, cfg) => onUpdateCfg(cfg)}
-                    options={{
-                        theme: 'lesser-dark',
-                        mode: 'application/json',
-                        lineNumbers: true,
-                        styleSelectedText: true,
-                        indentUnit: 2,
-                        tabSize: 2
-                    }}/> : null,
-            preview: !isRoot && parentIsEnabled &&
+                <div className="plugin-configuration-editor">
+                    <Codemirror
+                        value={editedCfg}
+                        editorDidMount={editor => setEditor(editor)}
+                        onBeforeChange={(editor, data, cfg) => onUpdateCfg(cfg)}
+                        options={{
+                            theme: 'lesser-dark',
+                            mode: 'application/json',
+                            lineNumbers: true,
+                            styleSelectedText: true,
+                            indentUnit: 2,
+                            tabSize: 2
+                        }}/>
+                    {cfgError && <div className="plugin-configuration-errorarea">
+                        <div className="plugin-configuration-errorarea-header">
+                            <Message msgId="contextCreator.configurePlugins.cfgParsingError.title"/>
+                        </div>
+                        <div className="plugin-configuration-errorarea-body">
+                            <Message msgId="contextCreator.configurePlugins.cfgParsingError.body" msgParams={{error: cfgError.message}}>
+                                {msg => <pre className="plugin-configuration-errormsg">{msg}</pre>}
+                            </Message>
+                        </div>
+                    </div>}
+                </div> : null,
+            preview: !isRoot && parentIsEnabled && !isMandatory &&
                 <Button
                     className="square-button-md no-border"
                     onClick={(event) => {
                         event.stopPropagation();
-                        changePluginsKey([plugin.name], 'enabled', !plugin.enabled);
+                        if (!isMandatory) {
+                            (plugin.enabled ? onDisablePlugins : onEnablePlugins)([plugin.name]);
+                        }
                     }}>
                     <Glyphicon glyph={plugin.enabled ? 'check' : 'unchecked'}/>
                 </Button> || null,
             children: processChildren &&
-                pluginsToItems(plugin.children, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg, changePluginsKey,
-                    true, false, plugin.enabled) || []
+                pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
+                    onEnablePlugins, onDisablePlugins, onUpdateCfg, changePluginsKey, false, plugin.children, true, plugin.enabled) || []
         };
     });
 
 const pickIds = items => items && items.map(item => item.id);
+const ignoreMandatory = items => items && items.filter(item => !item.mandatory);
 
-export default ({
+const configurePluginsStep = ({
     allPlugins = [],
     editedPlugin,
     editedCfg,
+    cfgError,
     availablePluginsFilterText = "",
     enabledPluginsFilterText = "",
     availablePluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
+    documentationBaseURL,
     onFilterAvailablePlugins = () => {},
     onFilterEnabledPlugins = () => {},
     onEditPlugin = () => {},
+    onEnablePlugins = () => {},
+    onDisablePlugins = () => {},
     onUpdateCfg = () => {},
     setSelectedPlugins = () => {},
-    changePluginsKey = () => {}
+    changePluginsKey = () => {},
+    setEditor = () => {}
 }) => {
     const selectedPlugins = allPlugins.filter(plugin => plugin.selected);
     const availablePlugins = allPlugins.filter(plugin => !plugin.enabled);
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
-    const selectedItems = pluginsToItems(selectedPlugins, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg,
-        changePluginsKey, false, true);
-    const availableItems = pluginsToItems(availablePlugins, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg,
-        changePluginsKey, true, true);
-    const enabledItems = pluginsToItems(enabledPlugins, editedPlugin, editedCfg, onEditPlugin, onUpdateCfg,
-        changePluginsKey, true, true);
+
+    const pluginsToItemsFunc = pluginsToItems.bind(null, editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL,
+        onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, changePluginsKey, true);
+
+    const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
+    const availableItems = pluginsToItemsFunc(availablePlugins, true);
+    const enabledItems = pluginsToItemsFunc(enabledPlugins, true);
 
     return (
         <div className="configure-plugins-step">
@@ -140,6 +183,7 @@ export default ({
                         glyph: 'info-sign',
                         title: 'contextCreator.configurePlugins.searchResultsEmpty'
                     },
+                    emptyTest: items => !items.filter(item => !item.mandatory).length,
                     onFilter: onFilterEnabledPlugins
                 }}
                 allowCtrlMultiSelect
@@ -148,13 +192,39 @@ export default ({
                     'right' :
                     'left'
                 }
-                sortStrategy={items => items && items.sort((x, y) => x.title > y.title)}
+                sortStrategy={items => {
+                    const recursiveSort = curItems => curItems && curItems.map(item => ({...item, children: recursiveSort(item.children)}))
+                        .sort((x, y) => x.title < y.title ? -1 : 1);
+                    return recursiveSort(items);
+                }}
                 filter={(text, items) => {
                     const loweredText = text.toLowerCase();
-                    return items.filter(item => item.title.toLowerCase().indexOf(loweredText) > -1);
+                    const findMatching = (curItems = []) => curItems.reduce((result, item) =>
+                        result || item.title.toLowerCase().indexOf(loweredText) > -1 || findMatching(item.children), false);
+                    return items.filter(item => item.title.toLowerCase().indexOf(loweredText) > -1 || findMatching(item.children));
                 }}
-                onSelect={items => setSelectedPlugins(pickIds(items))}
-                onTransfer={(items, direction) => changePluginsKey(pickIds(items), 'enabled', direction === 'right')}/>
+                onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
+                onTransfer={(items, direction) => (direction === 'right' ? onEnablePlugins : onDisablePlugins)(pickIds(ignoreMandatory(items)))}/>
         </div>
     );
 };
+
+export default compose(
+    withState('errorLineNumber', 'setErrorLineNumber'),
+    withState('editor', 'setEditor'),
+    lifecycle({
+        componentDidUpdate() {
+            const {cfgError, editor, errorLineNumber, setErrorLineNumber} = this.props;
+            const cfgErrorLineNumber = get(cfgError, 'lineNumber');
+            if (editor && cfgErrorLineNumber !== errorLineNumber) {
+                if (errorLineNumber) {
+                    editor.removeLineClass(errorLineNumber - 1, 'background', 'plugin-configuration-line-error');
+                }
+                setErrorLineNumber(cfgErrorLineNumber);
+                if (cfgErrorLineNumber) {
+                    editor.addLineClass(cfgErrorLineNumber - 1, 'background', 'plugin-configuration-line-error');
+                }
+            }
+        }
+    })
+)(configurePluginsStep);
