@@ -29,7 +29,7 @@ const {mapTypeSelector} = require('../selectors/maptype');
 const { mapPaddingSelector } = require('../selectors/maplayout');
 
 const {setControlProperty} = require('../actions/controls');
-const {MAP_CONFIG_LOADED} = require('../actions/config');
+const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const MapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -44,6 +44,9 @@ const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
+const { isLoggedIn } = require('../selectors/security');
+const { unsavedMapSelector } = require('../selectors/controls');
+const { push } = require('connected-react-router');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const handleCreationBackgroundError = (action$, store) =>
@@ -250,6 +253,12 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
             return action ? Rx.Observable.of(action) : Rx.Observable.empty();
         });
 
+const redirectUnauthorizedUserOnNewMap = (action$, { getState = () => {}}) =>
+    action$.ofType(MAP_CONFIG_LOAD_ERROR)
+        .filter((action) => action.error && action.error.status === 403 && unsavedMapSelector(getState()))
+        .filter(() => !isLoggedIn(getState()))
+        .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
+
 module.exports = {
     checkMapPermissions,
     handleCreationLayerError,
@@ -257,5 +266,6 @@ module.exports = {
     resetMapOnInit,
     resetLimitsOnInit,
     zoomToExtentEpic,
-    compareMapChanges
+    compareMapChanges,
+    redirectUnauthorizedUserOnNewMap
 };
