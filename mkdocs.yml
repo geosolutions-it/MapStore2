@@ -55,7 +55,7 @@ pages:
       - Creating Widgets: 'user-guide/widgets.md'
       - Menu Bar: 'user-guide/menu-bar.md'
       - Printing a Map: 'user-guide/print.md'
-      - Adding Local Vector Files: 'user-guide/local-files.md'
+      - Import Files: 'user-guide/import.md'
       - Managing Remote Services from the Catalog: 'user-guide/catalog.md'
       - Saving a Map: 'user-guide/save.md'
       - Performing Measurments: 'user-guide/measure.md'
