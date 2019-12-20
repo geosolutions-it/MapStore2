@@ -50,10 +50,11 @@ const {
 
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
-let mockAxios = new MockAdapter(axios);
+
 const BASE_URL = 'base/web/client/test-resources/geostore/';
 
 describe('Test correctness of the maps actions', () => {
+    let mockAxios;
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
         GeoStoreDAO.addBaseUrl = (options) => {

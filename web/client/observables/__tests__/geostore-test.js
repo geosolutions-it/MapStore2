@@ -88,7 +88,6 @@ describe('geostore observables for resources management', () => {
         );
     });
     describe('linked resources', () => {
-        let mockAxios;
 
         const RES_1 = {
             data: {},
@@ -103,25 +102,20 @@ describe('geostore observables for resources management', () => {
                 }
             }
         };
-        beforeEach(() => {
-            const { mock } = geoStoreMock();
-            mockAxios = mock;
-        });
-        afterEach(() => {
-            mockAxios.restore();
-        });
 
         it('update linked resources', done => {
+            let mockAxios;
+
             const { mock } = geoStoreMock({
                 callbacks: {
                     onUpdateAttribute: ({data}) => {
                         expect(data).toEqual(JSON.stringify({
                             restAttribute: {
                                 name: 'thumbnail',
-                                value: 'rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri' // the URL is encoded
+                                value: 'rest/geostore/data/2/raw?decode=datauri' // the URL is encoded
                             }
                         }));
-                        done();
+
                     }
                 }
             });
@@ -129,10 +123,13 @@ describe('geostore observables for resources management', () => {
             createResource(RES_1).subscribe(
                 v => {
                     expect(v).toBe(0);
-
+                    mockAxios.restore();
+                    done();
                 },
                 e => {
+                    mockAxios.restore();
                     done(e);
+
                 });
         });
     });
