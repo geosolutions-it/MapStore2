@@ -128,8 +128,7 @@
         "name": "Settings",
         "defaultConfig": {
             "wrap": true
-        },
-        "dependencies": ["BurgerMenu"]
+        }
     }, {
         "name": "MetadataExplorer",
         "defaultConfig": {
@@ -174,7 +173,7 @@
         }
     }, {
         "name": "Toolbar",
-        "children": ["Locate", "ZoomIn", "ZoomOut", "ZoomAll", "Undo", "FeatureEditor", "FullScreen", "GlobeViewSwitcher", "MapLoading"]
+        "children": ["Locate", "ZoomIn", "ZoomOut", "ZoomAll", "Undo", "FullScreen", "GlobeViewSwitcher", "MapLoading"]
     }, {
         "name": "ScaleBox"
     }, {
@@ -184,7 +183,8 @@
     }, {
         "name": "ZoomOut"
     }, {
-        "name": "OmniBar"
+        "name": "OmniBar",
+        "children": ["BurgerMenu"]
     }, {
         "name": "Login"
     }, {

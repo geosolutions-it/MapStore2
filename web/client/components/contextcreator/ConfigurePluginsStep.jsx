@@ -199,9 +199,10 @@ const configurePluginsStep = ({
                 }}
                 filter={(text, items) => {
                     const loweredText = text.toLowerCase();
-                    const findMatching = (curItems = []) => curItems.reduce((result, item) =>
-                        result || item.title.toLowerCase().indexOf(loweredText) > -1 || findMatching(item.children), false);
-                    return items.filter(item => item.title.toLowerCase().indexOf(loweredText) > -1 || findMatching(item.children));
+                    const recursiveFilter = (curItems = []) =>
+                        curItems.map(item => ({...item, children: recursiveFilter(item.children)}))
+                            .filter(item => item.children.length > 0 || item.title.toLowerCase().indexOf(loweredText) > -1)
+                    return recursiveFilter(items);
                 }}
                 onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
                 onTransfer={(items, direction) => (direction === 'right' ? onEnablePlugins : onDisablePlugins)(pickIds(ignoreMandatory(items)))}/>

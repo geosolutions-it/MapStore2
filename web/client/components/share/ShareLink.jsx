@@ -42,6 +42,7 @@ class ShareLink extends React.Component {
                 </div>
                 <pre style={{ padding: 0 }}>
                     <FormControl
+                        readOnly
                         type="text"
                         value={this.props.shareUrl}
                         onFocus={ev => ev.target.select()}/>
