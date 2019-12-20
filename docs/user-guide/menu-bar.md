@@ -131,7 +131,7 @@ In particular, with these options it is possible to:
 
 * **Export map** in `json` format
 
-* [Import](local-files.md) vector files from your machine
+* [Import](import.md) files from your machine
 
 * Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map
 
