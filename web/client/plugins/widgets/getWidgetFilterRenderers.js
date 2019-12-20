@@ -21,15 +21,10 @@ const mergeQuickFiltersStream = compose(
     mapPropsStream(props$ =>
         props$.combineLatest(
             // extract the quickFilterStream$ from props
-            props$.pluck('quickFilterStream$').distinctUntilChanged().switchMap( quickFilterStream$ => {
-                // extract the value from the stream
-                return quickFilterStream$.map( ({quickFilters, attributeName, options}) => {
-                    const attributeQuickFilter = quickFilters && options && find(options.propertyName, f => f === attributeName) && quickFilters[attributeName] || {};
-                    const value = attributeQuickFilter && (attributeQuickFilter.rawValue || attributeQuickFilter.value);
-                    return value;
-                });
-            }).startWith(undefined),
-            (props, value) => {
+            props$.pluck('quickFilterStream$').distinctUntilChanged().switchMap(quickFilterStream$ => quickFilterStream$).startWith(undefined),
+            (props, quickFilters) => {
+                const attributeQuickFilter = quickFilters && props.options && find(props.options.propertyName, f => f === props.attributeName) && quickFilters[props.attributeName] || {};
+                const value = attributeQuickFilter && (attributeQuickFilter.rawValue || attributeQuickFilter.value);
                 return {
                     ...props,
                     value
@@ -39,23 +34,23 @@ const mergeQuickFiltersStream = compose(
 
 );
 
-const getFilterComponent = ({localType, attributeName, quickFilterStream$}) => compose(
-    withProps({quickFilterStream$: quickFilterStream$.map(params => ({...params, attributeName}))}),
-    // withProps({quickFilterStream$}),
+const getFilterComponent = ({options, localType, attributeName, quickFilterStream$}) => compose(
+    // withProps({quickFilterStream$: quickFilterStream$.map(params => ({...params, attributeName}))}),
+    withProps({quickFilterStream$, attributeName, options}),
     mergeQuickFiltersStream
 )(getFilterRenderer(localType, {name: attributeName }));
 
 // add to the container a stream as a prop that emits a value each time quick filter stream changes
 const withQuickFiltersStream = compose(
     mapPropsStream(props$ => {
-        return props$.map((p) => ({...p, quickFilterStream$: props$.map(({quickFilters, options}) => ({quickFilters, options})).distinctUntilChanged()}));
+        return props$.map((p) => ({...p, quickFilterStream$: props$.pluck('quickFilters').distinctUntilChanged()}));
     })
 );
 
 const getWidgetFilterRenderers = compose(
     withQuickFiltersStream,
     withPropsOnChange(
-        ["describeFeatureType", "options", "quickFilterStream$"],
+        ["describeFeatureType", "options"],
         ({ describeFeatureType, options, quickFilterStream$} = {}) => {
             return describeFeatureType ?
                 {filterRenderers: getAttributeFields(describeFeatureType).reduce( (prev, {localType, name: attributeName}) => {
