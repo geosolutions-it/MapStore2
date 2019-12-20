@@ -137,9 +137,9 @@ In particular, with these options it is possible to:
 
 * Perform a [Measure](measure.md) on the map
 
-* **Save** the map in order to apply the changes (see [Resources Properties](resources-properties.md) section for more information)
+* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md) window opens, already filled with the map properties
 
-* **Save as** when the user needs to save a copy of the map (see [Resources Properties](resources-properties.md) section for more information)
+* **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
 
 * Create [Annotations](annotations.md) and add them to the map
 
