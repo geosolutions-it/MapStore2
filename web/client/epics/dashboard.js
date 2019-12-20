@@ -72,6 +72,17 @@ const getFTSelectedArgs = (state) => {
     let typeName = layer.name;
     return [url, typeName];
 };
+const { set } = require('../utils/ImmutableUtils');
+
+
+/**
+ * removes quickFilters from widgets
+ * @param {object} resource to clean from
+ */
+const cleanResource = (resource) => {
+    const widgets = (resource && resource.data && resource.data.widgets || []).map(({quickFilters, ...w}) => w );
+    return set("data.widgets", widgets, resource);
+};
 
 module.exports = {
 
@@ -185,6 +196,7 @@ module.exports = {
     // saving dashboard flow (both creation and update)
     saveDashboard: action$ => action$
         .ofType(SAVE_DASHBOARD)
+        .map(({resource}) => ({resource: cleanResource(resource)}))
         .exhaustMap(({resource} = {}) =>
             (!resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(rid => Rx.Observable.of(
