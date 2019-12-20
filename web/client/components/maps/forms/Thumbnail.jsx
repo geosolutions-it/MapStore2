@@ -81,7 +81,10 @@ class Thumbnail extends React.Component {
     };
 
     getThumbnailUrl = () => {
-        return this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA" ? decodeURIComponent(this.props.map.newThumbnail) : null;
+        return this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA"
+            // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
+            ? decodeURIComponent(this.props.map.newThumbnail)
+            : null;
     };
 
     isImage = (images) => {

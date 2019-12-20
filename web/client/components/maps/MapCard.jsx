@@ -87,7 +87,16 @@ class MapCard extends React.Component {
     getCardStyle = () => {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
-                backgroundImage: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, '
+                    + this.props.backgroundOpacityStart
+                    + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd
+                    + ') ), url('
+                    + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA"
+                        ? thumbUrl
+                        // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
+                        : decodeURIComponent(this.props.map.thumbnail)
+                    )
+                    + ')'
             });
         }
         return this.props.style;

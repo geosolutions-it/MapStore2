@@ -11,12 +11,14 @@ import uuid from 'uuid/v1';
 import { includes, isNil } from 'lodash';
 import GeoStoreDAO from '../api/GeoStoreDAO';
 
-const createLinkedResourceURL = (id, tail = "") => encodeURIComponent(`rest/geostore/data/${id}${tail}`);
+const createLinkedResourceURL = (id, tail = "") => `rest/geostore/data/${id}${tail}`;
 const LINKED_RESOURCE_REGEX = /rest\/geostore\/data\/(\d+)/;
 const getResourceIdFromURL = path => {
-    // double decoding is needed for backward compatibility with old linked resources
-    // the second one doesn't have effect to URLS like /rest/geostore/data/1
-    // but correctly decodes old thumbnails
+    /* double decoding is needed for backward compatibility with old linked resources
+    * the second one doesn't have effect to URLS like /rest/geostore/data/1
+    * but correctly decodes old thumbnails
+    * This is correct here because this function only retrieves the ID from the URL, to identify linked resources.
+    */
     const decodedUrl = decodeURIComponent(decodeURIComponent(path));
     const res = LINKED_RESOURCE_REGEX.exec(decodedUrl);
     return res && !!res[0] && res[1];
