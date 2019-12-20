@@ -19,10 +19,10 @@ import {SAVE_CONTEXT, LOAD_CONTEXT, SET_CREATION_STEP, MAP_VIEWER_LOAD, MAP_VIEW
     DISABLE_PLUGINS, SAVE_PLUGIN_CFG, EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG,
     contextSaved, setResource, startResourceLoad, loadFinished, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded,
     setEditedPlugin, setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins, enablePlugins,
-    setCfgError, changePluginsKey} from '../actions/contextcreator';
+    setCfgError, changePluginsKey, SET_RESOURCE} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
-    pluginsSelector} from '../selectors/contextcreator';
+    pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
@@ -150,6 +150,22 @@ export const contextCreatorLoadContext = (action$, store) => action$
             )
         )
     );
+
+/**
+ * Enables plugins that should be enabled at the start
+ * @param {observable} action$ manages `SET_RESOURCE`
+ * @param {object} store
+ */
+export const enableInitialPlugins = (action$, store) => action$
+    .ofType(SET_RESOURCE)
+    .switchMap(() => {
+        const state = store.getState();
+        const pluginsToEnable = initialEnabledPluginsSelector(state);
+
+        return pluginsToEnable && pluginsToEnable.length > 0 ?
+            Rx.Observable.of(enablePlugins(pluginsToEnable)) :
+            Rx.Observable.empty();
+    });
 
 /**
  * Emits mapViewerLoad actions, when current step changes to Map Configuration

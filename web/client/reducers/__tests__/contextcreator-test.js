@@ -123,7 +123,7 @@ describe('contextcreator reducer', () => {
         expect(plugins.length).toBe(3);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
         expect(plugins[0].title).toBe(defaultPlugins[0].title);
-        expect(plugins[0].enabled).toBe(true);
+        expect(plugins[0].enabled).toBe(false);
         expect(plugins[0].isUserPlugin).toBe(false);
         expect(plugins[0].active).toBe(false);
         expect(plugins[0].pluginConfig).toExist();
@@ -137,7 +137,7 @@ describe('contextcreator reducer', () => {
         expect(plugins[0].children[0].pluginConfig.cfg).toNotExist();
         expect(plugins[1].name).toBe(defaultPlugins[1].name);
         expect(plugins[1].title).toBe(defaultPlugins[1].title);
-        expect(plugins[1].enabled).toBe(true);
+        expect(plugins[1].enabled).toBe(false);
         expect(plugins[1].isUserPlugin).toBe(true);
         expect(plugins[1].active).toBe(true);
         expect(plugins[1].pluginConfig).toExist();
@@ -176,8 +176,8 @@ describe('contextcreator reducer', () => {
         const plugins = pluginsSelector(state);
         expect(plugins).toExist();
         const enabledPlugins = findPlugins(plugins, plugin => plugin.enabled);
-        expect(enabledPlugins.length).toBe(3);
-        [...pluginsToChange, 'Catalog'].map(pluginToChange =>
+        expect(enabledPlugins.length).toBe(2);
+        [...pluginsToChange].map(pluginToChange =>
             expect(findIndex(enabledPlugins, plugin => plugin.name === pluginToChange)).toBeGreaterThan(-1));
     });
     it('updateEditedCfg', () => {

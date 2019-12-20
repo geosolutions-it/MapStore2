@@ -121,6 +121,8 @@ export default (state = {}, action) => {
         const contextPlugins = get(plugins, 'desktop', []);
 
         const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));
+
+        let pluginsToEnable = [];
         const convertPlugins = curPlugins => curPlugins.map(plugin => {
             const getPlugin = pluginArray => head(pluginArray.filter(p => getPluginName(p) === plugin.name));
             const enabledPlugin = getPlugin(contextPlugins);
@@ -131,19 +133,22 @@ export default (state = {}, action) => {
                 return plugin;
             }
 
+            pluginsToEnable.push(targetPlugin.name);
+
             return {
                 ...plugin,
                 pluginConfig: {
                     ...get(plugin, 'pluginConfig', {}),
                     cfg: get(targetPlugin, 'cfg')
                 },
-                enabled: true,
                 isUserPlugin: !!userPlugin,
                 active: targetPlugin.active || false,
                 children: convertPlugins(plugin.children)
             };
         });
-        return set('newContext', otherData, set('plugins', convertPlugins(allPlugins), set('resource', resource, state)));
+
+        return set('initialEnabledPlugins', pluginsToEnable,
+            set('newContext', otherData, set('plugins', convertPlugins(allPlugins), set('resource', resource, state))));
     }
     case CLEAR_CONTEXT_CREATOR: {
         return {};

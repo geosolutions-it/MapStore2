@@ -201,7 +201,7 @@ const configurePluginsStep = ({
                     const loweredText = text.toLowerCase();
                     const recursiveFilter = (curItems = []) =>
                         curItems.map(item => ({...item, children: recursiveFilter(item.children)}))
-                            .filter(item => item.children.length > 0 || item.title.toLowerCase().indexOf(loweredText) > -1)
+                            .filter(item => item.children.length > 0 || item.title.toLowerCase().indexOf(loweredText) > -1);
                     return recursiveFilter(items);
                 }}
                 onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
