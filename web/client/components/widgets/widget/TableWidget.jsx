@@ -18,7 +18,7 @@ const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !d
 
 const WidgetContainer = require('./WidgetContainer');
 
-module.exports = ({
+module.exports = getWidgetFilterRenderers(({
     id,
     title,
     loading,
@@ -33,6 +33,7 @@ module.exports = ({
         moreFeatures: () => {}
     },
     describeFeatureType,
+    filterRenderers,
     columnSettings,
     features,
     size,
@@ -69,7 +70,7 @@ module.exports = ({
                 pageEvents={pageEvents}
                 virtualScroll={virtualScroll}
                 enableColumnFilters
-                filterRenderers={getWidgetFilterRenderers(describeFeatureType, id)}
+                filterRenderers={filterRenderers}
                 features={features}
                 pages={pages}
                 error={error}
@@ -80,4 +81,4 @@ module.exports = ({
         </BorderLayout>
     </WidgetContainer>
 
-    );
+    ));
