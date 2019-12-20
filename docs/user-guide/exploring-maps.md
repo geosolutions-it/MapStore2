@@ -23,7 +23,7 @@ In particular:
 
 * The [Sidebar](side-bar.md) is mainly a navigation panel
 
-* The [Basemap Switcher](basemap.md) allow to add, remove or edit the map in background
+* The [Background Selector](background.md) allow to add, remove or edit the map in background
 
 * The [Footer](footer.md) includes the [CRS selector](footer.md#crs-selector), the coordinates, the scale and the credits of the layer
 
