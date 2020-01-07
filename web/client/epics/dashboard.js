@@ -52,6 +52,9 @@ const {
     isLoggedIn
 } = require('../selectors/security');
 const {
+    cleanResource
+} = require('../utils/DashboardUtils');
+const {
     getEditingWidgetLayer,
     getEditingWidgetFilter
 } = require('../selectors/widgets');
@@ -72,21 +75,8 @@ const getFTSelectedArgs = (state) => {
     let typeName = layer.name;
     return [url, typeName];
 };
-const { set } = require('../utils/ImmutableUtils');
-
-
-/**
- * removes quickFilters from widgets
- * @param {object} resource to clean from
- * @returns {object} resource without
- */
-const cleanResource = (resource) => {
-    const widgets = (resource && resource.data && resource.data.widgets || []).map(({quickFilters, ...w}) => w );
-    return set("data.widgets", widgets, resource);
-};
 
 module.exports = {
-    cleanResource,
     // Basic interactions with dashboard editor
     openDashboardWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
         .filter( () => isDashboardAvailable(getState()))

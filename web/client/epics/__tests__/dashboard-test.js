@@ -12,8 +12,7 @@ const {
     openDashboardWidgetEditor,
     initDashboardEditorOnNew,
     closeDashboardWidgetEditorOnFinish,
-    filterAnonymousUsersForDashboard,
-    cleanResource
+    filterAnonymousUsersForDashboard
 } = require('../dashboard');
 const {
     createWidget, insertWidget,
@@ -33,7 +32,6 @@ const {
     CHANGE_DRAWING_STATUS
 } = require('../../actions/draw');
 const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
-const dashboardQuickFiltersResource = require('../../test-resources/widgets/dashboard_quick_filters');
 
 const BASE_STATE = {
     controls: {
@@ -263,10 +261,5 @@ describe('openDashboardWidgetEditor epic', () => {
             },
             newDashboardState);
         });
-    });
-    it('cleanResource', () => {
-        expect(dashboardQuickFiltersResource.data.widgets[0].quickFilters).toExist();
-        const resourceClean = cleanResource(dashboardQuickFiltersResource);
-        expect(resourceClean.data.widgets[0].quickFilters).toNotExist();
     });
 });
