@@ -35,7 +35,6 @@ const mergeQuickFiltersStream = compose(
 );
 
 const getFilterComponent = ({options, localType, attributeName, quickFilterStream$}) => compose(
-    // withProps({quickFilterStream$: quickFilterStream$.map(params => ({...params, attributeName}))}),
     withProps({quickFilterStream$, attributeName, options}),
     mergeQuickFiltersStream
 )(getFilterRenderer(localType, {name: attributeName }));
