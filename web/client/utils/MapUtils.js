@@ -390,6 +390,7 @@ function getSimpleGeomType(geomType = "Point") {
 }
 
 const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
+    // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
     const decodedUri = decodeURIComponent(uri);
     const findDataDigit = regex.exec(decodedUri);
     return findDataDigit && findDataDigit.length && findDataDigit.length > 1 ? findDataDigit[1] : null;

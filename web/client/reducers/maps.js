@@ -138,7 +138,8 @@ function maps(state = {
         let newMaps = state.results === "" ? [] : [...state.results];
         for (let i = 0; i < newMaps.length; i++) {
             if (newMaps[i].id && newMaps[i].id === action.resourceId) {
-                newMaps[i] = assign({}, newMaps[i], {[action.name]: decodeURIComponent(action.value), updating: false, loadingError: action.error ? action.error : null}); // TODO remove decodeURIComponent to reuse this reducer!!!
+                // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
+                newMaps[i] = assign({}, newMaps[i], {[action.name]: decodeURIComponent(action.value), updating: false, loadingError: action.error ? action.error : null});
             }
         }
         return assign({}, state, {results: newMaps});

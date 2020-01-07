@@ -121,7 +121,6 @@ const setDetailsChangedEpic = (action$, store) =>
             return Rx.Observable.from(actions);
         });
 
-
 /**
  * If the details resource does not exist it saves it, and it updates its permission with the one set for the mapPermissionsFromIdSelector
  * and it updates the attribute details in map resource
@@ -190,9 +189,6 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
                 });
         });
 
-/**
-         Epics used to load Maps
-     */
 const loadMapsEpic = (action$) =>
     action$.ofType(MAPS_LOAD_MAP)
         .switchMap((action) => {

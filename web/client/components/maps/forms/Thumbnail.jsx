@@ -12,6 +12,8 @@ const {Glyphicon} = require('react-bootstrap');
 const Dropzone = require('react-dropzone');
 const Spinner = require('react-spinkit');
 const Message = require('../../../components/I18N/Message');
+const { getResourceIdFromURL } = require('../../../utils/ResourceUtils');
+
 
 const errorMessages = {
     "FORMAT": <Message msgId="map.errorFormat" />,
@@ -81,7 +83,10 @@ class Thumbnail extends React.Component {
     };
 
     getThumbnailUrl = () => {
-        return this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA" ? decodeURIComponent(this.props.map.newThumbnail) : null;
+        return this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA"
+            // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
+            ? decodeURIComponent(this.props.map.newThumbnail)
+            : null;
     };
 
     isImage = (images) => {
@@ -185,14 +190,10 @@ class Thumbnail extends React.Component {
 
     deleteThumbnail = (thumbnail, mapId) => {
         if (thumbnail && thumbnail.indexOf("geostore") !== -1) {
-            // this doesn't work if the URL is not encoded (because of GeoStore / Tomcat parameter encoding issues)
-            let start = thumbnail.indexOf("data%2F") + 7;
-            let end = thumbnail.indexOf("%2Fraw");
-            let idThumbnail = thumbnail.slice(start, end);
-
+            const idThumbnail = getResourceIdFromURL(thumbnail);
             // delete the old thumbnail
             if (idThumbnail) {
-                // with mapId != null it will ovveride thumbnail attribute with NODATA value for that map
+                // with mapId != null it will override thumbnail attribute with NODATA value for that map
                 this.props.onDeleteThumbnail(idThumbnail, mapId);
             }
         }

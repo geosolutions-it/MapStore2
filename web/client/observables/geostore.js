@@ -11,13 +11,8 @@ import uuid from 'uuid/v1';
 import { includes, isNil } from 'lodash';
 import GeoStoreDAO from '../api/GeoStoreDAO';
 
-const createLinkedResourceURL = (id, tail = "") => encodeURIComponent(encodeURIComponent(`rest/geostore/data/${id}${tail}`));
-const LINKED_RESOURCE_REGEX = /rest\/geostore\/data\/(\d+)/;
-const getResourceIdFromURL = path => {
-    const decodedUrl = decodeURIComponent(decodeURIComponent(path));
-    const res = LINKED_RESOURCE_REGEX.exec(decodedUrl);
-    return res && !!res[0] && res[1];
-};
+const createLinkedResourceURL = (id, tail = "") => `rest/geostore/data/${id}${tail}`;
+import {getResourceIdFromURL} from "../utils/ResourceUtils";
 
 
 const getLinkedAttributesIds = (id, filterFunction = () => true, API = GeoStoreDAO) =>
