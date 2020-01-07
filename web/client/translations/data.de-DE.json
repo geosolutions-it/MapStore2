@@ -1109,10 +1109,10 @@
         "mapImport": {
                 "title": "Einführen",
                 "dropZone": {
-                    "heading": "<p> <h4> Legen Sie hier Ihre Konfigurations- oder Vektordateien ab </h4> <small> oder </small> </p>",
+                    "heading": "<p> <h4> Legen Sie hier Ihre Kartenkontexte oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Konfigurationsdateien: MapStore Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
-                    "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei Konfigurationsdateien überschrieben </i> </small> </p>"
+                    "infoSupported": "<p> <small> Unterstützte Kartenkontexte dateien: MapStore Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
+                    "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei Kartenkontexte überschrieben </i> </small> </p>"
                 },
                 "errors": {
                     "fileNotSupported": "Datei wird nicht unterstützt",
