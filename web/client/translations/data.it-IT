@@ -1104,10 +1104,10 @@
         "mapImport": {
             "title": "Importa",
             "dropZone": {
-                "heading": "<p> <h4> Rilascia qui la configurazione o i file vettoriali </h4> <small> o </small> </p>",
+                "heading": "<p> <h4> Rilascia qui i contesti di mappa o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
-                "infoSupported": "<p> <small> File di configurazione supportati: formato legacy di MapStore<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
-                "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di file di configurazione </i> </small> </p>"
+                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di nuovi contesti di mappa </i> </small> </p>"
             },
             "errors": {
                 "fileNotSupported": "File non supportato",
