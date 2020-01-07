@@ -22,10 +22,7 @@ const {
     EDITOR_CHANGE
 } = require('../../actions/widgets');
 const {
-    saveDashboard: saveDashboardAction,
-    DASHBOARD_LOADING,
     DASHBOARD_LOAD_ERROR,
-    SAVE_ERROR,
     SET_EDITING
 } = require('../../actions/dashboard');
 const {checkLoggedUser, logout} = require('../../actions/security');
@@ -79,9 +76,6 @@ const FILTER_BUILDER_STATE = {
     }
 };
 
-const axios = require('../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
-let mockAxios;
 
 describe('openDashboardWidgetEditor epic', () => {
     it('openDashboardWidgetEditor with New', (done) => {
