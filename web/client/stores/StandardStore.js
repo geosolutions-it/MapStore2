@@ -15,8 +15,7 @@ const layers = require('../reducers/layers');
 const mapConfig = require('../reducers/config');
 
 const DebugUtils = require('../utils/DebugUtils').default;
-const {combineEpics} = require('../utils/PluginsUtils');
-const { combineReducers } = require('../utils/StateUtils');
+const {combineEpics, combineReducers} = require('../utils/PluginsUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');

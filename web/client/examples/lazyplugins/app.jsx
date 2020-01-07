@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PluginsContainer from "../../components/plugins/PluginsContainer";
 import {Provider, connect} from "react-redux";
-import {getPlugins} from "../../utils/PluginsUtils";
+import {getPlugins, getReducers, getEpics} from "../../utils/PluginsUtils";
 import {createStore, updateStore} from "../../utils/StateUtils";
+
 import Theme from "../../components/theme/Theme";
 
 import plugins from "./plugins";
@@ -28,8 +29,7 @@ const startApp = (loadedPlugins) => {
             type: 'osm'
         }]
     };
-
-    const store = createStore({ plugins, state: initialState });
+    const store = createStore({ reducers: getReducers(plugins), epics: getEpics(plugins), state: initialState });
     let extensionReducers = {};
     let extensionEpics = {};
     const updatePlugins = (name, plugin) => {
@@ -39,7 +39,7 @@ const startApp = (loadedPlugins) => {
         if (plugin.epics) {
             extensionEpics = { ...extensionEpics, ...plugin.epics };
         }
-        updateStore({ plugins, reducers: extensionReducers, epics: extensionEpics });
+        updateStore({ reducers: { ...getReducers(plugins), ...extensionReducers }, epics: { ...getEpics(plugins), ...extensionEpics} });
     };
 
     store.subscribe(() => {
