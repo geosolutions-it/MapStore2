@@ -78,6 +78,7 @@ const { set } = require('../utils/ImmutableUtils');
 /**
  * removes quickFilters from widgets
  * @param {object} resource to clean from
+ * @returns {object} resource without
  */
 const cleanResource = (resource) => {
     const widgets = (resource && resource.data && resource.data.widgets || []).map(({quickFilters, ...w}) => w );
@@ -85,7 +86,7 @@ const cleanResource = (resource) => {
 };
 
 module.exports = {
-
+    cleanResource,
     // Basic interactions with dashboard editor
     openDashboardWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
         .filter( () => isDashboardAvailable(getState()))

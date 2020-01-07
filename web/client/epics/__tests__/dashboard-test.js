@@ -12,7 +12,8 @@ const {
     openDashboardWidgetEditor,
     initDashboardEditorOnNew,
     closeDashboardWidgetEditorOnFinish,
-    filterAnonymousUsersForDashboard
+    filterAnonymousUsersForDashboard,
+    cleanResource
 } = require('../dashboard');
 const {
     createWidget, insertWidget,
@@ -21,8 +22,11 @@ const {
     EDITOR_CHANGE
 } = require('../../actions/widgets');
 const {
-    SET_EDITING,
-    DASHBOARD_LOAD_ERROR
+    saveDashboard: saveDashboardAction,
+    DASHBOARD_LOADING,
+    DASHBOARD_LOAD_ERROR,
+    SAVE_ERROR,
+    SET_EDITING
 } = require('../../actions/dashboard');
 const {checkLoggedUser, logout} = require('../../actions/security');
 
@@ -32,6 +36,7 @@ const {
     CHANGE_DRAWING_STATUS
 } = require('../../actions/draw');
 const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
+const dashboardQuickFiltersResource = require('../../test-resources/widgets/dashboard_quick_filters');
 
 const BASE_STATE = {
     controls: {
@@ -73,6 +78,11 @@ const FILTER_BUILDER_STATE = {
         }
     }
 };
+
+const axios = require('../../libs/ajax');
+const MockAdapter = require('axios-mock-adapter');
+let mockAxios;
+
 describe('openDashboardWidgetEditor epic', () => {
     it('openDashboardWidgetEditor with New', (done) => {
         const startActions = [createWidget({ id: "TEST" })];
@@ -259,5 +269,10 @@ describe('openDashboardWidgetEditor epic', () => {
             },
             newDashboardState);
         });
+    });
+    it('cleanResource', () => {
+        expect(dashboardQuickFiltersResource.data.widgets[0].quickFilters).toExist();
+        const resourceClean = cleanResource(dashboardQuickFiltersResource);
+        expect(resourceClean.data.widgets[0].quickFilters).toNotExist();
     });
 });
