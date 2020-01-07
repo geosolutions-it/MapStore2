@@ -8,14 +8,16 @@
 const { compose, withPropsOnChange } = require('recompose');
 const { get } = require('lodash');
 const {editableWidget, withHeaderTools, defaultIcons} = require('./tools');
+
 /**
  * enhancer that updates widget column size on resize. and add base icons and menus
  * Moreover enhances it to allow delete.
 */
 module.exports = compose(
-    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { } } = {}) => ({
+    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => {} } = {}) => ({
         gridEvents: {
             ...gridEvents,
+            onAddFilter: (widgetFilter) => updateProperty(`quickFilters.${widgetFilter.attribute}`, widgetFilter),
             onColumnResize:
                 (colIdx, width, rg, d, a, columns) =>
                     updateProperty(`options.columnSettings["${get(columns.filter(c => !c.hide)[colIdx], "name")}"].width`, width)

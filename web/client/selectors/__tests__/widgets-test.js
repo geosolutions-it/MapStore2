@@ -17,6 +17,7 @@ const {
     getEditingWidgetFilter,
     getEditorSettings,
     getWidgetLayer,
+    getWidgetAttributeFilter,
     dependenciesSelector,
     availableDependenciesSelector,
     returnToFeatureGridSelector,
@@ -71,6 +72,36 @@ describe('widgets selectors', () => {
         const state = set(`widgets.builder.editor`, { returnToFeatureGrid: true }, {});
         expect(returnToFeatureGridSelector(state)).toExist();
         expect(returnToFeatureGridSelector(state)).toBe(true);
+    });
+
+    it('getWidgetAttributeFilter', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    floating: {
+                        widgets: [{
+                            id: "wId",
+                            quickFilters: {
+                                state: {
+                                    rawValue: 'y',
+                                    value: 'y',
+                                    operator: 'ilike',
+                                    type: 'string',
+                                    attribute: 'state'
+                                }
+                            },
+                            options: {
+                                propertyName: ['state']
+                            }
+                        }]
+                    }
+                }
+            }
+        };
+        const widgetFilter = getWidgetAttributeFilter("wId", "state")(state);
+        expect(widgetFilter).toExist();
+        expect(widgetFilter).toEqual({ rawValue: 'y', value: 'y', operator: 'ilike', type: 'string', attribute: 'state' });
+
     });
     it('getWidgetLayer', () => {
         const tocLayerState = {'layers': { selected: ["TEST1"], flat: [{id: "TEST1", name: "TEST1"}] }};

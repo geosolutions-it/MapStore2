@@ -21,8 +21,8 @@ const {
     EDITOR_CHANGE
 } = require('../../actions/widgets');
 const {
-    SET_EDITING,
-    DASHBOARD_LOAD_ERROR
+    DASHBOARD_LOAD_ERROR,
+    SET_EDITING
 } = require('../../actions/dashboard');
 const {checkLoggedUser, logout} = require('../../actions/security');
 
@@ -73,6 +73,8 @@ const FILTER_BUILDER_STATE = {
         }
     }
 };
+
+
 describe('openDashboardWidgetEditor epic', () => {
     it('openDashboardWidgetEditor with New', (done) => {
         const startActions = [createWidget({ id: "TEST" })];

@@ -1,0 +1,105 @@
+{
+  "category": "DASHBOARD",
+  "data": {
+      "widgets": [
+          {
+              "id": "53e68f90-1db0-11ea-abea-9b4aac8b600a",
+              "layer": {
+                  "type": "wms",
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                  "visibility": true,
+                  "dimensions": [],
+                  "name": "mapstore:states",
+                  "title": "states",
+                  "description": "",
+                  "bbox": {
+                      "crs": "EPSG:4326",
+                      "bounds": {
+                          "minx": -125.020233154297,
+                          "miny": 24.8338890075684,
+                          "maxx": -66.681037902832,
+                          "maxy": 49.4938163757324
+                      }
+                  },
+                  "links": [],
+                  "params": {},
+                  "allowedSRS": {},
+                  "search": {
+                      "type": "wfs",
+                      "url": "https://gs-stable.geo-solutions.it/geoserver/wfs"
+                  }
+              },
+              "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+              "legend": false,
+              "mapSync": false,
+              "cartesian": true,
+              "yAxis": true,
+              "widgetType": "table",
+              "geomProp": "geom",
+              "options": {
+                  "propertyName": [
+                      "state_name",
+                      "state_abbr",
+                      "land_km"
+                  ]
+              },
+              "title": "states",
+              "dataGrid": {
+                  "y": 0,
+                  "x": 0,
+                  "w": 1,
+                  "h": 1
+              },
+              "filters": {
+                  "state_abbr": {
+                      "rawValue": "y",
+                      "value": "y",
+                      "operator": "ilike",
+                      "type": "string",
+                      "attribute": "state_abbr"
+                  }
+              },
+              "quickFilters": {
+                  "state_abbr": {
+                      "rawValue": "p",
+                      "value": "p",
+                      "operator": "ilike",
+                      "type": "string",
+                      "attribute": "state_abbr"
+                  }
+              }
+          }
+      ],
+      "layouts": {
+          "md": [
+              {
+                  "w": 3,
+                  "h": 2,
+                  "x": 0,
+                  "y": 0,
+                  "i": "53e68f90-1db0-11ea-abea-9b4aac8b600a",
+                  "moved": false,
+                  "static": false
+              }
+          ]
+      }
+  },
+  "id": 17191,
+  "attributes": {},
+  "metadata": {
+      "name": "4654 quick filter dashboard",
+      "description": "for table widget only"
+  },
+  "createdAt": "2019-12-13T14:57:18.416+01:00",
+  "modifiedAt": "2019-12-20T15:45:52.145+01:00",
+  "permission": [
+      {
+          "canRead": true,
+          "canWrite": true,
+          "user": {
+              "id": 3,
+              "name": "admin"
+          }
+      }
+  ]
+}

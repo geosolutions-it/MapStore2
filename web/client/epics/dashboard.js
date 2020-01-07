@@ -52,6 +52,9 @@ const {
     isLoggedIn
 } = require('../selectors/security');
 const {
+    cleanResource
+} = require('../utils/DashboardUtils');
+const {
     getEditingWidgetLayer,
     getEditingWidgetFilter
 } = require('../selectors/widgets');
@@ -74,7 +77,6 @@ const getFTSelectedArgs = (state) => {
 };
 
 module.exports = {
-
     // Basic interactions with dashboard editor
     openDashboardWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
         .filter( () => isDashboardAvailable(getState()))
@@ -185,6 +187,7 @@ module.exports = {
     // saving dashboard flow (both creation and update)
     saveDashboard: action$ => action$
         .ofType(SAVE_DASHBOARD)
+        .map(({resource}) => ({resource: cleanResource(resource)}))
         .exhaustMap(({resource} = {}) =>
             (!resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(rid => Rx.Observable.of(
