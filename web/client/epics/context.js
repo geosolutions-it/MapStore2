@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import axios from '../libs/ajax';
 import { Observable } from 'rxjs';
 
 import { LOCATION_CHANGE } from 'connected-react-router';
@@ -15,7 +15,7 @@ import { pluginsSelectorCreator } from '../selectors/localConfig';
 import { isLoggedIn } from '../selectors/security';
 
 import { LOAD_CONTEXT, LOAD_FINISHED, loadContext, loading, setContext, setResource, contextLoadError, loadFinished,
-    SET_CURRENT_CONTEXT, CONTEXT_LOAD_ERROR } from '../actions/context';
+    SET_CURRENT_CONTEXT, CONTEXT_LOAD_ERROR, LOAD_PLUGINS_REGISTRY, configurePluginsRegistry, pluginsRegistryError } from '../actions/context';
 import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
 import { changeMapType } from '../actions/maptype';
 import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
@@ -106,6 +106,25 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
                 )
             )
     );
+
+export const loadPluginsRegistry = action$ =>
+    action$.ofType(LOAD_PLUGINS_REGISTRY)
+        .switchMap(({ path }) =>
+            Observable.defer(() => axios.get(path))
+                .map(response => {
+                    if (typeof response.data === 'object') {
+                        return configurePluginsRegistry(response.data);
+                    }
+                    try {
+                        const data = JSON.parse(response.data);
+                        return configurePluginsRegistry(data);
+                    } catch (e) {
+                        return pluginsRegistryError('Configuration file broken or not found (' + path + '): ' + e.message);
+                    }
+
+                })
+                .catch((e) => Observable.of(pluginsRegistryError(e)))
+        );
 
 /**
  * Handles map type change when context changes

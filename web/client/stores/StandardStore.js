@@ -29,6 +29,7 @@ const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
 const configEpics = require('../epics/config');
 const timeManagerEpics = require('../epics/dimension');
+const {persistMiddleware, persistEpic} = require('../utils/StateUtils');
 
 const standardEpics = {
     ...layersEpics,
@@ -54,11 +55,11 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         layers: () => {return null; },
         router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
-    const rootEpic = combineEpics(plugins, {...appEpics, ...standardEpics});
+    const rootEpic = persistEpic(combineEpics(plugins, {...appEpics, ...standardEpics}));
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
     const defaultState = assign({}, initialState.defaultState, optsState.defaultState);
     const mobileOverride = assign({}, initialState.mobile, optsState.mobile);
-    const epicMiddleware = createEpicMiddleware(rootEpic);
+    const epicMiddleware = persistMiddleware(createEpicMiddleware(rootEpic));
     const rootReducer = (state, action) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));
         let newState = {

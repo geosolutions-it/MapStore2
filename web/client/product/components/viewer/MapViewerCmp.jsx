@@ -17,6 +17,7 @@ class MapViewerComponent extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         loadMapConfig: PropTypes.func,
+        loadPluginsRegistry: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
@@ -28,6 +29,7 @@ class MapViewerComponent extends React.Component {
         plugins: {},
         onInit: () => {},
         loadMapConfig: () => {},
+        loadPluginsRegistry: () => {},
         match: {
             params: {}
         }
@@ -47,6 +49,7 @@ class MapViewerComponent extends React.Component {
     render() {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer
+            loadPluginsRegistry={this.props.loadPluginsRegistry}
             pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}

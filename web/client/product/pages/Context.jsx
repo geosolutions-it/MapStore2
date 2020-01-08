@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
-import { loadContext, clearContext } from '../../actions/context';
+import { loadContext, clearContext, loadPluginsRegistry } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
@@ -58,6 +58,7 @@ class Context extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         onInit: PropTypes.func,
+        loadPluginsRegistry: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         windowTitle: PropTypes.string,
@@ -72,6 +73,7 @@ class Context extends React.Component {
         mode: 'desktop',
         loadContext: () => {},
         reset: () => {},
+        loadPluginsRegistry: () => {},
         plugins: {},
         match: {
             params: {}
@@ -114,6 +116,7 @@ export default compose(
         }),
         {
             loadContext,
-            reset: clearContext
+            reset: clearContext,
+            loadPluginsRegistry
         })
 )(Context);

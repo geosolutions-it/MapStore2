@@ -19,6 +19,7 @@ const PluginsUtils = require('../utils/PluginsUtils');
 
 const PluginsContainer = connect((state) => ({
     statePluginsConfig: state.plugins,
+    pluginsRegistry: state.context && state.context.pluginsRegistry || {},
     mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
         layerSettings: state.layers.settings
@@ -33,17 +34,20 @@ class MapViewer extends React.Component {
         statePluginsConfig: PropTypes.object,
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
+        loadPluginsRegistry: PropTypes.func,
         plugins: PropTypes.object
     };
 
     static defaultProps = {
         mode: 'desktop',
         className: 'viewer',
-        loadMapConfig: () => {}
+        loadMapConfig: () => {},
+        loadPluginsRegistry: () => { }
     };
 
     UNSAFE_componentWillMount() {
         this.props.loadMapConfig();
+        this.props.loadPluginsRegistry();
     }
 
     render() {

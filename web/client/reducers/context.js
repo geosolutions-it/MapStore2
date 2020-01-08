@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT } from "../actions/context";
+import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, PLUGINS_REGISTRY_LOADED, PLUGINS_REGISTRY_LOAD_ERROR } from "../actions/context";
 import {set} from '../utils/ImmutableUtils';
 
 /**
@@ -44,6 +44,12 @@ export default (state = {}, action) => {
         return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
             "loading", action.value, state
         ));
+    }
+    case PLUGINS_REGISTRY_LOADED: {
+        return set('pluginsRegistry', action.plugins, state);
+    }
+    case PLUGINS_REGISTRY_LOAD_ERROR: {
+        return set('pluginsRegistryError', action.error, state);
     }
     default:
         return state;

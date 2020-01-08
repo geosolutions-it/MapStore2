@@ -4,6 +4,7 @@ import logger from 'redux-logger';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import {wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
+import { BehaviorSubject } from 'rxjs';
 
 export const getMiddlewares = (userMiddlewares = [], debug) => {
     return debug ? [thunkMiddleware, logger, ...userMiddlewares]
@@ -32,12 +33,33 @@ export const getStore = (name = PERSISTED_STORE_NAME) => {
     return ConfigUtils.getConfigProp(name) || {};
 };
 
-const persistMiddleware = (middleware, storeName = PERSISTED_STORE_NAME, name = 'epic') => {
+export const persistMiddleware = (middleware, storeName = PERSISTED_STORE_NAME, name = 'epicMiddleware') => {
     ConfigUtils.setConfigProp(storeName + '.' + name, middleware);
     return middleware;
 };
 
-const fetchMiddleware = (storeName = PERSISTED_STORE_NAME, name = 'epic') => {
+const fetchMiddleware = (storeName = PERSISTED_STORE_NAME, name = 'epicMiddleware') => {
+    return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
+};
+
+export const persistReducer = (reducer, storeName = PERSISTED_STORE_NAME, name = 'rootReducer') => {
+    ConfigUtils.setConfigProp(storeName + '.' + name, reducer);
+    return reducer;
+};
+
+const fetchReducer = (storeName = PERSISTED_STORE_NAME, name = 'rootReducer') => {
+    return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
+};
+
+export const persistEpic = (epic, storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
+    const epic$ = new BehaviorSubject(epic);
+    ConfigUtils.setConfigProp(storeName + '.' + name, epic$);
+    return (...args) =>
+        epic$.mergeMap(e => e(...args));
+
+};
+
+const fetchEpic = (storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
     return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
 };
 
@@ -74,7 +96,7 @@ export const createStore = ({
     debug = false,
     enhancer
 } = {}) => {
-    const reducer = rootReducer || combineReducers(reducers);
+    const reducer = persistReducer(rootReducer || combineReducers(reducers));
     const epic = rootEpic || combineEpics(...wrapEpics(epics));
     const allMiddlewares = epic ? [persistMiddleware(createEpicMiddleware(epic)), ...middlewares] : middlewares;
     const middleware = applyMiddleware.apply(null, getMiddlewares(allMiddlewares, debug));
@@ -97,10 +119,29 @@ export const createStore = ({
  * @param {object} epicMiddleware the epic middleware to update, if not specified the persisted one will be used
  */
 export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} } = {}, store, epicMiddleware) => {
-    const reducer = rootReducer || combineReducers(reducers);
+    const reducer = persistReducer(rootReducer || combineReducers(reducers));
     (store || getStore()).replaceReducer(reducer);
     const epic = rootEpic || combineEpics(...wrapEpics(epics));
     (epicMiddleware || fetchMiddleware()).replaceEpic(epic);
+};
+
+export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
+    const rootReducer = fetchReducer();
+    const reducer = (state, action) => {
+        const newState = {...state, ...rootReducer(state, action)};
+        return Object.keys(reducers).reduce((previous, current) => {
+            return {
+                ...previous,
+                [current]: reducers[current](previous[current], action)
+            };
+        }, newState);
+    };
+    (store || getStore()).replaceReducer(reducer);
+    const rootEpic = fetchEpic();
+
+    wrapEpics(epics).forEach((epic) => {
+        rootEpic.next(epic);
+    });
 };
 
 export default {
