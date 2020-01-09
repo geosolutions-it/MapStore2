@@ -55,7 +55,6 @@ describe('handleMapZoomLayer enhancer', function() {
         }};
         const Sink = handleMapZoomLayer(createSink(props => {
             props.zoomTo([1]);
-            expect(props.isEpsgSupported([1], editorData)).toBe(false);
             done();
         }));
         ReactDOM.render(<Provider store={store}><Sink editorData={editorData} /></Provider>, document.getElementById("container"));
@@ -89,7 +88,7 @@ describe('handleMapZoomLayer enhancer', function() {
         const selectedNodes = ["layer.id1", "layer.id2", "Default"];
         const Sink = handleMapZoomLayer(createSink(props => {
             props.zoomTo(selectedNodes);
-            expect(props.isEpsgSupported()).toBe(false);
+            expect(props.isEpsgSupported()).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Provider store={store}><Sink editorData={editorData} selectedNodes={selectedNodes}  /></Provider>, document.getElementById("container"));
