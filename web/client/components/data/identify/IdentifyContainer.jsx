@@ -58,7 +58,8 @@ module.exports = props => {
         showCoordinateEditor,
         onChangeClickPoint,
         onChangeFormat,
-        formatCoord
+        formatCoord,
+        showInMapPopup
     } = props;
 
     const latlng = point && point.latlng || null;
@@ -80,7 +81,7 @@ module.exports = props => {
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
-        <div id="identify-container" className={enabled && requests.length !== 0 ? "identify-active" : ""}>
+        <div id="identify-container" className={`${enabled && requests.length !== 0 ? "identify-active" : ""} ${showInMapPopup ? 'identify-popup' : ''}`}>
             <DockablePanel
                 bsStyle="primary"
                 glyph="map-marker"

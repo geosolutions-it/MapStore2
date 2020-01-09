@@ -17,6 +17,7 @@ export default class PopupSupport extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         this.preparePopups();
     }
 
@@ -27,10 +28,15 @@ export default class PopupSupport extends React.Component {
 
     renderPopups() {
         const { popups } = this.props;
-        return popups.map(({ id, component: PopupContent }) => {
+        return popups.map(({ id, component: PopupContent, props }) => {
+            if (!PopupContent) {
+                this.popupWrapperRefs[id] = document.getElementById(id);
+                return null;
+            }
+
             return (
-                <div id={id} style={{ position: 'absolute' }} ref={(ref) => { this.popupWrapperRefs[id] = ref; return true; }}>
-                    <PopupContent {...this.props} onClose={this.closePopup.bind(this, id)}/>
+                <div key={id} ref={(ref) => { this.popupWrapperRefs[id] = ref; return true; }}>
+                    <PopupContent {...this.props} {...props}/>
                 </div>
             );
         });
@@ -38,15 +44,6 @@ export default class PopupSupport extends React.Component {
 
     render() {
         return <div>{this.renderPopups()}</div>;
-    }
-
-    closePopup(id) {
-        console.log('close', id);
-        const popup = this.state.popups.find(p => p.id === id);
-        if (popup) {
-            console.log(popup);
-
-        }
     }
 
 

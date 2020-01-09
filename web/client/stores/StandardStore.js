@@ -52,6 +52,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         mapConfigRawData: () => null,
+        mapPopups: () => null,
         layers: () => {return null; },
         router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
@@ -70,6 +71,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
                 mapId: mapState.loadingError.mapId
             } || null,
             mapConfigRawData: mapState && mapState.mapConfigRawData || null,
+            mapPopups: mapState && mapState.mapPopups || null,
             layers: mapState ? layers(mapState.layers, action) : null
         };
         if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {

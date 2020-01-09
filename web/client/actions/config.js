@@ -16,6 +16,8 @@ const MAP_INFO_LOADED = 'MAP_INFO_LOADED';
 const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
 const MAP_SAVE_ERROR = 'MAP:MAP_SAVE_ERROR';
 const MAP_SAVED = 'MAP:MAP_SAVED';
+const MAP_POPUP_UPDATE = 'MAP:POPUP_UPDATE';
+const MAP_POPUP_REMOVE = 'MAP:POPUP_REMOVE';
 
 function configureMap(conf, mapId) {
     return {
@@ -79,6 +81,16 @@ const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 
 const mapSaved = () => ({type: MAP_SAVED});
 
+const mapPopupUpdate = (id, position) => ({
+    type: MAP_POPUP_UPDATE,
+    popup: { id, position }
+});
+
+const mapPopupRemove = (id) => ({
+    type: MAP_POPUP_UPDATE,
+    id
+})
+
 module.exports = {
     LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
@@ -89,6 +101,8 @@ module.exports = {
     MAP_INFO_LOAD_ERROR,
     MAP_SAVE_ERROR,
     MAP_SAVED,
+    MAP_POPUP_REMOVE,
+    MAP_POPUP_UPDATE,
     loadMapConfig,
     loadMapInfo,
     configureMap,
@@ -97,5 +111,7 @@ module.exports = {
     mapInfoLoadError,
     mapInfoLoadStart,
     mapSaveError,
-    mapSaved
+    mapSaved,
+    mapPopupRemove,
+    mapPopupUpdate
 };

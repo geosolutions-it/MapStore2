@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Overlay } from 'ol';
+import {isEqual} from 'lodash';
 
 export default class PopupSupport extends React.Component {
     static propTypes = {
@@ -17,55 +18,63 @@ export default class PopupSupport extends React.Component {
     }
 
     componentDidMount() {
-        this.preparePopups();
+        const { popups, map } = this.props;
+        this.preparePopups(popups, map);
     }
 
-    getOverlay = ({ id }) => {
-        const element = this.popupWrapperRefs[id];
-        return new Overlay({
-            element,
-            autoPan: true,
-            autoPanAnimation: 200
-        });
+    componentDidUpdate(prevProps) {
+        const prevPopups = prevProps.popups.map(({id, position}) => ({id, position}));
+        const newPopups = this.props.popups.map(({id, position}) => ({id, position}));
+        if (!isEqual(prevPopups, newPopups)) {
+            const { popups, map } = this.props;
+            this.rerenderPopups(popups, map);
+        }
     }
 
     renderPopups() {
         const { popups } = this.props;
-        return popups.map(({ id, component: PopupContent }) => {
+        return popups.map(({ id, content: PopupContent }) => {
+            if (!PopupContent) {
+                this.popupWrapperRefs[id] = document.getElementById(id);
+                return null;
+            }
+
             return (
-                <div id={id} style={{ position: 'absolute' }} ref={(ref) => { this.popupWrapperRefs[id] = ref; return true; }}>
-                    <PopupContent {...this.props} onClose={this.closePopup.bind(this, id)}/>
+                <div className="ol-popup" ref={(ref) => { this.popupWrapperRefs[id] = ref; return true; }} key={id}>
+                    <PopupContent {...this.props}/>
                 </div>
             );
         });
     }
 
     render() {
-        return <div>{this.renderPopups()}</div>;
+        return <div className="popup-wrapper">{this.renderPopups()}</div>;
     }
-
-    closePopup(id) {
-        const overlay = this.state.overlays.find((o) => o.getId() === id);
-        if (overlay) {
-            overlay.setPosition(undefined);
-        }
-    }
-
 
     popupWrapperRefs = {};
 
-    preparePopups = () => {
-        const { popups, map } = this.props;
-        this.setState({
-            overlays: [...popups.map(this.getOverlay)]
-        },
-        () => {
-            this.state.overlays.map((overlay) => map.addOverlay(overlay));
-            map.on('click', (evt) => {
-                this.state.overlays.map(overlay => {
-                    overlay.setPosition(evt.coordinate);
-                });
+    preparePopups = (popups, map) => {
+        popups.map(({ id, position: { coordinates } }) => {
+            const element = this.popupWrapperRefs[id];
+            const overlay = new Overlay({
+                element,
+                autoPan: true,
+                autoPanAnimation: {
+                    duration: 200
+                },
+                positioning: "center-center"
             });
+
+            map.addOverlay(overlay);
+            overlay.setPosition(coordinates);
+            this.setState((state) => ({ popups: [...state.popups, overlay]}));
         });
+    }
+
+    rerenderPopups = (popups, map) => {
+        this.state.popups.map((popup) => {
+            map.removeOverlay(popup);
+        });
+        this.setState({ popups: [] }, () => this.preparePopups(popups, map));
     }
 }

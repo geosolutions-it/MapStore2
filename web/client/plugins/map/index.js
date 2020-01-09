@@ -21,7 +21,6 @@ const {warning} = require('../../actions/notifications');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {projectionDefsSelector} = require('../../selectors/map');
-const Popup = require('./openlayers/Popup').default;
 
 const Empty = () => { return <span/>; };
 
@@ -94,13 +93,14 @@ module.exports = (mapType, actions) => {
     require('../../components/map/' + mapType + '/plugins/index');
     const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
 
+
+    // TODO:
+    // * dodać selector/funkcje wyłapującą element po jakimś kluczu
+    // * napisać obsługę pobierania koordynatów i przekazywania do store'a gdzie trzymane sa info o popupach (lista obiektów: position, content, id)
+    // * po stronie supportu dopisać style (strzałka i takie tam)
+
     const PopupSupport = connect((state) => ({
-        popups: [
-            {
-                id: 'sample-popup',
-                component: Popup
-            }
-        ]
+        popups: state.mapPopups || []
     }))(components.PopupSupport || Empty);
 
     return {
