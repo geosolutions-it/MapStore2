@@ -3,92 +3,48 @@
 
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a space where the user can add many miniature items, such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
-1. Provide an overview for a better visualization of the data.
+1. Provide an overview for a better data visualization
 
-2. Interact spatially and analytically with the data by creating connections between maps and charts.
+2. Interact spatially and analytically with the data by creating connections between widgets
 
-3. Perform analysis for better decisions.
+3. Perform analysis for better decisions
 
-## Creating New Dashboard
+In order to create a new dashboard, the **New Dashboard** button <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> appears in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) Homepage once logged as *Administrator* or *Normal user*. With a click on it, an empty dashboard workspace appears. This page is composed of a *Topbar*, a *Sidebar* and a *Viewer*:
 
-From the *Home Page*:
+<img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"/>
 
-* **Click** on the *New Dashboard* icon <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> to create a new dashboard.
+## Topbar
 
-You will be redirected to the dashboard workspace.
+Through the *Topbar* it is possible to:
 
-<img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"  style="max-width:600px;"/>
+* Access [GeoSolutions website](https://www.geo-solutions.it/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
-Now the new dashboard is empty and ready to host new items that, in turn, can contain layers.
+* Set the language, with the *Language switcher*:
 
-* **Click** on the *Add* icon <img src="../img/button/+++.jpg" class="ms-docbutton"/> to add new widgets.
+<img src="../img/exploring-dashboards/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-The *Widget* page will open on the left showing a list of items that can be created and added to the dashboard.
+* Go back to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) with the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
 
-<img src="../img/exploring-dashboards/dashboard-2.jpg" class="ms-docimage"  style="max-width:400px;"/>
+* Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing users and groups](managing-users-and-groups.md) section)
 
-The process of creating widgets in the dashboard workspace is almost the same as in the map workspace. The only difference is that here you must start by choosing the widget type, then decide on which layer to apply it.
+* Open the *Options* <img src="../img/button/burger.jpg" class="ms-docbutton"/> panel which allows you to start the *Tutorial* and [Save/Save as](resources-properties.md) the dashboard
 
-You will note that there exists a *Map Widget* type in the list. It allows you to add an empty map and then to add layers to it or to add already saved map from the portal. Once you have added a map to the dashboard, you can add other widget types and to connect them to the map (except for the text type).
+## Sidebar
 
-* **Click** on *Map* widget to add a map. A new page will open allowing you to add an already existing map or an empty map.
+The *Sidebar* allows the user to:
 
-* **Select** to add an *Empty Map*.
+* [Add new widgets](adding-widgets.md) with the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-<img src="../img/exploring-dashboards/dashboard-3.jpg" class="ms-docimage"  style="max-width:400px;"/>
+* See the connections between widgets with the <img src="../img/button/show-connections.jpg" class="ms-docbutton"/> button, available when connections are present (more information about this option are available in [Connecting Widgets](connecting-widgets.md) section)
 
-* **Click** on the next icon to use the empty map <img src="../img/button/next.jpg" class="ms-docbutton"/>.
+## Viewer
 
-At this point you can configure your map and add layers to it.
+Once the widgets are added in the viewer it is possible to:
 
-<img src="../img/exploring-dashboards/dashboard-4.jpg" class="ms-docimage"  style="max-width:400px;"/>
+* Change widgets position by moving them with a simple *Drag and Drop* and resize them:
 
-* **Click** on <img src="../img/button/+++.jpg" class="ms-docbutton"/> to add a layer.
+<img src="../img/exploring-dashboards/move-resize.gif" class="ms-docimage"/>
 
-* **Search** in the text box *USA Population* for example.
+* Access widgets menu <img src="../img/button/menu.jpg" class="ms-docbutton"/> from which the user can choose between several options (more information about the options of the menu can be found in Map's [Access Widget Menu](widgets.md#access-widgets-menu) section)
 
-<img src="../img/exploring-dashboards/dashboard-5.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-* **Select** the layer then click on the <img src="../img/button/+++.jpg" class="ms-docbutton"/> icon to use the layer.
-
-<img src="../img/exploring-dashboards/dashboard-6.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-From here you can select the layer and change the [layer settings](layer-settings.md), delete it or add another layer to the map.
-
-<img src="../img/exploring-dashboards/dashboard-7.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-* **Click** on the next icon <img src="../img/button/next.jpg" class="ms-docbutton"/> when you are done.
-
-* **Enter** a *Title* and a *Description* then save.
-
-<img src="../img/exploring-dashboards/dashboard-8.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-The map with the configured layers will be added to the workspace.
-
-<img src="../img/exploring-dashboards/dashboard-9.jpg" class="ms-docimage"/>
-
-Now let us add a *Legend* widget types. As before:
-
-* **Click** on the *Add* icon <img src="../img/button/+++.jpg" class="ms-docbutton"/> to add another widget.
-
-* **Select** *Legend* widget type.
-
-<img src="../img/exploring-dashboards/dashboard-12.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-You will be addressed to the configuration page.
-
-<img src="../img/exploring-dashboards/dashboard-13.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-The highlighted icon in green <img src="../img/button/connection-icon.jpg" class="ms-docbutton"/> means that the widget will be connected to the map.
-
-* **Click** on the next icon <img src="../img/button/next.jpg" class="ms-docbutton"/>.
-* **Enter** a *Title* and a *Description* then save.
-
-The legend will be added to the dashboard. A new icon will be highlighted in green
-indicating the active connection between the two widgets. It can be switched off to hide the connections.
-
-<img src="../img/exploring-dashboards/dashboard-14.jpg" class="ms-docimage"/>
-
-!!! note
-    Adding and configuring other widget types is identical to the process seen in
-    [Creating Widgets](widgets.md) section.
+* Take a look at the widget *Description* (more information about widget *Description* can be found in Map's [Access Widgets Info](widgets.md#access-widgets-info) section)
