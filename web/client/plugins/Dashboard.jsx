@@ -25,19 +25,19 @@ const WidgetsView = compose(
             getDashboardWidgetsLayout,
             dependenciesSelector,
             isWidgetSelectionActive,
-            (state) => get(getEditingWidget(state), "id"),
+            (state) => getEditingWidget(state),
             getWidgetsDependenciesGroups,
             showConnectionsSelector,
             isDashboardLoading,
-            (resource, widgets, layouts, dependencies, selectionActive, editingWidgetId, groups, showGroupColor, loading) => ({
+            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading) => ({
                 resource,
                 loading,
                 canEdit: (resource ? !!resource.canEdit : true),
-                widgets,
                 layouts,
                 dependencies,
                 selectionActive,
-                editingWidgetId,
+                editingWidget,
+                widgets,
                 groups,
                 showGroupColor
             })
@@ -59,7 +59,27 @@ const WidgetsView = compose(
     })),
     withHandlers({
         // TODO: maybe using availableDependencies here will be better when different widgets type dependencies are supported
-        isWidgetSelectable: ({ editingWidgetId }) => ({ widgetType, id }) => (widgetType === "map" || widgetType === "table") && id !== editingWidgetId
+        isWidgetSelectable: ({ editingWidget }) =>
+            ({ widgetType, id, layer = {}, dependenciesMap, mapSync }) =>
+                (widgetType === "map" ||
+                    /*
+                     * when the target is a table widget then check among its dependencies
+                     * if it has other connection that are for sure map or table
+                     * then make it non selectable
+                    */
+                    widgetType === "table" && layer.name === editingWidget.layer.name &&
+                    ( !dependenciesMap || (dependenciesMap && !mapSync)
+                    /* ||
+                        dependenciesMap &&
+                        Object.keys(dependenciesMap)
+                            .map(d => dependenciesMap[d] && (WIDGETS_REGEX.exec(dependenciesMap[d]) || [])[1])
+                            .filter(widgetsId => {
+                                let widget = find(widgets, {id: wId});
+
+                            })*/
+
+                    )
+                ) && id !== editingWidget.id
     })
 )(require('../components/dashboard/Dashboard'));
 

@@ -64,11 +64,11 @@ module.exports = compose(
             const toFilter = fromObject(fb);
             const {filter, property, and} = fb;
             const {layerFilter} = layer || {};
-
+            let geom = {};
+            let cqlFilterRules = {};
             let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
-            newFilterObj = {...newFilterObj, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
 
-            if (!mapSync || !dependencies.viewport) {
+            if (!mapSync /* || !dependencies.viewport*/) {
                 return {
                     filter: newFilterObj || layerFilter ? filter(and(
                         ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
@@ -76,14 +76,19 @@ module.exports = compose(
                     )) : undefined
                 };
             }
-
+            if (dependencies.quickFilters) {
+                newFilterObj = {...newFilterObj, ...composeFilterObject(newFilterObj, dependencies.quickFilters, dependencies.options)};
+            }
+            if (dependencies.filter) {
+                newFilterObj = {...newFilterObj, ...composeAttributeFilters([newFilterObj, dependencies.filter])};
+            }
             if (dependencies.viewport) {
                 const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
                     return {...p, [c]: parseFloat(viewport.bounds[c])};
                 }, {});
-                const geom = CoordinatesUtils.getViewportGeometry(bounds, viewport.crs);
+                geom = CoordinatesUtils.getViewportGeometry(bounds, viewport.crs);
                 const cqlFilter = getCqlFilter(layer, dependencies);
-                const cqlFilterRules = cqlFilter
+                cqlFilterRules = cqlFilter
                     ? [toFilter(read(cqlFilter))]
                     : [];
                 return {
@@ -94,6 +99,11 @@ module.exports = compose(
                         property(geomProp).intersects(geom)))
                 };
             }
+            return {
+                filter: filter(and(
+                    ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                    ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
+            };
         }
     )
 

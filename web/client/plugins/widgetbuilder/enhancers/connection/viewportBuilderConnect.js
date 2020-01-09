@@ -12,10 +12,15 @@ const withMapConnect = require('./withMapConnect');
  *
  */
 module.exports = compose(
-    withProps(({ editorData = {} }) => ({
-        canConnect: editorData.geomProp,
-        connected: editorData.mapSync
-    })),
+    withProps(({ editorData = {}, widgets }) => {
+        const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
+        return {
+            canConnect:
+                editorData.geomProp && editorData.widgetType !== "table" ||
+                editorData.widgetType === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(editorData.id) !== -1).length > 0 ).length === 0,
+            connected: editorData.mapSync
+        };
+    }),
     withMapConnect({
         viewport: "viewport",
         layers: "layers",

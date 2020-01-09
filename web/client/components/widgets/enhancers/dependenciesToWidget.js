@@ -30,6 +30,7 @@ module.exports = withProps(
     ({ dependencies, dependenciesMap }) => ({
         dependencies: dependenciesMap
             ? buildDependencies(dependenciesMap, dependencies)
-            : dependencies
+            : dependencies,
+        dependenciesMap
     })
 );
