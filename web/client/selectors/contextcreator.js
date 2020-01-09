@@ -15,3 +15,4 @@ export const resourceSelector = state => state.contextcreator && state.contextcr
 export const mapViewerLoadedSelector = state => state.contextcreator && state.contextcreator.mapViewerLoaded;
 export const reloadConfirmSelector = state => state.contextcreator && state.contextcreator.showReloadConfirm;
 export const isLoadingSelector = state => state.contextcreator && state.contextcreator.loading;
+export const isValidContextNameSelector = state => state.contextcreator && state.contextcreator.isValidContextName;

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM,
-    SET_RESOURCE, CLEAR_CONTEXT_CREATOR, CHANGE_ATTRIBUTE, LOADING} from "../actions/contextcreator";
+    SET_RESOURCE, IS_VALID_CONTEXT_NAME, CLEAR_CONTEXT_CREATOR, CHANGE_ATTRIBUTE, LOADING} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 export default (state = {}, action) => {
@@ -23,6 +23,9 @@ export default (state = {}, action) => {
     case SET_RESOURCE: {
         const {data, ...resource} = action.resource;
         return set('newContext', data || {}, set('resource', resource, state));
+    }
+    case IS_VALID_CONTEXT_NAME: {
+        return set('isValidContextName', action.valid, state);
     }
     case CLEAR_CONTEXT_CREATOR: {
         return {};

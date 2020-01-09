@@ -11,7 +11,8 @@ import {createStructuredSelector} from 'reselect';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector} from '../selectors/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, isLoadingSelector,
+    isValidContextNameSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload,
     showMapViewerReloadConfirm} from '../actions/contextcreator';
@@ -34,6 +35,8 @@ export default createPlugin('ContextCreator', {
         resource: resourceSelector,
         mapType: mapTypeSelector,
         showReloadConfirm: reloadConfirmSelector,
+        loading: isLoadingSelector,
+        isValidContextName: isValidContextNameSelector,
         pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
     }), {
         onSetStep: setCreationStep,

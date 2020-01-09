@@ -17,6 +17,7 @@ export const SET_RESOURCE = 'CONTEXTCREATOR:SET_RESOURCE';
 export const LOAD_CONTEXT = 'CONTEXTCREATOR:LOAD_CONTEXT';
 export const START_RESOURCE_LOAD = 'CONTEXTCREATOR:START_RESOURCE_LOAD';
 export const LOAD_FINISHED = 'CONTEXTCREATOR:LOAD_FINISHED';
+export const IS_VALID_CONTEXT_NAME = 'CONTEXTCREATOR:IS_VALID_CONTEXT_NAME';
 export const CONTEXT_LOAD_ERROR = 'CONTEXTCREATOR:CONTEXT_LOAD_ERROR';
 export const LOADING = 'CONTEXTCREATOR:LOADING';
 export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
@@ -68,6 +69,11 @@ export const startResourceLoad = () => ({
 
 export const loadFinished = () => ({
     type: LOAD_FINISHED
+});
+
+export const isValidContextName = (valid) => ({
+    type: IS_VALID_CONTEXT_NAME,
+    valid
 });
 
 export const contextLoadError = ({ error }) => ({

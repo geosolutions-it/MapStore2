@@ -74,10 +74,11 @@ export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
 
 export default class ContextCreator extends React.Component {
     static propTypes = {
+        loading: PropTypes.bool,
+        isValidContextName: PropTypes.bool,
         curStepId: PropTypes.string,
         newContext: PropTypes.object,
         resource: PropTypes.object,
-        plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         viewerPlugins: PropTypes.array,
         ignoreViewerPlugins: PropTypes.bool,
@@ -97,6 +98,8 @@ export default class ContextCreator extends React.Component {
     };
 
     static defaultProps = {
+        loading: false,
+        isValidContextName: true,
         newContext: {},
         resource: {},
         viewerPlugins: [
@@ -149,7 +152,8 @@ export default class ContextCreator extends React.Component {
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
                     disableNext: !this.props.resource.name || !this.props.resource.name.length ||
-                        !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length,
+                        !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
+                        this.props.loading || !this.props.isValidContextName,
                     component:
                         <GeneralSettings
                             contextName={this.props.resource.name}
