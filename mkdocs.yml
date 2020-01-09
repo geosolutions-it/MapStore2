@@ -72,6 +72,7 @@ pages:
       - Paragraph Section: 'user-guide/paragraph-section.md'
       - Immersive Section: 'user-guide/immersive-section.md'
       - Media Section: 'user-guide/media-section.md'
+      - Web Page Section: 'user-guide/web-section.md'
   - Developer Guide:
     - Dev Setup and Run: 'developer-guide/index.md'
     - Database Setup: 'developer-guide/database-setup.md'

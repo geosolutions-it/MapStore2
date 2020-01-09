@@ -1,4 +1,4 @@
-# Exploring Stories
+# Exploring Story 
 **********************
 
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), the Story is a tool that allows you to express in a simple and dynamic way a concept, combining and connecting text, maps, images, video and other media as desired. The final result is an interactive flux of information that reflects user customizations.
@@ -13,7 +13,7 @@ The user can approach with a story in two different ways:
 ## Edit Mode
 
 The *Edit Mode* allows the user to edit a story by adding, removing or modifying the elements inside it. This approach and its tools are used both to edit an existing story and to create a new one. <br>
-In order to create a new story, the user can click on the **New Story** button <img src="../img/button/new-story.jpg" class="ms-docbutton"/> on [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) homepage. As soon as you perform this operation the workflow appears in *Edit Mode* and composed of two main elements: the *Builder* and the *Sections Container* (later simply called *Container*).
+In order to create a new story, the user can click on the **New Story** button <img src="../img/button/new_story_button.jpg" class="ms-docbutton"/> on [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) homepage. As soon as you perform this operation the workflow appears in *Edit Mode* and composed of two main elements: the *Builder* and the *Sections Container* (later simply called *Container*).
 
 <img src="../img/exploring-stories/story-workspace.jpg" class="ms-docimage"/>
 
@@ -25,34 +25,63 @@ The information flux of the Story is organized in Sections, that can be added fr
 * [Paragraph Section](paragraph-section.md)
 * [Immersive Section](immersive-section.md)
 * [Media Section](media-section.md)
+* [Web Page Section](web-section.md)
 
 ## View Mode
 
 The *View Mode* it is a way of approaching a story useful in cases where you would like to present the content of your work to someone, or simply every time you need to check up the progress of your work. <br>
-The user can access the *View Mode* through the **Show preview** button <img src="../img/button/show-preview.jpg" class="ms-docbutton"/> in Builder's toolbar, and the first display is organized like the following:
+The user can access the *View Mode* through the **Show preview** button <img src="../img/button/show-preview-button.jpg" class="ms-docbutton"/> in Builder's toolbar, and the first display is organized like the following:
 
-<img src="../img/exploring-stories/view-mode.jpg" class="ms-docimage"/>
+<img src="../img/exploring-stories/view-mode-page.jpg" class="ms-docimage"/>
 
-Most of the page is occupied by a large display space, that can be navigated also through the Navigation bar on top-right of the story:
+On the top of the page there is a **Top bar** in which the story's informations are displayed. 
 
-<img src="../img/exploring-stories/story-navbar.jpg" class="ms-docimage"/>
+<img src="../img/exploring-stories/top-bar.jpg" class="ms-docimage"/>
 
-The user, scrolling through the story, can interact with it browsing and zooming the maps, or observing fullscreen images and videos with just one click:
+Which are from left to right:
 
-<img src="../img/exploring-stories/interact-maps.gif" class="ms-docimage"/>
+* **Edit Story** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/> that allows to switching back to the *Edit Mode*
+* **Navigation bar** allows to navigating to the different sections of the story 
+* The **Title** the user choose for the story 
+* The **Icon** of the story.  
 
-In order to switch back to *Edit Mode*, there is the **Navigation edit** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/> on top-left of the story.
+!!! Warning
+    For setting this information the user needed to go back on the *Edit Mode* and open the **Setting** button <img src="../img/button/setting-button.jpg" class="ms-docbutton"/> just as explained in the [Story Setting](story-setting.md).
+
+Most of the page is occupied by a large display space, that can be navigated through the **Navigation bar** or scrolling through the story. The user can interact with it browsing and zooming the maps, or observing full screen images and videos with just one click:
+
+<img src="../img/exploring-stories/view-mode-nava.gif" class="ms-docimage" width="700px"/>
 
 ## Save a Story
 
-Both in edit mode and new mode, the user can save your story, through the option button <img src="../img/button/burger.jpg" class="ms-docbutton"/> on the top bar. If the story is not saved yet, there's only the possibility to perform the Save, but if a story was already saved it is possible to choose between Save and Save as. Saving a Story it is possible to define the following settings:
+Both in edit mode and new mode, the user can save your story, through the Option button <img src="../img/button/burger.jpg" class="ms-docbutton"/> on the top bar. If the story is not saved yet, there's only the possibility to perform the Save, but if a story was already saved it is possible to choose between Save and Save as. Saving a Story it is possible to define the following settings:
 
-<img src="../img/exploring-stories/save-story.jpg" class="ms-docimage" width="400px"/>
+<img src="../img/exploring-stories/save-page.jpg" class="ms-docimage" width="400px"/>
 
 * **Name** (it's the only mandatory field)
 
-* **Thumbnail**
+* **Thumbnail** with an image with max 500 kb and with not more of 180 px of hight and 300 px of width
 
-* **Description**
+* **Description** of the story you are saving
 
-* **Permissions**
+* **Permissions** as explained in the [Managing user rights](managing-user-rights.md) 
+
+## Share a Story
+
+The user can share the story with the direct link of the story or on a social network. Through the Option button <img src="../img/button/burger.jpg" class="ms-docbutton"/> on the top bar the dropdown menu showing a Share button <img src="../img/share/share.jpg" class="ms-docbutton"  style="max-height:20px;"/>. 
+
+In the **Link** section there is a story's URL that the user can copy and the QR Code that the user can read.
+
+<img src="../img/exploring-stories/share.jpg" class="ms-docimage" width="400px"/>
+
+In the **Social** section there are Facebook, Twitter and LinkedIn icons through which the user can share the story. 
+
+<img src="../img/exploring-stories/share-social.jpg" class="ms-docimage" width="400px"/>
+
+If the **Advanced Options** are enable, the story link opens in *View mode* with the possibility to back to the home page with the *Home Page* button.
+
+<img src="../img/exploring-stories/share-page.jpg" class="ms-docimage"/>
+
+
+
+

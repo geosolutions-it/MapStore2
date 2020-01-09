@@ -21,14 +21,18 @@ With the text editor toolbar it is possible to customize the text by modifying t
 
 <img src="../img/text-editor-toolbar/alignment.jpg" class="ms-docimage"/>
 
-* **Color Picker** (with this tool it is possible to change the text color to customize the highlighting)
+* **Bulleted list** to add a *Unordered* and *Ordered* list 
+
+<img src="../img/text-editor-toolbar/list.jpg" class="ms-docimage"/>
+
+* **Color Picker** for change the text color to customize the highlighting
 
 <img src="../img/text-editor-toolbar/color-picker.jpg" class="ms-docimage" style="width:200px"/>
 
-* **Link/Unlink** (this tool allows the user to add or remove an hyperlink to the text)
+* **Link/Unlink** allow the user to add or remove an hyperlink to the text
 
 <img src="../img/text-editor-toolbar/link.jpg" class="ms-docimage"style="width:250px"/>
 
-* **Remove** (this tool is useful to remove text changes)
+* **Remove** to remove text changes
 
 <img src="../img/text-editor-toolbar/remove.jpg" class="ms-docimage"/>

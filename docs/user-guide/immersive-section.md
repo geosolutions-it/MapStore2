@@ -23,21 +23,29 @@ An example of an Immersive Content with *Small* size, aligned to the *Right* and
 
 <img src="../img/immersive-section/imm-content-edit.jpg" class="ms-docimage"/>
 
-The immersive content can host both text or media contents. A new content can be added inside the immersive content through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button, or can be removed through the <img src="../img/button/remove2.jpg" class="ms-docbutton"/> button. 
+The immersive content can hos text, media contents or web page. A new content can be added inside the immersive content through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button, or can be removed through the <img src="../img/button/remove2.jpg" class="ms-docbutton"/> button. 
 
-<img src="../img/immersive-section/add-remove.jpg" class="ms-docimage" style="width:400px"/>
+<img src="../img/immersive-section/add-remove.jpg" class="ms-docimage"/>
 
 As soon as you add a text content, it appears just below the current content, and with a simple click inside it, the user is allow to write his text and formatting it through the [Text Editor Toolbar](text-editor-toolbar.md). An example of a text content can be the following:
 
-<img src="../img/immersive-section/is-text-content.jpg" class="ms-docimage" style="width:400px"/>
+<img src="../img/immersive-section/is-text-content.jpg" class="ms-docimage" width="550px"/>
 
-Adding a media content the [Media Editor Window](media-editor-window.md) appears, allowing the user to add an Image, a Video or a Map.
+Adding a media content the [Media Editor Window](media-editor-window.md) appears, allowing the user to add an Image or a Map. It is also possible adding a web page content as it is explained in the [Web Page Section](web-section.md). An example of immersive content with text and image can be the following:
 
-### Images
+<img src="../img/immersive-section/test-image.jpg" class="ms-docimage" width="550px"/>
 
-An image added inside the immersive content can be customized through the [Content Image Toolbar](content-image-toolbar.md). An example of an image with *Medium* size and *Right* alignment set, added just below a text content, can be the following:
+## Background
 
-<img src="../img/immersive-section/imm-txt-img.jpg" class="ms-docimage" style="width:400px"/>
+For Immersive sections, it is possible to customize the background through the background editor toolbar:
+
+<img src="../img/immersive-section/bck-toolbar.jpg" class="ms-docimage" width="550px"/>
+
+The background editor toolbar, when no media are applied, allows the user to:
+
+* Add a media as background, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor Window](media-editor-window.md)
 
 !!! note
     Only for Immersive Section, when the user try to add another section of the same type just below the current one, the added section is actually another immersive content, that fits inside the same immersive section. 
+
+
