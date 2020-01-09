@@ -1,28 +1,72 @@
-# Printing a Map
+# Printing a Map 
 ****************
 
-Once added the layers to a new map or opened an already exsiting map:
+For **print** the map just created or an already existing map must open the **Burger Menu** inside the [Menu Bar](menu-bar.md) and the dropdown menu shows this option:  <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> 
 
-* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/> from the main menu bar
+The window that opens allows the user to custumize the sheet print.
 
-* **Click** on the *Print* option from the list <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/>
+<img src="../img/print/print-page.jpg" class="ms-docimage"/>
 
-* On the pop-up page:
+## Setting the print
 
-  * **Enter** a *Title* and a *Description*.
+* It is possible enter a **Title** and a **Description**, shown at the print page.
 
-  * In the *Layout* section, **Select**  the sheet size, e.g. A4 Format. **Check** the flag to include the *Legend* in the layout.
+<img src="../img/print/print-title-descr.jpg" class="ms-docimage"/>
 
-  * **Choose** between a *Landscape* or *Portrait* layout.
+* it is possible change the **Resolution** of the print 
 
-<img src="../img/print/print-layout.jpg" class="ms-docimage"/>
+<img src="../img/print/resolution.jpg" class="ms-docimage"/>
 
-  * **Click** on *Legend options*. Here, you can set the labels font, icons size and resolution
+## Layout 
 
-  * Finally, **Choose** the *Resolution* of the print
+Opening the **Layout** section allow you to: 
 
-<img src="../img/print/print-legend.jpg" class="ms-docimage"/>
+<img src="../img/print/first-layout-print.jpg" class="ms-docimage"/>
 
-  * **Click** on the print button. You will be addressed to the print preview where you can download the layout in *PDF* by clicking on the *Download* button <img src="../img/button/download-layout.jpg" class="ms-docbutton"/>.
+* Select the *sheet size* between A3 and A4 format
 
-<img src="../img/print/print-preview.jpg" class="ms-docimage"/>
+* Enable the flag to include the *Legend* in the layout
+
+* Enable the flag to insert the *legend* on a distinct page
+
+<img src="../img/print/layout-print.jpg" class="ms-docimage"/> 
+
+If the legend is on a distinct page it is possible insert the map choosing between: 
+
+* *Landscape* layout 
+
+<img src="../img/print/landscape.jpg" class="ms-docimage"/>
+
+* *Portrait* layout
+
+<img src="../img/print/portrait.jpg" class="ms-docimage"/>
+
+## Legend options 
+
+Opening the **Legend options** section allow you to:
+
+<img src="../img/print/first-legend-options.jpg" class="ms-docimage"/>
+
+* Set the labels inserting the font type, the font size and choosing between bold or italic style
+
+* Select the icons size
+
+* Select the resolution of the legend 
+
+<img src="../img/print/legend-options.jpg" class="ms-docimage"/>
+
+## Print
+
+When the print is ready it is possible print the map clicking on the <img src="../img/button/print-button.jpg" class="ms-docbutton"/> button. You will be addressed to the print preview allow you to:
+
+<img src="../img/print/preview.jpg" class="ms-docimage"/> 
+
+* <img src="../img/button/zoom-in-out.jpg" class="ms-docbutton"/> zoom in/out int the preview
+
+* <img src="../img/print/page-print.jpg" class="ms-docbutton"/> change page if there is more than one page
+
+* <img src="../img/button/download-layout.jpg" class="ms-docbutton"/> download the layout in *PDF*
+
+Now you have the map printed: 
+
+<img src="../img/print/print.jpg" class="ms-docimage"/>
